@@ -1,0 +1,219 @@
+
+<script type="text/javascript" language="JavaScript"><!--
+
+document.addEventListener("DOMContentLoaded", function(){
+    if (window.location.hash.length > 0){
+     HideAllShowOne(window.location.hash.slice(1));
+    }
+    else{
+    HideAllShowOne('greeting');
+    }
+ });
+
+function HideAllShowOne(d) {
+// Between the quotation marks, list the id values of each div.
+    var IDvaluesOfEachDiv = "greeting researcher everybody";
+    //-------------------------------------------------------------
+    IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/[,\s"']/g," ");
+    IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/^\s*/,"");
+    IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/\s*$/,"");
+    IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/  +/g," ");
+    var IDlist = IDvaluesOfEachDiv.split(" ");
+    for(var i in IDlist) {
+        HideContent(IDlist[i]);
+        ShowContent(d);
+    }
+}
+
+function HideContent(d) {
+document.getElementById(d).style.display = "none";
+}
+function ShowContent(d) {
+document.getElementById(d).style.display = "block";
+}
+function ReverseDisplay(d) {
+if(document.getElementById(d).style.display == "none") { document.getElementById(d).style.display = "block"; }
+else { document.getElementById(d).style.display = "none"; }
+}
+
+jQuery(document).ready(function() {      
+    makeamap('mapspace','#c8c8c8','#f04717');
+});
+
+//--></script>
+
+<div id="mapspace" style="width:100%;height:100%;margin-bottom:-180px;margin-top:-100px;"></div>
+
+<div class="container-fluid"  style="text-align:center;">
+
+        <div class="row">
+        <div class="col-md-6">
+        <div class="jumbotron" style="color:white;padding:5px 0 20px 0;">
+        <h2>These people need <br>access to research</h2>
+        </div>
+        <p style="background-color:white;"><a href="/stories">Explore their stories</a></p>
+        </div>
+        <div class="col-md-6">
+        <div class="jumbotron" style="background-color:#212f3f;color:white;padding:5px 0 20px 0;">
+        <h2>What can you <br>do to help?</h2>
+        </div>
+        </div>
+        </div>
+        <div class="row"><!-- Start of what people can do -->
+        <div class="col-md-4">
+        <div class="panel panel-default">
+          <div class="panel-body" style="background-color:#f04717;color:white;">
+                <p style="text-align:center;margin-top:8px;">
+                <a href="https://twitter.com/OA_Button" target="_blank"><i class="fa fa-twitter-square fa-5x" style="color:#212f3f;"></i></a>
+                <a href="https://www.facebook.com/openaccessbutton" target="_blank"><i class="fa fa-facebook-square fa-5x" style="color:#212f3f;"></i></a>
+                <a href="https://plus.google.com/+OpenAccessButton" target="_blank"><i class="fa fa-google-plus-square fa-5x" style="color:#212f3f;"></i></a>
+                <br>or <a href="/contact" style="color:#212f3f;">contact us directly</a>
+                </p>
+                </div></div>
+        </div>
+        <div class="col-md-4">
+        <div class="panel panel-default" style="background-color:#f04717;color:white;">
+          <div class="panel-body">
+                <h2>Get connected</h2></br>
+                <p colour:white><a href="https://docs.google.com/forms/d/1uAOUA7VqSzKtiy7Ctj7--i2BMOr9-xENG1GZRMeHjfg/viewform">Sign up to our mailing list here.</a></p>
+                </div></div>
+        </div>
+        <div class="col-md-4">
+        <div class="panel panel-default" style="background-color:#f04717;color:white;">
+          <div class="panel-body">
+        <p style="text-align:center;margin-top:8px;">
+                <h2>Find out more</h2>
+                <a href="/about#faq"  style="color:#212f3f;">FAQ</a></br>
+                <a href="/about"  style="color:#212f3f;">About Us</a></br>
+                <a href="/support"  style="color:#212f3f;">Support our work</a></br>
+                </div></div>
+        </div>
+        </div>
+        <div class="row">
+            <div class="panel panel-default" style="background-color:#212f3f;color:white;">
+                <div class="panel-body">
+                    <a href="https://act.eff.org/action/let-s-stand-together-to-promote-open-access-worldwide" target="_blank"><img src="https://www.eff.org/files/styles/homepage_feature/public/2014/09/18/diego_3.png"/></a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+        <div class="panel panel-default" style="background-color:#212f3f;color:white;">
+          <div class="panel-body">
+            <h1>Go further</h1>
+            </div></div></div>
+        <div class="row">
+    <div class="col-md-3" position="fixed">
+    <div class="panel panel-default">
+    <div class="panel-body">
+        <ul class="nav nav-pills nav-stacked">
+            <li class="disabled"><a href="#">Everyone can help.</a>
+            <li class="active"><a href="javascript:HideAllShowOne('greeting')">Take action now!</a>
+            <li class="active"><a href="javascript:HideAllShowOne('researcher')">Take action as student or researcher</a>
+            <!-- Hiding this until we have action points for librarian-type librarians.
+            <li class="active"><a href="javascript:HideAllShowOne('librarian')">Take action as a librarian</a>
+            -->
+            <li class="active"><a href="javascript:HideAllShowOne('everybody')">Take action as a citizen</a></ul>
+            </div></div>
+    </div>
+    <div class="col-md-9">
+<div class="panel panel-default" align="left">
+     <div class="panel-body">
+        <h2>Take action!</h2>
+        <div id="greeting" style="display:block" align="left">
+        <p>You can change things, we already have. By learning about the problem, the solution and what you can do to help, you can make a real difference in ensuring students, doctors, researchers, and others aren't locked out of the research they need.</p> 
+
+        <p>Movement towards Open Access is taking hold among research funders, campuses, individuals, and student organisations. Here you'll find where action is needed and how you can get involved. Remember, you have lots of choices about how to help and how much commitment you can give. If there's anything we can do to help, let us know.</p>
+    <div class="panel panel-default">
+    <div class="panel-body">
+    <a href="javascript:ReverseDisplay('oneMinute')"><h3 align="left">If you have 1 minute...</h3></a>
+<div id="oneMinute" style="display:none">
+<ul>
+<li>Share <a href="http://openaccessbutton.org">openaccessbutton.org</a> on Twitter, Facebook, Google +, Tumblr, another social networking site you use, or by email.</li>
+
+<li>Sign the petition in <a href="https://act.eff.org/action/let-s-stand-together-to-promote-open-access-worldwide" target="_blank">support of Diego Gomez and Open Access to Research</a>.</li>
+
+<li>Sign the <a href="http://www.righttoresearch.org/act/individual.shtml" target="_blank">student statement</a> from the <a href="http://www.righttoresearch.org" target="_blank">Right to Research Coalition</a>.</li>
+</ul>
+<h4 align="left">Get Connected</h4>
+Get connected by subscribing to our mailing list, following our <a href="http://blog.openaccessbutton.org">blog</a> or <a href="http://www.twitter.com/OA_Button" target="_blank">Twitter feed</a>, or by liking us on <a href="https://www.facebook.com/openaccessbutton" target="_blank">Facebook</a>.  That way you will know all the latest Open Access Button news and get our Action Alerts when there are exciting new opportunities for you to make a difference.
+</div>
+
+</div></div>
+    <div class="panel panel-default">
+    <div class="panel-body">
+<a href="javascript:ReverseDisplay('tenMinutes')"><h3 align="left">If you have 10 minutes...</h3></a>
+<div id="tenMinutes" style="display:none">
+<h4 align="left">Communicate</h4>
+Talk to a friend or a colleague about Open Access and the Open Access Button. Try out some conversation starters like:
+<ul>
+<li>Have you ever been asked to pay 40 dollars to read a piece of research?</li>
+<li>Have you ever been denied access to research you need?</li>
+</ul>
+Use this time to bust myths (using our <a href="https://www.openaccessbutton.org/advocacy">guides</a>) about Open Access and highlight the benefits of being Open.</br>
+During your conversation,
+<ul>
+<li>Try to convince your colleagues who may object to Open Access to publish in an Open Access journal.
+<li>Try to find out if they object to Open Access and use our <a href="https://openaccessbutton.org/advocacy">guides</a> to address any concerns.
+</ul>
+</div>
+</div></div>
+    <div class="panel panel-default">
+    <div class="panel-body">
+<a href="javascript:ReverseDisplay('thirtyMinutes')"><h3>If you have 30 minutes...</h3></a>
+<div id="thirtyMinutes" style="display:none">
+<p>If you're a student, reach out to your professors and librarians. Let them know you care about Open Access. Send an email, grab them after class, or set up a meeting. Talk to them. Especially ask if they can publish their work Open Access or self archive existing work. Encourage your librarians to include Open Access in the mandatory library orientation for incoming students.  Use our <a href="advocacy">guides</a> to bust those myths and answer questions.</p>
+<h4>Get educated</h4>
+<p>Read our <a href="advocacy">guides</a> to get up to speed on everything from the challenges we face in getting access to the results of research to the impact of limited access. You'll learn what you need to know about Open Access and Open Access advocacy so we can make progress on this issue together.</p>
+<p>After you've learned what we're fighting for (and why we want to change things), get connected by subscribing to our blog or <a href="http://www.twitter.com/OA_Button" target="_blank">Twitter feed</a>, or by liking us on <a href="https://www.facebook.com/openaccessbutton" target="_blank">Facebook</a>.  That way you'll know all the latest Open Access Button news and get our Action Alerts when there are exciting new opportunities for you to make a difference.</p>
+</div>
+</div></div>
+    <div class="panel panel-default">
+    <div class="panel-body">
+<a href="javascript:ReverseDisplay('hour')"><h3>If you have an hour...</h3></a>
+<div id="hour" style="display:none">
+<h4>Write a blog/op-ed for a local newspaper</h4>
+<p>Taking your voice to a public forum can be an extremely effective form of advocacy and you can publish anything you want with just a few clicks on a blog. If you don't have a blog, school/local newspapers are around for just this purpose and they're often itching for content. Open Access affects everybody, and an opinion piece or letter to the editor calling for change - in a few hundred words - is sure to garner interested comments or emails. If you're writing for a blog or for a newspaper, let us know and we can help.</p>
+<h4>Get your organisations on board</h4>
+<p>Lots and lots of organizations have an interest in opening up access to academic research. You could bring up anything from the access barriers at your institution to the heavy toll lack of access to research has on students, researchers, patients, and doctors all over the world, or something else. Let them know that access is an issue and urge them to join advocacy efforts.</p>
+<h4>Get your Faculty Assembly, Colleagues, and Administrators on Board</h4>
+<p>If you're a student, researcher or professor, spend some time working to bring them on board.</p>
+</div>
+</div>
+</div></div>
+<div id="researcher" style="display:none" align="left">
+<h3>As students and researchers...</h3><a name="researcher"></a>
+You can try the following:
+<ul>
+<li>If you are at an institution and it doesn't have an Open Access repository, advocate for one where researchers and students can deposit scholarly works</li>
+<li>Advocate on campus and try to implement an institutional Open Access Policy</li>
+<li>Open yourself, use our <a href="https://openaccessbutton.org/advocacy">guides</a> to help make your own work Open Access</li>
+<li>Retain your copyrights when you sign publishing agreements</li>
+<li>Serve as editor of an Open Access journal</li>
+<li>Educate your professional organizations about Open Access</li>
+</ul>
+</div>
+<!-- Hiding this until we have some copy
+<div id="librarian" style="display:none" align="left">
+<h1>Take Action!</h1>
+<h3>As librarians...</h3><a name="librarian"></a>
+</div> -->
+<div id="everybody" style="display:none" align="left">
+<h3>As everybody...</h3><a name="student"></a>
+One of the things about Open Access is that it is for everybody. Even if you are not working at a research intitute or studying at a university, you may have numerous reasons for wanting to read the results of scholarly research. These could be as varied as looking up health information, following up a press release about a new discovery, to simple interest in new research. If you would like Open Access to become the norm, you can start by trying the following:
+    </br></br>
+    <ul>
+<li>Organize and give a talk about Open Access and the Open Access Button
+<li>Spend some time talking to people about the Open Access Button and handing out fliers
+<li>Get involved in International Open Access Week
+<li>Educate locally
+<li>Advocate nationally
+<li>Join the Open Access Button's activism list. If you're interested, send a friendly email to advocacy[AT]openaccessbutton[dot]org
+</ul>
+If you do, please let us know, we would love to help out.
+ </div>
+ </div>
+</div>
+    </div>
+</div>
+</div>
+

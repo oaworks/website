@@ -1,0 +1,200 @@
+
+
+<script type="text/javascript" language="JavaScript"><!--
+document.addEventListener("DOMContentLoaded", function(){
+if (window.location.hash.length > 0){
+ HideAllShowOne(window.location.hash.slice(1));
+}
+else{
+HideAllShowOne('landing');
+}
+ });
+function HideAllShowOne(d) {
+// Between the quotation marks, list the id values of each div.
+var IDvaluesOfEachDiv = "landing fund volunteer code feedback share";
+//-------------------------------------------------------------
+IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/[,\s"']/g," ");
+IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/^\s*/,"");
+IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/\s*$/,"");
+IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/  +/g," ");
+var IDlist = IDvaluesOfEachDiv.split(" ");
+for(var i in IDlist) {
+HideContent(IDlist[i]);
+ShowContent(d);
+}
+parent.location.hash = d;
+window.scrollTo(0, 0);
+}
+function HideContent(d) {
+document.getElementById(d).style.display = "none";
+}
+function ShowContent(d) {
+document.getElementById(d).style.display = "block";
+}
+function ReverseDisplay(d) {
+if(document.getElementById(d).style.display == "none") { document.getElementById(d).style.display = "block"; }
+else { document.getElementById(d).style.display = "none"; }
+}
+//--></script>
+
+<div class="container-fluid">
+<div class="row">
+<div class="col-md-3" position="fixed">
+<div class="panel panel-default">
+<div class="panel-body">
+<ul class="nav nav-pills nav-stacked">
+<li class="active"><a href="javascript:HideAllShowOne('fund')">Fund</a>
+<li class="active"><a href="javascript:HideAllShowOne('volunteer')">Volunteer</a>
+<li class="active"><a href="javascript:HideAllShowOne('code')">Code</a>
+<li class="active"><a href="javascript:HideAllShowOne('share')">Share</a>
+<li class="active"><a href="javascript:HideAllShowOne('feedback')">Feedback</a>
+</ul>
+</div>
+</div>
+</div>
+<div class="col-md-9">
+<div class="panel panel-default" style="background-color:#212f3f;color:#ffffff;">
+<div class="panel-body">
+<h1><a href="javascript:HideAllShowOne('landing')" style="color:#FFF">Support</a></h1>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-body">
+<div id="landing" style="display:block"><a name="landing"></a>
+Most of our work at the Open Access Button depends on the efforts of our volunteer team. Keeping our project online and growing requires a lot of time, effort and money. For this reason, we rely on the continuous support of individuals, companies or groups. Why not become on of them?
+<br/><br/>
+There are several ways you can show your support to the Open Access Button:
+<h3>Show your support in kind! </h3>
+If you have specific skills or knowledge that we could use, drop us a line!
+<h3>Get involved!</h3>
+Join our international <a href="javascript:HideAllShowOne('volunteer')">volunteer</a> team. You can also contribute in <a href="javascript:HideAllShowOne('code')">code</a>, our work is open source.
+<h3>Spread the word! </h3>
+<a href="javascript:HideAllShowOne('share')">Share</a> the Open Access Button and help others find out more about Open Access.
+<h3>Talk to us!</h3>
+Feel free to <a href="javascript:HideAllShowOne('feedback')">contact</a> us to provide any feedback, ideas or even bug fixes.
+</div>
+<div id="fund" style="display:none"><a name="fund"></a>
+<h2>Funding</h2>
+As a not-for-profit project, we currently rely on generous donations and grants to build the Open Access and Open Data Button and keep them online. There are a number of ways you can be involved, whether you're an individual, a company or group, or have something non-financial to offer.
+</br></br>
+
+We've previously been funded by the Center for Open Science, the Open Society Foundations, PLOS and Jisc. We've received in-kind support from Mozilla, SPARC, Cottage Labs and the Right to Research Coalition. 
+</br>
+</br>
+<h3>Donations</h3><a name="donations"></a>
+We have received donations from a number of fantastic individuals who supported our  <a href="about/#crowdfund">Crowdfunder</a>. As a not-for-profit project, generous donations help build the Open Access and Open Data Button and keep them online. Currently, we're building a new donation system. In the mean time, if you'd like to support our work please leave you name and email. We'll be in touch! 
+</br></br>
+<iframe src= "https://salsa4.salsalabs.com/o/51595/c/383/p/salsa/donation/common/public/?donate_page_KEY=10784" width="100%" height="900" frameBorder="0"></iframe>
+</br></br>
+<h3>Sponsorship</h3><a name="sponsorship"></a>
+We have some amazing <a href="about/#thanks">partners</a> who have helped the Open Access Button get to where it is through financial support. You don't need to be a large company or funder to sponsor us. If your journal, library, research lab, company or so on would like to partner with us, email funding@openaccessbutton.org to discuss how we can help each other.
+</br></br>
+<h3>In-kind support</h3><a name="inkind"></a>
+The Open Access Button doesn't just need money, often you can help us with in-kind support. This could be anything from providing the venue for an event, to merchandise, to professional assistance. If you have something you'd like to offer, email funding@openaccessbutton.org.
+</div>
+
+<div id="volunteer" style="display:none"><a name="volunteer"></a>
+<h2>Volunteer</h2>
+Everything you see here has been envisioned, and built, by a hearty team of volunteer students and young researchers with different backgrounds from across the world. You can read more about them <a href="about/#team">here</a>.
+</br></br>
+At the moment we're not actively recruiting new volunteers to manage the project. However, if you care about the project and Open Access, and think you could add to something we're doing then don't hesitate to tell us! <a href="about/#contact">Contact us</a> and tell us how great you are.
+</div>
+
+<div id="code" style="display:none"><a name="code"></a>
+<h2>Code</h2>
+<table class="table">
+<tr>
+<td>Firefox Addon</td>
+<td><a href="https://github.com/OAButton/oab-fxaddon" target="_blank">Source Code</a></td>
+<td><a href="https://github.com/OAButton/oab-fxaddon/issues" target="_blank">Issue Tracker</a></td>
+</tr><tr>
+<td>Chrome Addon</td>
+<td><a href="https://github.com/OAButton/oab-chromeaddon" target="_blank">Source Code</a></td>
+<td><a href="https://github.com/OAButton/oab-chromeaddon/issues" target="_blank">Issue Tracker</a></td>
+</tr><tr>
+<td>Backend</td>
+<td><a href="https://github.com/OAButton/backend" target="_blank">Source Code</a></td>
+<td><a href="https://github.com/OAButton/backend/issues" target="_blank">Issue Tracker</a></td>
+</tr><tr>
+<td>Android Mobile App</td>
+<td><a href="https://github.com/OAButton/androidmobileapp" target="_blank">Source Code</a></td>
+<td><a href="https://github.com/OAButton/androidmobileapp/issues" target="_blank">Issue Tracker</a></td>
+</tr><tr>
+<td>iOS Mobile App</td>
+<td><a href="https://github.com/OAButton/iOSmobileapp">Source Code</a></td>
+<td><a href="https://github.com/OAButton/iOSmobileapp/issues">Issue Tracker</a></td>
+</tr>
+</table>
+The last year and a half has been incredible. We have gone from nothing to a really useful, workable bookmarklet which has helped track thousands of people running into paywalls. Most of it thanks to volunteer developers (and others), who poured their souls into getting this project off the ground. The Open Access Button is always being developed and we always welcome all who want to get involved.
+</br></br>
+To join, you should be familiar with (or prepared to learn to use) Github, JavaScript and Python and you can find an up-to-date list of bugs or issues for each platform above. We can also use people with skills in design, security auditing, quality assurance, and more. We will be more than pleased to have you help in your area of expertise. If you have ideas for improving design, usability, bug hunting and fixing, translation, testing, or anything else that you think might be useful, please let us know.<br></br>
+Github is where you find all our development related documents, it's simple. Anything else, email martin@openaccessbutton.org. Yes, you saw that right, no mailing list.<br></br>
+If you make a significant contribution (generously judged by us, or demanded by you) we'll send you some goodies (stickers, postcards, smiles). We'll also include you on the Open Access Button page as a developer, and you'll have bonus karma points and warm fuzzy feelings.
+</br></br>
+All of our work is released under free and open source licenses such as the MIT License or Creative Commons licenses.
+</div>
+
+<div id="share" style="display:none"><a name="share"></a>
+<h2>Share</h2>
+The Button can only be a success if it's shared and used widely. That's pretty hard to do without the marketing budget to match. Time and time again our users and the wider community have held events, written blogs and articles and even made videos for the Button.
+</br></br>
+On this page you can find all the resources, images and more that will make that a lot simpler now. If you'd like a resource we don't have, or in a language we don't have please let us know and we'll try to get it made for you.
+</br></br>
+<h3>Open Access Button Images</h3>
+Open Access Button Logo: <a href="https://www.flickr.com/photos/128805157@N06/15381941780/in/set-72157648428785969?rb=1" target="_blank">Alone</a>,
+<a href="https://www.flickr.com/photos/128805157@N06/15564891821/in/set-72157648428785969" target="_blank">Vertical Text</a>,
+<a href="https://www.flickr.com/photos/128805157@N06/15566136412/" target="_blank">Horizontal Text</a>
+</br>
+Open Access Button Slogan Graphic:
+<a href="https://www.flickr.com/photos/128805157@N06/15381569297/in/set-72157648428785969" target="blank">Horizontal Panel</a>,
+<a href="https://www.flickr.com/photos/128805157@N06/15564913301/in/set-72157648428785969" target="blank">Push Button alone</a>,
+<a href="https://www.flickr.com/photos/128805157@N06/14947415653/in/set-72157648428785969" target="blank">Get Research alone</a>,
+<a href="https://www.flickr.com/photos/128805157@N06/15567588115/in/set-72157648428785969/" target="blank">Make Progress alone</a>
+</br>
+Mozilla extension (20/10/14): Image <a href="https://www.flickr.com/photos/128805157@N06/15785604961/" target="_blank">1</a>, <a href="https://www.flickr.com/photos/128805157@N06/15601650499/" target="_blank">2</a>, <a href="https://www.flickr.com/photos/128805157@N06/15785605051/" target="_blank">3</a>, <a href"https://www.flickr.com/photos/128805157@N06/15602317367/" target="_blank">4</a>
+</br>
+Chrome extension (20/10/14): Image <a href="https://www.flickr.com/photos/128805157@N06/15168034033/" target="_blank">1</a>
+</br>
+Android app (20/10/14): Image 1, 2 and 3
+</br>
+Bookmarklet (20/10/14): Image <href="https://www.flickr.com/photos/128805157@N06/15602064028" target="_blank">1</a>, <a href="https://www.flickr.com/photos/128805157@N06/15785604891" target="_blank">2</a>
+</br>
+Website (20/10/14): Homepage, Map, <a href="https://www.flickr.com/photos/128805157@N06/15602064178/" target="_blank">Stories page</a>, <a href="https://www.flickr.com/photos/128805157@N06/15167525154/" target="_blank">Wishlist</a>
+</br>
+Team: Founders (
+<a href="https://www.flickr.com/photos/128805157@N06/15381758547/" target="_blank">1</a>,
+<a href="https://www.flickr.com/photos/128805157@N06/15382141920/in/photostream/" target="_blank">2</a>),
+<a href="https://www.flickr.com/photos/128805157@N06/15382146370/" target="_blank">January 2013 Team Photo</a>,
+<a href="https://www.flickr.com/photos/128805157@N06/15544091356/" target="_blank">Button Hackday</a>
+<h3>General Open Access Images</h3>
+<a href="http://en.wikipedia.org/wiki/Open_access#mediaviewer/File:Open_Access_logo_PLoS_white.svg" target="_blank">Open Access Logo</a>
+</br>
+<a href="http://api.ning.com/files/fD9AJ*g4L*kkPOgcSV92jv7eZxwaRkN-H8OVPFwOGyBvSiBWfAim2RWQp7IKKrJX0*Z6UaIZR5nIR6eJdgzd-kslQj6KJRWD/OAlogo.jpg" target="_blank">Open Access Logo with Text</a>
+</br>
+<a href="http://api.ning.com/files/57eloaC8PTj*QnOY8I*rE8AB9mfvLTveJvZkEwhHpCW64o9NSvLv7RxtyLKtlGA9th0fanBUqHSxuqE6JIEzflD9ov3Ssx*h/header_865x180.jpg" target="_blank">Open Access Week logo</a>
+</br>
+Images of paywalls (<a href="https://www.flickr.com/photos/dullhunk/6885585302/in/pool-open-access-irony-award" target="_blank">1</a>,
+<a href="https://www.flickr.com/photos/dullhunk/6875273607/in/pool-open-access-irony-award" target="_blank">2</a>,
+<a href="https://www.flickr.com/photos/dullhunk/8653757940/in/pool-open-access-irony-award" target="_blank">3</a>,
+<a href="https://www.dropbox.com/s/r52iuaygzwkxz46/Screenshot%202014-10-16%2017.38.06.png?dl=0" target="_blank">4</a>)
+<h3>More information on: </h3>
+<a href="/advocacy">Open Access</a></br>
+<a href="/about#how">Our features</a></br>
+<a href="/about#faq">FAQs</a></br>
+<a href="/about#history">Our background</a>
+<h3>Style request</h3>
+We request that when writing the abbreviation "OA button" isn't used, we prefer "Open Access Button" or the "The Button" in the context of some Open Access Button branding.
+</div>
+
+<div id="feedback" style="display:none"><a name="feedback"></a>
+<h2>Feedback</h2>
+Here at the Open Access Button we're always listening to our users and other stakeholders to make sure the Button is constantly at the forefront of what can be done and is as useful as possible. Of course, we're also listening for bugs and fixes!
+</br></br>
+Please, <a href="/contact">get in touch</a> and take a second to provide some feedback, your great ideas or bugs!
+</div>
+
+</div>
+</div>
+</div>
+</div>
+</div>
