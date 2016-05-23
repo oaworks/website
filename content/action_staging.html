@@ -1,0 +1,91 @@
+
+<script type="text/javascript" language="JavaScript"><!--
+
+document.addEventListener("DOMContentLoaded", function(){
+    if (window.location.hash.length > 0){
+     HideAllShowOne(window.location.hash.slice(1));
+    }
+    else{
+    HideAllShowOne('greeting');
+    }
+ });
+
+function HideAllShowOne(d) {
+// Between the quotation marks, list the id values of each div.
+    var IDvaluesOfEachDiv = "greeting researcher everybody";
+    //-------------------------------------------------------------
+    IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/[,\s"']/g," ");
+    IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/^\s*/,"");
+    IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/\s*$/,"");
+    IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/  +/g," ");
+    var IDlist = IDvaluesOfEachDiv.split(" ");
+    for(var i in IDlist) {
+        HideContent(IDlist[i]);
+        ShowContent(d);
+    }
+}
+
+function HideContent(d) {
+document.getElementById(d).style.display = "none";
+}
+function ShowContent(d) {
+document.getElementById(d).style.display = "block";
+}
+function ReverseDisplay(d) {
+if(document.getElementById(d).style.display == "none") { document.getElementById(d).style.display = "block"; }
+else { document.getElementById(d).style.display = "none"; }
+}
+
+jQuery(document).ready(function() {      
+    makeamap('mapspace','#c8c8c8','#f04717');
+});
+
+//--></script>
+
+<div id="mapspace" style="width:100%;height:100%;margin-bottom:-180px;margin-top:-100px;"></div>
+
+<div class="container-fluid" style="text-align:center;">
+
+        <div class="row">
+        <div class="col-md-6">
+        <div class="jumbotron" style="color:white;padding:5px 0 20px 0;">
+        <h2>These people need <br>access to research</h2>
+        </div>
+        </div>
+        <div class="col-md-6">
+        <div class="jumbotron" style="background-color:#212f3f;color:white;padding:5px 0 20px 0;">
+        <h2>Can you </br>help them?</h2>
+        </div>
+        </div>
+        </div>
+        <div class="row"><!-- Start of what people can do -->
+        <div class="col-md-4">
+        <div class="panel panel-default">
+          <a href="/resources" target="_blank"><div class="panel-body" style="background-color:#f04717;color:white;">
+                <p style="text-align:center;margin-top:8px;">
+                <h2>Support Us</h2>
+                Join Team Button
+                </p>
+                </div></a></div>
+        </div>
+        <div class="col-md-4">
+        <div class="panel panel-default" style="background-color:#f04717;color:white;">
+          <a href="/advocacy" target="_blank"><div class="panel-body" style="background-color:#f04717;color:white;">
+                <h2>Advocate</h2>
+                <p>Find resources on open access</p>
+                </div></a></div>
+        </div>
+        <div class="col-md-4">
+        <div class="panel panel-default" style="background-color:#f04717;color:white;">
+          <a href="/stories" target="_blank"><div class="panel-body" style="background-color:#f04717;color:white;">
+        <p style="text-align:center;margin-top:8px;">
+                <h2>Get data</h2>
+                <p>Find stories</p>
+                </div></a></div>
+        </div>
+        </div>
+
+</div>
+
+
+

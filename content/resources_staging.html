@@ -1,0 +1,423 @@
+<!-- CSS from the OpenCon Live site -->
+<style>
+.rtr-button {
+    width: 100%;
+     padding: 0px;
+     display: table;
+     }
+.rtr-button div {
+    background-color: #134859;
+    }
+.rtr-button-more {
+    display: none;
+    text-align: left;
+    font-weight : normal;
+    padding-top: 10px;
+    color: white;
+    padding-left: 15px;
+    padding-right: 15px;
+    }
+.rtr-button-padding {
+    width: 100%;
+    height: 20px;
+    background-color: white!important;
+    }
+.rtr-button-arrow {
+    float: right;
+    margin-right: 5px;
+    transform: rotate(90deg);
+    height: 20px;
+    width: 20px;
+    }
+.rtr-button li {
+        float: left;
+         list-style: none;
+         padding-left: 5px;
+         padding-right: 5px;
+         }
+.rtr-button-2 li {
+width: 50%;
+}
+.rtr-button-3 li {
+width: 33%;
+ }
+.rtr-button-4 li {
+    width: 25%;
+    }
+.rtr-button a {
+text-align: centre;
+background-color: #134859;
+padding-top: 5px;
+padding-bottom: 5px;
+width: 100%;
+display: block;
+text-align: center;
+color: white;
+font-size: 20px;
+}
+.rtr-social {
+    height: 64px;
+    width: 64px;
+    filter: invert (0%);
+    clip: rect (0px, 72pz, 72px, 0px);
+    padding: 4px;
+    }
+.rtr-social:hover {
+    filter: invert (100%);
+    }
+.rtr-button p {
+    background-color: #134859;
+    color:white;
+    display:block;
+    font-size:20px;
+    font-weight:normal;
+    padding-bottom:5px;
+    padding-top:5px;
+    text-align:center;
+    width:100%;
+    }
+</style>
+
+<style>
+.solid_card {
+    background-color: #212f3f;
+    color: #FFF;
+    padding: 10px 10px 10px 10px;
+    margin: 10px 10px 10px 10px;
+    border-radius: 15px;
+    }
+.border_card {
+    border-style: solid;
+    border-width: 2px;
+    border-color: #212f3f;
+    padding: 10px 10px 10px 10px;
+    margin: 10px 10px 10px 10px;
+    border-radius: 15px;
+    }
+
+.btn-primary {
+  color: #fff;
+  background-color: #3276b1;
+  border-color: #357ebd;
+}
+
+.btn-orange {
+  color: #fff;
+  background-color: #f04717;
+  border-color: #357ebd;
+}
+
+.btn-odb {
+  color: #fff;
+  background-color: #398bc5;
+  border-color: #357ebd;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.open .dropdown-toggle.btn-primary {
+  color: #ffffff;
+  background-color: #f04717;
+  border-color: #f04717;
+}
+</style>
+
+<script type="text/javascript" language="JavaScript"><!--
+document.addEventListener("DOMContentLoaded", function(){
+    if (window.location.hash.length > 0){
+ HideAllShowOne(window.location.hash.slice(1));
+}
+else{
+HideAllShowOne('greeting');
+}
+});
+
+function HideAllShowOne(d) {
+// Between the quotation marks, list the id values of each div.
+var IDvaluesOfEachDiv = "greeting researcher everybody";
+//-------------------------------------------------------------
+IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/[,\s"']/g," ");
+IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/^\s*/,"");
+IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/\s*$/,"");
+IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/  +/g," ");
+var IDlist = IDvaluesOfEachDiv.split(" ");
+for(var i in IDlist) {
+HideContent(IDlist[i]);
+ShowContent(d);
+}
+}
+function HideContent(d) {
+document.getElementById(d).style.display = "none";
+}
+function ShowContent(d) {
+document.getElementById(d).style.display = "block";
+}
+function ReverseDisplay(d) {
+if(document.getElementById(d).style.display == "none") { document.getElementById(d).style.display = "block"; }
+else { document.getElementById(d).style.display = "none"; }
+}
+jQuery(document).ready(function() {
+    makeamap('mapspace','#c8c8c8','#f04717');
+});
+//--></script>
+
+<!-- Javascript from the OpenCon Live site to make the cards expand -->
+
+<script type="text/javascript" language="JavaScript">
+   function icBtnReveal(element) {
+       if ($('#'+element).css('display') == 'none') {
+ $('.rtr-button-more').css('display', 'none');
+ $('#'+element).css('display', 'block');
+ $('.rtr-button-arrow', $('#'+element).parent('div')).css('transform', 'rotate(270deg)');
+} else {
+$('#'+element).css('display', 'none');
+$('.rtr-button-arrow').css('transform', 'rotate(90deg)');
+}
+}
+</script>
+
+<div id="mapspace" style="width:100%;height:100%;margin-bottom:-180px;margin-top:-100px;"></div>
+
+<div class="container-fluid"  style="text-align:center;">
+<div class="row">
+<div class="col-md-12">
+<div class="jumbotron" style="color:white;padding:5px 0 20px 0;">
+<h2>Text about why these stories are important and how to use them</h2>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-6">
+<h3>I'm a header, I think I'll be needed</h3>
+<p>This is pretty wide split in two, I think Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, I love how easy it is to make stuff pretty on this site, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, </p>
+</div>
+<div class="col-md-6">
+<h3>I'm another header, I think I'll be needed too</h3>
+<p>This is pretty wide split in two, I think Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, </p>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<div class="jumbotron" style="color:white;padding:5px 0 20px 0;">
+<h2>Data and Stories</h2>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-6">
+<h3>Hey Look, I mirror the above, nice right?</h3>
+<p>This is pretty wide split in two, I think Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, Text and stuff, </p>
+</div>
+<div class="col-md-6">
+<h3><- (or ^) What she said</h3>
+<p>Hack up furballs sleep on keyboard. Hack up furballs curl into a furry donut walk on car leaving trail of paw prints on hood and windshield and stare at wall turn and meow stare at wall some more meow again continue staring . Purr while eating chew iPad power cord kick up litter. Has closed eyes but still sees you claw drapes, for hunt by meowing loudly at 5am next to human slave food dispenser shove bum in owner's face like camera lens sleep in the bathroom sink. Leave dead animals as gifts pooping rainbow while flying in a toasted bread costume in spaceand claw drapes steal the warm chair right after you get up and scream at teh bath thinking longingly about tuna brine,</p>
+</div>
+</div>
+
+<!--
+<div class="row">
+<div class="col-md-6">
+<ul class="rtr-button-6 rtr-button">
+<li>
+<div class="rtr-button-padding"></div>
+<div class="rtr-button-padding"></div>
+<p>Can have video, images, etc.</p>
+<div class="rtr-button-padding"></div>
+<a href="https://www.youtube.com/playlist?list=PLKzRudZaXUD0SA6IMycQD9UOIE-kYOPfm">Can link to external sources</a>
+<div class="rtr-button-padding"></div>
+<p>Can be continued indefinitely</p>
+</li>
+</div>
+<div class="col-md-6">
+<div class="rtr-button-padding">
+<a onClick="icBtnReveal('uniqueName2')">Can be expanded
+<img class="rtr-button-arrow" src="http://cdn.infocology.co.uk/arrow.png" />
+</a>
+<div class="rtr-button-more" id="uniqueName2">
+Here's some expanded text.
+</div>
+</div>
+</div>
+</div>
+-->
+
+<div class ="row">
+    <div class="col-md-12">
+<h2>What Open Access</h2><a name="what"></a>
+<p>I'm a few sentances on why open access. I'm a few sentances on why open access. I'm a few sentances on why open access. I'm a few sentances on why open access.</p>
+    </div>
+</div>
+<div class="row">
+<div class="col-md-12">
+  <div class="col-md-3">
+    <div class="card card-block  border_card">
+      <h3 class="card-title">The Open Knowledge definition of Open Data</h3>
+      <p class="card-text">Open means anyone can freely access, use, modify, and share for any purpose (subject, at most, to requirements that preserve provenance and openness).</p>
+      <a href="http://opendefinition.org/" target="_blank" class="btn btn-primary">Read the definition</a>
+      </div>
+    </div>
+  <div class="col-md-3">
+    <div class="card card-block  solid_card">
+      <h3 class="card-title">The Panton Principles for Open Data</h3>
+      <p class="card-text">The Panton Principles are a set of recommendations that address how best to make published data from scientific studies available for re-use. In this context, "published" means "made public" and is not restricted to formal publication in the scholarly literature.</p>
+      <a href="http://pantonprinciples.org/" target="_blank" class="btn btn-primary">Read Recommendations</a>
+    </div>
+</div>
+    <div class="col-md-3">
+      <div class="card card-block  border_card">
+      <h3 class="card-title">The Licence Powering Open Data</h3>
+      <p class="card-text">The recommended licence for Open Data is CC-0.</p>
+      <a href="https://creativecommons.org/about/cc0/" target="_blank" class="btn btn-primary">Find out more</a>
+    </div>
+  </div>
+      <div class="col-md-3">
+      <div class="card card-block  solid_card">
+      <h3 class="card-title">A one pager explaining Open Data</h3>
+      <p class="card-text">Our friends at SPARC have put together a clear, concise factsheet explaining Open Data.</p>
+      <a href="http://sparcopen.org/wp-content/uploads/2016/01/SPARC-Open-Data-Factsheet.pdf" target="_blank" class="btn btn-primary">Get the factsheet</a>
+    </div>
+  </div>
+ </div>
+  </div>
+ <div class="row">
+<div class="col-md-12">
+ <h2>How Open Access</h2><a name="how"></a>
+ <p>I'm a few sentances on why open access. I'm a few sentances on why open access. I'm a few sentances on why open access. I'm a few sentances on why open access.</p>
+ </div>
+  </div>
+<div class="row">
+<div class="col-md-12">
+  <div class="col-md-3">
+    <div class="card card-block solid_card">
+      <h3 class="card-title">Deposit in your institutional repository</h3>
+      <p class="card-text"></p>
+      <a href="http://roarmap.eprints.org" target="_blank" class="btn btn-primary">Find yours now</a>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card card-block border_card">
+      <h3 class="card-title">Deposit in a subject repository</h3>
+      <p class="card-text"></p>
+      <a href="http://www.re3data.org" target="_blank" class="btn btn-primary">Find yours now</a>
+    </div>
+  </div>
+    <div class="col-md-3">
+      <div class="card card-block solid_card">
+      <h3 class="card-title">Deposit with Figshare</h3>
+      <p class="card-text">Figshare is an online digital repository where researchers can preserve and share their research outputs, including figures, datasets, images, and videos. It is free to upload content and free to access, in adherence to the principle of open data.</p>
+      <a href="http://www.figshare.com" target="_blank" class="btn btn-primary">Check it out</a>
+    </div>
+  </div>
+      <div class="col-md-3">
+      <div class="card card-block border_card">
+      <h3 class="card-title">Deposit with Zenodo</h3>
+      <p class="card-text">Zenodo is an open dependable home for the long-tail of science, enabling researchers to share and preserve any research outputs in any size, any format and from any science.</p>
+      <a href="http://zenodo.org" class="btn btn-primary">Check it out</a>
+    </div>
+  </div>
+ </div>
+  </div>
+
+<div class="row">
+<div class="col-md-12">
+  <div class="col-md-3">
+    <div class="card card-block border_card">
+      <h3 class="card-title">Open Data Handbook</h3>
+      <p class="card-text">This handbook provides concrete information on how to produce open data.</p>
+      <a href="http://opendatahandbook.org/guide/en/how-to-open-up-data/" target="_blank" class="btn btn-primary">Read the handbook</a>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card card-block solid_card">
+      <h3 class="card-title">We're looking best practice examples from your field!</h3>
+      <p class="card-text"></p>
+      <a href="https://opendatabutton.org/general-feedback" target="_blank" class="btn btn-primary">Let us know</a>
+    </div>
+  </div>
+    <div class="col-md-3">
+      <div class="card card-block border_card">
+      <h3 class="card-title">Think we're missing something?</h3>
+      <p class="card-text"></p>
+      <a href="https://opendatabutton.org/general-feedback" target="_blank" class="btn btn-primary">Let us know</a>
+    </div>
+  </div>
+ </div>
+</div>
+
+<div class="row">
+<div class="col-md-12">
+<h2>Why Open Access</h2><a name="why"></a>
+<p>I'm a few sentances on why open access. I'm a few sentances on why open access. I'm a few sentances on why open access. I'm a few sentances on why open access.</p>
+</div>
+ </div>
+
+<div class="row">
+<div class="col-md-12">
+  <div class="col-md-3">
+    <div class="card card-block solid_card">
+      <h3 class="card-title">Data versioning and data care practices are key for Open Science.</h3>
+      <p class="card-text">10 steps you can take to make sure you contribute to a culture shift towards open science.</p>
+      <a href="http://blogs.lse.ac.uk/impactofsocialsciences/2015/02/09/data-versioning-open-science/" target="_blank" class="btn btn-primary">Find out more</a>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card card-block border_card">
+      <h3 class="card-title">Who's afraid of Open Data?</h3>
+      <p class="card-text">Scrutinising arguments expressing concerns against Open Data.</p>
+      <a href="http://blogs.lse.ac.uk/impactofsocialsciences/2015/12/16/whos-afraid-of-open-data-dorothy-bishop/" target="_blank" class="btn btn-primary">Read the arguments</a>
+    </div>
+  </div>
+    <div class="col-md-3">
+      <div class="card card-block solid_card">
+      <h3 class="card-title">Is withholding your data simply bad science, or should it fall under scientific misconduct?</h3>
+      <p class="card-text">If you don't share your data, you are breaking professional standards in research, and are thus committing scientific misconduct.</p>
+      <a href="http://blogs.lse.ac.uk/impactofsocialsciences/2015/07/03/data-secrecy-bad-science-or-scientific-misconduct/" target="_blank" class="btn btn-primary">Read more</a>
+    </div>
+  </div>
+      <div class="col-md-3">
+      <div class="card card-block border_card">
+      <h3 class="card-title">Forging new policies to motivate academic data sharing</h3>
+      <p class="card-text">"In order to tap into the vast potential that is attributed to academic data sharing we need to forge new policies that follow the guiding principle reputation instead of obligation".</p>
+      <a href="http://blogs.lse.ac.uk/impactofsocialsciences/2015/06/02/reputation-instead-of-obligation-new-policies-to-motivate-academic-data-sharing/" target="_blank" class="btn btn-primary">Read more</a>
+    </div>
+  </div>
+ </div>
+ </div>
+
+<div class="row">
+<div class="col-md-12">
+  <div class="col-md-3">
+    <div class="card card-block border_card">
+      <h3 class="card-title">Citation benefits attributed to open data</h3>
+      <p class="card-text">There is "a statistically well-supported citation benefit from open data".</p>
+      <a href="https://peerj.com/articles/175/" target="_blank" class="btn btn-primary">Check the figures</a>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card card-block solid_card">
+      <h3 class="card-title">Open data positively affects citation rates in the field of astronomy.</h3>
+      <p class="card-text"></p>
+      <a href="http://arxiv.org/abs/1111.3618" target="_blank" class="btn btn-primary">Read more</a>
+    </div>
+  </div>
+    <div class="col-md-3">
+      <div class="card card-block border_card">
+      <h3 class="card-title">Is withholding your data scientific misconduct?</h3>
+      <p class="card-text">If you don't share your data, you are breaking professional standards in research, and are thus committing scientific misconduct</p>
+      <a href="http://blogs.lse.ac.uk/impactofsocialsciences/2015/07/03/data-secrecy-bad-science-or-scientific-misconduct/" target="_blank" class="btn btn-primary">Read more</a>
+    </div>
+  </div>
+      <div class="col-md-3">
+      <div class="card card-block solid_card">
+      <h3 class="card-title">The Royal Society's open data policy requires publication of the data supporting a paper.</h3>
+      <p class="card-text">"Datasets should be deposited in an appropriate, recognised, publicly available repository. Where no data-specific repository exists, authors should deposit their datasets in a general repository such as Dryad or Figshare, or include it in the supplementary material."</p>
+      <a href="https://royalsociety.org/journals/ethics-policies/data-sharing-mining/" target="_blank" class="btn btn-primary">Read Open Data Policy</a>
+    </div>
+  </div>
+ </div>
+ </div>
+
+</div>
+

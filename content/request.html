@@ -1,0 +1,113 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="well" style="background-color:#212f3f;color:white;min-height:200px;">
+        <h1 style="text-align:center;font-size:100px;color:#f04717;" id="requestscount">X</h1>
+        <p style="text-align:center;">requests for access are in progress</p>
+      </div>
+      <div class="well" style="background-color:#212f3f;color:white;min-height:200px;">
+        <h1 style="text-align:center;font-size:100px;color:#f04717;" id="requestssuccesscount">0</h1>
+        <p style="text-align:center;">requests have been successful</p>
+      </div>
+      <div class="holder holder-suggestions"></div>
+    </div>
+
+    <div class="col-md-8">
+      <div class="panel panel-default holder holder-ui" id="requests">
+        <div class="panel-heading" style="background-color:white;padding:0px;">
+          <div class="input-group" style="margin-left:-1px;margin-top:-1px;margin-bottom:-6px;margin-right:-2px;">
+            <input type="text" class="form-control holder holder-search holder-function" holder-function="suggest" placeholder="search..." style="font-size:1.6em;height:50px;">
+            <div class="input-group-btn">
+              <a href="/request" class="btn btn-default" alt="clear all search terms and reset" title="clear all search terms and reset" style="height:50px;font-size:1.6em;">x</a>
+            </div>
+          </div>
+          <div class="holder holder-filters" style="margin-top:5px;"></div>
+        </div>
+      </div>
+      <div class="holder holder-results"></div>
+    </div>            
+  </div>
+</div>
+
+<script>
+jQuery(document).ready(function() {        
+
+  var result = function(res) {
+    return '<tr><td><h4><a href="/request/' + res._id + '" style="color:#212f3f;">Requesting ' + res.email + ' to provide access to the supporting data for the article at ' + res.url + '</a></h4></td></tr>';
+  }
+  var results = function(data) {
+    $('#requestscount').html(data.hits.total);
+    var out = '<table class="table table-striped table-bordered"><thead></thead><tbody class="holder holder-results">';
+    for ( var r in data.hits.hits ) {
+      out += result(data.hits.hits[r]._source);
+    }
+    out += '</tbody></table>';
+    $('.holder.holder-results').html(out);
+  }
+
+  var first = true;
+  var scroll = function(data) {
+    if (first) {
+      first = false;
+    } else {
+      for ( var r in data.hits.hits ) {
+        var res = result(data.hits.hits[r]._source);
+        $('.holder.holder-innerresults').append(res);
+      }
+    }
+  }        
+
+  var aggregations = function(data) {
+    $('.holder.holder-suggestions').html("");
+    for ( var f in $('.holder').holder.options.query.aggregations ) {
+      var disp = '<div class="well"><p>Filter by ' + f + '</p>';
+      for ( var r in data.aggregations[f].buckets ) {
+        var j = data.aggregations[f].buckets[r];
+        if ( f === 'status' && j.key === 'success' ) $('#requestssuccesscount').html(j.doc_count);
+        disp += '<p>' + searchify({class: 'holder btn btn-info', val: j.key + ' (' + j.doc_count + ')', attrs: {function: 'add', filter: f, value: j.key} }) + '</p>';
+      }
+      disp += '</div>';
+      $('.holder.holder-suggestions').append(disp);
+    }      
+  }
+
+  $('#requests').holder({
+    what: "Requests",
+    url: "https://api.opendatabutton.org/query/request",
+    datatype: 'JSON',
+    scroll: true,
+    defaultquery: { 
+      sort: [
+        {
+          createdAt: {order: 'desc'}
+        }
+      ],
+      query: {
+        filtered: {
+          query: {
+            bool: {
+              must: []
+            }
+          },
+          filter: {
+            bool: {
+              must:[{term:{'type.exact':'article'}}]
+            }
+          }
+        }
+      }
+    },
+    pushstate: false,
+    results: {
+      default: results,
+      scroll: scroll,
+      aggregations: aggregations
+    },
+    size: 50,
+    aggregations: {
+      status: { terms: { field: "status.exact", size: 100 } }
+    }
+  }); 
+
+});  
+</script>
