@@ -1,0 +1,169 @@
+# REDIRECTS - EVERYTHING TO HTTPS AND NO WWW
+server {
+    listen      443 ssl;
+    server_name www.openaccessbutton.org;
+    return 301 https://openaccessbutton.org;
+}
+server {
+    listen      80;
+    server_name www.openaccessbutton.org;
+    return 301 https://openaccessbutton.org;
+}
+server {
+    listen      80;
+    server_name openaccessbutton.org *.openaccessbutton.org;
+    return 301 https://$host$request_uri;
+}
+
+# SERVE LIVE API WITH CONNECT TO PREFERRED METEOR SERVICE (CLUSTER)
+server {
+    listen          443 ssl spdy;
+    server_name     api.openaccessbutton.org;
+
+    #keepalive_timeout 70;
+    #proxy_read_timeout 600s;
+
+    ssl on;
+    ssl_certificate /etc/letsencrypt/live/api.openaccessbutton.org/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/api.openaccessbutton.org/privkey.pem;
+
+    location / {
+        proxy_pass http://clapi/api/service/oabutton/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+        proxy_set_header X-Forwarded-For $remote_addr;
+    }
+}
+
+# SERVE LIVE SITE WITH CONNECT TO PREFERRED METEOR SERVICE (LOCAL AT THE MOMENT)
+server {
+    listen 443 ssl spdy;
+    server_name openaccessbutton.org;
+    root /home/cloo/live/openresearchbutton/oab_static;
+
+    #keepalive_timeout 70;
+    #proxy_read_timeout 600s;
+
+    ssl on;
+    ssl_certificate /etc/letsencrypt/live/openaccessbutton.org/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/openaccessbutton.org/privkey.pem;
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_ciphers "HIGH:!aNULL:!MD5 or HIGH:!aNULL:!MD5:!3DES";
+    ssl_prefer_server_ciphers on;
+    ssl_stapling on;
+    add_header Strict-Transport-Security "max-age=31536000;";
+
+    location @proxy {
+        proxy_pass http://clapilocal;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+        proxy_set_header X-Forwarded-For $remote_addr;
+    }
+    
+    location /merged-stylesheets.css {
+        try_files $uri @proxy; 
+    }    
+    location /sockjs {
+        try_files $uri @proxy; 
+    }    
+    location /app {
+        try_files $uri @proxy; 
+    }    
+    location /packages {
+        try_files $uri @proxy; 
+    }    
+    location /login {
+        try_files $uri @proxy;
+    }
+    location /account {
+        try_files $uri @proxy; 
+    }    
+    location /request/ {
+        try_files $uri @proxy; 
+    }    
+    location /story/ {
+        try_files $uri @proxy; 
+    }    
+    location /admin/openaccessbutton {
+        try_files $uri @proxy; 
+    }    
+
+    location /content {
+        try_files $uri $uri.html $uri.md $uri/index $uri/index.html $uri/index.md /dynamic.html 404 /404 =404;
+        add_header Access-Control-Allow-Origin *;
+    }
+    location = / {
+        index index.html;
+    }
+    location = /index.html {
+        root /home/cloo/live/openresearchbutton/oab_static;
+    }
+    location / {
+        try_files $uri $uri.html $uri.md /index.html;
+        add_header Access-Control-Allow-Origin *;
+    }
+}
+
+# SERVE A DEV VERSION OF THE SITE
+server {
+    listen 80;
+    server_name oab.test.cottagelabs.com;
+    root /home/cloo/dev/openresearchbutton/oab_static;
+
+    #keepalive_timeout 70;
+    #proxy_read_timeout 600s;
+
+    location @proxy {
+        proxy_pass http://localhost:3002;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+        proxy_set_header X-Forwarded-For $remote_addr;
+    }
+    
+    location /merged-stylesheets.css {
+        try_files $uri @proxy; 
+    }    
+    location /sockjs {
+        try_files $uri @proxy; 
+    }    
+    location /app {
+        try_files $uri @proxy; 
+    }    
+    location /packages {
+        try_files $uri @proxy; 
+    }    
+    location /login {
+        try_files $uri @proxy;
+    }
+    location /account {
+        try_files $uri @proxy; 
+    }    
+    location /request/ {
+        try_files $uri @proxy; 
+    }    
+    location /story/ {
+        try_files $uri @proxy; 
+    }
+    location /admin/openaccessbutton {
+        try_files $uri @proxy; 
+    }    
+
+    location /content {
+        try_files $uri $uri.html $uri.md $uri/index $uri/index.html $uri/index.md /dynamic.html 404 /404 =404;
+        add_header Access-Control-Allow-Origin *;
+    }
+    location = / {
+        index index.html;
+    }
+    location = /index.html {
+        root /home/cloo/dev/openresearchbutton/oab_static;
+    }
+    location / {
+        try_files $uri $uri.html $uri.md /index.html;
+        add_header Access-Control-Allow-Origin *;
+    }
+
+}
