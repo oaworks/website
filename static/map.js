@@ -21,7 +21,24 @@ jQuery(document).ready(function() {
     }
 
     var getdata = function() {
-      var qry = {"size":100000, "query": {"match_all": {} }, "fields": ["location.geo.lat","location.geo.lon"] }
+      var qry = {
+        "size":100000, 
+        "query": {
+          filtered: {
+            query: {
+              bool: {
+                must: []
+              }
+            },
+            filter: {
+              bool: {
+                must:[{term:{'type.exact':'article'}}]
+              }
+            }
+          }
+        }, 
+        "fields": ["location.geo.lat","location.geo.lon"] 
+      }
       $.ajax({
         type: 'GET',
         url: '//api.opendatabutton.org/query/blocked?source=' + JSON.stringify(qry),

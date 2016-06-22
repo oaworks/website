@@ -142,7 +142,7 @@ div.tooltip {
         <div class="row">
         <div class="col-md-6">
         <div class="jumbotron" style="color:white;padding:5px 0 20px 0;">
-        <h2>These people need <br>access to research</h2>
+        <h2><span id="storycount"></span> people need <br>access to research</h2>
         </div>
         </div>
         <div class="col-md-6">
@@ -310,3 +310,22 @@ If you do, please let us know, we would love to help out.
 </div>
 
 
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-default holder holder-ui" id="stories" style="display:none;">
+        <div class="panel-heading" style="background-color:white;padding:0px;">
+          <div class="input-group" style="margin-left:-1px;margin-top:-1px;margin-bottom:-6px;margin-right:-2px;">
+            <input type="text" class="form-control holder holder-search holder-function" holder-function="suggest" placeholder="search..." style="font-size:1.6em;height:50px;">
+            <div class="input-group-btn">
+              <a href="/story" class="btn btn-default" alt="clear all search terms and reset" title="clear all search terms and reset" style="height:50px;font-size:1.6em;">x</a>
+            </div>
+          </div>
+          <div class="holder holder-filters" style="margin-top:5px;"></div>
+        </div>
+      </div>
+      <div class="holder holder-results"></div>
+    </div>
+  </div>
+</div>
