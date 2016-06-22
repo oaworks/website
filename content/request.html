@@ -33,7 +33,7 @@
 jQuery(document).ready(function() {        
 
   var result = function(res) {
-    return '<tr><td><h4><a href="/request/' + res._id + '" style="color:#212f3f;">Requesting ' + res.email + ' to provide access to the supporting data for the article at ' + res.url + '</a></h4></td></tr>';
+    return '<tr><td><h4><a href="/request/' + res._id + '" style="color:#212f3f;">Requesting ' + res.email + ' to provide access to the article at ' + res.url + '</a></h4></td></tr>';
   }
   var results = function(data) {
     $('#requestscount').html(data.hits.total);
@@ -73,7 +73,7 @@ jQuery(document).ready(function() {
 
   $('#requests').holder({
     what: "Requests",
-    url: "https://api.opendatabutton.org/query/request",
+    url: "https://api.openaccessbutton.org/query/request",
     datatype: 'JSON',
     scroll: true,
     defaultquery: { 
@@ -91,7 +91,8 @@ jQuery(document).ready(function() {
           },
           filter: {
             bool: {
-              must:[{term:{'type.exact':'article'}}]
+              must:[{term:{'type.exact':'article'}}],
+              must_not:[{term:{'test':true}}]
             }
           }
         }
