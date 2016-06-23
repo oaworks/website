@@ -15,11 +15,8 @@ So your steps should be:
 5. View on the test site
 6. 
 6. checkout master
-7. 
 7. pull from master
-8. 
 8. merge Develop
-9. 
 9. push to master
 
 Although before point 6 you probably could do other pushes to Develop and view them too. Most of the time it should work
