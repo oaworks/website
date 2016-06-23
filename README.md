@@ -8,7 +8,7 @@ So your steps should be:
 2. commit them in Develop
 3. pull from Develop to check in case someone else made changes
 4. If all OK, push to Develop
-5. View on the test site
+5. View on the test: site oab.test.cottagelabs.com
 6. checkout master
 7. pull from master
 8. merge Develop
