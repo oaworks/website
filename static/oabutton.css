@@ -63,7 +63,7 @@ hr{
     z-index:1000;
     position:relative;
     background-color:#212f3f;
-    min-height:800px;
+    min-height:400px;
     margin:-10px 0 0 0;
 }
 .strap p, .strap h1, .strap h2, .strap h3, .strap h4, .strap h5, .strap h6{

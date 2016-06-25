@@ -13,7 +13,7 @@
     </div>
 
     <div class="col-md-8">
-      <div class="panel panel-default holder holder-ui" id="requests">
+      <div class="panel panel-default holder holder-ui" id="requests" style="display:none;">
         <div class="panel-heading" style="background-color:white;padding:0px;">
           <div class="input-group" style="margin-left:-1px;margin-top:-1px;margin-bottom:-6px;margin-right:-2px;">
             <input type="text" class="form-control holder holder-search holder-function" holder-function="suggest" placeholder="search..." style="font-size:1.6em;height:50px;">
@@ -102,7 +102,7 @@ jQuery(document).ready(function() {
     results: {
       default: results,
       scroll: scroll,
-      aggregations: aggregations
+      suggestions: aggregations
     },
     size: 50,
     aggregations: {
