@@ -77,6 +77,9 @@ server {
     location /request/ {
         try_files $uri @proxy; 
     }    
+    location /response/ {
+        try_files $uri @proxy; 
+    }    
     location /story/ {
         try_files $uri @proxy; 
     }    
@@ -141,6 +144,9 @@ server {
         try_files $uri @proxy; 
     }    
     location /request/ {
+        try_files $uri @proxy; 
+    }    
+    location /response/ {
         try_files $uri @proxy; 
     }    
     location /story/ {
