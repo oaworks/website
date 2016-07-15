@@ -75,9 +75,10 @@
     .navbar-alert{
       height:35px;
       text-align: center;
-      vertical-align: bottom;
     }
-    
+    .p-alert{
+    padding-top: 3px
+    }
   </style>
 </head>
 
@@ -86,7 +87,7 @@
   <div class="navbar navbar-fixed-top" style="background-color:white;">
     <div class="container-fluid">
       <!--This is where the alert bar should go when active--><!-- this is a classic alert bar that can go on the site. It'll appear above the normal menu except on mobile where it'll disappear. -->
-<div class = "navbar-alert hidden-xs"><p>Like data? Try out our sister tool, the <a href = "https://opendatabutton.org">Open Data Button</a>.</p></div>
+<div class = "navbar-alert hidden-xs"><p class = "p-alert">Like data? Try out our sister tool, the <a href = "https://opendatabutton.org">Open Data Button</a>.</p></div>
       <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
           <span class="sr-only">Toggle navigation</span>
