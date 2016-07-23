@@ -29,6 +29,9 @@ p{
 p a{
   font-size:1.5em;
 }
+ul, ol{
+  padding:0;
+}
 .row{
     padding-top:30px;
     padding-bottom:30px;
@@ -138,6 +141,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00212f3f', e
 
 }
 
+div#footer{
+  text-align:center;
+}
 
 /* CAROUSEL */
 .carousel {
