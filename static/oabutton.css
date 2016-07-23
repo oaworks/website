@@ -23,6 +23,12 @@ body{
 hr{
     border-color:#212f3f;
 }
+p{
+  margin:1.5em 1em;
+}
+p a{
+  font-size:1.5em;
+}
 .row{
     padding-top:30px;
     padding-bottom:30px;
