@@ -41,6 +41,7 @@
       $('.notting').hide();
     }
     if (window.innerWidth < 768) {
+      $('#biggie').hide();
       $('.navbar-nav').css('height','100%');
     }
   });
@@ -96,7 +97,7 @@
           <li><a href="/blog">Blog</a></li>
           <li class="ting" style="display:none;"><a href="/account">Your account</a></li>
           <li class="notting"><a href="/login">Login</a></li>
-          <li class="notting hidden-xs hidden-sm" style="background-color:#f04717;color:#212f3f;height:55px;z-index:10000;
+          <li id="biggie" class="notting" style="background-color:#f04717;color:#212f3f;height:55px;z-index:10000;
           -webkit-border-bottom-right-radius: 5px;-webkit-border-bottom-left-radius: 5px;
           -moz-border-radius-bottomright: 5px;-moz-border-radius-bottomleft: 5px;border-bottom-right-radius: 5px;border-bottom-left-radius: 5px;">
           <a href="/login" style="font-size:1.2em;font-weight:bold;">Download</a></li>

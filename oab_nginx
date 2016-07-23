@@ -87,6 +87,13 @@ server {
         try_files $uri @proxy; 
     }    
 
+    location /openaccessbutton {
+        expires 30d;
+        add_header Pragma public;
+        add_header Cache-Control "public";
+        root /home/cloo/clapi/uploads;
+    }
+
     location /static {
         expires 30d;
         add_header Pragma public;
