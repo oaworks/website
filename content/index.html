@@ -1,6 +1,17 @@
 <div class="strap strap-white" id="topper" style="background-image:url('/static/mountain.jpg');background-repeat:no-repeat;background-size:100%;background-color:#212f3f;">
   <div class="container-fluid">
-    <div class="row">
+    
+    <div class="row hidden-xs hidden-sm" style="padding:0;margin:-10px 0 -40px 0;">
+      <div class="col-md-12">
+        <div class="well" style="padding:0;">
+          <h4 style="text-align:center;">
+            Hey! Do you like data? Would you like more access to data? Why not try <a href="https://opendatabutton.org">opendatabutton.org</a> 
+          </h4>
+        </div>
+      </div>
+    </div>
+
+    <div class="row hidden-xs hidden-sm">
       <div class="col-md-1">
         <img class="img" src="/static/oabutton_logo_final200.png" style="height:100px;">
       </div>
@@ -16,7 +27,7 @@
     
     <div class="row">
       <div class="col-md-7">
-        <div id="myCarousel" class="carousel slide" data-ride="carousel" style="background-color:white;">
+        <div id="myCarousel" class="carousel slide hidden-xs hidden-sm" data-ride="carousel" style="background-color:white;">
           <ol class="carousel-indicators">
             <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
             <li data-target="#myCarousel" data-slide-to="1"></li>
@@ -46,18 +57,18 @@
             <div class="item">          
               <div class="container">            
                 <div class="carousel-caption">              
-                  <h3>I am even more impressed by the Open Access Button, a genuinely grass-roots initiative developed by two students.</h3>
+                  <h3>Need data to fuel your research? Find and request research data with the Open Data Button.</h3>
                   <hr></hr>
-                  <p>Sander Dekker, State Secretary, Dutch Ministry of Education, Culture and Science.</p>
+                  <p>Get the free app at opendatabutton.org</p>
                 </div>          
               </div>        
             </div>      
             <div class="item">          
               <div class="container">            
                 <div class="carousel-caption">              
-                  <h3>The use of the Open Access Button will help more people to find research papers.</h3>
+                  <h3>I am even more impressed by the Open Access Button, a genuinely grass-roots initiative developed by two students.</h3>
                   <hr></hr>
-                  <p>Professor Stephen Curry, The Guardian.</p>
+                  <p>Sander Dekker, State Secretary, Dutch Ministry of Education, Culture and Science.</p>
                 </div>          
               </div>        
             </div>      
@@ -81,7 +92,7 @@
         </div>
       </div>
       <div class="col-md-5">
-        <div class="well" id="statement" style="font-size:1.1em;height:400px;background-color:#212f3f;color:white;">
+        <div class="well" id="statement" style="font-size:1.1em;min-height:400px;background-color:#212f3f;color:white;">
           <h1 style="color:white;">Push Button.
           <br>Get Research.
           <br>Make Progress.</h1>
@@ -89,7 +100,7 @@
             We all know the frustration of finding the research paper you need, but you can't afford the $40 to access it. 
             The Open Access Button helps you get the research you want right now, and adds papers you still need to your wishlist.
           </p>
-          <p><br><a class="btn btn-large btn-block btn-action" href="#how">Learn more about how it works</a></p>
+          <p class="hidden-xs hidden-sm"><br><a class="btn btn-lg btn-block btn-action" href="#how">Learn more about how it works</a></p>
         </div>
       </div>
     </div>
@@ -125,18 +136,19 @@
         </div>
       </div>
     </div>
-  
-    <div class="row" style="margin-top:-50px;">
+
+    <div class="row" style="margin-top:-40px;">
       <div class="col-md-4">
-        <p><a class="btn btn-large btn-block btn-action" href="/login">Get your own button</a></p>
+        <p><a class="btn btn-lg btn-block btn-action" href="/login">Get your own Button</a></p>
       </div>
       <div class="col-md-4">
-        <p><a class="btn btn-large btn-block btn-action" href="/action">Get involved</a></p>
+        <p><a class="btn btn-lg btn-block btn-action" href="/action">Learn more about how people use research</a></p>
       </div>
       <div class="col-md-4">
-        <p><a class="btn btn-large btn-block btn-action" href="/docs">Check out our API docs</a></p>
+        <p><a class="btn btn-lg btn-block btn-action" href="/action">Get involved with improving access</a></p>
       </div>
     </div>
+
   </div>
 </div>
 
@@ -145,38 +157,38 @@
 <a name="media"> </a> 
 <div class="strap strap-white strap-compact">
   <div class="container-fluid">
-    <h1>USING THE BUTTON</h1>
     <div class="row">
       <div class="col-md-4">
-        <div class="bubble">
+        <div class="bubble" style="min-height:120px;">
           <p>Tools like the Open Access Button can help catalyse change and create a world where science has more impact, is more efficient and importantly available to everyone</p>
         </div>
+        <p class="visible-xs visible-sm" style="padding-top:5px;">Professor Randy Schekman, Nobel Prize in Physiology or Medicine 2013.</p>
+      </div>
+      <div class="col-md-4">
+        <div class="bubble" style="min-height:120px;">
+          <p>I am even more impressed by the Open Access Button, a genuinely grass-roots initiative developed by two students.</p>
+        </div>
+        <p class="visible-xs visible-sm" style="padding-top:5px;">Sander Dekker, State Secretary, Dutch Ministry of Education, Culture and Science.</p>
+      </div>
+      <div class="col-md-4">
+        <div class="bubble" style="min-height:120px;">
+          <p>The use of the Open Access Button will help more people to find research papers.</p>
+        </div>
+        <p class="visible-xs visible-sm" style="padding-top:5px;">Professor Stephen Curry, The Guardian.</p>
+      </div>
+    </div>
+
+    <div class="row hidden-xs hidden-sm" style="margin-top:-30px;">
+      <div class="col-md-4">
         <p>Professor Randy Schekman, Nobel Prize in Physiology or Medicine 2013.</p>
       </div>
       <div class="col-md-4">
-        <div class="bubble">
-          <p>I am even more impressed by the Open Access Button, a genuinely grass-roots initiative developed by two students.</p>
-        </div>
         <p>Sander Dekker, State Secretary, Dutch Ministry of Education, Culture and Science.</p>
       </div>
       <div class="col-md-4">
-        <div class="bubble">
-          <p>The use of the Open Access Button will help more people to find research papers.</p>
-        </div>
-      </div>
-      <p>Professor Stephen Curry, The Guardian.</p>
-    </div>
-  
-    <div class="row">
-      <div class="col-md-4">
-        <p><a class="btn btn-large btn-block btn-action" href="/login">Get your own Button</a></p>
-      </div>
-      <div class="col-md-4">
-        <p><a class="btn btn-large btn-block btn-action" href="/action">Learn more about how people use research</a></p>
-      </div>
-      <div class="col-md-4">
-        <p><a class="btn btn-lg btn-block btn-action" href="/action">Get involved with improving access</a></p>
+        <p>Professor Stephen Curry, The Guardian.</p>
       </div>
     </div>
+
   </div>
 </div>

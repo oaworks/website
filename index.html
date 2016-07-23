@@ -32,8 +32,6 @@
   
   <link href='//fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
 
-  <link href='/static/oab.css' rel='stylesheet' type='text/css'>
-
   <script>
   jQuery(document).ready(function() {
     getter();
@@ -43,6 +41,7 @@
       $('.notting').hide();
     }
     if (window.innerWidth < 768) {
+      $('#biggie').hide();
       $('.navbar-nav').css('height','100%');
     }
   });
@@ -87,15 +86,13 @@
 
   <div class="navbar navbar-fixed-top" style="background-color:white;">
     <div class="container-fluid">
-      <!--This is where the alert bar should go when active--><!-- this is a classic alert bar that can go on the site. It'll appear above the normal menu except on mobile where it'll disappear. -->
-<div class = "navbar-alert hidden-xs"><p class = "p-alert">Like data? Try out our sister tool, the <a href = "https://opendatabutton.org">Open Data Button</a>.</p></div>
       <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"  style="z-index:1000000;">
           <span class="sr-only">Toggle navigation</span>
           <span class="glyphicon glyphicon-list"></span>
         </button>
-        <ul class="nav navbar-nav hidden-xs">
-          <li><img class="img" src="/static/oabutton_logo_final200.png" style="height:54px;padding-top:2px;"></li>
+        <ul class="nav navbar-nav">
+          <li class="hidden-xs hidden-sm"><img class="img" src="/static/oabutton_logo_final200.png" style="height:54px;padding-top:2px;"></li>
           <li><a href="/" style="font-size:18px;">Open Access Button</a></li>
         </ul>
       </div>
@@ -108,7 +105,7 @@
           <li><a href="/blog">Blog</a></li>
           <li class="ting" style="display:none;"><a href="/account">Your account</a></li>
           <li class="notting"><a href="/login">Login</a></li>
-          <li class="notting" style="background-color:#f04717;color:#212f3f;height:55px;z-index:10000;
+          <li id="biggie" class="notting" style="background-color:#f04717;color:#212f3f;height:55px;z-index:10000;
           -webkit-border-bottom-right-radius: 5px;-webkit-border-bottom-left-radius: 5px;
           -moz-border-radius-bottomright: 5px;-moz-border-radius-bottomleft: 5px;border-bottom-right-radius: 5px;border-bottom-left-radius: 5px;">
           <a href="/login" style="font-size:1.2em;font-weight:bold;">Download</a></li>
@@ -132,11 +129,16 @@
             <li><a href="https://openaccessbutton.org/support">For Developers</a></li>
           </ul>
         </div>
-        <div class="col-md-2">
-        </div>
-        <div class="col-md-4">
-          <p><a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a></p>
-          <p style="color:white;">This work is licensed under a <br><a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>. Our code is <a href = "https://opensource.org/licenses/MIT">Open Source</a>.</p>.
+        <div class="col-md-4 col-md-offset-2">
+          <p>
+            <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+              <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png">
+            </a>
+          </p>
+          <p style="color:white;">This work is licensed under a <br>
+            <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>. 
+            Our code is <a href="https://opensource.org/licenses/MIT">Open Source</a>.
+          </p>
         </div>
         <div class="col-md-4">
           <p style="margin-top:10px;">

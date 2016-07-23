@@ -20,9 +20,6 @@ server {
     listen          443 ssl spdy;
     server_name     api.openaccessbutton.org;
 
-    #keepalive_timeout 70;
-    #proxy_read_timeout 600s;
-
     ssl on;
     ssl_certificate /etc/letsencrypt/live/api.openaccessbutton.org/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/api.openaccessbutton.org/privkey.pem;
@@ -41,9 +38,6 @@ server {
     listen 443 ssl spdy;
     server_name openaccessbutton.org;
     root /home/cloo/live/openresearchbutton/oab_static;
-
-    #keepalive_timeout 70;
-    #proxy_read_timeout 600s;
 
     ssl on;
     ssl_certificate /etc/letsencrypt/live/openaccessbutton.org/fullchain.pem;
@@ -83,6 +77,9 @@ server {
     location /request/ {
         try_files $uri @proxy; 
     }    
+    location /response/ {
+        try_files $uri @proxy; 
+    }    
     location /story/ {
         try_files $uri @proxy; 
     }    
@@ -90,6 +87,18 @@ server {
         try_files $uri @proxy; 
     }    
 
+    location /openaccessbutton {
+        expires 30d;
+        add_header Pragma public;
+        add_header Cache-Control "public";
+        root /home/cloo/clapi/uploads;
+    }
+
+    location /static {
+        expires 30d;
+        add_header Pragma public;
+        add_header Cache-Control "public";
+    }
     location /content {
         try_files $uri $uri.html $uri.md $uri/index $uri/index.html $uri/index.md /dynamic.html 404 /404 =404;
         add_header Access-Control-Allow-Origin *;
@@ -142,6 +151,9 @@ server {
         try_files $uri @proxy; 
     }    
     location /request/ {
+        try_files $uri @proxy; 
+    }    
+    location /response/ {
         try_files $uri @proxy; 
     }    
     location /story/ {

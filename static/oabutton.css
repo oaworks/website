@@ -23,12 +23,6 @@ body{
 hr{
     border-color:#212f3f;
 }
-p{
-  margin:1.5em 1em;
-}
-p a{
-  font-size:1.5em;
-}
 ul, ol{
   padding:0;
 }
@@ -64,7 +58,7 @@ ul, ol{
      color:#212f3f;
 }
 .btn-action:hover{
-     background-color:#9dfdfd;
+     background-color:#d83a0e;
 }
 .jumbotron{
     background-color:#f04717;
@@ -75,7 +69,7 @@ ul, ol{
     z-index:1000;
     position:relative;
     background-color:#212f3f;
-    min-height:800px;
+    min-height:400px;
     margin:-10px 0 0 0;
 }
 .strap p, .strap h1, .strap h2, .strap h3, .strap h4, .strap h5, .strap h6{
