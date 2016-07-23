@@ -77,3 +77,14 @@ So, for neatness, static content like js and css files, and images, should go in
 
 And then the content of individual pages just goes in the /content folder.
 
+## Approval Process
+
+This keeps branches aligned and ensures content on the sight is properly vetted. 
+
+* Anyone can commit to develop branch to test changes
+* Joe to approve change
+* Joe merges on to master
+
+## Keeping Branches aligned
+
+If branches get out of alignment, Mark needs to review. 
