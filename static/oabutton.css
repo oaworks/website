@@ -23,6 +23,15 @@ body{
 hr{
     border-color:#212f3f;
 }
+p{
+  margin:1.5em 1em;
+}
+p a{
+  font-size:1.5em;
+}
+ul, ol{
+  padding:0;
+}
 .row{
     padding-top:30px;
     padding-bottom:30px;
@@ -53,6 +62,9 @@ hr{
 .btn-action{
      background-color:#f04717;
      color:#212f3f;
+}
+.btn-action:hover{
+     background-color:#9dfdfd;
 }
 .jumbotron{
     background-color:#f04717;
@@ -129,6 +141,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00212f3f', e
 
 }
 
+div#footer{
+  text-align:center;
+}
 
 /* CAROUSEL */
 .carousel {
