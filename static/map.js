@@ -84,7 +84,7 @@ jQuery(document).ready(function() {
         .attr("cx", x)
         .attr("cy", y)
         .attr("class","point")
-        .attr("r", 3)
+        .attr("r", 2)
         .style("fill", '#f04717');
     }
 

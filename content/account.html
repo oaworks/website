@@ -1,0 +1,204 @@
+<script>
+jQuery(document).ready(function() {
+  // on this page, an installed plugin should:
+  // look for #apikey field to read api key, after suitable delay to wait for data returned from server
+  // hide the download buttons
+  // set button as already downloaded, if not already set as such
+  // verify that the plugin is successfully installed and has registered the api key
+  
+  if (window.innerWidth > 991) {
+    $('#signin .well').css('min-height','370px');
+  }
+
+  var logged = LoginState.get("clogins");
+  console.log(logged);
+  if (logged) {
+    // try getting the user data from the accounts API
+    // if user info not yet provided, get the user to set their details
+    // if user has not downloaded, show download buttons and get started info
+    // also show a trigger button that the plugin can click, to show it has been downloaded, if not already recorded as being so (could have got from store)
+    // if user has downloaded but has no supports or requests logged, still show the get started info
+    // if user has supports or requests, don't show get started info and instead show links to the filtered requests page
+  } else {
+    $('#signin').show();
+  }
+  
+  var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+      sURLVariables = sPageURL.split('&'),
+      sParameterName,
+      i;
+    for (i = 0; i < sURLVariables.length; i++) {
+      sParameterName = sURLVariables[i].split('=');
+      if (sParameterName[0] === sParam) {
+        return sParameterName[1] === undefined ? true : sParameterName[1];
+      }
+    }
+  };
+  var next = getUrlParameter('next');
+  if (next) {
+    $('#tonext').attr('href',next);
+    $('#nextalert').show();
+  }
+
+  var loc = window.location.href;
+  var b = navigator.userAgent.match(/chrome/i) ? '.ch' : '.ff';
+  $('.dl').hide();
+  if (loc.indexOf('openaccessbutton') !== -1 || loc.indexOf('cottagelabs') !== -1) {
+    $('.dl.oab'+b).show();
+  } else {
+    $('.dl.odb'+b).show();
+  }
+
+});
+</script>
+
+<div class="container-fluid" id="signin" style="display:none;">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="jumbotron" style="margin-top:-10px;padding-top:50px;">
+        <input typ="text" class="form-control" name="email" placeholder="Enter your email address">
+        <a class="btn btn-action" href="#" style="border:1px solid white;margin-top:5px;">Sign up / Login</a>        
+      </div>
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-md-5">
+      <div class="well">
+        <h2 style="text-align:center;">
+          <i class="fa fa-user-plus"></i> Sign up
+        </h2>
+        <p>
+          Just provide your email address to begin signing up. We'll send you a validation 
+          email with a link and a code. Click the link, or copy the code.
+        </p>
+        <p>
+          We will <b>not</b> share your email address with anyone else. It will be used by us to contact 
+          you about the service, and as your account username until you choose a username of your own.
+          During your first login you can pick a username and confirm a couple 
+          more details to help us manage your account.
+        </p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="well">
+        <h2 style="text-align:center;">
+          <i class="fa fa-user"></i> Login
+        </h2>
+        <p>
+          Just enter your email address above to login. 
+        </p>
+        <p>
+          We don't use passwords - you will get an email with a link and an authentication code; all you 
+          have to do is click the link or type in the authentication code back here, once you get it. 
+          You will be signed in on your device and you will be remembered for next time you want to use the service.
+        </p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="well">
+        <h2 style="text-align:center;">
+          <i class="fa fa-download"></i> Download
+        </h2>
+        <p>
+          After signing up you will be able to login and download the Open Access Button 
+          for your preferred web browser. We're also making some handy widget and bookmarklet versions, coming soon.
+        </p>
+        <p>
+          Questions? Contact us
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid" id="userinfo">
+  <div id="tonextalert" class="row" style="display:none;">
+    <div class="col-md-12">
+      <div class="alert alert-info">
+        <h4><a id="tonext" href="">Thanks for signing in. Click here to return to the page you were viewing</a></h4>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="jumbotron">
+        <h1>Hello {{username}}</h1>
+        <p><a href="/login" id="logout-btn" class="btn btn-danger" style="margin-bottom:5px;">Logout</a></p>
+        <p>API Key: <span id="apikey">1234567890</span></p>
+        
+        <div id="setinfo">
+          <h1>Thanks for signing up!</h1>
+          <input type="text" name="username" id="new-username" class="form-control" placeholder="Set a username for your account">
+          <select id="set-profession" name="profession" class="form-control" style="margin-top:5px;">
+            <option value="">Please select your profession</option>
+            <option value="Student">Student</option>
+            <option value="Doctor">Doctor</option>
+            <option value="Patient">Patient</option>
+            <option value="Advocate">Advocate</option>
+            <option value="Academic">Academic</option>
+            <option value="Researcher">Researcher</option>
+            <option value="Librarian">Librarian</option>
+            <option value="Other">Other</option>
+            <option value="Undisclosed">Prefer not to say</option>
+          </select>
+          <input id="confirm_public" name="confirm_public" type="checkbox">
+          <label for="confirm_public" class="confirm-label">I understand that information obtained by this button will be publicly accessible</label><br>
+          <input id="confirm_terms" name="confirm_terms" type="checkbox">
+          <label for="confirm_terms" class="confirm-label">
+            I have read the Open Access Button
+            <a target="_blank" href="/privacy" style="color:white;text-decoration:underline;">privacy policy</a> 
+            and I agree to the 
+            <a target="_blank" href="/terms" style="color:white;text-decoration:underline;">terms</a>
+          </label><br>
+          <input id="mailinglist" name="mailing_list" type="checkbox">
+          <label for="mailinglist" class="mailinglist-label">I would like to be added to the Open Access Button Mailing List</label><br>
+          <button id="set-username" type="button" class="btn btn-action" style="margin-top:5px;border:1px solid white;">Save your details</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid" id="downloads">
+  <div class="row">
+    <div class="col-md-12">
+      <a class="btn btn-action btn-block dl odb ch" target="_blank" href="https://chrome.google.com/webstore/detail/open-data-button/kapdifmagjnchppkpilehblabndnmgpi">Get Open Data Button for Chrome</a>
+      <a class="btn btn-action btn-block dl odb ff" target="_blank" href="https://addons.mozilla.org/en-GB/firefox/addon/open-data-button/">Get Open Data Button for Firefox</a>
+      <a class="btn btn-action btn-block dl oab ch" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">Get Open Access Button for Chrome</a>
+      <a class="btn btn-action btn-block dl oab ff" target="_blank" href="https://addons.mozilla.org/en-GB/firefox/addon/openaccessbutton/">Get Open Access Button for Firefox</a>
+    </div>
+  </div>
+</div>
+
+<!-- if user already has requested or supported, don't show getstarted info, 
+just link to the requests page with a filter already added, to only show the requests they started, or those they support 
+could probably hide downloads buttons too - but what about wanting to install on different browser? just hide download buttons from plugin itself
+-->
+<div class="container-fluid" id="getstarted">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="well">
+        <h2>Getting started</h2>
+        <ul>
+          <li>Start by getting the plugin for your browser.</li>
+          <li>When you want access to an article or data that is not available, click the Open Access Button (you can do this on a paywall too).</li>
+          <li>If we can't find the article or the data, you can create a request story to ask the author for access.</li>
+          <li>(If someone already started a request for the same content, you can add your support to their request).</li>
+          <li>Your request will be moderated before being sent to the author.</li> 
+          <li>Once approved, we'll send your request, and you can use your request page to build support for your request.</li>
+          <li>We'll follow up with the author and keep you in the loop about the progress (whether you started the request or added your support to a request).</li>
+          <li>Once the requested content has been made available, we will mark the request as successful and let you know.</li>
+          <li>You'll be able to verify the content is what you wanted!</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+

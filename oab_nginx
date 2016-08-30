@@ -132,33 +132,6 @@ server {
         proxy_set_header X-Forwarded-For $remote_addr;
     }
     
-    location /merged-stylesheets.css {
-        try_files $uri @proxy; 
-    }    
-    location /sockjs {
-        try_files $uri @proxy; 
-    }    
-    location /app {
-        try_files $uri @proxy; 
-    }    
-    location /packages {
-        try_files $uri @proxy; 
-    }    
-    location /login {
-        try_files $uri @proxy;
-    }
-    location /account {
-        try_files $uri @proxy; 
-    }    
-    location /request/ {
-        try_files $uri @proxy; 
-    }    
-    location /response/ {
-        try_files $uri @proxy; 
-    }    
-    location /story/ {
-        try_files $uri @proxy; 
-    }
     location /admin/openaccessbutton {
         try_files $uri @proxy; 
     }    
