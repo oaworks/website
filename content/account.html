@@ -41,14 +41,15 @@ jQuery(document).ready(function() {
     $('#nextalert').show();
   }
 
-  var loc = window.location.href;
   var b = navigator.userAgent.match(/chrome/i) ? '.ch' : '.ff';
   $('.dl').hide();
-  if (loc.indexOf('openaccessbutton') !== -1 || loc.indexOf('cottagelabs') !== -1) {
-    $('.dl.oab'+b).show();
-  } else {
-    $('.dl.odb'+b).show();
+  $('.dl'+b).show();
+  
+  var chromeinstall = function(e) {
+    e.preventDefault();
+    chrome.webstore.install();
   }
+  $('#chromeinstall').bind('click',chromeinstall);
 
 });
 </script>
@@ -56,7 +57,7 @@ jQuery(document).ready(function() {
 <div class="container-fluid" id="signin" style="display:none;">
   <div class="row">
     <div class="col-md-12">
-      <div class="jumbotron" style="margin-top:-10px;padding-top:50px;">
+      <div class="jumbotron" style="margin-top:-10px;padding-top:90px;">
         <input typ="text" class="form-control" name="email" placeholder="Enter your email address">
         <a class="btn btn-action" href="#" style="border:1px solid white;margin-top:5px;">Sign up / Login</a>        
       </div>
@@ -128,11 +129,14 @@ jQuery(document).ready(function() {
       <div class="jumbotron">
         <h1>Hello {{username}}</h1>
         <p><a href="/login" id="logout-btn" class="btn btn-danger" style="margin-bottom:5px;">Logout</a></p>
-        <p>API Key: <span id="apikey">1234567890</span></p>
+        <p>API Key: <span id="apikey">08be728c167820f0836f982f6e1444</span></p>
         
         <div id="setinfo">
           <h1>Thanks for signing up!</h1>
-          <input type="text" name="username" id="new-username" class="form-control" placeholder="Set a username for your account">
+          <input type="text" name="username" id="new-username" class="form-control" placeholder="Choose a username for your account">
+          <input style="margin-top:5px;" type="text" name="name" id="name" class="form-control" placeholder="Please tell us your name">
+          <input style="margin-top:5px;" type="text" name="affiliation" id="affiliation" class="form-control" placeholder="Please tell us your affiliation, such as university name or business name">
+          <input style="margin-top:5px;" type="text" name="orcid" id="orcid" class="form-control" placeholder="If you have an ORCiD, please tell us what it is">
           <select id="set-profession" name="profession" class="form-control" style="margin-top:5px;">
             <option value="">Please select your profession</option>
             <option value="Student">Student</option>
@@ -166,10 +170,8 @@ jQuery(document).ready(function() {
 <div class="container-fluid" id="downloads">
   <div class="row">
     <div class="col-md-12">
-      <a class="btn btn-action btn-block dl odb ch" target="_blank" href="https://chrome.google.com/webstore/detail/open-data-button/kapdifmagjnchppkpilehblabndnmgpi">Get Open Data Button for Chrome</a>
-      <a class="btn btn-action btn-block dl odb ff" target="_blank" href="https://addons.mozilla.org/en-GB/firefox/addon/open-data-button/">Get Open Data Button for Firefox</a>
-      <a class="btn btn-action btn-block dl oab ch" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">Get Open Access Button for Chrome</a>
-      <a class="btn btn-action btn-block dl oab ff" target="_blank" href="https://addons.mozilla.org/en-GB/firefox/addon/openaccessbutton/">Get Open Access Button for Firefox</a>
+      <a id="chromeinstall" class="btn btn-action btn-block dl ch" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">Get Open Access Button for Chrome</a>
+      <a id="firefoxinstall" class="btn btn-action btn-block dl ff" target="_blank" href="https://addons.mozilla.org/en-GB/firefox/addon/openaccessbutton/">Get Open Access Button for Firefox</a>
     </div>
   </div>
 </div>
