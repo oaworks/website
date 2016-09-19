@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Open Access Button</title>
+  <meta name="description" content="">
+  <meta name="author" content="Cottage Labs">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+
+  <link href="/static/favicon.ico" rel="icon" type="image/x-icon">
+  
+  <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <script type="text/javascript" src="//static.cottagelabs.com/jquery-1.10.2.min.js"></script>
+  <script type="text/javascript" src="//static.cottagelabs.com/bootstrap-3.0.3/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="//static.cottagelabs.com/bootstrap-3.0.3/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <script type="text/javascript" src="//static.cottagelabs.com/holder/jquery.holder.min.js"></script>
+  <script type="text/javascript" src="//static.cottagelabs.com/fingerprint2.min.js"></script>
+  <script type="text/javascript" src="//static.cottagelabs.com/clogin.js"></script>
+
+  <link rel="stylesheet" href="/static/oabutton.css">
+  
+  <link href='//fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+
+  <!--<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/itemID"> enable this for chrome inline install-->
+  
+  <script>
+  jQuery(document).ready(function() {
+    var logged = clogin.loggedin();
+    if (logged) {
+      $('.cloggedin').show();
+      $('.notcloggedin').hide();
+      if ($('#downloader').is(':visible')) $('#downloader').remove(); // needs handled directly because of classes for hiding it on small and medium screens too
+    }
+  });
+  </script>
+  
+  <style>
+    markdown {
+      display:none;
+    }
+    .container-fluid {
+      margin:0 auto 0 auto;
+      padding-left:15px;
+      padding-right:15px;
+      max-width:1000px;
+    }
+    .navbar {
+        -webkit-box-shadow: 0 1px 1px 0 rgba(51,51,51,1);
+        -moz-box-shadow: 0 1px 1px 0 rgba(51,51,51,1);
+        box-shadow: 0 1px 1px 0 rgba(51,51,51,1);
+    }
+    .navbar-nav li a{
+      font-size:1em;
+      color:#212f3f;
+      height:51px;
+      padding:13px 10px 13px 10px;
+    }
+    .navbar-nav{
+      height:50px;
+    }
+    .navbar-alert{
+      height:35px;
+      text-align:center;
+      vertical-align:middle;
+    }
+    .p-alert{
+    padding-top:3px;
+    }
+  </style>
+</head>
+<body>
+  <div id="topnav" class="navbar navbar-fixed-top" style="background-color:white;">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"  style="z-index:1000000;">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="glyphicon glyphicon-list"></span>
+        </button>
+        <ul class="nav navbar-nav">
+          <li class="hidden-xs hidden-sm"><img class="img" src="/static/icon_OAB.png" style="height:45px;margin-top:6px;"></li>
+          <li><a href="/" style="font-size:18px;">Open Access Button</a></li>
+        </ul>
+      </div>
+      <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav pull-right">
+          <!--<li><a href="/request/new"><i class="glyphicon glyphicon-plus"></i> Create a request</a></li>-->
+          <li><a href="/request"><i class="glyphicon glyphicon-search"></i> Contribute to requests</a></li>
+          <li class="cloggedin" style="display:none;"><a href="/account" style="padding-top:16px;">Your account</a></li>
+          <li class="notcloggedin"><a href="/account" style="padding-top:16px;">Login</a></li>
+          <li id="downloader" class="hidden-xs hidden-sm notcloggedin" style="background-color:#398bc5;color:#212f3f;height:55px;z-index:10000;
+          -webkit-border-bottom-right-radius: 5px;-webkit-border-bottom-left-radius: 5px;
+          -moz-border-radius-bottomright: 5px;-moz-border-radius-bottomleft: 5px;border-bottom-right-radius: 5px;border-bottom-left-radius: 5px;">
+          <a href="/account" style="font-size:1.2em;font-weight:bold;">Download</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+<script type="text/javascript" language="JavaScript"><!--
+function HideAllShowOne(d) {
+// Between the quotation marks, list the id values of each div.
+    var IDvaluesOfEachDiv = "donations sponsorship inkind volunteer code feedback";
+    //-------------------------------------------------------------
+    IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/[,\s"']/g," ");
+    IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/^\s*/,"");
+    IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/\s*$/,"");
+    IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/  +/g," ");
+    var IDlist = IDvaluesOfEachDiv.split(" ");
+    for(var i in IDlist) {
+        HideContent(IDlist[i]);
+    ShowContent(d);
+    }
+}
+
+function HideContent(d) {
+document.getElementById(d).style.display = "none";
+}
+function ShowContent(d) {
+document.getElementById(d).style.display = "block";
+}
+function ReverseDisplay(d) {
+if(document.getElementById(d).style.display == "none") { document.getElementById(d).style.display = "block"; }
+else { document.getElementById(d).style.display = "none"; }
+}
+
+//--></script>
+
+<div class="container-fluid">
+<div class="row">
+    <div class="col-md-3" position="fixed">
+    <div class="panel panel-default">
+    <div class="panel-body">
+        <ul class="nav nav-pills nav-stacked">
+            <li class="active"><a href="javascript:HideAllShowOne('privacy)">Privacy Policy</a>
+            </ul>
+            </div></div>
+    </div>
+
+    <div class="col-md-9">
+    <div class="panel panel-default" style="background-color:#212f3f;color:#ffffff;">
+    <div class="panel-body">
+<h1>Privacy Policy</h1>
+</div></div>
+Open Access Button is committed to protecting the privacy of visitors to our website, as well as our users and activists. We have established this Privacy Policy to explain what information we collect through our website and how it is used. In this policy, Open Access Button refers to Open Access Button Student Team Members, Steering Committee Members, Advisory Board Members, developers and activists. 
+
+We do not sell or rent member, donor or website visitor information under any circumstances, and we do not share member, donor or visitor information without prior consent except as compelled by law. To date we have not received any requests for user information from any government or any law enforcement agency.  
+<h2>Data Storage</h2>
+All communications with our servers are transmitted over SSL (HTTPS) for both access to the public website as well as the API. The data is stored on servers in Europe, which are only accessible via <a href="https://en.wikipedia.org/wiki/Secure_Shell">Secure Shell Public Key Cryptography</a> and are fully firewalled. <a href="http://www.equinix.com/services/data-centers-colocation/standards-compliance/iso/">The data centres comply to these standards</a>.
+<h2>Cookies</h2>
+We use cookies are used for login accounts. Users remain logged in but this can be controlled by the user and their own browser. We use session cookies on certain portions of the website. Session cookies expire when you close your browser. If you wish to keep your connection information anonymous, there are various free and paid services available that will keep your connection information anonymous, but please note that you can still be identified if you log in.
+<h2>Our Use of Your Data</h2> 
+In general, the Open Access Button uses the data collected to further its Vision and Mission. We use user information to process and manage your membership. If you agree, we will use your email address to send you updates and alerts on Open Access and Open Access Advocacy. In addition to the metadata of the research papers, usernames, professions and approximate locations will be publicly displayed in our data. To protect your privacy, the location data we collect is blurred by 11 kilometres.
+<br></br>
+We use the information you supply in our Action Center to help you take action in support of Open Access, such as helping you in contacting your politicians, signing a petition or sharing a message on social media. We also may use Action Center information to assess the success of action campaigns and to improve the functionality and effectiveness of our site.
+<br></br>
+On occasion, we may use anonymised versions of the data for use in academic research, this research will also be used to further the mission of the Open Access Button and will only be used with approval of an institutional research ethics board. We will contact you prior to any use of the data for academic research. 
+
+<h2>Third Party Services</h2>
+Open Access Button also provides links to or interacts with a wide variety of third-party websites, including interactive links to sites like social media via application programming interfaces (APIs). Open Access Button is not responsible for, and does not have any control over, the privacy practices or the content of such third parties. We encourage users to read the privacy policies of any website visited via links from or interactions with the Open Access Button website. Where appropriate, we will provide specific notice of these third-party services at the point of interaction. 
+
+<h2>App Downloads</h2>
+The Open Access Button apps can be downloaded from Mozilla Addons, Chrome Web Store and Google Play Store. We encourage users to read the privacy policies of these stores.
+<h2>Disclosure of Your Data</h2>
+We will provide relevant data for use by advocates to further the mission of the Open Access Button. This data will be released on a dedicated data platform in the near future under a Creative Commons 0 licence. 
+We understand that some users may require a higher level of privacy in the data collected, if you'd like to maintain privacy dont use your real name as your username as it will be publicly displayed. In addition, please use a unique username that is not used on any other sites or service.
+<h2>Updating and Removing Your Data</h2>
+You may choose to correct, update, or delete the membership information you have submitted to us by sending an email requesting changes to hello@openaccessbutton.org. If we inadvertently collect more personal information than intended, we endeavor to delete the extraneous information. However, please understand that deleted information may continue to persist on backup media.
+<h2>Security</h2>
+Open Access Button has <a href="http://en.wikipedia.org/wiki/HTTP_Secure">HTTPS</a> turned on by default for both access to the public website as well as for our API. We make good faith efforts to store information collected by Open Access Button in an environment that is secure, however we cannot guarantee complete security. We will store any information collected for a  length of time appropriate to our needs. The data collected by the Open Access Button is stored on servers in Europe, which are only accessible via <a href="https://en.wikipedia.org/wiki/Secure_Shell">Secure Shell Public Key Cryptography</a> and are fully firewalled.
+<h2>Changes to Our Policies</h2>
+This policy is current as of October 21, 2014. Our Privacy Policy may change from time to time. However, any revised privacy policy will be consistent with our mission. If we make any substantive changes to our policies, we will place notice in our blog and post notice of changes on this page.
+<h2>Questions?</h2>
+Email legal@openaccessbutton.org
+<br></br>
+</div>
+
+</div>
+</div>
+
+
+  <div class="strap" id="footer" style="padding-top:80px;">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-6" style="border-right:1px solid #c8c8c8;min-height:200px;">
+          <p style="color:white;">
+            This work is licensed under a
+            <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+          </p>
+          <p style="color:white;"> 
+            Our code is <a href="https://opensource.org/licenses/MIT">open source</a>
+            and on <a href="https://github.com/oabutton">Github</a>.<br>
+            <a href="/support">Want to help?</a>
+          </p>
+          <p>
+            <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+              <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png">
+            </a>
+          </p>
+        </div>
+        <div class="col-md-3" style="min-height:200px;">
+          <ul style="list-style-type:none;margin-left:40px;">
+            <li><a href="/about">About us</a></li>
+            <li><a href="/support">Support us</a></li>
+            <li><a href="/resources">Resources</a></li>
+            <li><a href="/advocacy">Advocacy</a></li>
+            <li><a href="/blog">Blog</a></li>            
+          </ul>
+        </div>
+        <div class="col-md-3" style="text-align:right;">
+          <p>
+            <a alt="Find us on twitter" title="Find us on twitter" href="https://twitter.com/OA_Button" target="_blank"><i class="fa fa-twitter-square fa-5x" style="color:#4099FF;"></i></a>
+            <a alt="Find us on facebook" title="Find us on facebook"  href="https://www.facebook.com/openaccessbutton" target="_blank"><i class="fa fa-facebook-square fa-5x" style="padding-left:10px;color:#3B5998;"></i></a><br>
+            <a alt="Find us on github" title="Find us on github" href="https://github.com/oabutton" target="_blank"><i class="fa fa-github-square fa-5x" style="color:#767676;"></i></a>
+            <a alt="Contact us" title="Contact us" href="/contact" target="_blank"><i class="fa fa-envelope-square fa-5x action" style="padding-left:10px;"></i></a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-74685304-1', 'auto');
+  ga('send', 'pageview');
+  </script>
+
+
+</body></html>

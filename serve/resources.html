@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Open Access Button</title>
+  <meta name="description" content="">
+  <meta name="author" content="Cottage Labs">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+
+  <link href="/static/favicon.ico" rel="icon" type="image/x-icon">
+  
+  <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <script type="text/javascript" src="//static.cottagelabs.com/jquery-1.10.2.min.js"></script>
+  <script type="text/javascript" src="//static.cottagelabs.com/bootstrap-3.0.3/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="//static.cottagelabs.com/bootstrap-3.0.3/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <script type="text/javascript" src="//static.cottagelabs.com/holder/jquery.holder.min.js"></script>
+  <script type="text/javascript" src="//static.cottagelabs.com/fingerprint2.min.js"></script>
+  <script type="text/javascript" src="//static.cottagelabs.com/clogin.js"></script>
+
+  <link rel="stylesheet" href="/static/oabutton.css">
+  
+  <link href='//fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+
+  <!--<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/itemID"> enable this for chrome inline install-->
+  
+  <script>
+  jQuery(document).ready(function() {
+    var logged = clogin.loggedin();
+    if (logged) {
+      $('.cloggedin').show();
+      $('.notcloggedin').hide();
+      if ($('#downloader').is(':visible')) $('#downloader').remove(); // needs handled directly because of classes for hiding it on small and medium screens too
+    }
+  });
+  </script>
+  
+  <style>
+    markdown {
+      display:none;
+    }
+    .container-fluid {
+      margin:0 auto 0 auto;
+      padding-left:15px;
+      padding-right:15px;
+      max-width:1000px;
+    }
+    .navbar {
+        -webkit-box-shadow: 0 1px 1px 0 rgba(51,51,51,1);
+        -moz-box-shadow: 0 1px 1px 0 rgba(51,51,51,1);
+        box-shadow: 0 1px 1px 0 rgba(51,51,51,1);
+    }
+    .navbar-nav li a{
+      font-size:1em;
+      color:#212f3f;
+      height:51px;
+      padding:13px 10px 13px 10px;
+    }
+    .navbar-nav{
+      height:50px;
+    }
+    .navbar-alert{
+      height:35px;
+      text-align:center;
+      vertical-align:middle;
+    }
+    .p-alert{
+    padding-top:3px;
+    }
+  </style>
+</head>
+<body>
+  <div id="topnav" class="navbar navbar-fixed-top" style="background-color:white;">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"  style="z-index:1000000;">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="glyphicon glyphicon-list"></span>
+        </button>
+        <ul class="nav navbar-nav">
+          <li class="hidden-xs hidden-sm"><img class="img" src="/static/icon_OAB.png" style="height:45px;margin-top:6px;"></li>
+          <li><a href="/" style="font-size:18px;">Open Access Button</a></li>
+        </ul>
+      </div>
+      <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav pull-right">
+          <!--<li><a href="/request/new"><i class="glyphicon glyphicon-plus"></i> Create a request</a></li>-->
+          <li><a href="/request"><i class="glyphicon glyphicon-search"></i> Contribute to requests</a></li>
+          <li class="cloggedin" style="display:none;"><a href="/account" style="padding-top:16px;">Your account</a></li>
+          <li class="notcloggedin"><a href="/account" style="padding-top:16px;">Login</a></li>
+          <li id="downloader" class="hidden-xs hidden-sm notcloggedin" style="background-color:#398bc5;color:#212f3f;height:55px;z-index:10000;
+          -webkit-border-bottom-right-radius: 5px;-webkit-border-bottom-left-radius: 5px;
+          -moz-border-radius-bottomright: 5px;-moz-border-radius-bottomleft: 5px;border-bottom-right-radius: 5px;border-bottom-left-radius: 5px;">
+          <a href="/account" style="font-size:1.2em;font-weight:bold;">Download</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+<style>
+.solid_card {
+    background-color: #212f3f;
+    color: #FFF;
+    padding: 10px 10px 10px 10px;
+    margin: 10px 10px 10px 10px;
+    border-radius: 15px;
+    }
+.border_card {
+    border-style: solid;
+    border-width: 2px;
+    border-color: #212f3f;
+    padding: 10px 10px 10px 10px;
+    margin: 10px 10px 10px 10px;
+    border-radius: 15px;
+    }
+.btn-primary {
+  color: #fff;
+  background-color: #3276b1;
+  border-color: #357ebd;
+}
+.solid_blue {
+    background-color: #212f3f;
+    color: #FFF;
+}
+.btn-orange {
+  color: #fff;
+  background-color: #f04717;
+  border-color: #357ebd;
+}
+.btn-odb {
+  color: #fff;
+  background-color: #398bc5;
+  border-color: #357ebd;
+}
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.open .dropdown-toggle.btn-primary {
+  color: #ffffff;
+  background-color: #f04717;
+  border-color: #f04717;
+}
+</style>
+
+<div class="container-fluid"  style="text-align:center;">
+<div class="row">
+<div class="col-md-12">
+<div class="solid_blue" style="padding:5px 0 20px 0;">
+<h2>Open Access Resources</h2>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-6">
+<h3>Using our stories and data</h3>
+<h4>Why</h4><p>Personal stories and visuals are powerful. They illustrate in a way abstract ideas can't demonstrate the value of openness. Our stories are generated by real people trying access real research, and try to demonstrate how we'd benefit from making research open.</p><h4>How</h4><p>Our stories, requests and maps are embedable and searchable. You can search requests <a href "www.openaccessbutton.org/request">here</a>. On each request page you will find code to paste into a HTML editor to display your request.</p>
+</div>
+<div class="col-md-6">
+<h3>Resources from across the web</h3>
+<p>The Open Access Button needs fantastic resources for engaging authors around Open Access to be successful. We're compiling resources we use below. If we've missed a resource, let us know.</p></div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+<div class="solid_blue" style="padding:5px 0 20px 0;">
+<h2>What is Open Access?</h2><a name="what"></a>
+<p>Open Access is the free, immediate, online availabiliy of research articles, coupled with full re-use rights.</p>
+    </div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+  <div class="col-md-3">
+    <div class="card card-block  border_card">
+      <h3 class="card-title">Budapest Open Access Initiative</h3>
+      <p class="card-text">The 2002 Budapest Open Access Initiative outlines the principles of Open Access, and defines Open Access as the free availability and full re-use of research articles.</p>
+      <a href="http://www.budapestopenaccessinitiative.org/read" target="_blank" class="btn btn-primary">Read the BOAI</a>
+      </div>
+    </div>
+  <div class="col-md-3">
+    <div class="card card-block  solid_card">
+      <h3 class="card-title">Open Access Explained!</h3>
+      <p class="card-text">This video by PhD Comics with narration by Nick Shockey and Jonathan Eisen provides an illustrated explanation of Open Access.</p>
+      <a href="https://www.youtube.com/watch?v=L5rVH1KGBCY" target="_blank" class="btn btn-primary">Watch the Video</a>
+    </div>
+</div>
+    <div class="col-md-3">
+      <div class="card card-block  border_card">
+      <h3 class="card-title">Licenses Powering Open Access</h3>
+      <p class="card-text">Open Access publications that are re-usable typically utilise a Creative Commons license.</p>
+      <a href="https://creativecommons.org/share-your-work/licensing-types-examples/" target="_blank" class="btn btn-primary">Find out more</a>
+    </div>
+</div>
+      <div class="col-md-3">
+      <div class="card card-block  solid_card">
+      <h3 class="card-title">Two pager explaining Open Access</h3>
+      <p class="card-text">Our friends at SPARC have put together a clear, concise factsheet explaining Open Access.</p>
+      <a href="http://sparcopen.org/wp-content/uploads/2016/01/SPARC-Open-Access-Factsheet.pdf" target="_blank" class="btn btn-primary">Get the factsheet</a>
+    </div>
+  </div>
+ </div>
+  </div>
+  
+ <div class="row">
+<div class="col-md-12">
+<div class="solid_blue" style="padding:5px 0 20px 0;">
+ <h2>How can I make my research Open Access?</h2><a name="how"></a>
+ <p> Research can be made Open Access by publishing in an Open Access journal or archiving for free in a repository.</p>
+ </div>
+ </div>
+  </div>
+  
+<div class="row">
+<div class="col-md-12">
+  <div class="col-md-3">
+    <div class="card card-block solid_card">
+      <h3 class="card-title">Deposit in your institutional repository</h3>
+      <p class="card-text"></p>
+      <a href="http://roarmap.eprints.org" target="_blank" class="btn btn-primary">Find yours now</a>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card card-block border_card">
+      <h3 class="card-title">Deposit in a subject repository</h3>
+      <p class="card-text"></p>
+      <a href="#" class="btn btn-primary">Find yours now</a>
+    </div>
+  </div>
+    <div class="col-md-3">
+      <div class="card card-block solid_card">
+      <h3 class="card-title">Deposit with Figshare</h3>
+      <p class="card-text">Figshare is an online digital repository where researchers can preserve and share their research outputs, including figures, datasets, images, and videos. It is free to upload content and free to access.</p>
+      <a href="http://www.figshare.com" target="_blank" class="btn btn-primary">Check it out</a>
+    </div>
+  </div>
+      <div class="col-md-3">
+      <div class="card card-block border_card">
+      <h3 class="card-title">Deposit with Zenodo</h3>
+      <p class="card-text">Zenodo is an open dependable home for the long-tail of science, enabling researchers to share and preserve any research outputs in any size, any format and from any science.</p>
+      <a href="http://zenodo.org" class="btn btn-primary">Check it out</a>
+    </div>
+  </div>
+ </div>
+  </div>
+<div class="row">
+<div class="col-md-12">
+  <div class="col-md-3">
+     <div class="card card-block border_card">
+      <h3 class="card-title">SHERPA/RoMEO</h3>
+      <p class="card-text">SHERPA/RoMEO is a resource that lists copyright and archiving policies for journals. Use it to learn if you're able to archive your research.</p>
+      <a href="http://www.sherpa.ac.uk/romeo/index.php" target="_blank" class="btn btn-primary">Check it out</a>
+    </div>
+     </div>
+<div class="col-md-3">
+      <div class="card card-block solid_card">
+      <h3 class="card-title">Directory of Open Access Journals (DOAJ)</h3>
+      <p class="card-text">The DOAJ is an online directory that lists nearly 9,000 highly quality, peer reviewed Open Access journals.</p>
+      <a href="https://doaj.org/" target="_blank" class="btn btn-primary">Check it out</a>
+    </div>
+     </div>
+    <div class="col-md-3">
+      <div class="card card-block border_card">
+      <h3 class="card-title">Think we're missing something?</h3>
+      <p class="card-text"></p>
+      <a href="https://opendatabutton.org/general-feedback" target="_blank" class="btn btn-primary">Let us know</a>
+    </div>
+    </div>
+  <div class="col-md-3">
+    <div class="card card-block solid_card">
+      <h3 class="card-title">We're looking best practice examples from your field!</h3>
+      <p class="card-text"></p>
+      <a href="https://opendatabutton.org/general-feedback" class="btn btn-primary">Let us know</a>
+    </div>
+  </div>
+ </div>
+</div>
+
+<div class="row">
+<div class="col-md-12">
+<div class="solid_blue" style="padding:5px 0 20px 0;">
+<h2>Why make your research Open Access?</h2><a name="why"></a>
+<p>Open Access increases the impact of research, makes research more discoverable, and accelerates innovation.</p>
+</div>
+</div>
+ </div>
+
+<div class="row">
+<div class="col-md-12">
+  <div class="col-md-3">
+      <div class="card card-block solid_card">
+      <h3 class="card-title">Why Open Research?</h3>
+      <p class="card-text">You can advance your career by sharing your research.</p>
+      <a href="http://whyopenresearch.org/" class="btn btn-primary">Learn how</a>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card card-block border_card">
+      <h3 class="card-title">The Benefits of Open Access</h3>
+      <p class="card-text">From increased access and visibility to higher citation counts Open Access benefits researchers and readers. </p>
+      <a href="http://sparceurope.org/open-access/benefits-of-open-access/" class="btn btn-primary">Learn more</a>
+    </div>
+  </div>
+    <div class="col-md-3">
+      <div class="card card-block solid_card">
+      <h3 class="card-title">Citation Advantages for all disciplines</h3>
+      <p class="card-text">Across all fields, Open Access articles in repositories have a higher citation rate than non-Open Access articles.</p>
+      <a href="http://blogs.lse.ac.uk/impactofsocialsciences/2014/06/30/open-access-citation-advantage-chalmers/" class="btn btn-primary">Read more</a>
+    </div>
+     </div>
+      <div class="col-md-3">
+    <div class="card card-block border_card">
+      <h3 class="card-title">Funders Require Open Access</h3>
+      <p class="card-text">SHERPA/JULIET is a resource that lists the Open Access policies of funders. Discover if your funder requires Open Access. </p>
+      <a href="http://www.sherpa.ac.uk/juliet/index.php" class="btn btn-primary">Check it out</a>
+    </div>
+  </div>
+    </div>
+  </div>
+</div>
+ </div>
+ </div>
+
+</div>
+
+
+  <div class="strap" id="footer" style="padding-top:80px;">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-6" style="border-right:1px solid #c8c8c8;min-height:200px;">
+          <p style="color:white;">
+            This work is licensed under a
+            <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+          </p>
+          <p style="color:white;"> 
+            Our code is <a href="https://opensource.org/licenses/MIT">open source</a>
+            and on <a href="https://github.com/oabutton">Github</a>.<br>
+            <a href="/support">Want to help?</a>
+          </p>
+          <p>
+            <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+              <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png">
+            </a>
+          </p>
+        </div>
+        <div class="col-md-3" style="min-height:200px;">
+          <ul style="list-style-type:none;margin-left:40px;">
+            <li><a href="/about">About us</a></li>
+            <li><a href="/support">Support us</a></li>
+            <li><a href="/resources">Resources</a></li>
+            <li><a href="/advocacy">Advocacy</a></li>
+            <li><a href="/blog">Blog</a></li>            
+          </ul>
+        </div>
+        <div class="col-md-3" style="text-align:right;">
+          <p>
+            <a alt="Find us on twitter" title="Find us on twitter" href="https://twitter.com/OA_Button" target="_blank"><i class="fa fa-twitter-square fa-5x" style="color:#4099FF;"></i></a>
+            <a alt="Find us on facebook" title="Find us on facebook"  href="https://www.facebook.com/openaccessbutton" target="_blank"><i class="fa fa-facebook-square fa-5x" style="padding-left:10px;color:#3B5998;"></i></a><br>
+            <a alt="Find us on github" title="Find us on github" href="https://github.com/oabutton" target="_blank"><i class="fa fa-github-square fa-5x" style="color:#767676;"></i></a>
+            <a alt="Contact us" title="Contact us" href="/contact" target="_blank"><i class="fa fa-envelope-square fa-5x action" style="padding-left:10px;"></i></a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-74685304-1', 'auto');
+  ga('send', 'pageview');
+  </script>
+
+
+</body></html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Open Access Button</title>
+  <meta name="description" content="">
+  <meta name="author" content="Cottage Labs">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+
+  <link href="/static/favicon.ico" rel="icon" type="image/x-icon">
+  
+  <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <script type="text/javascript" src="//static.cottagelabs.com/jquery-1.10.2.min.js"></script>
+  <script type="text/javascript" src="//static.cottagelabs.com/bootstrap-3.0.3/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="//static.cottagelabs.com/bootstrap-3.0.3/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <script type="text/javascript" src="//static.cottagelabs.com/holder/jquery.holder.min.js"></script>
+  <script type="text/javascript" src="//static.cottagelabs.com/fingerprint2.min.js"></script>
+  <script type="text/javascript" src="//static.cottagelabs.com/clogin.js"></script>
+
+  <link rel="stylesheet" href="/static/oabutton.css">
+  
+  <link href='//fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+
+  <!--<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/itemID"> enable this for chrome inline install-->
+  
+  <script>
+  jQuery(document).ready(function() {
+    var logged = clogin.loggedin();
+    if (logged) {
+      $('.cloggedin').show();
+      $('.notcloggedin').hide();
+      if ($('#downloader').is(':visible')) $('#downloader').remove(); // needs handled directly because of classes for hiding it on small and medium screens too
+    }
+  });
+  </script>
+  
+  <style>
+    markdown {
+      display:none;
+    }
+    .container-fluid {
+      margin:0 auto 0 auto;
+      padding-left:15px;
+      padding-right:15px;
+      max-width:1000px;
+    }
+    .navbar {
+        -webkit-box-shadow: 0 1px 1px 0 rgba(51,51,51,1);
+        -moz-box-shadow: 0 1px 1px 0 rgba(51,51,51,1);
+        box-shadow: 0 1px 1px 0 rgba(51,51,51,1);
+    }
+    .navbar-nav li a{
+      font-size:1em;
+      color:#212f3f;
+      height:51px;
+      padding:13px 10px 13px 10px;
+    }
+    .navbar-nav{
+      height:50px;
+    }
+    .navbar-alert{
+      height:35px;
+      text-align:center;
+      vertical-align:middle;
+    }
+    .p-alert{
+    padding-top:3px;
+    }
+  </style>
+</head>
+<body>
+  <div id="topnav" class="navbar navbar-fixed-top" style="background-color:white;">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"  style="z-index:1000000;">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="glyphicon glyphicon-list"></span>
+        </button>
+        <ul class="nav navbar-nav">
+          <li class="hidden-xs hidden-sm"><img class="img" src="/static/icon_OAB.png" style="height:45px;margin-top:6px;"></li>
+          <li><a href="/" style="font-size:18px;">Open Access Button</a></li>
+        </ul>
+      </div>
+      <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav pull-right">
+          <!--<li><a href="/request/new"><i class="glyphicon glyphicon-plus"></i> Create a request</a></li>-->
+          <li><a href="/request"><i class="glyphicon glyphicon-search"></i> Contribute to requests</a></li>
+          <li class="cloggedin" style="display:none;"><a href="/account" style="padding-top:16px;">Your account</a></li>
+          <li class="notcloggedin"><a href="/account" style="padding-top:16px;">Login</a></li>
+          <li id="downloader" class="hidden-xs hidden-sm notcloggedin" style="background-color:#398bc5;color:#212f3f;height:55px;z-index:10000;
+          -webkit-border-bottom-right-radius: 5px;-webkit-border-bottom-left-radius: 5px;
+          -moz-border-radius-bottomright: 5px;-moz-border-radius-bottomleft: 5px;border-bottom-right-radius: 5px;border-bottom-left-radius: 5px;">
+          <a href="/account" style="font-size:1.2em;font-weight:bold;">Download</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="jumbotron">
+        <h1>
+          Hi! Sorry, we are down for maintenance a little bit today, 19th May 2016.
+        </h1>        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <div class="strap" id="footer" style="padding-top:80px;">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-6" style="border-right:1px solid #c8c8c8;min-height:200px;">
+          <p style="color:white;">
+            This work is licensed under a
+            <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+          </p>
+          <p style="color:white;"> 
+            Our code is <a href="https://opensource.org/licenses/MIT">open source</a>
+            and on <a href="https://github.com/oabutton">Github</a>.<br>
+            <a href="/support">Want to help?</a>
+          </p>
+          <p>
+            <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+              <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png">
+            </a>
+          </p>
+        </div>
+        <div class="col-md-3" style="min-height:200px;">
+          <ul style="list-style-type:none;margin-left:40px;">
+            <li><a href="/about">About us</a></li>
+            <li><a href="/support">Support us</a></li>
+            <li><a href="/resources">Resources</a></li>
+            <li><a href="/advocacy">Advocacy</a></li>
+            <li><a href="/blog">Blog</a></li>            
+          </ul>
+        </div>
+        <div class="col-md-3" style="text-align:right;">
+          <p>
+            <a alt="Find us on twitter" title="Find us on twitter" href="https://twitter.com/OA_Button" target="_blank"><i class="fa fa-twitter-square fa-5x" style="color:#4099FF;"></i></a>
+            <a alt="Find us on facebook" title="Find us on facebook"  href="https://www.facebook.com/openaccessbutton" target="_blank"><i class="fa fa-facebook-square fa-5x" style="padding-left:10px;color:#3B5998;"></i></a><br>
+            <a alt="Find us on github" title="Find us on github" href="https://github.com/oabutton" target="_blank"><i class="fa fa-github-square fa-5x" style="color:#767676;"></i></a>
+            <a alt="Contact us" title="Contact us" href="/contact" target="_blank"><i class="fa fa-envelope-square fa-5x action" style="padding-left:10px;"></i></a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-74685304-1', 'auto');
+  ga('send', 'pageview');
+  </script>
+
+
+</body></html>

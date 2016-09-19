@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Open Access Button</title>
+  <meta name="description" content="">
+  <meta name="author" content="Cottage Labs">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+
+  <link href="/static/favicon.ico" rel="icon" type="image/x-icon">
+  
+  <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <script type="text/javascript" src="//static.cottagelabs.com/jquery-1.10.2.min.js"></script>
+  <script type="text/javascript" src="//static.cottagelabs.com/bootstrap-3.0.3/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="//static.cottagelabs.com/bootstrap-3.0.3/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <script type="text/javascript" src="//static.cottagelabs.com/holder/jquery.holder.min.js"></script>
+  <script type="text/javascript" src="//static.cottagelabs.com/fingerprint2.min.js"></script>
+  <script type="text/javascript" src="//static.cottagelabs.com/clogin.js"></script>
+
+  <link rel="stylesheet" href="/static/oabutton.css">
+  
+  <link href='//fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+
+  <!--<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/itemID"> enable this for chrome inline install-->
+  
+  <script>
+  jQuery(document).ready(function() {
+    var logged = clogin.loggedin();
+    if (logged) {
+      $('.cloggedin').show();
+      $('.notcloggedin').hide();
+      if ($('#downloader').is(':visible')) $('#downloader').remove(); // needs handled directly because of classes for hiding it on small and medium screens too
+    }
+  });
+  </script>
+  
+  <style>
+    markdown {
+      display:none;
+    }
+    .container-fluid {
+      margin:0 auto 0 auto;
+      padding-left:15px;
+      padding-right:15px;
+      max-width:1000px;
+    }
+    .navbar {
+        -webkit-box-shadow: 0 1px 1px 0 rgba(51,51,51,1);
+        -moz-box-shadow: 0 1px 1px 0 rgba(51,51,51,1);
+        box-shadow: 0 1px 1px 0 rgba(51,51,51,1);
+    }
+    .navbar-nav li a{
+      font-size:1em;
+      color:#212f3f;
+      height:51px;
+      padding:13px 10px 13px 10px;
+    }
+    .navbar-nav{
+      height:50px;
+    }
+    .navbar-alert{
+      height:35px;
+      text-align:center;
+      vertical-align:middle;
+    }
+    .p-alert{
+    padding-top:3px;
+    }
+  </style>
+</head>
+<body>
+  <div id="topnav" class="navbar navbar-fixed-top" style="background-color:white;">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"  style="z-index:1000000;">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="glyphicon glyphicon-list"></span>
+        </button>
+        <ul class="nav navbar-nav">
+          <li class="hidden-xs hidden-sm"><img class="img" src="/static/icon_OAB.png" style="height:45px;margin-top:6px;"></li>
+          <li><a href="/" style="font-size:18px;">Open Access Button</a></li>
+        </ul>
+      </div>
+      <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav pull-right">
+          <!--<li><a href="/request/new"><i class="glyphicon glyphicon-plus"></i> Create a request</a></li>-->
+          <li><a href="/request"><i class="glyphicon glyphicon-search"></i> Contribute to requests</a></li>
+          <li class="cloggedin" style="display:none;"><a href="/account" style="padding-top:16px;">Your account</a></li>
+          <li class="notcloggedin"><a href="/account" style="padding-top:16px;">Login</a></li>
+          <li id="downloader" class="hidden-xs hidden-sm notcloggedin" style="background-color:#398bc5;color:#212f3f;height:55px;z-index:10000;
+          -webkit-border-bottom-right-radius: 5px;-webkit-border-bottom-left-radius: 5px;
+          -moz-border-radius-bottomright: 5px;-moz-border-radius-bottomleft: 5px;border-bottom-right-radius: 5px;border-bottom-left-radius: 5px;">
+          <a href="/account" style="font-size:1.2em;font-weight:bold;">Download</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+<script type="text/javascript" language="JavaScript"><!--
+
+document.addEventListener("DOMContentLoaded", function(){
+    if (window.location.hash.length > 0){
+     HideAllShowOne(window.location.hash.slice(1));
+    }
+    else{
+    HideAllShowOne('landing');
+    }
+ });
+
+function HideAllShowOne(d) {
+// Between the quotation marks, list the id values of each div.
+    var IDvaluesOfEachDiv = "landing howitworks history press team steering developers governance contact faq thanks";
+    //-------------------------------------------------------------
+    IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/[,\s"']/g," ");
+    IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/^\s*/,"");
+    IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/\s*$/,"");
+    IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/  +/g," ");
+    var IDlist = IDvaluesOfEachDiv.split(" ");
+    for(var i in IDlist) {
+        HideContent(IDlist[i]);
+    ShowContent(d);
+    }
+    parent.location.hash = d;
+    window.scrollTo(0, 0);
+}
+
+function HideContent(d) {
+document.getElementById(d).style.display = "none";
+}
+function ShowContent(d) {
+document.getElementById(d).style.display = "block";
+}
+function ReverseDisplay(d) {
+if(document.getElementById(d).style.display == "none") { document.getElementById(d).style.display = "block"; }
+else { document.getElementById(d).style.display = "none"; }
+}
+
+//--></script>
+
+<div class="container-fluid">
+<div class="row">
+<div class="col-md-3" position="fixed">
+<div class="panel panel-default">
+<div class="panel-body">
+<ul class="nav nav-pills nav-stacked">
+<li class="active"><a href="javascript:HideAllShowOne('howitworks')">How it Works</a>
+<li class="active"><a href="javascript:HideAllShowOne('history')">History</a>
+<li class="active"><a href="javascript:HideAllShowOne('press')">Press</a>
+<li class="active"><a href="javascript:HideAllShowOne('team')">Student Team</a>
+<li class="active"><a href="javascript:HideAllShowOne('steering')">Steering Committee</a>
+<li class="active"><a href="javascript:HideAllShowOne('developers')">Developers</a>
+<li class="active"><a href="javascript:HideAllShowOne('governance')">Governance</a>
+<li class="active"><a href="javascript:HideAllShowOne('contact')">Contact</a>
+<li class="active"><a href="javascript:HideAllShowOne('faq')">FAQ</a>
+<li class="active"><a href="javascript:HideAllShowOne('thanks')">Thanks To</a>
+</ul>
+
+</div>
+
+<p></div>
+</div>
+<div class="col-md-9">
+<div class="panel panel-default" style="background-color:#212f3f;color:#ffffff;">
+<div class="panel-body">
+<h1><a href="javascript:HideAllShowOne('landing')" style="color:#fff">About Us</a></h1>
+</div>
+</div></p>
+<div id="landing" style="display:block"><a name="landing"></a>
+<h2>About the Open Access Button</h2>
+  <h2 style="color:red;">
+    TODO add Legal and contact info into about section, and also the about blurb from opendatabutton
+  </h2>
+The Open Access Button is an app that helps researchers, patients, students and the public get access to scholarly research and to report when they're denied access. Since November 2013, we have recorded tens of thousands of instances where people were denied access to research. 
+</br></br>
+Our team is committed to supporting Open Access and to fixing the barriers limiting access research. You can learn more about our  <a href="javascript:HideAllShowOne('history')">history</a>,  <a href="javascript:HideAllShowOne('team')">who we are</a> and  <a href="javascript:HideAllShowOne('governance')">what we do</a>! 
+</br></br>
+If you want to know more about how the <a href="javascript:HideAllShowOne('howitworks')">Open Access Button works</a> visit our <a href="javascript:HideAllShowOne('faq')">FAQ</a> or <a href="javascript:HideAllShowOne('contact')">contact</a> us with your questions!
+</div>
+
+<div id="howitworks" style="display:none">
+<h1>How it works </h1><a name="howitworks"></a>
+The key functions of the Open Access Button are finding free research, making more research available and also advocacy. Here's how each works.
+
+<h3>Finding free papers</h3>
+Research published in journals that require you to pay to read can sometimes be accessed free in other places. These other copies are often very similar to the published version, but may lack nice formatting or be a version prior to peer review. These copies can be found in research repositories, on authors websites and many other places because they're archived. To find these versions we identify the paper a user needs and effectively search on <a href="http://scholar.google.com" target="_blank">Google Scholar</a> and <a href="http://core.kmi.open.ac.uk/" target="_blank">CORE</a> to find these copies and link them to the users.
+
+<h3>Making more research, or information about papers available</h3>
+If a free copy isn't available we aim to make one. This is not a simple task and so we have to use a few different innovative strategies. First, we email the author of the research and ask them to make a copy of the research available  - once they do this we'll send it to everyone who needs it. Second, we create pages for each paper needed which, if shared, viewed, and linked to an author could see and provide their paper on. Third, we're building ways to find associated information about a paper such as the facts contained, comments from people who've read it, related information and lay summaries.
+
+<h3>Advocacy</h3>
+Unfortunately the Open Access Button can only do so much, and isn't a perfect or long term solution to this problem. The data and stories collected by the Button are used to help make the changes required to really solve this issue. We also support campaigns and grassroots advocates with this at <a href="action">openaccessbutton.org/action</a>.
+</div>
+
+<div id="history" style="display:none">
+<h1>History</h1><a name="history"></a>
+<p>Since November 2013, the Open Access Button has been giving  a voice to researchers who can't access what they need and helping them make progress with their research. The Button was founded by two students, Joseph McArthur and David Carroll, who knew next to nothing about Open Access - but were tired of hitting paywalls. Although they couldn't code, over the course of a weekend at a <a href = "http://www.bmj.com/content/347/bmj.f4437">BMJ hackday</a> they build the first version of the button. </p>
+<p>Today, the button is run by volunteer students and early career professionals around the world tired of not being able to get the research they need. Together they work to build apps, tell stories, and support campaigns which will help make this problem a thing of the past.</p>
+</br>
+<p>The Open Access Button has been supported by <a href="http://righttoresearch.org" target="_blank">Right to Research Coalition</a>, <a href="http://www.sparcopen.org" target="_blank">SPARC</a> and <a href="about/#thanks">many others</a></p>.
+</div>
+
+<div id="press" style="display:none">
+<h1>Press Information</h1><a name="press"></a>
+Want to write about the Open Access and Open Data Button? On this page you'll find everything you need to do it.
+
+<h3>Recent press releases</h3>
+
+<a href="https://openaccessbutton.org/blog/open-data-button-is-here" >New App Helps Researchers Share Data Openly
+</a></br>
+<a href="https://openaccessbutton.org/blog/new-apps-find-free-access-to-scientific-and-scholarly-research" >New apps find free access to scientific and scholarly research</a></br>
+<a href="http://blog.openaccessbutton.org/2014/07/14/open-access-button-to-partner-with-cottage-labs-to-further-develop-the-open-access-button">Open Access Button Partners with Cottage Labs</a></br>
+<a href="http://blog.openaccessbutton.org/2013/11/18/students-launch-button-to-put-denied-access-to-research-on-the-map">Open Access Button Beta Launches</a></br>
+
+<h3>Interviews, comments and quotes </h3>
+
+Please contact media@openaccessbutton.org or +44732634892 to speak to the Open Access Button team. We will respond to you as soon as possible.
+
+<h3>Previous Stories</h3>
+
+<a href = "https://www.theguardian.com/science/2013/nov/18/open-access-button-push">Guardian (Open Access Button Beta)</a><br>
+<a href = "http://blogs.scientificamerican.com/information-culture/the-open-access-button-discovering-when-and-where-researchers-hit-paywalls/">Scientific America (Open Access Button Beta)</a><br>
+<a href = "http://venturebeat.com/2014/10/23/open-access-button-gets-expanded-features-to-help-users-find-free-scholarly-researc/">Venure Beat (Open Access Button Full Release)</a><br>
+<a href = "http://www.huffingtonpost.co.uk/will-ross/new-app-makes-research-ac_b_6019428.html">Huffington Post (Open Access Button Full Release)</a>
+<a href = "http://www.bmj.com/content/347/bmj.f4437">BMJ</a><br>
+<a href = "http://sparcopen.org/our-work/innovator/open-access-button/">SPARC Innovator Award (Founding story)</a>
+
+<h3>More information on: </h3>
+
+<a href="http://www.sparc.arl.org/issues/open-access">Open Access</a></br>
+<a href="#how">Our features</a></br>
+<a href="#faq">FAQs</a></br>
+<a href="#history">Our background</a></br>
+<a href="#team">Team</a>
+<a href="/support#fund">Funders</a>
+
+<h3>Images</h3>
+<a href = "https://www.flickr.com/photos/128805157@N06/?">Open Data Button Album</a><br>
+Open Access Button Logo: <a href="https://www.flickr.com/photos/128805157@N06/15381941780/in/set-72157648428785969?rb=1" target="_blank">Alone</a>,
+<a href="https://www.flickr.com/photos/128805157@N06/15564891821/in/set-72157648428785969" target="_blank">Vertical Text</a>,
+<a href="https://www.flickr.com/photos/128805157@N06/15566136412/" target="_blank">Horizontal Text</a>
+</br>
+Open Access Button Slogan Graphic:
+<a href="https://www.flickr.com/photos/128805157@N06/15381569297/in/set-72157648428785969" target="blank">Horizontal Panel</a>,
+<a href="https://www.flickr.com/photos/128805157@N06/15564913301/in/set-72157648428785969" target="blank">Push Button alone</a>,
+<a href="https://www.flickr.com/photos/128805157@N06/14947415653/in/set-72157648428785969" target="blank">Get Research alone</a>,
+<a href="https://www.flickr.com/photos/128805157@N06/15567588115/in/set-72157648428785969/" target="blank">Make Progress alone</a>
+</br>
+Mozilla extension (20/10/14): Image 1, 2 and 3
+</br>
+Chrome extension (20/10/14): Image 1, 2 and 3
+</br>
+Android app (20/10/14): Image 1, 2 and 3
+</br>
+Website (20/10/14): Homepage, Map, Stories page
+</br>
+Team: Founders (
+<a href="https://www.flickr.com/photos/128805157@N06/15381758547/" target="_blank">1</a>,
+<a href="https://www.flickr.com/photos/128805157@N06/15382141920/in/photostream/" target="_blank">2</a>),
+<a href="https://www.flickr.com/photos/128805157@N06/15382146370/" target="_blank">January 2013 Team Photo</a>,
+<a href="https://www.flickr.com/photos/128805157@N06/15544091356/" target="_blank">Button Hackday</a>
+
+<h3>General Open Access Images</h3>
+
+<a href="http://en.wikipedia.org/wiki/Open_access#mediaviewer/File:Open_Access_logo_PLoS_white.svg" target="_blank">Open Access Logo</a>
+</br>
+<a href="http://api.ning.com/files/fD9AJ*g4L*kkPOgcSV92jv7eZxwaRkN-H8OVPFwOGyBvSiBWfAim2RWQp7IKKrJX0*Z6UaIZR5nIR6eJdgzd-kslQj6KJRWD/OAlogo.jpg" target="_blank">Open Access Logo with Text</a>
+</br>
+<a href="http://api.ning.com/files/57eloaC8PTj*QnOY8I*rE8AB9mfvLTveJvZkEwhHpCW64o9NSvLv7RxtyLKtlGA9th0fanBUqHSxuqE6JIEzflD9ov3Ssx*h/header_865x180.jpg" target="_blank">Open Access Week logo</a>
+</br>
+Images of paywalls (<a href="https://www.flickr.com/photos/dullhunk/6885585302/in/pool-open-access-irony-award" target="_blank">1</a>,
+<a href="https://www.flickr.com/photos/dullhunk/6875273607/in/pool-open-access-irony-award" target="_blank">2</a>,
+<a href="https://www.flickr.com/photos/dullhunk/8653757940/in/pool-open-access-irony-award" target="_blank">3</a>,
+<a href="https://www.dropbox.com/s/r52iuaygzwkxz46/Screenshot%202014-10-16%2017.38.06.png?dl=0" target="_blank">4</a>)
+
+<h3>Style request</h3>
+
+We request that when writing the abbreviation "OA Button" isn't used, we prefer "Open Access Button" or the "The Button" in the context of some Open Access Button branding.
+</div>
+
+<div id="team" style="display:none">
+<h1>Student & Early Career Professional Team</h1><a name="team"></a><a name="student"></a>
+
+<p>The button is supported by a diverse team of committed volunteers from around the world.</p>
+
+David Carroll, Co-Lead</br>
+&nbsp;&nbsp;Medical Student. Belfast, Northern Ireland.</br>
+Joe McArthur, Co-Lead</br>
+&nbsp;&nbsp;Assistant Director, Right to Research Coalition. London, England.</br>
+Georgina Taylor, Co-Lead</br>
+&nbsp;&nbsp;Junior doctor. Darwin, Australia.</br>
+</br>
+Sarah Melton, Community + Advocacy Coordinator</br>
+&nbsp;&nbsp;PhD Student. Atlanta, USA.</br>
+Chealsye Bowley, Communications Lead</br>
+&nbsp;&nbsp;Scholarly Communication Librarian. Texas, USA.</br>
+Alexandra Giannopoulou, Communication + Advocacy Officer</br>
+&nbsp;&nbsp;PhD Law Student, Universite Paris II Pantheon Assas</br>
+Martin Bentley, Technology Assistant</br>
+&nbsp;&nbsp;Geology/computing science MSc student. Port Elizabeth, South Africa. </br>
+Luke Barnes, Secretary</br>
+&nbsp;&nbsp;Molecular Biology student. Cardiff, Wales</br>
+Gennie Gebhart, Team member</br>
+&nbsp;&nbsp;Library and information science student. Washington State, USA.</br>
+<br>
+<h4>Past Members</h4>
+Juan L&oacute;pez-Tavera</br>
+Natalie Catherwood</br>
+Jim McGrath</br>
+Rachael Patton</br>
+Fabian Falkenbach</br>
+Lydia Zvyagintseva</br>
+Sucheta Tiwari</br>
+Margaux Larre-Perez</br>
+Dave Bennett</br>
+Reshma Ramachandran</br>
+Megan Waples</br>
+Minuette Le</br>
+Joseph Paul</br>
+Heidi Dowding</br>
+Natalia Norori</br>
+Penny Andrews</br>
+Rigel Hope</br>
+Jess Warren</br>
+</div>
+
+<div id="steering" style="display:none">
+<h1>Steering Committee</h1><a name="steering"></a>
+     <h4>Nicole Allen</h4>
+     Director of Open Education for the Scholarly Publishing and Academic Resources Coalition (SPARC) based in Washington, DC.
+     <h4>Christine Fruin</h4>
+     Associate University Librarian for Scholarly Communications at the University of Florida's George A. Smathers Libraries,
+     <h4>Nick Hammer</h4>
+     Executive Administrator for the Public Library of Science.
+     <h4>Adi Kamdar</h4>
+     Activist at the Electronic Frontier Foundation.
+     <h4>Iryna Kuchma</h4>
+     Open Access programme manager at EIFL.
+     <h4>Victor Ng</h4>
+     Engineer for Mozilla Corporation.
+     <h4>Nick Sheppard</h4>
+     Repository Developer at Leeds Metropolitan University
+     <h4>Nick Shockey</h4>
+     Director of Programs and Engagement for the Scholarly Publishing and Academic Resources Coalition (SPARC) and founding director of the Right to Research Coalition (R2RC).
+</div>
+
+<div id="developers" style="display:none"><a name="developers"></a> 
+  <h1>Developers</h1>
+  The Open Access Button has a long term relationship with <a href = "www.cottagelabs.com">Cottage Labs</a> to provide hosting and core development on the tool.
+
+<h4>Mark MacGillivray</h4>
+Senior partner at Cottage Labs
+<h4>Steven Eardley</h4>
+Employee at Cottage Labs
+<h3>Previous</h3>
+
+<h4>Harry Rickards</h4>
+Undergraduate student at Massachusetts Institute of Technology.
+<h4>Vesko Vankov</h4>
+Undergraduate student at the University of Bristol
+<h4>Andy Byers</h4>
+Software Developer at Ubiquity Press.
+</br></br>
+     Other people who have contributed directly to the codebase can be found on <a href="https://github.com/orgs/OAButton/people" target="_target">Github</a>.
+</div>
+
+<div id="governance" style="display:none"><a name="governance"></a>
+<h1>Governance</h1>
+<h2>Terms of Use</h2>
+    Terms of use can be found at <a href="https://openaccessbutton.org/terms">openaccessbutton.org/terms</a></br>
+
+     <h2>Privacy</h2>
+    Privacy Privacy can be found at <a href="https://openaccessbutton.org/privacy">openaccessbutton.org/privacy</a></br>
+
+     <h2>Governance</h2>
+     The Open Access Button is lead by students and young researchers. The student and young researcher team is supported by a steering committee of professionals which provide them with technical support and advice.
+     </br>
+     We are committed to working towards the following Vision and Mission:
+
+<h3>Vision:</h3>
+
+A world where people can access and reuse research freely, immediately and effectively.
+
+<h3>Mission: </h3>
+
+Make visible the impact of limited access and reuse of research. </br>
+Make it easier for people to get access to research freely and immediately. </br>
+Strengthen the movement to improve scholarly communications and promote innovation.</br>
+<hr>
+The Open Access Button team aims to maintain an open way of working, including publishing our policies and meeting minutes where possible.
+<ol>
+<li><a href="https://drive.google.com/file/d/0B9F59A2246PoRXlWVGZ3ZHJhQm8/edit" target="_blank">Open Access Button Governance</a>
+<li>Policy Documents
+<ol>
+<li><a href="https://docs.google.com/file/d/0BzwC8nwJLTwZRDdCUk9SaEJqajQ/edit" target="_blank">Openness Policy</a>
+<li>Ethical Funding Partnership Guidelines
+<li><a href="https://drive.google.com/file/d/0B9F59A2246PoRjRuaWQxdGdXek0/edit" target="_blank">Medsin-UK's Ethical Fundraising Framework</a>
+<li>In Kind Support Guidelines
+</ol>
+<li>Minutes
+<ol>
+<li><a href="https://drive.google.com/#folders/0B9F59A2246PoMFFGSjhtNkZiTGc" target="_blank">Student Team Meetings</a>
+<li><a href="https://drive.google.com/#folders/0B9F59A2246PoX3hfT2kyckhBLVE" target="_blank">Steering Committee Meetings</a>
+<li>Individual Meetings
+<li>Roundtable Minutes
+<li><a href="https://drive.google.com/file/d/0B9F59A2246PoSUljcW0wQkY2cVk/edit" target="_blank">London Meeting Minutes</a>
+</ol>
+</ol>
+<hr>
+     The Open Access Button is supported by <a href="http://www.sparcopen.org" target="_blank">SPARC (Scholarly Publishing and Academic Resources Coaltion)</a>. SPARC is a global coalition committed to making Open the default for research and education. SPARC empowers people to solve big problems and make new discoveries through the adoption of policies and practices that advance Open Access, Open Data, and Open Education.
+</div>
+
+<div id="contact" style="display:none">
+     <h1>Contact</h1><a name="contact"></a>
+     We can be found on <a href="https://twitter.com/OA_Button" target="_blank">Twitter</a>, <a href="https://www.facebook.com/openaccessbutton" target="_blank">Facebook</a> and <a href="https://plus.google.com/+OpenAccessButton/" target="_blank">Google+</a>.
+     </br></br>
+     For general inquires please contact: Hello[AT]openaccessbutton[Dot]org </br>
+     For press inquires please contact: Press[AT]]openaccessbutton[[Dot]org </br>
+     For funding inquiries please contact: Funding[AT]openaccessbutton[dot]org</br>
+     For legal inquiries please contact: Legal[AT]openaccessbutton[dot]org
+</div>
+
+<div id="faq" style="display:none"><a name="faq"></a>
+<h1>Frequently Asked Questions</h1>
+<h2>Using the Button</h2>
+<h4>What platforms does the Open Access Button work on?</h4>
+The Open Access Button works on all browsers. Our bookmarklet can be used   in all browsers, however there are also Chrome plugins and Firefox   extensions.
+<br></br>
+<h4>How do you tell if the user is on a paywall?</h4>
+We ask the user tell us when they are on a paywall after instructing them what a paywall is and showing them instructions.
+<br></br>
+<h4>How do you help a person gain access to the paper they have been denied access to?</h4>
+<strong>Finding free papers:</strong>
+
+Versions of papers published in journals that require you to pay to read can sometimes be accessed for free in other places. These other copies are often very similar to the published version, but may lack nice formatting or be a version prior to peer review. These copies can be found in research repositories, on authors websites and many other places because they are archived. To find these versions we identify the paper a user needs and effectively search on Google Scholar and CORE to find these copies and link them to the users.
+<br></br>
+<strong>Making more research, or information about papers available:</strong>
+Much of the time there will not be a copy available. If a free copy is not available we aim to make one. This is not a simple task and so we have to use a few different innovative strategies. To name just one, we email the author of the research and ask them to make a copy of the research available into already established repositories, and once they do we'll send it to everyone who needs it. We are also aiming to help create a new incentive for authors to put their work in repositories. By emailing the author, and creating pages which can get their attention we hope to help the voices of those needing their research need them.
+<br></br>
+Overall, the Button will hopefully represent an increasingly powerful way to link published research in journals to research in research repositories. Research repositories store a huge number of papers, but can often can be hard to find and use, this new platform will allow us to aid their discoverability. While we are talking about how it works, it is worth mentioning while we wish we could stand here and say to you all that everything is working flawlessly, we cannot. Like all first releases, the first few weeks will be a slightly bumpy start. People will try and use the tool in ways we could not have imagined, in setups we could not test for so we will be very quickly listening to our users and responding to bugs.
+<br></br>
+<h4>I cannot seem to get the Open Access Button to work. Help! </h4>
+There are people who can help! Email your issue to bugs[AT]openaccessbutton[DOT]org
+<h2>Behind the Open Access Button</h2>
+
+<h4>How are you funded?</h4>
+Sparingly...    We are run as part of a charity, by almost entirely volunteers. We    maintain a diverse stream of funding and in-kind support from a number    of groups and individuals in line with our policies on funding.   Examples  include from Cottage Labs, Open Society Foundations, Mozilla, Jisc and PLOS    alongside individual donors. If you would like to support the Open    Access Button in any way please see openaccessbutton.org/support.
+<br></br>
+<h4>What do your licenses mean?</h4>
+All of our software is licenced under an MIT licence. MIT is an open source software license that gives you permission, free of charge and without restriction, to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the software provided that  you include the copyright notice and the same permission notice.   Learn  more about Open Source license here.
+
+All of our content (unless otherwise stated) is licensed under a Creative Commons Attribution license (CC-BY).    This means that you are free to share and remix our work as long as   you  give attribution to us. Learn more about Creative Commons licenses here.
+<br></br>
+<h4>Have you ever thought of #canihazPDF?</h4>
+#canihazPDF is one method of dealing with the frustrating system of scholarly publishing. However, #canihazPDF is a temporary and illegal solution to the problem. Sharing research in this way can lead to very grave consequences, you need to look no further than the story of Diego Gomez to see this.
+
+The Open Access Button is an alternative to strategies like this, and is a completely legal way of obtaining papers in a way which simultaneously supports a long term solution.
+<br></br>
+<h4>Is what you are doing legal?</h4>
+Yes. All users consent to their data (location, profession, research motivation, etc.) being used when they sign up for an Open Access Button account. Additionally, we use only legal means of helping  people  gain  access to research they have previously been denied access  to.
+<br></br>
+<h4>Can the Open Access Button be used in other languages?</h4>
+We would really like to start to translate the Open Access Button into other languages. If you can lend your support we would really like to hear from you. Please contact comms[AT]openaccessbutton[DOT]org
+<br></br>
+<h4>When will you have a iPhone app? </h4>
+Soon! But you can help us do it faster! If you would like to help us build an iPhone app please see our developers page.
+
+<h2>Privacy</h2>
+<h4>What do you do to protect my privacy?</h4>
+Open Access Button has HTTPS turned on by default. We make good faith efforts to store information collected by Open Access Button in an environment that is secure, however we cannot guarantee complete security. We will store any information collected for a  length of time appropriate to our needs. The data collected by the Open Access Button is stored on servers in Europe, which are only accessible via Secure Shell Public Key Cryptography and are fully firewalled.
+
+We understand that some users may require a higher level of privacy in the data collected, if you would like to maintain privacy do not use your real name as your username as it will be publicly displayed. In addition, please use a unique username that is not used on any other sites or service.
+
+All location data collected by the Open Access Button is blurred by 11 kilometres to protect the privacy of our users.
+<br></br>
+<h2>Data</h2>
+<h4>Why do you collect metadata about the research I am reading?</h4>
+The   data and stories collected by the Open Access Button will be used to   support data driven campaigns and tell stories to support Open Access   and fix the long-term issues that stop people getting the research they need.
+<br></br>
+<h4>How do I remove or change my data?</h4>
+You may choose to correct, update, or delete the membership information you have submitted to us by sending an email requesting changes to hello@openaccessbutton.org.
+<br></br>
+<h4>Question still not answered here? Contact us hello@openaccessbutton.org</h4>
+
+<img src="http://imgs.xkcd.com/comics/simple_answers.png ">
+</div>
+
+<div id="thanks" style="display:none"><a name="thanks"></a> 
+<h1>Thanks</h1>
+We are humbled that this project has been contributed to by more people than we dare to count. We have listed as many as we can below (ones that have not been listed have been listed elsewhere).
+<h2>Friends, family and significant others</h2>
+<p>Many of the team have missed many family events, social occasions and time with loved ones along this journey. We would really like to take the time to thank you all for sticking with us, and forgive us for all the future things we will miss because there is still much to do, and we can not do it without you.</p>
+<h2>Funders</h2>
+<a href="http://plos.org" target="_blank">Public Library of Science (PLOS)</a></br>
+<a href="http://www.jisc.ac.uk/" target="_blank">Jisc</a></br>
+<a href="http://www.opensocietyfoundations.org/" target="_blank">Open Society Foundations</a></br>
+<a href="http://mozillascience.org" target="_blank">Mozilla Science</a></br>
+Crowdfunders</br>
+<h2>Organisational Partners</h2>
+<a href="http://www.medsin.org" target="_blank">Medsin-UK</a></br>
+<a href="http://righttoresearch.org" target="_blank">Right to Research Coalition</a></br>
+<a href="http://cottagelabs.com" target="_blank">Cottage Labs</a></br>
+
+<h2>Crowdfunding</h2><a name="crowdfunding"></a>
+Earlier in 2014, some wonderful people below pitched in to help us create the second version of the Open Access Button that you see today. You can follow in their footsteps and donate
+<a href="support">here</a>.
+
+<h3>Superstars</h3>
+<div style="float: left; width: 50%;">
+<ul>
+<li>Abby Clobridge
+<li>Ben Johnson
+<li>Benjamin Bober
+<li>Benjamin Schwessinger
+<li>Brian Johnson
+<li>Charlotte Ward
+<li>Denise Troll Covey
+<li>Francis Ouellette
+<li>Gerard Ridgway
+<li>Graham Triggs
+<li>Gwen
+<li>Heather Joseph
+<li>Hilda Bastian
+</ul>
+</div>
+<div style="float: left; width: 50%;">
+<ul>
+<li>Ian Hamilton
+<li>Iva Cheung
+<li>John Hammersley
+<li>Katherine Bettany
+<li>Nancy Pontika
+<li>Nick Shockey
+<li>Nicole Allen
+<li>Penny
+<li>Pietro Gatti-Lafranconi
+<li>Ross Mounce
+<li>Sandra Giuliani
+<li>Stephanie
+<li>Tom Olijhoek
+</ul>
+</div>
+
+<h3>Hall of Fame</h3>
+<div style="float: left; width: 50%;">
+<ul>
+<li>Alessandro Sarretta
+<li>Andrew Gray
+<li>Andrew Herxheimer
+<li>Bethan Ruddock
+<li>Brooks Yardley
+<li>Catherine Anderson (genegeek)
+<li>Christine Fruin
+<li>Cliodhna Grant
+<li>Cynth Orozca
+</ul>
+</div>
+<div style="float: left; width: 50%;">
+<ul>
+<li>David Jay
+<li>Erica Pool
+<li>John Hilton
+<li>Joshua Nicholson
+<li>Nicholas Schiller
+<li>Paul Gob&eacute;e
+<li>Richard Van Noorden
+<li>Scott St.Louis
+<li>Thomas Arildsen
+</ul>
+</div>
+
+</br>
+<h2>To Everyone That Supported Our Thunderclaps</h2>
+Over 600 people supported us on Thunderclaps. If Thunderclap told us your name we would thank you personally, but you know who you are.
+<h2>Awesome People</h2>
+We wanted to thank everyone else who has contributed to the project, sometimes in small but significant ways, and sometimes in large and significant ways.
+<br></br>
+
+<div style="float: left; width: 33%;">
+<ul>
+<li>Our Users</li>
+<li>Graham Steel </li>
+<li>Donna Okubo</li>
+<li>Peter Murray Rust</li>
+<li>Protohedgehog</li>
+<li>David Guedj</li>
+<li>Shane Canning </li>
+<li>Cecy Marden</li>
+<li>Nancy Pontika</li>
+<li>Ross Mounce</li>
+<li>Timothy Vollmer and everyone at Creative Commons</li>
+<li>Our critics</li>
+<li>Ranit Schmelzer</li>
+<li>Shawn Daugherty</li>
+<li>Ernesto Priego</li>
+<li>Ellen Cole</li>
+<li>Frederique Bordignon</li>
+<li>Carlos Luna</li>
+<li>Marwan Shawki</li>
+<li>Helen Muir</li>
+</ul>
+</div>
+<div style="float: left; width: 33%;">
+<ul>
+<li>Matt Senate</li>
+<li>Daniel Mietchen
+<li>Ian Mulvany</li>
+<li>Randy Schekman
+<li>Jennifer Mitchell</li>
+<li>Heather Joseph</li>
+<li>Melissa Hagemann
+<li>Cameron Stocks
+<li>Andrew Gray</li>
+<li>Cameron Neylon</li>
+<li>Garret McMahon</li>
+<li>Muhammad Naeem Khan</li>
+<li>Yasha Nazir Butt</li>
+<li>Oyetude Taiwo</li>
+<li>Roshan Kumar Karn</li>
+<li>Angela Mumo</li>
+<li> David Benoist</li>
+<li>Rosello Mascansantos</li>
+<li>Nina Rose</li>
+<li>Sofia Zapounidou</li>
+<li>Ed Saperia</li>
+</ul>
+</div>
+<div style="float: right; width: 33%;">
+<ul>
+<li>Paul Simpson</li>
+<li>Stephen Curry</li>
+<li>Jonny Meldrum</li>
+<li>Tania Browne</li>
+<li>Oleg Lavrovsky </li>
+<li>Stevie Benton</li>
+<li>Simon Collins and the team at iBase</li>
+<li>Dizz Gotham</li>
+<li>Cameron Stocks</li>
+<li>Gerard Donnelly </li>
+<li>Felicia Yeung and several others at Medsin</li>
+<li>Samson Williams </li>
+<li>Our Universities (sometimes)</li>
+<li>Jacquie Kelly </li>
+<li>Stuart Lawson </li>
+<li>Girl Talk </li>
+<li>Dorian the Cat</li>
+<li>George the Cat</li>
+</ul>
+</div>
+
+<div id="beta_devs" style="clear:both;">
+<h2 align="left">Open Access Button Beta developers</h2>
+We had some help getting this off the ground in 2013. This is the group of volunteer developers who put together the bookmarklet, in record time.
+</br></br>
+<div style="float: left; width: 33%;">
+<ul>
+<li>Andy Lulham</li>
+<li>Victor Ng</li>
+<li>Oleg Lavrovsky</li>
+<li>Florian Rathgeber</li>
+</ul>
+</div>
+<div style="float: left; width: 33%;">
+<ul>
+<li>Jez Cope</lI>
+<li>Alf Eaton</li>
+<li>Nicholas Ng</li>
+</ul>
+</div>
+<div style="float: left; width: 33%;">
+<ul>
+<li>Tom Pollard</li>
+<li>Timothee Alby</li>
+<li>Emanuil Tolev</li>
+</ul>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+</div>
+
+
+  <div class="strap" id="footer" style="padding-top:80px;">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-6" style="border-right:1px solid #c8c8c8;min-height:200px;">
+          <p style="color:white;">
+            This work is licensed under a
+            <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+          </p>
+          <p style="color:white;"> 
+            Our code is <a href="https://opensource.org/licenses/MIT">open source</a>
+            and on <a href="https://github.com/oabutton">Github</a>.<br>
+            <a href="/support">Want to help?</a>
+          </p>
+          <p>
+            <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+              <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png">
+            </a>
+          </p>
+        </div>
+        <div class="col-md-3" style="min-height:200px;">
+          <ul style="list-style-type:none;margin-left:40px;">
+            <li><a href="/about">About us</a></li>
+            <li><a href="/support">Support us</a></li>
+            <li><a href="/resources">Resources</a></li>
+            <li><a href="/advocacy">Advocacy</a></li>
+            <li><a href="/blog">Blog</a></li>            
+          </ul>
+        </div>
+        <div class="col-md-3" style="text-align:right;">
+          <p>
+            <a alt="Find us on twitter" title="Find us on twitter" href="https://twitter.com/OA_Button" target="_blank"><i class="fa fa-twitter-square fa-5x" style="color:#4099FF;"></i></a>
+            <a alt="Find us on facebook" title="Find us on facebook"  href="https://www.facebook.com/openaccessbutton" target="_blank"><i class="fa fa-facebook-square fa-5x" style="padding-left:10px;color:#3B5998;"></i></a><br>
+            <a alt="Find us on github" title="Find us on github" href="https://github.com/oabutton" target="_blank"><i class="fa fa-github-square fa-5x" style="color:#767676;"></i></a>
+            <a alt="Contact us" title="Contact us" href="/contact" target="_blank"><i class="fa fa-envelope-square fa-5x action" style="padding-left:10px;"></i></a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-74685304-1', 'auto');
+  ga('send', 'pageview');
+  </script>
+
+
+</body></html>

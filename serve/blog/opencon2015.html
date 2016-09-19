@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Open Access Button</title>
+  <meta name="description" content="">
+  <meta name="author" content="Cottage Labs">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+
+  <link href="/static/favicon.ico" rel="icon" type="image/x-icon">
+  
+  <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <script type="text/javascript" src="//static.cottagelabs.com/jquery-1.10.2.min.js"></script>
+  <script type="text/javascript" src="//static.cottagelabs.com/bootstrap-3.0.3/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="//static.cottagelabs.com/bootstrap-3.0.3/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <script type="text/javascript" src="//static.cottagelabs.com/holder/jquery.holder.min.js"></script>
+  <script type="text/javascript" src="//static.cottagelabs.com/fingerprint2.min.js"></script>
+  <script type="text/javascript" src="//static.cottagelabs.com/clogin.js"></script>
+
+  <link rel="stylesheet" href="/static/oabutton.css">
+  
+  <link href='//fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+
+  <!--<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/itemID"> enable this for chrome inline install-->
+  
+  <script>
+  jQuery(document).ready(function() {
+    var logged = clogin.loggedin();
+    if (logged) {
+      $('.cloggedin').show();
+      $('.notcloggedin').hide();
+      if ($('#downloader').is(':visible')) $('#downloader').remove(); // needs handled directly because of classes for hiding it on small and medium screens too
+    }
+  });
+  </script>
+  
+  <style>
+    markdown {
+      display:none;
+    }
+    .container-fluid {
+      margin:0 auto 0 auto;
+      padding-left:15px;
+      padding-right:15px;
+      max-width:1000px;
+    }
+    .navbar {
+        -webkit-box-shadow: 0 1px 1px 0 rgba(51,51,51,1);
+        -moz-box-shadow: 0 1px 1px 0 rgba(51,51,51,1);
+        box-shadow: 0 1px 1px 0 rgba(51,51,51,1);
+    }
+    .navbar-nav li a{
+      font-size:1em;
+      color:#212f3f;
+      height:51px;
+      padding:13px 10px 13px 10px;
+    }
+    .navbar-nav{
+      height:50px;
+    }
+    .navbar-alert{
+      height:35px;
+      text-align:center;
+      vertical-align:middle;
+    }
+    .p-alert{
+    padding-top:3px;
+    }
+  </style>
+</head>
+<body>
+  <div id="topnav" class="navbar navbar-fixed-top" style="background-color:white;">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"  style="z-index:1000000;">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="glyphicon glyphicon-list"></span>
+        </button>
+        <ul class="nav navbar-nav">
+          <li class="hidden-xs hidden-sm"><img class="img" src="/static/icon_OAB.png" style="height:45px;margin-top:6px;"></li>
+          <li><a href="/" style="font-size:18px;">Open Access Button</a></li>
+        </ul>
+      </div>
+      <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav pull-right">
+          <!--<li><a href="/request/new"><i class="glyphicon glyphicon-plus"></i> Create a request</a></li>-->
+          <li><a href="/request"><i class="glyphicon glyphicon-search"></i> Contribute to requests</a></li>
+          <li class="cloggedin" style="display:none;"><a href="/account" style="padding-top:16px;">Your account</a></li>
+          <li class="notcloggedin"><a href="/account" style="padding-top:16px;">Login</a></li>
+          <li id="downloader" class="hidden-xs hidden-sm notcloggedin" style="background-color:#398bc5;color:#212f3f;height:55px;z-index:10000;
+          -webkit-border-bottom-right-radius: 5px;-webkit-border-bottom-left-radius: 5px;
+          -moz-border-radius-bottomright: 5px;-moz-border-radius-bottomleft: 5px;border-bottom-right-radius: 5px;border-bottom-left-radius: 5px;">
+          <a href="/account" style="font-size:1.2em;font-weight:bold;">Download</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+<div class="container-fluid">
+<div class="row">
+    <div class="col-md-6" position="fixed">
+            </div></div>
+
+<h1>OpenCon Applications are Open</h1>
+
+<p><i>This is a repost of a blog that can be found at http://opencon2015.org/blog/opencon-2015-applications-are-open. Many Open Access Button team members were present at OpenCon 2014 and we couldn't reccomend applying highly enough.</i></p>
+
+<p dir="ltr">Applications to attend OpenCon 2015 on November 14-16 in Brussels, Belgium are now open! The application is available on the OpenCon website at<a href="http://opencon2015.org/attend"> opencon2015.org/attend</a> and includes the opportunity to apply for a travel scholarship to cover the cost of travel and accommodations. Applications will close on June 22nd at 11:59pm PDT.</p>  <p dir="ltr">OpenCon seeks to bring together the most capable, motivated students and early career academic professionals from around the world to advance Open Access, Open Education, and Open Dataâregardless of their ability to cover travel costs. &nbsp;In 2014, more than 80% of attendees received support. &nbsp;Due to this, attendance at OpenCon is by application only.</p>  <p dir="ltr">Students and early career academic professionals of all experience levels are encouraged to apply. &nbsp;We want to support those who have ideas for new projects and initiatives in addition to those who are already leading them. &nbsp;The most important thing is an interest in advancing Open Access, Open Education, and Open Data and a commitment to taking action. We also hope to use applications to connect applicants with opportunities for collaboration, local events in your area, and scholarship opportunities to attend other relevant conferences.</p>  <p dir="ltr">OpenCon is equal parts conference and community. &nbsp;The meeting in Brussels serves as the centerpiece of a much larger network to foster initiatives and collaboration among the next generation across OpenConâs issue areas. &nbsp;Become an active part of the community by joining<a href="http://opencon2015.org/community/discussion"> our discussion list</a>, tuning in for our monthly<a href="http://opencon2015.org/community/calls"> community calls</a> and<a href="http://opencon2015.org/community/webcasts"> webcasts</a>, or<a href="http://opencon2015.org/satellite"> hosting an OpenCon satellite event</a> in your community.</p>  <p dir="
+ltr"><a href="http://opencon2015.org/attend">Apply now</a>, and join the OpenCon community today!</p>  <p dir="ltr"><a href="/attend" target="_blank"><img alt="" src="http://www.sparc.arl.org/sites/default/files/Community%20calls%20Graphic.png" style="height:281px; width:500px" /></a></p>  <p dir="ltr"><strong>About OpenCon:</strong></p>  <p dir="ltr">Hosted by the Right to Research Coalition and SPARC, OpenCon 2015 will bring together students and early career academic professionals from across the world to learn about the issues, develop critical skills, and return home ready to catalyze action toward a more open system for sharing the worldâs information â from scholarly and scientific research, to educational materials, to digital data. &nbsp;OpenCon 2015 will be held on November 14-16 in Brussels, Belgium.</p>  <p dir="ltr">OpenCon 2015âs three day program will begin with two days of conference-style keynotes, panels, and interactive workshops, drawing both on the expertise of leaders in the Open Access, Open Education and Open Data movements and the experience of participants who have already led successful projects.</p>  <p dir="ltr">The third day will take advantage of the location in Brussels by providing a half-day of advocacy training followed by the opportunity for in-person meetings with relevant policy makers, ranging from the European Parliament, European Commission, embassies, and key NGOs. Participants will leave with a deeper understanding of the conferenceâs three issue areas, stronger skills in organizing local and national projects, and connections with policymakers and prominent leaders across the three issue areas.</p>  <p dir="ltr">OpenCon 2015 builds on the success of the first-ever OpenCon meeting last year which convened 115 students and early career academic professionals from 39 countries in Washington, DC. &nbsp;</p>  <p dir="ltr">Speakers at OpenCon 2014 included the Deputy Assistant to the President of the United States for Legislativ
+e Affairs, the Chief Commons Officer of Sage Bionetworks, the Associate Director for Data Science for the U.S. National Institutes of Health, and more than 15 students and early career academic professionals leading successful initiatives. OpenCon 2015 will again feature leading experts, and the program will be announced in the coming months.</p> 
+
+<br>
+<br>
+<br>
+
+</div>
+
+
+
+  <div class="strap" id="footer" style="padding-top:80px;">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-6" style="border-right:1px solid #c8c8c8;min-height:200px;">
+          <p style="color:white;">
+            This work is licensed under a
+            <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+          </p>
+          <p style="color:white;"> 
+            Our code is <a href="https://opensource.org/licenses/MIT">open source</a>
+            and on <a href="https://github.com/oabutton">Github</a>.<br>
+            <a href="/support">Want to help?</a>
+          </p>
+          <p>
+            <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+              <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png">
+            </a>
+          </p>
+        </div>
+        <div class="col-md-3" style="min-height:200px;">
+          <ul style="list-style-type:none;margin-left:40px;">
+            <li><a href="/about">About us</a></li>
+            <li><a href="/support">Support us</a></li>
+            <li><a href="/resources">Resources</a></li>
+            <li><a href="/advocacy">Advocacy</a></li>
+            <li><a href="/blog">Blog</a></li>            
+          </ul>
+        </div>
+        <div class="col-md-3" style="text-align:right;">
+          <p>
+            <a alt="Find us on twitter" title="Find us on twitter" href="https://twitter.com/OA_Button" target="_blank"><i class="fa fa-twitter-square fa-5x" style="color:#4099FF;"></i></a>
+            <a alt="Find us on facebook" title="Find us on facebook"  href="https://www.facebook.com/openaccessbutton" target="_blank"><i class="fa fa-facebook-square fa-5x" style="padding-left:10px;color:#3B5998;"></i></a><br>
+            <a alt="Find us on github" title="Find us on github" href="https://github.com/oabutton" target="_blank"><i class="fa fa-github-square fa-5x" style="color:#767676;"></i></a>
+            <a alt="Contact us" title="Contact us" href="/contact" target="_blank"><i class="fa fa-envelope-square fa-5x action" style="padding-left:10px;"></i></a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-74685304-1', 'auto');
+  ga('send', 'pageview');
+  </script>
+
+
+</body></html>
