@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
 function HideAllShowOne(d) {
 // Between the quotation marks, list the id values of each div.
-    var IDvaluesOfEachDiv = "landing howitworks history press team steering developers governance contact faq thanks";
+    var IDvaluesOfEachDiv = "landing howitworks history press team steering developers governance thanks";
     //-------------------------------------------------------------
     IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/[,\s"']/g," ");
     IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/^\s*/,"");
@@ -53,9 +53,7 @@ else { document.getElementById(d).style.display = "none"; }
 <li class="active"><a href="javascript:HideAllShowOne('team')">Student Team</a>
 <li class="active"><a href="javascript:HideAllShowOne('steering')">Steering Committee</a>
 <li class="active"><a href="javascript:HideAllShowOne('developers')">Developers</a>
-<li class="active"><a href="javascript:HideAllShowOne('governance')">Governance</a>
-<li class="active"><a href="javascript:HideAllShowOne('contact')">Contact</a>
-<li class="active"><a href="javascript:HideAllShowOne('faq')">FAQ</a>
+<li class="active"><a href="javascript:HideAllShowOne('governance')">Governance</a>con
 <li class="active"><a href="javascript:HideAllShowOne('thanks')">Thanks To</a>
 </ul>
 
@@ -75,7 +73,13 @@ else { document.getElementById(d).style.display = "none"; }
     TODO add Legal and contact info into about section, and also the about blurb from opendatabutton
   </h2>
 The Open Access Button is an app that helps researchers, patients, students and the public get legal access to research they need and request research be made available. Since November 2013, we have made 15,000 requests for research articles and data.</br></br>
-Our team is committed to connecting people with the research they need and advocating for Open Access. You can learn more about our <a href="javascript:HideAllShowOne('history')">history</a>,  <a href="javascript:HideAllShowOne('team')">who we are</a>, <a href="javascript:HideAllShowOne('governance')">what we do</a>, or <a href="javascript:HideAllShowOne('contact')">contact</a> us with your questions. 
+Our team is committed to connecting people with the research they need and advocating for Open Access. You can learn more about our <a href="javascript:HideAllShowOne('history')">history</a>,  <a href="javascript:HideAllShowOne('team')">who we are</a>, or <a href="javascript:HideAllShowOne('governance')">what we do</a>. 
+<p>We'd love to hear from you!</p>We can be found on <a href="https://twitter.com/OA_Button" target="_blank">Twitter</a>, <a href="https://www.facebook.com/openaccessbutton" target="_blank">Facebook</a> and <a href="https://plus.google.com/+OpenAccessButton/" target="_blank">Google+</a>.
+     </br></br>
+     For general inquires please contact: Hello[AT]openaccessbutton[Dot]org </br>
+     For press inquires please contact: Press[AT]]openaccessbutton[[Dot]org </br>
+     For funding inquiries please contact: Funding[AT]openaccessbutton[dot]org</br>
+     For legal inquiries please contact: Legal[AT]openaccessbutton[dot]org
 </div>
 
 <div id="howitworks" style="display:none">
@@ -310,80 +314,6 @@ The Open Access Button team aims to maintain an open way of working, including p
      The Open Access Button is supported by <a href="http://www.sparcopen.org" target="_blank">SPARC (Scholarly Publishing and Academic Resources Coaltion)</a>. SPARC is a global coalition committed to making Open the default for research and education. SPARC empowers people to solve big problems and make new discoveries through the adoption of policies and practices that advance Open Access, Open Data, and Open Education.
 </div>
 
-<div id="contact" style="display:none">
-     <h1>Contact</h1><a name="contact"></a>
-     We can be found on <a href="https://twitter.com/OA_Button" target="_blank">Twitter</a>, <a href="https://www.facebook.com/openaccessbutton" target="_blank">Facebook</a> and <a href="https://plus.google.com/+OpenAccessButton/" target="_blank">Google+</a>.
-     </br></br>
-     For general inquires please contact: Hello[AT]openaccessbutton[Dot]org </br>
-     For press inquires please contact: Press[AT]]openaccessbutton[[Dot]org </br>
-     For funding inquiries please contact: Funding[AT]openaccessbutton[dot]org</br>
-     For legal inquiries please contact: Legal[AT]openaccessbutton[dot]org
-</div>
-
-<div id="faq" style="display:none"><a name="faq"></a>
-<h1>Frequently Asked Questions</h1>
-<h2>Using the Button</h2>
-<h4>What platforms does the Open Access Button work on?</h4>
-The Open Access Button works on all browsers. Our bookmarklet can be used   in all browsers, however there are also Chrome plugins and Firefox   extensions.
-<br></br>
-<h4>How do you tell if the user is on a paywall?</h4>
-We ask the user tell us when they are on a paywall after instructing them what a paywall is and showing them instructions.
-<br></br>
-<h4>How do you help a person gain access to the paper they have been denied access to?</h4>
-<strong>Finding free papers:</strong>
-
-Versions of papers published in journals that require you to pay to read can sometimes be accessed for free in other places. These other copies are often very similar to the published version, but may lack nice formatting or be a version prior to peer review. These copies can be found in research repositories, on authors websites and many other places because they are archived. To find these versions we identify the paper a user needs and effectively search on Google Scholar and CORE to find these copies and link them to the users.
-<br></br>
-<strong>Making more research, or information about papers available:</strong>
-Much of the time there will not be a copy available. If a free copy is not available we aim to make one. This is not a simple task and so we have to use a few different innovative strategies. To name just one, we email the author of the research and ask them to make a copy of the research available into already established repositories, and once they do we'll send it to everyone who needs it. We are also aiming to help create a new incentive for authors to put their work in repositories. By emailing the author, and creating pages which can get their attention we hope to help the voices of those needing their research need them.
-<br></br>
-Overall, the Button will hopefully represent an increasingly powerful way to link published research in journals to research in research repositories. Research repositories store a huge number of papers, but can often can be hard to find and use, this new platform will allow us to aid their discoverability. While we are talking about how it works, it is worth mentioning while we wish we could stand here and say to you all that everything is working flawlessly, we cannot. Like all first releases, the first few weeks will be a slightly bumpy start. People will try and use the tool in ways we could not have imagined, in setups we could not test for so we will be very quickly listening to our users and responding to bugs.
-<br></br>
-<h4>I cannot seem to get the Open Access Button to work. Help! </h4>
-There are people who can help! Email your issue to bugs[AT]openaccessbutton[DOT]org
-<h2>Behind the Open Access Button</h2>
-
-<h4>How are you funded?</h4>
-Sparingly...    We are run as part of a charity, by almost entirely volunteers. We    maintain a diverse stream of funding and in-kind support from a number    of groups and individuals in line with our policies on funding.   Examples  include from Cottage Labs, Open Society Foundations, Mozilla, Jisc and PLOS    alongside individual donors. If you would like to support the Open    Access Button in any way please see openaccessbutton.org/support.
-<br></br>
-<h4>What do your licenses mean?</h4>
-All of our software is licenced under an MIT licence. MIT is an open source software license that gives you permission, free of charge and without restriction, to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the software provided that  you include the copyright notice and the same permission notice.   Learn  more about Open Source license here.
-
-All of our content (unless otherwise stated) is licensed under a Creative Commons Attribution license (CC-BY).    This means that you are free to share and remix our work as long as   you  give attribution to us. Learn more about Creative Commons licenses here.
-<br></br>
-<h4>Have you ever thought of #canihazPDF?</h4>
-#canihazPDF is one method of dealing with the frustrating system of scholarly publishing. However, #canihazPDF is a temporary and illegal solution to the problem. Sharing research in this way can lead to very grave consequences, you need to look no further than the story of Diego Gomez to see this.
-
-The Open Access Button is an alternative to strategies like this, and is a completely legal way of obtaining papers in a way which simultaneously supports a long term solution.
-<br></br>
-<h4>Is what you are doing legal?</h4>
-Yes. All users consent to their data (location, profession, research motivation, etc.) being used when they sign up for an Open Access Button account. Additionally, we use only legal means of helping  people  gain  access to research they have previously been denied access  to.
-<br></br>
-<h4>Can the Open Access Button be used in other languages?</h4>
-We would really like to start to translate the Open Access Button into other languages. If you can lend your support we would really like to hear from you. Please contact comms[AT]openaccessbutton[DOT]org
-<br></br>
-<h4>When will you have a iPhone app? </h4>
-Soon! But you can help us do it faster! If you would like to help us build an iPhone app please see our developers page.
-
-<h2>Privacy</h2>
-<h4>What do you do to protect my privacy?</h4>
-Open Access Button has HTTPS turned on by default. We make good faith efforts to store information collected by Open Access Button in an environment that is secure, however we cannot guarantee complete security. We will store any information collected for a  length of time appropriate to our needs. The data collected by the Open Access Button is stored on servers in Europe, which are only accessible via Secure Shell Public Key Cryptography and are fully firewalled.
-
-We understand that some users may require a higher level of privacy in the data collected, if you would like to maintain privacy do not use your real name as your username as it will be publicly displayed. In addition, please use a unique username that is not used on any other sites or service.
-
-All location data collected by the Open Access Button is blurred by 11 kilometres to protect the privacy of our users.
-<br></br>
-<h2>Data</h2>
-<h4>Why do you collect metadata about the research I am reading?</h4>
-The   data and stories collected by the Open Access Button will be used to   support data driven campaigns and tell stories to support Open Access   and fix the long-term issues that stop people getting the research they need.
-<br></br>
-<h4>How do I remove or change my data?</h4>
-You may choose to correct, update, or delete the membership information you have submitted to us by sending an email requesting changes to hello@openaccessbutton.org.
-<br></br>
-<h4>Question still not answered here? Contact us hello@openaccessbutton.org</h4>
-
-<img src="http://imgs.xkcd.com/comics/simple_answers.png ">
-</div>
 
 <div id="thanks" style="display:none"><a name="thanks"></a> 
 <h1>Thanks</h1>
