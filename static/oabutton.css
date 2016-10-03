@@ -11,6 +11,11 @@ white is ffffff
 /*html{
     background-color:#212f3f;
 }*/
+
+h1, h2, h3, h4, h5, h6{
+    font-family: 'Montserrat', sans-serif;
+}
+
 html, body{
     margin:0;
     padding:0;
