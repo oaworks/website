@@ -1,0 +1,200 @@
+<script>
+jQuery(document).ready(function() {
+  // on this page, an installed plugin should:
+  // look for #apikey field to read api key, after suitable delay to wait for data returned from server
+  // hide the download buttons
+  // set button as already downloaded, if not already set as such
+  // verify that the plugin is successfully installed and has registered the api key
+
+  if (window.innerWidth > 991) {
+    $('#cloginArea .well').css('min-height','250px');
+  }
+  
+  var setvalues = function() {
+    if (clogin.apikey) $('#apikey').html(clogin.apikey);
+  }
+  clogin.init({api:'https://dev.api.cottagelabs.com/accounts',afterLogin: setvalues });
+  
+  var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+      sURLVariables = sPageURL.split('&'),
+      sParameterName,
+      i;
+    for (i = 0; i < sURLVariables.length; i++) {
+      sParameterName = sURLVariables[i].split('=');
+      if (sParameterName[0] === sParam) {
+        return sParameterName[1] === undefined ? true : sParameterName[1];
+      }
+    }
+  };
+  var next = getUrlParameter('next');
+  if (next) {
+    $('#tonext').attr('href',next);
+    $('#nextalert').show();
+  }
+  
+  var e = getUrlParameter('e');
+  if (e) {
+    $('#cloginEmail').val(e);
+    setTimeout(function() { $('#cloginSubmit').trigger('click'); }, 100);
+  }
+
+  var b = navigator.userAgent.match(/chrome/i) ? '.ch' : '.ff';
+  $('.dl').hide();
+  $('.dl'+b).show();
+  
+  var chromeinstall = function(e) {
+    e.preventDefault();
+    chrome.webstore.install();
+  }
+  $('#chromeinstall').bind('click',chromeinstall);
+
+});
+</script>
+
+<div class="container-fluid notcloggedin" id="cloginArea">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="jumbotron" style="margin-top:-10px;padding-top:90px;">
+        <div id="cloginEmailArea">
+          <input type="text" class="form-control" id="cloginEmail" placeholder="Enter your email address">
+          <button id="cloginSubmit" type="submit" class="btn btn-action" style="border:1px solid white;margin-top:5px;">Sign up / Login</button>
+        </div>
+        <div id="cloginTokenArea" style="display:none;">
+          <input type="text" class="form-control" id="cloginToken" placeholder="Check your email - click the link in the email, or enter your login code here">
+          <button id="cloginSubmitToken" type="submit" class="btn btn-action" style="border:1px solid white;margin-top:5px;">Login</button>
+        </div>
+        <div id="cloginMessages" style="margin-top:5px;"></div>
+        <div id="cloginLoading" style="display:none;"><img style="height:30px;" src="//static.cottagelabs.com/spinner.gif"></div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-md-6">
+      <div class="well">
+        <h2 style="text-align:center;">
+          <i class="fa fa-user-plus"></i> Sign up
+        </h2>
+        <p style="text-align:justify;">
+          Just provide your email address to begin signing up. We'll send you a validation 
+          email with a link and a code. Click the link, or copy the code.
+        </p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="well">
+        <h2 style="text-align:center;">
+          <i class="fa fa-user"></i> Login
+        </h2>
+        <p style="text-align:justify;">
+          Just enter your email address above to login.<br>
+          We don't use passwords - you will get an email with a link and an authentication code; all you 
+          have to do is click the link or type in the authentication code back here, once you get it. 
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="well">
+        <h2 style="text-align:center;">
+          &nbsp;
+        </h2>
+        <p style="text-align:justify;">
+          We will <b>not</b> share your email address with anyone else. It will be used by us to contact 
+          you about the service, and as your username until you choose your own.
+          After first login you can pick a username and confirm a couple 
+          more details to help us manage your account.
+        </p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="well">
+        <h2 style="text-align:center;">
+          <i class="fa fa-download"></i> Download
+        </h2>
+        <p style="text-align:justify;">
+          After signing up you will be able to login and download the Open Access Button 
+          for your preferred web browser. We're also making some handy widget and bookmarklet versions, coming soon.<br>
+          Questions? <a href="/contact">Contact us</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid cloggedin" id="userinfo" style="display:none;">
+  <div id="tonextalert" class="row" style="display:none;">
+    <div class="col-md-12">
+      <div class="alert alert-info">
+        <h4><a id="tonext" href="">Thanks for signing in. Click here to return to the page you were viewing</a></h4>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="jumbotron" style="margin-top:-10px;">
+        <h1>Hello {{username}}</h1>
+        <p><button id="cloginLogout" class="btn btn-danger" style="margin-bottom:5px;">Logout</button></p>
+        <p>API Key: <span id="apikey"></span></p>
+        
+        <div id="setinfo">
+          <h1>Thanks for signing up!</h1>
+          <input type="text" name="username" id="new-username" class="form-control" placeholder="Choose a username for your account">
+          <input style="margin-top:5px;" type="text" name="name" id="name" class="form-control" placeholder="Please tell us your name">
+          <input style="margin-top:5px;" type="text" name="affiliation" id="affiliation" class="form-control" placeholder="Please tell us your affiliation, such as university name or business name">
+          <input style="margin-top:5px;" type="text" name="orcid" id="orcid" class="form-control" placeholder="If you have an ORCiD, please tell us what it is">
+          <select id="set-profession" name="profession" class="form-control" style="margin-top:5px;">
+            <option value="">Please select your profession</option>
+            <option value="Student">Student</option>
+            <option value="Doctor">Doctor</option>
+            <option value="Patient">Patient</option>
+            <option value="Advocate">Advocate</option>
+            <option value="Academic">Academic</option>
+            <option value="Researcher">Researcher</option>
+            <option value="Librarian">Librarian</option>
+            <option value="Other">Other</option>
+            <option value="Undisclosed">Prefer not to say</option>
+          </select>
+          <input id="confirm_public" name="confirm_public" type="checkbox">
+          <label for="confirm_public" class="confirm-label">I understand that information obtained by this button will be publicly accessible</label><br>
+          <input id="confirm_terms" name="confirm_terms" type="checkbox">
+          <label for="confirm_terms" class="confirm-label">
+            I have read the Open Access Button
+            <a target="_blank" href="/privacy" style="color:white;text-decoration:underline;">privacy policy</a> 
+            and I agree to the 
+            <a target="_blank" href="/terms" style="color:white;text-decoration:underline;">terms</a>
+          </label><br>
+          <input id="mailinglist" name="mailing_list" type="checkbox">
+          <label for="mailinglist" class="mailinglist-label">I would like to be added to the Open Access Button Mailing List</label><br>
+          <button id="set-username" type="button" class="btn btn-action" style="margin-top:5px;border:1px solid white;">Save your details</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid cloggedin" id="downloads">
+  <div class="row">
+    <div class="col-md-12">
+      <p>
+        By the way we have a brand new plugin coming really soon, in October 2016, combining up the open access and open data plugins all into one, and with some great new features!
+        Check back soon for more info.
+      </p>
+      <div id="plugin_messages"></div>
+      <a id="chromeinstall" class="btn btn-action btn-block dl ch" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">Get Open Access Button for Chrome</a>
+      <a id="firefoxinstall" class="btn btn-action btn-block dl ff" target="_blank" href="https://addons.mozilla.org/en-GB/firefox/addon/openaccessbutton/">Get Open Access Button for Firefox</a>
+    </div>
+  </div>
+</div>
+
+<!-- if user has requested or supported, show links to filters of requests on their ones -->
+<!-- otherwise show a getting started prompt-->
+<!-- show the getting started button, in case people want to read instructions, whether new users or not -->
+
+
+
+

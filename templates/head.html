@@ -1,0 +1,75 @@
+<head>
+  <meta charset="utf-8">
+  <title>Open Access Button</title>
+  <meta name="description" content="">
+  <meta name="author" content="Cottage Labs">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+
+  <link href="/static/favicon.ico" rel="icon" type="image/x-icon">
+  
+  <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <script type="text/javascript" src="//static.cottagelabs.com/jquery-1.10.2.min.js"></script>
+  <script type="text/javascript" src="//static.cottagelabs.com/bootstrap-3.0.3/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="//static.cottagelabs.com/bootstrap-3.0.3/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <script type="text/javascript" src="//static.cottagelabs.com/holder/jquery.holder.min.js"></script>
+  <script type="text/javascript" src="//static.cottagelabs.com/fingerprint2.min.js"></script>
+  <script type="text/javascript" src="//static.cottagelabs.com/clogin.js"></script>
+
+  <link rel="stylesheet" href="/static/oabutton.css">
+  
+  <link href='//fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+
+  <!--<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/itemID"> enable this for chrome inline install-->
+  
+  <script>
+  jQuery(document).ready(function() {
+    var logged = clogin.loggedin();
+    if (logged) {
+      $('.cloggedin').show();
+      $('.notcloggedin').hide();
+      if ($('#downloader').is(':visible')) $('#downloader').remove(); // needs handled directly because of classes for hiding it on small and medium screens too
+    }
+  });
+  </script>
+  
+  <style>
+    markdown {
+      display:none;
+    }
+    .container-fluid {
+      margin:0 auto 0 auto;
+      padding-left:15px;
+      padding-right:15px;
+      max-width:1000px;
+    }
+    .navbar {
+        -webkit-box-shadow: 0 1px 1px 0 rgba(51,51,51,1);
+        -moz-box-shadow: 0 1px 1px 0 rgba(51,51,51,1);
+        box-shadow: 0 1px 1px 0 rgba(51,51,51,1);
+    }
+    .navbar-nav li a{
+      font-size:1em;
+      color:#212f3f;
+      height:51px;
+      padding:13px 10px 13px 10px;
+    }
+    .navbar-nav{
+      height:50px;
+    }
+    .navbar-alert{
+      height:35px;
+      text-align:center;
+      vertical-align:middle;
+    }
+    .p-alert{
+    padding-top:3px;
+    }
+  </style>
+</head>

@@ -84,8 +84,7 @@ jQuery(document).ready(function() {
         .attr("cx", x)
         .attr("cy", y)
         .attr("class","point")
-        .attr("r", 3)
-        .style("fill", '#f04717');
+        .attr("r", 2);
     }
 
     draw = function(topo,data) {
@@ -93,8 +92,7 @@ jQuery(document).ready(function() {
       country.enter().insert("path")
         .attr("class", "country")
         .attr("d", path)
-        .attr("id", function(d,i) { return d.id; })
-        .style("fill", '#c8c8c8');
+        .attr("id", function(d,i) { return d.id; });
 
       //add points and repo suggestions
       if ( data ) {

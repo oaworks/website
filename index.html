@@ -28,10 +28,11 @@
   <script type="text/javascript" src="//static.cottagelabs.com/loginstate.min.js"></script>
 
   <link rel="stylesheet" href="/static/oabutton.css">
-  <link rel="stylesheet" media="only screen and (max-device-width: 1024px)" href="/static/oabutton_mobile.css">
   
   <link href='//fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
 
+  <!--<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/itemID"> enable this for chrome inline install-->
+  
   <script>
   jQuery(document).ready(function() {
     getter();
@@ -55,7 +56,7 @@
       margin:0 auto 0 auto;
       padding-left:15px;
       padding-right:15px;
-      max-width:1200px;
+      max-width:1000px;
     }
     .navbar {
         -webkit-box-shadow: 0 1px 1px 0 rgba(51,51,51,1);
@@ -71,12 +72,20 @@
     .navbar-nav{
       height:50px;
     }
+    .navbar-alert{
+      height:35px;
+      text-align:center;
+      vertical-align:middle;
+    }
+    .p-alert{
+    padding-top:3px;
+    }
   </style>
 </head>
 
 <body>
 
-  <div class="navbar navbar-fixed-top" style="background-color:white;">
+  <div id="topnav" class="navbar navbar-fixed-top" style="background-color:white;">
     <div class="container-fluid">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"  style="z-index:1000000;">
@@ -84,23 +93,20 @@
           <span class="glyphicon glyphicon-list"></span>
         </button>
         <ul class="nav navbar-nav">
-          <li class="hidden-xs hidden-sm"><img class="img" src="/static/oabutton_logo_final200.png" style="height:54px;padding-top:2px;"></li>
+          <li class="hidden-xs hidden-sm"><img class="img" src="/static/oab.png" style="height:54px;padding-top:2px;"></li>
           <li><a href="/" style="font-size:18px;">Open Access Button</a></li>
         </ul>
       </div>
       <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav pull-right">
-          <li><a href="/action">Take action</a></li>
-          <li><a href="/request">Requests</a></li>
-          <li><a href="/support">Support</a></li>
-          <li><a href="/about">About</a></li>
-          <li><a href="/blog">Blog</a></li>
+          <li><a href="/request/new"><i class="glyphicon glyphicon-plus"></i> Create a request</a></li>
+          <li><a href="/request"><i class="glyphicon glyphicon-search"></i> Explore requests</a></li>
           <li class="ting" style="display:none;"><a href="/account">Your account</a></li>
-          <li class="notting"><a href="/login">Login</a></li>
-          <li id="biggie" class="notting" style="background-color:#f04717;color:#212f3f;height:55px;z-index:10000;
+          <li class="notting"><a href="/account">Login</a></li>
+          <li id="biggie" class="notting" style="background-color:#398bc5;color:#212f3f;height:55px;z-index:10000;
           -webkit-border-bottom-right-radius: 5px;-webkit-border-bottom-left-radius: 5px;
           -moz-border-radius-bottomright: 5px;-moz-border-radius-bottomleft: 5px;border-bottom-right-radius: 5px;border-bottom-left-radius: 5px;">
-          <a href="/login" style="font-size:1.2em;font-weight:bold;">Download</a></li>
+          <a href="/account" style="font-size:1.2em;font-weight:bold;">Download</a></li>
         </ul>
       </div>
     </div>
@@ -111,28 +117,36 @@
   <div class="strap strap-compact" id="footer">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-md-2">
+        <div class="col-md-4">
+          <p>
+            <a alt="Find us on twitter" title="Find us on twitter" href="https://twitter.com/OA_Button" target="_blank"><i class="fa fa-twitter-square fa-5x action"></i></a>
+            <a alt="Find us on facebook" title="Find us on facebook"  href="https://www.facebook.com/openaccessbutton" target="_blank"><i class="fa fa-facebook-square fa-5x action"></i></a><br>
+            <a alt="Find us on github" title="Find us on github" href="https://github.com/oabutton" target="_blank"><i class="fa fa-github-square fa-5x action"></i></a>
+            <a alt="Contact us" title="Contact us" href="/about#contact" target="_blank"><i class="fa fa-envelope-square fa-5x action"></i></a>
+          </p>
+        </div>
+        <div class="col-md-2 col-md-offset-1">
           <ul style="list-style-type: none;">
-            <li><a href="mailto:legal@openaccessbutton.org?Subject=Hello" target="_top">Legal</a></li>
-            <li><a href="/about">FAQ</a></li>
-            <li><a href="/blog">Blog</a></li>
-            <li><a href="/contact" target="_top">Contact Us</a></li>
-            <li><a href="mailto:media@openaccessbutton.org?Subject=Hello" target="_top">Press</a></li>
-            <li><a href="https://openaccessbutton.org/support">For Developers</a></li>
+            <li><a href="/about">About us</a></li>
+            <li><a href="/support">Support us</a></li>
+            <li><a href="/resources">Resources</a></li>
+            <li><a href="/blog">Blog</a></li>            
           </ul>
         </div>
-        <div class="col-md-2">
-        </div>
         <div class="col-md-4">
-          <p><a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a></p>
-          <p style="color:white;">This work is licensed under a <br><a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>. Our code is <a href = "https://opensource.org/licenses/MIT">Open Source</a>.</p>.
-        </div>
-        <div class="col-md-4">
-          <p style="float:right;margin-top:10px;">
-            <a href="https://twitter.com/OA_Button" target="_blank"><i class="fa fa-twitter-square fa-5x action"></i></a>
-            <a href="https://www.facebook.com/openaccessbutton" target="_blank"><i class="fa fa-facebook-square fa-5x action"></i></a>
-            <a href="https://plus.google.com/+OpenAccessButton/" target="_blank"><i class="fa fa-google-plus-square fa-5x action"></i></a>
-            <br><a href="/contact" style="color:#f04717;">contact us directly</a>
+          <p style="color:white;">
+            This work is licensed under a
+            <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+          </p>
+          <p style="color:white;"> 
+            Our code is <a href="https://opensource.org/licenses/MIT">Open Source</a>
+            and on <a href="https://github.com/oabutton">Github</a>.<br>
+            <a href="/support">Want to help?</a>
+          </p>
+          <p>
+            <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+              <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png">
+            </a>
           </p>
         </div>
       </div>

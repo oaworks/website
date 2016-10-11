@@ -1,0 +1,15 @@
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <p>I will be request item page</p>
+      <p id="item"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+jQuery(document).ready(function() {
+  $('#item').html(window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1));
+});
+</script>
