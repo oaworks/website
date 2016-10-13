@@ -10,10 +10,38 @@ jQuery(document).ready(function() {
     $('#cloginArea .well').css('min-height','250px');
   }
   
-  var setvalues = function() {
-    if (clogin.apikey) $('#apikey').html(clogin.apikey);
+  var savecheck = function() {
+    if ( $('#username').val() && $('#profile\\.name').val() && $('#service\\.openaccessbutton\\.profile\\.profession').val() && $('#service\\.openaccessbutton\\.profile\\.confirm_public').is(':checked') && $('#service\\.openaccessbutton\\.profile\\.confirm_terms').is(':checked') ) {
+      return true;
+    } else {
+      $('#cloginSaveMessages').html('<p>Sorry, some information is missing. Please ensure you have filled in all the fields above and that you have checked the confirmation boxes too, then try saving again. Thanks!</p>');
+      return false;
+    }
   }
-  clogin.init({api:'https://dev.api.cottagelabs.com/accounts',afterLogin: setvalues });
+  var setvalues = function() {
+    if (clogin.user.account.username) $('.username').html(clogin.user.account.username);
+    if (clogin.apikey) $('#apikey').html(clogin.apikey);
+    try {
+      var p = clogin.user.account.profile ? clogin.user.account.profile : {};
+      var s = clogin.user.account.service.openaccessbutton.profile ? clogin.user.account.service.openaccessbutton.profile : {};
+      if (!clogin.user.account.username || !p.name || !s.profession || !s.confirm_public || !s.confirm_terms ) {
+        if (clogin.user.account.username) {
+          $('#username').val(clogin.user.account.username);
+        }
+        if (p.name) $('#profile\\.name').val(p.name);
+        if (s.orcid) $('#service\\.openaccessbutton\\.profile\\.orcid').val(s.orcid);
+        if (s.affiliation) $('#service\\.openaccessbutton\\.profile\\.affiliation').val(s.affiliation);
+        if (s.profession) $('#service\\.openaccessbutton\\.profile\\.profession').val(s.profession);
+        $('#setinfo').show();
+      }
+    } catch(err) {
+      $('#setinfo').show();
+    }
+  }
+  var aftersave = function() {
+    $('#setinfo').hide();
+  }
+  clogin.init({api:'https://dev.api.cottagelabs.com/accounts',afterLogin: setvalues, saveValidate: savecheck, afterSave: aftersave });
   
   var getUrlParameter = function getUrlParameter(sParam) {
     var sPageURL = decodeURIComponent(window.location.search.substring(1)),
@@ -58,11 +86,11 @@ jQuery(document).ready(function() {
       <div class="jumbotron" style="margin-top:-10px;padding-top:90px;">
         <div id="cloginEmailArea">
           <input type="text" class="form-control" id="cloginEmail" placeholder="Enter your email address">
-          <button id="cloginSubmit" type="submit" class="btn btn-action" style="border:1px solid white;margin-top:5px;">Sign up / Login</button>
+          <button id="cloginSubmit" type="submit" class="btn btn-action" style="border:1px solid white;margin-top:5px;">Sign up / Login</button> 
         </div>
         <div id="cloginTokenArea" style="display:none;">
-          <input type="text" class="form-control" id="cloginToken" placeholder="Check your email - click the link in the email, or enter your login code here">
-          <button id="cloginSubmitToken" type="submit" class="btn btn-action" style="border:1px solid white;margin-top:5px;">Login</button>
+          <input type="text" class="form-control" id="cloginToken" placeholder="Check your email, enter your login code - or just click the link in the email">
+          <p style="padding-top:5px;">Thanks! Now check your email for your login code link</p>
         </div>
         <div id="cloginMessages" style="margin-top:5px;"></div>
         <div id="cloginLoading" style="display:none;"><img style="height:30px;" src="//static.cottagelabs.com/spinner.gif"></div>
@@ -78,7 +106,7 @@ jQuery(document).ready(function() {
         </h2>
         <p style="text-align:justify;">
           Just provide your email address to begin signing up. We'll send you a validation 
-          email with a link and a code. Click the link, or copy the code.
+          email with a link and a code. Click the link in the email, or copy the code into the box that will appear above.
         </p>
       </div>
     </div>
@@ -137,18 +165,18 @@ jQuery(document).ready(function() {
   <div class="row">
     <div class="col-md-12">
       <div class="jumbotron" style="margin-top:-10px;">
-        <h1>Hello {{username}}</h1>
+        <h1>Hello <span class="username"></span></h1>
         <p><button id="cloginLogout" class="btn btn-danger" style="margin-bottom:5px;">Logout</button></p>
         <p>API Key: <span id="apikey"></span></p>
         
-        <div id="setinfo">
+        <div id="setinfo" style="display:none;">
           <h1>Thanks for signing up!</h1>
-          <input type="text" name="username" id="new-username" class="form-control" placeholder="Choose a username for your account">
-          <input style="margin-top:5px;" type="text" name="name" id="name" class="form-control" placeholder="Please tell us your name">
-          <input style="margin-top:5px;" type="text" name="affiliation" id="affiliation" class="form-control" placeholder="Please tell us your affiliation, such as university name or business name">
-          <input style="margin-top:5px;" type="text" name="orcid" id="orcid" class="form-control" placeholder="If you have an ORCiD, please tell us what it is">
-          <select id="set-profession" name="profession" class="form-control" style="margin-top:5px;">
-            <option value="">Please select your profession</option>
+          <input type="text" id="username" class="form-control cloginSave" placeholder="Choose a username for your account (required)">
+          <input style="margin-top:5px;" type="text" id="profile.name" class="form-control cloginSave" placeholder="Please tell us your name (required)">
+          <input style="margin-top:5px;" type="text" id="service.openaccessbutton.profile.affiliation" class="form-control cloginSave" placeholder="Please tell us your affiliation, such as university name or business name">
+          <input style="margin-top:5px;" type="text" id="service.openaccessbutton.profile.orcid" class="form-control cloginSave" placeholder="If you have an ORCiD, please tell us what it is">
+          <select id="service.openaccessbutton.profile.profession" class="form-control cloginSave" style="margin-top:5px;">
+            <option value="">Please select your profession (required)</option>
             <option value="Student">Student</option>
             <option value="Doctor">Doctor</option>
             <option value="Patient">Patient</option>
@@ -159,31 +187,26 @@ jQuery(document).ready(function() {
             <option value="Other">Other</option>
             <option value="Undisclosed">Prefer not to say</option>
           </select>
-          <input id="confirm_public" name="confirm_public" type="checkbox">
-          <label for="confirm_public" class="confirm-label">I understand that information obtained by this button will be publicly accessible</label><br>
-          <input id="confirm_terms" name="confirm_terms" type="checkbox">
-          <label for="confirm_terms" class="confirm-label">
+          <input id="service.openaccessbutton.profile.confirm_public" type="checkbox" class="cloginSave">
+          <label class="confirm-label">I understand that information obtained by this button will be publicly accessible</label><br>
+          <input id="service.openaccessbutton.profile.confirm_terms" type="checkbox" class="cloginSave">
+          <label class="confirm-label">
             I have read the Open Access Button
             <a target="_blank" href="/privacy" style="color:white;text-decoration:underline;">privacy policy</a> 
             and I agree to the 
             <a target="_blank" href="/terms" style="color:white;text-decoration:underline;">terms</a>
           </label><br>
-          <input id="mailinglist" name="mailing_list" type="checkbox">
-          <label for="mailinglist" class="mailinglist-label">I would like to be added to the Open Access Button Mailing List</label><br>
-          <button id="set-username" type="button" class="btn btn-action" style="margin-top:5px;border:1px solid white;">Save your details</button>
+          <button id="cloginSave" type="button" class="btn btn-action" style="margin-top:5px;border:1px solid white;">Save your details</button>
+          <div id="cloginSaveMessages"></div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="container-fluid cloggedin" id="downloads">
+<div class="container-fluid cloggedin" id="downloads" style="margin-bottom:50px;">
   <div class="row">
     <div class="col-md-12">
-      <p>
-        By the way we have a brand new plugin coming really soon, in October 2016, combining up the open access and open data plugins all into one, and with some great new features!
-        Check back soon for more info.
-      </p>
       <div id="plugin_messages"></div>
       <a id="chromeinstall" class="btn btn-action btn-block dl ch" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">Get Open Access Button for Chrome</a>
       <a id="firefoxinstall" class="btn btn-action btn-block dl ff" target="_blank" href="https://addons.mozilla.org/en-GB/firefox/addon/openaccessbutton/">Get Open Access Button for Firefox</a>

@@ -4,19 +4,36 @@
 
 <script>
 jQuery(document).ready(function() {
+  var api = 'https://api.openaccessbutton.org';
+  if (window.location.host.indexOf('openaccessbutton.org') === -1) api = 'https://dev.api.cottagelabs.com/service/oab';
+
+  var result = function(res) {
+    var out = '';
+    out += '<div class="well" style="background-color:#eee;border-color:#212f3f;overflow:hidden;">';
+    // TODO should show the item title here... but what if it is data? need to show we want the data for X, not article X
+    out += '<h4><a href="/request/' + res._id + '" style="color:#212f3f;">';
+    out += res.title ? res.title : res.url;
+    out += '</a></h4>';
+    var dt = new Date(res.createdAt).toUTCString().split(', ')[1];
+    var rq = '';
+    if (res.user) {
+      if (res.user.username) {
+        rq = ' by ' + res.user.username;
+      } else if (res.user.email) {
+        rq = ' by ' + res.user.email;
+      }
+    }
+    out += '<p>Requested' + rq + ' on ' + dt.substring(0,dt.length-13);
+    if (res.count && res.count > 1) out += '. Supported by ' + res.count + ' people.';
+    out += '</p>';
+    // TODO add a support this request and a share this request buttons
+    out += '</div>';
+    return out;
+  }
   var results = function(data) {
     $('#requestscount').html(data.hits.total);
     var out = '';
-    for ( var r in data.hits.hits ) {
-      var res = data.hits.hits[r]._source;
-      out += '<div class="well" style="background-color:#eee;border-color:#212f3f;overflow:hidden;">';
-      // TODO should show the item title here... but what if it is data? need to show we want the data for X, not article X
-      out += '<h4><a href="/request/' + res._id + '" style="color:#212f3f;">' + res.url + '</a></h4>';
-      var dt = new Date(res.createdAt).toUTCString().split(', ')[1];
-      out += '<p>Requested by ' + res.email + ' on ' + dt.substring(0,dt.length-13) + '</p>';
-      // TODO add a support this request and a share this request buttons
-      out += '</div>';
-    }
+    for ( var r in data.hits.hits ) out += result(data.hits.hits[r]._source);
     $('.holder.holder-results').html(out);
     $('#storycount').html(data.hits.total);
   }
@@ -49,7 +66,7 @@ jQuery(document).ready(function() {
 
   $('#requests').holder({
     what: "Explore requests",
-    url: "https://api.openaccessbutton.org/query/request",
+    url: api + "/query",
     datatype: 'JSON',
     scroll: true,
     defaultquery: { 
@@ -67,7 +84,7 @@ jQuery(document).ready(function() {
           },
           filter: {
             bool: {
-              must_not:[{term:{'test':true}}]
+              //must_not:[{term:{'test':true}}]
             }
           }
         }
@@ -142,7 +159,8 @@ div.tooltip {
         <h3 style="text-align:center;font-size:60px;color:#f04717;"><span id="requestssuccesscount">0</span><span style="color:#ccc;">/</span><span id="requestscount">X</span></h3>
         <p style="text-align:center;font-size:0.8em;">Successful requests</p>
       </div>
-      <div class="holder holder-suggestions"></div>
+      <a class="btn btn-action btn-block btn-xs" href="/request/new">Create a new request</a>
+      <div class="holder holder-suggestions" style="margin-top:15px;"></div>
     </div>
 
     <div class="col-md-9">

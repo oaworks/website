@@ -1,15 +1,366 @@
 
-<div class="container-fluid">
+<div class="container-fluid" id="infopanel">
   <div class="row">
+    <div class="col-md-4 notnew" style="z-index:10;">
+      <div class="well" style="background-color:#212f3f;color:white;padding-top:30px;padding-bottom:40px;margin-top:-10px;border:1px solid #212f3f;min-height:300px;">
+        <h1 style="text-align:center;" id="msg"></h1>
+      </div>
+    </div>
+    <div class="col-md-8" style="z-index:5;" id="requestpanel">
+      <div class="panel panel-default" style="border-color:#398bc5;margin-top:-10px;">
+        <div class="panel-heading notnew" style="background-color:#398bc5;padding-top:30px;padding-bottom:30px;min-height:242px;">
+          <h1 style="text-align:center;">
+            <a href="#" target="_blank" id="titlelink" style="color:white;" alt="Click to open the source in a new page" title="Click to open the source in a new page"></a>
+          </h1>
+        </div>
+        <div class="panel-body">
+          <a href="#" id="details" class="panels" alt="Click to view and edit request details" title="Click to view and edit request details">+ details</a>
+          <div id="edit" class="panels details" style="display:none;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row notnew">
     <div class="col-md-12">
-      <p>I will be request item page</p>
-      <p id="item"></p>
+      <div class="panel panel-default" style="border-color:#212f3f;">
+        <div class="panel-heading" style="background-color:#212f3f;"><h1 style="text-align:center;color:white;">Add your support</h1></div>
+        <div class="panel-body">
+  
+          <div class="cloggedin" style="display:none;" id="addsupport">
+            <textarea class="form-control addsupport" style="min-height:100px;" placeholder="(Optional) please tell us why you support this request, and what you would use this content for if you had access" id="supportstory"></textarea>
+            <a class="btn btn-action btn-block addsupport" id="addsupport" href="#" style="margin-top:2px;">Add your support</a>
+            <p class="addsupport" style="display:none;">Thank you! Your support has been added to this request, and you will be notified when this content becomes available.</p>
+          </div>
+
+          <div class="notcloggedin">
+            <p>
+              Please sign in so that you can add your support.
+              No account yet? Then sign up now to support this request, and start your own requests.
+            </p>
+            <a class="btn btn-default btn-block login" href="/account">Login (or sign up) please!</a>                
+          </div>
+
+          <p style="padding-top:30px;font-size:0.8em;">Can you provide this content? If you have the right to share it, 
+            we'd love to hear from you.<br>Please <a class="label label-default" style="background-color:#212f3f;color:white;" href="mailto:contact@openaccessbutton.org">contact us</a> to discuss providing a copy.
+            Or help us with a <a class="label label-default" style="background-color:#212f3f;color:white;" href="https://openaccessbutton.org/donate">donation</a> to support open access.
+          </p>
+        </div>
+        
+        <div class="panel-footer" style="background-color:#398bc5;">
+          <a href="#" id="shares" class="btn btn-action btn-block panels" style="margin-top:5px;">
+            Share this request on 
+            <i class="fa fa-twitter-square"></i>
+            <i class="fa fa-facebook-square"></i>
+            etc
+          </a>
+        </div>    
+      </div>        
+    </div>
+  </div>
+
+  <div class="row panels shares" style="display:none;">
+    <div class="col-md-8">
+      <p>Share and publicise this request, to increase the chances of us getting it to the people that need it.</p>
+      <p>Request URL: <code id="requesturl"></code></p>
+      <p>Embed code - embed a widget in your site to publicise this request. Just copy and paste the code below:</p>
+      <textarea id="widget" class="form-control" style="height:120px;" onclick="this.select()"><div id="oab_insert"></div><script>var oabe = function() {var x = new XMLHttpRequest(); x.onreadystatechange = function() { if (x.readyState == 4 && x.status == 200) { document.getElementById("oab_insert").innerHTML = JSON.parse(x.responseText).data; } }; x.open("GET", "WIDGETURL", true); x.send(); }();</script></textarea>
+    </div>
+    <div class="col-md-4">
+    </div>
+  </div>
+
+  <div class="row notnew">
+    <div class="col-md-12" style="padding-top:100px;">
+      <div class="well">          
+        <p>We believe that researchers have an obligation to make research papers and the data supporting papers open by default. 
+          Open research and data is good practice for research, makes greater innovation possible, and is fair for funders - 
+          the public. Request pages keep researchers accountable to requests for papers and data made through the Open Access Button.</p>
+
+        <p>Open Data is data that is freely available on the internet permitting any user to download, copy, analyse, 
+          re-process, pass through software or use for any other purpose without financial, legal, or technical barriers. 
+          Open Data is great for research, because it accelerates discovery, increases integrity, and promotes spontaneity.</p>
+        <p>(*Occasionally, data can't be made open for privacy and other good reasons, which we understand. However, "It's hard" or 
+          "I don't have the time" are not good reasons.)</p>
+        <p>It's beneficial for researchers, too. Papers with publicly available data are <a href="https://peerj.com/articles/175/">cited more</a> 
+          and the datasets themselves can be cited - allowing researchers to get greater credit for all their work. With Open Research Data bigger 
+          problems are solved faster. Better than data just sitting on your hard drive gathering dust, right?</p>
+
+        <p>This page has been automatically generated by users. If you see an error or offensive content please let us know by emailing 
+          <a href="mailto:leads@openaccessbutton.org">leads@openaccessbutton.org</a>.</p>
+
+        <p>We're working to improve our requests process. Let us know what you think!</p>
+      </div>
     </div>
   </div>
 </div>
 
+
+<div class="container-fluid" id="loginpanel" style="display:none;min-height:700px;">
+  <div class="row">
+    <div class="col-md-12" style="z-index:5;">
+      <div class="jumbotron" style="background-color:#398bc5;margin-top:-10px;padding-top:30px;padding-bottom:30px;min-height:100px;">
+        <h2 style="text-align:center;">
+          Sorry!<br>You have to sign up if you want to create and edit requests.<br>Why not sign up now?
+        </h2>
+      </div>
+      <a class="btn btn-action btn-block" href="/account">Sign up now</a>
+    </div>
+  </div>
+</div>
+
+
+
 <script>
-jQuery(document).ready(function() {
-  $('#item').html(window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1));
-});
+  jQuery(document).ready(function() {
+    var api = 'https://api.openaccessbutton.org';
+    if (window.location.host.indexOf('openaccessbutton.org') === -1) {
+      api = 'https://dev.api.cottagelabs.com/service/oab';
+      clogin.api = 'https://dev.api.cottagelabs.com/accounts';
+    }
+    clogin.login();
+
+    var rid = window.location.pathname.split('/')[2];
+
+    var format = function(date) {
+      var pubDate = new Date(parseInt(date));
+      var weekday = new Array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
+      var monthname = new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
+      return weekday[pubDate.getDay()] + ' ' + monthname[pubDate.getMonth()] + ' ' + pubDate.getDate() + ', ' + pubDate.getFullYear();
+    }
+
+    var record = undefined;
+    var submit = function() {
+      var data = {};
+      if (rid === 'new') data.plugin = 'oab_site_1.0.0';
+      if ( $('#email').length ) data.email = $('#email').val();
+      if ( $('#status').length ) data.status = $('#status').val();
+      if ( $('#url').length ) data.url = $('#url').val();
+      if ( $('#title').length ) data.title = $('#title').val();
+      if ( $('#doi').length ) data.doi = $('#doi').val();
+      if ( $('#story').length ) data.story = $('#story').val();
+      if ( $('#test').length ) {
+        $('#test').is(':checked') ? data.test = true : data.test = false;
+      }
+      var url = api+'/request';
+      if (rid !== 'new') url += '/'+rid;
+      var opts = {
+        type:'POST',
+        url: url,
+        cache:false,
+        processData:false,
+        contentType: 'application/json',
+        dataType: 'json',
+        data: JSON.stringify(data),
+        success: function() { $('#savesuccess').show(); setTimeout(function() { $('#savesuccess').hide(); }, 2000); },
+        beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
+      }
+      $.ajax(opts);
+    }
+    var deleteitem = function() {
+      $.ajax({
+        type:'DELETE',
+        url:api+'/request/'+rid,
+        beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
+      });
+      $('#edit').html('<p>This request has been deleted. You will be redirected to the requests page.</p>');
+      setTimeout(function() { window.location = '/request'; }, 2000);
+    }
+    var scrape = function() {
+      var url = $('#url').length && $('#url').val() ? $('#url').val() : $('#titlelink').attr('href');
+      $.ajax({
+        type:'GET',
+        url:api+'/scrape?url='+encodeURIComponent(url),
+        success: function(data) {
+          if (data.data) {
+            if (data.data.title) $('#title').val(data.data.title);
+            if (data.data.doi) $('#doi').val(data.data.doi);
+            if (data.data.email && data.data.email.length > 0) $('#email').val(data.data.email[0]);
+            $('#edit').show();
+          }
+        }
+      })
+    }
+    
+    $('#requesturl').html(window.location.protocol + '//' + window.location.host + window.location.pathname);
+    $('.login').attr('href','/account?next='+window.location.pathname);
+    $('#widget').val( $('#widget').val().replace('WIDGETURL',api+'/embed/request/'+rid) );
+
+    var details = function(data) {
+      record = data && data.data ? data.data : undefined;
+      // add request details to page
+      // if user, make editable and submittable
+      // add admin controls to details if user is admin
+      var dets = '';
+      if (record) {
+        // update the title link
+        $('#titlelink').attr('href',record.url);
+        record.title ? $('#titlelink').html(record.title) : $('#titlelink').html('Untitled article');
+        // update the msg header at the top with a success / closed / other status info
+        var msg = '<span style="color:#f04717;font-size:1.2em;">' + record.count + '</span> ';
+        msg += record.count === 1 ? 'person supports ' : 'people support ';
+        msg += 'this request for ';
+        msg += record.type === 'article' ? 'access' : 'data';
+        $('#msg').html(msg);
+        // TODO check for other requests for the same URL but of different types
+        dets += '<p>This request was created on ' + format(record.createdAt);
+        if (record.user && (record.user.username || record.user.email)) {
+          dets += ' by ';
+          dets += record.user.username ? record.user.username : record.user.email;
+        }
+        if (!clogin.loggedin() && record && record.story) {
+          dets += ' who said:<br><blockquote>' + record.story + '</blockquote><br>';
+        }
+        var eml = clogin.hasRole('openaccessbutton.admin') || record.status === 'refused' ? '<input type="text" id="email" value="' + record.email + '" style="background-color:orange;" class="form-control">' : record.email;
+        if (record.status === 'moderate') {
+          dets += ' and we will be sending it to ' + eml + ' once our team have approved it.';
+        } else if (record.status === 'progress') {
+          dets += ' and we are waiting to hear back from ' + eml + '.';
+        } else if (record.status === 'hold') {
+          dets += ' but the request is on hold - ' + eml + ' will get back to us soon.'; // TODO add hold info as well 
+        } else if (record.status === 'refused') {
+          dets += ', but has been refused by ' + record.email + ' - can you provide a new author email address to try? <input type="text" id="email" class="form-control" placeholder="Author email address">';
+        } else if (record.status === 'success') {
+          dets += ', and has been successful!';
+        }
+        dets += '</p>';
+        if (clogin.hasRole('openaccessbutton.admin')) {
+          dets += ' <select id="status" class="form-control" style="background-color:orange;width:100px;display:inline;margin-right:20px;">';
+          var statuses = ['moderate','progress','hold','refused','received'];
+          for ( var s in statuses ) {
+            dets += '<option value="' + statuses[s] + '"';
+            if (record.status === statuses[s]) dets += ' selected="selected"';
+            dets += '>' + statuses[s] + '</option>';
+          }
+          dets += '</select>';
+          dets += ' <span style="color:orange;">test:</span> <input type="checkbox" id="test"';
+          if (record.test === true) dets += ' checked="checked"';
+          dets += '> <a style="margin-left:20px;" class="btn btn-danger btn-xs" id="delete" href="#">DELETE</a>';
+          // TODO add options to email all requestees, or extract data about the request (or pass off to admin)
+        }
+        dets += '</p>';
+      } else {
+        dets += '<p>New request</p>';
+        dets += '<p><input type="text" id="url" class="form-control" placeholder="Article URL"></p>';
+      }
+      if (clogin.loggedin()) { 
+        dets += '<p><input type="text" id="title" class="form-control" placeholder="Article title" value="';
+        if (record && record.title) dets += record.title;
+        dets += '"></p>';
+        dets += '<p><input type="text" id="doi" class="form-control" placeholder="DOI" value="';
+        if (record && record.doi) dets += record.doi;
+        dets += '"></p>';
+      } else if (record && record.doi) {
+        dets += '<p>DOI: ' + record.doi + '</p>';
+        dets += '<p><a href="/account">Sign up now</a> to get your Open Access Button and to edit and create requests</p>';
+      }
+      // TODO is it worth collecting author info here? What will we ever actually use it for?
+      if (clogin.hasRole('openaccessbutton.admin') || record && record.user.id && clogin.getCookie().userId === record.user.id) {
+        dets += '<p><textarea id="story" class="form-control" placeholder="Story" style="min-height:100px;';
+        if (clogin.hasRole('openaccessbutton.admin') && rid !== 'new') dets += 'background-color:orange;';
+        dets += '">';
+        if (record && record.story) dets += record.story;
+        dets += '</textarea></p>';        
+      } else if (rid === 'new') {
+        dets += '<p><textarea id="story" class="form-control" placeholder="Story" style="min-height:100px;"></textarea></p>';
+      }
+      // TODO need to add and bind a save button if the user can save anything
+      if (clogin.hasRole('openaccessbutton.user') || clogin.hasRole('openaccessbutton.admin')) dets += '<input type="submit" id="submitchanges" value="Save changes" class="btn btn-action btn-block"><div id="savesuccess" style="display:none;"><p>Saved</p></div>';
+      $('#edit').html(dets);
+      if ($('#submitchanges').length) $('#submitchanges').bind('click',submit);
+      if ($('#delete').length) $('#delete').bind('click',deleteitem);
+      if (clogin.hasRole('root')) $('#titlelink').bind('click',scrape);
+      if ($('#url').length && rid === 'new') $('#url').bind('blur',scrape);
+
+      // list all the stories supporting this request
+      // if user and user supports this request already, hide the support submission area
+
+      // if successful, need to show the links to the content, and the data badge for the author if applicable
+      // and if request is on hold or failed then show a section at the top to indicate that, and other possible actions
+    }
+    
+    var result = function(res) {
+      var out = '';
+      out += '<div class="well" style="background-color:#eee;border-color:#212f3f;overflow:hidden;">';
+      // TODO should show the item title here... but what if it is data? need to show we want the data for X, not article X
+      out += '<h4><a href="/request/' + res._id + '" style="color:#212f3f;">' + res.url + '</a></h4>';
+      var dt = new Date(res.createdAt).toUTCString().split(', ')[1];
+      out += '<p>Requested by ' + res.email + ' on ' + dt.substring(0,dt.length-13) + '</p>';
+      // TODO add a support this request and a share this request buttons
+      out += '</div>';
+      return out;
+    }
+    var results = function(data) {
+      $('#requestscount').html(data.hits.total);
+      var out = '';
+      for ( var r in data.hits.hits ) out += result(data.hits.hits[r]._source);
+      $('.holder.holder-results').html(out);
+      $('#storycount').html(data.hits.total);
+    }
+
+    if (rid === 'new') {
+      if (clogin.loggedin()) {
+        $('.notnew').hide();
+        $('#details').hide();
+        $('#requestpanel').removeClass('col-md-8').addClass('col-md-12');
+        details();
+        $('div.details').show();
+        $('#submitchanges').html('Save new request');
+      } else {
+        $('#loginpanel').show();
+        $('#infopanel').hide();
+      }
+    } else {
+      $.ajax({
+        type: 'GET',
+        url: api + '/request/' + rid,
+        success: details,
+        error: function() { $('#titlelink').html("Sorry, we can't find a request with ID " + rid); }
+      });
+
+      $('#stories').holder({
+        what: "Explore stories",
+        url: api + "/supports",
+        datatype: 'JSON',
+        defaultquery: { 
+          sort: [
+            {
+              createdAt: {order: 'desc'}
+            }
+          ],
+          query: {
+            filtered: {
+              query: {
+                bool: {
+                  must: []
+                }
+              },
+              filter: {
+                bool: {
+                  must_not:[{term:{'test':true}}]
+                }
+              }
+            }
+          }
+        },
+        pushstate: false,
+        results: {
+          default: results
+        }
+      }); 
+
+    }
+
+    // make this the receiver page too? If so look for a receiver query param and replace the add your support section
+
+    // add action to addsupport button to submit support from this user
+    
+    var panels = function(event) {
+      event.preventDefault();
+      $('div.panels:not(.' + $(this).attr('id') + ')').hide();
+      $('div.'+$(this).attr('id')).toggle();
+    }
+    $('a.panels').bind('click',panels);
+  });
 </script>
+
