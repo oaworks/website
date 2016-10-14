@@ -132,12 +132,11 @@ jQuery(document).ready(function() {
         
         <div id="setinfo" style="display:none;">
           <h1>Thanks for signing up!</h1>
-          <input type="text" id="username" class="form-control cloginSave" placeholder="Choose a username for your account (required)">
-          <input style="margin-top:5px;" type="text" id="profile.name" class="form-control cloginSave" placeholder="Please tell us your name (required)">
-          <input style="margin-top:5px;" type="text" id="service.openaccessbutton.profile.affiliation" class="form-control cloginSave" placeholder="Please tell us your affiliation, such as university name or business name">
-          <input style="margin-top:5px;" type="text" id="service.openaccessbutton.profile.orcid" class="form-control cloginSave" placeholder="If you have an ORCiD, please tell us what it is">
+          <input type="text" id="username" class="form-control cloginSave" placeholder="Choose a username (required)">
+          <input style="margin-top:5px;" type="text" id="profile.name" class="form-control cloginSave" placeholder="Full name (required)">
+          <input style="margin-top:5px;" type="text" id="service.openaccessbutton.profile.affiliation" class="form-control cloginSave" placeholder="Affiliation (University name, Business name etc">
           <select id="service.openaccessbutton.profile.profession" class="form-control cloginSave" style="margin-top:5px;">
-            <option value="">Please select your profession (required)</option>
+            <option value="">Select the profession which best describes you (required)</option>
             <option value="Student">Student</option>
             <option value="Doctor">Doctor</option>
             <option value="Patient">Patient</option>
@@ -149,13 +148,13 @@ jQuery(document).ready(function() {
             <option value="Undisclosed">Prefer not to say</option>
           </select>
           <input id="service.openaccessbutton.profile.confirm_public" type="checkbox" class="cloginSave">
-          <label class="confirm-label">I understand that information obtained by this button will be publicly accessible</label><br>
+          <label class="confirm-label">I understand that information obtained by the Open Access Button will be publicly accessible</label><br>
           <input id="service.openaccessbutton.profile.confirm_terms" type="checkbox" class="cloginSave">
           <label class="confirm-label">
             I have read the Open Access Button
             <a target="_blank" href="/privacy" style="color:white;text-decoration:underline;">privacy policy</a> 
             and I agree to the 
-            <a target="_blank" href="/terms" style="color:white;text-decoration:underline;">terms</a>
+            <a target="_blank" href="/terms" style="color:white;text-decoration:underline;">terms of service</a>
           </label><br>
           <button id="cloginSave" type="button" class="btn btn-action" style="margin-top:5px;border:1px solid white;">Save your details</button>
           <div id="cloginSaveMessages"></div>
