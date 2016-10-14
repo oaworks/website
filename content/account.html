@@ -83,73 +83,33 @@ jQuery(document).ready(function() {
 <div class="container-fluid notcloggedin" id="cloginArea">
   <div class="row">
     <div class="col-md-12">
-      <div class="jumbotron" style="margin-top:-10px;padding-top:90px;">
+      <div class="jumbotron" style="margin-top:-10px;">
         <div id="cloginEmailArea">
+          <h2 style="text-align:center;">Sign in to your account</h2>
+          <p style="text-align:center;">
+            We use a password free system<br>
+            No account yet? Just enter your email address to get started
+          </p>
           <input type="text" class="form-control" id="cloginEmail" placeholder="Enter your email address">
-          <button id="cloginSubmit" type="submit" class="btn btn-action" style="border:1px solid white;margin-top:5px;">Sign up / Login</button> 
+          <button id="cloginSubmit" type="submit" class="btn btn-action btn-block" style="border:1px solid white;margin-top:10px;">Sign up / Login</button> 
         </div>
         <div id="cloginTokenArea" style="display:none;">
-          <input type="text" class="form-control" id="cloginToken" placeholder="Check your email, enter your login code - or just click the link in the email">
-          <p style="padding-top:5px;">Thanks! Now check your email for your login code link</p>
+          <h2 style="text-align:center;">Go check your email!</h2>
+          <p style="text-align:center;">
+            We use a password free system.<br>
+            It's magical, more secure, and means you have one less password to remember. The link expires in 30 minutes so be sure to use it soon.
+          </p>
+          <input type="text" class="form-control" id="cloginToken" placeholder="Enter your login code">
+          <p style="text-align:center;">
+            <br>If you don't receive an email within a few minutes, check your spam folder. Contact us at 
+            <a style="color:white;" href="mailto:hello@openaccessbutton.org">hello@openaccessbutton.org</a> if you don't receive an email.
+          </p>
         </div>
         <div id="cloginMessages" style="margin-top:5px;"></div>
         <div id="cloginLoading" style="display:none;"><img style="height:30px;" src="//static.cottagelabs.com/spinner.gif"></div>
       </div>
     </div>
-  </div>
-  
-  <div class="row">
-    <div class="col-md-6">
-      <div class="well">
-        <h2 style="text-align:center;">
-          <i class="fa fa-user-plus"></i> Sign up
-        </h2>
-        <p style="text-align:justify;">
-          Just provide your email address to begin signing up. We'll send you a validation 
-          email with a link and a code. Click the link in the email, or copy the code into the box that will appear above.
-        </p>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="well">
-        <h2 style="text-align:center;">
-          <i class="fa fa-user"></i> Login
-        </h2>
-        <p style="text-align:justify;">
-          Just enter your email address above to login.<br>
-          We don't use passwords - you will get an email with a link and an authentication code; all you 
-          have to do is click the link or type in the authentication code back here, once you get it. 
-        </p>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-6">
-      <div class="well">
-        <h2 style="text-align:center;">
-          &nbsp;
-        </h2>
-        <p style="text-align:justify;">
-          We will <b>not</b> share your email address with anyone else. It will be used by us to contact 
-          you about the service, and as your username until you choose your own.
-          After first login you can pick a username and confirm a couple 
-          more details to help us manage your account.
-        </p>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="well">
-        <h2 style="text-align:center;">
-          <i class="fa fa-download"></i> Download
-        </h2>
-        <p style="text-align:justify;">
-          After signing up you will be able to login and download the Open Access Button 
-          for your preferred web browser. We're also making some handy widget and bookmarklet versions, coming soon.<br>
-          Questions? <a href="/contact">Contact us</a>
-        </p>
-      </div>
-    </div>
-  </div>
+  </div>  
 </div>
 
 
@@ -167,7 +127,7 @@ jQuery(document).ready(function() {
       <div class="jumbotron" style="margin-top:-10px;">
         <h1>Hello <span class="username"></span></h1>
         <p><button id="cloginLogout" class="btn btn-danger" style="margin-bottom:5px;">Logout</button></p>
-        <p>API Key: <span id="apikey"></span></p>
+        <p id="apikey" style="display:none;"></p>
         
         <div id="setinfo" style="display:none;">
           <h1>Thanks for signing up!</h1>

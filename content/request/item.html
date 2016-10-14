@@ -10,7 +10,7 @@
       <div class="panel panel-default" style="border-color:#398bc5;margin-top:-10px;">
         <div class="panel-heading notnew" style="background-color:#398bc5;padding-top:30px;padding-bottom:30px;min-height:242px;">
           <h1 style="text-align:center;">
-            <a href="#" target="_blank" id="titlelink" style="color:white;" alt="Click to open the source in a new page" title="Click to open the source in a new page"></a>
+            <a href="" target="_blank" id="titlelink" style="color:white;" alt="Click to open the source in a new page" title="Click to open the source in a new page"></a>
           </h1>
         </div>
         <div class="panel-body">
@@ -152,7 +152,15 @@
         contentType: 'application/json',
         dataType: 'json',
         data: JSON.stringify(data),
-        success: function() { $('#savesuccess').show(); setTimeout(function() { $('#savesuccess').hide(); }, 2000); },
+        success: function(data) { 
+          if (rid === 'new') {
+            //$('#savesuccess').html('<p>Your new request has been created at <a href="/request/' + '' + '">' + '' + '</a></p>');
+            //window.location = '/request/' + '';
+            $('#savesuccess').html(JSON.stringify(data));
+          }
+          $('#savesuccess').show(); 
+          setTimeout(function() { $('#savesuccess').hide(); }, 2000); 
+        },
         beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
       }
       $.ajax(opts);
@@ -166,20 +174,51 @@
       $('#edit').html('<p>This request has been deleted. You will be redirected to the requests page.</p>');
       setTimeout(function() { window.location = '/request'; }, 2000);
     }
-    var scrape = function() {
+    var availability = function() {
+      $('#loadingavailability').show();
       var url = $('#url').length && $('#url').val() ? $('#url').val() : $('#titlelink').attr('href');
       $.ajax({
         type:'GET',
-        url:api+'/scrape?url='+encodeURIComponent(url),
+        url:api+'/availability?url='+encodeURIComponent(url),
         success: function(data) {
-          if (data.data) {
-            if (data.data.title) $('#title').val(data.data.title);
-            if (data.data.doi) $('#doi').val(data.data.doi);
-            if (data.data.email && data.data.email.length > 0) $('#email').val(data.data.email[0]);
-            $('#edit').show();
+          $('#loadingavailability').hide();
+          if (data && data.data && data.data.availability && data.data.availability.length > 0) {
+            for ( var a in data.data.availability ) {
+              var ar = data.data.availability[a];
+              $('#url').after('<a style="margin-top:5px;" href="' + ar.url + '" class="btn btn-action">This ' + ar.type + ' is already available!</a> ');
+            }
           }
-        }
-      })
+          if (data && data.data && data.data.requests && data.data.requests.length > 0) {
+            for ( var r in data.data.requests ) {
+              var rr = data.data.requests[r];
+              $('#url').after('<a style="margin-top:5px;" href="' + rr.url + '" class="btn btn-action">There is already a ' + rr.type + ' request open!</a> ');
+            }
+          }
+          // TODO for items in accepts should create checkboxes by type
+        },
+        error: function() { $('#loadingavailability').hide(); }
+      });
+    }
+    var scrape = function() {
+      var url = $('#url').length && $('#url').val() ? $('#url').val() : $('#titlelink').attr('href');
+      if (url) {
+        $('#loadingscrape').show();
+        if (rid === 'new') availability(); // kick off an availability check
+        $.ajax({
+          type:'GET',
+          url:api+'/scrape?url='+encodeURIComponent(url),
+          success: function(data) {
+            $('#loadingscrape').hide();
+            if (data.data) {
+              if (data.data.title) $('#title').val(data.data.title);
+              if (data.data.doi) $('#doi').val(data.data.doi);
+              if (data.data.email && data.data.email.length > 0) $('#email').val(data.data.email[0]);
+              $('#edit').show();
+            }
+          },
+          error: function() { $('#loadingscrape').hide(); }
+        });
+      }
     }
     
     $('#requesturl').html(window.location.protocol + '//' + window.location.host + window.location.pathname);
@@ -242,6 +281,8 @@
       } else {
         dets += '<p>New request</p>';
         dets += '<p><input type="text" id="url" class="form-control" placeholder="Article URL"></p>';
+        dets += '<p id="loadingscrape" style="display:none;"><img style="height:20px;" src="//static.cottagelabs.com/spinner.gif"> loading details...</p>';
+        dets += '<p id="loadingavailability" style="display:none;"><img style="height:20px;" src="//static.cottagelabs.com/spinner.gif"> checking availability...</p>';
       }
       if (clogin.loggedin()) { 
         dets += '<p><input type="text" id="title" class="form-control" placeholder="Article title" value="';
@@ -256,7 +297,7 @@
       }
       // TODO is it worth collecting author info here? What will we ever actually use it for?
       if (clogin.hasRole('openaccessbutton.admin') || record && record.user.id && clogin.getCookie().userId === record.user.id) {
-        dets += '<p><textarea id="story" class="form-control" placeholder="Story" style="min-height:100px;';
+        dets += '<p><textarea id="story" class="form-control" placeholder="How would getting access to this research help you? This message will be sent to the author." style="min-height:100px;';
         if (clogin.hasRole('openaccessbutton.admin') && rid !== 'new') dets += 'background-color:orange;';
         dets += '">';
         if (record && record.story) dets += record.story;
@@ -265,7 +306,12 @@
         dets += '<p><textarea id="story" class="form-control" placeholder="Story" style="min-height:100px;"></textarea></p>';
       }
       // TODO need to add and bind a save button if the user can save anything
-      if (clogin.hasRole('openaccessbutton.user') || clogin.hasRole('openaccessbutton.admin')) dets += '<input type="submit" id="submitchanges" value="Save changes" class="btn btn-action btn-block"><div id="savesuccess" style="display:none;"><p>Saved</p></div>';
+      if (clogin.hasRole('openaccessbutton.user') || clogin.hasRole('openaccessbutton.admin')) {
+        dets += '<input type="submit" id="submitchanges" value="Save';
+        if (rid !== 'new') dets += ' changes';
+        dets += '" class="btn btn-action btn-block">';
+        dets += '<div id="savesuccess" style="display:none;"><p>Saved</p></div>';
+      }
       $('#edit').html(dets);
       if ($('#submitchanges').length) $('#submitchanges').bind('click',submit);
       if ($('#delete').length) $('#delete').bind('click',deleteitem);
