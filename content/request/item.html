@@ -137,39 +137,48 @@
 
     var record = undefined;
     var submit = function() {
-      var data = {};
-      if (rid === 'new') data.plugin = 'oab_site_1.0.0';
-      if ( $('#email').length ) data.email = $('#email').val();
-      if ( $('#status').length ) data.status = $('#status').val();
-      if ( $('#url').length ) data.url = $('#url').val();
-      if ( $('#title').length ) data.title = $('#title').val();
-      if ( $('#doi').length ) data.doi = $('#doi').val();
-      if ( $('#story').length ) data.story = $('#story').val();
-      if ( $('#test').length ) {
-        $('#test').is(':checked') ? data.test = true : data.test = false;
+      if (rid === 'new' && ( $('.types:checked').length === 0 || $('#url').val() === '' ) ) {
+        $('#savesuccess').html('<p>Sorry, some information is missing. Please select at least one request type, and provide at least a URL.</p>').show();
+        setTimeout(function() { $('#savesuccess').html('<p>Saved</p>').hide(); }, 5000); 
+      } else {
+        var data = {};
+        if (rid === 'new') data.plugin = 'oab_site_1.0.0';
+        if ( $('#email').length ) data.email = $('#email').val();
+        if ( $('#status').length ) data.status = $('#status').val();
+        if ( $('#url').length ) data.url = $('#url').val();
+        if ( $('#title').length ) data.title = $('#title').val();
+        if ( $('#doi').length ) data.doi = $('#doi').val();
+        if ( $('#story').length ) data.story = $('#story').val();
+        if ( $('#test').length ) {
+          $('#test').is(':checked') ? data.test = true : data.test = false;
+        }
+        var url = api+'/request';
+        if (rid !== 'new') url += '/'+rid;
+        var opts = {
+          type:'POST',
+          url: url,
+          cache:false,
+          processData:false,
+          contentType: 'application/json',
+          dataType: 'json',
+          success: function(data) { 
+            if (rid === 'new') {
+              var msg = '<p>Your new ' + data.type + ' request has been created. View it at <a href="/request/' + data._id + '">' + data._id + '</a></p>';
+              $('#savesuccess').html() === '<p>Saved</p>' ? $('#savesuccess').html(msg) : $('#savesuccess').append(msg);
+              if ($('.types:checked').length !== 2) window.location = '/request/' + '';
+            } else {
+              setTimeout(function() { $('#savesuccess').hide(); }, 2000); 
+            }
+            $('#savesuccess').show(); 
+          },
+          beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
+        }
+        $('.types:checked').each(function() {
+          data.type = $(this).attr('id').replace('request_','');
+          opts.data = JSON.stringify(data);
+          $.ajax(opts);      
+        });
       }
-      var url = api+'/request';
-      if (rid !== 'new') url += '/'+rid;
-      var opts = {
-        type:'POST',
-        url: url,
-        cache:false,
-        processData:false,
-        contentType: 'application/json',
-        dataType: 'json',
-        data: JSON.stringify(data),
-        success: function(data) { 
-          if (rid === 'new') {
-            //$('#savesuccess').html('<p>Your new request has been created at <a href="/request/' + '' + '">' + '' + '</a></p>');
-            //window.location = '/request/' + '';
-            $('#savesuccess').html(JSON.stringify(data));
-          }
-          $('#savesuccess').show(); 
-          setTimeout(function() { $('#savesuccess').hide(); }, 2000); 
-        },
-        beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
-      }
-      $.ajax(opts);
     }
     var deleteitem = function() {
       $.ajax({
@@ -191,12 +200,16 @@
           if (data && data.data && data.data.availability && data.data.availability.length > 0) {
             for ( var a in data.data.availability ) {
               var ar = data.data.availability[a];
+              $('#request_'+ar.type).hide();
+              if ( $('.types:visible').length === 0 ) $('#submitchanges').hide();
               $('#url').after('<a style="margin-top:5px;" href="' + ar.url + '" class="btn btn-action">This ' + ar.type + ' is already available!</a> ');
             }
           }
           if (data && data.data && data.data.requests && data.data.requests.length > 0) {
             for ( var r in data.data.requests ) {
               var rr = data.data.requests[r];
+              $('#request_'+rr.type).hide();
+              if ( $('.types:visible').length === 0 ) $('#submitchanges').hide();
               $('#url').after('<a style="margin-top:5px;" href="' + rr.url + '" class="btn btn-action">There is already a request for this ' + rr.type + '!</a> ');
             }
           }
@@ -289,6 +302,8 @@
         dets += '<p><input type="text" id="url" class="form-control" placeholder="URL"></p>';
         dets += '<p id="loadingscrape" style="display:none;"><img style="height:20px;" src="//static.cottagelabs.com/spinner.gif"> loading details...</p>';
         dets += '<p id="loadingavailability" style="display:none;"><img style="height:20px;" src="//static.cottagelabs.com/spinner.gif"> checking availability...</p>';
+        dets += '<p><input type="checkbox" id="request_article" class="types"> Request the article<br>';
+        dets += '<input type="checkbox" id="request_data" class="types"> Request the data</p>'
       }
       if (clogin.loggedin()) { 
         dets += '<p><input type="text" id="title" class="form-control" placeholder="Title" value="';

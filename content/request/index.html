@@ -23,7 +23,7 @@ jQuery(document).ready(function() {
         rq = ' by ' + res.user.email;
       }
     }
-    out += '<p>Requested' + rq + ' on ' + dt.substring(0,dt.length-13);
+    out += '<p>' + res.type.substring(0,1).toUpperCase() + res.type.substring(1) + ' requested' + rq + ' on ' + dt.substring(0,dt.length-13);
     if (res.count && res.count > 1) out += '. Supported by ' + res.count + ' people.';
     out += '</p>';
     // TODO add a support this request and a share this request buttons
