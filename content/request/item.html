@@ -271,7 +271,9 @@
         }
         var eml = clogin.hasRole('openaccessbutton.admin') || record.status === 'refused' ? '<input type="text" id="email" value="' + record.email + '" style="background-color:orange;" class="form-control">' : record.email;
         if (record.status === 'moderate') {
-          dets += ' and we will be sending it to ' + eml + ' once our team have approved it.';
+          dets += ' and we will be sending it ';
+          if (eml) dets += 'to ' + eml;
+          dets += 'once our team have approved it.';
         } else if (record.status === 'progress') {
           dets += ' and we are waiting to hear back from ' + eml + '.';
         } else if (record.status === 'hold') {
