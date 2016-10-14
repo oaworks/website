@@ -191,7 +191,7 @@
           if (data && data.data && data.data.requests && data.data.requests.length > 0) {
             for ( var r in data.data.requests ) {
               var rr = data.data.requests[r];
-              $('#url').after('<a style="margin-top:5px;" href="' + rr.url + '" class="btn btn-action">There is already a ' + rr.type + ' request open!</a> ');
+              $('#url').after('<a style="margin-top:5px;" href="' + rr.url + '" class="btn btn-action">There is already a request for this ' + rr.type + '!</a> ');
             }
           }
           // TODO for items in accepts should create checkboxes by type
