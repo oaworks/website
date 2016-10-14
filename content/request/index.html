@@ -53,14 +53,16 @@ jQuery(document).ready(function() {
   var aggregations = function(data) {
     $('.holder.holder-suggestions').html("");
     for ( var f in $('.holder').holder.options.query.aggregations ) {
-      var disp = '<div style="border-bottom:1px solid #ccc;"><p style="font-size:0.9em;">Filter by ' + f + '</p>';
-      for ( var r in data.aggregations[f].buckets ) {
-        var j = data.aggregations[f].buckets[r];
-        if ( f === 'status' && j.key === 'success' ) $('#requestssuccesscount').html(j.doc_count);
-        disp += '<p>' + searchify({class: 'holder label label-default', val: j.key + ' (' + j.doc_count + ')', attrs: {function: 'add', filter: f, value: j.key} }) + '</p>';
+      if (data.aggregations[f].buckets.length > 1) {
+        var disp = '<div style="border-bottom:1px solid #ccc;"><p style="font-size:0.9em;">Filter by ' + f + '</p>';
+        for ( var r in data.aggregations[f].buckets ) {
+          var j = data.aggregations[f].buckets[r];
+          if ( f === 'status' && j.key === 'success' ) $('#requestssuccesscount').html(j.doc_count);
+          disp += '<p>' + searchify({class: 'holder label label-default', val: j.key + ' (' + j.doc_count + ')', attrs: {function: 'add', filter: f, value: j.key} }) + '</p>';
+        }
+        disp += '</div>';
+        $('.holder.holder-suggestions').append(disp);
       }
-      disp += '</div>';
-      $('.holder.holder-suggestions').append(disp);
     }      
   }
 
@@ -90,7 +92,7 @@ jQuery(document).ready(function() {
         }
       }
     },
-    pushstate: false,
+    pushstate: true,
     results: {
       default: results,
       scroll: scroll,

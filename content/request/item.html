@@ -101,10 +101,16 @@
     <div class="col-md-12" style="z-index:5;">
       <div class="jumbotron" style="background-color:#398bc5;margin-top:-10px;padding-top:30px;padding-bottom:30px;min-height:100px;">
         <h2 style="text-align:center;">
-          Sorry!<br>You have to sign up if you want to create and edit requests.<br>Why not sign up now?
+          You want to create a request? Awesome!
         </h2>
+        <p style="text-align:center;">
+          You need to create an account first. Sign up now to begin making requests for articles and data.
+        </p>
+        <p style="text-align:center;">
+          Already have an account? Login now!
+        </p>
       </div>
-      <a class="btn btn-action btn-block" href="/account">Sign up now</a>
+      <a class="btn btn-action btn-block" href="/account?next=/request/new">Sign up / login</a>
     </div>
   </div>
 </div>
@@ -279,13 +285,13 @@
         }
         dets += '</p>';
       } else {
-        dets += '<p>New request</p>';
-        dets += '<p><input type="text" id="url" class="form-control" placeholder="Article URL"></p>';
+        dets += '<p>New Request</p>';
+        dets += '<p><input type="text" id="url" class="form-control" placeholder="URL"></p>';
         dets += '<p id="loadingscrape" style="display:none;"><img style="height:20px;" src="//static.cottagelabs.com/spinner.gif"> loading details...</p>';
         dets += '<p id="loadingavailability" style="display:none;"><img style="height:20px;" src="//static.cottagelabs.com/spinner.gif"> checking availability...</p>';
       }
       if (clogin.loggedin()) { 
-        dets += '<p><input type="text" id="title" class="form-control" placeholder="Article title" value="';
+        dets += '<p><input type="text" id="title" class="form-control" placeholder="Title" value="';
         if (record && record.title) dets += record.title;
         dets += '"></p>';
         dets += '<p><input type="text" id="doi" class="form-control" placeholder="DOI" value="';
