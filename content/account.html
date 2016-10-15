@@ -14,7 +14,7 @@ jQuery(document).ready(function() {
     if ( $('#username').val() && $('#profile\\.name').val() && $('#service\\.openaccessbutton\\.profile\\.profession').val() && $('#service\\.openaccessbutton\\.profile\\.confirm_public').is(':checked') && $('#service\\.openaccessbutton\\.profile\\.confirm_terms').is(':checked') ) {
       return true;
     } else {
-      $('#cloginSaveMessages').html('<p>Sorry, some information is missing. Please ensure you have filled in all the fields above and that you have checked the confirmation boxes too, then try saving again. Thanks!</p>');
+      $('#cloginSaveMessages').html('<p>Some information is missing. Please confirm you have completed all the fields and checked the boxes. Then save again.</p>');
       return false;
     }
   }
