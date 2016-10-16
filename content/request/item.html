@@ -275,6 +275,11 @@
           dets += ' <span style="color:orange;">test:</span> <input type="checkbox" id="test"';
           if (record.test === true) dets += ' checked="checked"';
           dets += '> <a style="margin-left:20px;" class="btn btn-danger btn-xs" id="delete" href="#">DELETE</a>';
+          if (record.location && record.location.geo && record.location.geo.lat) {
+            dets += '<p style="color:orange;margin-top:5px;">Location: ' + record.location.geo.lat + ',' + record.location.geo.lon
+            if (record.location.location) dets += ' - ' + record.location.location;
+            dets += '</p>';
+          }
           // TODO add options to email all requestees, or extract data about the request (or pass off to admin)
         }
         dets += '</p>';
