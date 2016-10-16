@@ -15,9 +15,23 @@
         </div>
         <div class="panel-body">
           <a href="#" id="details" class="panels" alt="Click to view and edit request details" title="Click to view and edit request details">+ details</a>
-          <div id="edit" class="panels details" style="display:none;"></div>
+          <a href="#" id="shares" class="btn btn-xs btn-action panels pull-right" style="margin-left:20px;margin-right:20px;height:28px;font-size:0.9em;">Share</a>
+          <div style="display:inline;margin-bottom:-10px;padding-left:20px;" class="pull-right">
+            <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Help us get access to research!" data-size="large"></a>
+          </div>
+          <a class="btn btn-xs btn-action pull-right" style="height:28px;font-size:0.9em;" id="fbshare" href="https://www.facebook.com/sharer/sharer.php?u=" target="_blank"><i class="fa fa-facebook-official"></i> facebook</a>
+          <div id="edit" class="panels details" style="display:none;margin-top:20px;"></div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <div class="row panels shares" style="display:none;">
+    <div class="col-md-12">
+      <p>Share this request! Sharing helps a request gain more support and the research be made accessible.</p>
+      <p>Request URL: <code id="requesturl"></code></p>
+      <p>Want to share this request on your website? Embed the widget! Copy and paste the text below:</p>
+      <textarea id="widget" class="form-control" style="min-height:100px;" onclick="this.select()"><div id="oab_insert"></div><script>var oabe = function() {var x = new XMLHttpRequest(); x.onreadystatechange = function() { if (x.readyState == 4 && x.status == 200) { document.getElementById("oab_insert").innerHTML = JSON.parse(x.responseText).data; } }; x.open("GET", "WIDGETURL", true); x.send(); }();</script></textarea>
     </div>
   </div>
 
@@ -28,7 +42,7 @@
         <div class="panel-body">
   
           <div class="cloggedin" style="display:none;" id="addsupport">
-            <textarea class="form-control addsupport" style="min-height:100px;" placeholder="(Optional) How would getting access to this research help you? This message may be sent to the author." id="supportstory"></textarea>
+            <textarea class="form-control addsupport" style="min-height:100px;" placeholder="How would getting access to this research help you? This message may be sent to the author. (Optional)" id="supportstory"></textarea>
             <a class="btn btn-action btn-block addsupport" id="addsupport" href="#" style="margin-top:2px;">Add your support</a>
             <p class="addsupport" style="display:none;">Thank you! Your support has been added to this request, and you will be notified when this content becomes available.</p>
           </div>
@@ -45,54 +59,11 @@
             we'd love to hear from you.<br>Please <a class="label label-default" style="background-color:#212f3f;color:white;" href="mailto:contact@openaccessbutton.org">contact us</a> to discuss providing a copy.
             Or help us with a <a class="label label-default" style="background-color:#212f3f;color:white;" href="https://openaccessbutton.org/donate">donation</a> to support open access.
           </p>
-        </div>
-        
-        <div class="panel-footer" style="background-color:#398bc5;">
-          <a href="#" id="shares" class="btn btn-action btn-block panels" style="margin-top:5px;">
-            Share this request on 
-            <i class="fa fa-twitter-square"></i>
-            <i class="fa fa-facebook-square"></i>
-            etc
-          </a>
-        </div>    
+        </div>        
       </div>        
     </div>
   </div>
 
-  <div class="row panels shares" style="display:none;">
-    <div class="col-md-8">
-      <p>Share and publicise this request, to increase the chances of us getting it to the people that need it.</p>
-      <p>Request URL: <code id="requesturl"></code></p>
-      <p>Embed code - embed a widget in your site to publicise this request. Just copy and paste the code below:</p>
-      <textarea id="widget" class="form-control" style="height:120px;" onclick="this.select()"><div id="oab_insert"></div><script>var oabe = function() {var x = new XMLHttpRequest(); x.onreadystatechange = function() { if (x.readyState == 4 && x.status == 200) { document.getElementById("oab_insert").innerHTML = JSON.parse(x.responseText).data; } }; x.open("GET", "WIDGETURL", true); x.send(); }();</script></textarea>
-    </div>
-    <div class="col-md-4">
-    </div>
-  </div>
-
-  <div class="row notnew">
-    <div class="col-md-12" style="padding-top:100px;">
-      <div class="well">          
-        <p>We believe that researchers have an obligation to make research papers and the data supporting papers open by default. 
-          Open research and data is good practice for research, makes greater innovation possible, and is fair for funders - 
-          the public. Request pages keep researchers accountable to requests for papers and data made through the Open Access Button.</p>
-
-        <p>Open Data is data that is freely available on the internet permitting any user to download, copy, analyse, 
-          re-process, pass through software or use for any other purpose without financial, legal, or technical barriers. 
-          Open Data is great for research, because it accelerates discovery, increases integrity, and promotes spontaneity.</p>
-        <p>(*Occasionally, data can't be made open for privacy and other good reasons, which we understand. However, "It's hard" or 
-          "I don't have the time" are not good reasons.)</p>
-        <p>It's beneficial for researchers, too. Papers with publicly available data are <a href="https://peerj.com/articles/175/">cited more</a> 
-          and the datasets themselves can be cited - allowing researchers to get greater credit for all their work. With Open Research Data bigger 
-          problems are solved faster. Better than data just sitting on your hard drive gathering dust, right?</p>
-
-        <p>This page has been automatically generated by users. If you see an error or offensive content please let us know by emailing 
-          <a href="mailto:leads@openaccessbutton.org">leads@openaccessbutton.org</a>.</p>
-
-        <p>We're working to improve our requests process. Let us know what you think!</p>
-      </div>
-    </div>
-  </div>
 </div>
 
 
@@ -173,11 +144,16 @@
           },
           beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
         }
-        $('.types:checked').each(function() {
-          data.type = $(this).attr('id').replace('request_','');
+        if (rid === 'new') {
+          $('.types:checked').each(function() {
+            data.type = $(this).attr('id').replace('request_','');
+            opts.data = JSON.stringify(data);
+            $.ajax(opts);      
+          });
+        } else {
           opts.data = JSON.stringify(data);
-          $.ajax(opts);      
-        });
+          $.ajax(opts);
+        }
       }
     }
     var deleteitem = function() {
@@ -241,6 +217,7 @@
     }
     
     $('#requesturl').html(window.location.protocol + '//' + window.location.host + window.location.pathname);
+    $('#fbshare').attr('href',$('#fbshare').attr('href') + encodeURIComponent(window.location.host + window.location.pathname));
     $('.login').attr('href','/account?next='+window.location.pathname);
     $('#widget').val( $('#widget').val().replace('WIDGETURL',api+'/embed/request/'+rid) );
 
@@ -273,7 +250,7 @@
         if (record.status === 'moderate') {
           dets += ' and we will be sending it ';
           if (eml) dets += 'to ' + eml;
-          dets += 'once our team have approved it.';
+          dets += ' once our team have approved it.';
         } else if (record.status === 'progress') {
           dets += ' and we are waiting to hear back from ' + eml + '.';
         } else if (record.status === 'hold') {
@@ -285,7 +262,7 @@
         }
         dets += '</p>';
         if (clogin.hasRole('openaccessbutton.admin')) {
-          dets += ' <select id="status" class="form-control" style="background-color:orange;width:100px;display:inline;margin-right:20px;">';
+          dets += ' <select id="status" class="form-control" style="background-color:orange;width:130px;display:inline;margin-right:20px;">';
           var statuses = ['moderate','progress','hold','refused','received'];
           for ( var s in statuses ) {
             dets += '<option value="' + statuses[s] + '"';
@@ -355,7 +332,6 @@
       out += '<h4><a href="/request/' + res._id + '" style="color:#212f3f;">' + res.url + '</a></h4>';
       var dt = new Date(res.createdAt).toUTCString().split(', ')[1];
       out += '<p>Requested by ' + res.email + ' on ' + dt.substring(0,dt.length-13) + '</p>';
-      // TODO add a support this request and a share this request buttons
       out += '</div>';
       return out;
     }
@@ -433,3 +409,21 @@
   });
 </script>
 
+<script>
+  window.twttr = (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0],
+      t = window.twttr || {};
+    if (d.getElementById(id)) return t;
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "https://platform.twitter.com/widgets.js";
+    fjs.parentNode.insertBefore(js, fjs);
+
+    t._e = [];
+    t.ready = function(f) {
+      t._e.push(f);
+    };
+    
+    return t;
+  }(document, "script", "twitter-wjs"));
+</script>
