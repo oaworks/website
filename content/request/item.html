@@ -15,11 +15,11 @@
         </div>
         <div class="panel-body">
           <a href="#" id="details" class="panels" alt="Click to view and edit request details" title="Click to view and edit request details">+ details</a>
-          <a href="#" id="shares" class="btn btn-xs btn-action panels pull-right" style="margin-left:20px;margin-right:20px;height:28px;font-size:0.9em;">Share</a>
-          <div style="display:inline;margin-bottom:-10px;padding-left:20px;" class="pull-right">
+          <a href="#" id="shares" class="btn btn-xs btn-action panels pull-right shares" style="margin-left:20px;margin-right:20px;height:28px;font-size:0.9em;">Share</a>
+          <div style="display:inline;margin-bottom:-10px;padding-left:20px;" class="pull-right shares">
             <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Help us get access to research!" data-size="large"></a>
           </div>
-          <a class="btn btn-xs btn-action pull-right" style="height:28px;font-size:0.9em;" id="fbshare" href="https://www.facebook.com/sharer/sharer.php?u=" target="_blank"><i class="fa fa-facebook-official"></i> facebook</a>
+          <a class="btn btn-xs btn-action pull-right shares" style="height:28px;font-size:0.9em;" id="fbshare" href="https://www.facebook.com/sharer/sharer.php?u=" target="_blank"><i class="fa fa-facebook-official"></i> facebook</a>
           <div id="edit" class="panels details" style="display:none;margin-top:20px;"></div>
         </div>
       </div>
@@ -180,6 +180,7 @@
               $('#request_'+ar.type).hide();
               if ( $('.types:visible').length === 0 ) $('#submitchanges').hide();
               $('#url').after('<a style="margin-top:5px;" href="' + ar.url + '" class="btn btn-action">This ' + ar.type + ' is already available!</a> ');
+              // TODO add a share button back in, saying please share that we helped you find this
             }
           }
           if (data && data.data && data.data.requests && data.data.requests.length > 0) {
@@ -345,6 +346,7 @@
     }
 
     if (rid === 'new') {
+      $('.shares').hide();
       if (clogin.loggedin()) {
         $('.notnew').hide();
         $('#details').hide();
