@@ -9,7 +9,7 @@ jQuery(document).ready(function() {
   if (window.innerWidth > 991) {
     $('#cloginArea .well').css('min-height','250px');
   }
-  
+
   var savecheck = function() {
     if ( $('#username').val() && $('#profile\\.name').val() && $('#service\\.openaccessbutton\\.profile\\.profession').val() && $('#service\\.openaccessbutton\\.profile\\.confirm_public').is(':checked') && $('#service\\.openaccessbutton\\.profile\\.confirm_terms').is(':checked') ) {
       return true;
@@ -42,7 +42,7 @@ jQuery(document).ready(function() {
     $('#setinfo').hide();
   }
   clogin.init({api:'https://dev.api.cottagelabs.com/accounts',afterLogin: setvalues, saveValidate: savecheck, afterSave: aftersave });
-  
+
   var getUrlParameter = function getUrlParameter(sParam) {
     var sPageURL = decodeURIComponent(window.location.search.substring(1)),
       sURLVariables = sPageURL.split('&'),
@@ -60,7 +60,7 @@ jQuery(document).ready(function() {
     $('#tonext').attr('href',next);
     $('#tonextalert').show();
   }
-  
+
   var e = getUrlParameter('e');
   if (e) {
     $('#cloginEmail').val(e);
@@ -70,7 +70,7 @@ jQuery(document).ready(function() {
   var b = navigator.userAgent.match(/chrome/i) ? '.ch' : '.ff';
   $('.dl').hide();
   $('.dl'+b).show();
-  
+
   var chromeinstall = function(e) {
     e.preventDefault();
     chrome.webstore.install();
@@ -87,12 +87,12 @@ jQuery(document).ready(function() {
         <div id="cloginEmailArea">
           <h2 style="text-align:center;">Sign in to your account</h2>
           <p style="text-align:center;">
-            No account yet? Just enter your email address to get started<br>
-            We use a password free system
-            
+            No account yet? Just enter your email address to get started.<br>
+            We use a password free system.
+
           </p>
           <input type="text" class="form-control" id="cloginEmail" placeholder="Enter your email address">
-          <button id="cloginSubmit" type="submit" class="btn btn-action btn-block" style="border:1px solid white;margin-top:10px;">Sign up / Login</button> 
+          <button id="cloginSubmit" type="submit" class="btn btn-action btn-block" style="border:1px solid white;margin-top:10px;">Sign up / Login</button>
         </div>
         <div id="cloginTokenArea" style="display:none;">
           <h2 style="text-align:center;">Go check your email!</h2>
@@ -102,7 +102,7 @@ jQuery(document).ready(function() {
           </p>
           <input type="text" class="form-control" id="cloginToken" placeholder="Enter your login code">
           <p style="text-align:center;">
-            <br>If you don't receive an email within a few minutes, check your spam folder. Contact us at 
+            <br>If you don't receive an email within a few minutes, check your spam folder. Contact us at
             <a style="color:white;" href="mailto:hello@openaccessbutton.org">hello@openaccessbutton.org</a> if you don't receive an email.
           </p>
         </div>
@@ -110,7 +110,7 @@ jQuery(document).ready(function() {
         <div id="cloginLoading" style="display:none;"><img style="height:30px;" src="//static.cottagelabs.com/spinner.gif"></div>
       </div>
     </div>
-  </div>  
+  </div>
 </div>
 
 
@@ -129,7 +129,7 @@ jQuery(document).ready(function() {
         <h1>Hello <span class="username"></span></h1>
         <p><button id="cloginLogout" class="btn btn-danger" style="margin-bottom:5px;">Logout</button></p>
         <p id="apikey" style="display:none;"></p>
-        
+
         <div id="setinfo" style="display:none;">
           <h1>Thanks for signing up!</h1>
           <input type="text" id="username" class="form-control cloginSave" placeholder="Choose a username (required)">
@@ -152,8 +152,8 @@ jQuery(document).ready(function() {
           <input id="service.openaccessbutton.profile.confirm_terms" type="checkbox" class="cloginSave">
           <label class="confirm-label">
             I have read the Open Access Button
-            <a target="_blank" href="/privacy" style="color:white;text-decoration:underline;">privacy policy</a> 
-            and I agree to the 
+            <a target="_blank" href="/privacy" style="color:white;text-decoration:underline;">privacy policy</a>
+            and I agree to the
             <a target="_blank" href="/terms" style="color:white;text-decoration:underline;">terms of service</a>
           </label><br>
           <button id="cloginSave" type="button" class="btn btn-action" style="margin-top:5px;border:1px solid white;">Save your details</button>
@@ -178,7 +178,3 @@ jQuery(document).ready(function() {
 <!-- if user has requested or supported, show links to filters of requests on their ones -->
 <!-- otherwise show a getting started prompt-->
 <!-- show the getting started button, in case people want to read instructions, whether new users or not -->
-
-
-
-
