@@ -48,7 +48,7 @@ jQuery(document).ready(function() {
         $('.holder.holder-innerresults').append(res);
       }
     }
-  }        
+  }
 
   var aggregations = function(data) {
     $('.holder.holder-suggestions').html("");
@@ -63,7 +63,7 @@ jQuery(document).ready(function() {
         disp += '</div>';
         $('.holder.holder-suggestions').append(disp);
       }
-    }      
+    }
   }
 
   $('#requests').holder({
@@ -71,7 +71,7 @@ jQuery(document).ready(function() {
     url: api + "/query",
     datatype: 'JSON',
     scroll: true,
-    defaultquery: { 
+    defaultquery: {
       sort: [
         {
           createdAt: {order: 'desc'}
@@ -103,9 +103,9 @@ jQuery(document).ready(function() {
       status: { terms: { field: "status.exact", size: 100 } },
       type: { terms: { field: "type.exact", size: 100 } }
     }
-  }); 
+  });
 
-});  
+});
 </script>
 
 <style>
@@ -121,13 +121,13 @@ jQuery(document).ready(function() {
   stroke-width: 0.8px;
 }
 div.tooltip {
-  color: #222; 
-  background: #fff; 
-  padding: .5em; 
+  color: #222;
+  background: #fff;
+  padding: .5em;
   text-shadow: #f5f5f5 0 1px 0;
-  border-radius: 2px; 
-  box-shadow: 0px 0px 2px 0px #a6a6a6; 
-  opacity: 0.9; 
+  border-radius: 2px;
+  box-shadow: 0px 0px 2px 0px #a6a6a6;
+  opacity: 0.9;
   position: absolute;
 }
 </style>
@@ -141,6 +141,13 @@ div.tooltip {
 <div class="strap strap-compact" id="requests">
   <div class="container-fluid">
     <div class="row">
+
+<div>
+<div class="alert alert-info">
+<p>We are making this still! </p>
+</div>
+</div>
+
       <div class="col-md-12" style="padding-top:40px;padding-bottom:20px;">
         <div class="input-group" style="margin-left:-1px;margin-top:-1px;margin-bottom:-6px;margin-right:-2px;">
           <input type="text" class="form-control holder holder-search holder-function" holder-function="suggest" placeholder="Search to explore open requests" style="font-size:1.6em;height:50px;">
@@ -167,8 +174,6 @@ div.tooltip {
 
     <div class="col-md-9">
       <div class="holder holder-results"></div>
-    </div>            
+    </div>
   </div>
 </div>
-
-
