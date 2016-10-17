@@ -1,0 +1,14 @@
+{{SUBJECT Open Access Button request successful! }}
+
+Hello!
+
+A request for content that you supported has been successful!
+
+The requested content is now available - check the request page for more information:
+
+https://openaccessbutton.org/request/{{_id}}
+
+Thanks very much for your support,
+
+
+The Open Access Button team

@@ -1,0 +1,14 @@
+[1st email]
+3c - OAB Sends follow up after three weeks [Draft]
+
+To: {corresponding email}
+CC:
+Bcc:
+From: [odb]
+Attachements:
+
+Subject: Someone is interested in your work, will you share it with them?
+Body:
+Dear Colleague, 
+
+Sorry to bother you again. We’ve tried to reach out a couple of times about sharing the data supporting one of your papers with {username}. This is the final time we’ll follow up with you, in a week we’ll mark this public request as failed. 

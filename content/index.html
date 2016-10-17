@@ -4,6 +4,7 @@
 <script>
 jQuery(document).ready(function() {
   $('#signup').bind('click',function() { window.location = window.location.origin+'/account?e='+$('#email').val() });
+  $('#search').bind('click',function() { window.location = window.location.origin+'/request/new?url='+$('#url').val() });
 });
 </script>
 
@@ -57,17 +58,31 @@ div.tooltip {
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-6">
-
-          <h3><p style="text-align:center;"> Is lack of access to articles and data holding you back?</h3> </p> <p style="text-align:center;"> The next time you can't access the research you need, use the Open Access Button.
-          <p style="text-align:center;">We get you instant, legal access to articles - and request articles that aren't available. Join a community changing research by creating a request and sharing your story.
+        <h3 style="text-align:center;">
+          Is lack of access to articles and data holding you back?
+        </h3>
+        <p style="text-align:center;">
+          The next time you can't access the research you need, use the Open Access Button.
+        </p>
+        <p style="text-align:center;">
+          We get you instant, legal access to articles - and request articles that aren't available. Join a community changing research by creating a request and sharing your story.
         </p>
       </div>
-      <div class="col-md-6">
+      
+      <div class="col-md-6 notcloggedin">
         <p style="color:#f04717;margin-top:0px;margin-bottom:5px;text-align:center;">
-        Sign up now to begin unlocking articles and data
+          Sign up now to begin unlocking articles and data
         </p>
         <input type="text" class="form-control" placeholder="Enter your email address" id="email">
         <button class="btn btn-block btn-action" style="margin-top:5px;" id="signup">Sign Up</button>
+      </div>
+      
+      <div class="col-md-6 cloggedin">
+        <p style="color:#f04717;margin-top:0px;margin-bottom:5px;text-align:center;">
+          Start searching for aricles and data now!
+        </p>
+        <input type="text" class="form-control" placeholder="Enter a URL" id="url">
+        <button class="btn btn-block btn-action" style="margin-top:5px;" id="search">Search</button>
       </div>
     </div>
   </div>

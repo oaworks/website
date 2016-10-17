@@ -1,0 +1,63 @@
+{{SUBJECT Open Access Button request to share}}
+
+Dear colleague,
+
+We are writing to you from Open Access Button, a tool helping connect people 
+with research articles and the data behind them!
+
+{{count}} of our users are interested in an article you published:
+
+{{title}}
+
+and they would like access to the {{type}}, if at all possible, 
+and have publicly requested that you share it.
+
+Our users are just some of many who would benefit if you shared the 
+{{type}}, and you can read stories about why our users would like access 
+on the public request page at:
+
+https://openaccessbutton.org/request/{{_id}}
+
+Sharing your {{type}} could lead to increased citations for your work, 
+and the acceleration of research in your area.\n\n \
+
+You can easily make your {{type}} publicly available by simply uploading 
+your {{type}} in your preferred format, or if it is already publicly available 
+by just providing a URL where we can find it. Just go to our upload page by 
+following the link below:
+
+https://openaccessbutton.org/response/{{receiver}}
+
+We'll use the Open Science Framework to host, preserve, and identify your data. 
+
+We'll use the paper title and abstract to provide initial metadata and licence 
+the data CC0 (the recommended licence for sharing data).
+
+We know preparing to share your {{type}} can take some time, and you're probably extremely busy, so you can put this request on hold if necessary.
+
+You can tell us how long you need by just clicking the corresponding link below:
+
+https://openaccessbutton.org/response/{{receiver}}?hold=7days
+https://openaccessbutton.org/response/{{receiver}}?hold=14days
+https://openaccessbutton.org/response/{{receiver}}?hold=28days
+
+Or if you want to refuse to provide this {{type}}, click this link:
+
+https://openaccessbutton.org/response/{{receiver}}?refuse=true
+
+Once you've uploaded or provided a link, our community will confirm it and then you'll receive a badge to recognise your efforts!
+
+If you have any other issues, email us at contact@openaccessbutton.org.
+
+Kind Regards,
+
+
+The Open Access Button Robot
+
+
+You're receiving this email because an Open Access Button user requested access 
+to something you are an author of. If you'd like to stop receiving emails from 
+Open Access Button, you can let us know by just clicking this link:
+
+https://openaccessbutton.org/dnr/{{email}}."
+

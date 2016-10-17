@@ -1,0 +1,178 @@
+
+<div class="container-fluid" style="min-height:500px;">
+  <div class="row">
+    <div class="col-md-12" style="z-index:5;" id="requestpanel">
+      <div class="panel panel-default" style="border-color:#398bc5;margin-top:-10px;margin-bottom:200px;">
+        <div class="panel-body">
+          <div id="findarticle">
+            <h3>Find an article</h3>
+            <p><input type="text" id="url" class="form-control" placeholder="Give us a URL then hit enter"></p>
+            <div class="alert alert-info" id="loadingavailability" style="display:none;">
+              <img style="height:20px;" src="//static.cottagelabs.com/spinner.gif"> checking availability...
+            </div>
+          </div>
+
+          <div id="newrequest" style="display:none;margin-top:50px;">
+            <h3 id="createheader">Create a new request</h3>
+            <div class="alert alert-info" id="loadingscrape" style="display:none;">
+              <img style="height:20px;" src="//static.cottagelabs.com/spinner.gif"> 
+              loading details...
+            </div>
+            <p id="request_article_choice"><input type="checkbox" id="request_article"> Request the article</p>
+            <p id="request_data_choice"><input type="checkbox" id="request_data"> Request the data</p>
+
+            <p><input type="text" id="title" class="form-control" placeholder="Title" value=""></p>
+            <p><input type="text" id="doi" class="form-control" placeholder="DOI" value=""></p>
+            <p><textarea id="story" class="form-control" placeholder="How would getting access to this research help you? This message will be sent to the author." style="min-height:100px;"></textarea></p>
+            <input type="submit" id="submitrequest" value="Create request!" class="btn btn-action btn-block">
+            <div id="savesuccess" style="display:none;"><p>Saved</p></div>
+          </div>
+
+          <div id="loginpls" style="display:none;">
+            <h2 style="text-align:center;">You want to create a request? Awesome!</h2>
+            <p style="text-align:center;">
+              You need to create an account first. Sign up now to begin making requests for articles and data.
+            </p>
+            <p style="text-align:center;">
+              Already have an account? Login now!
+            </p>
+            <a id="login" class="btn btn-action btn-block" href="/account?next=/request/new?url=">Sign up / login</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+  jQuery(document).ready(function() {
+    var api = 'https://api.openaccessbutton.org';
+    if (window.location.host.indexOf('openaccessbutton.org') === -1) {
+      api = 'https://dev.api.cottagelabs.com/service/oab';
+      clogin.api = 'https://dev.api.cottagelabs.com/accounts';
+    }
+    clogin.login();
+
+    var submit = function() {
+      if ( $('.types:checked').length === 0 || !$('#url').val() === '' || !$('#story').val() ) {
+        $('#savesuccess').html('<p><br>Sorry, some information is missing. Please select at least one request type, and provide at least a URL and a story, and select the type of request you want to make.</p>').show();
+        setTimeout(function() { $('#savesuccess').html('<p>Saved</p>').hide(); }, 2000); 
+      } else {
+        var data = {};
+        data.plugin = 'oab_site_1.0.0';
+        data.email = $('#email').val();
+        data.url = $('#url').val();
+        data.title = $('#title').val();
+        data.doi = $('#doi').val();
+        data.story = $('#story').val();
+        var url = api+'/request';
+        var opts = {
+          type:'POST',
+          url: url,
+          cache:false,
+          processData:false,
+          contentType: 'application/json',
+          dataType: 'json',
+          success: function(data) { 
+            var msg = '<p>Your new ' + data.type + ' request has been created. View it at <a href="/request/' + data._id + '">' + data._id + '</a></p>';
+            $('#savesuccess').html() === '<p>Saved</p>' ? $('#savesuccess').html(msg) : $('#savesuccess').append(msg);
+            if ($('.types:checked').length !== 2) window.location = '/request/' + data._id;
+            $('#savesuccess').show();
+          },
+          beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
+        }
+        $('.types:checked').each(function() {
+          data.type = $(this).attr('id').replace('request_','');
+          opts.data = JSON.stringify(data);
+          $.ajax(opts);      
+        });
+      }
+    }
+
+    var scrape = function() {
+      $('#loadingscrape').show();
+      $.ajax({
+        type:'GET',
+        url:api+'/scrape?url='+encodeURIComponent($('#url').val()),
+        success: function(data) {
+          $('#loadingscrape').hide();
+          if (data.data) {
+            if (data.data.title) $('#title').val(data.data.title);
+            if (data.data.doi) $('#doi').val(data.data.doi);
+            if (data.data.email && data.data.email.length > 0) $('#email').val(data.data.email[0]);
+          }
+        },
+        error: function() { $('#loadingscrape').hide(); }
+      });
+    }
+    
+    var availability = function(e) {
+      if (e === undefined || e.keyCode === 13) {
+        $('#loadingavailability').show();
+        $.ajax({
+          type:'GET',
+          url:api+'/availability?url='+encodeURIComponent($('#url').val()),
+          success: function(data) {
+            $('#loadingavailability').hide();
+            var create = 'articledata';
+            if (data.data.availability.length > 0) {
+              for ( var a in data.data.availability ) {
+                var ar = data.data.availability[a];
+                $('#request_'+ar.type+'_choice').hide();
+                $('#url').after('<br><a style="margin-top:5px;" href="' + ar.url + '" class="btn btn-block btn-action">This ' + ar.type + ' is already available!</a> ');
+                create = create.replace(ar.type,'');
+                // TODO add a share button back in, saying please share that we helped you find this
+              }
+            }
+            if (data.data.requests.length > 0) {
+              for ( var r in data.data.requests ) {
+                var rr = data.data.requests[r];
+                $('#request_'+rr.type).hide();
+                $('#url').after('<br><a style="margin-top:5px;" href="' + rr.url + '" class="btn btn-block btn-action">There is already a request for this ' + rr.type + ' - add your support!</a> ');
+                create = create.replace(ar.type,'');
+              }
+            }
+            if (create) {
+              if (clogin.loggedin()) {
+                $('#submitrequest').bind('click',submit);
+                $('#newrequest').show();
+                if (create == 'data') {
+                  $('#request_article_choice').hide();
+                  $('#request_data_choice').hide();
+                  $('#request_data').prop('checked',true);
+                  $('#submitrequest').attr('value','Create new data request!');
+                  $('#createheader').html('Create a new data request').after("<p>Sorry we couldn't find any data</p>");;
+                } else if (create == 'article') {
+                  $('#request_article_choice').hide();
+                  $('#request_data_choice').hide();
+                  $('#request_article').prop('checked',true);
+                  $('#submitrequest').attr('value','Create new article request!');
+                  $('#createheader').html('Create a new article request').after("<p>Sorry we couldn't find an article</p>");
+                } else {
+                  $('#createheader').after("<p>Sorry we couldn't find anything for that URL</p>");
+                }
+                scrape();
+              } else {
+                $('#loginpls').show();
+                $('#login').attr('href','/account?next=/request/new?url='+encodeURIComponent($('#url').val()));
+              }
+            }
+          },
+          error: function() { 
+            $('#loadingavailability').hide();
+            $('#findarticle').after('<p>Sorry, something went wrong. ');
+          }
+        });
+      }
+    }
+    $('#url').bind('keyup',availability);
+    
+    if (window.location.href.indexOf('?url=') !== -1 && clogin.loggedin()) {
+      var url = decodeURIComponent(window.location.href.split('?url=')[1]);
+      $('#url').val(url);
+      availability();
+    }
+  });
+</script>

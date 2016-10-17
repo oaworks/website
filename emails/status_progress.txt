@@ -1,0 +1,16 @@
+{{SUBJECT Open Access Button request sent!}}
+
+Hi {{user.username}},
+
+Your request for {{type}}:
+
+{{title}}
+
+has been sent to the author. You can view, and share your request here:
+
+https://openaccessbutton.org/request/{{_id}}
+
+Cheers, 
+
+
+The Open Access Button Robot

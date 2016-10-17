@@ -1,0 +1,18 @@
+{{SUBJECT Thanks for supporting an Open Access Button request!}}
+
+Hi, 
+
+We’ve received your support for the request for {{type}}:
+
+{{title}}
+
+We’ll keep you in the loop about the request, and notify you if it’s made available. 
+
+You can provide further support by sharing it with other people! Here is the URL to share:
+
+https://openaccessbutton.org/request/{{_id}}
+
+Cheers, 
+
+
+The Open Access Button Robot

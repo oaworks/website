@@ -1,0 +1,70 @@
+{{SUBJECT Open Access Button submission received /SUBJECT}}
+
+Hello colleague!
+
+Thank you very much for your submission to the request at 
+
+https://openaccessbutton.org/request/{{_id}}
+
+We have contacted all the people who needed access to this content to let them know you've been so helpful in making it available.
+
+Thanks very much again for your support,
+
+
+The Open Access Button team
+
+
+TODO USE THE BELOW TO ALSO TELL THE AUTHOR THEIR STUFF IS ON OSF OR ZENODO
+
+8 - Response on deposit from COS to Author  [Need COS Review]
+
+To: [submitting email]
+CC:
+Bcc:
+From: [COS]
+Attachements:
+
+Subject: Congratulations! Your data has been added to the Open Science Framework.  
+
+Body:
+
+Hello,
+
+//Congratulations! Your data has been added to the Open Science Framework (OSF). You now have a permanent, citable URL that you can share: [ URL ]. The Open Data Button will send this to the person who requested your data. Once they’ve verified the submission, you’ll be sent a badge recognising your efforts helping to make research more open. 
+
+Get more from the OSF by enhancing your page with the following:
+Collaborators/contributors to the submission
+Charts, graphs, and data that didn't make it onto the submission
+Links to related publications or reference lists
+Metadata on this submission
+
+To claim your Open Science Framework account, please create a password by clicking here: [ URL ]. Please verify your profile information at [ URL ]. 
+
+Sincerely yours,
+The OSF Robot
+
+
+13 - Email to author awarding badge [proofed 2.29]
+To: {author}
+CC:
+Bcc:
+From: [OAB]
+Attachments: Open Data Badge Image
+
+Subject: Here is your shiny new Open Data Badge 
+
+Body:
+
+Dear Colleague, 
+
+Thanks again for sharing your data. We’re happy to say that we’ve verified everything, and can now award you your Open Data Badge! 
+
+Open Data Badges can be used to demonstrate your commitment to making, and your ability to create, Open Data. The request page for this data has also been marked as an open data success!  
+
+We’ve attached images of the Open Data Badge that you can display proudly on any pages you manage. 
+
+Cheers, 
+
+The Open Access Button Robot
+
+p.s  What have you thought so far? We’d love to know! Please give us feedback on your experience here.  

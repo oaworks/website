@@ -9,14 +9,14 @@ server {
   add_header Cache-Control "public";
   add_header Access-Control-Allow-Origin *;
 
-  rewrite ^/request/.* /request/item last;
-
-  location /content {
-    try_files $uri $uri.html $uri.md $uri/index $uri/index.html $uri/index.md /404 =404;
-  }
+  rewrite ^/request/!new /request/item last;
 
   location / {
     try_files /serve/$uri.html /serve/$uri/index.html /404.html =404;
+  }
+
+  location /content {
+    try_files $uri $uri.html $uri.md $uri/index $uri/index.html $uri/index.md /404 =404;
   }
   
   location /static {

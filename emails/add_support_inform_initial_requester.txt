@@ -1,0 +1,20 @@
+MISC4 - Email to original requester when someone else requests via request page [proofed 2.29] 
+
+To: {requester email}
+CC:
+Bcc:
+From: [ODB]
+Attachments:
+
+Subject: Your request has been supported! 
+
+Body:
+Hi {username}, 
+
+Great news - your request has been supported! Someone else requested the data you are in interested in via your original request page. We’ll let the author know that now {number of requests} people would like them to share their data. 
+
+The more people that request the data, the more likely an author is the share it! If you haven’t already, make sure to share the request with people you know. 
+
+Our best, 
+
+The Open Data Button Robot
