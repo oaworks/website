@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
 function HideAllShowOne(d) {
 // Between the quotation marks, list the id values of each div.
-    var IDvaluesOfEachDiv = "landing howitworks team history press governance thanks";
+    var IDvaluesOfEachDiv = "landing howitworks team history press governance thanks contact";
     //-------------------------------------------------------------
     IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/[,\s"']/g," ");
     IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/^\s*/,"");
@@ -53,6 +53,8 @@ else { document.getElementById(d).style.display = "none"; }
 <li class="active"><a href="javascript:HideAllShowOne('press')">Press</a>
 <li class="active"><a href="javascript:HideAllShowOne('governance')">Legal</a>
 <li class="active"><a href="javascript:HideAllShowOne('thanks')">Thanks To</a>
+=<li class="active"><a href="javascript:HideAllShowOne('contact')">Contact Us</a>
+
 </ul>
 
 </div>
@@ -70,15 +72,7 @@ else { document.getElementById(d).style.display = "none"; }
 
 The Open Access Button is an app that helps researchers, patients, students and the public get legal access to research they need and request research be made available. Since November 2013, we have made 15,000 requests for research articles and data.</br></br>
 Our team is committed to connecting people with the research they need and advocating for Open Access. You can learn more about <a href="javascript:HideAllShowOne('howitworks')">how the Button works</a>, our <a href="javascript:HideAllShowOne('history')">history</a>, and <a href="javascript:HideAllShowOne('team')">who we are</a>.
-</p>We'd love to hear from you! We can be found on <a href="https://twitter.com/OA_Button" target="_blank">Twitter</a>, <a href="https://www.facebook.com/openaccessbutton" target="_blank">Facebook</a> and <a href="github.com/OAButton" target="_blank">Github</a> - or say hello via email at hello@openaccessbutton.org.
-    <p>
-    </p>
-     Want to share the Button with your readers? We'd love to chat!</br>
-     For press inquires contact: press@openaccessbutton.org</br>
-      <p>
-      </p>
-     For funding inquiries please contact: funding@openaccessbutton.org</br>
-     For legal inquiries please contact: legal@openaccessbutton.org</br>
+</p>
 </div>
 
 <div id="howitworks" style="display:none">
@@ -448,6 +442,15 @@ We wanted to thank everyone else who has contributed to the project, sometimes i
 </ul>
 </div>
 
+<div id="contact" style="display:none"><a name="contact"></a>
+
+<p>We'd love to hear from you! We can be found on <a href="https://twitter.com/OA_Button" target="_blank">Twitter</a>, <a href="https://www.facebook.com/openaccessbutton" target="_blank">Facebook</a> and <a href="github.com/OAButton" target="_blank">Github</a> - or say hello via email at hello@openaccessbutton.org.</p>
+  
+     Want to share the Button with your readers? We'd love to chat!
+     For press inquires contact: press@openaccessbutton.org
+     For funding inquiries please contact: funding@openaccessbutton.org
+     For legal inquiries please contact: legal@openaccessbutton.org
+</div>
 </ul>
 </div>
 </div>
