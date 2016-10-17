@@ -1,0 +1,36 @@
+{{SUBJECT I am the subject of this email /SUBJECT}}
+
+Hello there!
+
+I am an example email that could be sent by the Open Access Buttons system.
+
+I am just a simple plain text email so far, with some novel ways to provide or include variables. 
+As a plain text email, I should have the filename suffix .txt
+
+I can be written in html instead of just text, in which case I should be formatted 
+using html content rather than just text.
+
+To turn me into an html template, just put the usual html in here, and change the suffix of 
+the filename to .html instead of .txt
+
+Markdown is NOT possible yet, but if it would be useful, it could be added. In that case, the 
+file should contain markdown and the suffix should be changed to .md
+
+If this email content should include variables that should be inserted by the system before sending, 
+then they can be included like this: {{VARIABLE}}
+
+Which variables can be included like this is an open question - perhaps they could be variables from 
+an oabutton request, or variables from an oabutton user account. We should discuss this. Where emails 
+can be written as generically as possible, this is the best solution. But for example an email to a user 
+or group of users about a particular request would need to use a variable to include a URL that points 
+to the request in question, something like https://openaccessbutton.org/request/{{_id}}
+
+To provide variables in this template that should be used by the system sending this email, 
+include them like the example SUBJECT variable shown at the top of this email. At the moment, 
+the only valid variable that can be passed to the system this way is SUBJECT. If you find the 
+need for a new variable, open an issue about it on oabutton/backend/issues.
+
+Thanks!
+
+
+The lovely Open Access Button system
