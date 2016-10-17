@@ -40,7 +40,7 @@
       <div class="panel panel-default" style="border-color:#212f3f;">
         <div class="panel-heading" style="background-color:#212f3f;"><h1 style="text-align:center;color:white;">Add your support</h1></div>
         <div class="panel-body">
-  
+
           <div class="cloggedin" style="display:none;" id="addsupport">
             <p>Do you also need access to this research? Add your support! Requests are more likely to be fulfilled when multiple people need access to the research. Together we can make this a successful request.</p>
             <textarea class="form-control addsupport" style="min-height:100px;" placeholder="How would getting access to this research help you? This message will be sent to the author. (Optional)" id="supportstory"></textarea>
@@ -50,18 +50,18 @@
 
           <div class="notcloggedin">
             <p>
-              Thanks for wanting to support this request! You need to create an account first. Sign up now 
+              Thanks for wanting to support this request! You need to create an account first. Sign up now
               to begin supporting requests and creating your own. Already have an account? Login now!
             </p>
-            <a class="btn btn-default btn-block login" href="/account">Login (or sign up) please!</a>                
+            <a class="btn btn-default btn-block login" href="/account">Login (or sign up) please!</a>
           </div>
 
-          <p style="padding-top:30px;font-size:0.8em;">Can you provide this content? If you have the right to share it, 
+          <p style="padding-top:30px;font-size:0.8em;">Can you provide this content? If you have the right to share it,
             we'd love to hear from you.<br>Please <a class="label label-default" style="background-color:#212f3f;color:white;" href="mailto:contact@openaccessbutton.org">contact us</a> to discuss providing a copy.
             <!--Or help us with a <a class="label label-default" style="background-color:#212f3f;color:white;" href="https://openaccessbutton.org/donate">donation</a> to support open access.-->
           </p>
-        </div>        
-      </div>        
+        </div>
+      </div>
     </div>
   </div>
 
@@ -111,7 +111,7 @@
     var submit = function() {
       if (rid === 'new' && ( $('.types:checked').length === 0 || $('#url').val() === '' ) ) {
         $('#savesuccess').html('<p>Sorry, some information is missing. Please select at least one request type, and provide at least a URL.</p>').show();
-        setTimeout(function() { $('#savesuccess').html('<p>Saved</p>').hide(); }, 5000); 
+        setTimeout(function() { $('#savesuccess').html('<p>Saved</p>').hide(); }, 5000);
       } else {
         var data = {};
         if (rid === 'new') data.plugin = 'oab_site_1.0.0';
@@ -133,15 +133,15 @@
           processData:false,
           contentType: 'application/json',
           dataType: 'json',
-          success: function(data) { 
+          success: function(data) {
             if (rid === 'new') {
               var msg = '<p>Your new ' + data.type + ' request has been created. View it at <a href="/request/' + data._id + '">' + data._id + '</a></p>';
               $('#savesuccess').html() === '<p>Saved</p>' ? $('#savesuccess').html(msg) : $('#savesuccess').append(msg);
               if ($('.types:checked').length !== 2) window.location = '/request/' + '';
             } else {
-              setTimeout(function() { $('#savesuccess').hide(); }, 2000); 
+              setTimeout(function() { $('#savesuccess').hide(); }, 2000);
             }
-            $('#savesuccess').show(); 
+            $('#savesuccess').show();
           },
           beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
         }
@@ -149,7 +149,7 @@
           $('.types:checked').each(function() {
             data.type = $(this).attr('id').replace('request_','');
             opts.data = JSON.stringify(data);
-            $.ajax(opts);      
+            $.ajax(opts);
           });
         } else {
           opts.data = JSON.stringify(data);
@@ -217,7 +217,7 @@
         });
       }
     }
-    
+
     $('#requesturl').html(window.location.protocol + '//' + window.location.host + window.location.pathname);
     $('#fbshare').attr('href',$('#fbshare').attr('href') + encodeURIComponent(window.location.host + window.location.pathname));
     $('.login').attr('href','/account?next='+window.location.pathname);
@@ -256,7 +256,7 @@
         } else if (record.status === 'progress') {
           dets += ' and we are waiting to hear back from ' + eml + '.';
         } else if (record.status === 'hold') {
-          dets += ' but the request is on hold - ' + eml + ' will get back to us soon.'; // TODO add hold info as well 
+          dets += ' but the request is on hold - ' + eml + ' will get back to us soon.'; // TODO add hold info as well
         } else if (record.status === 'refused') {
           dets += ', but has been refused by ' + record.email + ' - can you provide a new author email address to try? <input type="text" id="email" class="form-control" placeholder="Author email address">';
         } else if (record.status === 'success') {
@@ -284,14 +284,14 @@
         }
         dets += '</p>';
       } else {
-        dets += '<h3>New Request</h3>';
+        dets += '<h3>What do you need?</h3>';
         dets += '<p><input type="text" id="url" class="form-control" placeholder="URL"></p>';
         dets += '<p id="loadingscrape" style="display:none;"><img style="height:20px;" src="//static.cottagelabs.com/spinner.gif"> loading details...</p>';
         dets += '<p id="loadingavailability" style="display:none;"><img style="height:20px;" src="//static.cottagelabs.com/spinner.gif"> checking availability...</p>';
         dets += '<p><input type="checkbox" id="request_article" class="types"> Request the article<br>';
         dets += '<input type="checkbox" id="request_data" class="types"> Request the data</p>'
       }
-      if (clogin.loggedin()) { 
+      if (clogin.loggedin()) {
         dets += '<p><input type="text" id="title" class="form-control" placeholder="Title" value="';
         if (record && record.title) dets += record.title;
         dets += '"></p>';
@@ -308,7 +308,7 @@
         if (clogin.hasRole('openaccessbutton.admin') && rid !== 'new') dets += 'background-color:orange;';
         dets += '">';
         if (record && record.story) dets += record.story;
-        dets += '</textarea></p>';        
+        dets += '</textarea></p>';
       } else if (rid === 'new') {
         dets += '<p><textarea id="story" class="form-control" placeholder="How would getting access to this research help you? This message will be sent to the author." style="min-height:100px;"></textarea></p>';
       }
@@ -331,7 +331,7 @@
       // if successful, need to show the links to the content, and the data badge for the author if applicable
       // and if request is on hold or failed then show a section at the top to indicate that, and other possible actions
     }
-    
+
     var result = function(res) {
       var out = '';
       out += '<div class="well" style="background-color:#eee;border-color:#212f3f;overflow:hidden;">';
@@ -375,7 +375,7 @@
         what: "Explore stories",
         url: api + "/supports",
         datatype: 'JSON',
-        defaultquery: { 
+        defaultquery: {
           sort: [
             {
               createdAt: {order: 'desc'}
@@ -400,14 +400,14 @@
         results: {
           default: results
         }
-      }); 
+      });
 
     }
 
     // make this the receiver page too? If so look for a receiver query param and replace the add your support section
 
     // add action to addsupport button to submit support from this user
-    
+
     var panels = function(event) {
       event.preventDefault();
       $('div.panels:not(.' + $(this).attr('id') + ')').hide();
@@ -431,7 +431,7 @@
     t.ready = function(f) {
       t._e.push(f);
     };
-    
+
     return t;
   }(document, "script", "twitter-wjs"));
 </script>
