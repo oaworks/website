@@ -1,0 +1,9 @@
+{{SUBJECT Thanks for Signing Up}}
+
+Hi {{username}},
+
+I'm some email text.
+
+Thanks, 
+
+The Open Access Button Team
