@@ -5,17 +5,17 @@
       <div class="panel panel-default" style="border-color:#398bc5;margin-top:-10px;margin-bottom:200px;">
         <div class="panel-body">
           <div id="findarticle">
-            <h3>Find an article</h3>
-            <p><input type="text" id="url" class="form-control" placeholder="Give us a URL then hit enter"></p>
+            <h3>What do you need?</h3>
+            <p><input type="text" id="url" class="form-control" placeholder="Give us an article URL then hit enter"></p>
             <div class="alert alert-info" id="loadingavailability" style="display:none;">
               <img style="height:20px;" src="//static.cottagelabs.com/spinner.gif"> checking availability...
             </div>
           </div>
 
           <div id="newrequest" style="display:none;margin-top:50px;">
-            <h3 id="createheader">Create a new request</h3>
+            <h3 id="createheader">Create a request</h3>
             <div class="alert alert-info" id="loadingscrape" style="display:none;">
-              <img style="height:20px;" src="//static.cottagelabs.com/spinner.gif"> 
+              <img style="height:20px;" src="//static.cottagelabs.com/spinner.gif">
               loading details...
             </div>
             <p id="request_article_choice"><input type="checkbox" id="request_article"> Request the article</p>
@@ -58,7 +58,7 @@
     var submit = function() {
       if ( $('.types:checked').length === 0 || !$('#url').val() === '' || !$('#story').val() ) {
         $('#savesuccess').html('<p><br>Sorry, some information is missing. Please select at least one request type, and provide at least a URL and a story, and select the type of request you want to make.</p>').show();
-        setTimeout(function() { $('#savesuccess').html('<p>Saved</p>').hide(); }, 2000); 
+        setTimeout(function() { $('#savesuccess').html('<p>Saved</p>').hide(); }, 2000);
       } else {
         var data = {};
         data.plugin = 'oab_site_1.0.0';
@@ -75,7 +75,7 @@
           processData:false,
           contentType: 'application/json',
           dataType: 'json',
-          success: function(data) { 
+          success: function(data) {
             var msg = '<p>Your new ' + data.type + ' request has been created. View it at <a href="/request/' + data._id + '">' + data._id + '</a></p>';
             $('#savesuccess').html() === '<p>Saved</p>' ? $('#savesuccess').html(msg) : $('#savesuccess').append(msg);
             if ($('.types:checked').length !== 2) window.location = '/request/' + data._id;
@@ -86,7 +86,7 @@
         $('.types:checked').each(function() {
           data.type = $(this).attr('id').replace('request_','');
           opts.data = JSON.stringify(data);
-          $.ajax(opts);      
+          $.ajax(opts);
         });
       }
     }
@@ -107,7 +107,7 @@
         error: function() { $('#loadingscrape').hide(); }
       });
     }
-    
+
     var availability = function(e) {
       if (e === undefined || e.keyCode === 13) {
         $('#loadingavailability').show();
@@ -160,7 +160,7 @@
               }
             }
           },
-          error: function() { 
+          error: function() {
             $('#loadingavailability').hide();
             $('#findarticle').after('<p>Sorry, something went wrong. ');
           }
@@ -168,7 +168,7 @@
       }
     }
     $('#url').bind('keyup',availability);
-    
+
     if (window.location.href.indexOf('?url=') !== -1 && clogin.loggedin()) {
       var url = decodeURIComponent(window.location.href.split('?url=')[1]);
       $('#url').val(url);
