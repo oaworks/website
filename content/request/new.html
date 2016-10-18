@@ -169,7 +169,7 @@
     }
     $('#url').bind('keyup',availability);
 
-    if (window.location.href.indexOf('?url=') !== -1 && clogin.loggedin()) {
+    if (window.location.href.indexOf('?url=') !== -1) {
       var url = decodeURIComponent(window.location.href.split('?url=')[1]);
       $('#url').val(url);
       availability();
