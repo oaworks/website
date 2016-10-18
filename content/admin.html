@@ -1,0 +1,205 @@
+
+<div class="container-fluid" id="accounts" style="display:none;">
+  <div class="row" id="mailbox" style="display:none;">
+    <div class="col-md-12">
+      <input type="text" id="email" placeholder="Email address(es), comma separated" class="form-control">
+      <select id="template" class="form-control" style="margin-top:5px;">
+        <option val="">Select a template (optional)</option>
+      </select>
+      <textarea id="content" class="form-control" style="min-height:300px;margin-top:5px;margin-bottom:5px;"></textarea>
+      <a class="btn btn-action btn-block" id="sendemail">Send email</a>
+      <br>
+      <br>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
+      <a class="btn btn-action btn-block" id="showmailbox">Write an email</a>
+      <div class="holder holder-suggestions" style="margin-top:15px;"></div>
+    </div>
+    <div class="col-md-9">
+      <div class="input-group" style="margin-left:-1px;margin-top:-1px;margin-bottom:-6px;margin-right:-2px;">
+        <input type="text" class="form-control holder holder-search holder-function" holder-function="suggest" placeholder="Search users" style="font-size:1.6em;height:50px;">
+        <div class="input-group-btn">
+          <a href="/request" class="btn btn-default" alt="clear all search terms and reset" title="clear all search terms and reset" style="height:50px;font-size:1.5em;">X</a>
+        </div>
+      </div>
+      <div class="holder holder-filters" style="margin:10px -5px 0px -5px;"></div>
+      <div class="holder holder-results"></div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="container-fluid" id="no">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="jumbotron">
+        <h2>You cannot access admin</h2>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+  jQuery(document).ready(function() {
+
+    $('#showmailbox').bind('click',function(e) { e.preventDefault(); $('#mailbox').toggle(); });
+    var sendemail = function(e) {
+      e.preventDefault();
+      alert('TODO should send the email');
+    }
+    $('#sendemail').bind('click',sendemail);
+    var templates = {};
+    var template = function(e) {
+      var name = $('#template').val();
+      if (templates[name]) $('#content').val(templates[name]);
+    }
+    $('#template').bind('change',template);
+    
+    if (!clogin.loggedin()) window.location = '/account?next=/admin';
+
+    var api = 'https://api.openaccessbutton.org';
+    if (window.location.host.indexOf('openaccessbutton.org') === -1) {
+      api = 'https://dev.api.cottagelabs.com/service/oab';
+      clogin.api = 'https://dev.api.cottagelabs.com/accounts';
+    }
+    
+    var del = function(e) {
+      alert('TODO will remove a user account from oabutton');
+      e.preventDefault();
+    }
+    var ban = function(e) {
+      alert('TODO will remove a user account from oabutton and ban an email address from signing up to oabutton');
+      e.preventDefault();
+    }
+    var email = function(e) {
+      e.preventDefault();
+      $('#mailbox').show();
+      var eml = $(this).attr('href');
+      var emails = $('#email').val();
+      if (emails.indexOf(eml) === -1) {
+        if (emails) emails += ',';
+        emails += eml;
+      } else {
+        emails = emails.replace(','+eml,'').replace(eml+',','').replace(eml,'');
+      }
+      $('#email').val(emails);
+    }
+    var adminify = function(e) {
+      e.preventDefault();
+      clogin.addrole('openaccessbutton.admin',$(this).attr('href'));
+      $(this).siblings('.unadmin').show();
+      $(this).hide();
+    }
+    var unadmin = function(e) {
+      e.preventDefault();      
+      clogin.removerole('openaccessbutton.admin',$(this).attr('href'));
+      $(this).siblings('.adminify').show();
+      $(this).hide();
+    }
+    
+    clogin.afterLogin = function() {
+      if (clogin.hasRole('openaccessbutton.admin')) {
+        $('#no').hide();
+        $('#accounts').show();
+        var result = function(res) {
+          var out = '';
+          out += '<div class="well" style="padding:2px 4px 2px 4px;background-color:#eee;border-color:#212f3f;overflow:hidden;">';
+          if (res.username) out += '<h4>' + res.username + '</h4>';
+          out += '<p>';
+          out += res.emails[0].address;
+          var dt = new Date(res.createdAt).toUTCString().split(', ')[1].split(':')[0];
+          dt = dt.substring(0,dt.length-3);
+          out += ' (created ' + dt + ')<br>';
+          out += '<a class="label label-danger delete" href="' + res._id + '">remove</a> ';
+          out += '<a class="label label-danger ban" href="' + res._id + '">ban</a> ';
+          out += '<a class="label label-info email" href="' + res.emails[0].address + '">email</a> ';
+          out += '<a class="label label-warning adminify" href="' + res._id + '"';
+          if (res.roles.openaccessbutton.indexOf('admin') !== -1) out += ' style="display:none;"';
+          out += '>adminify</a> ';
+          out += '<a class="label label-default unadmin" href="' + res._id + '"';
+          if (res.roles.openaccessbutton.indexOf('admin') === -1) out += ' style="display:none;"';
+          out += '>unadmin</a>';
+          out += '</p>';
+          out += '</div>';
+          return out;
+        }
+        var results = function(data) {
+          $('#count').html(data.hits.total);
+          var out = '';
+          for ( var r in data.hits.hits ) out += result(data.hits.hits[r]._source);
+          $('.holder.holder-results').html(out);
+          $('.delete').bind('click',del);
+          $('.ban').bind('click',ban);
+          $('.adminify').bind('click',adminify);
+          $('.unadmin').bind('click',unadmin);
+          $('.email').bind('click',email);
+        }
+
+        var aggregations = function(data) {
+          $('.holder.holder-suggestions').html("");
+          for ( var f in $('.holder').holder.options.query.aggregations ) {
+            if (data.aggregations[f].buckets.length > 1) {
+              var filter = $('.holder').holder.options.query.aggregations[f].terms.field;
+              var disp = '<div style="border-bottom:1px solid #ccc;"><p style="font-size:0.9em;">Filter by ' + f + '</p>';
+              for ( var r in data.aggregations[f].buckets ) {
+                var j = data.aggregations[f].buckets[r];
+                disp += '<p>' + searchify({class: 'holder label label-default', val: j.key + ' (' + j.doc_count + ')', attrs: {function: 'add', filter: filter, value: j.key} }) + '</p>';
+              }
+              disp += '</div>';
+              $('.holder.holder-suggestions').append(disp);
+            }
+          }
+        }
+
+        $('#accounts').holder({
+          what: "Search accounts",
+          url: api + "/users?apikey="+clogin.apikey,
+          datatype: 'JSON',
+          //apikey: clogin.apikey, // to get this working have to stop ES overriding allowed headers
+          defaultquery: {
+            sort: [
+              {
+                createdAt: {order: 'desc'}
+              }
+            ],
+            query: {
+              filtered: {
+                query: {
+                  bool: {
+                    must: []
+                  }
+                },
+                filter: {
+                  bool: {
+                    must:[{exists:{field:'roles.openaccessbutton'}}]
+                  }
+                }
+              }
+            }
+          },
+          pushstate: false,
+          results: {
+            default: results,
+            suggestions: aggregations
+          },
+          size: 50,
+          aggregations: {
+            roles: { terms: { field: "roles.openaccessbutton.exact", size: 100 } },
+            profession: { terms: { field: "service.openaccessbutton.profile.profession.exact", size: 100 } },
+            affiliation: { terms: { field: "service.openaccessbutton.profile.affiliation.exact", size: 100 } }
+          }
+        });
+
+      } else {
+        window.location = '/';
+      }
+    }
+    
+    clogin.login();
+  });
+</script>
