@@ -4,6 +4,8 @@ Hi {{username}},
 
 Thanks for using the Open Access Button. You're one step closer to accessing the articles and data you need.
 
+You can find and request research right now with the Browser Button at https://www.openaccessbutton.org/request/new. Open Access Button plugins for Chrome and Firefox will be released in the next two weeks. We'll also release a bookmarklet for all browsers during that time. We'll send you an update when the plugin is available for installation. 
+
 You can track your ongoing requests under your account at https://www.openaccessbutton.org/account. If you experience any problems using the Button, let us know!
 
 We look forward to getting you access to research,
