@@ -1,9 +1,10 @@
-{{SUBJECT Thanks for Signing Up}}
+{{SUBJECT Start Using Your Open Access Button!}}
 
 Hi {{username}},
 
-I'm some email text.
+Thanks for using the Open Access Button. You're one step closer to accessing the articles and data you need.
 
-Thanks, 
+You can track your ongoing requests under your account at https://www.openaccessbutton.org/account. If you experience any problems using the Button, let us know!
 
-The Open Access Button Team
+We look forward to getting you access to research,
+The Open Access Button team
