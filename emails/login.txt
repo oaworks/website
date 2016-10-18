@@ -1,0 +1,15 @@
+{{SUBJECT Click to sign into your account}}
+
+Hi, there!
+
+Let's get you signed into your Open Access Button account.
+
+Please confirm your email: [link]
+
+Or enter this code on the login page: [xxxxxx]
+
+The code and link is valid for 30 minutes, so be sure to use it soon!
+
+We look forward to getting you access to research,
+
+The Open Access Button team
