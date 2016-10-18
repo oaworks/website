@@ -3,7 +3,7 @@
 <script src="/static/map.js"></script>
 <script>
 jQuery(document).ready(function() {
-  $('#signup').bind('click',function() { window.location = window.location.origin+'/account?e='+$('#email').val() });
+  $('#signup').bind('click',function() { window.location = window.location.origin+'/account?email='+$('#email').val() });
   $('#search').bind('click',function() { window.location = window.location.origin+'/request/new?url='+$('#url').val() });
 });
 </script>

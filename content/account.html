@@ -43,27 +43,13 @@ jQuery(document).ready(function() {
   }
   clogin.init({api:'https://dev.api.cottagelabs.com/accounts',afterLogin: setvalues, saveValidate: savecheck, afterSave: aftersave });
 
-  var getUrlParameter = function getUrlParameter(sParam) {
-    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-      sURLVariables = sPageURL.split('&'),
-      sParameterName,
-      i;
-    for (i = 0; i < sURLVariables.length; i++) {
-      sParameterName = sURLVariables[i].split('=');
-      if (sParameterName[0] === sParam) {
-        return sParameterName[1] === undefined ? true : sParameterName[1];
-      }
-    }
-  };
-  var next = getUrlParameter('next');
-  if (next) {
-    $('#tonext').attr('href',next);
+  if (window.location.href.indexOf('next=') !== -1) {
+    $('#tonext').attr('href',window.location.href.split('next=')[1]);
     $('#tonextalert').show();
   }
 
-  var e = getUrlParameter('e');
-  if (e) {
-    $('#cloginEmail').val(e);
+  if (window.location.href.indexOf('email=') !== -1) {
+    $('#cloginEmail').val(window.location.href.split('next=')[0].split('email=')[1]);
     setTimeout(function() { $('#cloginSubmit').trigger('click'); }, 100);
   }
 
