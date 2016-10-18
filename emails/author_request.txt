@@ -19,7 +19,7 @@ on the public request page at:
 https://openaccessbutton.org/request/{{_id}}
 
 Sharing your {{type}} could lead to increased citations for your work, 
-and the acceleration of research in your area.\n\n \
+and the acceleration of research in your area.
 
 You can easily make your {{type}} publicly available by simply uploading 
 your {{type}} in your preferred format, or if it is already publicly available 
