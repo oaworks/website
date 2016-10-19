@@ -19,7 +19,7 @@ file should contain markdown and the suffix should be changed to .md
 If this email content should include variables that should be inserted by the system before sending, 
 then they can be included like this: {{VARIABLE}}
 
-The variables that are available are:
+The variables that are available in a request context are:
 
 {{_id}} (the ID of the request)
 {{url}} (the URL of the page the request was created on)
@@ -34,7 +34,18 @@ The variables that are available are:
 
 Using a variable in context would look something like https://openaccessbutton.org/request/{{_id}}
 
-(Also see the author_request example.)
+And in a user context are:
+
+{{userid}}
+{{username}}
+{{useremail}}
+{{fullname}}
+{{affiliation}}
+{{profession}}
+{{logincode}}
+{{loginurl}}
+
+(Also see the author_request example for a fuller demonstration of an actual email template the system could send.)
 
 Emails should be written as generically as possible, so they fit as many logical flows as can be allowed, 
 and must fit a context in which the system can know to send them. When emailing a group of users, for 
