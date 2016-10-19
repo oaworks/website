@@ -4,9 +4,9 @@ Hi, there!
 
 Let's get you signed into your Open Access Button account.
 
-Please confirm your email: [link]
+Please confirm your email: {{loginurl}}
 
-Or enter this code on the login page: [xxxxxx]
+Or enter this code on the login page: {{logincode}}
 
 The code and link is valid for 30 minutes, so be sure to use it soon!
 
