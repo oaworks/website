@@ -1,49 +1,8 @@
-
-
-<script type="text/javascript" language="JavaScript"><!--
-function HideAllShowOne(d) {
-// Between the quotation marks, list the id values of each div.
-    var IDvaluesOfEachDiv = "donations sponsorship inkind volunteer code feedback";
-    //-------------------------------------------------------------
-    IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/[,\s"']/g," ");
-    IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/^\s*/,"");
-    IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/\s*$/,"");
-    IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/  +/g," ");
-    var IDlist = IDvaluesOfEachDiv.split(" ");
-    for(var i in IDlist) {
-        HideContent(IDlist[i]);
-    ShowContent(d);
-    }
-}
-
-function HideContent(d) {
-document.getElementById(d).style.display = "none";
-}
-function ShowContent(d) {
-document.getElementById(d).style.display = "block";
-}
-function ReverseDisplay(d) {
-if(document.getElementById(d).style.display == "none") { document.getElementById(d).style.display = "block"; }
-else { document.getElementById(d).style.display = "none"; }
-}
-
-//--></script>
-
 <div class="container-fluid">
-<div class="row">
-    <div class="col-md-3" position="fixed">
-    <div class="panel panel-default">
-    <div class="panel-body">
-        <ul class="nav nav-pills nav-stacked">
-            <li class="active"><a href="javascript:HideAllShowOne('privacy)">Privacy Policy</a>
-            </ul>
-            </div></div>
-    </div>
-
-    <div class="col-md-9">
-    <div class="panel panel-default" style="background-color:#212f3f;color:#ffffff;">
-    <div class="panel-body">
-
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-default" style="background-color:#212f3f;color:#ffffff;">
+        <div class="panel-body">
         <h1>Privacy Policy</h1>
 </div></div>
 <p>Open Access Button is committed to protecting the privacy of visitors to our website, our users, and activists. We have established this Privacy Policy to explain what information we collect through our website and how it is used. In this policy, Open Access Button refers to Open Access Button team members.</p>
@@ -54,7 +13,7 @@ else { document.getElementById(d).style.display = "none"; }
 <p>All communications with our servers are transmitted over SSL (HTTPS) for both access to the public website as well as the API. The data is stored on servers in Europe, which are only accessible via <a href="https://en.wikipedia.org/wiki/Secure_Shell">Secure Shell Public Key Cryptography</a> and are fully firewalled. The data centres comply to <a href="http://www.equinix.com/services/data-centers-colocation/standards-compliance/iso/">ISO standards</a>.</p>
 
         <h2>Cookies</h2>
-<p>Cookies are used for our account system. Users remain logged in but this can be controlled by the user and their own browser. We use session cookies on certain portions of the website. Session cookies expire when you close your browser. If you wish to keep your connection information anonymous, there are various free and paid services available that will keep your connection information anonymous, but please note that you can still be identified if you log in.</p>
+<p>Cookies are used for our account system. Users remain logged in but this can be controlled by the user and their own browser. We use session cookies on certain portions of the website. Session cookies expire when you close your browser. If you wish to keep your connection information anonymous, there are various free and paid services available t hat will keep your connection information anonymous, but please note that you can still be identified if you log in.</p>
 
         <h2>Our Use of Your Data</h2>
 <p>In general, the Open Access Button uses the data collected to further its Vision and Mission. We use user information to manage your membership and contact authors on your behalf. We may occationally use your email address to send you updates and alerts on Open Access and Open Access Advocacy. In addition to the metadata of the research papers, usernames, professions, and approximate locations will be publicly displayed in our data and website. To protect your privacy, the location data we collect is blurred by 11 kilometres.</p>
@@ -85,6 +44,5 @@ else { document.getElementById(d).style.display = "none"; }
 <p>Email legal@openaccessbutton.org</p>
 
 </div>
-
 </div>
 </div>
