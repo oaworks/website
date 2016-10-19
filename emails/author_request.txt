@@ -5,12 +5,12 @@ Dear colleague,
 We are writing to you from Open Access Button, a tool helping connect people 
 with research articles and the data behind them!
 
-{{count}} of our users, a {{fullname}} who's a {{usertype}} are interested in an article you published:
+{{count}} of our users, a {{fullname}} who's a {{profession}} are interested in an article you published:
 
 {{title}}
 
 and they would like access to the {{type}}, if at all possible, 
-and have publicly requested that you share it. They need to because"
+and have publicly requested that you share it. They need to because:
 
 "{{story}}"
 
