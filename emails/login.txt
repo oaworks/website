@@ -11,5 +11,4 @@ Or enter this code on the login page: {{logincode}}
 The code and link is valid for 30 minutes, so be sure to use it soon!
 
 We look forward to getting you access to research,
-
 The Open Access Button team
