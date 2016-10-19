@@ -1,4 +1,4 @@
-{{SUBJECT Click to sign into your account}}
+{{SUBJECT Click to sign into your Open Access Button account}}
 
 Hi, there!
 
