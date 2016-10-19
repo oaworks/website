@@ -1,6 +1,6 @@
 {{SUBJECT Click to sign into your Open Access Button account}}
 
-Hi, there!
+Hi {{useremail}}!
 
 Let's get you signed into your Open Access Button account.
 
