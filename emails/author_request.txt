@@ -5,12 +5,14 @@ Dear colleague,
 We are writing to you from Open Access Button, a tool helping connect people 
 with research articles and the data behind them!
 
-{{count}} of our users are interested in an article you published:
+{{count}} of our users, a {{fullname}} who's a {{usertype}} are interested in an article you published:
 
 {{title}}
 
 and they would like access to the {{type}}, if at all possible, 
-and have publicly requested that you share it.
+and have publicly requested that you share it. They need to because"
+
+"{{story}}"
 
 Our users are just some of many who would benefit if you shared the 
 {{type}}, and you can read stories about why our users would like access 
@@ -51,9 +53,7 @@ If you have any other issues, email us at contact@openaccessbutton.org.
 
 Kind Regards,
 
-
 The Open Access Button Robot
-
 
 You're receiving this email because an Open Access Button user requested access 
 to something you are an author of. If you'd like to stop receiving emails from 
