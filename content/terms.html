@@ -1,47 +1,8 @@
-
-<script type="text/javascript" language="JavaScript"><!--
-function HideAllShowOne(d) {
-// Between the quotation marks, list the id values of each div.
-    var IDvaluesOfEachDiv = "donations sponsorship inkind volunteer code feedback";
-    //-------------------------------------------------------------
-    IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/[,\s"']/g," ");
-    IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/^\s*/,"");
-    IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/\s*$/,"");
-    IDvaluesOfEachDiv = IDvaluesOfEachDiv.replace(/  +/g," ");
-    var IDlist = IDvaluesOfEachDiv.split(" ");
-    for(var i in IDlist) {
-        HideContent(IDlist[i]);
-    ShowContent(d);
-    }
-}
-
-function HideContent(d) {
-document.getElementById(d).style.display = "none";
-}
-function ShowContent(d) {
-document.getElementById(d).style.display = "block";
-}
-function ReverseDisplay(d) {
-if(document.getElementById(d).style.display == "none") { document.getElementById(d).style.display = "block"; }
-else { document.getElementById(d).style.display = "none"; }
-}
-
-//--></script>
-
 <div class="container-fluid">
-<div class="row">
-    <div class="col-md-3" position="fixed">
-    <div class="panel panel-default">
-    <div class="panel-body">
-        <ul class="nav nav-pills nav-stacked">
-            <li class="active"><a href="javascript:HideAllShowOne('terms)">Terms of Service</a>
-            </ul>
-            </div></div>
-    </div>
-
-    <div class="col-md-9">
-    <div class="panel panel-default" style="background-color:#212f3f;color:#ffffff;">
-    <div class="panel-body">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-default" style="background-color:#212f3f;color:#ffffff;">
+        <div class="panel-body">
 <h1>Terms of Service</h1>
 </div></div>
 <p>These terms of service cover your use and access to the services ("the service"), software ("the software") and websites ("the website") provided by the Open Access Button. Our Privacy Policy explains how we collect and use your information. By using our service, you are agreeing to be bound by these Terms and to accept our Privacy Policy.</p>
@@ -71,7 +32,7 @@ else { document.getElementById(d).style.display = "none"; }
 
 <h2>Questions?</h2>
 <p>Email legal@openaccessbutton.org</p>
-</div>
 
+</div>
 </div>
 </div>
