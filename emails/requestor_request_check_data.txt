@@ -2,7 +2,7 @@
 
 Hi {{username}},
 
-The author has responded to the request for the data supporting “{{title}}”. You can view what they’ve sent here: {{url}}.
+The author has responded to the request for the data supporting “{{title}}”. You can view what they’ve sent here: https://openaccessbutton.org/request/{{_id}}.
 
 Please take some time take a look and confirm it’s what you requested and that there are enough supporting materials to make the data understandable.
 

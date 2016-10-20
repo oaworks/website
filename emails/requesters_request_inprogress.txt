@@ -2,8 +2,8 @@
 
 Hi {{username}},
 
-The {{type}} request for "{{title}}" has been sent to the author. You can view, and share your request here: {{url}}.
+The {{type}} request for "{{title}}" has been sent to the author. You can view, and share your request here: https://openaccessbutton.org/request/{{_id}}.
 
-Many thanks, 
+Many thanks,
 
 The Open Data Button Robot
