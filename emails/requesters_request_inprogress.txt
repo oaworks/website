@@ -6,4 +6,4 @@ The {{type}} request for "{{title}}" has been sent to the author. You can view, 
 
 Many thanks,
 
-The Open Data Button Robot
+The Open Access Button Robot

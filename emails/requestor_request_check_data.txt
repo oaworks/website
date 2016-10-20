@@ -10,4 +10,4 @@ Once this is done, we can either reward the author with an Open Data Badge or fo
 
 Many thanks,
 
-The Open Data Button Robot
+The Open Access Button Robot
