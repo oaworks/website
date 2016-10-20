@@ -1,8 +1,8 @@
 {{SUBJECT Here is your shiny new Open Data Badge }}
 
-<p>Dear colleague,</p>
+Dear colleague,
 
-Thanks again for sharing your data. We’re happy to say that we’ve verified everything, and can now award you your Open Data Badge!
+Thanks again for sharing your data. We’re happy to say that we’ve verified everything, and can now award you your Open Data Badge! Your data has also been sent to all who requested it. 
 
 Open Data Badges can be used to demonstrate your commitment to making, and your ability to create, Open Data. The request page for this data has also been marked as an open data success!
 
@@ -12,8 +12,6 @@ Cheers,
 
 The Open Access Button Robot
 
-<p>The Open Access Button Robot</p>
-
-<p>You're receiving this email because an Open Access Button user requested access
+You're receiving this email because an Open Access Button user requested access
 to something you are an author of. If you'd like to stop receiving emails from
-Open Access Button, you can let us know by <a href ="https://openaccessbutton.org/dnr/{{email}}">unsubscribing</a>.</p>
+Open Access Button, you can let us know by clicking this link: https://openaccessbutton.org/dnr/{{email}}">
