@@ -18,8 +18,8 @@
               <img style="height:20px;" src="//static.cottagelabs.com/spinner.gif">
               loading details...
             </div>
-            <p id="request_article_choice"><input type="checkbox" id="request_article"> Request the article</p>
-            <p id="request_data_choice"><input type="checkbox" id="request_data"> Request the data</p>
+            <p id="request_article_choice"><input type="checkbox" id="request_article" class="types"> Request the article</p>
+            <p id="request_data_choice"><input type="checkbox" id="request_data" class="types"> Request the data</p>
 
             <p><input type="text" id="title" class="form-control" placeholder="Title" value=""></p>
             <p><input type="text" id="doi" class="form-control" placeholder="DOI" value=""></p>
@@ -29,7 +29,7 @@
           </div>
 
           <div id="loginpls" style="display:none;">
-            <h3 style="text-align:center;">Either the article or data isn’t available, but you can create a request!</h3>
+            <h3 id="logintoget" style="text-align:center;">The research you need isn’t available, but you can create a request!</h3>
             <p style="text-align:center;">
               You need to create an account first. Sign up now to begin making requests for articles and data. We’ll contact the author to request the research is made available - and then send you a link.
             </p>
@@ -55,8 +55,17 @@
     }
     clogin.login();
 
+    $('.types').bind('change',function() {
+      console.log('fire')
+      if ($(this).attr('id') == 'request_data') {
+        $('#request_article').prop('checked',false);
+      } else {
+        $('#request_data').prop('checked',false);        
+      }
+    });
+                     
     var submit = function() {
-      if ( $('.types:checked').length === 0 || !$('#url').val() === '' || !$('#story').val() ) {
+      if ( $('.types:checked').length === 0 || !$('#url').val() || !$('#story').val() ) {
         $('#savesuccess').html('<p><br>Sorry, some information is missing. Please select at least one request type, and provide at least a URL and a story, and select the type of request you want to make.</p>').show();
         setTimeout(function() { $('#savesuccess').html('<p>Saved</p>').hide(); }, 2000);
       } else {
@@ -131,7 +140,7 @@
                 var rr = data.data.requests[r];
                 $('#request_'+rr.type).hide();
                 $('#url').after('<br><a style="margin-top:5px;" href="' + rr.url + '" class="btn btn-block btn-action">There is already a request for this ' + rr.type + ' - add your support!</a> ');
-                create = create.replace(ar.type,'');
+                create = create.replace(rr.type,'');
               }
             }
             if (create) {
@@ -143,7 +152,7 @@
                   $('#request_data_choice').hide();
                   $('#request_data').prop('checked',true);
                   $('#submitrequest').attr('value','Create new data request!');
-                  $('#createheader').html('Create a new data request').after("<p>Sorry we couldn't find any data</p>");;
+                  $('#createheader').html('Create a new data request').after("<p>Sorry we couldn't find any data</p>");
                 } else if (create == 'article') {
                   $('#request_article_choice').hide();
                   $('#request_data_choice').hide();
@@ -155,6 +164,11 @@
                 }
                 scrape();
               } else {
+                if (create === 'data') {
+                  $('#logintoget').html("The data isn't available, but you can create a request!");                  
+                } else if (create === 'article') {
+                  $('#logintoget').html("The article isn't available, but you can create a request!");                  
+                }
                 $('#loginpls').show();
                 $('#login').attr('href','/account?next=/request/new?url='+encodeURIComponent($('#url').val()));
               }
