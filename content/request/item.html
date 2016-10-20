@@ -161,7 +161,7 @@
 
     var details = function(data) {
       record = data && data.data ? data.data : undefined;
-      if (record.supports) {
+      if (record.supports && record.supports.length) {
         $('#supportarea').hide();
         $('#supported').show();
       }
