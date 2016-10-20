@@ -1,14 +1,14 @@
 
 <div class="container-fluid" id="infopanel">
   <div class="row">
-    <div class="col-md-4 notnew" style="z-index:10;">
-      <div class="well" style="background-color:#212f3f;color:white;padding-top:30px;padding-bottom:40px;margin-top:-10px;border:1px solid #212f3f;min-height:300px;">
+    <div class="col-md-4" style="z-index:10;">
+      <div class="well" id="msgcol" style="background-color:#212f3f;color:white;padding-top:30px;padding-bottom:40px;margin-top:-10px;border:1px solid #212f3f;min-height:300px;">
         <h1 style="text-align:center;" id="msg"></h1>
       </div>
     </div>
     <div class="col-md-8" style="z-index:5;" id="requestpanel">
       <div class="panel panel-default" style="border-color:#398bc5;margin-top:-10px;">
-        <div class="panel-heading notnew" style="background-color:#398bc5;padding-top:30px;padding-bottom:30px;min-height:242px;">
+        <div class="panel-heading" style="background-color:#398bc5;padding-top:30px;padding-bottom:30px;min-height:242px;">
           <h1 style="text-align:center;">
             <a href="" target="_blank" id="titlelink" style="color:white;" alt="Click to open the source in a new page" title="Click to open the source in a new page"></a>
           </h1>
@@ -35,17 +35,26 @@
     </div>
   </div>
 
-  <div class="row notnew">
+  <div class="row">
     <div class="col-md-12">
       <div class="panel panel-default" style="border-color:#212f3f;">
         <div class="panel-heading" style="background-color:#212f3f;"><h1 style="text-align:center;color:white;">Add your support</h1></div>
         <div class="panel-body">
 
-          <div class="cloggedin" style="display:none;" id="addsupport">
-            <p>Do you also need access to this research? Add your support! Requests are more likely to be fulfilled when multiple people need access to the research. Together we can make this a successful request.</p>
-            <textarea class="form-control addsupport" style="min-height:100px;" placeholder="How would getting access to this research help you? This message will be sent to the author. (Optional)" id="supportstory"></textarea>
-            <a class="btn btn-action btn-block addsupport" id="addsupport" href="#" style="margin-top:2px;">Add your support</a>
-            <p class="addsupport" style="display:none;">Thank you! Your support has been added to this request, and you will be notified when this content becomes available.</p>
+          <div class="cloggedin" style="display:none;">
+            <div id="supportarea">
+              <p>Do you also need access to this research? Add your support! Requests are more likely to be fulfilled when multiple people need access to the research. Together we can make this a successful request.</p>
+              <textarea class="form-control addsupport" style="min-height:100px;" placeholder="How would getting access to this research help you? This message will be sent to the author. (Optional)" id="supportstory"></textarea>
+              <a class="btn btn-action btn-block addsupport" id="addsupport" href="#" style="margin-top:2px;">Add your support</a>
+              <p class="addsupport" style="display:none;">Thank you! Your support has been added to this request, and you will be notified when this content becomes available.</p>
+            </div>
+            
+            <div id="supported" style="display:none;">
+              <p>
+                Thanks! You have added your support to this request! You are awesome! 
+                <br>Please share this request to help everyone get access.
+              </p>
+            </div>
           </div>
 
           <div class="notcloggedin">
@@ -68,26 +77,6 @@
 </div>
 
 
-<div class="container-fluid" id="loginpanel" style="display:none;min-height:700px;">
-  <div class="row">
-    <div class="col-md-12" style="z-index:5;">
-      <div class="jumbotron" style="background-color:#398bc5;margin-top:-10px;padding-top:30px;padding-bottom:30px;min-height:100px;">
-        <h2 style="text-align:center;">
-          You want to create a request? Awesome!
-        </h2>
-        <p style="text-align:center;">
-          You need to create an account first. Sign up now to begin making requests for articles and data.
-        </p>
-        <p style="text-align:center;">
-          Already have an account? Login now!
-        </p>
-      </div>
-      <a class="btn btn-action btn-block" href="/account?next=/request/new">Sign up / login</a>
-    </div>
-  </div>
-</div>
-
-
 
 <script>
   jQuery(document).ready(function() {
@@ -96,7 +85,6 @@
       api = 'https://dev.api.cottagelabs.com/service/oab';
       clogin.api = 'https://dev.api.cottagelabs.com/accounts';
     }
-    clogin.login();
 
     var rid = window.location.pathname.split('/')[2];
 
@@ -109,53 +97,32 @@
 
     var record = undefined;
     var submit = function() {
-      if (rid === 'new' && ( $('.types:checked').length === 0 || $('#url').val() === '' ) ) {
-        $('#savesuccess').html('<p>Sorry, some information is missing. Please select at least one request type, and provide at least a URL.</p>').show();
-        setTimeout(function() { $('#savesuccess').html('<p>Saved</p>').hide(); }, 5000);
-      } else {
-        var data = {};
-        if (rid === 'new') data.plugin = 'oab_site_1.0.0';
-        if ( $('#email').length ) data.email = $('#email').val();
-        if ( $('#status').length ) data.status = $('#status').val();
-        if ( $('#url').length ) data.url = $('#url').val();
-        if ( $('#title').length ) data.title = $('#title').val();
-        if ( $('#doi').length ) data.doi = $('#doi').val();
-        if ( $('#story').length ) data.story = $('#story').val();
-        if ( $('#test').length ) {
-          $('#test').is(':checked') ? data.test = true : data.test = false;
-        }
-        var url = api+'/request';
-        if (rid !== 'new') url += '/'+rid;
-        var opts = {
-          type:'POST',
-          url: url,
-          cache:false,
-          processData:false,
-          contentType: 'application/json',
-          dataType: 'json',
-          success: function(data) {
-            if (rid === 'new') {
-              var msg = '<p>Your new ' + data.type + ' request has been created. View it at <a href="/request/' + data._id + '">' + data._id + '</a></p>';
-              $('#savesuccess').html() === '<p>Saved</p>' ? $('#savesuccess').html(msg) : $('#savesuccess').append(msg);
-              if ($('.types:checked').length !== 2) window.location = '/request/' + '';
-            } else {
-              setTimeout(function() { $('#savesuccess').hide(); }, 2000);
-            }
-            $('#savesuccess').show();
-          },
-          beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
-        }
-        if (rid === 'new') {
-          $('.types:checked').each(function() {
-            data.type = $(this).attr('id').replace('request_','');
-            opts.data = JSON.stringify(data);
-            $.ajax(opts);
-          });
-        } else {
-          opts.data = JSON.stringify(data);
-          $.ajax(opts);
-        }
+      var data = {};
+      if ( $('#email').length ) data.email = $('#email').val();
+      if ( $('#status').length ) data.status = $('#status').val();
+      if ( $('#url').length ) data.url = $('#url').val();
+      if ( $('#title').length ) data.title = $('#title').val();
+      if ( $('#doi').length ) data.doi = $('#doi').val();
+      if ( $('#story').length ) data.story = $('#story').val();
+      if ( $('#test').length ) {
+        $('#test').is(':checked') ? data.test = true : data.test = false;
       }
+      var url = api+'/request/'+rid;
+      var opts = {
+        type:'POST',
+        url: url,
+        cache:false,
+        processData:false,
+        contentType: 'application/json',
+        dataType: 'json',
+        success: function(data) {
+          $('#savesuccess').show();
+          setTimeout(function() { $('#savesuccess').hide(); }, 2000);
+        },
+        beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
+      }
+      opts.data = JSON.stringify(data);
+      $.ajax(opts);
     }
     var deleteitem = function() {
       $.ajax({
@@ -166,41 +133,10 @@
       $('#edit').html('<p>This request has been deleted. You will be redirected to the requests page.</p>');
       setTimeout(function() { window.location = '/request'; }, 2000);
     }
-    var availability = function() {
-      $('#loadingavailability').show();
-      var url = $('#url').length && $('#url').val() ? $('#url').val() : $('#titlelink').attr('href');
-      $.ajax({
-        type:'GET',
-        url:api+'/availability?url='+encodeURIComponent(url),
-        success: function(data) {
-          $('#loadingavailability').hide();
-          if (data && data.data && data.data.availability && data.data.availability.length > 0) {
-            for ( var a in data.data.availability ) {
-              var ar = data.data.availability[a];
-              $('#request_'+ar.type).hide();
-              if ( $('.types:visible').length === 0 ) $('#submitchanges').hide();
-              $('#url').after('<a style="margin-top:5px;" href="' + ar.url + '" class="btn btn-action">This ' + ar.type + ' is already available!</a> ');
-              // TODO add a share button back in, saying please share that we helped you find this
-            }
-          }
-          if (data && data.data && data.data.requests && data.data.requests.length > 0) {
-            for ( var r in data.data.requests ) {
-              var rr = data.data.requests[r];
-              $('#request_'+rr.type).hide();
-              if ( $('.types:visible').length === 0 ) $('#submitchanges').hide();
-              $('#url').after('<a style="margin-top:5px;" href="' + rr.url + '" class="btn btn-action">There is already a request for this ' + rr.type + '!</a> ');
-            }
-          }
-          // TODO for items in accepts should create checkboxes by type
-        },
-        error: function() { $('#loadingavailability').hide(); }
-      });
-    }
     var scrape = function() {
-      var url = $('#url').length && $('#url').val() ? $('#url').val() : $('#titlelink').attr('href');
+      var url = $('#titlelink').attr('href');
       if (url) {
         $('#loadingscrape').show();
-        if (rid === 'new') availability(); // kick off an availability check
         $.ajax({
           type:'GET',
           url:api+'/scrape?url='+encodeURIComponent(url),
@@ -225,6 +161,10 @@
 
     var details = function(data) {
       record = data && data.data ? data.data : undefined;
+      if (record.supports) {
+        $('#supportarea').hide();
+        $('#supported').show();
+      }
       // add request details to page
       // if user, make editable and submittable
       // add admin controls to details if user is admin
@@ -234,10 +174,20 @@
         $('#titlelink').attr('href',record.url);
         record.title ? $('#titlelink').html(record.title) : $('#titlelink').html('Untitled article');
         // update the msg header at the top with a success / closed / other status info
-        var msg = '<span style="color:#f04717;font-size:1.2em;">' + record.count + '</span> ';
-        msg += record.count === 1 ? 'person supports ' : 'people support ';
-        msg += 'this request for ';
-        msg += record.type === 'article' ? 'access' : 'data';
+        var msg = '';
+        if (record.status === 'received') {
+          msg += 'Success! ';
+          msg += '<span style="color:#f04717;font-size:1.2em;">' + record.count + '</span> ';
+          msg += record.count === 1 ? 'person ' : 'people ';
+          msg += 'got access to this ';
+          msg += record.type === 'article' ? 'article' : 'data';
+          $('#msgcol').css('background-color','#52be80');
+        } else {
+          msg += '<span style="color:#f04717;font-size:1.2em;">' + record.count + '</span> ';
+          msg += record.count === 1 ? 'person supports ' : 'people support ';
+          msg += 'this request for ';
+          msg += record.type === 'article' ? 'access' : 'data';
+        }
         $('#msg').html(msg);
         // TODO check for other requests for the same URL but of different types
         dets += '<p>This request was created on ' + format(record.createdAt);
@@ -259,8 +209,8 @@
           dets += ' but the request is on hold - ' + eml + ' will get back to us soon.'; // TODO add hold info as well
         } else if (record.status === 'refused') {
           dets += ', but has been refused by ' + record.email + ' - can you provide a new author email address to try? <input type="text" id="email" class="form-control" placeholder="Author email address">';
-        } else if (record.status === 'success') {
-          dets += ', and has been successful!';
+        } else if (record.status === 'received') {
+          dets += '</p><p>This request has been successful!';
         }
         dets += '</p>';
         if (clogin.hasRole('openaccessbutton.admin')) {
@@ -283,13 +233,6 @@
           // TODO add options to email all requestees, or extract data about the request (or pass off to admin)
         }
         dets += '</p>';
-      } else {
-        dets += '<h3>What do you need?</h3>';
-        dets += '<p><input type="text" id="url" class="form-control" placeholder="URL"></p>';
-        dets += '<p id="loadingscrape" style="display:none;"><img style="height:20px;" src="//static.cottagelabs.com/spinner.gif"> loading details...</p>';
-        dets += '<p id="loadingavailability" style="display:none;"><img style="height:20px;" src="//static.cottagelabs.com/spinner.gif"> checking availability...</p>';
-        dets += '<p><input type="checkbox" id="request_article" class="types"> Request the article<br>';
-        dets += '<input type="checkbox" id="request_data" class="types"> Request the data</p>'
       }
       if (clogin.loggedin()) {
         dets += '<p><input type="text" id="title" class="form-control" placeholder="Title" value="';
@@ -305,25 +248,20 @@
       // TODO is it worth collecting author info here? What will we ever actually use it for?
       if (clogin.hasRole('openaccessbutton.admin') || record && record.user.id && clogin.getCookie().userId === record.user.id) {
         dets += '<p><textarea id="story" class="form-control" placeholder="How would getting access to this research help you? This message will be sent to the author." style="min-height:100px;';
-        if (clogin.hasRole('openaccessbutton.admin') && rid !== 'new') dets += 'background-color:orange;';
+        if (clogin.hasRole('openaccessbutton.admin')) dets += 'background-color:orange;';
         dets += '">';
         if (record && record.story) dets += record.story;
         dets += '</textarea></p>';
-      } else if (rid === 'new') {
-        dets += '<p><textarea id="story" class="form-control" placeholder="How would getting access to this research help you? This message will be sent to the author." style="min-height:100px;"></textarea></p>';
-      }
+      } 
       // TODO need to add and bind a save button if the user can save anything
       if (clogin.hasRole('openaccessbutton.user') || clogin.hasRole('openaccessbutton.admin')) {
-        dets += '<input type="submit" id="submitchanges" value="Save';
-        if (rid !== 'new') dets += ' changes';
-        dets += '" class="btn btn-action btn-block">';
+        dets += '<input type="submit" id="submitchanges" value="Save changes" class="btn btn-action btn-block">';
         dets += '<div id="savesuccess" style="display:none;"><p>Saved</p></div>';
       }
       $('#edit').html(dets);
       if ($('#submitchanges').length) $('#submitchanges').bind('click',submit);
       if ($('#delete').length) $('#delete').bind('click',deleteitem);
       if (clogin.hasRole('root')) $('#titlelink').bind('click',scrape);
-      if ($('#url').length && rid === 'new') $('#url').bind('blur',scrape);
 
       // list all the stories supporting this request
       // if user and user supports this request already, hide the support submission area
@@ -343,77 +281,85 @@
       return out;
     }
     var results = function(data) {
-      $('#requestscount').html(data.hits.total);
       var out = '';
       for ( var r in data.hits.hits ) out += result(data.hits.hits[r]._source);
       $('.holder.holder-results').html(out);
-      $('#storycount').html(data.hits.total);
     }
 
-    if (rid === 'new') {
-      $('.shares').hide();
-      if (clogin.loggedin()) {
-        $('.notnew').hide();
-        $('#details').hide();
-        $('#requestpanel').removeClass('col-md-8').addClass('col-md-12');
-        details();
-        $('div.details').show();
-        $('#submitchanges').html('Save new request');
-      } else {
-        $('#loginpanel').show();
-        $('#infopanel').hide();
-      }
-    } else {
-      $.ajax({
-        type: 'GET',
-        url: api + '/request/' + rid,
-        success: details,
-        error: function() { $('#titlelink').html("Sorry, we can't find a request with ID " + rid); }
-      });
-
-      $('#stories').holder({
-        what: "Explore stories",
-        url: api + "/supports",
-        datatype: 'JSON',
-        defaultquery: {
-          sort: [
-            {
-              createdAt: {order: 'desc'}
-            }
-          ],
-          query: {
-            filtered: {
-              query: {
-                bool: {
-                  must: []
-                }
-              },
-              filter: {
-                bool: {
-                  must_not:[{term:{'test':true}}]
-                }
-              }
-            }
+    $('#stories').holder({
+      url: api + "/supports",
+      datatype: 'JSON',
+      defaultquery: {
+        sort: [
+          {
+            createdAt: {order: 'desc'}
           }
-        },
-        pushstate: false,
-        results: {
-          default: results
+        ],
+        query: {
+          match_all: {}
         }
-      });
+      },
+      pushstate: false,
+      results: {
+        default: results
+      }
+    });
 
+    var addsupport = function(event) {
+      event.preventDefault();
+      if ($('#supportstory').val()) {
+        var data = {story:$('#story').val()};
+        var url = api+'/support/'+rid;
+        var opts = {
+          type:'POST',
+          url: url,
+          cache:false,
+          processData:false,
+          contentType: 'application/json',
+          dataType: 'json',
+          success: function(data) {
+            $('#supportarea').hide();
+            $('#supported').show();
+          },
+          beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
+        }
+        opts.data = JSON.stringify(data);
+        $.ajax(opts);        
+      } else {
+        alert('Please provide a story first!');
+      }
     }
-
-    // make this the receiver page too? If so look for a receiver query param and replace the add your support section
-
-    // add action to addsupport button to submit support from this user
-
+    $('#addsupport').bind('click',addsupport);
+    
     var panels = function(event) {
       event.preventDefault();
       $('div.panels:not(.' + $(this).attr('id') + ')').hide();
       $('div.'+$(this).attr('id')).toggle();
     }
     $('a.panels').bind('click',panels);
+
+    // login not necessary but returns supports info if possible, so we try
+    var rurl = api + '/request/' + rid;
+    var runrequest = function() {
+      $.ajax({
+        type: 'GET',
+        url: rurl,
+        success: details,
+        error: function() { $('#titlelink').html("Sorry, we can't find a request with ID " + rid); }
+      });      
+
+    }
+    clogin.afterFailure = runrequest;
+    if (clogin.loggedin()) {
+      clogin.afterLogin = function() {
+        rurl += '?apikey=' + clogin.apikey; 
+        runrequest();
+      };
+      clogin.login();
+    } else {
+      runrequest();
+    }
+
   });
 </script>
 
