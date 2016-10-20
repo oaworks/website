@@ -1,0 +1,9 @@
+{{SUBJECT Your request has failed}}
+
+Hi {{username}},
+
+The author of "{{title}}" has responded to the request by refusing it.
+
+Many thanks,
+
+The Open Access Button Robot
