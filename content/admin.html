@@ -6,10 +6,12 @@
       <input type="text" id="cc" placeholder="cc" style="margin-top:5px;" class="form-control">
       <input type="text" id="bcc" placeholder="bcc" style="margin-top:5px;" class="form-control">
       <input type="text" id="subject" placeholder="subject" style="margin-top:5px;" class="form-control">
+      <textarea id="content" class="form-control" style="min-height:300px;margin-top:5px;"></textarea>
+      <textarea id="html" class="form-control" style="min-height:300px;margin-top:5px;display:none;"></textarea>
+      <textarea id="text" class="form-control" style="min-height:300px;margin-top:5px;display:none;"></textarea>
       <select id="template" class="form-control" style="margin-top:5px;">
         <option val="">Select a template (optional)</option>
       </select>
-      <textarea id="content" class="form-control" style="min-height:300px;margin-top:5px;"></textarea>
       <a class="btn btn-action btn-block" id="sendemail" style="margin-top:5px;">Send email</a>
       <br>
       <br>
@@ -82,7 +84,7 @@
         dataType: 'json',
         beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
         data : JSON.stringify({template:$('#template').val(),vars:request}),
-        url:api+'/construct',
+        url:api+'/substitute',
         success: function(data) { 
           if (request) {
             $('#to').val(request.email+','+request.user.email);
@@ -120,7 +122,7 @@
         url:api+'/request/'+rid,
         success: function(data) { 
           request = data.data;
-          $('#template').after('<a style="margin-top:5px;display:none;" href="" id="populate" class="btn btn-info btn-xs btn-block">Populate for request ' + rid + '</a>');
+          $('#template').after('<a style="margin-top:5px;display:none;" href="" id="populate" class="btn btn-info btn-xs btn-block">Preview the email for request ' + rid + '</a>');
           $('#populate').bind('click',populate);
         }
       });      
@@ -138,11 +140,29 @@
       }
     });
     var template = function(e) {
-      var name = $('#template').val();
-      if (name && templates[name]) {
-        $('#content').val(templates[name].content);
+      var tid = $('#template').val();
+      if (tid && templates[tid]) {
+        // look for one with same name but different type (unless type .md)
+        var prefix = templates[tid].filename.split('.')[0];
+        var suffix = templates[tid].filename.split('.')[1];
+        if (suffix !== 'md') {
+          $('#content').val("").hide();
+          $('#'+suffix).val(templates[tid].content).show();
+          var alt = suffix === 'html' ? 'txt' : 'html';
+          for ( var t in templates ) {
+            if (templates[t].filename === prefix + '.' + alt) {
+              $('#'+alt).before('<p>There appears to be an alternative format ' + alt + ' template available too - both will be sent, so you must edit both.</p>');
+              $('#'+alt).val(templates[t].content).show();
+            }
+          }
+        } else {
+          $('#content').val(templates[tid].content).show();
+        }
         if ($('#populate').length) $('#populate').show();
       } else {
+        $('#content').val("").show();
+        $('#html').val("").hide();
+        $('#text').val("").hide();
         if ($('#populate').length) $('#populate').hide();        
       }
     }

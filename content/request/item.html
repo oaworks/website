@@ -37,7 +37,7 @@
 
   <div class="row">
     <div class="col-md-12">
-      <div class="panel panel-default" style="border-color:#212f3f;">
+      <div id="supportpanel" class="panel panel-default" style="border-color:#212f3f;">
         <div class="panel-heading" style="background-color:#212f3f;"><h1 style="text-align:center;color:white;">Add your support</h1></div>
         <div class="panel-body">
 
@@ -49,6 +49,13 @@
               <p class="addsupport" style="display:none;">Thank you! Your support has been added to this request, and you will be notified when this content becomes available.</p>
             </div>
             
+            <div id="youcreated" style="display:none;">
+              <p>
+                You don't have to add your support, you created this request!<br>
+                Try sharing your request and we'll ask others to support you!
+              </p>
+            </div>
+
             <div id="supported" style="display:none;">
               <p>
                 Thanks! You have added your support to this request! You are awesome! 
@@ -168,112 +175,133 @@
     $('#widget').val( $('#widget').val().replace('WIDGETURL',api+'/embed/request/'+rid) );
 
     var details = function(data) {
-      record = data && data.data ? data.data : undefined;
+      record = data.data;
+      var iscreator = clogin.user && clogin.user.account && clogin.user.account._id === record.user.id;
+      var isadmin = clogin.hasRole('openaccessbutton.admin');
+      var iseditable = clogin.loggedin() && record.status === 'help' || record.status === 'moderate' || record.status === 'refused';
       if (record.supports && record.supports.length) {
         $('#supportarea').hide();
         $('#supported').show();
+      } else if (iscreator) {
+        $('#supportarea').hide();
+        $('#youcreated').show();        
       }
-      // add request details to page
-      // if user, make editable and submittable
-      // add admin controls to details if user is admin
+
+      // update the title link and message header
+      $('#titlelink').attr('href',record.url);
+      record.title ? $('#titlelink').html(record.title) : $('#titlelink').html('Untitled article');
+      var msg = '';
+      if (record.status === 'received') {
+        msg += 'Success! ';
+        msg += '<span style="color:#f04717;font-size:1.2em;">' + record.count + '</span> ';
+        msg += record.count === 1 ? 'person ' : 'people ';
+        msg += 'got access to this ';
+        msg += record.type === 'article' ? 'article' : 'data';
+        $('#msgcol').css('background-color','#52be80');
+      } else {
+        msg += '<span style="color:#f04717;font-size:1.2em;">' + record.count + '</span> ';
+        msg += record.count === 1 ? 'person supports ' : 'people support ';
+        msg += 'this request for ';
+        msg += record.type === 'article' ? 'access' : 'data';
+      }
+      $('#msg').html(msg);
+
+      // TODO check for other requests for the same URL but of different types
+      
+      // add the details
       var dets = '';
-      if (record) {
-        // update the title link
-        $('#titlelink').attr('href',record.url);
-        record.title ? $('#titlelink').html(record.title) : $('#titlelink').html('Untitled article');
-        // update the msg header at the top with a success / closed / other status info
-        var msg = '';
-        if (record.status === 'received') {
-          msg += 'Success! ';
-          msg += '<span style="color:#f04717;font-size:1.2em;">' + record.count + '</span> ';
-          msg += record.count === 1 ? 'person ' : 'people ';
-          msg += 'got access to this ';
-          msg += record.type === 'article' ? 'article' : 'data';
-          $('#msgcol').css('background-color','#52be80');
-        } else {
-          msg += '<span style="color:#f04717;font-size:1.2em;">' + record.count + '</span> ';
-          msg += record.count === 1 ? 'person supports ' : 'people support ';
-          msg += 'this request for ';
-          msg += record.type === 'article' ? 'access' : 'data';
-        }
-        $('#msg').html(msg);
-        // TODO check for other requests for the same URL but of different types
-        dets += '<p>This request was created on ' + format(record.createdAt);
-        if (record.user && (record.user.username || record.user.email)) {
-          dets += ' by ';
-          dets += record.user.username ? record.user.username : record.user.email;
-        }
-        if (!clogin.loggedin() && record && record.story) {
-          dets += ' who said:<br><blockquote>' + record.story + '</blockquote><br>';
-        }
-        var eml = clogin.hasRole('openaccessbutton.admin') || record.status === 'refused' ? '<input type="text" id="email" value="' + record.email + '" style="background-color:orange;" class="form-control">' : record.email;
-        if (record.status === 'moderate') {
-          dets += ' and we will be sending it ';
-          if (eml) dets += 'to ' + eml;
-          dets += ' once our team have approved it.';
-        } else if (record.status === 'progress') {
-          dets += ' and we are waiting to hear back from ' + eml + '.';
-        } else if (record.status === 'hold') {
-          dets += ' but the request is on hold - ' + eml + ' will get back to us soon.'; // TODO add hold info as well
-        } else if (record.status === 'refused') {
-          dets += ', but has been refused by ' + record.email + ' - can you provide a new author email address to try? <input type="text" id="email" class="form-control" placeholder="Author email address">';
-        } else if (record.status === 'received') {
-          dets += '</p><p>This request has been successful!';
-        }
-        dets += '</p>';
-        if (clogin.hasRole('openaccessbutton.admin')) {
-          dets += ' <select id="status" class="form-control" style="background-color:orange;width:130px;display:inline;margin-right:20px;">';
-          var statuses = ['moderate','progress','hold','refused','received'];
-          for ( var s in statuses ) {
-            dets += '<option value="' + statuses[s] + '"';
-            if (record.status === statuses[s]) dets += ' selected="selected"';
-            dets += '>' + statuses[s] + '</option>';
-          }
-          dets += '</select>';
-          dets += ' <span style="color:orange;">test:</span> <input type="checkbox" id="test"';
-          if (record.test === true) dets += ' checked="checked"';
-          dets += '> <a style="margin-left:20px;" class="btn btn-danger btn-xs" id="delete" href="#">DELETE</a>';
-          dets += ' <a style="margin-left:20px;" class="btn btn-info btn-xs" href="/admin?request=' + rid + '">Email</a>';
-          if (record.location && record.location.geo && record.location.geo.lat) {
-            dets += '<p style="color:orange;margin-top:5px;">Location: ' + record.location.geo.lat + ',' + record.location.geo.lon
-            if (record.location.location) dets += ' - ' + record.location.location;
-            dets += '</p>';
-          }
-          // TODO add options to email all requestees, or extract data about the request (or pass off to admin)
-        }
-        dets += '</p>';
+      dets += '<p>This request was created on ' + format(record.createdAt);
+      if (record.user && (record.user.username || record.user.email)) {
+        dets += ' by ';
+        dets += record.user.username ? record.user.username : record.user.email;
       }
-      if (clogin.loggedin()) {
+      if (record.story) dets += ' who said:<br><blockquote>' + record.story + '</blockquote><br>';
+      dets += '</p>';
+      dets += '<p>';
+      
+      // set the status statement
+      if (record.status === 'help') {
+        dets += 'It just needs a bit more detail then it can get started.'
+      } else if (record.status === 'moderate') {
+        dets += 'We will be sending it once our team have approved it.';
+      } else if (record.status === 'progress') {
+        dets += 'We are waiting to hear back.';
+      } else if (record.status === 'hold') {
+        dets += 'The request is on hold while the author prepares content.'; // TODO add hold info as well
+      } else if (record.status === 'refused') {
+        dets += 'Unfortunately this has been refused by ' + record.email + ' - can you provide a new author email address to try? <input type="text" id="email" class="form-control" placeholder="Author email address">';
+      } else if (record.status === 'received') {
+        dets += '</p><p>This request has been successful!';
+      }
+      dets += '</p>';
+      
+      // show admin controls
+      if (isadmin) {
+        dets += ' <select id="status" class="form-control" style="background-color:orange;width:130px;display:inline;margin-right:20px;">';
+        var statuses = ['help','moderate','progress','hold','refused','received'];
+        for ( var s in statuses ) {
+          dets += '<option value="' + statuses[s] + '"';
+          if (record.status === statuses[s]) dets += ' selected="selected"';
+          dets += '>' + statuses[s] + '</option>';
+        }
+        dets += '</select>';
+        dets += ' <span style="color:orange;">test:</span> <input type="checkbox" id="test"';
+        if (record.test === true) dets += ' checked="checked"';
+        dets += '> <a style="margin-left:20px;" class="btn btn-danger btn-xs" id="delete" href="#">DELETE</a>';
+        dets += ' <a style="margin-left:20px;" class="btn btn-info btn-xs" href="/admin?request=' + rid + '">Email</a>';
+        if (record.location && record.location.geo && record.location.geo.lat) {
+          dets += '<p style="color:orange;margin-top:5px;">Location: ' + record.location.geo.lat + ',' + record.location.geo.lon
+          if (record.location.location) dets += ' - ' + record.location.location;
+          dets += '</p>';
+        }
+      }
+      dets += '</p>';
+
+      // show the email if at a stage where it can be changed, or if admin
+      if (isadmin || iseditable) {
+        dets += '<p><input type="text" id="email" value="' + record.email + '" placeholder="Email"';
+        if (isadmin && !iseditable) dets += ' style="background-color:orange;"';
+        dets += 'class="form-control"></p>';
+      }
+      
+      if (iseditable) {
         dets += '<p><input type="text" id="title" class="form-control" placeholder="Title" value="';
-        if (record && record.title) dets += record.title;
+        if (record.title) dets += record.title;
         dets += '"></p>';
         dets += '<p><input type="text" id="doi" class="form-control" placeholder="DOI" value="';
-        if (record && record.doi) dets += record.doi;
+        if (record.doi) dets += record.doi;
         dets += '"></p>';
-      } else if (record && record.doi) {
+      } else if (record.doi) {
         dets += '<p>DOI: ' + record.doi + '</p>';
-        dets += '<p><a href="/account">Sign up now</a> to get your Open Access Button and to edit and create requests</p>';
+        if (!clogin.loggedin()) dets += '<p><a href="/account?next=/request/' + rid + '">Sign up now</a> to get your Open Access Button and to edit and create requests</p>';
       }
-      // TODO is it worth collecting author info here? What will we ever actually use it for?
-      if (clogin.hasRole('openaccessbutton.admin') || record && record.user.id && clogin.getCookie().userId === record.user.id) {
+      if (isadmin || (iscreator && iseditable)) {
         dets += '<p><textarea id="story" class="form-control" placeholder="How would getting access to this research help you? This message will be sent to the author." style="min-height:100px;';
-        if (clogin.hasRole('openaccessbutton.admin')) dets += 'background-color:orange;';
+        if (isadmin && !iseditable) dets += 'background-color:orange;';
         dets += '">';
-        if (record && record.story) dets += record.story;
+        if (record.story) dets += record.story;
         dets += '</textarea></p>';
-      } 
-      // TODO need to add and bind a save button if the user can save anything
-      if (clogin.hasRole('openaccessbutton.user') || clogin.hasRole('openaccessbutton.admin')) {
+      }
+      
+      // save button for anyone logged and if status allows, or if admin user
+      if ( isadmin || iseditable ) {
         dets += '<input type="submit" id="submitchanges" value="Save changes" class="btn btn-action btn-block">';
         dets += '<div id="savesuccess" style="display:none;"><p>Saved</p></div>';
       }
+      
+      // bind actions
       $('#edit').html(dets);
       if ($('#submitchanges').length) $('#submitchanges').bind('click',submit);
       if ($('#delete').length) $('#delete').bind('click',deleteitem);
       if (clogin.hasRole('root')) $('#titlelink').bind('click',scrape);
 
-      // if successful, need to show the links to the content, and the data badge for the author if applicable
-      // and if request is on hold or failed then show a section at the top to indicate that, and other possible actions
+      // if status success, need to show the links to the content, and the data badge for the author if applicable
+
+      if (record.status === 'help' && clogin.loggedin()) {
+        $('#supportpanel').before("<div class=\"alert alert-info\"><p>Hey, we just need a bit more information to ge this request going, can you have a look at the details and fill in what's missing?</p></div>");
+      } else if ( record.status === 'refused' && clogin.loggedin()) {
+        $('#supportpanel').before("<div class=\"alert alert-info\"><p>This request was refused, but we could try again with another author - can you have a look at the details and provide an alternative contact email address to try?</p></div>");
+      }
     }
 
     var results = function(data) {
@@ -360,7 +388,7 @@
         url: rurl,
         success: details,
         error: function() { $('#titlelink').html("Sorry, we can't find a request with ID " + rid); }
-      });      
+      });
 
     }
     clogin.afterFailure = runrequest;
