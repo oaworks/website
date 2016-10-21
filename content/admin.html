@@ -75,7 +75,7 @@
     });
     var template = function(e) {
       var name = $('#template').val();
-      if (templates[name]) $('#content').val(templates[name]);
+      if (templates[name]) $('#content').val(templates[name].content);
     }
     $('#template').bind('change',template);
         
