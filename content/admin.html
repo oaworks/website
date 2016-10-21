@@ -46,20 +46,6 @@
 
 <script>
   jQuery(document).ready(function() {
-
-    $('#showmailbox').bind('click',function(e) { e.preventDefault(); $('#mailbox').toggle(); });
-    var sendemail = function(e) {
-      e.preventDefault();
-      alert('TODO should send the email');
-    }
-    $('#sendemail').bind('click',sendemail);
-    var templates = {};
-    var template = function(e) {
-      var name = $('#template').val();
-      if (templates[name]) $('#content').val(templates[name]);
-    }
-    $('#template').bind('change',template);
-    
     if (!clogin.loggedin()) window.location = '/account?next=/admin';
 
     var api = 'https://api.openaccessbutton.org';
@@ -67,7 +53,32 @@
       api = 'https://dev.api.cottagelabs.com/service/oab';
       clogin.api = 'https://dev.api.cottagelabs.com/accounts';
     }
+
+    $('#showmailbox').bind('click',function(e) { e.preventDefault(); $('#mailbox').toggle(); });
     
+    var sendemail = function(e) {
+      e.preventDefault();
+      alert('TODO should send the email');
+    }
+    $('#sendemail').bind('click',sendemail);
+    
+    var templates = {};
+    $.ajax({
+      type:'GET',
+      url:api+'/templates',
+      success: function(data) { 
+        for ( var t in data.data ) {
+          templates[data.data[t]._id] = data.data[t];
+          $('#template').append('<option value="' + data.data[t]._id + '">' + data.data[t].filename + '</option>');
+        }
+      }
+    });
+    var template = function(e) {
+      var name = $('#template').val();
+      if (templates[name]) $('#content').val(templates[name]);
+    }
+    $('#template').bind('change',template);
+        
     var del = function(e) {
       alert('TODO will remove a user account from oabutton');
       e.preventDefault();
