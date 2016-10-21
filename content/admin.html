@@ -2,12 +2,15 @@
 <div class="container-fluid" id="accounts" style="display:none;">
   <div class="row" id="mailbox" style="display:none;">
     <div class="col-md-12">
-      <input type="text" id="email" placeholder="Email address(es), comma separated" class="form-control">
+      <input type="text" id="to" placeholder="To: email address(es), comma separated" class="form-control">
+      <input type="text" id="cc" placeholder="cc" style="margin-top:5px;" class="form-control">
+      <input type="text" id="bcc" placeholder="bcc" style="margin-top:5px;" class="form-control">
+      <input type="text" id="subject" placeholder="subject" style="margin-top:5px;" class="form-control">
       <select id="template" class="form-control" style="margin-top:5px;">
         <option val="">Select a template (optional)</option>
       </select>
-      <textarea id="content" class="form-control" style="min-height:300px;margin-top:5px;margin-bottom:5px;"></textarea>
-      <a class="btn btn-action btn-block" id="sendemail">Send email</a>
+      <textarea id="content" class="form-control" style="min-height:300px;margin-top:5px;"></textarea>
+      <a class="btn btn-action btn-block" id="sendemail" style="margin-top:5px;">Send email</a>
       <br>
       <br>
     </div>
@@ -56,11 +59,72 @@
 
     $('#showmailbox').bind('click',function(e) { e.preventDefault(); $('#mailbox').toggle(); });
     
+    var vars = {};
     var sendemail = function(e) {
       e.preventDefault();
       alert('TODO should send the email');
+      // get the vars
+      // need the to, cc, bcc, subject
+      // get the html and text, or content if they don't, and determine what the content is?
+      // needs an authd post to the /sendmail route
     }
     $('#sendemail').bind('click',sendemail);
+    
+    var request;
+    var rid;
+    var populate = function(event) {
+      event.preventDefault();
+      $.ajax({
+        type:'POST',
+        cache:false,
+        processData:false,
+        contentType: 'application/json',
+        dataType: 'json',
+        beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
+        data : JSON.stringify({template:$('#template').val(),vars:request}),
+        url:api+'/construct',
+        success: function(data) { 
+          if (request) {
+            $('#to').val(request.email+','+request.user.email);
+            alert('The "To" field has been populated with the email of the author to contact about this request, AND the email of the user that created the request (in that order). You can remove whichever ones you do not wish to use, or change them altogether if you wish');
+          }
+          if (data.data.html) {
+            $('#content').val(data.data.html);
+          } else if (data.data.text) {
+            $('#content').val(data.data.text);
+          } else {
+            $('#content').val(data.data.content);
+          }
+          if (data.data.subject) $('#subject').val(data.data.subject);
+          var notes = '';
+          vars = {};
+          var ignore = ['content','text','html','subject'];
+          for ( var k in data.data ) {
+            vars[k] = data.data[k];
+            if (ignore.indexOf(k) === -1) {
+              if (!notes.length) notes += 'This email would be sent with the following additional parameters:<br>';
+              notes += k + ': ' + data.data[k] + '<br>';
+            }
+          }
+          if (notes.length) {
+            notes = '<p id="notes">' + notes + '</p>';
+            $('#sendemail').before(notes);
+          }
+        }
+      });      
+    }
+    if (window.location.href.indexOf('request=') !== -1) {
+      rid = window.location.href.split('request=')[1].split('&')[0];
+      $.ajax({
+        type:'GET',
+        url:api+'/request/'+rid,
+        success: function(data) { 
+          request = data.data;
+          $('#template').after('<a style="margin-top:5px;display:none;" href="" id="populate" class="btn btn-info btn-xs btn-block">Populate for request ' + rid + '</a>');
+          $('#populate').bind('click',populate);
+        }
+      });      
+    }
     
     var templates = {};
     $.ajax({
@@ -75,7 +139,12 @@
     });
     var template = function(e) {
       var name = $('#template').val();
-      if (templates[name]) $('#content').val(templates[name].content);
+      if (name && templates[name]) {
+        $('#content').val(templates[name].content);
+        if ($('#populate').length) $('#populate').show();
+      } else {
+        if ($('#populate').length) $('#populate').hide();        
+      }
     }
     $('#template').bind('change',template);
         
@@ -91,14 +160,14 @@
       e.preventDefault();
       $('#mailbox').show();
       var eml = $(this).attr('href');
-      var emails = $('#email').val();
+      var emails = $('#to').val();
       if (emails.indexOf(eml) === -1) {
         if (emails) emails += ',';
         emails += eml;
       } else {
         emails = emails.replace(','+eml,'').replace(eml+',','').replace(eml,'');
       }
-      $('#email').val(emails);
+      $('#to').val(emails);
     }
     var adminify = function(e) {
       e.preventDefault();
