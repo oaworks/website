@@ -2,7 +2,8 @@
 <div class="container-fluid" id="accounts" style="display:none;">
   <div class="row" id="mailbox" style="display:none;">
     <div class="col-md-12">
-      <input type="text" id="to" placeholder="To: email address(es), comma separated" class="form-control">
+      <input type="text" id="from" placeholder="From (defaults to requests@openaccessbutton.org)" class="form-control">
+      <input type="text" id="to" style="margin-top:5px;" placeholder="To: email address(es), comma separated" class="form-control">
       <input type="text" id="cc" placeholder="cc" style="margin-top:5px;" class="form-control">
       <input type="text" id="bcc" placeholder="bcc" style="margin-top:5px;" class="form-control">
       <input type="text" id="subject" placeholder="subject" style="margin-top:5px;" class="form-control">
@@ -73,6 +74,7 @@
     
     var reset = function() {
       vars = {};
+      $('#from').val("");
       $('#to').val("");
       $('#cc').val("");
       $('#bcc').val("");
@@ -87,6 +89,7 @@
     
     var sendemail = function(e) {
       e.preventDefault();
+      if ($('#from').val()) vars.from = $('#from').val();
       vars.to = $('#to').val();
       vars.cc = $('#cc').val();
       vars.bcc = $('#bcc').val();
