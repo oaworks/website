@@ -6,12 +6,12 @@
       <input type="text" id="cc" placeholder="cc" style="margin-top:5px;" class="form-control">
       <input type="text" id="bcc" placeholder="bcc" style="margin-top:5px;" class="form-control">
       <input type="text" id="subject" placeholder="subject" style="margin-top:5px;" class="form-control">
-      <textarea id="content" class="form-control" style="min-height:300px;margin-top:5px;"></textarea>
-      <textarea id="html" class="form-control" style="min-height:300px;margin-top:5px;display:none;"></textarea>
-      <textarea id="text" class="form-control" style="min-height:300px;margin-top:5px;display:none;"></textarea>
       <select id="template" class="form-control" style="margin-top:5px;">
         <option val="">Select a template (optional)</option>
       </select>
+      <textarea id="content" class="form-control contents" style="min-height:300px;margin-top:5px;"></textarea>
+      <textarea id="secondary" class="form-control contents" style="min-height:300px;margin-top:5px;display:none;"></textarea>
+      <div id="previewhtml" class="well" style="display:none;margin-top:5px;"></div>
       <a class="btn btn-action btn-block" id="sendemail" style="margin-top:5px;">Send email</a>
       <br>
       <br>
@@ -37,7 +37,7 @@
 
 
 
-<div class="container-fluid" id="no">
+<div class="container-fluid" id="no" style="display:none;">
   <div class="row">
     <div class="col-md-12">
       <div class="jumbotron">
@@ -51,7 +51,10 @@
 
 <script>
   jQuery(document).ready(function() {
-    if (!clogin.loggedin()) window.location = '/account?next=/admin';
+    if (!clogin.loggedin()) {
+      $('#no').show();
+      window.location = '/account?next=/admin';
+    }
 
     var api = 'https://api.openaccessbutton.org';
     if (window.location.host.indexOf('openaccessbutton.org') === -1) {
@@ -59,43 +62,121 @@
       clogin.api = 'https://dev.api.cottagelabs.com/accounts';
     }
 
+    var vars = {};
+    var templates = {};
+    var tid;
+    var request;
+    var rid;
+    var firstpopulate = true;
+
     $('#showmailbox').bind('click',function(e) { e.preventDefault(); $('#mailbox').toggle(); });
     
-    var vars = {};
+    var reset = function() {
+      vars = {};
+      $('#to').val("");
+      $('#cc').val("");
+      $('#bcc').val("");
+      $('#subject').val("");
+      $('#content').val("").show();
+      $('#secondary').val("").hide();
+      $('#previewhtml').html("").hide();
+      if ($('#foundemails').length) $('#foundemails').remove();
+      if ($('#notes').length) $('#notes').remove();
+      if ($('#populate').length) $('#populate').removeClass('disabled').hide();
+    }
+    
     var sendemail = function(e) {
       e.preventDefault();
-      alert('TODO should send the email');
-      // get the vars
-      // need the to, cc, bcc, subject
-      // get the html and text, or content if they don't, and determine what the content is?
-      // needs an authd post to the /sendmail route
+      vars.to = $('#to').val();
+      vars.cc = $('#cc').val();
+      vars.bcc = $('#bcc').val();
+      vars.subject = $('#subject').val();
+      if (!tid) {
+        var c = $('#content').val();
+        if (c.indexOf('<') !== -1 && c.indexOf('>') !== -1) {
+          vars.html = c;
+        } else {
+          vars.text = c;
+        }
+      } else if (templates[tid].filename.endsWith('.html')) {
+        vars.html = $('#content').val();
+        if ($('#secondary').val()) vars.text = $('#secondary').val();
+      } else if (templates[tid].filename.endsWith('.txt')) {
+        vars.text = $('#content').val();
+        if ($('#secondary').val()) vars.html = $('#secondary').val();
+      } else {
+        vars.text = $('#content').val();
+        vars.html = $('#secondary').val();        
+      }
+      if (vars.content) delete vars.content;
+      var opts = {
+        type:'POST',
+        cache:false,
+        processData:false,
+        contentType: 'application/json',
+        dataType: 'json',
+        data: JSON.stringify(vars),
+        beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
+        url:api+'/sendmail',
+        success: function(data) {
+          alert('Your email has been sent');
+        }
+      };
+      if (vars.to || vars.cc || vars.bcc) {
+        //alert(JSON.stringify(vars,undefined,2));
+        $.ajax(opts);
+        $('#template').val("");
+        tid = undefined;
+        reset();
+      } else {
+        alert('You need at least one email address in one of to, cc, or bcc!');
+      }
     }
     $('#sendemail').bind('click',sendemail);
     
-    var request;
-    var rid;
     var populate = function(event) {
+      $('#populate').addClass('disabled');
+      firstpopulate = true;
       event.preventDefault();
-      $.ajax({
+      var opts = {
         type:'POST',
         cache:false,
         processData:false,
         contentType: 'application/json',
         dataType: 'json',
         beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
-        data : JSON.stringify({template:$('#template').val(),vars:request}),
         url:api+'/substitute',
         success: function(data) { 
           if (request) {
-            $('#to').val(request.email+','+request.user.email);
-            alert('The "To" field has been populated with the email of the author to contact about this request, AND the email of the user that created the request (in that order). You can remove whichever ones you do not wish to use, or change them altogether if you wish');
+            if (firstpopulate) {
+              firstpopulate = false;
+              $('#to').after('<p id="foundemails" style="padding-bottom:5px;font-size:0.7em;">AUTHOR: '+request.email+'<br>CREATOR:  '+request.user.email+'<br>(could go direct into TO field, but for safety in testing, they do not)</p>');
+            }
+          }
+          if (templates[tid].filename.endsWith('.md')) {
+            $('#content').val(data.data.text).show();
+            $('#secondary').val(data.data.html).show();
+            $('#previewhtml').html(data.data.html).show();
+          } else if (templates[tid].filename.endsWith('.html')) {
+            var dc = data.data.html ? data.data.html : data.data.content;
+            $('#content').val(dc).show();
+            $('#previewhtml').html(dc).show();
+            if (data.data.text) $('#secondary').val(data.data.html).show();
+          } else {
+            var tc = data.data.text ? data.data.text : data.data.content;
+            $('#content').val(dc).show();
+            if (data.data.html) {
+              $('#secondary').val(data.data.html).show();
+              $('#previewhtml').html(data.data.html).show();
+            }
           }
           if (data.data.html) {
-            $('#content').val(data.data.html);
+            $('#html').html(data.data.html).show();
+            $('#previewhtml').html(data.data.html).show();
           } else if (data.data.text) {
-            $('#content').val(data.data.text);
+            $('#text').val(data.data.text).show();
           } else {
-            $('#content').val(data.data.content);
+            $('#content').val(data.data.content).show();
           }
           if (data.data.subject) $('#subject').val(data.data.subject);
           var notes = '';
@@ -109,11 +190,20 @@
             }
           }
           if (notes.length) {
+            if ($('#notes').length) $('#notes').remove();
             notes = '<p id="notes">' + notes + '</p>';
             $('#sendemail').before(notes);
           }
         }
-      });      
+      };
+      $('.contents').each(function() {
+        if ($(this).val()) {
+          var st = {content:$(this).val(),vars:request};
+          if (templates[tid].filename.endsWith('.md')) st.markdown = true;
+          opts.data = JSON.stringify(st);
+          $.ajax(opts);
+        }
+      });
     }
     if (window.location.href.indexOf('request=') !== -1) {
       rid = window.location.href.split('request=')[1].split('&')[0];
@@ -122,13 +212,12 @@
         url:api+'/request/'+rid,
         success: function(data) { 
           request = data.data;
-          $('#template').after('<a style="margin-top:5px;display:none;" href="" id="populate" class="btn btn-info btn-xs btn-block">Preview the email for request ' + rid + '</a>');
+          $('#sendemail').before('<a style="margin-top:5px;display:none;" href="" id="populate" class="btn btn-info btn-xs btn-block">Preview the email with variables for request ' + rid + '</a>');
           $('#populate').bind('click',populate);
         }
       });      
     }
     
-    var templates = {};
     $.ajax({
       type:'GET',
       url:api+'/templates',
@@ -140,30 +229,26 @@
       }
     });
     var template = function(e) {
-      var tid = $('#template').val();
+      e.preventDefault();
+      reset();
+      tid = $('#template').val();
       if (tid && templates[tid]) {
         // look for one with same name but different type (unless type .md)
         var prefix = templates[tid].filename.split('.')[0];
         var suffix = templates[tid].filename.split('.')[1];
         if (suffix !== 'md') {
-          $('#content').val("").hide();
-          $('#'+suffix).val(templates[tid].content).show();
+          $('#content').val(templates[tid].content).show();
           var alt = suffix === 'html' ? 'txt' : 'html';
           for ( var t in templates ) {
             if (templates[t].filename === prefix + '.' + alt) {
-              $('#'+alt).before('<p>There appears to be an alternative format ' + alt + ' template available too - both will be sent, so you must edit both.</p>');
-              $('#'+alt).val(templates[t].content).show();
+              $('#secondary').before('<p>There appears to be an alternative format ' + alt + ' template available too - both will be sent, so you must edit both.</p>');
+              $('#secondary').val(templates[t].content).show();
             }
           }
         } else {
           $('#content').val(templates[tid].content).show();
         }
         if ($('#populate').length) $('#populate').show();
-      } else {
-        $('#content').val("").show();
-        $('#html').val("").hide();
-        $('#text').val("").hide();
-        if ($('#populate').length) $('#populate').hide();        
       }
     }
     $('#template').bind('change',template);

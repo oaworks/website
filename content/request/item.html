@@ -44,7 +44,7 @@
           <div class="cloggedin" style="display:none;">
             <div id="supportarea">
               <p>Do you also need access to this research? Add your support! Requests are more likely to be fulfilled when multiple people need access to the research. Together we can make this a successful request.</p>
-              <textarea class="form-control addsupport" style="min-height:100px;" placeholder="How would getting access to this research help you? This message will be sent to the author. (Optional)" id="supportstory"></textarea>
+              <textarea class="form-control addsupport" style="min-height:100px;" placeholder="How would getting access to this research help you? This message will be sent to the author. (This is optional, however it will help the request get fulfilled)" id="supportstory"></textarea>
               <a class="btn btn-action btn-block addsupport" id="addsupport" href="#" style="margin-top:2px;">Add your support</a>
               <p class="addsupport" style="display:none;">Thank you! Your support has been added to this request, and you will be notified when this content becomes available.</p>
             </div>
@@ -310,7 +310,9 @@
         var s = data.hits.hits[r]._source;
         out += '<blockquote>';
         out += s.username ? s.username : s.email;
-        out += ' supports this story:<br>' + s.story + '</blockquote>';
+        out += ' supports this request';
+        if (s.story) out += ':<br>' + s.story
+        out += '</blockquote>';
       }
       $('#stories').html(out);
     }
@@ -349,27 +351,23 @@
 
     var addsupport = function(event) {
       event.preventDefault();
-      if ($('#supportstory').val()) {
-        var data = {story:$('#story').val()};
-        var url = api+'/support/'+rid;
-        var opts = {
-          type:'POST',
-          url: url,
-          cache:false,
-          processData:false,
-          contentType: 'application/json',
-          dataType: 'json',
-          success: function(data) {
-            $('#supportarea').hide();
-            $('#supported').show();
-          },
-          beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
-        }
-        opts.data = JSON.stringify(data);
-        $.ajax(opts);        
-      } else {
-        alert('Please provide a story first!');
+      var data = {story:$('#story').val()};
+      var url = api+'/support/'+rid;
+      var opts = {
+        type:'POST',
+        url: url,
+        cache:false,
+        processData:false,
+        contentType: 'application/json',
+        dataType: 'json',
+        success: function(data) {
+          $('#supportarea').hide();
+          $('#supported').show();
+        },
+        beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
       }
+      opts.data = JSON.stringify(data);
+      $.ajax(opts);        
     }
     $('#addsupport').bind('click',addsupport);
     
