@@ -30,6 +30,7 @@
   
   <script>
   jQuery(document).ready(function() {
+    if (window.location.href.indexOf('odb=true') !== -1) $('#fromopendatabutton').show();
     var logged = clogin.loggedin();
     if (logged) {
       $('.cloggedin').show();

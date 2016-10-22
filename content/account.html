@@ -19,7 +19,13 @@ jQuery(document).ready(function() {
     }
   }
   var setvalues = function() {
-    if (clogin.user.account.username) $('.username').html(clogin.user.account.username);
+    if (clogin.user.account.username) {
+      $('.username').html(clogin.user.account.username);
+      if (window.location.href.indexOf('next=') !== -1) {
+        $('#tonext').attr('href',window.location.href.split('next=')[1]);
+        $('#tonextalert').show();
+      }
+    }
     if (clogin.apikey) $('#apikey').html(clogin.apikey);
     try {
       var p = clogin.user.account.profile ? clogin.user.account.profile : {};
@@ -40,13 +46,13 @@ jQuery(document).ready(function() {
   }
   var aftersave = function() {
     $('#setinfo').hide();
+    $('.username').html($('#username').val());
+    if (window.location.href.indexOf('next=') !== -1) {
+      $('#tonext').attr('href',window.location.href.split('next=')[1]);
+      $('#tonextalert').show();
+    }
   }
   clogin.init({api:'https://dev.api.cottagelabs.com/accounts',afterLogin: setvalues, saveValidate: savecheck, afterSave: aftersave });
-
-  if (window.location.href.indexOf('next=') !== -1) {
-    $('#tonext').attr('href',window.location.href.split('next=')[1]);
-    $('#tonextalert').show();
-  }
 
   if (window.location.href.indexOf('email=') !== -1) {
     $('#cloginEmail').val(window.location.href.split('next=')[0].split('email=')[1]);
