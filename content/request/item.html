@@ -15,7 +15,7 @@
         </div>
         <div class="panel-body">
           <a href="#" id="details" class="panels" alt="Click to view and edit request details" title="Click to view and edit request details">+ details</a>
-          <a href="#" id="shares" class="btn btn-xs btn-action panels pull-right shares" style="margin-left:20px;margin-right:20px;height:28px;font-size:0.9em;">Embed</a>
+    <!-- removing embed button till embeds work   <a href="#" id="shares" class="btn btn-xs btn-action panels pull-right shares" style="margin-left:20px;margin-right:20px;height:28px;font-size:0.9em;">Embed</a> -->
           <div style="display:inline;margin-bottom:-10px;padding-left:20px;" class="pull-right shares">
             <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Help us get access to research!" data-size="large"></a>
           </div>
@@ -298,7 +298,7 @@
       // if status success, need to show the links to the content, and the data badge for the author if applicable
 
       if (record.status === 'help' && clogin.loggedin()) {
-        $('#supportpanel').before("<div class=\"alert alert-info\"><p>Hey, we just need a bit more information to ge this request going, can you have a look at the details and fill in what's missing?</p></div>");
+        $('#supportpanel').before("<div class=\"alert alert-info\"><p>We need a bit more information for this request. Can you look at the details and fill in what's missing?</p></div>");
       } else if ( record.status === 'refused' && clogin.loggedin()) {
         $('#supportpanel').before("<div class=\"alert alert-info\"><p>This request was refused, but we could try again with another author - can you have a look at the details and provide an alternative contact email address to try?</p></div>");
       }
