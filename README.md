@@ -23,7 +23,7 @@ This repo will automatically deploy changes committed to the site.
 * master is our stable, released code.
 * develop is what we're currently working on now.
 
-Changes should be committed to the develop branch first and viewed on the test site. Once confirmed as being acceptable, they should be committed to the master branch and they will appear on the live site.
+Changes should be committed to the develop branch first and viewed on the test site. Once confirmed as being acceptable, they should be committed to the master branch and they will appear on the live site. The email system & data displayed on the site can be used without causing real database changes or emailing authors. 
 
 Actual editing of the files themselves can be done in any text editor or code editing tool, as you prefer.
 
