@@ -15,7 +15,7 @@
         </div>
         <div class="panel-body">
           <a href="#" id="details" class="panels" alt="Click to view and edit request details" title="Click to view and edit request details">+ details</a>
-          <a href="#" id="shares" class="btn btn-xs btn-action panels pull-right shares" style="margin-left:20px;margin-right:20px;height:28px;font-size:0.9em;">Share</a>
+          <a href="#" id="shares" class="btn btn-xs btn-action panels pull-right shares" style="margin-left:20px;margin-right:20px;height:28px;font-size:0.9em;">Embed</a>
           <div style="display:inline;margin-bottom:-10px;padding-left:20px;" class="pull-right shares">
             <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Help us get access to research!" data-size="large"></a>
           </div>
@@ -48,7 +48,7 @@
               <a class="btn btn-action btn-block addsupport" id="addsupport" href="#" style="margin-top:2px;">Add your support</a>
               <p class="addsupport" style="display:none;">Thank you! Your support has been added to this request, and you will be notified when this content becomes available.</p>
             </div>
-            
+
             <div id="youcreated" style="display:none;">
               <p>
                 You don't have to add your support, you created this request!<br>
@@ -58,7 +58,7 @@
 
             <div id="supported" style="display:none;">
               <p>
-                Thanks! You have added your support to this request! You are awesome! 
+                Thanks! You have added your support to this request! You are awesome!
                 <br>Please share this request to help everyone get access.
               </p>
             </div>
@@ -84,7 +84,7 @@
   <div class="row">
     <div class="col-md-12">
       <div id="stories">
-        
+
       </div>
     </div>
   </div>
@@ -184,7 +184,7 @@
         $('#supported').show();
       } else if (iscreator) {
         $('#supportarea').hide();
-        $('#youcreated').show();        
+        $('#youcreated').show();
       }
 
       // update the title link and message header
@@ -207,7 +207,7 @@
       $('#msg').html(msg);
 
       // TODO check for other requests for the same URL but of different types
-      
+
       // add the details
       var dets = '';
       dets += '<p>This request was created on ' + format(record.createdAt);
@@ -218,7 +218,7 @@
       if (record.story) dets += ' who said:<br><blockquote>' + record.story + '</blockquote><br>';
       dets += '</p>';
       dets += '<p>';
-      
+
       // set the status statement
       if (record.status === 'help') {
         dets += 'It just needs a bit more detail then it can get started.'
@@ -234,7 +234,7 @@
         dets += '</p><p>This request has been successful!';
       }
       dets += '</p>';
-      
+
       // show admin controls
       if (isadmin) {
         dets += ' <select id="status" class="form-control" style="background-color:orange;width:130px;display:inline;margin-right:20px;">';
@@ -263,7 +263,7 @@
         if (isadmin && !iseditable) dets += ' style="background-color:orange;"';
         dets += 'class="form-control"></p>';
       }
-      
+
       if (iseditable) {
         dets += '<p><input type="text" id="title" class="form-control" placeholder="Title" value="';
         if (record.title) dets += record.title;
@@ -282,13 +282,13 @@
         if (record.story) dets += record.story;
         dets += '</textarea></p>';
       }
-      
+
       // save button for anyone logged and if status allows, or if admin user
       if ( isadmin || iseditable ) {
         dets += '<input type="submit" id="submitchanges" value="Save changes" class="btn btn-action btn-block">';
         dets += '<div id="savesuccess" style="display:none;"><p>Saved</p></div>';
       }
-      
+
       // bind actions
       $('#edit').html(dets);
       if ($('#submitchanges').length) $('#submitchanges').bind('click',submit);
@@ -338,7 +338,7 @@
                     }
                   }
                 ]
-              }              
+              }
             }
           }
         }
@@ -367,10 +367,10 @@
         beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
       }
       opts.data = JSON.stringify(data);
-      $.ajax(opts);        
+      $.ajax(opts);
     }
     $('#addsupport').bind('click',addsupport);
-    
+
     var panels = function(event) {
       event.preventDefault();
       $('div.panels:not(.' + $(this).attr('id') + ')').hide();
@@ -392,7 +392,7 @@
     clogin.afterFailure = runrequest;
     if (clogin.loggedin()) {
       clogin.afterLogin = function() {
-        rurl += '?apikey=' + clogin.apikey; 
+        rurl += '?apikey=' + clogin.apikey;
         runrequest();
       };
       clogin.login();
