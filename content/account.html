@@ -26,6 +26,8 @@ jQuery(document).ready(function() {
         $('#tonext').attr('href',window.location.href.split('next=')[1]);
         $('#tonextalert').show();
       }
+    } else {
+      $('#downloads').hide();
     }
     if (clogin.apikey) $('#apikey').html(clogin.apikey);
     try {
@@ -173,7 +175,7 @@ jQuery(document).ready(function() {
   </div>
 </div>
 
-<div class="container-fluid" id="downloads" style="margin-bottom:50px;display:none;">
+<div class="container-fluid cloggedin" id="downloads" style="margin-bottom:50px;display:none;">
   <div class="row">
     <div class="col-md-6">
       <h3>Get Started</h3>

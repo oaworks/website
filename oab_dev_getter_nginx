@@ -39,7 +39,7 @@ server {
 server {
   listen 80;
   server_name oabb.test.cottagelabs.com;
-  root /home/cloo/dev/openresearchbutton/bookmarklet;
+  root /home/cloo/dev/openresearchbutton/oab_static/static/bookmarklet;
 
   location / {
     add_header Access-Control-Allow-Origin *;
