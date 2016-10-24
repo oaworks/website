@@ -15,13 +15,11 @@
 
           <div id="moredetails" style="display:none;margin-top:50px;">
             <p>
-              Hey, sorry, thanks for signing up, but we still need a bit more info from you 
-              before you can create requests - could you go to your account page and provide
-              it for us? Thanks!
+              We need a few more details about you before you can make this request. Can you take a second to finish signing up?
             </p>
             <a id="moredetailslink" href="" class="btn btn-block btn-action">Complete your account details</a>
           </div>
-          
+
           <div id="newrequest" style="display:none;margin-top:50px;">
             <h3 id="createheader">Create a request</h3>
             <div class="alert alert-info" id="loadingscrape" style="display:none;">
@@ -71,10 +69,10 @@
       if ($(this).attr('id') == 'request_data') {
         $('#request_article').prop('checked',false);
       } else {
-        $('#request_data').prop('checked',false);        
+        $('#request_data').prop('checked',false);
       }
     });
-    
+
     var locsubmit = function(post,data) {
       try {
         if (navigator.geolocation) {
@@ -94,9 +92,9 @@
       } catch (e) {
         post.data = JSON.stringify(data);
         $.ajax(post);
-      }      
+      }
     }
-                     
+
     var submit = function() {
       if ( $('.types:checked').length === 0 || !$('#url').val() || !$('#story').val() ) {
         $('#savesuccess').html('<p><br>Sorry, some information is missing. Please select at least one request type, and provide at least a URL and a story, and select the type of request you want to make.</p>').show();
@@ -206,9 +204,9 @@
                 }
               } else {
                 if (create === 'data') {
-                  $('#logintoget').html("The data isn't available, but you can create a request!");                  
+                  $('#logintoget').html("The data isn't available, but you can create a request!");
                 } else if (create === 'article') {
-                  $('#logintoget').html("The article isn't available, but you can create a request!");                  
+                  $('#logintoget').html("The article isn't available, but you can create a request!");
                 }
                 $('#loginpls').show();
                 $('#login').attr('href','/account?next=/request/new?url='+encodeURIComponent($('#url').val()));
