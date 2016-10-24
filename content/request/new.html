@@ -100,7 +100,7 @@
     var submit = function() {
       if ( $('.types:checked').length === 0 || !$('#url').val() || !$('#story').val() ) {
         $('#savesuccess').html('<p><br>Sorry, some information is missing. Please select at least one request type, and provide at least a URL and a story, and select the type of request you want to make.</p>').show();
-        setTimeout(function() { $('#savesuccess').html('<p>Saved</p>').hide(); }, 2000);
+        setTimeout(function() { $('#savesuccess').html('<p>Saved</p>').hide(); }, 5000);
       } else {
         $('#submitrequest').hide();
         $('#savingspinner').show();
@@ -174,7 +174,7 @@
               for ( var r in data.data.requests ) {
                 var rr = data.data.requests[r];
                 $('#request_'+rr.type).hide();
-                $('#url').after('<br><a style="margin-top:5px;" href="' + rr.url + '" class="btn btn-block btn-action">There is already a request for this ' + rr.type + ' - add your support!</a> ');
+                $('#url').after('<br><a style="margin-top:5px;" href="' + rr._id + '" class="btn btn-block btn-action">There is already a request for this ' + rr.type + ' - add your support!</a> ');
                 create = create.replace(rr.type,'');
               }
             }
