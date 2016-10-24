@@ -1,6 +1,6 @@
 {{SUBJECT Your request has been fulfilled}}
 
-Hi {{username}},
+Hi,
 
 The author has responded to the request for the data supporting “{{title}}”. You can view what they’ve sent here: https://openaccessbutton.org/request/{{_id}}.
 

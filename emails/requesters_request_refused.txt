@@ -1,6 +1,6 @@
 {{SUBJECT Your request has failed}}
 
-Hi {{username}},
+Hi,
 
 The author of "{{title}}" has responded to the request by refusing it.
 
