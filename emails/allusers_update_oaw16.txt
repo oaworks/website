@@ -1,6 +1,6 @@
 {{SUBJECT Update Your Open Access Button!}}
 
-Hi, {{username}}!
+Hi!
 
 We have exciting news - there's a new Open Access Button. You can update your Button right now through your account page: https://openaccessbutton.org/account/. Your current Button will stop working.
 
