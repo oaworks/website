@@ -36,6 +36,16 @@ server {
   }
 }
 
+server {
+  listen 80;
+  server_name oabb.test.cottagelabs.com;
+  root /home/cloo/dev/openresearchbutton/bookmarklet;
+
+  location / {
+    add_header Access-Control-Allow-Origin *;
+  }
+}
+
 #server {
 #    location /content {
 #        try_files $uri $uri.html $uri.md $uri/index $uri/index.html $uri/index.md /dynamic.html 404 /404 =404;
