@@ -1,6 +1,6 @@
 {{SUBJECT Your request is in progress}}
 
-Hi {{username}},
+Hi,
 
 The author of "{{title}}" has responded to the request by putting it on hold. This is good news, it means they're preparing the {{type}} to share.
 
