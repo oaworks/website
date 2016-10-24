@@ -1,5 +1,8 @@
 # bookmarklet
 
+TODO this should be in the /static/bookmarklet folder but it is 
+causing an error in the build, so moving it out here for now.
+
 This bookmarklet just wraps core functionality from the plugin. 
 
 The index.html demonstrates how it looks, and shows a button that 
