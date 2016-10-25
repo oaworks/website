@@ -84,7 +84,6 @@
   <div class="row">
     <div class="col-md-12">
       <div id="stories">
-
       </div>
     </div>
   </div>
@@ -333,8 +332,8 @@
               bool: {
                 must: [
                   {
-                    term: {
-                      'rid.exact':rid
+                    query_string: {
+                      query:'rid:'+rid
                     }
                   }
                 ]

@@ -153,7 +153,7 @@
       if ($(this).attr('id') === 'find' || e === undefined || e.keyCode === 13) {
         $('#find').hide();
         $('#loadingavailability').show();
-        $.ajax({
+        var opts = {
           type:'GET',
           url:api+'/availability?url='+encodeURIComponent($('#url').val()),
           success: function(data) {
@@ -217,7 +217,18 @@
             $('#loadingavailability').hide();
             $('#findarticle').after('<p>Sorry, something went wrong. ');
           }
-        });
+        };
+        if (clogin.apikey) {
+          opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", clogin.apikey); };
+          opts.type = 'POST';
+          opts.url = api+'/availability';
+          opts.cache = false;
+          opts.processData = false;
+          opts.contentType = 'application/json';
+          opts.dataType = 'json';
+          opts.data = JSON.stringify({url:$('#url').val()});
+        }
+        $.ajax(opts);
       }
     }
     $('#url').bind('keyup',availability);

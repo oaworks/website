@@ -1,5 +1,5 @@
 var oabutton_bookmarklet = function(apikey) {
-  oab.bookmarklet = '0.2.1';
+  oab.bookmarklet = '0.2.2';
 
   var popup = document.createElement('div');
   popup.setAttribute('id','oabutton_popup');

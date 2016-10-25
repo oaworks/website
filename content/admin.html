@@ -104,7 +104,7 @@
       $('#previewhtml').html("").hide();
       if ($('#foundemails').length) $('#foundemails').remove();
       if ($('#notes').length) $('#notes').remove();
-      if ($('#populate').length) $('#populate').removeClass('disabled').hide();
+      if ($('#populate').length) $('#populate').removeClass('disabled');
     }
     
     var sendemail = function(e) {
@@ -237,6 +237,7 @@
           request = data.data;
           $('#sendemail').before('<a style="margin-top:5px;display:none;" href="" id="populate" class="btn btn-info btn-xs btn-block">Preview the email with variables for request ' + rid + '</a>');
           $('#populate').bind('click',populate);
+          $('#mailbox').show();
         }
       });      
     }
