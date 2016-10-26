@@ -29,5 +29,12 @@ and js file names that are required.
 The version number of this bookmarklet must be set in bookmarklet.js. 
 It would probably be useful if it equates to the version of the plugin 
 that things were last copied from. It can also be useful to use the 
-version in includer.js and in the link used to create the bookmarklet, 
-so that the links to files are refreshed with version increments.
+version in includer.js so that the links to files are refreshed with 
+version increments. The actual link used in a page to allow a user to 
+drag the bookmark to their bookmark bar should be used as the example 
+in index.html, with Math.random() variable added to it, so that every 
+use of the bookmarklet will get a fresh version of includer.js - so, 
+if includer.js has a new version number set, then it will retrieve 
+the latest version of the bookmarklet code, automatically keeping 
+users up to date.
+

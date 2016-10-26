@@ -1,5 +1,5 @@
 (function() {
-  var version = '0.2.2';
+  var version = '0.2.4.8';
   var url = 'http://oab.test.cottagelabs.com/static/bookmarklet';
   var fls = ['bookmarklet.css','oab.js','ui.js','bookmarklet.js'];
   for (var i = 0; i < fls.length; i++) {

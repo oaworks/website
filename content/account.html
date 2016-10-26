@@ -188,7 +188,7 @@ jQuery(document).ready(function() {
       <a id="firefoxinstall" class="btn btn-action btn-block dl ff disabled" target="_blank" href="https://addons.mozilla.org/en-GB/firefox/addon/openaccessbutton/">Firefox Plugin Coming Soon</a>
       <p class="dl mob">Doing research on the move? We'd like to make an app for your phone. But, right now you can use it in your browser. Check back when you're by your computer for our plugins.</p>
       <!-- TODO the bookmarklet link should have the dl class added to it, so it only shows when expected-->
-      <a id="bookmarklet" class="btn btn-action btn-block bk disabled" href="javascript:apikey='XXXX';document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','http://oab.test.cottagelabs.com/static/bookmarklet/includer.js?v=0.2.2');">OAButton bookmarklet</a>
+      <a id="bookmarklet" class="btn btn-action btn-block bk disabled" href="javascript:apikey='XXXX';document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','http://oab.test.cottagelabs.com/static/bookmarklet/includer.js?r='+Math.random());">OAButton bookmarklet</a>
       <a class="btn btn-action btn-block" href="/request/new">Use the Button in your Browser</a>
       <a class="btn btn-action btn-block" id="viewrequests" href="/request">View your requests</a>
     </div>

@@ -1,6 +1,16 @@
 # REDIRECTS - EVERYTHING TO HTTPS AND NO WWW
 server {
     listen      443 ssl;
+    server_name teambutton.org *.teambutton.org;
+    return 301 https://teambutton.org$request_uri?team=true;
+}
+server {
+    listen      80;
+    server_name teambutton.org *.teambutton.org;
+    return 301 https://teambutton.org$request_uri?team=true;
+}
+server {
+    listen      443 ssl;
     server_name opendatabutton.org *.opendatabutton.org;
     return 301 https://openaccessbutton.org$request_uri?odb=true;
 }
