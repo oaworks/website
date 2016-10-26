@@ -66,6 +66,9 @@ jQuery(document).ready(function() {
     $('#cloginEmail').val(window.location.href.split('next=')[0].split('email=')[1]);
     setTimeout(function() { $('#cloginSubmit').trigger('click'); }, 100);
   }
+  $('#cloginEmail').bind('keyup',function(e) {
+    if (e.keyCode === 13) $('#cloginSubmit').trigger('click');
+  });
 
   var mobileCheck = function() {
     // checks if browser is a mobile or tablet browser
