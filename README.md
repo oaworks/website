@@ -94,6 +94,12 @@ So, for neatness, static content like js and css files, and images, should go in
 
 And then the content of individual pages just goes in the /content folder.
 
+## The Bookmarklet
+
+* The bookmarklet is generated from code that runs the [Open Access Button Plugin](https://github.com/oabutton/unified-extension).
+* The bookmarklet can be instantly updated for users similar to how we update the website. 
+* You can view the bookmarklet in development at oabb.test.cottagelabs.com
+
 ## Approval Process
 
 This keeps branches aligned and ensures content on the sight is properly vetted.
