@@ -60,9 +60,9 @@ jQuery(document).ready(function() {
       $('#tonextalert').show();
     }
   }
-  var api = 'https://api.openaccessbutton.org';
+  var api = 'https://api.cottagelabs.com/accounts';
   if (window.location.host.indexOf('openaccessbutton.org') === -1) {
-    api = 'https://dev.api.cottagelabs.com/service/oab';
+    api = 'https://dev.api.cottagelabs.com/accounts';
   }
   clogin.init({api:api,afterLogin: setvalues, saveValidate: savecheck, afterSave: aftersave });
 
