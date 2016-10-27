@@ -1,1 +1,1 @@
-../../getter/build.js
+/home/cloo/dev/getter/build.js
