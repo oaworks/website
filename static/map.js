@@ -2,11 +2,11 @@
 jQuery(document).ready(function() {
 
   var makemap = function() {
-    $('#odbpositioner').html('<div style="position:relative;top:0;left:0;z-index:1000;"> \
+    $('#oabpositioner').html('<div style="position:relative;top:0;left:0;z-index:1000;"> \
     <p style="text-align:center;"> \
-      <a href="https://opendatabutton.org/story" style="font-weight:bold;color:#212f3f;"> \
-        opendatabutton.org \
-        <span id="odbmapcount"></span> \
+      <a href="https://openaccessbutton.org" style="font-weight:bold;color:#212f3f;"> \
+        openaccessbutton.org \
+        <span class="oabmapcount"></span> \
         people need access to data. Can you help? \
       </a> \
     </p> \
@@ -16,7 +16,7 @@ jQuery(document).ready(function() {
     var topo,projection,path,svg,g,draw;
 
     var updatemap = function(data) {
-      $('#odbmapcount').html(data.hits.total);
+      $('.oabmapcount').html(data.hits.total);
       draw(topo,data);
     }
 
@@ -32,7 +32,7 @@ jQuery(document).ready(function() {
             },
             filter: {
               bool: {
-                must:[{term:{'type.exact':'article'}}]
+                must:[]
               }
             }
           }
@@ -41,7 +41,7 @@ jQuery(document).ready(function() {
       }
       $.ajax({
         type: 'GET',
-        url: '//api.opendatabutton.org/query/blocked?source=' + JSON.stringify(qry),
+        url: '//api.openaccessbutton.org/query?source=' + JSON.stringify(qry),
         dataType: 'JSON',
         success: updatemap
       });
