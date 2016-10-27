@@ -55,7 +55,7 @@ server {
     ssl_certificate_key /etc/letsencrypt/live/api.openaccessbutton.org/privkey.pem;
 
     location / {
-        proxy_pass http://clapi/api/service/oabutton/;
+        proxy_pass http://clapi/api/service/oab/;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection $connection_upgrade;
@@ -63,85 +63,37 @@ server {
     }
 }
 
-# SERVE LIVE SITE WITH CONNECT TO PREFERRED METEOR SERVICE (LOCAL AT THE MOMENT)
 server {
-    listen 443 ssl spdy;
-    server_name openaccessbutton.org;
-    root /home/cloo/live/openresearchbutton/oab_static;
+  listen 443;
+  server_name openaccessbutton.org;
+  root /home/cloo/live/openresearchbutton/oab_static;
 
-    ssl on;
-    ssl_certificate /etc/letsencrypt/live/openaccessbutton.org/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/openaccessbutton.org/privkey.pem;
-    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-    ssl_ciphers "HIGH:!aNULL:!MD5 or HIGH:!aNULL:!MD5:!3DES";
-    ssl_prefer_server_ciphers on;
-    ssl_stapling on;
-    add_header Strict-Transport-Security "max-age=31536000;";
+  ssl on;
+  ssl_certificate /etc/letsencrypt/live/openaccessbutton.org/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/openaccessbutton.org/privkey.pem;
+  ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+  ssl_ciphers "HIGH:!aNULL:!MD5 or HIGH:!aNULL:!MD5:!3DES";
+  ssl_prefer_server_ciphers on;
+  ssl_stapling on;
+  add_header Strict-Transport-Security "max-age=31536000;";
 
-    location @proxy {
-        proxy_pass http://clapilocal;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection $connection_upgrade;
-        proxy_set_header X-Forwarded-For $remote_addr;
-    }
-    
-    location /merged-stylesheets.css {
-        try_files $uri @proxy; 
-    }    
-    location /sockjs {
-        try_files $uri @proxy; 
-    }    
-    location /app {
-        try_files $uri @proxy; 
-    }    
-    location /packages {
-        try_files $uri @proxy; 
-    }    
-    location /login {
-        try_files $uri @proxy;
-    }
-    location /account {
-        try_files $uri @proxy; 
-    }    
-    location /request/ {
-        try_files $uri @proxy; 
-    }    
-    location /response/ {
-        try_files $uri @proxy; 
-    }    
-    location /story/ {
-        try_files $uri @proxy; 
-    }    
-    location /admin/openaccessbutton {
-        try_files $uri @proxy; 
-    }    
+  add_header Pragma public;
+  add_header Cache-Control "public";
+  add_header Access-Control-Allow-Origin *;
 
-    location /openaccessbutton {
-        expires 30d;
-        add_header Pragma public;
-        add_header Cache-Control "public";
-        root /home/cloo/clapi/uploads;
-    }
+  rewrite ^/request/((?!new).)*$ /request/item last;
+  rewrite ^/response/((?!new).)*$ /response/item last;
 
-    location /static {
-        expires 30d;
-        add_header Pragma public;
-        add_header Cache-Control "public";
-    }
-    location /content {
-        try_files $uri $uri.html $uri.md $uri/index $uri/index.html $uri/index.md /dynamic.html 404 /404 =404;
-        add_header Access-Control-Allow-Origin *;
-    }
-    location = / {
-        index index.html;
-    }
-    location = /index.html {
-        root /home/cloo/live/openresearchbutton/oab_static;
-    }
-    location / {
-        try_files $uri $uri.html $uri.md /index.html;
-        add_header Access-Control-Allow-Origin *;
-    }
+  location / {
+    try_files /serve/$uri.html /serve/$uri/index.html /404.html =404;
+  }
+
+  location /content {
+    try_files $uri $uri.html $uri.md $uri/index $uri/index.html $uri/index.md /404 =404;
+  }
+  
+  location /static {
+    try_files $uri /serve/$uri =404;
+    expires 30d;
+  }
 }
-

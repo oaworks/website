@@ -46,20 +46,3 @@ server {
   }
 }
 
-#server {
-#    location /content {
-#        try_files $uri $uri.html $uri.md $uri/index $uri/index.html $uri/index.md /dynamic.html 404 /404 =404;
-#        add_header Access-Control-Allow-Origin *;
-#    }
-#    location = / {
-#        index index.html;
-#    }
-#    location = /index.html {
-#        root /home/cloo/dev/openresearchbutton/oab_static;
-#    }
-#    location / {
-#        try_files $uri $uri.html $uri.md /index.html;
-#        add_header Access-Control-Allow-Origin *;
-#    }
-#
-#}
