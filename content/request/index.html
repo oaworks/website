@@ -4,19 +4,36 @@
 
 <script>
 jQuery(document).ready(function() {
+  var api = 'https://api.openaccessbutton.org';
+  if (window.location.host.indexOf('openaccessbutton.org') === -1) api = 'https://dev.api.cottagelabs.com/service/oab';
+
+  var result = function(res) {
+    var out = '';
+    out += '<div class="well" style="background-color:#eee;border-color:#212f3f;overflow:hidden;">';
+    // TODO should show the item title here... but what if it is data? need to show we want the data for X, not article X
+    out += '<h4><a href="/request/' + res._id + '" style="color:#212f3f;">';
+    out += res.title ? res.title : res.url;
+    out += '</a></h4>';
+    var dt = new Date(res.createdAt).toUTCString().split(', ')[1];
+    var rq = '';
+    if (res.user) {
+      if (res.user.username) {
+        rq = ' by ' + res.user.username;
+      } else if (res.user.email) {
+        rq = ' by ' + res.user.email;
+      }
+    }
+    out += '<p>' + res.type.substring(0,1).toUpperCase() + res.type.substring(1) + ' requested' + rq + ' on ' + dt.substring(0,dt.length-13);
+    if (res.count && res.count > 1) out += '. Supported by ' + res.count + ' people.';
+    out += '</p>';
+    // TODO add a support this request and a share this request buttons
+    out += '</div>';
+    return out;
+  }
   var results = function(data) {
     $('#requestscount').html(data.hits.total);
     var out = '';
-    for ( var r in data.hits.hits ) {
-      var res = data.hits.hits[r]._source;
-      out += '<div class="well" style="background-color:#eee;border-color:#212f3f;overflow:hidden;">';
-      // TODO should show the item title here... but what if it is data? need to show we want the data for X, not article X
-      out += '<h4><a href="/request/' + res._id + '" style="color:#212f3f;">' + res.url + '</a></h4>';
-      var dt = new Date(res.createdAt).toUTCString().split(', ')[1];
-      out += '<p>Requested by ' + res.email + ' on ' + dt.substring(0,dt.length-13) + '</p>';
-      // TODO add a support this request and a share this request buttons
-      out += '</div>';
-    }
+    for ( var r in data.hits.hits ) out += result(data.hits.hits[r]._source);
     $('.holder.holder-results').html(out);
     $('#storycount').html(data.hits.total);
   }
@@ -31,28 +48,30 @@ jQuery(document).ready(function() {
         $('.holder.holder-innerresults').append(res);
       }
     }
-  }        
+  }
 
   var aggregations = function(data) {
     $('.holder.holder-suggestions').html("");
     for ( var f in $('.holder').holder.options.query.aggregations ) {
-      var disp = '<div style="border-bottom:1px solid #ccc;"><p style="font-size:0.9em;">Filter by ' + f + '</p>';
-      for ( var r in data.aggregations[f].buckets ) {
-        var j = data.aggregations[f].buckets[r];
-        if ( f === 'status' && j.key === 'success' ) $('#requestssuccesscount').html(j.doc_count);
-        disp += '<p>' + searchify({class: 'holder label label-default', val: j.key + ' (' + j.doc_count + ')', attrs: {function: 'add', filter: f, value: j.key} }) + '</p>';
+      if (data.aggregations[f].buckets.length > 1) {
+        var disp = '<div style="border-bottom:1px solid #ccc;"><p style="font-size:0.9em;">Filter by ' + f + '</p>';
+        for ( var r in data.aggregations[f].buckets ) {
+          var j = data.aggregations[f].buckets[r];
+          if ( f === 'status' && j.key === 'received' ) $('#requestssuccesscount').html(j.doc_count);
+          disp += '<p>' + searchify({class: 'holder label label-default', val: j.key + ' (' + j.doc_count + ')', attrs: {function: 'add', filter: f, value: j.key} }) + '</p>';
+        }
+        disp += '</div>';
+        $('.holder.holder-suggestions').append(disp);
       }
-      disp += '</div>';
-      $('.holder.holder-suggestions').append(disp);
-    }      
+    }
   }
 
   $('#requests').holder({
     what: "Explore requests",
-    url: "https://api.openaccessbutton.org/query/request",
+    url: api + "/query",
     datatype: 'JSON',
     scroll: true,
-    defaultquery: { 
+    defaultquery: {
       sort: [
         {
           createdAt: {order: 'desc'}
@@ -67,13 +86,13 @@ jQuery(document).ready(function() {
           },
           filter: {
             bool: {
-              must_not:[{term:{'test':true}}]
+              //must_not:[{term:{'test':true}}]
             }
           }
         }
       }
     },
-    pushstate: false,
+    pushstate: true,
     results: {
       default: results,
       scroll: scroll,
@@ -84,9 +103,9 @@ jQuery(document).ready(function() {
       status: { terms: { field: "status.exact", size: 100 } },
       type: { terms: { field: "type.exact", size: 100 } }
     }
-  }); 
+  });
 
-});  
+});
 </script>
 
 <style>
@@ -102,13 +121,13 @@ jQuery(document).ready(function() {
   stroke-width: 0.8px;
 }
 div.tooltip {
-  color: #222; 
-  background: #fff; 
-  padding: .5em; 
+  color: #222;
+  background: #fff;
+  padding: .5em;
   text-shadow: #f5f5f5 0 1px 0;
-  border-radius: 2px; 
-  box-shadow: 0px 0px 2px 0px #a6a6a6; 
-  opacity: 0.9; 
+  border-radius: 2px;
+  box-shadow: 0px 0px 2px 0px #a6a6a6;
+  opacity: 0.9;
   position: absolute;
 }
 </style>
@@ -117,7 +136,14 @@ div.tooltip {
 <div id="mapspace"></div>
 -->
 
+<!-- Start of info bar. When not required, simply comment out. -->
 
+<div class="alert alert-info class="close"" style="margin-top:60px;margin-left:10px;margin-right:10px">
+<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+<p>We are currently processing more than 10,000 requests. Keep checking back for more!</p>
+</div>
+
+<!-- End of info bar -->
 
 <div class="strap strap-compact" id="requests">
   <div class="container-fluid">
@@ -142,13 +168,12 @@ div.tooltip {
         <h3 style="text-align:center;font-size:60px;color:#f04717;"><span id="requestssuccesscount">0</span><span style="color:#ccc;">/</span><span id="requestscount">X</span></h3>
         <p style="text-align:center;font-size:0.8em;">Successful requests</p>
       </div>
-      <div class="holder holder-suggestions"></div>
+      <a class="btn btn-action btn-block btn-xs" href="/request/new">Find & Request <br> Research</a>
+      <div class="holder holder-suggestions" style="margin-top:15px;"></div>
     </div>
 
     <div class="col-md-9">
       <div class="holder holder-results"></div>
-    </div>            
+    </div>
   </div>
 </div>
-
-

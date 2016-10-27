@@ -37,13 +37,23 @@ if(document.getElementById(d).style.display == "none") { document.getElementById
 else { document.getElementById(d).style.display = "none"; }
 }
 
-jQuery(document).ready(function() {      
+jQuery(document).ready(function() {
     makeamap('mapspace','#c8c8c8','#f04717');
 });
 
 //--></script>
 
 <div class="container"  style="text-align:center;">
+
+  <!-- Start of info bar. When not required, simply comment out. -->
+
+  <div class="alert alert-info class="close"" style="margin-top:60px;margin-left:10px;margin-right:10px">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <p>Thanks for visiting! This page is being retired and merged with our <a href = "/request">request system</a></p>
+  </div>
+
+  <!-- End of info bar -->
+
     <div class="row">
         <div class="col-md-3">
             <div class="panel panel-default">
@@ -209,7 +219,7 @@ jQuery(document).ready(function() {
                         </div>
                         <a href="javascript:ReverseDisplay('faq3')"><h3>How do we achieve Open Access to scholarly literature?</h3></a>
                         <div id="faq3" style="display:none;">
-                            Many support Open Access to research because they believe the results of tax-payer funded research should be shared; since citizens have paid for this research, they should be able to access it at no additional charge. Many others also support Open Access to academic research because knowledge itself, or information, is a public good. 
+                            Many support Open Access to research because they believe the results of tax-payer funded research should be shared; since citizens have paid for this research, they should be able to access it at no additional charge. Many others also support Open Access to academic research because knowledge itself, or information, is a public good.
                         </div>
                         <a href="javascript:ReverseDisplay('faq4')"><h3>How can I make my work more openly available?</h3></a>
                         <div id="faq4" style="display:none;">
@@ -353,13 +363,13 @@ jQuery(document).ready(function() {
                             <p>Fees can either be waived in their entirety, or a partial discount off the standard APC may be offered, depending on your eligibility criteria. If you can't find their waiver/discount policy email the journal/publisher to ask about it.</p>
                             <p>Example fee waiver policies include (a non-exhaustive list):</p>
                             <ul>
-                                <li>PLOS's <a href="http://www.plos.org/publications/publication-fees/plos-publication-fee-assistance/" target="_blank">publication fee assistance</a> 
-                                <li>BioMed Central's <a href="http://www.biomedcentral.com/authors/oawaiverfund" target="_blank">open access waiver fund</a> 
-                                <li>Hindawi's <a href="http://www.hindawi.com/waiver/" target="_blank">waiver policy</a> 
-                                <li>Pensoft's <a href="http://www.pensoft.net/journals/zookeys/about/Copyright%20Notice#Discounts%20and%20Waivers" target="_blank">discounts and waivers</a> 
-                                <li>Copernicus Publications' <a href="http://publications.copernicus.org/for_authors/financial_support.html" target="_blank">financial support for authors</a> 
-                                <li>F1000Research's <a href="http://f1000research.com/article-processing-charges" target="_blank">discounts and waivers</a> 
-                                <li>PeerJ's <a href="https://peerj.com/pricing/#waivers" target="_blank">fee waiver policy for undergraduates & researchers in low-income economies</a> 
+                                <li>PLOS's <a href="http://www.plos.org/publications/publication-fees/plos-publication-fee-assistance/" target="_blank">publication fee assistance</a>
+                                <li>BioMed Central's <a href="http://www.biomedcentral.com/authors/oawaiverfund" target="_blank">open access waiver fund</a>
+                                <li>Hindawi's <a href="http://www.hindawi.com/waiver/" target="_blank">waiver policy</a>
+                                <li>Pensoft's <a href="http://www.pensoft.net/journals/zookeys/about/Copyright%20Notice#Discounts%20and%20Waivers" target="_blank">discounts and waivers</a>
+                                <li>Copernicus Publications' <a href="http://publications.copernicus.org/for_authors/financial_support.html" target="_blank">financial support for authors</a>
+                                <li>F1000Research's <a href="http://f1000research.com/article-processing-charges" target="_blank">discounts and waivers</a>
+                                <li>PeerJ's <a href="https://peerj.com/pricing/#waivers" target="_blank">fee waiver policy for undergraduates & researchers in low-income economies</a>
                             </ul>
                         </div>
                         <a href="javascript:ReverseDisplay('howYourself3')"><h3>Predatory Open Access Journals</h3></a>
@@ -438,7 +448,7 @@ jQuery(document).ready(function() {
                             <p>In addition to this, <a href="http://www.sherpa.ac.uk/romeo/statistics.php" target="_blank"many conventional publishers</a> allow authors to self archive their work in insitutional repositories</a>, a route that is commonly known as "green open access". If you publish in a non-open access journal, a really useful resource to check the self-archiving policies of traditional journals is the <a href="http://www.sherpa.ac.uk/romeo/" target="_blank">Sherpa/RoMEO</a> database of publisher policies. From there ask your librarian for help or send us an email at hello@openaccessbutton.org.</p>
                             <p>If you are wanting to self archive your work, the <a href="http://roar.eprints.org/" target="_blank">Registry of Open Access Repositories (ROAR)</a> lists more than 3,700 repositories, both subject-based open access repositories and institutional open access repositories. </p>
                         </div>
-                     </div> 
+                     </div>
                     <div id="howAdvocate"><a name="howAdvocate"></a>
                         <h1>How to Advocate for Open Access</h1>
                         Convincing colleagues to publish Open Access is one of the most difficult challenges for open access advocates, both new and more experienced. Here are some actions and tips to get you started, check out the <a href="../action">Open Access Button Action page</a> to join the change coming to the publishing system and let us know how we can help at <a href="mailto:advocacy@openaccessbutton.org">advocacy@openaccessbutton.org</a>.
@@ -554,5 +564,3 @@ jQuery(document).ready(function() {
         </div>
     </div>
 </div>
-
-
