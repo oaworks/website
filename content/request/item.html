@@ -177,7 +177,13 @@
       record = data.data;
       var iscreator = clogin.user && clogin.user.account && clogin.user.account._id === record.user.id;
       var isadmin = clogin.hasRole('openaccessbutton.admin');
-      var iseditable = clogin.loggedin() && record.status === 'help' || record.status === 'moderate' || record.status === 'refused';
+      var iseditable = clogin.loggedin() && (record.status === 'help' || record.status === 'moderate' || record.status === 'refused');
+      console.log(clogin.loggedin())
+      console.log(clogin.hasRole('openaccessbutton.admin'))
+      console.log(record.status === 'help' || record.status === 'moderate' || record.status === 'refused')
+      console.log(iscreator)
+      console.log(isadmin)
+      console.log(iseditable)
       if (record.supports && record.supports.length) {
         $('#supportarea').hide();
         $('#supported').show();
@@ -272,7 +278,6 @@
         dets += '"></p>';
       } else if (record.doi) {
         dets += '<p>DOI: ' + record.doi + '</p>';
-        if (!clogin.loggedin()) dets += '<p><a href="/account?next=/request/' + rid + '">Sign up now</a> to get your Open Access Button and to edit and create requests</p>';
       }
       if (isadmin || (iscreator && iseditable)) {
         dets += '<p><textarea id="story" class="form-control" placeholder="How would getting access to this research help you? This message will be sent to the author." style="min-height:100px;';
@@ -281,6 +286,7 @@
         if (record.story) dets += record.story;
         dets += '</textarea></p>';
       }
+      if (!clogin.loggedin()) dets += '<p><a href="/account?next=/request/' + rid + '">Sign up now</a> to get your Open Access Button and to edit and create requests</p>';
 
       // save button for anyone logged and if status allows, or if admin user
       if ( isadmin || iseditable ) {
