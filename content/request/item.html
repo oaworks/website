@@ -305,50 +305,50 @@
 
     var results = function(data) {
       var out = '';
-      for ( var r in data.hits.hits ) {
-        var s = data.hits.hits[r]._source;
-        out += '<blockquote>';
-        out += s.username ? s.username : s.email;
-        out += ' supports this request';
-        if (s.story) out += ':<br>' + s.story
-        out += '</blockquote>';
+      if (data.hits && data.hits.hits) {
+        for ( var r in data.hits.hits ) {
+          var s = data.hits.hits[r]._source;
+          out += '<blockquote>';
+          out += s.username ? s.username : s.email;
+          out += ' supports this request';
+          if (s.story) out += ':<br>' + s.story
+          out += '</blockquote>';
+        }
       }
       $('#stories').html(out);
     }
 
-    try {
-      $('#stories').holder({
-        url: api + "/supports",
-        datatype: 'JSON',
-        defaultquery: {
-          sort: [
-            {
-              createdAt: {order: 'desc'}
-            }
-          ],
-          size:1000,
-          query: {
-            filtered: {
-              query: {
-                bool: {
-                  must: [
-                    {
-                      query_string: {
-                        query:'rid:'+rid
-                      }
+    $('#stories').holder({
+      url: api + "/supports",
+      datatype: 'JSON',
+      defaultquery: {
+        sort: [
+          {
+            createdAt: {order: 'desc'}
+          }
+        ],
+        size:1000,
+        query: {
+          filtered: {
+            query: {
+              bool: {
+                must: [
+                  {
+                    query_string: {
+                      query:'rid:'+rid
                     }
-                  ]
-                }
+                  }
+                ]
               }
             }
           }
-        },
-        pushstate: false,
-        results: {
-          default: results
         }
-      });
-    } catch(err) {}
+      },
+      pushstate: false,
+      results: {
+        default: results
+      }
+    });
 
     var addsupport = function(event) {
       event.preventDefault();
