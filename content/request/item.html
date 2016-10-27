@@ -316,37 +316,39 @@
       $('#stories').html(out);
     }
 
-    $('#stories').holder({
-      url: api + "/supports",
-      datatype: 'JSON',
-      defaultquery: {
-        sort: [
-          {
-            createdAt: {order: 'desc'}
-          }
-        ],
-        size:1000,
-        query: {
-          filtered: {
-            query: {
-              bool: {
-                must: [
-                  {
-                    query_string: {
-                      query:'rid:'+rid
+    try {
+      $('#stories').holder({
+        url: api + "/supports",
+        datatype: 'JSON',
+        defaultquery: {
+          sort: [
+            {
+              createdAt: {order: 'desc'}
+            }
+          ],
+          size:1000,
+          query: {
+            filtered: {
+              query: {
+                bool: {
+                  must: [
+                    {
+                      query_string: {
+                        query:'rid:'+rid
+                      }
                     }
-                  }
-                ]
+                  ]
+                }
               }
             }
           }
+        },
+        pushstate: false,
+        results: {
+          default: results
         }
-      },
-      pushstate: false,
-      results: {
-        default: results
-      }
-    });
+      });
+    } catch(err) {}
 
     var addsupport = function(event) {
       event.preventDefault();
