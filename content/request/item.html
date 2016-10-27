@@ -178,12 +178,6 @@
       var iscreator = clogin.user && clogin.user.account && clogin.user.account._id === record.user.id;
       var isadmin = clogin.hasRole('openaccessbutton.admin');
       var iseditable = clogin.loggedin() && (record.status === 'help' || record.status === 'moderate' || record.status === 'refused');
-      console.log(clogin.loggedin())
-      console.log(clogin.hasRole('openaccessbutton.admin'))
-      console.log(record.status === 'help' || record.status === 'moderate' || record.status === 'refused')
-      console.log(iscreator)
-      console.log(isadmin)
-      console.log(iseditable)
       if (record.supports && record.supports.length) {
         $('#supportarea').hide();
         $('#supported').show();
