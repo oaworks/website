@@ -1,13 +1,13 @@
-{{SUBJECT Update Your Open Access Button!}}
+{{SUBJECT Update Your Open Access Button for major improvements!}}
 
 Hi!
 
-We have exciting news - there's a new Open Access Button. You can update your Button right now through your account page: https://openaccessbutton.org/account/. Your current Button will stop working.
+We have exciting news - there's a new Open Access Button. You can update your Button right now through your account page: https://openaccessbutton.org/account/. Your current Button may stop working.
 
-There are some big changes. Here are just four:
-1. You can find and request both articles and data in one service. The system we use to find articles has had dramatic improvements.
+There are some big improvements. Here are just four:
+1. You can find and request both articles and data in one service. The system we use to find articles has also had dramatic improvements.
 2. The request system has major improvements. We'll now try to find author's emails for you and approve requests in less than a day.
-3. The bookmarklet is back.
+3. The bookmarklet is back, so we once again support all browsers.
 4. You can use the Button from a webpage.
 
 and throughout everything is simpler, more efficient, and better.
