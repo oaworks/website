@@ -56,6 +56,8 @@ server {
 
     location / {
         proxy_pass http://clapi/api/service/oab/;
+        add_header Access-Control-Allow-Methods 'GET, PUT, POST, DELETE, OPTIONS';
+        add_header Access-Control-Allow-Headers 'X-apikey,X-id,DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection $connection_upgrade;
