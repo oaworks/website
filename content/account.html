@@ -60,7 +60,11 @@ jQuery(document).ready(function() {
       $('#tonextalert').show();
     }
   }
-  clogin.init({api:'https://dev.api.cottagelabs.com/accounts',afterLogin: setvalues, saveValidate: savecheck, afterSave: aftersave });
+  var api = 'https://api.openaccessbutton.org';
+  if (window.location.host.indexOf('openaccessbutton.org') === -1) {
+    api = 'https://dev.api.cottagelabs.com/service/oab';
+  }
+  clogin.init({api:api,afterLogin: setvalues, saveValidate: savecheck, afterSave: aftersave });
 
   if (window.location.href.indexOf('email=') !== -1) {
     $('#cloginEmail').val(window.location.href.split('next=')[0].split('email=')[1]);
