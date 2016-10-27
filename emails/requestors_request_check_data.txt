@@ -1,0 +1,13 @@
+{{SUBJECT Your request has been fulfilled}}
+
+Hi,
+
+The author has responded to the request for the data supporting “{{title}}”. You can view what they’ve sent here: https://openaccessbutton.org/request/{{_id}}.
+
+Please take some time take a look and confirm it’s what you requested and that there are enough supporting materials to make the data understandable. If there isn't, please respond to this email.
+
+Once this is done, we can either reward the author with an Open Data Badge or follow up to understand what needs changing.
+
+Many thanks,
+
+The Open Access Button Robot

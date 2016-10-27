@@ -1,0 +1,85 @@
+{{SUBJECT I am the subject of this email}}
+
+Hello there!
+
+I am an example email that could be sent by the Open Access Buttons system.
+
+I am just a simple plain text email so far, with some novel ways to provide or include variables.
+As a plain text email, I should have the filename suffix .txt
+
+I can be written in html instead of just text, in which case I should be formatted
+using html content rather than just text.
+
+To turn me into an html template, just put the usual html in here, and change the suffix of
+the filename to .html instead of .txt
+
+Markdown is NOT possible yet, but if it would be useful, it could be added. In that case, the
+file should contain markdown and the suffix should be changed to .md
+
+If this email content should include variables that should be inserted by the system before sending,
+then they can be included like this: {{VARIABLE}}
+
+The variables that are available in a request context are:
+
+{{_id}} (the ID of the request)
+{{url}} (the URL of the page the request was created on)
+{{title}} (the title of the article the request is about)
+{{story}} (the story of why the user created the request)
+{{type}} (the type of request - article OR data)
+{{status}} (the status of the request)
+{{count}} (how many people want this content)
+{{userid}} (the user ID of the user that created the request)
+{{username}} (the username of the user that created the request)
+{{receiver}} (the receiver token necessary in a URL to allow an author to submit content to the request)
+
+Using a variable in context would look something like https://openaccessbutton.org/request/{{_id}}
+
+And in a user context are:
+
+{{userid}}
+{{username}}
+{{useremail}}
+{{fullname}}
+{{affiliation}}
+{{profession}}
+{{logincode}}
+{{loginurl}}
+
+(Also see the author_request example for a fuller demonstration of an actual email template the system could send.)
+
+Emails should be written as generically as possible, so they fit as many logical flows as can be allowed,
+and must fit a context in which the system can know to send them. When emailing a group of users, for
+example all users that supported a request, the email they all receive should be the same.
+
+The two main types of context are changes to a request record and changes to a user record.
+Within those contexts, the most common is changes to a request record, and emails could be sent for example
+to a user after they create the request but when there are some key fields missing (status help), or when
+a request should be sent to an author to provide content (status progress) - and probably most status changes.
+Other triggers are followup actions, such as following up weekly for three weeks after a request is set to
+status hold, and on fourth week changing to status refused (or the author refuses) so then we send an email
+to the request creator to tell them it has been refused.
+
+Email addresses to which we can send emails are the emails of users that created requests, emails of users
+that supported requests, emails of authors that are provided as contacts for requests, or the user account
+email address when contacting the user - but for the time being the decision on the emails to use will be
+set by the system; this may be updated in future.
+
+Variables can also be PROVIDED to the system within an email template, so that the system can use them when
+sending the email. The main example of this is the SUBJECT variable, which is demonstrated at the top of this
+email example. These are similar to including variables, but should be capitalised and after the variable 
+name there should be a space and then the value for the variable.
+
+The list of variables that can be provided:
+
+{{SUBJECT I am an example subject variable}}
+
+To request new variables either for inclusion or provision, create a github issue demonstrating the need
+for it in the context of a proposed or current template.
+
+For development, any emails sent from the dev system will automatically replace https://openaccessbutton.org
+with https://oab.test.cottagelabs.com.
+
+Thanks!
+
+
+The lovely Open Access Button system

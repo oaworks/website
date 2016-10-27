@@ -1,0 +1,48 @@
+# example nginx config to ensure content can be served to getter and not cause infinte loops
+
+server {
+  listen 80;
+  server_name oab.test.cottagelabs.com;
+  root /home/cloo/dev/openresearchbutton/oab_static;
+
+  add_header Pragma public;
+  add_header Cache-Control "public";
+  add_header Access-Control-Allow-Origin *;
+
+  rewrite ^/request/((?!new).)*$ /request/item last;
+  rewrite ^/response/((?!new).)*$ /response/item last;
+
+  location / {
+    try_files /serve/$uri.html /serve/$uri/index.html /404.html =404;
+  }
+
+  location /content {
+    try_files $uri $uri.html $uri.md $uri/index $uri/index.html $uri/index.md /404 =404;
+  }
+  
+  location /static {
+    try_files $uri /serve/$uri =404;
+    expires 30d;
+  }
+}
+
+server {
+  listen 80;
+  server_name oabe.test.cottagelabs.com;
+  root /home/cloo/dev/openresearchbutton/unified-extension;
+
+  location / {
+    add_header Access-Control-Allow-Origin *;
+  }
+}
+
+server {
+  listen 80;
+  server_name oabb.test.cottagelabs.com;
+  root /home/cloo/dev/openresearchbutton/oab_static/static/bookmarklet;
+
+  location / {
+    add_header Access-Control-Allow-Origin *;
+  }
+}
+
