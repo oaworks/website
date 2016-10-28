@@ -1,5 +1,5 @@
 (function() {
-  var version = '1.0.0';
+  var version = '1.0.0.1';
   var url = 'https://openaccessbutton.org/static/bookmarklet';
   var fls = ['bookmarklet.css','oab.js','ui.js','bookmarklet.js'];
   for (var i = 0; i < fls.length; i++) {
