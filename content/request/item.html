@@ -15,11 +15,11 @@
         </div>
         <div class="panel-body">
           <a href="#" id="details" class="panels" alt="Click to view and edit request details" title="Click to view and edit request details">+ details</a>
-    <!-- removing embed button till embeds work   <a href="#" id="shares" class="btn btn-xs btn-action panels pull-right shares" style="margin-left:20px;margin-right:20px;height:28px;font-size:0.9em;">Embed</a> -->
-          <div style="display:inline;margin-bottom:-10px;padding-left:20px;" class="pull-right shares">
+          <a href="#" id="shares" class="btn btn-xs btn-action panels pull-right" style="margin-left:20px;margin-right:20px;height:28px;font-size:0.9em;">Embed</a>
+          <div style="display:inline;margin-bottom:-10px;padding-left:20px;" class="pull-right">
             <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Help us get access to research!" data-size="large"></a>
           </div>
-          <a class="btn btn-xs btn-action pull-right shares" style="height:28px;font-size:0.9em;" id="fbshare" href="https://www.facebook.com/sharer/sharer.php?u=" target="_blank"><i class="fa fa-facebook-official"></i> facebook</a>
+          <a class="btn btn-xs btn-action pull-right" style="height:28px;font-size:0.9em;" id="fbshare" href="https://www.facebook.com/sharer/sharer.php?u=" target="_blank"><i class="fa fa-facebook-official"></i> facebook</a>
           <div id="edit" class="panels details" style="display:none;margin-top:20px;"></div>
         </div>
       </div>
@@ -171,7 +171,7 @@
     $('#requesturl').html(window.location.protocol + '//' + window.location.host + window.location.pathname);
     $('#fbshare').attr('href',$('#fbshare').attr('href') + encodeURIComponent(window.location.host + window.location.pathname));
     $('.login').attr('href','/account?next='+window.location.pathname);
-    $('#widget').val( $('#widget').val().replace('WIDGETURL',api+'/embed/request/'+rid) );
+    $('#widget').val( $('#widget').val().replace('WIDGETURL',api+'/embed/'+rid) );
 
     var details = function(data) {
       record = data.data;
