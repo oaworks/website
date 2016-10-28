@@ -63,6 +63,9 @@ jQuery(document).ready(function() {
   var api = 'https://api.cottagelabs.com/accounts';
   if (window.location.host.indexOf('openaccessbutton.org') === -1) {
     api = 'https://dev.api.cottagelabs.com/accounts';
+    $('#bookmarklet').attr('href',$('#bookmarklet').attr('href').replace('YYYY','http://oab.test.cottagelabs.com'));
+  } else {
+    $('#bookmarklet').attr('href',$('#bookmarklet').attr('href').replace('YYYY','https://openaccessbutton.org'));
   }
   clogin.init({api:api,afterLogin: setvalues, saveValidate: savecheck, afterSave: aftersave });
 
@@ -198,7 +201,7 @@ jQuery(document).ready(function() {
         <p>
           To install, click and drag the button directly below to your bookmarks bar.
         </p>
-        <a id="bookmarklet" class="btn btn-action btn-block disabled" href="javascript:apikey='XXXX';document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','http://oab.test.cottagelabs.com/static/bookmarklet/includer.js?r='+Math.random());">Open Access Button</a>
+        <a id="bookmarklet" class="btn btn-action btn-block disabled" href="javascript:apikey='XXXX';document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','YYYY/static/bookmarklet/includer.js?r='+Math.random());">Open Access Button</a>
         <p><small>Having trouble? See instructions for <a href="http://www.howtogeek.com/231775/how-to-install-and-use-bookmarklets-in-microsoft-edge/" target="_blank" >Edge</a>, <a href="https://support.mozilla.org/en-US/kb/bookmarklets-perform-common-web-page-tasks#w_how-do-i-install-a-bookmarklet" target="_blank" >Firefox</a> and <a href="https://mreidsma.github.io/bookmarklets/installing.html" target="_blank" >Safari</a>.</small>
         </p>
       </div>
