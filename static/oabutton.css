@@ -46,6 +46,9 @@ hr{
     padding-top:10px;
     padding-bottom:20px;
 }
+.form-control {
+  font-size:1.1em;
+}
 .navbar-brand{
     font-weight:bold;
     color:#212f3f;
