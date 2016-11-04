@@ -9,10 +9,10 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-12">
-      
+
       <div id="missing" style="display:none;">
         <div class="jumbotron">
-          <p>Sorry, we have no record of expecting to receive any items for that ID.</p>
+          <p>Sorry, we have no record of expecting to receive any items for that ID. If you think there should be, please <a href="mailto:requests@openaccessbutton.org">get in touch</a>.</p>
         </div>
       </div>
 
@@ -21,26 +21,25 @@
 
       <div class="panels" id="upload" style="margin-bottom:100px;">
         <p>
-          Thank you very much for responding to our request! All we need is a URL to a web page where the requested content 
-          can be publicly accessed without restriction. (Note, the URL to an article should ideally be direct to the full text 
-          content rather than to a splash page.)
+          Thank you for responding to our request! All we need is a URL to a web page where the requested content
+          can be publicly accessed without restriction. It's best if the URL for an article goes directly to the full text.
         </p>
-        
+
         <p>
-          If you don't have it up online anywhere yet, then upload a file
-          below and we'll publish it for you! If you have more than one file, or a folder of files, please 
-          zip (or tar) them first.
+          If you don't have it online anywhere yet, then upload a file
+          and we'll publish it for you! If you have more than one file, or a folder of files, please zip them first.
         </p>
-        
+
         <p id="typearticle">
-          We will send your article to Zenodo for safe keeping. 
+          We will send your article to <a href="https://zenodo.org/"></a>Zenodo</a> for safe keeping. Here it will be hosted, preserved, and identified.
         </p>
-        
+
         <p id="typedata">
-          We will send your data to the Open Science Foundation 
-          and you'll receive an Open Data badge once it has been validated.
+          We will send your data to the <a href="https://osf.io">Open Science Framework</a>.
+          The Open Science Framework will host, preserve, and identify your data. We’ll use the paper title and abstract to provide initial metadata and licence the data CC-0 (the recommended licence for sharing data). You’ll be able to change this information later if you wish.
+          <br>Once you submit the data, we'll send it to the requestor. When they've checked it's what they need you'll receive an Open Data Badge.
         </p>
-        
+
         <input style="margin-top:50px;" id="url" type="text" class="form-control" placeholder="Enter your URL here, OR:">
         <input type="file" id="file" class="form-control" style="margin-top:5px;">
         <textarea id="description" class="form-control" style="min-height:120px;margin-top:5px;" placeholder="Please provide a brief description or further information here, if necessary"></textarea>
@@ -51,7 +50,7 @@
         <div class="jumbotron">
           <p>
             Thank you for submitting your content!<br>
-            We will inform our community that you have provided this, 
+            We will inform our community that you have provided this,
             and it will be validated to ensure it is what is needed.
           </p>
         </div>
@@ -60,8 +59,8 @@
       <div class="panels" id="validating">
         <div class="jumbotron">
           <p>
-            This content has already been received, and is currently awaiting validation.<br>
-            Please view the original request for further information.
+            This content has already been received, and is currently awaiting validation from the requestor.<br>
+            Please view the original request (above) for further information.
           </p>
         </div>
       </div>
@@ -71,7 +70,7 @@
           <p>
             This content has already been received and validated.<br>
             There is no further action to take.<br>
-            Please view the original request for further information.
+            Please view the original request (above) for further information.
           </p>
         </div>
       </div>
@@ -79,7 +78,7 @@
       <div class="panels" id="hold">
         <div class="jumbotron">
           <p>
-            Thank you for letting us know you will get back to us.<br>
+            Thank you for your response.<br>
             We will put this request on hold for <span id="holdlength">X</span> days.
           </p>
         </div>
@@ -89,8 +88,8 @@
         <div class="jumbotron">
           <p>
             Thank you for your response.<br>
-            We are sorry to hear that you are unable to provide the content our community has requested.<br>
-            We will let them know it cannot be made available.
+            We are sorry to hear that you are unable to provide the content.<br>
+            We will let resquestors know it cannot be made available, and display that publically on the request page.
           </p>
         </div>
       </div>
@@ -117,14 +116,14 @@
 
     var submit = function(e) {
       e.preventDefault();
-      
+
       // old code that did receiving
       /*
         Template.oabuttonupload.helpers({
           oabuploadactions: function() {
             return {
               formData: function() { return { service: 'openaccessbutton', dirId: Session.get("respid") } },
-              finished: function(index, fileInfo, context) { 
+              finished: function(index, fileInfo, context) {
                 Session.set("uploadcount",Session.get("uploadcount")+1);
               }
             }
@@ -139,7 +138,7 @@
       alert('TODO should submit the file/URL now');
     }
     $('#submit').bind('click',submit);
-    
+
     var details = function(data) {
       request = data;
       var dets = '<div class="jumbotron" style="margin-top:-10px;">';
@@ -150,7 +149,7 @@
       dets += '</div>';
       $('#request').html(dets).show();
       $('#type' + request.type).show();
-      
+
       if (request.status === 'received') {
         request.received.validated === false ? $('#validating').show() : $('#validated').show();
       } else if (window.location.href.indexOf('hold=') !== -1) {
@@ -171,10 +170,6 @@
       success: details,
       error: function() { $('.panels').hide(); $('#missing').show(); }
     });
-    
+
   });
 </script>
-
-
-
-

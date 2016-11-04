@@ -1,0 +1,11 @@
+{{SUBJECT Your request has been fulfilled}}
+
+Hi,
+
+The author has responded to the request for the article “{{title}}”. You can view what the author sent here: https://openaccessbutton.org/request/{{_id}}.
+
+Please take some time take a look and confirm it’s what you requested. If there isn't, please respond to this email.
+
+Many thanks,
+
+The Open Access Button Robot
