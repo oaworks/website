@@ -1,16 +1,16 @@
 var oabutton_bookmarklet = function(apikey) {
-  oab.bookmarklet = '1.0.2';
+  oab.bookmarklet = '1.0.3';
 
   var popup = document.createElement('div');
   popup.setAttribute('id','oabutton_popup');
   popup.setAttribute('class','reset-this');
   popup.innerHTML = '\
     <h2><img src="' + oab.site_address + '/static/bookmarklet/img/oa128.png" style="width:40px;vertical-align:middle;"> Open Access Button</h2> \
-    <div id="loading_area" style="margin:5px -10px 10px -10px;"> \
+    <div id="loading_area" style="margin:5px 0px 10px -10px;"> \
       <img id="icon_loading" style="width:150px;margin:20px auto 10px 110px;" src="' + oab.site_address + '/static/bookmarklet/img/spin_orange.svg"> \
       <p style="text-align:center;">We\'re looking!<br> Give us a moment.</p> \
     </div> \
-    <div class="collapse" id="buttonstatus" style="margin:5px -10px 10px -10px;min-height:180px;"> \
+    <div class="collapse" id="buttonstatus" style="margin:5px 0px 10px -10px;min-height:180px;"> \
       <a href="#" target="_blank" id="iconarticle" class="need" data-type="article" alt="Sorry, we couldn\'t find it. Click to start a new request" title="Sorry, we couldn\'t find it. Click to start a new request"> \
         <img style="height:100px;width:80px;margin-bottom:12px;" src="' + oab.site_address + '/static/bookmarklet/img/oab_article.png"><br> \
         Unavailable \
