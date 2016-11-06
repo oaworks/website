@@ -21,7 +21,9 @@
 
       <div class="panels" id="upload" style="margin-bottom:100px;">
         <p>
-          Thank you for responding to our request! Now, we either need a URL where the content can be found, or for you to upload it.
+          Thank you for responding to our request!
+          <br>
+          Now, we either need a URL where the content can be found, or for you to upload it.
         </p>
 
         <p id="typearticle">
@@ -45,7 +47,7 @@
 
         <input style="margin-top:50px;" id="url" type="text" class="form-control" placeholder="Enter the content's URL here, or:">
         <input type="file" id="file" class="form-control" style="margin-top:5px;">
-        <textarea id="description" class="form-control" style="min-height:120px;margin-top:5px;" placeholder="Please provide a brief description, if necessary"></textarea>
+        <textarea id="description" class="form-control" style="min-height:120px;margin-top:5px;" placeholder="Please provide a brief description or further information here, if necessary"></textarea>
         <a href="#" class="btn btn-action btn-block" style="margin-top:5px;" id="submit">Submit</a>
       </div>
 
@@ -63,8 +65,7 @@
       <div class="panels" id="validating">
         <div class="jumbotron">
           <p>
-            This content has already been received, and is currently awaiting validation from the requestor.<br>
-            Please view the original request (above) for further information.
+            This content has already been received, and is awaiting validation from the requestor. Please view the original request (above) for further information.
           </p>
         </div>
       </div>
@@ -72,9 +73,8 @@
       <div class="panels" id="validated">
         <div class="jumbotron">
           <p>
-            This content has already been received and validated.<br>
             There is no further action to take.<br>
-            Please view the original request (above) for further information.
+            This content has already been received and validated. Please view the original request (above) for further information.
           </p>
         </div>
       </div>
@@ -82,7 +82,8 @@
       <div class="panels" id="hold">
         <div class="jumbotron">
           <p>
-            Thank you for your response.<br>
+            Thank you for your response.
+            <br>
             We will put this request on hold for <span id="holdlength">X</span> days.
           </p>
         </div>
@@ -91,9 +92,9 @@
       <div class="panels" id="refuse">
         <div class="jumbotron">
           <p>
-            Thank you for your response.<br>
-            We are sorry to hear that you are unable to provide the content.<br>
-            We will let resquestors know it cannot be made available, and display that publically on the request page.
+            Thank you for your response.
+            <br>
+            We are sorry that you are unable to provide the content. We will let requestors know it cannot be made available, and display that publically on the request page.
           </p>
         </div>
       </div>
