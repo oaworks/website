@@ -30,32 +30,52 @@
       <div class="panels" id="upload" style="margin-bottom:100px;">
         <h3>Thank you for responding to our request</h3>
         <p>
-          To complete the request we either need a URL where the content can be found or for you to upload it.
+          To complete the request we need to know where we can find the content that has been requested.
+          If it is already publicly available online somewhere that anyone can access without restriction, 
+          all we need you to do is provide us with the URL address where we can find it.
         </p>
 
         <p class="typearticle">
-          It's best if the URL goes to a web page where the article full text
-          can be publicly accessed without restriction.
+          It's best if the URL goes directly to the web page where the article full text
+          can be found, rather than to a journal splash page for example. However, we'll 
+          take whatever works best for you!
           <br>
-          If you don't have it online yet we can send your article to <a  href="https://zenodo.org">Zenodo</a> for safe keeping. Here it will be hosted, preserved, and identified.
+          If you don't have the article publicly online anywhere yet, you can upload it to us and 
+          we will send it to <a target="_blank" href="https://zenodo.org">Zenodo</a> on 
+          your behalf for safe keeping, where it will be hosted, preserved, and made 
+          available to others under a CC-BY licence.
         </p>
 
         <p class="typedata">
-          It's best if the URL goes to a web page where the data
-          can be publicly accessed without restriction.
+          If you don't have the data publicly online anywhere yet, you can upload it to us and 
+          we will send it to the <a href="https://osf.io">Open Science Framework</a>.
+          The Open Science Framework will host and preserve your data, and make it available to 
+          others under a <a target="_blank" href="https://creativecommons.org/publicdomain/zero/1.0/">CC-0</a> 
+          licence (the <a target="_blank" href="http://pantonprinciples.org/">recommended licence</a> for sharing data).<br>
+          
+          We’ll use the paper title and abstract to provide initial metadata, which you can edit below.
           <br>
-          If you don't have it online anywhere yet we will send your data to the <a href="https://osf.io">Open Science Framework</a>.
-          The Open Science Framework will host, preserve, and identify your data. We’ll use the paper title and abstract to provide initial metadata and licence the data <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC-0</a> <a href "http://pantonprinciples.org/"></a>(the recommended licence for sharing data)</a>. You’ll be able to change this later if you wish.
-          <br>
-          Once you submit the data, we'll send it to the requestor. When they've checked it's what they need you'll receive an Open Data Badge.
+          Once you submit the data, we'll ask our community to validate it. When they've checked it's what they need, you'll receive an Open Data Badge.
           <br>
           If you have more than one file, or a folder of files, please zip them first.
         </p>
 
-        <input style="margin-top:50px;" id="url" type="text" class="form-control" placeholder="Enter the content's URL here, or:">
-        <input type="file" id="file" class="form-control" style="margin-top:5px;">
-        <textarea id="description" class="form-control" style="min-height:120px;margin-top:5px;" placeholder="Please provide a brief description or further information here, if necessary"></textarea>
-        <a href="#" class="btn btn-action btn-block" style="margin-top:5px;" id="submit">Submit</a>
+        <input style="margin-top:50px;margin-bottom:5px;" id="url" type="text" class="form-control" placeholder="Enter the publicly available URL here">
+        <a href="#" class="btn btn-action btn-block" style="margin-top:5px;margin-bottom:30px;" id="submiturl">Submit your URL</a>
+    
+        <p>
+          Or if you don't have a URL, upload your file here instead:
+        </p>
+        
+        <form id="fileupload" enctype="multipart/form-data" method="POST">
+          <input type="file" name="file" id="file" class="form-control">
+          <input type="hidden" name="service" value="openaccessbutton">
+          <input type="hidden" name="dirId" id="dirId" value="">
+          <input style="margin-top:5px;margin-bottom:5px;" id="title" type="text" class="form-control" placeholder="Enter the title here">
+          <textarea id="description" class="form-control" style="min-height:150px;margin-top:5px;" placeholder="Please provide an abstract / brief description / further information here"></textarea>
+          <input type="submit" class="btn btn-action btn-block" style="margin-top:5px;" id="submitfile" value="Upload your file">
+        </form>
+    
         <div class="panels" id="loading" style="display:none;">
           <img style="height:20px;" src="//static.cottagelabs.com/spin_grey.svg">
         </div>
@@ -137,42 +157,45 @@
     var request;
     var rid = window.location.pathname.split('/')[2];
 
-    var submitreceive = function() {
+    var submit = function() {
       // once the file is successfully posted, submit to the receive endpoint and show confirmation
       // the receive endpoint will trigger forwarding to zenodo or osf
       var data = {};
       if ($('#url').val()) data.url = $('#url').val();
       if ($('#description').val()) data.description = $('#description').val();
+      if ($('#title').val()) data.title = $('#title').val();
       // TODO really this should have a way to upload files built into it, and grab the #file and put it in the content var
-      // but for now that is handled separately via the file upload API
-      /*$.ajax({
+      // but for now that is handled separately via the file upload route
+      $.ajax({
         type: 'POST',
         url: api + '/receive/' + rid,
         cache: false,
         processData: false,
         contentType: 'application/json',
         dataType: 'json',
-        data: JSON.stringify(data)
-      });*/      
-      $('.panels').hide(); $('#submitted').show();
+        data: JSON.stringify(data),
+        success: function() { $('.panels').hide(); $('#submitted').show(); },
+        error: function() { $('.panels').hide(); $('#error').show(); }
+      });
     }
-    var submit = function(e) {
+    $('#submiturl').bind('click',submit);    
+    $('form#fileupload').submit(function() {
       $('#loading').show();
-      e.preventDefault();
-      // if url provided rather than file upload, skip this and call submitreceive directly (backend will grab from the URL)
-      if ($('#url').val()) {
-        submitreceive();
-      } else {
-        submitreceive(); // just for now, while testing UI
-        /*$.ajax({
-          type: 'POST',
-          url: uploadapi + '/openaccessbutton/' + rid,
-          success: submitreceive,
-          error: function() { $('.panels').hide(); $('#error').show(); }
-        });*/      
-      }
-    }
-    $('#submit').bind('click',submit);
+      $('#dirId').attr('value',rid);
+      var formData = new FormData(this);
+      $.ajax({
+        url: uploadapi + '/openaccessbutton/' + rid,
+        type: 'POST',
+        data: formData,
+        async: false,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: submit,
+        error: function() { $('.panels').hide(); $('#error').show(); }
+      });
+      return false;      
+    });
 
     var details = function(data) {
       request = data;
@@ -185,6 +208,7 @@
       $('#request').html(dets).show();
       $('.requestlink').attr('href','/request/'+request._id);
       $('.type' + request.type).show();
+      if (request.title) $('#title').val(request.title);
 
       if (request.status === 'received') {
         request.received.validated === false ? $('#validating').show() : $('#validated').show();
