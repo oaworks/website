@@ -224,8 +224,8 @@
             if (create) {
               if (clogin.loggedin()) {
                 var acc = clogin.user && clogin.user.account ? clogin.user.account : undefined;
-                if (acc && ( !acc.username || !acc.service.openaccessbutton.profile.profession || !acc.service.openaccessbutton.profile.affiliation || !acc.profile.name ) ) {
-                  $('#moredetailslink').attr('href','/account?next='+encodeURIComponent('/request/new?url='+$('#url').val()));
+                if (acc && ( !acc.username || !acc.service.openaccessbutton.profile.profession || !acc.profile.name ) ) {
+                  $('#moredetailslink').attr('href','/account?next=/request/new?url='+encodeURIComponent($('#url').val()));
                   $('#moredetails').show();
                 } else {
                   $('#submit').bind('click',submit);
