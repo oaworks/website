@@ -24,6 +24,50 @@ server {
     try_files $uri /serve/$uri =404;
     expires 30d;
   }
+
+  location /blog/new-oab-2016 {
+    rewrite ^/.* https://medium.com/@openaccessbutton/take-action-this-open-access-week-with-the-new-open-access-button-e9372c5cb4aa permanent;
+  }
+  location /blog/open-data-button-is-here {
+    rewrite ^/.* https://medium.com/@openaccessbutton/new-app-helps-researchers-share-data-openly-be59437ed6fa permanent;
+  }
+  location /blog/may-major-updates {
+    rewrite ^/.* https://medium.com/@openaccessbutton/open-data-button-launch-update-fd5d7c4e8a74 permanent;
+  }
+  location /blog/open-data-button-beta {
+    rewrite ^/.* https://medium.com/@openaccessbutton/open-data-button-beta-launching-next-week-for-open-data-day-8ab4d0e222a3 permanent;
+  }
+  location /blog/from_open_access_to_open_data {
+    rewrite ^/.* https://medium.com/@openaccessbutton/the-open-access-button-moves-into-open-data-7752f73f7f16 permanent;
+  }
+  location /blog/standwithdiego {
+    rewrite ^/.* https://medium.com/@openaccessbutton/diego-gomez-stands-trial-for-sharing-research-standwithdiego-7bc1f8fadeab permanent;
+  }
+  location /blog/diego-gomez {
+    rewrite ^/.* https://medium.com/@openaccessbutton/support-diego-gomez-an-update-a0e18d0afb96 permanent;
+  }
+  location /blog/opencon2015 {
+    rewrite ^/.* https://medium.com/@openaccessbutton/opencon-applications-are-open-ff694021d72 permanent;
+  }
+  location /blog/annual-report-2014 {
+    rewrite ^/.* https://medium.com/@openaccessbutton/open-access-button-annual-report-2014-90906c2cf12e permanent;
+  }
+  location /blog/jisc2015 {
+    rewrite ^/.* https://medium.com/@openaccessbutton/support-us-in-the-jisc-supporting-technology-startup-project-bfbeec0b50cd permanent;
+  }
+  location /blog/innovator-award {
+    rewrite ^/.* https://medium.com/@openaccessbutton/open-access-button-founders-honoured-with-sparc-innovator-award-22a57e9f5039 permanent;
+  }
+  location /blog/end-year-team-memo {
+    rewrite ^/.* https://medium.com/@openaccessbutton/open-access-button-annual-report-2014-90906c2cf12e permanent;
+  }
+  location /blog/odb-launch-update {
+    rewrite ^/.* https://medium.com/@openaccessbutton/open-data-button-launch-update-fd5d7c4e8a74 permanent;
+  }
+  location /blog/new-apps-find-free-access-to-scientific-and-scholarly-research {
+    rewrite ^/.* https://medium.com/@openaccessbutton/21-october-2014-631d530eb8ca permanent;
+  }
+
 }
 
 server {

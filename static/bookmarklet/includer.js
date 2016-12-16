@@ -1,6 +1,7 @@
 (function() {
-  var version = '1.0.2';
+  var version = '1.0.3.1';
   var url = 'https://openaccessbutton.org/static/bookmarklet';
+  url = 'http://oab.test.cottagelabs.com/static/bookmarklet'; // COMMENT THIS OUT BEFORE GOING TO LIVE
   var fls = ['bookmarklet.css','oab.js','ui.js','bookmarklet.js'];
   for (var i = 0; i < fls.length; i++) {
     var tp = fls[i].indexOf('css') !== -1 ? 'link' : 'script';

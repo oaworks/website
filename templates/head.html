@@ -31,12 +31,25 @@
   <script>
   jQuery(document).ready(function() {
     if (window.location.href.indexOf('odb=true') !== -1) $('#fromopendatabutton').show();
+    
     var logged = clogin.loggedin();
     if (logged) {
       $('.cloggedin').show();
       $('.notcloggedin').hide();
       if ($('#downloader').is(':visible')) $('#downloader').remove(); // needs handled directly because of classes for hiding it on small and medium screens too
     }
+    
+    var coloured = false;
+    var colorise = function() {
+      if (coloured === false) {
+        coloured = true;
+        $('#downloader').css('background-color','#f04717');
+      } else {
+        coloured = false;
+        $('#downloader').css('background-color','#398bc5');        
+      }
+    }
+    $('#dllink').bind('mouseenter mouseleave',colorise);
   });
   </script>
   

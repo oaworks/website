@@ -1,33 +1,82 @@
   <div id="topnav" class="navbar navbar-fixed-top" style="background-color:white;">
     <div class="container-fluid">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"  style="z-index:1000000;">
+      <div class="navbar-header visible-xs" style="padding-top:10px;">
+        <a href="/" class="pull-left" style="color:#212f3f;">Open Access Button</a>
+        <button type="button" class="mobnavtoggle pull-right" style="z-index:1000000;padding-top:0px;border:none;background-color:transparent;">
           <span class="sr-only">Toggle navigation</span>
-          <span class="glyphicon glyphicon-list"></span>
+          <i class="fa fa-bars"></i>
         </button>
+      </div>
+      <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
           <li class="hidden-xs hidden-sm"><img class="img" src="/static/icon_OAB.png" style="height:45px;margin-top:6px;"></li>
           <li><a href="/" style="font-size:18px;">Open Access Button</a></li>
         </ul>
-      </div>
-      <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav pull-right">
           <!--<li><a href="/request/new"><i class="glyphicon glyphicon-plus"></i> Create a request</a></li>-->
           <li><a href="/request"><i class="glyphicon glyphicon-search"></i> Support Requests</a></li>
-          <li class="cloggedin" style="display:none;"><a href="/account" style="padding-top:16px;">Your account</a></li>
+          <li class="cloggedin" style="display:none;"><a href="/account" style="padding-top:16px;">Your Account</a></li>
           <li class="notcloggedin"><a href="/account" style="padding-top:16px;">Login</a></li>
-          <li id="downloader" class="hidden-xs hidden-sm notcloggedin" style="background-color:#398bc5;color:#212f3f;height:55px;z-index:10000;
-          -webkit-border-bottom-right-radius: 5px;-webkit-border-bottom-left-radius: 5px;
-          -moz-border-radius-bottomright: 5px;-moz-border-radius-bottomleft: 5px;border-bottom-right-radius: 5px;border-bottom-left-radius: 5px;">
-          <a href="/account" style="font-size:1.2em;font-weight:bold;">Sign up</a></li>
+          <li id="downloader" class="hidden-xs hidden-sm notcloggedin"><a id="dllink" href="/account" style="font-size:1.2em;font-weight:bold;">Sign up</a></li>
         </ul>
       </div>
     </div>
 
     <div class="alert alert-info" style="display:none;" id="fromopendatabutton">
       <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-       <p>The Open Data Button has now merged with the Open Access Button. Your account and request will stay the same, but you'll need to get the new plugin. For more on the changes see our <a href="/blog/new-oab-2016">blog</a>.</p>
-       </div>
-
+      <p>The Open Data Button has now merged with the Open Access Button. Your account and request will stay the same, but you'll need to get the new plugin. For more on the changes see our <a href="/blog/new-oab-2016">blog</a>.</p>
+    </div>
 
   </div>
+  
+  <div id="mobnav" class="container">
+    <div style="background-color:white;width:100%;height:100%;padding:5px;">
+      <div class="row">
+        <div class="col-md-12">
+          <p style="text-align:right;">
+            <a class="mobnavtoggle" href="#" style="color:#212f3f;margin-right:12px;margin-top:-2px;"><i class="glyphicon glyphicon-remove"></i></a>
+          </p>
+          <h2><a href="/">Home</a></h2>
+          <h2><a href="/request">Support Requests</a></h2>
+          <h2 class="cloggedin" style="display:none;"><a href="/account">Your Account</a></h2>
+          <h2 class="notcloggedin"><a href="/account" style="padding-top:16px;">Login</a></h2>
+          <h2><a href="/about">About us</a></h2>
+          <h2><a href="/resources">Resources</a></h2>
+          <h2><a href="/blog">Blog</a></h2>
+          <h2><a href="/bug">File a bug</a></h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    #mobnav {
+      display:none;
+      width:100%;
+      height:100%;
+      margin:0;
+      padding:5px;
+      position:fixed;
+      top:0;
+      left:1200;
+      z-index:1000000;
+      background-color:#212f3f;
+    }
+    #mobnav h2 {
+      padding-bottom:5px;
+      border-bottom:1px solid #212f3f;
+    }
+    #mobnav h2 a {
+      color:#398bc5;
+    }
+  </style>
+
+  <script>
+    jQuery(document).ready(function() {
+      var mobnav = function(event) {
+        event.preventDefault();
+        $('#mobnav').toggle();
+      }
+      $('.mobnavtoggle').bind('click',mobnav);
+    });
+  </script>

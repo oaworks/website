@@ -108,6 +108,6 @@ jQuery(document).ready(function() {
     }
     
   }
-  makemap();
+  if ( $('#mapspace').length && $('#mapspace').is(':visible') ) makemap();
   
 });

@@ -5,6 +5,7 @@
 jQuery(document).ready(function() {
   $('#signup').bind('click',function() { window.location = window.location.origin+'/account?email='+$('#email').val() });
   $('#search').bind('click',function() { window.location = window.location.origin+'/request/new?url='+$('#url').val() });
+  $('#url').bind('keyup',function(e) { if (e.keyCode === 13) { window.location = window.location.origin+'/request/new?url='+$('#url').val(); } });
 });
 </script>
 
@@ -38,25 +39,30 @@ div.tooltip {
 </style>
 
 
-<!-- start of alert bar -->
+<!-- start of alert bar for use when needed
 
        <div class="alert alert-info">
          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
           <p>We've released a rebuild of our website & apps. If you spot an issue, <a href="/bug">let us know</a></p>
           </div>
 
-<!-- end of alert bar -->
+end of alert bar -->
 
 <div class="strap strap-compact" style="margin-top:-20px;background-image:url(/static/book.jpg);background-color:transparent;height:600px;background-size:100% 100%;background-repeat:no-repeat;" id="topstrap">
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2">
         <h1 style="text-align:center;font-weight:normal;padding-top:50px;color:#f04717;">
           <img src="/static/icon_OAB.png"><br><br><br>
           Get the articles and data you need<br>
-         with the Open Access Button<br>
           <small style="color:#666;display:none;">Over <span class="oabmapcount">####</span> articles searched</small>
         </h1>
+        <div class="input-group">
+          <input type="text" class="form-control" id="url" placeholder="Give us an article URL">
+          <span class="input-group-btn">
+            <a class="btn btn-action" id="search" href="#" style="height:34px;padding-top:3px;">Find it!</a>
+          </span>
+        </div>
       </div>
     </div>
   </div>
@@ -65,7 +71,7 @@ div.tooltip {
 <div class="strap strap-compact">
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-12">
         <h3 style="text-align:center;">
           Is lack of access to articles and data holding you back?
         </h3>
@@ -73,16 +79,18 @@ div.tooltip {
           The next time you can't access the research you need, use the Open Access Button.
         </p>
         <p style="text-align:center;">
-          We get you instant, legal access to articles - and request articles that aren't available. Join a community changing research by creating a request and sharing your story.
+          We get you instant, legal access to articles - and request articles that aren't available.
+          <br>Join a community changing research by creating a request and sharing your story.
         </p>
-      </div>
 
-      <div class="col-md-6 notcloggedin">
-        <h3 style="color:#f04717;margin-bottom:10px;text-align:center;">
-          Sign up now to begin unlocking articles and data
-        </h3>
-        <input type="text" class="form-control" placeholder="Enter your email address" id="email">
-        <button class="btn btn-block btn-action" style="margin-top:5px;" id="signup">Sign Up</button>
+        <div class="notcloggedin">
+          <h3 style="color:#f04717;margin-bottom:10px;text-align:center;">
+            Sign up now to begin unlocking articles and data
+          </h3>
+          <input type="text" class="form-control" placeholder="Enter your email address" id="email">
+          <button class="btn btn-block btn-action" style="margin-top:5px;" id="signup">Sign Up</button>
+        </div>
+
       </div>
 
     </div>

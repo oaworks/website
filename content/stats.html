@@ -1,0 +1,185 @@
+
+<div class="container-fluid" id="no" style="display:none;">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="jumbotron">
+        <h2>You cannot access admin</h2>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid" id="stats" style="display:none;">
+  <div class="row">
+    <div class="col-md-12">
+      <input type="text" class="form-control holder holder-search" style="display:none;">
+      <h1>STATS</h1>
+      <p>
+        More details to come, and graphing of the figures, and exporting, and restricting to time slices.
+      </p>
+      <div id="results">
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<script>
+  jQuery(document).ready(function() {
+    if (!clogin.loggedin()) {
+      $('#no').show();
+      window.location = '/account?next=/admin';
+    }
+
+    var api = 'https://api.openaccessbutton.org';
+    if (window.location.host.indexOf('openaccessbutton.org') === -1) {
+      //api = 'https://dev.api.cottagelabs.com/service/oab';
+      clogin.api = 'https://dev.api.cottagelabs.com/accounts';
+    }
+    
+    var results = function(data) {
+      var info = '<p>There have been ' + data.hits.total + ' availability checks (what used to be blocks) made since we switched to the new site and plugins (24th October 2016)</p>';
+      info += '<p>' + data.facets.email.missing + ' of those were made anonymously, ';
+      info += 'and ' + (data.hits.total - data.facets.email.missing) + ' were made by signed in users (but some users have made multiple, so this is not a unique user count).</p>';
+      var dt = new Date();
+      dt.setMonth(dt.getMonth()-1);
+      var onemonthago = Date.parse(dt);
+      dt.setMonth(dt.getMonth()-2);
+      var threemonthsago = Date.parse(dt);
+      var lastmonth = 0;
+      var onetothreemonths = 0;
+      var overthreemonths = 0;
+      var downloaded = 0;
+      var seen = [];
+      var used = {};
+      for (var u in data.hits.hits) {
+        if (data.hits.hits[u].fields) {
+          var email = data.hits.hits[u].fields.email ? data.hits.hits[u].fields.email[0] : undefined;
+          var plugin = data.hits.hits[u].fields.plugin ? data.hits.hits[u].fields.plugin[0] : 'website';
+          var createdAt = data.hits.hits[u].fields.createdAt ? data.hits.hits[u].fields.createdAt[0] : undefined;
+          if (email === undefined || email && seen.indexOf(email) === -1) {
+            if (used[plugin] === undefined) used[plugin] = {identified:[],anonymous:0};
+            if (email !== undefined) {
+              if (plugin !== 'website') {
+                downloaded += 1;
+                if (createdAt && createdAt > onemonthago) {
+                  lastmonth +=1;
+                } else if (createdAt && createdAt > threemonthsago) {
+                  onetothreemonths += 1;
+                } else if (createdAt) {
+                  overthreemonths += 1;
+                }
+                seen.push(email);
+              }
+              used[plugin].identified.push(email);
+            } else {
+              used[plugin].anonymous += 1;
+            }
+          }
+        }
+      }
+      info += '<p>' + downloaded + ' signed in users have downloaded and used some version of the plugin and/or bookmarklet ';
+      info += ' - ' + lastmonth + ' in the last month, ';
+      info += onetothreemonths + ' between one and three months ago, ';
+      info += 'and ' + overthreemonths + ' over three months ago.</p>';
+      info += '<p>The number of identified (by most recent access method) and anonymous users is:</p>';
+      info += '<table class="table table-bordered table-striped">';
+      info += '<thead><th>method</th><th>identified</th><th>anonymous</th><th>subtotal</th><th>total</th></thead><tbody>';
+      var website = 0;
+      var plugins = 0;
+      var bookmarklets = 0;
+      var pkeys = [];
+      for ( var u in used ) pkeys.push(u);
+      pkeys.sort();
+      var last;
+      var rtotal = 0;
+      for ( var pk in pkeys ) {
+        var p = pkeys[pk];
+        var psub = p.split('_')[0];
+        if (psub !== last) {
+          if (last !== undefined) info += '<td>' + rtotal + '</td></tr>';
+          last = psub;
+          rtotal = 0;
+        } else {
+          info += '<td></td></tr>';
+        }
+        info += '<tr><td>' + p + '</td><td>' + used[p].identified.length + '</td><td>' + used[p].anonymous + '</td><td>' + (used[p].identified.length + used[p].anonymous) + '</td>';
+        rtotal += (used[p].identified.length + used[p].anonymous);
+        if (parseInt(pk) === pkeys.length-1) info += '<td>' + rtotal + '</td></tr>';
+        if (p === 'website') {
+          website += (used[p].identified.length + used[p].anonymous);
+        } else if (p.indexOf('bookmarklet') !== -1) {
+          bookmarklets += (used[p].identified.length + used[p].anonymous);
+        } else {
+          plugins += (used[p].identified.length + used[p].anonymous);
+        }
+      }
+      info += '</tbody></table>';
+      $('#results').append(info);
+    }
+
+    clogin.afterLogin = function() {
+      if (!clogin.hasRole('openaccessbutton.admin')) window.location = '/';
+      
+      $('#no').hide();
+      $('#stats').show();
+      
+      $('#stats').holder({
+        url: api + "/availabilities?apikey="+clogin.apikey,
+        datatype: 'JSON',
+        //apikey: clogin.apikey, // to get this working have to stop ES overriding allowed headers
+        defaultquery: {
+          sort: [
+            {
+              createdAt: {order: 'desc'}
+            }
+          ],
+          size:10000,
+          fields:['plugin','email','createdAt'],
+          query: {
+            filtered: {
+              query: {
+                bool: {
+                  must: []
+                }
+              },
+              filter: {
+                bool: {
+                  must:[]
+                }
+              }
+            }
+          },
+          aggregations: {
+            "availabilities" : {
+              "date_histogram" : {
+                "field" : "createdAt",
+                "interval" : "week"
+              }
+            }
+          }
+        },
+        pushstate: false,
+        results: {
+          default: results
+        },
+        facets: {
+          plugin: { terms: { "field": "plugin.exact", "size": 100 } },
+          email: { terms: { "field": "email.exact", "size": 100 } }, // the "missing" count on this, next to terms list, shows how many anonymous availability requests there were
+          url: { terms: { "field": "url.exact", "size": 100 } }
+        }
+      });
+        
+    }
+    
+    clogin.login();
+  });
+</script>
+
+

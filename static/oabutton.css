@@ -16,6 +16,19 @@ h1, h2, h3, h4, h5, h6{
     font-family: 'Montserrat', sans-serif;
 }
 
+#downloader {
+  background-color:#398bc5;
+  color:#212f3f;
+  height:55px;
+  z-index:10000;
+  -webkit-border-bottom-right-radius: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  -moz-border-radius-bottomright: 5px;
+  -moz-border-radius-bottomleft: 5px;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
 html, body{
     margin:0;
     padding:0;
@@ -33,6 +46,9 @@ hr{
     padding-top:10px;
     padding-bottom:20px;
 }
+.form-control {
+  font-size:1em;
+}
 .navbar-brand{
     font-weight:bold;
     color:#212f3f;
@@ -44,7 +60,7 @@ hr{
 }
 .navbar-nav li a:hover{
     color:#212f3f;
-    background-color:#398bc5;
+    background-color:#f04717;
 }
 .navbar-nav li.active{
     color:#212f3f;

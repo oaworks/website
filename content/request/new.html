@@ -32,7 +32,9 @@
             <p><input type="text" id="title" class="form-control" placeholder="Title" value=""></p>
             <p><input type="text" id="doi" class="form-control" placeholder="DOI (optional, but useful)" value=""></p>
             <p><textarea id="story" class="form-control" placeholder="How would getting access to this research help you? This message will be sent to the author." style="min-height:100px;"></textarea></p>
-            <input type="submit" id="submitrequest" value="Create request!" class="btn btn-action btn-block">
+            <button type="submit" class="btn btn-action btn-block" id="submit" style="margin-top:5px;background-color:#f04717;color:#212f3f;" disabled>
+              Say why you need this in up to <br><span id="counter">25</span> words to create this request
+            </button>
             <img id="savingspinner" style="height:20px;display:none;" src="//static.cottagelabs.com/spinner.gif">
             <div id="savesuccess" style="display:none;"><p>Saved</p></div>
           </div>
@@ -57,6 +59,41 @@
 
 <script>
   jQuery(document).ready(function() {
+    // this was copied from the chrome plugin which does not use jquery, hence why it is plain js
+    document.getElementById('story').onkeyup = function () {
+      var length = document.getElementById('story').value.replace(/  +/g,' ').split(' ').length;
+      var left = 25 - length;
+      if (left < 0) {
+        left = 0;
+      }
+      if (length === 0) {
+        document.getElementById('submit').innerHTML = 'Say why you need this in up to <br><span id="counter">25</span> words to support this request';
+        document.getElementById('submit').style.backgroundColor = '#f04717';
+      }
+      if (length <= 5) {
+        document.getElementById('submit').innerHTML = 'Tell us your reason with up to <span id="counter"></span><br> more words to support this request';
+        document.getElementById('submit').style.backgroundColor = '#f04717';
+      }
+      if ( left < 25 && length > 5 ) {
+        document.getElementById('submit').removeAttribute('disabled');
+      } else {
+        document.getElementById('submit').setAttribute('disabled',true);
+      }
+      if (length > 5 && length <= 10) {
+        document.getElementById('submit').innerHTML = 'Great, <span id="counter"></span> words remaining!<br>Write a few more?';
+        document.getElementById('submit').style.backgroundColor = '#ffff66';
+      }
+      if (length > 10 && length <= 20) {
+        document.getElementById('submit').innerHTML = '<span id="counter"></span> words left! Or click to submit<br>now and create your request!';
+        document.getElementById('submit').style.backgroundColor = '#99ff99';
+      }
+      if (length > 20) {
+        document.getElementById('submit').innerHTML = '<span id="counter"></span>... Click now to submit your<br>reason and create your request';
+        document.getElementById('submit').style.backgroundColor = '#99ff99';
+      }
+      document.getElementById('counter').innerHTML = left;
+    };
+
     var api = 'https://api.openaccessbutton.org';
     if (window.location.host.indexOf('openaccessbutton.org') === -1) {
       api = 'https://dev.api.cottagelabs.com/service/oab';
@@ -100,7 +137,7 @@
         $('#savesuccess').html('<p><br>Sorry, some information is missing. Please select at least one request type, and provide at least a URL and a story, and select the type of request you want to make.</p>').show();
         setTimeout(function() { $('#savesuccess').html('<p>Saved</p>').hide(); }, 5000);
       } else {
-        $('#submitrequest').hide();
+        $('#submit').hide();
         $('#savingspinner').show();
         var data = {};
         data.plugin = 'oab_site_1.0.0';
@@ -151,11 +188,19 @@
 
     var availability = function(e) {
       if ($(this).attr('id') === 'find' || e === undefined || e.keyCode === 13) {
+        var url = $('#url').val().trim();
+        if (url.lastIndexOf('.') === url.length-1) url = url.substring(0,url.length-1);
+        if (url.indexOf('.') === -1 || url.indexOf('/') === -1) {
+          // this does not appear to be a URL to a page we would likely check for availability
+          // may add other checks here too
+          alert('Sorry, what you have entered does not appear to be a vaild URL to a page on a website that we can check for you. Please try again.');
+          return false;
+        }
         $('#find').hide();
         $('#loadingavailability').show();
         var opts = {
           type:'GET',
-          url:api+'/availability?url='+encodeURIComponent($('#url').val()),
+          url:api+'/availability?url='+encodeURIComponent(url),
           success: function(data) {
             $('#loadingavailability').hide();
             var create = 'articledata';
@@ -179,23 +224,21 @@
             if (create) {
               if (clogin.loggedin()) {
                 var acc = clogin.user && clogin.user.account ? clogin.user.account : undefined;
-                if (acc && ( !acc.username || !acc.service.openaccessbutton.profile.profession || !acc.service.openaccessbutton.profile.affiliation || !acc.profile.name ) ) {
-                  $('#moredetailslink').attr('href','/account?next='+encodeURIComponent('/request/new?url='+$('#url').val()));
+                if (acc && ( !acc.username || !acc.service.openaccessbutton.profile.profession || !acc.profile.name ) ) {
+                  $('#moredetailslink').attr('href','/account?next=/request/new?url='+encodeURIComponent($('#url').val()));
                   $('#moredetails').show();
                 } else {
-                  $('#submitrequest').bind('click',submit);
+                  $('#submit').bind('click',submit);
                   $('#newrequest').show();
                   if (create == 'data') {
                     $('#request_article_choice').hide();
                     $('#request_data_choice').hide();
                     $('#request_data').prop('checked',true);
-                    $('#submitrequest').attr('value','Create new data request!');
                     $('#createheader').html('Create a new data request').after("<p>Sorry we couldn't find any data</p>");
                   } else if (create == 'article') {
                     $('#request_article_choice').hide();
                     $('#request_data_choice').hide();
                     $('#request_article').prop('checked',true);
-                    $('#submitrequest').attr('value','Create new article request!');
                     $('#createheader').html('Create a new article request').after("<p>Sorry we couldn't find an article</p>");
                   } else {
                     $('#createheader').after("<p>Sorry we couldn't find anything for that URL</p>");

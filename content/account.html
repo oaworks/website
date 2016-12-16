@@ -10,7 +10,7 @@ jQuery(document).ready(function() {
     $('#cloginArea .well').css('min-height','250px');
   }
 
-  var savecheck = function() {
+  var savevalidate = function() {
     if ( $('#username').val() && $('#profile\\.name').val() && $('#service\\.openaccessbutton\\.profile\\.profession').val() && $('#service\\.openaccessbutton\\.profile\\.confirm_public').is(':checked') && $('#service\\.openaccessbutton\\.profile\\.confirm_terms').is(':checked') ) {
       return true;
     } else {
@@ -18,13 +18,14 @@ jQuery(document).ready(function() {
       return false;
     }
   }
-  var setvalues = function() {
+  var afterlogin = function() {
     $('#downloads').hide();
     if (clogin.user.account.username) {
       $('.username').html(clogin.user.account.username);
-      if (window.location.href.indexOf('next=') !== -1) {
-        $('#tonext').attr('href',window.location.href.split('next=')[1]);
+      if (clogin.next) {
+        $('#tonext').attr('href',clogin.next);
         $('#tonextalert').show();
+        window.location = clogin.next;
       }
     }
     if (clogin.apikey) {
@@ -55,8 +56,8 @@ jQuery(document).ready(function() {
     $('#setinfo').hide();
     $('#downloads').show();
     $('.username').html($('#username').val());
-    if (window.location.href.indexOf('next=') !== -1) {
-      $('#tonext').attr('href',window.location.href.split('next=')[1]);
+    if (clogin.next) {
+      $('#tonext').attr('href',clogin.next);
       $('#tonextalert').show();
     }
   }
@@ -67,7 +68,7 @@ jQuery(document).ready(function() {
   } else {
     $('#bookmarklet').attr('href',$('#bookmarklet').attr('href').replace('YYYY','https://openaccessbutton.org'));
   }
-  clogin.init({api:api,afterLogin: setvalues, saveValidate: savecheck, afterSave: aftersave });
+  clogin.init({api:api,afterLogin: afterlogin, saveValidate: savevalidate, afterSave: aftersave });
 
   if (window.location.href.indexOf('email=') !== -1) {
     $('#cloginEmail').val(window.location.href.split('next=')[0].split('email=')[1]);
@@ -93,7 +94,7 @@ jQuery(document).ready(function() {
 
   var chromeinstall = function(e) {
     e.preventDefault();
-    chrome.webstore.install();
+    chrome.webstore.install('https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel',function() {window.location=window.location;});
   }
   $('#chromeinstall').bind('click',chromeinstall);
 
@@ -155,11 +156,11 @@ jQuery(document).ready(function() {
 
         <div id="setinfo" style="display:none;">
           <h1>Thanks for signing up!</h1>
-          <input type="text" id="username" class="form-control cloginSave" placeholder="Choose a username (required)">
+          <input type="text" id="username" class="form-control cloginSave" placeholder="Username (required)">
           <input style="margin-top:5px;" type="text" id="profile.name" class="form-control cloginSave" placeholder="Full name (required)">
           <input style="margin-top:5px;" type="text" id="service.openaccessbutton.profile.affiliation" class="form-control cloginSave" placeholder="Affiliation (University name, Business name etc)">
           <select id="service.openaccessbutton.profile.profession" class="form-control cloginSave" style="margin-top:5px;">
-            <option value="">Select the profession which best describes you (required)</option>
+            <option value="">Profession (required)</option>
             <option value="Student">Student</option>
             <option value="Doctor">Doctor</option>
             <option value="Patient">Patient</option>

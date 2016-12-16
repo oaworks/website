@@ -246,8 +246,9 @@
         dets += '</select>';
         dets += ' <span style="color:orange;">test:</span> <input type="checkbox" id="test"';
         if (record.test === true) dets += ' checked="checked"';
-        dets += '> <a style="margin-left:20px;" class="btn btn-danger btn-xs" id="delete" href="#">DELETE</a>';
-        dets += ' <a style="margin-left:20px;" class="btn btn-info btn-xs" href="/admin?request=' + rid + '">Email</a>';
+        dets += '> <a style="margin-left:20px;" class="btn btn-warning btn-xs" href="/admin?request=' + rid + '">Email</a>';
+        dets += ' <a style="margin-left:20px;" class="btn btn-warning btn-xs" href="/response/' + record.receiver + '">Responder</a>';
+        dets += ' <a style="margin-left:20px;" class="btn btn-danger btn-xs" id="delete" href="#">DELETE</a>';
         if (record.location && record.location.geo && record.location.geo.lat) {
           dets += '<p style="color:orange;margin-top:5px;">Location: ' + record.location.geo.lat + ',' + record.location.geo.lon
           if (record.location.location) dets += ' - ' + record.location.location;
@@ -258,7 +259,7 @@
 
       // show the email if at a stage where it can be changed, or if admin
       if (isadmin || iseditable) {
-        dets += '<p><input type="text" id="email" value="' + record.email + '" placeholder="Email"';
+        dets += '<p><input type="text" id="email" value="' + record.email + '" placeholder="Author Email"';
         if (isadmin && !iseditable) dets += ' style="background-color:orange;"';
         dets += 'class="form-control"></p>';
       }
