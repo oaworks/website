@@ -25,6 +25,9 @@ server {
     expires 30d;
   }
 
+  location /blog {
+    rewrite ^/.* https://medium.com/@openaccessbutton permanent;
+  }
   location /blog/new-oab-2016 {
     rewrite ^/.* https://medium.com/@openaccessbutton/take-action-this-open-access-week-with-the-new-open-access-button-e9372c5cb4aa permanent;
   }
