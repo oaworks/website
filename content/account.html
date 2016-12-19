@@ -94,13 +94,16 @@ jQuery(document).ready(function() {
 
   var chromeinstall = function(e) {
     e.preventDefault();
-    chrome.webstore.install(undefined, function(data) {console.log('install success'); console.log(data); window.location = window.location.href }, function(err) { console.log('install error'); console.log(err); });
+    chrome.webstore.install(undefined, function() { window.location = window.location.href }, function(err) { console.log('install error'); console.log(err); });
   }
   $('#chromeinstall').bind('click',chromeinstall);
 
   $('#viewrequests').bind('click',function(e) {
     $(this).attr('href','/request?q=user.username.exact:'+clogin.user.account.username);
   });
+  
+  var a = window.location.href.indexOf('a=') !== -1 ? window.location.href.split('a=')[1].split('&')[0] : undefined;
+  if ( a && a.length > 0 ) $('#cloginSubmit').html(a.substring(0,1).toUpperCase() + a.substring(1,a.length).replace('nup','n up'));
 });
 </script>
 
