@@ -1,0 +1,10 @@
+{{SUBJECT: We found a paper you needed!}}
+
+Hi!
+
+You previously requested "{{article title}}" with the Open Access Button. Good news: we have it now!
+
+You read the article here: https://openaccessbutton.org/request/{{_id}}
+
+Thanks for using the Button,
+The Open Access Button team
