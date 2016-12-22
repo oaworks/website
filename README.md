@@ -26,24 +26,25 @@ Changes should be committed to the develop branch first and viewed on the test s
 
 Actual editing of the files themselves can be done in any text editor or code editing tool, as you prefer.
 
-### How to Edit via Github Web UI (needs work)
+### How to edit & release via Github Web UI (good for small changes)
 Your steps should be:
 
 1. Change to the develop branch
 2. Make some changes as you wish
 3. commit them when you're ready
-4. View on the test: site oab.test.cottagelabs.com
+4. View on the test site: oab.test.cottagelabs.com
 
 #### to release
 
 If you're happy with the above changes & everything has been tested
 
-5. 
-7. pull from master
-8. merge develop
-9. push to master
+5. Go to: https://github.com/OAButton/oab_static/tree/master. You'll be invited to make a pull request from the develop branch. Do this. 
+6. On the new screen, check that the commits you made are lised & others have been tested. If there are commits that haven't been tested either test them or ask Mark to make a pull request for just your changes.  
+8. Hit a the "Create a pull request" button.
+9. If all checks pass & you have no conflits, keep clicking until it's successfully merged. DON'T delete "develop".
+10. Wait for your changes to appear on the live site (this may take a few minutes). If you're changes dont appear, you may need to bug Mark. 
 
-Although before point 7 you probably could do other pushes to develop and view them too. Most of the time it should work
+Although before point 5 you probably could do other pushes to develop and view them too. Most of the time it should work
 These occasional conflicts are slightly annoying when they occur, but it is still far better than versions of docs flying all over the place anyway!
 
 ### How to Edit via Github command line
