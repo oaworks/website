@@ -1,5 +1,4 @@
 # Open Access Button Website Content
-===============
 
 This is the content of Open Access Button site.
 
@@ -31,12 +30,15 @@ Actual editing of the files themselves can be done in any text editor or code ed
 Your steps should be:
 
 1. Change to the develop branch
-2. make some changes in develop
-2. commit them in develop
-3. pull from develop to check in case someone else made changes
-4. If all OK, push to develop
-5. View on the test: site oab.test.cottagelabs.com
-6. checkout master
+2. Make some changes as you wish
+3. commit them when you're ready
+4. View on the test: site oab.test.cottagelabs.com
+
+#### to release
+
+If you're happy with the above changes & everything has been tested
+
+5. 
 7. pull from master
 8. merge develop
 9. push to master
