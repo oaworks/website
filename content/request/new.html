@@ -111,7 +111,7 @@
     });
 
     var locsubmit = function(post,data) {
-      try {
+      /*try {
         if (navigator.geolocation) {
           var opts = {timeout: 5000};
           navigator.geolocation.getCurrentPosition(function (position) {
@@ -126,10 +126,10 @@
           post.data = JSON.stringify(data);
           $.ajax(post);
         }
-      } catch (e) {
-        post.data = JSON.stringify(data);
-        $.ajax(post);
-      }
+      } catch (e) {*/
+      post.data = JSON.stringify(data);
+      $.ajax(post);
+      //}
     }
 
     var submit = function() {
