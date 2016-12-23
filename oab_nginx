@@ -51,7 +51,7 @@ server {
 server {
   listen 443;
   server_name openaccessbutton.org;
-  root /home/cloo/live/openresearchbutton/oab_static;
+  root /home/cloo/live/openresearchbutton/website;
 
   ssl on;
   ssl_certificate /etc/letsencrypt/live/openaccessbutton.org/fullchain.pem;
