@@ -1,9 +1,0 @@
-{{SUBJECT Your request is in progress}}
-
-Hi,
-
-The author of "{{title}}" has responded to the request by putting it on hold. This is good news, it means they're preparing the {{type}} to share.
-
-Many thanks,
-
-The Open Access Button Robot
