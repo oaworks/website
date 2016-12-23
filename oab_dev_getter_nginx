@@ -3,7 +3,7 @@
 server {
   listen 80;
   server_name oab.test.cottagelabs.com;
-  root /home/cloo/dev/openresearchbutton/oab_static;
+  root /home/cloo/dev/openresearchbutton/website;
 
   add_header Pragma public;
   add_header Cache-Control "public";
@@ -86,7 +86,7 @@ server {
 server {
   listen 80;
   server_name oabb.test.cottagelabs.com;
-  root /home/cloo/dev/openresearchbutton/oab_static/static/bookmarklet;
+  root /home/cloo/dev/openresearchbutton/website/static/bookmarklet;
 
   location / {
     add_header Access-Control-Allow-Origin *;
