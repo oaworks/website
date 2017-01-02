@@ -1,4 +1,4 @@
-# oab_static: Open Access Button Website Content
+# Open Access Button Website Content
 Static content of OAButton site like the homepage, blogs and the about page, and the email tempaltes.
 
 ## How to edit our site
