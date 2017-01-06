@@ -75,7 +75,13 @@ jQuery(document).ready(function() {
     setTimeout(function() { $('#cloginSubmit').trigger('click'); }, 100);
   }
   $('#cloginEmail').bind('keyup',function(e) {
-    if (e.keyCode === 13) $('#cloginSubmit').trigger('click');
+    if (e.keyCode === 13) {
+      $('#cloginToken').attr('placeholder','Check ' + $('#cloginEmail').val() + ' for your login code' );
+      $('#cloginSubmit').trigger('click');
+    }
+  });
+  $('#cloginSubmit').bind('click',function(e) {
+    $('#cloginToken').attr('placeholder','Check ' + $('#cloginEmail').val() + ' for your login code' );
   });
 
   var mobileCheck = function() {
