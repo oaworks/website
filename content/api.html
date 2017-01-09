@@ -1,0 +1,324 @@
+      
+<div class="container-fluid" style="margin-top:-10px;">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="jumbotron">
+        <h2 style="text-align:center;">
+          Open Access Button API docs
+        </h2>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-3">
+          <div class="well">
+            <h3>
+              Contents
+            </h3>
+            <p>
+              Get started<br>
+              /<br>
+              /availability<br>
+              /availabilities<br>
+              /blacklist<br>
+              /scrape<br>
+              /request<br>
+              /request/:id<br>
+              /requests<br>
+              /supports<br>
+              /supports/:id
+            </p>
+          </div>          
+        </div>
+        <div class="col-md-9">
+          <div class="well">
+            <h3>
+              Getting started, getting authorised
+            </h3>
+            <p>
+              The Open Access Button API is a JSON API - it sends and receives JSON, so be sure to remember if you are POSTing data 
+              to set the content-type. For example if using curl, you'll need <code>curl -H "Content-Type:application/json"</code>.
+            </p>
+            <p>
+              To view JSON responses neatly in the browser, try installing a JSON viewer plugin. If you want more control to test sending 
+              and receiving queries, try using the browser dev tools console or POSTman (for Google Chrome, possibly other browsers too).
+            </p>
+            <p>
+              There are currently no limits, so be nice (1 request per second). If we notice problems we'll suspend 
+              your account and contact you about your needs.
+            </p>
+            <p>
+              Where authorisation is required, include a URL param called "apikey" or a header called "x-apikey". 
+              <span id="apikey">
+                Please <a href="/account?next=/api" class="label label-info">sign up / sign in</a> to see an API key here.
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="well">
+        <h3>
+          <a class="api" href="https://api.openaccessbutton.org" target="_blank" id="api">https://api.openaccessbutton.org</a>
+        </h3>
+        <h3>
+          GET
+        </h3>
+        <p>
+          The root of the API just returns a 200 success response and shows a status message - if it does not, the API is down.
+        </p>
+        <h3>
+          POST
+        </h3>
+        <p>
+          <b>Authorisation required</b><br>
+          A POST to the root will return a 200 response code and an authorisation success message to validate that your API key is working correctly.
+        </p>
+      </div>
+
+      <div class="well">
+        <h3>
+          <a class="api" href="https://api.openaccessbutton.org/availability" target="_blank">/availability</a>
+        </h3>
+        <h3>
+          GET
+          <small style="margin-left:10px;">
+            <a class="api" target="_blank" href="https://api.openaccessbutton.org/availability?url=http%3A%2F%2Fjournals.plos.org%2Fplosone%2Farticle%3Fid%3Dinfo%253Adoi%2F10.1371%2Fjournal.pone.0163591">
+              Example
+            </a>
+          </small>
+        </h3>
+        <p>
+          With a URL parameter named "url", providing a URL-encoded URL, this will return our analysis of 
+          the availability of the article at the URL. Note we do blacklist some URLs, see below for how to 
+          check the current blacklist.
+        </p>
+        <p>
+          The result object contains 3 main sections, listing "availability" if anything can be found anywhere. 
+          The availability response objects declare their "type" (currently these will be "article" or "data") 
+          and the "url" where the content has been found.
+        </p>
+        <p>
+          Then there is a "requests" list which shows any requests that we have already open for the URL, and the 
+          request objects in the list will give the request "type" and the request "id".
+        </p>
+        <p>
+          Finally there is an "accepts" list which shows what sort 
+          of request we would accept for this URL - currently we accept "article" and "data" requests, but note that 
+          if an article is already available or if an article request is already in the system, the "accepts" list will 
+          only show "data", because we will not accept another article request for the same item.
+        </p>
+        <p>
+          NOTE: detail where we search for availability?
+        </p>
+        <h3>
+          POST
+        </h3>
+        <p>
+          Same as GET, but provide a JSON body object with a field called "url" in it, instead of as URL parameter, like so: 
+          <code>{url: "https://some.url/here"}</code>
+        </p>
+      </div>
+
+      <div class="well">
+        <h3>
+          <a class="api" href="https://api.openaccessbutton.org/availabilities" target="_blank">/availabilities</a>
+        </h3>
+        <h3>
+          GET or POST
+          <small style="margin-left:10px;">
+            <a class="api" target="_blank" href="https://api.openaccessbutton.org/availabilities">
+              Example TODO ex query
+            </a>
+          </small>
+        </h3>
+        <p>
+          This provides an elasticsearch endpoint onto all the availability checks we have 
+          performed for URLs previously received to the system. This allows you to search and explore very 
+          effectively.
+        </p>
+        <p>
+          To make full use of this endpoint you should read the 
+          <a href="https://www.elastic.co/guide/en/elasticsearch/reference/1.4/query-dsl.html" target="_blank">elasticsearch query DSL documentation</a> 
+          (we are currently on ES 1.4, moving soon to 5.x).
+        </p>
+        <p>
+          NOTE: add some ES example queries
+        </p>
+      </div>
+
+      <div class="well">
+        <h3>
+          <a class="api" href="https://api.openaccessbutton.org/blacklist" target="_blank">/blacklist</a>
+        </h3>
+        <h3>
+          GET
+        </h3>
+        <p>
+          Returns a list of our currently blacklisted URLs - we won't accept availability checks or requests for URLs on this list.
+        </p>
+      </div>
+
+      <div class="well">
+        <h3>
+          /scrape
+        </h3>
+        <h3>
+          GET
+          <small style="margin-left:10px;">
+            <a class="api" target="_blank" href="https://api.openaccessbutton.org/scrape?url=http%3A%2F%2Fjournals.plos.org%2Fplosone%2Farticle%3Fid%3Dinfo%253Adoi%2F10.1371%2Fjournal.pone.0163591">
+              Example
+            </a>
+          </small>
+        </h3>
+        <p>
+          With a URL parameter named "url", providing a URL-encoded URL, this will return the metadata we retrieve for the given URL.
+        </p>
+        <p>
+          See the example for metadata structure (more may be added in future).
+        </p>
+      </div>
+      
+      <div class="well">
+        <h3>
+          /request
+        </h3>
+        <h3>
+          GET
+        </h3>
+        <p>
+          <b>Authorisation required</b><br>
+          This simply confirms if you are authorised to use this endpoint.
+        </p>
+        <h3>
+          POST
+        </h3>
+        <p>
+          We are currently considering enabling creation of new requests via the API. 
+          Would you find this useful? <a target="_blank" href="mailto:contact@openaccessbutton.org">Let us know!</a>
+        </p>
+        <!--
+        <p>
+          <b>Authorisation required</b><br>
+          POST a JSON object to create a new request. Note the blacklist before doing so. 
+          The required fields are ... and the optional fields are ... 
+        </p>
+        -->
+      </div>
+      
+      <div class="well">
+        <h3>
+          /request/:id
+        </h3>
+        <h3>
+          GET
+          <small style="margin-left:10px;">
+            <a class="api" target="_blank" href="https://api.openaccessbutton.org/request/RBNfJLPX382TZZtRR">
+              Example
+            </a>
+          </small>
+        </h3>
+        <p>
+          Returns the request with the given :id. View the example to see the request object structure.
+        </p>
+        <!--
+        <h3>
+          POST
+        </h3>
+        <p>
+          <b>Authorisation required</b><br>
+          POST a JSON object to change corresponding values in the identified request. Allowed fields in the 
+          object are "url", "title", "doi". If you are the request creator you can also change the "story".
+        </p>
+        <p>
+          Also, if there is no author email for this request to be sent to yet, and if the status is help, 
+          moderate, or refused, the "email" address can be changed too.<br>
+        </p>
+        -->
+      </div>
+      
+      <div class="well">
+        <h3>
+          <a class="api" href="https://api.openaccessbutton.org/requests" target="_blank">/requests</a>
+        </h3>
+        <h3>
+          GET or POST
+        </h3>
+        <p>
+          This provides an elasticsearch endpoint onto all the requests checks we have created so far 
+          (works the same as /availabilities, see above).
+        </p>
+      </div>
+      
+      <!--
+      <p>
+        /support/:rid<br>
+        auth required<br>
+        GET or POST to this endpoint will add your support to the identified request<br>
+        You should provide a "story" query param on GET, or a "story" key in your POST data.<br>
+        The story should explain why you support the request.<br>
+        NOTE: are we going to allow API creation of support?
+      </p>
+      -->
+      
+      <div class="well">
+        <h3>
+          <a class="api" href="https://api.openaccessbutton.org/supports" target="_blank">/supports</a>
+        </h3>
+        <h3>
+          GET or POST
+        </h3>
+        <p>
+          This provides an elasticsearch endpoint onto all the declarations of support we have received for open requests.
+          (works the same as /availabilities, see above).
+          <br>NOTE is it worth an example here of querying for all your own supports, or something...
+        </p>
+      </div>
+      
+      <div class="well">
+        <h3>
+          /supports/:id
+        </h3>
+        <h3>
+          GET
+          <small style="margin-left:10px;">
+            <a class="api auth" target="_blank" href="https://api.openaccessbutton.org/supports/RBNfJLPX382TZZtRR">
+              Example
+            </a>
+          </small>
+        </h3>
+        <p>
+          <b>Authorisation required</b><br>
+          Returns a list of any declarations of support you have already made for the identified request.
+        </p>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+  jQuery(document).ready(function() {
+
+    var api = 'https://api.openaccessbutton.org';
+    if (window.location.host.indexOf('openaccessbutton.org') === -1) {
+      api = 'https://dev.api.cottagelabs.com/service/oab';
+      $('.api').each(function() { $(this).attr('href',$(this).attr('href').replace('https://api.openaccessbutton.org',api)); });
+      clogin.api = 'https://dev.api.cottagelabs.com/accounts';
+    }
+    $('#api').html(api).attr('href',api);
+
+    clogin.afterLogin = function() {
+      if (clogin.apikey) {
+        $('#apikey').html('Your API key is <code>' + clogin.apikey + '</code>');
+        $('.auth').each(function() { $(this).attr('href',$(this).attr('href')+'?apikey='+clogin.apikey); });
+      } else {
+        $('.auth').hide();
+      }
+    }
+    clogin.login();
+    
+    
+  });
+</script>
