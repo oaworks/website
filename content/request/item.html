@@ -175,7 +175,7 @@
 
     var details = function(data) {
       record = data.data;
-      var iscreator = clogin.user && clogin.user.account && clogin.user.account._id === record.user.id;
+      var iscreator = clogin.user && clogin.user.account && record && record.user && clogin.user.account._id === record.user.id;
       var isadmin = clogin.hasRole('openaccessbutton.admin');
       var iseditable = clogin.loggedin() && (record.status === 'help' || record.status === 'moderate' || record.status === 'refused');
       if (record.supports && record.supports.length) {
@@ -190,16 +190,17 @@
       $('#titlelink').attr('href',record.url);
       record.title ? $('#titlelink').html(record.title) : $('#titlelink').html('Untitled article');
       var msg = '';
+      var counter = record.count ? record.count : 1;
       if (record.status === 'received') {
         msg += 'Success! ';
-        msg += '<span style="color:#f04717;font-size:1.2em;">' + record.count + '</span> ';
-        msg += record.count === 1 ? 'person ' : 'people ';
+        msg += '<span style="color:#f04717;font-size:1.2em;">' + counter + '</span> ';
+        msg += counter === 1 ? 'person ' : 'people ';
         msg += 'got access to this ';
         msg += record.type === 'article' ? 'article' : 'data';
         $('#msgcol').css('background-color','#52be80');
       } else {
-        msg += '<span style="color:#f04717;font-size:1.2em;">' + record.count + '</span> ';
-        msg += record.count === 1 ? 'person supports ' : 'people support ';
+        msg += '<span style="color:#f04717;font-size:1.2em;">' + counter + '</span> ';
+        msg += counter === 1 ? 'person supports ' : 'people support ';
         msg += 'this request for ';
         msg += record.type === 'article' ? 'access' : 'data';
       }

@@ -1,11 +1,19 @@
 
 <style>
-  h2 {
-    margin-top:100px;
+  #docs h2 {
+    margin-top:80px;
+  }
+  @media handheld, only screen and (max-width: 767px) {
+    #docs {
+      word-wrap: break-word;
+    }
+    code {
+      white-space: pre-wrap;
+    }
   }
 </style>
 
-<div class="container-fluid" style="margin-top:-10px;">
+<div class="container-fluid" id="docs" style="margin-top:-10px;">
   <div class="row">
     <div class="col-md-12">
       <div class="jumbotron">

@@ -11,7 +11,8 @@ jQuery(document).ready(function() {
   }
 
   var savevalidate = function() {
-    if ( $('#username').val() && $('#profile\\.name').val() && $('#service\\.openaccessbutton\\.profile\\.profession').val() && $('#service\\.openaccessbutton\\.profile\\.confirm_public').is(':checked') && $('#service\\.openaccessbutton\\.profile\\.confirm_terms').is(':checked') ) {
+    //if ( $('#username').val() && $('#profile\\.name').val() && $('#service\\.openaccessbutton\\.profile\\.profession').val() && $('#service\\.openaccessbutton\\.profile\\.confirm_public').is(':checked') && $('#service\\.openaccessbutton\\.profile\\.confirm_terms').is(':checked') ) {
+    if ( $('#username').val() && $('#profile\\.name').val() && $('#service\\.openaccessbutton\\.profile\\.profession').val() ) {
       return true;
     } else {
       $('#cloginSaveMessages').html('<p>Some information is missing. Please confirm you have completed all the fields and checked the boxes. Then save again.</p>');
@@ -19,7 +20,7 @@ jQuery(document).ready(function() {
     }
   }
   var afterlogin = function() {
-    $('#downloads').hide();
+    //$('#downloads').hide();
     if (clogin.user.account.username) {
       $('.username').html(clogin.user.account.username);
       if (clogin.next) {
@@ -46,7 +47,7 @@ jQuery(document).ready(function() {
         if (s.profession) $('#service\\.openaccessbutton\\.profile\\.profession').val(s.profession);
         $('#setinfo').show();
       } else {
-        $('#downloads').show();      
+        //$('#downloads').show();      
       }
     } catch(err) {
       $('#setinfo').show();
@@ -54,7 +55,7 @@ jQuery(document).ready(function() {
   }
   var aftersave = function() {
     $('#setinfo').hide();
-    $('#downloads').show();
+    //$('#downloads').show();
     $('.username').html($('#username').val());
     if (clogin.next) {
       $('#tonext').attr('href',clogin.next);
@@ -171,21 +172,21 @@ jQuery(document).ready(function() {
           <select id="service.openaccessbutton.profile.profession" class="form-control cloginSave" style="margin-top:5px;">
             <option value="">Profession (required)</option>
             <option value="Student">Student</option>
-            <option value="Doctor">Doctor</option>
+            <option value="Health professional">Health professional</option>
             <option value="Patient">Patient</option>
-            <option value="Advocate">Advocate</option>
             <option value="Academic">Academic</option>
             <option value="Researcher">Researcher</option>
             <option value="Librarian">Librarian</option>
             <option value="Other">Other</option>
-            <option value="Undisclosed">Prefer not to say</option>
           </select>
           <p>
-            <input id="service.openaccessbutton.profile.confirm_public" type="checkbox" class="cloginSave">
+            I agree that by signing up 
+            <!--<input id="service.openaccessbutton.profile.confirm_public" type="checkbox" class="cloginSave">-->
             I understand that information obtained by the Open Access Button will be publicly accessible
-          </p>
-          <p>
-            <input id="service.openaccessbutton.profile.confirm_terms" type="checkbox" class="cloginSave">
+            , and that
+          <!--</p>
+          <p>-->
+            <!--<input id="service.openaccessbutton.profile.confirm_terms" type="checkbox" class="cloginSave">-->
             I have read the Open Access Button
             <a target="_blank" href="/privacy" style="color:white;text-decoration:underline;">privacy policy</a>
             and I agree to the
