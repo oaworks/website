@@ -47,7 +47,7 @@ jQuery(document).ready(function() {
         if (s.profession) $('#service\\.openaccessbutton\\.profile\\.profession').val(s.profession);
         $('#setinfo').show();
       } else {
-        //$('#downloads').show();      
+        //$('#downloads').show();
       }
     } catch(err) {
       $('#setinfo').show();
@@ -108,7 +108,7 @@ jQuery(document).ready(function() {
   $('#viewrequests').bind('click',function(e) {
     $(this).attr('href','/request?q=user.username.exact:'+clogin.user.account.username);
   });
-  
+
   var a = window.location.href.indexOf('a=') !== -1 ? window.location.href.split('a=')[1].split('&')[0] : undefined;
   if ( a && a.length > 0 ) $('#cloginSubmit').html(a.substring(0,1).toUpperCase() + a.substring(1,a.length).replace('nup','n up'));
 });
@@ -180,16 +180,15 @@ jQuery(document).ready(function() {
             <option value="Other">Other</option>
           </select>
           <p>
-            I agree that by signing up 
+            I agree that by signing up
             <!--<input id="service.openaccessbutton.profile.confirm_public" type="checkbox" class="cloginSave">-->
-            I understand that information obtained by the Open Access Button will be publicly accessible
-            , and that
+            I understand that information obtained by the Open Access Button will be publicly accessible, and that
           <!--</p>
           <p>-->
             <!--<input id="service.openaccessbutton.profile.confirm_terms" type="checkbox" class="cloginSave">-->
             I have read the Open Access Button
             <a target="_blank" href="/privacy" style="color:white;text-decoration:underline;">privacy policy</a>
-            and I agree to the
+            and agree to the
             <a target="_blank" href="/terms" style="color:white;text-decoration:underline;">terms of service</a>
           </p>
           <button id="cloginSave" type="button" class="btn btn-action" style="margin-top:5px;border:1px solid white;">Save your details</button>
