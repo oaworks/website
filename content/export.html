@@ -1,0 +1,248 @@
+
+<script type="text/javascript" src="//static.cottagelabs.com/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+<link rel="stylesheet" href="//static.cottagelabs.com/bootstrap-datepicker/bootstrap-datepicker3.min.css">
+
+<div class="container-fluid" id="export">
+  <div class="row">
+    <div class="col-md-12">
+      <h1>EXPORT</h1>
+      
+      <div class="row">
+        <div class="col-md-12">
+          <select id="what" class="form-control">
+            <option value="">Choose what to export:</option>
+            <option value="request">Requests (the requests users create to get access to articles/data)</option>
+            <option value="availability">Availabilities (every click on the plugin or check via the site records an availability check)</option>
+            <option value="support">Supports (every time a user supports an existing request)</option>
+          </select>          
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-6">
+          <input type="text" id="from" class="form-control datepicker" placeholder="From (optional)" style="margin-bottom:2px;">
+        </div>
+        <div class="col-md-6">
+          <input type="text" id="to" class="form-control datepicker" placeholder="To (optional)">
+        </div>
+      </div>
+            
+      <div class="row">
+        <div class="col-md-6">
+          <select id="filter" class="form-control" style="margin-bottom:2px;">
+            <option value="">Filter by: (optional)</option>
+            <optgroup class="request">
+              <option>journal</option>
+              <option>publisher</option>
+              <option>status</option>
+              <option value="email">author email</option>
+              <option>keywords</option>
+              <option value="user.username">username</option>
+              <option value="user.email">user email</option>
+              <option>type</option>
+              <option>plugin</option>
+              <option>url</option>
+              <option>doi</option>
+            </optgroup>
+            <optgroup class="availability">
+              <option>url</option>
+              <option>plugin</option>
+              <option>username</option>
+              <option value="email">user email</option>
+              <option value="discovered.article">discovered article</option>
+              <option value="discovered.data">discovered data</option>
+            </optgroup>
+            <optgroup class="support">
+              <option>type</option>
+              <option>url</option>
+              <option>username</option>
+              <option value="email">user email</option>
+              <option value="rid">request ID</option>
+            </optgroup>
+            <optgroup class="account">
+              <option value="service.openaccessbutton.profile.profession">profession</option>
+              <option value="service.openaccessbutton.profile.affiliation">affiliation</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <select id="value" class="form-control">
+            <option value="">for value: (optional)</option>
+          </select>
+        </div>
+      </div>
+      
+      
+
+      <div class="row">
+        <!--
+        <div class="col-md-6">
+          <input type="radio" name="format" value="csv" checked="checked"> CSV &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <input type="radio" name="format" value="json"> JSON
+        </div>
+        -->
+        <div class="col-md-6">
+          <!--
+          <input type="radio" name="data" value="records" checked="checked"> Records &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <input type="radio" name="data" value="summary"> Summary &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          -->
+          <a class="btn btn-primary btn-block" href="#" id="go" target="_blank">Export</a>
+        </div>
+        <div class="col-md-6">
+          (Note: filtering by dates and by values can cause the resulting export to have no relevant records in it, which will cause an error instead of downloading a CSV file. If this happens, try relaxing your date ranges and/or filters.)
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<script>
+  jQuery(document).ready(function() {
+    if (!clogin.loggedin()) window.location = '/account?next=/export';
+
+    var api = 'https://api.openaccessbutton.org';
+    if (window.location.host.indexOf('openaccessbutton.org') === -1) {
+      api = 'https://dev.api.cottagelabs.com/service/oab';
+      clogin.api = 'https://dev.api.cottagelabs.com/accounts';
+    }
+    
+    $('.datepicker').datepicker({
+      format:'dd/mm/yyyy',
+      autoclose:true
+    });
+
+    /*var time = function(timestamp) {
+      var d = new Date(timestamp);
+      var year = d.getFullYear();
+      var month = d.getMonth() + 1;
+      var date = d.getDate();
+      //var hour = a.getHours();
+      //var min = a.getMinutes();
+      //var sec = a.getSeconds();
+      var time = date + '/' + month + '/' + year; // + ' ' + hour + ':' + min + ':' + sec ;
+      return time;
+    }*/
+
+    var changed = {from:undefined,to:undefined};
+    var change_date = function(e) {
+      changed[$(this).attr('id')] = $(this).val();
+    }
+    $('.datepicker').bind('change',change_date);
+
+    var what = function(e) {
+      $('.datepicker').val('');
+      var w = $(this).val();
+      $('optgroup').hide();
+      $('optgroup.'+w).show();
+      if (w) {
+        $.ajax({
+          type:'GET',
+          url: api+'/minmax/' + w + '/createdAt?apikey='+clogin.apikey,
+          success: function(data) {
+            var min = moment(data.min).format('DD/MM/YYYY');
+            $('#from').val(min);
+            $('#from').datepicker('setStartDate',min);
+            $('#to').datepicker('setStartDate',min);
+            var max = moment(data.max).format('DD/MM/YYYY');
+            $('#to').val(max);
+            $('#from').datepicker('setEndDate',max);
+            $('#to').datepicker('setEndDate',max);
+            changed.from = undefined; // no need to set a date range unless the user changes the date range, so unset on first load
+            changed.to = undefined;
+          }
+        });
+      }
+    }
+    $('#what').bind('change',what);
+    
+    var filter = function(e) {
+      $('#value').html('<option value="">for value:</option>');
+      var w = $('#what').val();
+      var k = $(this).val();
+      $.ajax({
+        type:'GET',
+        url: api+'/terms/' + w + '/' + k + '.exact?apikey='+clogin.apikey,
+        success: function(data) {
+          for ( var k in data ) {
+            $('#value').append('<option value="' + data[k].term + '">' + data[k].term + ' (' + data[k].count + ')</option>');
+          }
+        }
+      });      
+    }
+    $('#filter').bind('change',filter);    
+            
+    var go = function() {
+      if (!clogin.hasRole('openaccessbutton.admin') && $('#what').val() === 'account') window.location = '/';
+      var size = 10000;
+      var fields = {
+        account: ['_id','created_date','emails.address','profile.name','service.openaccessbutton.profile.affiliation','service.openaccessbutton.profile.profession','roles.openaccessbutton','username'],
+        request: ['_id','created_date','type','count','status','title','url','doi','journal','publisher','email','user.username'],
+        support: ['created_date','url','type','story','username','rid'],
+        availability: ['created_date','username','url','discovered.article','discovered.data','plugin']
+      }
+      var endpoint = 'requests';
+      if ($('#what').val() === 'account') endpoint = 'users';
+      if ($('#what').val() === 'availability') endpoint = 'availabilities';
+      if ($('#what').val() === 'support') endpoint = 'supports';
+
+      var query = {
+        size: size, // perhaps there needs to be a download batch size option, and/or a check on how many records are available to download
+        query: {
+          filtered: {
+            query: {
+              bool: {
+                must: [
+                  {"match_all":{}}
+                ]
+              }
+            },
+            filter: {
+              bool: {
+                must:[]
+              }
+            }
+          }
+        }
+      }
+      if ( $('#value').val() ) {
+        var t = {term:{}};
+        t.term[$('#filter').val()+'.exact'] = $('#value').val();
+        query.query.filtered.filter.bool.must.push(t);
+      }
+      if (changed.from || changed.to) {
+        var rg = {
+          range : {
+            createdAt : {
+            }
+          }
+        }
+        if (changed.from) rg.range.createdAt.gte = moment(changed.from,'DD/MM/YYYY').valueOf();
+        if (changed.to) rg.range.createdAt.lte = moment(changed.to,'DD/MM/YYYY').valueOf();
+        query.query.filtered.filter.bool.must.push(rg);
+      }
+      if ( query.query.filtered.filter.bool.must.length === 0 ) query.query = {"match_all":{}};
+
+      var url = api + '/' + endpoint + '?';
+      if ($('#what').val() === 'account') url += 'apikey=' + clogin.apikey + '&';
+      url += 'source=' + JSON.stringify(query);
+      var curl = clogin.api.replace('/accounts','/convert?from=json&to=csv&subset=hits.hits._source&fields=' + fields[$('#what').val()].join(',') + '&url='+encodeURIComponent(url));
+      $(this).attr('href',curl);
+    }
+    $('#go').bind('click',go);
+    
+    clogin.afterLogin = function() {
+      if (clogin.hasRole('openaccessbutton.admin')) $('#what').append('<option value="account">Users (the user account details)</option>');
+    }
+    clogin.login();
+    
+    
+  });
+</script>
+
+

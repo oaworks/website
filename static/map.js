@@ -41,7 +41,7 @@ jQuery(document).ready(function() {
       }
       $.ajax({
         type: 'GET',
-        url: '//api.openaccessbutton.org/query?source=' + JSON.stringify(qry),
+        url: '//api.openaccessbutton.org/requests?source=' + JSON.stringify(qry),
         dataType: 'JSON',
         success: updatemap
       });

@@ -6,7 +6,7 @@
         <div class="panel-body">
           <div id="findarticle">
             <h3>What do you need?</h3>
-            <p><input type="text" id="url" class="form-control" placeholder="Give us an article URL"></p>
+            <p><textarea id="url" class="form-control" style="min-height:150px;" placeholder="Give us an article URL, DOI, PMID, or PMC ID"></textarea></p>
             <input type="submit" id="find" value="Find it!" class="btn btn-action btn-block">
             <div class="alert alert-info" id="loadingavailability" style="display:none;margin-top:5px;">
               <img style="height:20px;" src="//static.cottagelabs.com/spinner.gif"> checking availability...
@@ -190,12 +190,13 @@
       if ($(this).attr('id') === 'find' || e === undefined || e.keyCode === 13) {
         var url = $('#url').val().trim();
         if (url.lastIndexOf('.') === url.length-1) url = url.substring(0,url.length-1);
-        if (url.indexOf('.') === -1 || url.indexOf('/') === -1) {
+        /*if ( ( url.indexOf('.') === -1 || url.indexOf('/') === -1 ) && isNaN(parseInt(url.toLowerCase().replace('pmc',''))) ) {
           // this does not appear to be a URL to a page we would likely check for availability
+          // nor a doi or pmc or pmid
           // may add other checks here too
           alert('Sorry, what you have entered does not appear to be a vaild URL to a page on a website that we can check for you. Please try again.');
           return false;
-        }
+        }*/
         $('#find').hide();
         $('#loadingavailability').show();
         var opts = {

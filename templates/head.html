@@ -8,7 +8,7 @@
 
 
   <link href="/static/favicon.ico" rel="icon" type="image/x-icon">
-  
+
   <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
   <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -18,19 +18,21 @@
   <script type="text/javascript" src="//static.cottagelabs.com/bootstrap-3.0.3/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="//static.cottagelabs.com/bootstrap-3.0.3/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <script type="text/javascript" src="//static.cottagelabs.com/moment.min.js"></script>
   <script type="text/javascript" src="//static.cottagelabs.com/holder/jquery.holder.js"></script>
   <script type="text/javascript" src="//static.cottagelabs.com/fingerprint2.min.js"></script>
   <script type="text/javascript" src="//static.cottagelabs.com/clogin.js"></script>
 
   <link rel="stylesheet" href="/static/oabutton.css">
-  
+
   <link href="https://fonts.googleapis.com/css?family=Montserrat|Roboto" rel="stylesheet">
 
   <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/gknkbkaapnhpmkcgkmdekdffgcddoiel">
-  
+
   <script>
   jQuery(document).ready(function() {
     if (window.location.href.indexOf('odb=true') !== -1) $('#fromopendatabutton').show();
+    if (window.location.href.indexOf('team=true') !== -1) $('#fromteambutton').show();
     
     var logged = clogin.loggedin();
     if (logged) {
@@ -38,7 +40,7 @@
       $('.notcloggedin').hide();
       if ($('#downloader').is(':visible')) $('#downloader').remove(); // needs handled directly because of classes for hiding it on small and medium screens too
     }
-    
+
     var coloured = false;
     var colorise = function() {
       if (coloured === false) {
@@ -46,13 +48,13 @@
         $('#downloader').css('background-color','#f04717');
       } else {
         coloured = false;
-        $('#downloader').css('background-color','#398bc5');        
+        $('#downloader').css('background-color','#398bc5');
       }
     }
     $('#dllink').bind('mouseenter mouseleave',colorise);
   });
   </script>
-  
+
   <style>
     markdown {
       display:none;
