@@ -27,15 +27,24 @@ var oabutton_ui = function(api_key) {
           for ( var li in libs ) {
             var lib = libs[li];
             if (lib.repository) {
-              locals += '<a target="_blank" href="' + lib.repository + '" alt="click to open" title="click to open">' + lib.title + ' <b>available online in repository</b></a>';              
+              locals += '<a target="_blank" href="' + lib.repository + '" alt="click to open" title="click to open">' + lib.title + ' <b>available online in repository</b></a><br>';              
             } else {
-              locals += lib.title + ' <b>' + lib.library.status + '</b> in ' + lib.library.collection.replace('In ','');
+              // TODO add something if a journal availability rather than an article availability
+              if (lib.type === 'journal') {
+                locals += 'This article appears to be in the journal <i>' + lib.title + '</i>, which is';
+              } else {
+                locals += lib.title;
+              }
+              locals += ' <b>' + lib.library.status + '</b> in ' + lib.library.collection.replace('In ','') + '<br>';
             }
           }
         }
         document.getElementById('library').innerHTML = locals;
         document.getElementById('library').style.backgroundColor = '#398bc5';
-        document.getElementById('iconill').innerHTML = 'Not the right article?<br>' + document.getElementById('iconill').innerHTML.split('.')[1];
+        var ilr = 'Not the right article';
+        if (response.data.library.journal) ilr += '/journal';
+        ilr += '?<br>' + document.getElementById('iconill').innerHTML.split('.')[1]
+        document.getElementById('iconill').innerHTML = ilr;
       }
       if (oab.library === 'imperial') {
         // TODO could configure a list of terms for libraries somewhere, or always provide a generic linked set?
@@ -52,6 +61,7 @@ var oabutton_ui = function(api_key) {
         document.getElementById('icon'+avail_entry.type).setAttribute('alt',title);
         document.getElementById('icon'+avail_entry.type).setAttribute('title',title);
         document.getElementById('icon'+avail_entry.type).setAttribute('href',avail_entry.url);
+        document.getElementById('icon'+avail_entry.type).className = 'need'; // it could have had disabled tag added to it, but should be removed if available
         var nd = document.getElementById('icon'+avail_entry.type).innerHTML;
         nd = nd.replace('Unavailable','Open '+avail_entry.type);
         document.getElementById('icon'+avail_entry.type).innerHTML = nd;
@@ -225,7 +235,9 @@ var oabutton_ui = function(api_key) {
       needs[n].setAttribute('alt',blurb);
       needs[n].setAttribute('title',blurb);
       needs[n].onclick = function(e) {
-        e.preventDefault();
+        var href = e.target.getAttribute('href');
+        if (href === undefined || href === null) href = e.target.parentNode.getAttribute('href');
+        if (href === '#') e.preventDefault();
       }      
     }
   }
