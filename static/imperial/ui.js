@@ -18,7 +18,7 @@ var oabutton_ui = function(api_key) {
       if (response.data.library.local && response.data.library.local.length) {
         if (response.data.availability.length === 0) {
           document.getElementById('iconarticle').style.display = "none";
-          document.getElementById('icondata').style.display = "none";          
+          if (oab.dataable) document.getElementById('icondata').style.display = "none";          
         }
         var locals = '';
         for ( var l in response.data.library.local) {
@@ -47,6 +47,7 @@ var oabutton_ui = function(api_key) {
     if (response.data.availability.length > 0) {
       var title = 'We found it! Click to open';
       for ( var avail_entry of response.data.availability ) {
+        if ( avail_entry.type === 'article' && oab.library && ( !response.data.library || !response.data.library.local || response.data.library.local.length === 0 ) ) document.getElementById('iconill').style.display = "none";
         document.getElementById('icon'+avail_entry.type).style.backgroundColor = '#398bc5';
         document.getElementById('icon'+avail_entry.type).setAttribute('alt',title);
         document.getElementById('icon'+avail_entry.type).setAttribute('title',title);

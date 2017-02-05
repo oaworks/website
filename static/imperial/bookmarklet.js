@@ -12,14 +12,20 @@ var oabutton_bookmarklet = function(apikey) {
       <p style="text-align:center;">We\'re looking!<br> Give us a moment.</p> \
     </div> \
     <div class="collapse" id="buttonstatus" style="margin:5px 0px 10px -10px;min-height:180px;"> \
-      <a href="#" target="_blank" id="iconarticle" class="need" data-type="article" alt="Sorry, we couldn\'t find an open access version. Click to start a new request" title="Sorry, we couldn\'t find an open access version. Click to start a new request" style="margin-bottom:10px;"> \
+      <a href="#" target="_blank" id="iconarticle" class="need" data-type="article" alt="Sorry, we couldn\'t find an open access version. Click to start a new request" title="Sorry, we couldn\'t find an open access version. Click to start a new request" style="margin-bottom:10px;';
+  if (!oab.dataable) {
+    form += 'width:330px;'
+  }
+  form += '"> \
         <img style="height:100px;width:80px;margin-bottom:12px;" src="' + oab.site_address + '/static/imperial/img/oab_article.png"><br> \
         Unavailable \
-      </a> \
-      <a href="#" target="_blank" id="icondata" class="need" data-type="data" alt="Sorry, we couldn\'t find any related data. Click to start a new request" title="Sorry, we couldn\'t find any related data. Click to start a new request"> \
+      </a>';
+  if (oab.dataable) {
+    form += '<a href="#" target="_blank" id="icondata" class="need" data-type="data" alt="Sorry, we couldn\'t find any related data. Click to start a new request" title="Sorry, we couldn\'t find any related data. Click to start a new request"> \
         <img style="height:110px;width:80px;margin-top:2px;" src="' + oab.site_address + '/static/imperial/img/oab_data.png"><br> \
         Unavailable \
       </a>';
+  }
   if (lib) {
     form += '<div style="clear:both;margin:0px 0px 11px 10px;padding:5px;border-radius:3px;" id="library"></div> \
       <a href="#" target="_blank" id="iconill" class="need" style="width:330px;height:50px;margin-top:10px;" data-type="ill" data-action="ill" alt="Sorry, we couldn\'t find it in your library. Click to start an inter-library loan request" title="Sorry, we couldn\'t find it in your library. Click to start an inter-library loan request"> \

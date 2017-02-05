@@ -15,6 +15,8 @@ var oab = {
   requestable : false, // whether or not a user is allowed to create a request (whether logged in or not)
   
   supportable : false, // whether or not a user is allowed to support a request (whether logged in or not)
+  
+  dataable : false, // whether or not to bother with the data icons
 
   api_address : 'https://dev.api.cottagelabs.com/service/oab',// 'https://api.openaccessbutton.org',
 
