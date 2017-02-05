@@ -1,186 +1,266 @@
-<!--<script type="text/javascript" src="//static.cottagelabs.com/d3/d3.v3.min.js"></script>
-<script type="text/javascript" src="//static.cottagelabs.com/d3/topojson.v1.min.js"></script>
-<script src="/static/map.js"></script>-->
+<script type="text/javascript" src="//static.cottagelabs.com/d3/d3.v4.min.js"></script>
+<script type="text/javascript" src="//static.cottagelabs.com/holdernew/use/oabutton_request.js"></script>
+<script type="text/javascript" src="//static.cottagelabs.com/holdernew/use/export.js"></script>
+<script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/filters.js"></script>
+<script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/export.js"></script>
+<script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/world.js"></script>
+<script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/graph.js"></script>
+<script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/line.js"></script>
+
+<style>
+  html, body{
+    margin:0;
+    padding:0;
+    font-size:1em;
+    font-family: 'Roboto', sans-serif;
+    color:#212f3f;
+  }
+  body{
+    background-color:#6b8cae;
+    margin-top:0px;
+  }
+  #topnav {
+    display:none;
+  }
+  #footer {
+    display:none;
+  }
+  .row{
+    padding-top:0px;
+    padding-bottom:0px;
+  }
+  blockquote {
+    border:none;
+    font-family: Georgia, serif;
+    font-size: 18px;
+    font-style: italic;
+    margin: 0.25em 0;
+    padding: 0.35em 40px;
+    line-height: 1.45;
+    position: relative;
+    color: #383838;
+  }
+  blockquote:before {
+    display: block;
+    padding-left: 10px;
+    content: "\201C";
+    font-size: 80px;
+    position: absolute;
+    left: -20px;
+    top: -20px;
+    color: #7a7a7a;
+  }
+  blockquote:after {
+    display: block;
+    padding-right: 30px;
+    content: "\201D";
+    font-size: 80px;
+    position: absolute;
+    right: 0px;
+    bottom: -60px;
+    color: #7a7a7a;
+  }
+  blockquote cite {
+    color: #999999;
+    font-size: 14px;
+    display: block;
+    margin-top: 5px;
+  }
+  blockquote cite:before {
+    content: "\2014 \2009";
+  }
+
+  .country {
+    stroke: #2c3e50;
+    stroke-width: 0.1px;
+    fill:#2c3e50;
+  }
+  .country:hover{
+    stroke: #333;
+    stroke-width: 0.8px;
+  }
+  .text{
+    font-size:1px;
+    text-transform:capitalize;
+  }
+  .point {
+    fill:#f04717;
+  }
+  div.tooltip {
+    color: #222;
+    background: #fff;
+    padding: .5em;
+    text-shadow: #f5f5f5 0 1px 0;
+    border-radius: 2px;
+    box-shadow: 0px 0px 2px 0px #a6a6a6;
+    opacity: 0.9;
+    position: absolute;
+  }
+  .btn-action {
+    background-color:#398bc5;
+    color:white;
+  }
+  .btn-action:hover {
+    background-color:#f04717;
+  }
+  .btn-title:hover {
+    cursor:default;
+  }
+
+</style>
+
+<div class="holder loading" style="margin:0px;padding:0px;position:fixed;top:90px;left:0;right:0;bottom:0;display:none;z-index:1000000000000000000000000000;">
+  <div style="margin:250px auto 0px auto;width:400px;">
+    <img src="/static/spin_orange.svg" style="width:100%;padding-left:100px;">
+  </div>
+</div>
+
+<div class="holder world view" style="margin:0px;padding:0px;position:fixed;top:90px;left:0;right:0;bottom:0;">
+  <svg class="holder world"></svg>
+</div>
+
+<div class="holder graph view" style="margin:0px;padding:0px;position:fixed;top:90px;left:0;right:0;bottom:0;display:none;">
+  <svg class="holder graph"></svg>
+</div>
+
+<div class="holder line view" style="margin:0px;padding:0px;position:fixed;top:90px;left:0;right:0;bottom:0;display:none;background-color:white;">
+  <svg class="holder line"></svg>
+</div>
+
+<div class="holder sticker"></div>
+<div class="holder sticky" style="z-index:1000000;background-color:#212f3f;margin-top:-10px;">
+  <div class="container-fluid" style="max-width:1000px;margin:10px auto 0px auto;padding-top:20px;">
+    <div class="row">
+      <div id="holder" class="col-md-12">
+        <div class="panel panel-default holder ui" style="background-color:white;">
+          <div class="panel-heading" style="background-color:white;padding:0px;">
+            <div class="input-group" style="margin-left:-1px;margin-top:-1px;margin-bottom:-6px;margin-right:-2px;">
+              <div class="input-group-btn">
+                <a class="btn btn-default holder" do="previous" alt="previous" title="previous" style="font-weight:bold;height:50px;font-size:1.8em;" href="#">&lt;</a>
+                <a class="btn btn-default" href="/" alt="click to go back to the site homepage" title="click to go back to the site homepage"><img src="https://openaccessbutton.org/static/icon_OAB.png" style="height:30px;margin-top:6px;"></a>
+              </div>
+              <input type="text" class="form-control holder search" do="add" placeholder="Open Access Button" style="font-size:1.6em;height:50px;">
+              <div class="input-group-btn">
+                <a href="#" class="btn btn-default holder toggle" toggle=".options" alt="show/hide search options" title="show/hide search options" style="font-weight:bold;height:50px;font-size:1.8em;">+</a>
+                <a class="btn btn-default holder" do="next" alt="next" title="next" style="font-weight:bold;height:50px;font-size:1.8em;" href="#">&gt;</a>
+              </div>
+            </div>
+            <div class="holder searches" style="margin-top:5px;"></div>
+          </div>
+          <div class="panel-body section holder options" style="display:none;">
+            <div class="row">
+              <div class="holder filters"></div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="btn-toolbar" role="toolbar" aria-label="...">
+                  <div class="btn-group" role="group" aria-label="...">
+                    <button type="button" class="btn btn-disabled btn-title" alt="Choose which data view to show" title="Choose which data view to show">Show: </button>
+                    <button type="button" class="btn btn-info show" val="stories">stories</button>
+                    <button type="button" class="btn btn-default show" val="world">map</button>
+                    <button type="button" class="btn btn-default show" val="graph">chart</button>
+                    <button type="button" class="btn btn-default show" val="line">time</button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="holder export">
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid" style="max-width:1000px;margin:0px auto 10px auto;" id="stories">
+  <div class="row">
+    <div class="col-md-3" id="instructions">
+      <div class="well" style="background-color:#212f3f;color:white;margin-top:-5px;padding-bottom:0px;border:none;">
+        <p>
+          <a class="btn btn-action btn-block holder toggle" href="#" toggle=".options" do="instruct" val="search">Explore <span class="requestcount">XXX</span> requests<br>- try our search options</a><br>
+          <a class="btn btn-action btn-block holder" do="instruct" val="help" href="">Help us find<br>author contact info</a><br>
+          <a class="btn btn-action btn-block holder" do="instruct" val="support" href="">Help others - add your<br>support to requests</a><br>
+          <a class="btn btn-action btn-block holder" do="instruct" val="respond" href="">Are you an author?<br>Respond to requests!</a><br>
+          <a class="btn btn-action btn-block" href="/find">Do you need access?<br>Find what you need!</a><br>
+        </p>
+      </div>
+    </div>
+    <div class="col-md-9">
+      <div class="well instruct intro" style="background-color:#f04717;border:none;color:#212f3f;padding-top:8px;margin-top:30px;">
+        <h2>
+          75 million people need open access to research.
+          Help others gain access, 
+          or search for what you need and we can help you!
+        </h2>
+      </div>
+      <!--
+      <div class="well instruct search" style="background-color:#f04717;margin-top:30px;border:none;color:#212f3f;padding-top:8px;display:none;">
+        <h2>
+          Explain the search options - actually they are pretty obvious when popped open, so far, so just don't bother for now.
+        </h2>
+      </div>
+      -->
+      <div class="well instruct help" style="background-color:#f04717;margin-top:30px;border:none;color:#212f3f;padding-top:8px;display:none;">
+        <h2>
+          We need help with these requests before we can issue them - can you help us find an author email to contact, and any other missing details?
+        </h2>
+      </div>
+      <div class="well instruct support" style="background-color:#f04717;margin-top:30px;border:none;color:#212f3f;padding-top:8px;display:none;">
+        <h2>
+          Explore all our open requests below, and add your support to any that you would also like access to, or that 
+          you think are particularly worthwhile.
+        </h2>
+      </div>
+      <div class="well instruct respond" style="background-color:#f04717;margin-top:30px;border:none;color:#212f3f;padding-top:8px;display:none;">
+        <h2>
+          Search our open requests, and if there are any you have authored, you could help by providing a copy!
+          Try the search options above to filter by your author email, or search for any titles you have written.
+        </h2>
+      </div>
+      <div class="holder results from0"></div>          
+    </div>
+  </div>
+</div>
+
+
 
 <script>
 jQuery(document).ready(function() {
-  var api = 'https://api.openaccessbutton.org';
-  if (window.location.host.indexOf('openaccessbutton.org') === -1) api = 'https://dev.api.cottagelabs.com/service/oab';
-
-  var result = function(res) {
-    var out = '';
-    out += '<div class="well" style="background-color:#eee;border-color:#212f3f;overflow:hidden;">';
-    // TODO should show the item title here... but what if it is data? need to show we want the data for X, not article X
-    out += '<h4><a href="/request/' + res._id + '" style="color:#212f3f;">';
-    out += res.title ? res.title : res.url;
-    out += '</a></h4>';
-    var dt = new Date(res.createdAt).toUTCString().split(', ')[1];
-    var rq = '';
-    if (res.user) {
-      if (res.user.username) {
-        rq = ' by ' + res.user.username;
-      } else if (res.user.email) {
-        rq = ' by ' + res.user.email;
-      }
-    }
-    out += '<p>' + res.type.substring(0,1).toUpperCase() + res.type.substring(1) + ' requested' + rq + ' on ' + dt.substring(0,dt.length-13);
-    if (res.count && res.count > 1) out += '. Supported by ' + res.count + ' people.';
-    out += '</p>';
-    // TODO add a support this request and a share this request buttons
-    out += '</div>';
-    return out;
-  }
-  var results = function(data) {
-    $('#requestscount').html(data.hits.total);
-    var out = '';
-    for ( var r in data.hits.hits ) out += result(data.hits.hits[r]._source);
-    $('.holder.holder-results').html(out);
-    $('#storycount').html(data.hits.total);
+  
+  if ( $(window).width() < 1000 ) {
+    $('#instructions').remove();
+    $('.instruct').remove();
+    $('.holder.export').hide();
   }
 
-  var first = true;
-  var scroll = function(data) {
-    if (first) {
-      first = false;
+  $('#holder').holder();
+
+  var show = function(e) {
+    if (e) e.preventDefault();
+    $('.show').removeClass('btn-info').addClass('btn-default');
+    $(this).removeClass('btn-default').addClass('btn-info');
+    var what = $(this).attr('val');
+    $('.holder.options').hide();
+    $('.instruct').hide();
+    $('.view').hide();
+    if ( what === 'stories' ) {
+      $('#stories').show();
+      $('.world').show();
     } else {
-      for ( var r in data.hits.hits ) {
-        var res = result(data.hits.hits[r]._source);
-        $('.holder.holder-innerresults').append(res);
-      }
+      $('#stories').hide();
+      $('.'+what).show();
     }
   }
+  $('.show').bind('click',show);
 
-  var aggregations = function(data) {
-    $('.holder.holder-suggestions').html("");
-    for ( var f in $('.holder').holder.options.query.aggregations ) {
-      if (data.aggregations[f].buckets.length > 1) {
-        var disp = '<div style="border-bottom:1px solid #ccc;"><p style="font-size:0.9em;">Filter by ' + f + '</p>';
-        for ( var r in data.aggregations[f].buckets ) {
-          var j = data.aggregations[f].buckets[r];
-          if ( f === 'status' && j.key === 'received' ) $('#requestssuccesscount').html(j.doc_count);
-          disp += '<p>' + searchify({class: 'holder label label-default', val: j.key + ' (' + j.doc_count + ')', attrs: {function: 'add', filter: f, value: j.key} }) + '</p>';
-        }
-        disp += '</div>';
-        $('.holder.holder-suggestions').append(disp);
-      }
-    }
-  }
-
-  var dq = {
-    sort: [
-      {
-        createdAt: {order: 'desc'}
-      }
-    ],
-    query: {
-      filtered: {
-        query: {
-          bool: {
-            must: []
-          }
-        },
-        filter: {
-          bool: {
-          }
-        }
-      }
-    }
-  };
-  if ( !( clogin.loggedin() && clogin.hasRole('openaccessbutton.admin') ) ) dq.query.filtered.filter.bool.must_not = [{term:{'test':true}}];
-
-  $('#requests').holder({
-    what: "Explore requests",
-    url: api + "/requests",
-    datatype: 'JSON',
-    scroll: true,
-    defaultquery: dq,
-    pushstate: true,
-    results: {
-      default: results,
-      scroll: scroll,
-      suggestions: aggregations
-    },
-    size: 50,
-    aggregations: {
-      status: { terms: { field: "status.exact", size: 100 } },
-      type: { terms: { field: "type.exact", size: 100 } }
-    }
-  });
-
+  var context = $.params('context');
+  if ( context ) $('.show[val="' + context + '"]').trigger('click');
+  
 });
 </script>
 
-<style>
-#mapspace{
-  overflow:hidden;
-  width:100%;
-  height:700px;
-  margin-top:50px;
-  margin-bottom:-50px;
-}
-.country{
-  stroke: #fff;
-  stroke-width: 0.8px;
-}
-div.tooltip {
-  color: #222;
-  background: #fff;
-  padding: .5em;
-  text-shadow: #f5f5f5 0 1px 0;
-  border-radius: 2px;
-  box-shadow: 0px 0px 2px 0px #a6a6a6;
-  opacity: 0.9;
-  position: absolute;
-}
-</style>
-
-<!--
-<div id="mapspace"></div>
--->
-
-<!-- Start of info bar. When not required, simply comment out. -->
-
-<!--
-<div class="alert alert-info class="close"" style="margin-top:60px;margin-left:10px;margin-right:10px">
-<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-<p>We are currently processing more than 10,000 requests. Keep checking back for more!</p>
-</div>
--->
-
-<!-- End of info bar -->
-
-<div class="strap strap-compact" id="requests">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-12" style="padding-top:40px;padding-bottom:20px;">
-        <div class="input-group" style="margin-left:-1px;margin-top:-1px;margin-bottom:-6px;margin-right:-2px;">
-          <input type="text" class="form-control holder holder-search holder-function" holder-function="suggest" placeholder="Search to explore open requests" style="font-size:1.6em;height:50px;">
-          <div class="input-group-btn">
-            <a href="/request" class="btn btn-default" alt="clear all search terms and reset" title="clear all search terms and reset" style="height:50px;font-size:1.5em;">X</a>
-          </div>
-        </div>
-        <div class="holder holder-filters" style="margin:10px -5px 0px -5px;"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-3">
-      <div class="well" style="background-color:#212f3f;border-color:#212f3f;color:white;margin-top:-15px;">
-        <h3 style="text-align:center;font-size:60px;color:#f04717;">
-          <!--<span id="requestssuccesscount">0</span>
-          <span style="color:#ccc;">/</span>-->
-          <span id="requestscount">X</span>
-        </h3>
-        <p style="text-align:center;font-size:0.8em;"><!--Successful r-->Requests</p>
-      </div>
-      <div class="holder holder-suggestions" style="margin-top:15px;"></div>
-    </div>
-
-    <div class="col-md-9">
-      <div class="holder holder-results"></div>
-    </div>
-  </div>
-</div>

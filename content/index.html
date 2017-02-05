@@ -48,21 +48,17 @@ div.tooltip {
 
 end of alert bar -->
 
-<div class="strap strap-compact" style="margin-top:-20px;background-image:url(/static/book.jpg);background-color:transparent;height:600px;background-size:100% 100%;background-repeat:no-repeat;" id="topstrap">
+<div class="strap strap-compact" style="margin-top:-20px;background-image:url(/static/book.jpg);background-color:transparent;height:500px;background-size:100% 100%;background-repeat:no-repeat;" id="topstrap">
   <div class="container-fluid">
     <div class="row">
       <div class="col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2">
-        <h1 style="text-align:center;font-weight:normal;padding-top:50px;color:#f04717;">
-          <img src="/static/icon_OAB.png"><br><br><br>
+        <h1 style="text-align:center;font-weight:normal;padding-top:20px;color:#f04717;">
+          <img src="/static/icon_OAB.png"><br><br>
           Get the articles and data you need<br>
           <small style="color:#666;display:none;">Over <span class="oabmapcount">####</span> articles searched</small>
         </h1>
-        <div class="input-group">
-          <input type="text" class="form-control" id="url" placeholder="Give us an article URL, DOI or PMID">
-          <span class="input-group-btn">
-            <a class="btn btn-action" id="search" href="#" style="height:34px;padding-top:3px;">Find it!</a>
-          </span>
-        </div>
+        <input type="text" class="form-control" id="url" placeholder="Give us an article URL, DOI or PMID">
+        <a class="btn btn-action btn-block" id="search" href="#" style="height:34px;padding-top:3px;margin-top:5px;">Find it!</a>
       </div>
     </div>
   </div>
@@ -70,6 +66,35 @@ end of alert bar -->
 
 <div class="strap strap-compact">
   <div class="container-fluid">
+    <div class="row" style="text-align:center;padding-top:30px;padding-bottom:30px;">
+      <div class="col-md-4">
+        <a href="/request/new"><img src="/static/OABeyeglass_200x200.png"></a>
+        <p>
+          <a href="/request/new" style="color:white;">Find the research you need - we search thousands of sources 
+            with legal access to millions of articles</a>
+        </p>
+      </div>
+      <div class="col-md-4">
+        <p style="font-size:190px;line-height:10px;color:#398bc5;">
+          <a href="/account"><i class="glyphicon glyphicon-download"></i></a>
+        </p>
+        <p>
+          <a href="/account" style="color:white;">Install our browser extension or grab our bookmarklet
+            to quickly search from any web page</a>
+        </p>
+      </div>
+      <div class="col-md-4">
+        <div class="well" style="background-color:#f04717;border:none;margin:0px 55px 4px 55px;">
+          <a href="/request"><img src="/static/oab_article.png" style="height:158px;"></a>
+        </div>
+        <p>
+          <a href="/request" style="color:white;">We've designed a transparent and effective system to 
+            request access to unavailable research</a>
+        </p>
+      </div>
+    </div>
+    
+    <!--
     <div class="row">
       <div class="col-md-12">
         <h3 style="text-align:center;">
@@ -90,17 +115,30 @@ end of alert bar -->
           <input type="text" class="form-control" placeholder="Enter your email address" id="email">
           <button class="btn btn-block btn-action" style="margin-top:5px;" id="signup">Sign Up</button>
         </div>
-
       </div>
-
     </div>
+    -->
+    
   </div>
 </div>
 
 <div class="strap strap-white">
   <div class="container-fluid">
     <div class="row">
+      <div class="col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2" style="text-align:center;">
+        <h3>
+          Open Access Button helps you <b style="color:#f04717;">find</b> available research, 
+          and <b style="color:#f04717;">request</b> unavailable research. <br><br>
+          <b style="color:#f04717;">Sign up</b> now to <b style="color:#f04717;">support</b> 
+          open requests, so we can send them to the authors, and together we will make progress toward more open research.
+        </h3>
+        <div class="notcloggedin" style="margin-top:30px;">
+          <input type="text" class="form-control" placeholder="Enter your email address" id="email">
+          <button class="btn btn-block btn-action" style="margin-top:5px;" id="signup">Sign up now to begin unlocking articles and data</button>
+        </div>
+      </div>
 
+      <!--
       <div class="col-md-4" align="center">
         <div class="well" style="background-color:white;min-height:320px;">
           <h2 style="color:#f04717;">
@@ -127,17 +165,17 @@ end of alert bar -->
         </div>
      </div>
 
-        <div class="col-md-4" align="center">
-          <div class="well" style="background-color:white;min-height:320px;">
-            <h2 style="color:#f04717;">
-             Making Research Available
-            </h2>
-              <p>Requests for articles and data are sent to the author — and other Open Access Button users can support your request. Together we will make progress toward more open research.
-            </p>
-          </div>
+      <div class="col-md-4" align="center">
+        <div class="well" style="background-color:white;min-height:320px;">
+          <h2 style="color:#f04717;">
+           Making Research Available
+          </h2>
+            <p>Requests for articles and data are sent to the author — and other Open Access Button users can support your request. Together we will make progress toward more open research.
+          </p>
         </div>
-
       </div>
+      -->
+
     </div>
   </div>
 </div>
@@ -156,20 +194,20 @@ end of alert bar -->
       </ol>
       <div class="carousel-inner">
         <div class="item active">
-          <div class="container" style="height:100px;width:1000px;margin:50px auto 50px auto;">
+          <div class="container" style="height:100px;width:800px;margin:50px auto 50px auto;">
             <h1 style="text-align:center;">Tools like the Open Access Button can help catalyse change and create a world where science has more impact,
               is more efficient and importantly available <br>to everyone.</h1>
             <p style="text-align:center;color:#f04717;font-weight:bold;">Professor Randy Schekman, Nobel Prize in Physiology or Medicine 2013</p>
           </div>
         </div>
         <div class="item">
-          <div class="container" style="height:100px;width:1000px;margin:50px auto 50px auto;">
+          <div class="container" style="height:100px;width:800px;margin:50px auto 50px auto;">
             <h1 style="text-align:center;">I am even more impressed by the Open Access Button, a genuinely grass-roots initiative developed by two students.</h1>
             <p style="text-align:center;color:#f04717;font-weight:bold;">Sander Dekker, State Secretary, Dutch Ministry of Education, Culture and Science</p>
           </div>
         </div>
         <div class="item">
-          <div class="container" style="height:100px;width:1000px;margin:50px auto 50px auto;">
+          <div class="container" style="height:100px;width:800px;margin:50px auto 50px auto;">
             <h1 style="text-align:center;">The use of the Open Access Button will help more people to find research papers.</h1>
             <p style="text-align:center;color:#f04717;font-weight:bold;">Professor Stephen Curry, The Guardian</p>
           </div>
