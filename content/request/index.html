@@ -187,6 +187,7 @@
           <a class="btn btn-action btn-block holder" do="instruct" val="support" href="">Help others - add your<br>support to requests</a><br>
           <a class="btn btn-action btn-block holder" do="instruct" val="respond" href="">Are you an author?<br>Respond to requests!</a><br>
           <a class="btn btn-action btn-block" href="/find">Do you need access?<br>Find what you need!</a><br>
+          <a id="viewrequests" class="btn btn-action btn-block cloggedin" href="/request">View your own requests</a><br>
         </p>
       </div>
     </div>
@@ -231,6 +232,14 @@
 
 <script>
 jQuery(document).ready(function() {
+  
+  var user = clogin.loggedin();
+  if (user) {
+    $('#viewrequests').bind('click',function(e) {
+      e.preventDefault();
+      $('.holder.search').val('user.username:'+user.username).trigger('change');
+    });    
+  }
   
   if ( $(window).width() < 1000 ) {
     $('#instructions').remove();

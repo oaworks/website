@@ -6,7 +6,7 @@ var oabutton_bookmarklet = function(apikey) {
   popup.setAttribute('class','reset-this');
   var lib = oab.library ? oab.library.substring(0,1).toUpperCase() + oab.library.substring(1,oab.library.length) : false;
   var form = '\
-    <h2><img src="' + oab.site_address + '/static/imperial/img/oa128.png" style="width:40px;vertical-align:middle;"> Open Access Button</h2> \
+    <h2 style="text-align:center;">Get PDF</h2> \
     <div id="loading_area" style="margin:5px 0px 10px -10px;"> \
       <img id="icon_loading" style="width:150px;margin:20px auto 10px 110px;" src="' + oab.site_address + '/static/imperial/img/spin_orange.svg"> \
       <p style="text-align:center;">We\'re looking!<br> Give us a moment.</p> \
@@ -17,19 +17,19 @@ var oabutton_bookmarklet = function(apikey) {
     form += 'width:330px;'
   }
   form += '"> \
-        <img style="height:100px;width:80px;margin-bottom:12px;" src="' + oab.site_address + '/static/imperial/img/oab_article.png"><br> \
-        Unavailable \
+        <img style="height:100px;width:80px;margin-bottom:12px;" src="' + oab.site_address + '/static/imperial/img/oab_article.png"><br>\
+        <span id="iconarticletext">Unavailable</span>\
       </a>';
   if (oab.dataable) {
     form += '<a href="#" target="_blank" id="icondata" class="need" data-type="data" alt="Sorry, we couldn\'t find any related data. Click to start a new request" title="Sorry, we couldn\'t find any related data. Click to start a new request"> \
-        <img style="height:110px;width:80px;margin-top:2px;" src="' + oab.site_address + '/static/imperial/img/oab_data.png"><br> \
-        Unavailable \
+        <img style="height:110px;width:80px;margin-top:2px;" src="' + oab.site_address + '/static/imperial/img/oab_data.png"><br>\
+        <span id="icondatatext">Unavailable</span>\
       </a>';
   }
   if (lib) {
-    form += '<div style="clear:both;margin:0px 0px 11px 10px;padding:5px;border-radius:3px;" id="library"></div> \
-      <a href="#" target="_blank" id="iconill" class="need" style="width:330px;height:50px;margin-top:10px;" data-type="ill" data-action="ill" alt="Sorry, we couldn\'t find it in your library. Click to start an inter-library loan request" title="Sorry, we couldn\'t find it in your library. Click to start an inter-library loan request"> \
-        We can\'t find this at ' + lib + ' Library. Request an inter-library loan\
+    form += '<div style="clear:both;margin:0px 0px 11px 10px;padding:5px;border-radius:3px;background-color:#398bc5;" id="library" class="collapse"></div> \
+      <a href="#" target="_blank" style="margin:3px 0px 10px 11px;font-size:0.7em;" id="ill" alt="Click to start an inter-library loan request" title="Click to start an inter-library loan request"> \
+        Not the right item? Request an inter-library loan \
       </a>';
   }
   form += '</div> \
