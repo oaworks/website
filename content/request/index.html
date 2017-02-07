@@ -1,5 +1,5 @@
 <script type="text/javascript" src="//static.cottagelabs.com/d3/d3.v4.min.js"></script>
-<script type="text/javascript" src="//static.cottagelabs.com/holdernew/use/oabutton_request.js"></script>
+<script type="text/javascript" src="/static/oabutton_request_holder.js"></script>
 <script type="text/javascript" src="//static.cottagelabs.com/holdernew/use/export.js"></script>
 <script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/filters.js"></script>
 <script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/export.js"></script>
@@ -152,6 +152,23 @@
               <div class="holder filters"></div>
             </div>
             <hr>
+            <div class="row" style="margin-bottom:20px;">
+              <div class="col-md-6">
+                <div class="input-group">
+                  <div class="input-group-btn">
+                    <button class="btn btn-disabled btn-title">Results from:</button>
+                  </div>
+                  <input type="text" class="form-control holder from" do="from" style="height:36px;">
+                  <div class="input-group-btn">
+                    <button class="btn btn-disabled btn-title" style="border-radius:0px;">To:</button>
+                  </div>
+                  <input type="text" class="form-control holder to" do="to" style="height:36px;">
+                </div>
+              </div>
+              <div class="col-md-6">
+                TIME SLIDER TO GO HERE
+              </div>
+            </div>
             <div class="row">
               <div class="col-md-6">
                 <div class="btn-toolbar" role="toolbar" aria-label="...">

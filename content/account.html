@@ -110,6 +110,7 @@ jQuery(document).ready(function() {
     chrome.webstore.install(undefined, function() { window.location = window.location.href }, function(err) { console.log('install error'); console.log(err); });
   }
   $('#chromeinstall').bind('click',chromeinstall);
+  $('.chromeinstall').bind('click',chromeinstall);
 
   $('#viewrequests').bind('click',function(e) {
     $(this).attr('href','/request?q=user.username.exact:'+clogin.user.account.username);
@@ -152,12 +153,14 @@ jQuery(document).ready(function() {
     </div>
     
     <div class="col-md-6">
-      <p style="font-size:190px;line-height:10px;color:#398bc5;text-align:center;margin-top:60px;">
+      <p style="font-size:190px;line-height:10px;color:#398bc5;text-align:center;margin-top:52px;">
         <a href="/account"><i class="glyphicon glyphicon-download"></i></a>
       </p>
       <p style="text-align:center;">
-        <a href="/account">Install our browser extension or grab our bookmarklet
-          to quickly search from any web page</a>
+        Signing up gives you extra control over requests, 
+        and access to all of our plugins and bookmarklets - 
+        or you can get our chrome plugin right now:
+        <a style="margin-top:5px;" class="btn btn-action btn-block chromeinstall" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">Get Open Access Button for Chrome</a>
       </p>
     </div>
   </div>
@@ -232,7 +235,7 @@ jQuery(document).ready(function() {
         <p><small>Having trouble? See instructions for <a href="http://www.howtogeek.com/231775/how-to-install-and-use-bookmarklets-in-microsoft-edge/" target="_blank" >Edge</a>, <a href="https://support.mozilla.org/en-US/kb/bookmarklets-perform-common-web-page-tasks#w_how-do-i-install-a-bookmarklet" target="_blank" >Firefox</a> and <a href="https://mreidsma.github.io/bookmarklets/installing.html" target="_blank" >Safari</a>.</small>
         </p>
       </div>
-      <a class="btn btn-action btn-block" style="margin-top:5px;" href="/request/new">Use the Button in your Browser</a>
+      <a class="btn btn-action btn-block" style="margin-top:5px;" href="/find">Use the Button in your Browser</a>
       <a class="btn btn-action btn-block" style="margin-top:5px;" id="viewrequests" href="/request">View your requests</a>
     </div>
 

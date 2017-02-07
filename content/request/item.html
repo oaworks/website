@@ -305,18 +305,13 @@
       }
     }
 
-    var results = function(data) {
+    var record = function(rec) {
       var out = '';
-      if (data.hits && data.hits.hits) {
-        for ( var r in data.hits.hits ) {
-          var s = data.hits.hits[r]._source;
-          out += '<blockquote>';
-          out += s.username ? s.username : s.email;
-          out += ' supports this request';
-          if (s.story) out += ':<br>' + s.story
-          out += '</blockquote>';
-        }
-      }
+      out += '<blockquote>';
+      out += rec.username ? rec.username : rec.email;
+      out += ' supports this request';
+      if (rec.story) out += ':<br>' + rec.story
+      out += '</blockquote>';
       $('#stories').html(out);
     }
 
@@ -346,10 +341,9 @@
           }
         }
       },
+      ui:false,
       pushstate: false,
-      results: {
-        default: results
-      }
+      record: record
     });
 
     var addsupport = function(event) {
