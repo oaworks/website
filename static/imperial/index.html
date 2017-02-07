@@ -15,10 +15,10 @@
 
     <p>
 
-    This is a demo of the Open Access Button Imperial bookmarklet.<br>
+    This is a demo of the Imperial Open Access Button bookmarklet.<br>
       Drag the below link to your bookmarks bar to run it on your system. Please note, in the final version we can change
       <br>"Imperial Open Access Button" to anything else (e.g GetPDF or Get it now). <br>
-      (NOTE this is just on our dev system for now - do not roll this bookmarklet out widely)
+      (NOTE this is on our dev system - do not roll this bookmarklet out widely)
     </p>
 
     <p>
@@ -26,13 +26,12 @@
     </p>
 
     <p style="max-width:600px;">
-      This page is currently using this article title as a test (showing an item that is available in Spiral):
-      <br>Yersinia pestis TIR-domain protein forms dimers that interact with the human adaptor protein MyD88. On the right demonstrates how it looks when opened.<br>
-
+      This page is currently using "Yersinia pestis TIR-domain protein forms dimers that interact with the human adaptor protein MyD88" as a test (showing an item that is available in Spiral).
+      <br> See right for a demonstration of how it looks when opened.<br>
 
       <h1>Example Articles</h1>
 
-      * Here is a page with an article in a journal that Imperial do not appear to subscribe to, and that is not available anywhere (so it offers to start an ILL):
+      * Here is a page with an article in a journal that Imperial do not appear to subscribe to, and that is not available anywhere (so it immediately offers to start an ILL):
       <br><a target="_blank" href="http://stm.sciencemag.org/content/9/375/eaah6510">http://stm.sciencemag.org/content/9/375/eaah6510</a>
 
       <br><br>
@@ -49,12 +48,12 @@
       <br>* if an item is available in the local repo, show a blue "available" link to item
       <br>* else if relevant journal subscription appears to be available, show a blue link saying to sign in to gain access (PROBLEM - READ BELOW)
       <br>* else if available locally in library locations, show a blue "available locally" link, when clicked, lists the status and locations
-      <br>* else if available anywhere else by the usual OABUTTON lookup, show blue "open article" link that opens the alternate source
+      <br>* else if available anywhere else by the usual Open Access Button lookup, show blue "open article" link that opens the alternate source
+      <br>* else if we find nothing, the button is red instead of blue and prompts to start an ILL
       <br>* a general error (if you see one, let us know how to reproduce it)
 
       <br><br>
       In each case above (except errors), there will also be a small link text offering to start an ILL if we appear to have the wrong item.
-      <br>In the case where we could find nothing, the big link is red instead of blue and prompts to start an ILL.
 
       <br><br>
       <h2>Problem</h2>
@@ -63,22 +62,24 @@
       the journal "Science" even though presumably Imperial do subscribe to it - because there are many other journals with the word "science" in their title,
       and starting with the word "science". Until I can find a reliable way to search exlibris for the actual journal title, we will have a problem here.
 
-      <h2>Changes from Mockups</h2>
+      <h2>Major changes from mock-ups</h2>
 
-* We've simplied some stages as the request system isn't intergrated here (and as we continue to refine concepts)<br>
-* We've allowed titles to be edited as there is no other point to correct these in the process currenlty. In our production button we have pages where these can be later checked and edited - we haven't yet shipped that for these yet. That can come after our sprint for the request system.<br>
-* Copy isn't refined yet.<br>
-* We're currently displaying where in the library physical items are, this probably shouldn't be included in future!<br>
+<br>* We've simplied some stages as the request system isn't intergrated here (and as we continue to refine concepts)
+<br>* We've allowed titles to be edited as there is no other point to correct these in the process currently. In our public button we have pages where these can be later checked and edited - we haven't yet shipped that for these yet. That can come after our sprint for the request system.
+<br>* Copy isn't refined yet.
+<br>* We're currently displaying where in the library physical items are, this probably shouldn't be included in future!
 
 <h2>Path fowards</h2>
 
-* Refining copy and appearance<br>
-* Working on the Exlibris search<br>
-* Implementing the request system into the tool (as discussed)<br>
-* Removing physical location box<br>
-* Other changes from Imperial feedback<br>
-* we need a link to an item that is physically in Imperial - but where would such an item have a web page we can read from?<br>
-* need a link to an item in a journal Imperial subscribes to, and that we can actually find in exlibris (see below re PROBLEM)<br>
+The currently bookmarklet should demonstrate roughly what we're able to do although is clearly not a polished product. Thankfully, we were able to do everything we expected to some degree (bar the problme noted above). To take things forward we would:
+
+<br>* Refining copy and appearance
+<br>* Working on improving Exlibris search
+<br>* Implementing the request system into the tool (as discussion suggests we should)
+<br>* Removing the physical location box
+<br>* Other changes from your feedback
+<!-- <br>* We need a link to an item that is physically in Imperial - but where would such an item have a web page we can read from?
+<br>* need a link to an item in a journal Imperial subscribes to, and that we can actually find in exlibris (see below re PROBLEM)-->
     </p>
 
   </body>
