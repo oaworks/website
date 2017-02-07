@@ -10,9 +10,8 @@
   </head>
   <body>
     <p>
-      I am a test of the oabutton Imperial bookmarklet.<br>
-      On the right demonstrates how it looks.<br>
-      Drag the below link to your bookmarks bar<br>
+      This is a test of the Open Access Button Imperial bookmarklet.<br>
+      Drag the below link to your bookmarks bar to run it on your system. Please note, in the final version we can change "Imperial Open Access Button" to anything else (e.g GetPDF or Get it now). <br>
       (NOTE this is just on our dev system for now - do not roll this bookmarklet out widely)
     </p>
 
@@ -22,42 +21,49 @@
 
     <p style="max-width:600px;">
       This page is currently using this article title as a test (showing an item that is available in Spiral):
-      <br>Yersinia pestis TIR-domain protein forms dimers that interact with the human adaptor protein MyD88
-      
+      <br>Yersinia pestis TIR-domain protein forms dimers that interact with the human adaptor protein MyD88. On the right demonstrates how it looks when opened.<br>
+
+
+      <h1>Example Articles<h1>
+
       <br><br>
       Here is a page with an article in a journal that Imperial do not appear to subscribe to, and that is not available anywhere (so it offers to start an ILL):
       <br><a target="_blank" href="http://stm.sciencemag.org/content/9/375/eaah6510">http://stm.sciencemag.org/content/9/375/eaah6510</a>
-      
+
       <br><br>
       Here is an article that is just generically open anyway, and (presumably) not in Spiral and not somewhere that Imperial subscribe to:
       <br><a target="_blank" href="http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0169629">http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0169629</a>
-      
+
       <br><br>
-      Here is an article in a journal that Imperial do subscribe to, although we do not find the journal itself (see PROBLEM), we DO find 
+      Here is an article in a journal that Imperial do subscribe to, although we do not find the journal itself (see PROBLEM, below), we do find
       that it is available to read locally:
       <br><a target="_blank" href="https://www.sciandmed.com/sm/journalviewer.aspx?issue=1207&article=2077">https://www.sciandmed.com/sm/journalviewer.aspx?issue=1207&article=2077</a>
       <br><br>
-      TODO need a link to an item that is physically in Imperial - but where would such an item have a web page we can read from?
-      <br>TODO need a link to an item in a journal Imperial subscribes to, and that we can actuall find in exlibris (see below re PROBLEM)
+      TODO: need a link to an item that is physically in Imperial - but where would such an item have a web page we can read from?
+      <br>TODO: need a link to an item in a journal Imperial subscribes to, and that we can actually find in exlibris (see below re PROBLEM)
 
       <br><br>
-      The states are:
+      The possible results the bookmarklet will currently return are:
       <br>* if an item is available in the local repo, show a blue "available" link to item
       <br>* else if relevant journal subscription appears to be available, show a blue link saying to sign in to gain access (PROBLEM - READ BELOW)
       <br>* else if available locally in library locations, show a blue "available locally" link, when clicked, lists the status and locations
       <br>* else if available anywhere else by the usual OABUTTON lookup, show blue "open article" link that opens the alternate source
-      
+
       <br><br>
       In each case above, there will also be a small link text offering to start an ILL if we appear to have the wrong item.
       <br>In the case where we could find nothing, the big link is red instead of blue and prompts to start an ILL.
-            
+
+      <br>* a general error (if you see one, let us know how can reproduce it)
+
+
       <br><br>
-      PROBLEM: exlibris search for journals is not reliably returning the correct journal. For example, a search for the journal "science" from a page like 
-      <a href="http://science.sciencemag.org/content/293/5530/629" target="_blank">http://science.sciencemag.org/content/293/5530/629</a> does NOT return 
-      the journal "Science" even though presumably Imperial do subscribe to it - because there are many other journals with the word "science" in their title, 
+      <h2>Problem</h2>
+      Exlibris search for journals is not reliably returning the correct journal. For example, a search for the journal "science" from a page like
+      <a href="http://science.sciencemag.org/content/293/5530/629" target="_blank">http://science.sciencemag.org/content/293/5530/629</a> does NOT return
+      the journal "Science" even though presumably Imperial do subscribe to it - because there are many other journals with the word "science" in their title,
       and starting with the word "science". Until I can find a reliable way to search exlibris for the actual journal title, we will have a problem here.
-      
+
     </p>
-    
+
   </body>
 </html>
