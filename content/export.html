@@ -107,7 +107,7 @@
     if (!clogin.loggedin()) window.location = '/account?next=/export';
 
     var api = 'https://api.openaccessbutton.org';
-    if (window.location.host.indexOf('openaccessbutton.org') === -1) {
+    if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
       api = 'https://dev.api.cottagelabs.com/service/oab';
       clogin.api = 'https://dev.api.cottagelabs.com/accounts';
     }
@@ -182,7 +182,7 @@
       var size = 10000;
       var fields = {
         account: ['_id','created_date','emails.address','profile.name','service.openaccessbutton.profile.affiliation','service.openaccessbutton.profile.profession','roles.openaccessbutton','username'],
-        request: ['_id','created_date','type','count','status','title','url','doi','journal','publisher','email','user.username'],
+        request: ['_id','created_date','type','count','status','title','url','doi','journal','publisher','email','user.username','story','rating'],
         support: ['created_date','url','type','story','username','rid'],
         availability: ['created_date','username','url','discovered.article','discovered.data','plugin']
       }

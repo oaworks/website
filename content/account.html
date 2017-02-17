@@ -17,8 +17,7 @@ jQuery(document).ready(function() {
   }
 
   var savevalidate = function() {
-    //if ( $('#username').val() && $('#profile\\.name').val() && $('#service\\.openaccessbutton\\.profile\\.profession').val() && $('#service\\.openaccessbutton\\.profile\\.confirm_public').is(':checked') && $('#service\\.openaccessbutton\\.profile\\.confirm_terms').is(':checked') ) {
-    if ( $('#username').val() && $('#profile\\.name').val() && $('#service\\.openaccessbutton\\.profile\\.profession').val() ) {
+    if ( $('#profile\\.firstname').val() && $('#profile\\.lastname').val() && $('#service\\.openaccessbutton\\.profile\\.profession').val() ) {
       return true;
     } else {
       $('#cloginSaveMessages').html('<p>Some information is missing. Please confirm you have completed all the fields and checked the boxes. Then save again.</p>');
@@ -27,8 +26,9 @@ jQuery(document).ready(function() {
   }
   var afterlogin = function() {
     //$('#downloads').hide();
-    if (clogin.user.account.username) {
-      $('.username').html(clogin.user.account.username);
+    if (clogin.user.account.username || (clogin.user.account.profile && clogin.user.account.profile.firstname ) ) {
+      var hl = clogin.user.account.profile.firstname ? clogin.user.account.profile.firstname : clogin.user.account.username;
+      $('.username').html(hl);
       if (clogin.next) {
         $('#tonext').attr('href',clogin.next);
         $('#tonextalert').show();
@@ -43,35 +43,35 @@ jQuery(document).ready(function() {
     try {
       var p = clogin.user.account.profile ? clogin.user.account.profile : {};
       var s = clogin.user.account.service.openaccessbutton.profile ? clogin.user.account.service.openaccessbutton.profile : {};
-      if (!clogin.user.account.username || !p.name || !s.profession || !s.confirm_public || !s.confirm_terms ) {
-        if (clogin.user.account.username) {
-          $('#username').val(clogin.user.account.username);
-        }
-        if (p.name) $('#profile\\.name').val(p.name);
+      if (!p.firstname || !p.lastname || !s.profession || !s.confirm_public || !s.confirm_terms ) {
+        if (p.firstname) $('#profile\\.firstname').val(p.firstname);
+        if (p.lastname) $('#profile\\.lastname').val(p.lastname);
         //if (s.orcid) $('#service\\.openaccessbutton\\.profile\\.orcid').val(s.orcid);
         if (s.affiliation) $('#service\\.openaccessbutton\\.profile\\.affiliation').val(s.affiliation);
         if (s.profession) $('#service\\.openaccessbutton\\.profile\\.profession').val(s.profession);
+        if (s.confirm_public && s.confirm_terms) $('#agreeterms').hide();
         $('#setinfo').show();
+        $('#sayhello').hide();
       } else {
         //$('#downloads').show();
       }
     } catch(err) {
       $('#setinfo').show();
+      $('#sayhello').hide();
     }
   }
   var aftersave = function() {
     $('#setinfo').hide();
     //$('#downloads').show();
-    $('.username').html($('#username').val());
     if (clogin.next) {
       $('#tonext').attr('href',clogin.next);
       $('#tonextalert').show();
     }
   }
   var api = 'https://api.cottagelabs.com/accounts';
-  if (window.location.host.indexOf('openaccessbutton.org') === -1) {
+  if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
     api = 'https://dev.api.cottagelabs.com/accounts';
-    $('#bookmarklet').attr('href',$('#bookmarklet').attr('href').replace('YYYY','http://oab.test.cottagelabs.com'));
+    $('#bookmarklet').attr('href',$('#bookmarklet').attr('href').replace('YYYY','https://dev.openaccessbutton.org'));
   } else {
     $('#bookmarklet').attr('href',$('#bookmarklet').attr('href').replace('YYYY','https://openaccessbutton.org'));
   }
@@ -81,15 +81,6 @@ jQuery(document).ready(function() {
     $('#cloginEmail').val(window.location.href.split('next=')[0].split('email=')[1]);
     setTimeout(function() { $('#cloginSubmit').trigger('click'); }, 100);
   }
-  $('#cloginEmail').bind('keyup',function(e) {
-    if (e.keyCode === 13) {
-      $('#cloginToken').attr('placeholder','Check ' + $('#cloginEmail').val() );
-      $('#cloginSubmit').trigger('click');
-    }
-  });
-  $('#cloginSubmit').bind('click',function(e) {
-    $('#cloginToken').attr('placeholder','Check ' + $('#cloginEmail').val() );
-  });
 
   var mobileCheck = function() {
     // checks if browser is a mobile or tablet browser
@@ -113,7 +104,7 @@ jQuery(document).ready(function() {
   $('.chromeinstall').bind('click',chromeinstall);
 
   $('#viewrequests').bind('click',function(e) {
-    $(this).attr('href','/request?q=user.username.exact:'+clogin.user.account.username);
+    $(this).attr('href','/request?q=user.id:'+clogin.user.account._id);
   });
 
   var a = window.location.href.indexOf('a=') !== -1 ? window.location.href.split('a=')[1].split('&')[0] : undefined;
@@ -123,17 +114,17 @@ jQuery(document).ready(function() {
 
 <div class="container-fluid notcloggedin" id="cloginArea">
   <div class="row">
-    <div class="col-md-6">
-      <div class="jumbotron" style="margin-top:30px;">
+    <div class="col-md-8 col-md-offset-2">
+      <div style="margin-top:30px;">
         <div id="cloginEmailArea">
           <h2 style="text-align:center;">Sign in to your account</h2>
           <p style="text-align:center;">
-            No account yet? Just enter your email address to get started.<br>
+            No account yet? <br>
+            Just enter your email address to get started.<br>
             We use a password free system.
-
           </p>
           <input type="text" class="form-control" id="cloginEmail" placeholder="Enter your email address">
-          <button id="cloginSubmit" type="submit" class="btn btn-action btn-block" style="border:1px solid white;margin-top:10px;">Sign up / Login</button>
+          <button id="cloginSubmit" type="submit" class="btn btn-action btn-block" style="margin-top:10px;">Sign up / Login</button>
         </div>
         <div id="cloginTokenArea" style="display:none;">
           <h2 style="text-align:center;">Go check your email!</h2>
@@ -144,24 +135,30 @@ jQuery(document).ready(function() {
           <input type="text" class="form-control" id="cloginToken" placeholder="Enter your login code">
           <p style="text-align:center;">
             <br>If you don't receive an email within a few minutes, check your spam folder. Contact us at
-            <a style="color:white;" href="mailto:help@openaccessbutton.org">help@openaccessbutton.org</a> if you don't receive an email.
+            <a href="mailto:help@openaccessbutton.org">help@openaccessbutton.org</a> if you don't receive an email.
           </p>
         </div>
         <div id="cloginMessages" style="margin-top:5px;"></div>
         <div id="cloginLoading" style="display:none;"><img style="height:30px;" src="//static.cottagelabs.com/spinner.gif"></div>
       </div>
-    </div>
-    
-    <div class="col-md-6">
-      <p style="font-size:190px;line-height:10px;color:#398bc5;text-align:center;margin-top:52px;">
-        <a href="/account"><i class="glyphicon glyphicon-download"></i></a>
-      </p>
-      <p style="text-align:center;">
-        Signing up gives you extra control over requests, 
-        and access to all of our plugins and bookmarklets - 
-        or you can get our chrome plugin right now:
-        <a style="margin-top:5px;" class="btn btn-action btn-block chromeinstall" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">Get Open Access Button for Chrome</a>
-      </p>
+
+      <div class="row" style="margin-top:70px;margin-bottom:100px;">
+        <div class="col-md-2">
+          <p style="font-size:80px;line-height:10px;color:#398bc5;text-align:center;">
+            <i class="glyphicon glyphicon-download"></i>
+          </p>          
+        </div>
+        <div class="col-md-10">
+          <p>
+            Signing up gives you extra control over requests, 
+            and access to all of our plugins and bookmarklets - 
+            or you can 
+            <a style="margin-top:5px;" class="chromeinstall" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">
+              get our chrome plugin right now
+            </a>
+          </p>          
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -169,7 +166,7 @@ jQuery(document).ready(function() {
 
 <div class="container-fluid cloggedin" id="userinfo" style="display:none;">
   <div id="tonextalert" class="row" style="display:none;">
-    <div class="col-md-12">
+    <div class="col-md-8 col-md-offset-2">
       <div class="alert alert-info">
         <h4><a id="tonext" href="">Click here to return to the page you were viewing.</a></h4>
       </div>
@@ -177,51 +174,44 @@ jQuery(document).ready(function() {
   </div>
 
   <div class="row">
-    <div class="col-md-12">
-      <div class="jumbotron" style="margin-top:-10px;">
-        <h1>Hello <span class="username"></span></h1>
-        <p><button id="cloginLogout" class="btn btn-danger" style="margin-bottom:5px;">Logout</button></p>
-        <p id="apikey" style="display:none;"></p>
+    <div class="col-md-8 col-md-offset-2">
+      <h2 id="sayhello">Hello <span class="username"></span></h2>
+      <p id="apikey" style="display:none;"></p>
 
-        <div id="setinfo" style="display:none;">
-          <h1>Thanks for signing up!</h1>
-          <p>We use these details to make article and data requests on your behalf.</p>
-          <input type="text" id="username" class="form-control cloginSave" placeholder="Username (required)">
-          <input style="margin-top:5px;" type="text" id="profile.name" class="form-control cloginSave" placeholder="Full name (required)">
-          <input style="margin-top:5px;" type="text" id="service.openaccessbutton.profile.affiliation" class="form-control cloginSave" placeholder="Affiliation (University name, Business name etc)">
-          <select id="service.openaccessbutton.profile.profession" class="form-control cloginSave" style="margin-top:5px;">
-            <option value="">Profession (required)</option>
-            <option value="Student">Student</option>
-            <option value="Health professional">Health professional</option>
-            <option value="Patient">Patient</option>
-            <option value="Academic">Academic</option>
-            <option value="Researcher">Researcher</option>
-            <option value="Librarian">Librarian</option>
-            <option value="Other">Other</option>
-          </select>
-          <p>
-            By signing up
-            <!--<input id="service.openaccessbutton.profile.confirm_public" type="checkbox" class="cloginSave">-->
-            I understand that information obtained by the Button will be public, and that
-          <!--</p>
-          <p>-->
-            <!--<input id="service.openaccessbutton.profile.confirm_terms" type="checkbox" class="cloginSave">-->
-            I agree to the Open Access Button
-            <a target="_blank" href="/privacy" style="color:white;text-decoration:underline;">privacy policy</a>
-            and
-            <a target="_blank" href="/terms" style="color:white;text-decoration:underline;">terms of service.</a>
-          </p>
-          <button id="cloginSave" type="button" class="btn btn-action" style="margin-top:5px;border:1px solid white;">Save your details</button>
-          <div id="cloginSaveMessages"></div>
-        </div>
+      <div id="setinfo" style="display:none;">
+        <h1>Thanks for signing up!</h1>
+        <p>We use these details to make article and data requests on your behalf.</p>
+        <input style="margin-top:5px;" type="text" id="profile.firstname" class="form-control cloginSave" placeholder="First name (required)">
+        <input style="margin-top:5px;" type="text" id="profile.lastname" class="form-control cloginSave" placeholder="Family name (required)">
+        <input style="margin-top:5px;" type="text" id="service.openaccessbutton.profile.affiliation" class="form-control cloginSave" placeholder="Affiliation (University name, Business name etc)">
+        <select id="service.openaccessbutton.profile.profession" class="form-control cloginSave" style="margin-top:5px;">
+          <option value="">Profession (required)</option>
+          <option value="Student">Student</option>
+          <option value="Health professional">Health professional</option>
+          <option value="Patient">Patient</option>
+          <option value="Researcher">Researcher</option>
+          <option value="Librarian">Librarian</option>
+          <option value="Other">Other</option>
+        </select>
+        <p id="agreeterms">
+          By signing up
+          I understand that information obtained by the Button will be public, and that
+          I agree to the Open Access Button
+          <a target="_blank" href="/privacy" style="text-decoration:underline;">privacy policy</a>
+          and
+          <a target="_blank" href="/terms" style="text-decoration:underline;">terms of service.</a>
+        </p>
+        <button id="cloginSave" type="button" class="btn btn-action" style="margin-top:5px;">Save your details</button>
+        <div id="cloginSaveMessages"></div>
       </div>
+      
     </div>
   </div>
 </div>
 
 <div class="container-fluid cloggedin" id="downloads" style="margin-bottom:50px;">
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-8 col-md-offset-2">
       <h3>Get Started</h3>
       <div id="plugin_messages"></div>
       <a id="chromeinstall" style="margin-top:5px;" class="btn btn-action btn-block dl ch" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">Get your Open Access Button</a>
@@ -237,9 +227,7 @@ jQuery(document).ready(function() {
       </div>
       <a class="btn btn-action btn-block" style="margin-top:5px;" href="/find">Use the Button in your Browser</a>
       <a class="btn btn-action btn-block" style="margin-top:5px;" id="viewrequests" href="/request">View your requests</a>
-    </div>
 
-    <div class="col-md-6">
       <h3>Instructions</h3>
       <p>We’ve worked hard to make the Button easy to use. Here’s what you need to know:</p>
       <ol>
@@ -248,6 +236,7 @@ jQuery(document).ready(function() {
         <li>If you need help, email us at <a href="mailto:help@openaccessbutton.org">help@openaccessbutton.org</a></li>
       </ol>
       <p>Want to test it out? Try searching for <a href="http://science.sciencemag.org/content/293/5530/629" target="_blank">this article</a>.</p>
+      <p><a id="cloginLogout" class="btn btn-warning" href="#">Logout</a></p>
     </div>
   </div>
 </div>

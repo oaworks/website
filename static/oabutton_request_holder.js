@@ -1,20 +1,49 @@
 
 $.fn.holder.use.oabutton = {
-  url: "https://api.openaccessbutton.org/requests",
+  //url: "https://api.openaccessbutton.org/requests",
+  url: "https://dev.api.cottagelabs.com/service/oab/requests",
   pushstate: false,
   sticky: true,
   datatype: 'JSON',
   size:500,
+  scroll:true,
   sort:[{createdAt:'desc'}],
   fields: ['status','type','user.profession','user.affiliation','_id','url','created_date','createdAt','title','email','user.username','location.geo.lat','location.geo.lon','story','count'],
   facets: {
     status: { terms: { field: "status.exact" } },
     type: { terms: { field: "type.exact" } },
     //plugin: { terms: { field: "plugin.exact", size: 100 } },
-    "user": { terms: { "field": "user.username.exact", size: 1000 } },
-    "author email": { terms: { field: "email.exact", size: 1000 } },
     keyword: { terms: { field: "keywords.exact", size: 1000 } },
     journal: { terms: { field: "journal.exact", size: 1000 } }
+  },
+  
+  ranges: {
+    createdAt: {
+      name: 'Created',
+      date: {
+        value: function(date) {
+          if (typeof date === 'string') date = parseInt(date);
+          var dv = date.toString().length > 10 ? Math.floor(date/1000) : date;
+          dv = dv - dv%86400; // also converts to start of current day
+          return dv;
+        },
+        display: function(date) {
+          if (typeof date === 'string') date = parseInt(date);
+          if (date.toString().length <= 10) date = date * 1000;
+          var d = new Date(date);
+          var dd = d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear();
+          return dd;
+        },
+        submit: function(date,max) {
+          if (typeof date === 'string') date = parseInt(date);
+          var ds = date.toString().length <= 10 ? date * 1000 : date;
+          if (max) ds += 86400; // to make sure we get things created during the max day
+          return ds;
+        }
+      },
+      step: 86400,
+      min: 1356998400
+    }
   },
   
   placeholder: function() {
@@ -28,29 +57,30 @@ $.fn.holder.use.oabutton = {
 
   record: function(rec,idx) {
     var sts = {
-      moderate: {text:'Awaiting moderation - nearly ready :)',color:'#ddd',highlight:'grey'},
-      help: {text:'We need more info - can you help?',color:'#ddd',highlight:'#f04717'},
-      progress: {text:'In progress - read more, support it, provide it!',highlight:'#212f3f'},
+      moderate: {text:'Awaiting moderation - nearly ready :)',color:'#eee',highlight:'grey'},
+      help: {text:'We need more info - can you help?',color:'#fbdad0',highlight:'#f04717'},
+      progress: {text:'In progress - read more, support it, provide it!',highlight:'grey',color:'white'},
       received: {text:'Success! This item has made available!',highlight:'#5cb85c',color:'#dcefdc'},
-      refused: {text:'Refused - can you help us try again?',highlight:'#d9534f',color:'#f1c2c0'}
+      refused: {text:'Refused - can you help us try again?',highlight:'#d9534f',color:'#f1c2c0'},
+      closed: {text:'Closed - this request could not be completed',highlight:'grey',color:'#eee'}
     }
     var color = rec.status && sts[rec.status] && sts[rec.status].color ? sts[rec.status].color : '#eee';
     var status = rec.status && sts[rec.status] && sts[rec.status].text ? sts[rec.status].text : rec.status;
     var highlight = rec.status && sts[rec.status] && sts[rec.status].highlight ? sts[rec.status].highlight : '#eee';
     var text = rec.status && sts[rec.status] && sts[rec.status].highlight ? sts[rec.status].highlight : 'blue';
-    var re = '<div class="well" style="border-width:3px;border-color:' + highlight + ';margin:30px auto 0px auto;background-color:' + color + '">';
+    var re = '<div class="well" style="margin:30px auto 0px auto;background-color:' + color + '">';
     re += '<p><b>';
     if (rec.type && rec.type === 'data') re += 'Data for ';
     re += '<a href="/request/' + rec._id + '">' + rec.title + '</a></b></p>';
-    re += '<blockquote>';
-    re += '<a style="color:#383838;" href="/request/' + rec._id + '">' + rec.story + '</a><cite>';
-    re += 'from ' + rec['user.username'];
+    if (rec.story && ( parseInt(rec.rating) >= 3 || rec.rating === undefined ) ) re += '<p style="padding:10px 0px 10px 30px;"><a style="color:#383838;font-style:italic;font-weight:bold;font-size:1.2em;" href="/request/' + rec._id + '">' + rec.story + '</a></p>';
+    re += '<p>from ';
+    re += rec['user.firstname'] ? rec['user.firstname'] : rec['user.username'];
     if (rec['user.profession'] && rec['user.profession'] !== 'Other') re += ', ' + rec['user.profession'];
     if (rec['user.affiliation'] && rec['user.affiliation'].length > 1) re += ' at ' + rec['user.affiliation'];
     re += rec.created_date ? ', on ' + rec.created_date.split(' ')[0].split('-').reverse().join('/') : '';
     if (rec.count && rec.count > 1) re += '<br>' + rec.count + ' people support this request';
-    re += '<br><a href="/request/' + rec._id + '" style="color:' + text + ';">' + status + '</a></cite>';
-    re += '</blockquote></div>';
+    re += '<br><a href="/request/' + rec._id + '" style="color:' + text + ';">' + status + '</a></p>';
+    re += '</div>';
     return re;
   },
   transform: function(rec) {

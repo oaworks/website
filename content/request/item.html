@@ -95,7 +95,7 @@
 <script>
   jQuery(document).ready(function() {
     var api = 'https://api.openaccessbutton.org';
-    if (window.location.host.indexOf('openaccessbutton.org') === -1) {
+    if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
       api = 'https://dev.api.cottagelabs.com/service/oab';
       clogin.api = 'https://dev.api.cottagelabs.com/accounts';
     }
@@ -114,6 +114,7 @@
       var data = {};
       if ( $('#email').length ) data.email = $('#email').val();
       if ( $('#status').length ) data.status = $('#status').val();
+      if ( $('#rating').length ) data.rating = $('#rating').val();
       if ( $('#url').length ) data.url = $('#url').val();
       if ( $('#title').length ) data.title = $('#title').val();
       if ( $('#doi').length ) data.doi = $('#doi').val();
@@ -211,9 +212,15 @@
       // add the details
       var dets = '';
       dets += '<p>This request was created on ' + format(record.createdAt);
-      if (record.user && (record.user.username || record.user.email)) {
+      if (record.user && (record.user.username || record.user.firstname || record.user.email)) {
         dets += ' by ';
-        dets += record.user.username ? record.user.username : record.user.email;
+        if (record.user.firstname) {
+          dets += record.user.firstname;
+        } else if (record.user.username) {
+          dets += record.user.username;
+        } else {
+          dets += record.user.email;
+        }
       }
       if (record.story) dets += ' who said:<br><blockquote>' + record.story + '</blockquote><br>';
       dets += '</p>';
@@ -232,13 +239,15 @@
         dets += 'Unfortunately this has been refused by ' + record.email + ' - can you provide a new author email address to try? <input type="text" id="email" class="form-control" placeholder="Author email address">';
       } else if (record.status === 'received') {
         dets += '</p><p>This request has been successful!';
+      } else if (record.status === 'closed') {
+        dets += '</p><p>This request could not be completed, and has been closed';
       }
       dets += '</p>';
 
       // show admin controls
       if (isadmin) {
-        dets += ' <select id="status" class="form-control" style="background-color:orange;width:130px;display:inline;margin-right:20px;">';
-        var statuses = ['help','moderate','progress','hold','refused','received'];
+        dets += '<p><select id="status" class="form-control" style="background-color:orange;width:130px;display:inline;margin-right:20px;">';
+        var statuses = ['help','moderate','progress','hold','refused','received','closed'];
         for ( var s in statuses ) {
           dets += '<option value="' + statuses[s] + '"';
           if (record.status === statuses[s]) dets += ' selected="selected"';
@@ -249,14 +258,21 @@
         if (record.test === true) dets += ' checked="checked"';
         dets += '> <a style="margin-left:20px;" class="btn btn-warning btn-xs" href="/admin?request=' + rid + '">Email</a>';
         dets += ' <a style="margin-left:20px;" class="btn btn-warning btn-xs" href="/response/' + record.receiver + '">Responder</a>';
-        dets += ' <a style="margin-left:20px;" class="btn btn-danger btn-xs" id="delete" href="#">DELETE</a>';
+        dets += ' <span style="color:orange;margin-top:5px;">rating: <select id="rating" class="form-control" style="background-color:orange;width:80px;display:inline;">';
+        var ratings = ["0","1","2","3","4","5"];
+        for ( var r in ratings ) {
+          dets += '<option value="' + ratings[r] + '"';
+          if (record.rating === ratings[r]) dets += ' selected="selected"';
+          dets += '>' + ratings[r] + '</option>';
+        }
+        dets += '</select>';
         if (record.location && record.location.geo && record.location.geo.lat) {
           dets += '<p style="color:orange;margin-top:5px;">Location: ' + record.location.geo.lat + ',' + record.location.geo.lon
           if (record.location.location) dets += ' - ' + record.location.location;
           dets += '</p>';
         }
+        dets += '</p>';
       }
-      dets += '</p>';
 
       // show the email if at a stage where it can be changed, or if admin
       if (isadmin || iseditable) {
@@ -289,6 +305,9 @@
         dets += '<input type="submit" id="submitchanges" value="Save changes" class="btn btn-action btn-block">';
         dets += '<div id="savesuccess" style="display:none;"><p>Saved</p></div>';
       }
+      if (iscreator || isadmin) {
+        dets += ' <a style="margin-top:10px;" class="btn btn-danger btn-block btn-xs" id="delete" href="#">DELETE</a>';        
+      }
 
       // bind actions
       $('#edit').html(dets);
@@ -308,7 +327,13 @@
     var record = function(rec) {
       var out = '';
       out += '<blockquote>';
-      out += rec.username ? rec.username : rec.email;
+      if (rec.firstname) {
+        out += rec.firstname;
+      } else if (rec.username) {
+        out += rec.username;
+      } else {
+        out += rec.email;
+      }
       out += ' supports this request';
       if (rec.story) out += ':<br>' + rec.story
       out += '</blockquote>';

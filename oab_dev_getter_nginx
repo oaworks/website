@@ -2,7 +2,7 @@
 
 server {
   listen 80;
-  server_name oab.test.cottagelabs.com;
+  server_name oab.test.cottagelabs.com dev.openaccessbutton.org;
   root /home/cloo/dev/openresearchbutton/website;
 
   add_header Pragma public;
@@ -69,6 +69,49 @@ server {
   }
   location /blog/new-apps-find-free-access-to-scientific-and-scholarly-research {
     rewrite ^/.* https://medium.com/@openaccessbutton/21-october-2014-631d530eb8ca permanent;
+  }
+
+  location ~ /url/(?<url>.+) {
+    proxy_pass http://clapidev/api/academic/redirect?url=$url;
+    proxy_redirect off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+  location /doi {
+    proxy_pass http://clapidev/api/academic/redirect/doi;
+    proxy_redirect off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+  location /pmc {
+    proxy_pass http://clapidev/api/academic/redirect/pmc;
+    proxy_redirect off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+  location /pmid {
+    proxy_pass http://clapidev/api/academic/redirect/pmid;
+    proxy_redirect off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+  location /title {
+    proxy_pass http://clapidev/api/academic/redirect/title;
+    proxy_redirect off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+  location /citation {
+    proxy_pass http://clapidev/api/academic/redirect/citation;
+    proxy_redirect off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
   }
 
 }
@@ -152,6 +195,173 @@ server {
     rewrite ^/.* https://medium.com/@openaccessbutton/21-october-2014-631d530eb8ca permanent;
   }
 
+  location ~ /url/(?<url>.+) {
+    proxy_pass http://clapidev/api/academic/redirect?url=$url;
+    proxy_redirect off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+  location /doi {
+    proxy_pass http://clapidev/api/academic/redirect/doi;
+    proxy_redirect off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+  location /pmc {
+    proxy_pass http://clapidev/api/academic/redirect/pmc;
+    proxy_redirect off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+  location /pmid {
+    proxy_pass http://clapidev/api/academic/redirect/pmid;
+    proxy_redirect off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+  location /title {
+    proxy_pass http://clapidev/api/academic/redirect/title;
+    proxy_redirect off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+  location /citation {
+    proxy_pass http://clapidev/api/academic/redirect/citation;
+    proxy_redirect off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+
+}
+
+server {
+  listen 443;
+  server_name dev.openaccessbutton.org;
+  root /home/cloo/dev/openresearchbutton/website;
+
+  ssl on;
+  ssl_certificate /etc/letsencrypt/live/dev.openaccessbutton.org/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/dev.openaccessbutton.org/privkey.pem;
+  ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+  ssl_ciphers "HIGH:!aNULL:!MD5 or HIGH:!aNULL:!MD5:!3DES";
+  ssl_prefer_server_ciphers on;
+  ssl_stapling on;
+
+  add_header Pragma public;
+  add_header Cache-Control "public";
+  add_header Access-Control-Allow-Origin *;
+
+  rewrite ^/request/((?!new).)*$ /request/item last;
+  rewrite ^/response/((?!new).)*$ /response/item last;
+
+  location / {
+    try_files /serve/$uri.html /serve/$uri/index.html /404.html =404;
+  }
+
+  location /content {
+    try_files $uri $uri.html $uri.md $uri/index $uri/index.html $uri/index.md /404 =404;
+  }
+  
+  location /static {
+    try_files $uri /serve/$uri =404;
+    expires 30d;
+  }
+
+  location /blog {
+    rewrite ^/.* https://medium.com/@openaccessbutton permanent;
+  }
+  location /blog/new-oab-2016 {
+    rewrite ^/.* https://medium.com/@openaccessbutton/take-action-this-open-access-week-with-the-new-open-access-button-e9372c5cb4aa permanent;
+  }
+  location /blog/open-data-button-is-here {
+    rewrite ^/.* https://medium.com/@openaccessbutton/new-app-helps-researchers-share-data-openly-be59437ed6fa permanent;
+  }
+  location /blog/may-major-updates {
+    rewrite ^/.* https://medium.com/@openaccessbutton/open-data-button-launch-update-fd5d7c4e8a74 permanent;
+  }
+  location /blog/open-data-button-beta {
+    rewrite ^/.* https://medium.com/@openaccessbutton/open-data-button-beta-launching-next-week-for-open-data-day-8ab4d0e222a3 permanent;
+  }
+  location /blog/from_open_access_to_open_data {
+    rewrite ^/.* https://medium.com/@openaccessbutton/the-open-access-button-moves-into-open-data-7752f73f7f16 permanent;
+  }
+  location /blog/standwithdiego {
+    rewrite ^/.* https://medium.com/@openaccessbutton/diego-gomez-stands-trial-for-sharing-research-standwithdiego-7bc1f8fadeab permanent;
+  }
+  location /blog/diego-gomez {
+    rewrite ^/.* https://medium.com/@openaccessbutton/support-diego-gomez-an-update-a0e18d0afb96 permanent;
+  }
+  location /blog/opencon2015 {
+    rewrite ^/.* https://medium.com/@openaccessbutton/opencon-applications-are-open-ff694021d72 permanent;
+  }
+  location /blog/annual-report-2014 {
+    rewrite ^/.* https://medium.com/@openaccessbutton/open-access-button-annual-report-2014-90906c2cf12e permanent;
+  }
+  location /blog/jisc2015 {
+    rewrite ^/.* https://medium.com/@openaccessbutton/support-us-in-the-jisc-supporting-technology-startup-project-bfbeec0b50cd permanent;
+  }
+  location /blog/innovator-award {
+    rewrite ^/.* https://medium.com/@openaccessbutton/open-access-button-founders-honoured-with-sparc-innovator-award-22a57e9f5039 permanent;
+  }
+  location /blog/end-year-team-memo {
+    rewrite ^/.* https://medium.com/@openaccessbutton/open-access-button-annual-report-2014-90906c2cf12e permanent;
+  }
+  location /blog/odb-launch-update {
+    rewrite ^/.* https://medium.com/@openaccessbutton/open-data-button-launch-update-fd5d7c4e8a74 permanent;
+  }
+  location /blog/new-apps-find-free-access-to-scientific-and-scholarly-research {
+    rewrite ^/.* https://medium.com/@openaccessbutton/21-october-2014-631d530eb8ca permanent;
+  }
+
+  location ~ /url/(?<url>.+) {
+    proxy_pass http://clapidev/api/academic/redirect?url=$url;
+    proxy_redirect off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+  location /doi {
+    proxy_pass http://clapidev/api/academic/redirect/doi;
+    proxy_redirect off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+  location /pmc {
+    proxy_pass http://clapidev/api/academic/redirect/pmc;
+    proxy_redirect off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+  location /pmid {
+    proxy_pass http://clapidev/api/academic/redirect/pmid;
+    proxy_redirect off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+  location /title {
+    proxy_pass http://clapidev/api/academic/redirect/title;
+    proxy_redirect off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+  location /citation {
+    proxy_pass http://clapidev/api/academic/redirect/citation;
+    proxy_redirect off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+
 }
 
 server {
@@ -171,5 +381,25 @@ server {
 
   location / {
     add_header Access-Control-Allow-Origin *;
+  }
+}
+
+server {
+  listen 80;
+  server_name ineedthisdoi.org;
+  root /home/cloo/dev/openresearchbutton/website/ineedthisdoi;
+
+  location = / {
+    try_files $uri $uri.html /index.html;
+  }
+  location = /index.html {
+    try_files $uri $uri.html /index.html;
+  }
+  location / {
+    proxy_pass http://clapidev/api/academic/redirect/;
+    proxy_redirect off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
   }
 }

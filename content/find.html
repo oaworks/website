@@ -1,58 +1,40 @@
-<script type="text/javascript" src="//static.cottagelabs.com/d3/d3.v3.min.js"></script>
-<script type="text/javascript" src="//static.cottagelabs.com/d3/topojson.v1.min.js"></script>
-<script src="/static/map.js"></script>
 
-<style>
-  #mapspace {
-    background-color:#212f3f;
-    margin-top:50px;
-    overflow:hidden;
-    width:100%;
-    height:900px;
-  }
-  .country {
-    stroke: #2c3e50;
-    stroke-width: 0.8px;
-    fill:#2c3e50;
-  }
-  .point {
-    fill:#566573;
-  }
-  div.tooltip {
-    color: #222;
-    background: #fff;
-    padding: .5em;
-    text-shadow: #f5f5f5 0 1px 0;
-    border-radius: 2px;
-    box-shadow: 0px 0px 2px 0px #a6a6a6;
-    opacity: 0.9;
-    position: absolute;
-  }
-</style>
-
-<div id="mapspace" class="hidden-xs hidden-sm"></div>
-
-<div id="main" class="container-fluid" style="margin-top:-900px;min-height:900px;">
+<div id="main" class="container-fluid" style="min-height:700px;">
   
   <div class="row">
-    <div class="col-md-6 intro" style="z-index:5;margin-top:30px;">
+    <div class="col-md-8 col-md-offset-2 intro" style="z-index:5;margin-top:30px;">
+      <h2>
+        Find research
+      </h2>
       <p><textarea id="url" class="form-control" style="min-height:128px;" placeholder="Give us an article URL, DOI, PMID, or PMC ID"></textarea></p>
       <input type="submit" id="find" value="Find it!" class="btn btn-action btn-block"><br><br>
-      <div class="row hidden-xs hidden-sm">
+      <p>
+        Search for what you need - we can look for DOIs, URLs, Pubmed IDs, Pubmed Central IDs, titles, and even citation strings. 
+        <br>We'll look all over the world for an open version, and if we can't find it you can create or support a request for access.
+      </p>
+      <p>
+        <br>We also have some convenient URLs you can use to redirect URLs, DOIs, Pubmed IDs, and Pubmed Central IDs to an open version if available, like these examples:<br><br>
+        <a href="http://ineedthisdoi.org/10.1186/1758-2946-3-47">http://ineedthisdoi.org/10.1186/1758-2946-3-47</a><br>
+        <a href="/doi/10.1186/1758-2946-3-47">https://dev.openaccessbutton.org/doi/10.1186/1758-2946-3-47</a><br>  
+        <a href="/pmid/21999661">https://dev.openaccessbutton.org/pmid/21999661</a><br>
+        <a href="/pmc/3206455">https://dev.openaccessbutton.org/pmc/3206455</a><br>
+        <a href="/url/http://science.sciencemag.org/content/293/5530/629">https://dev.openaccessbutton.org/url/http://science.sciencemag.org/content/293/5530/629</a><br>        
+      </p>
+      <div class="row hidden-xs hidden-sm" style="margin-top:40px;">
         <div class="col-md-2" style="text-align:right;">
-          <p style="font-size:80px;line-height:10px;color:#398bc5;">
+          <p style="font-size:40px;line-height:10px;color:#398bc5;">
             <a href="/account"><i class="glyphicon glyphicon-download"></i></a>
           </p>
         </div>
         <div class="col-md-10">
           <p style="padding-left:10px;">
-            <a href="/account" style="color:white;">Remember, we have handy browser extensions and bookmarklets you can install to help you search!</a>
+            <a href="/account">And we have handy browser extensions and bookmarklets you can install to help you search!</a>
           </p>
         </div>
       </div>
     </div>
     
-    <div class="col-md-6">
+    <div class="col-md-8 col-md-offset-2">
       <div class="well" id="loginpls" style="display:none;margin-top:50px;">
         <p style="text-align:center;">
           Sign up now to begin making requests for articles and data. We’ll contact the author to request the research is made available - and then send you a link.
@@ -69,16 +51,7 @@
       </div>
     </div>
 
-    <div class="col-md-6 intro">
-      <div class="well" style="background-color:#f04717;margin-top:30px;border:none;color:#212f3f;padding-top:8px;">
-        <h4>
-          Search for what you need - we can look for DOIs, URLs, Pubmed IDs, Pubmed Central IDs, titles, and even citation strings. 
-          <br><br>We'll look all over the world for an open version, and if we can't find it you can create or support a request for access.
-        </h4>
-      </div>
-    </div>
-    
-    <div class="col-md-6">
+    <div class="col-md-8 col-md-offset-2">
       <img id="loading" style="height:100%;width:100%;display:none;" src="/static/spin_orange.svg">
     </div>
   </div>
@@ -107,7 +80,7 @@
   </div>
   
   <div class="row" id="newrequest" style="display:none;">
-    <div class="col-md-12">
+    <div class="col-md-8 col-md-offset-2">
       <div class="well" style="margin-top:50px;background-color:#398bc5;border:none;">
         <h3 id="createheader" style="color:white;">Create a request</h3>
         <p><input type="text" id="title" class="form-control" placeholder="Title" value="Title (optional, but useful - can be added later)"></p>
@@ -132,7 +105,7 @@
   </div>
 
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-8 col-md-offset-2">
       <div id="savesuccess" class="well" style="margin-top:50px;background-color:#398bc5;border:none;display:none;">
       </div>
     </div>
@@ -181,7 +154,7 @@
     };
 
     var api = 'https://api.openaccessbutton.org';
-    if (window.location.host.indexOf('openaccessbutton.org') === -1) {
+    if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
       api = 'https://dev.api.cottagelabs.com/service/oab';
       clogin.api = 'https://dev.api.cottagelabs.com/accounts';
     }
@@ -251,7 +224,7 @@
         $('#story').attr('placeholder',$('#story').attr('placeholder').replace('research',requestwhat));
         if (clogin.loggedin()) {
           var acc = clogin.user && clogin.user.account ? clogin.user.account : undefined;
-          if (acc && ( !acc.username || !acc.service.openaccessbutton.profile.profession || !acc.profile.name ) ) {
+          if (acc && ( !acc.service.openaccessbutton.profile.profession || !acc.profile.firstname ) ) {
             $('.login').attr('href','/account?next=/request/new?url='+encodeURIComponent($('#url').val()));
             $('#moredetails').show();
           } else {

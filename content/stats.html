@@ -3,7 +3,7 @@
   <div class="row">
     <div class="col-md-12">
       <div class="jumbotron">
-        <h2>You cannot access admin</h2>
+        <h2>You cannot access stats - TODO UPDATE AND MAKE PUBLIC, INCLUDE SCIHUB OVERVIEW INFO TOO</h2>
       </div>
     </div>
   </div>
@@ -14,7 +14,7 @@
   <div class="row">
     <div class="col-md-12">
       <input type="text" class="form-control holder holder-search" style="display:none;">
-      <h1>STATS</h1>
+      <h1>STATS - TODO UPDATE AND MAKE PUBLIC, INCLUDE SCIHUB OVERVIEW INFO TOO</h1>
       <p>
         More details to come, and graphing of the figures, and exporting, and restricting to time slices.
       </p>
@@ -38,7 +38,7 @@
     }
 
     var api = 'https://api.openaccessbutton.org';
-    if (window.location.host.indexOf('openaccessbutton.org') === -1) {
+    if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
       api = 'https://dev.api.cottagelabs.com/service/oab';
       clogin.api = 'https://dev.api.cottagelabs.com/accounts';
     }
