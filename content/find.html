@@ -1,13 +1,21 @@
 
-<div id="main" class="container-fluid" style="min-height:700px;">
-  
+<div class="strap strap-compact intro" style="margin-top:-20px;background-image:url(/static/book.jpg);background-color:transparent;height:500px;background-size:100% 100%;background-repeat:no-repeat;" id="topstrap">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <h2 style="text-align:center;font-weight:normal;padding-top:20px;color:#212f3f;margin-top:100px;">
+          Find research<br>
+        </h2>
+        <p><textarea id="url" class="form-control" style="min-height:128px;" placeholder="Give us an article URL, DOI, PMID, or PMC ID"></textarea></p>
+        <input type="submit" id="find" value="Find it!" class="btn btn-action btn-block"><br><br>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid" style="min-height:500px;">
   <div class="row">
     <div class="col-md-8 col-md-offset-2 intro" style="z-index:5;margin-top:30px;">
-      <h2>
-        Find research
-      </h2>
-      <p><textarea id="url" class="form-control" style="min-height:128px;" placeholder="Give us an article URL, DOI, PMID, or PMC ID"></textarea></p>
-      <input type="submit" id="find" value="Find it!" class="btn btn-action btn-block"><br><br>
       <p>
         Search for what you need - we can look for DOIs, URLs, Pubmed IDs, Pubmed Central IDs, titles, and even citation strings. 
         <br>We'll look all over the world for an open version, and if we can't find it you can create or support a request for access.
@@ -83,7 +91,7 @@
     <div class="col-md-8 col-md-offset-2">
       <div class="well" style="margin-top:50px;background-color:#398bc5;border:none;">
         <h3 id="createheader" style="color:white;">Create a request</h3>
-        <p><input type="text" id="title" class="form-control" placeholder="Title" value="Title (optional, but useful - can be added later)"></p>
+        <p><input type="text" id="title" class="form-control" placeholder="Title (optional, but useful - can be added later)"></p>
         <p><input type="text" id="urlconfirm" class="form-control" placeholder="URL (we need this, or a DOI)" value=""></p>
         <p><input type="text" id="doi" class="form-control" placeholder="DOI (optional, but useful)" value=""></p>
         <p><input type="text" id="email" class="form-control" placeholder="Author email (so we can contact them)" value=""></p>
@@ -116,7 +124,6 @@
 
 <script>
   jQuery(document).ready(function() {
-    if ( $(window).width() < 1000 ) $('#main').css({'margin-top':'10px','margin-bottom':'10px'});
     
     // this was copied from the chrome plugin which does not use jquery, hence why it is plain js
     document.getElementById('story').onkeyup = function () {
