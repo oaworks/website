@@ -16,18 +16,18 @@
 <div class="container-fluid" style="min-height:500px;">
   <div class="row">
     <div class="col-md-8 col-md-offset-2 intro" style="z-index:5;margin-top:30px;">
-      <p>
-        Search for what you need - we can look for DOIs, URLs, Pubmed IDs, Pubmed Central IDs, titles, and even citation strings. 
+    <!--  <p>
+        Search for what you need - we can look for DOIs, URLs, Pubmed IDs, Pubmed Central IDs, titles, and even citation strings.
         <br>We'll look all over the world for an open version, and if we can't find it you can create or support a request for access.
       </p>
       <p>
         <br>We also have some convenient URLs you can use to redirect URLs, DOIs, Pubmed IDs, and Pubmed Central IDs to an open version if available, like these examples:<br><br>
         <a href="http://ineedthisdoi.org/10.1186/1758-2946-3-47">http://ineedthisdoi.org/10.1186/1758-2946-3-47</a><br>
-        <a href="/doi/10.1186/1758-2946-3-47">https://dev.openaccessbutton.org/doi/10.1186/1758-2946-3-47</a><br>  
+        <a href="/doi/10.1186/1758-2946-3-47">https://dev.openaccessbutton.org/doi/10.1186/1758-2946-3-47</a><br>
         <a href="/pmid/21999661">https://dev.openaccessbutton.org/pmid/21999661</a><br>
         <a href="/pmc/3206455">https://dev.openaccessbutton.org/pmc/3206455</a><br>
-        <a href="/url/http://science.sciencemag.org/content/293/5530/629">https://dev.openaccessbutton.org/url/http://science.sciencemag.org/content/293/5530/629</a><br>        
-      </p>
+        <a href="/url/http://science.sciencemag.org/content/293/5530/629">https://dev.openaccessbutton.org/url/http://science.sciencemag.org/content/293/5530/629</a><br>
+      </p>-->
       <div class="row hidden-xs hidden-sm" style="margin-top:40px;">
         <div class="col-md-2" style="text-align:right;">
           <p style="font-size:40px;line-height:10px;color:#398bc5;">
@@ -41,7 +41,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="col-md-8 col-md-offset-2">
       <div class="well" id="loginpls" style="display:none;margin-top:50px;">
         <p style="text-align:center;">
@@ -52,7 +52,7 @@
         </p>
         <a class="btn btn-action btn-block login" href="/account?next=/request/new?url=">Sign up / login</a>
       </div>
-      
+
       <div class="well" id="moredetails" style="display:none;margin-top:50px;">
         <p>We need a few more details about you before you can make this request. Can you take a second to finish signing up?</p>
         <a href="/account?next=/request/new?url=" class="btn btn-block btn-action login">Complete your account details</a>
@@ -63,7 +63,7 @@
       <img id="loading" style="height:100%;width:100%;display:none;" src="/static/spin_orange.svg">
     </div>
   </div>
-  
+
   <div class="row" id="availability" style="display:none;">
     <div class="col-md-6">
       <div class="well articlewell" style="background-color:#f04717;border:none;margin:0px;">
@@ -71,7 +71,7 @@
           <a href="#" class="startrequest requestarticle" style="color:#333;">
             <img src="/static/oab_article.png" style="height:250px;"><br><br>
             <span class="articletext">Article unavailable - start a request!</span>
-          </a>          
+          </a>
         </p>
       </div>
     </div>
@@ -86,7 +86,7 @@
       </div>
     </div>
   </div>
-  
+
   <div class="row" id="newrequest" style="display:none;">
     <div class="col-md-8 col-md-offset-2">
       <div class="well" style="margin-top:50px;background-color:#398bc5;border:none;">
@@ -100,11 +100,11 @@
           Say why you need this in up to <br><span id="counter">25</span> words to create this request
         </button>
         <p style="font-size:0.7em;">
-          <br><br>Notes: 
+          <br><br>Notes:
           <br>The article title helps identify what you need when we look for it again, and helps others know what you are looking for
-          <br>If we were unable to find anything for you this time, we do need at least a URL or a DOI to be able to look further - these can be for any 
+          <br>If we were unable to find anything for you this time, we do need at least a URL or a DOI to be able to look further - these can be for any
           version of the article you need access to or data for, and from there we'll look for an open version
-          <br>An email to contact an author of the item you need access to is required for the request to make progress, but if you can't find one 
+          <br>An email to contact an author of the item you need access to is required for the request to make progress, but if you can't find one
           right now, it can be added to the request later, and we'll look for it too.
           <br>A good story explaining why you need access is very helpful in explaining to authors why they should make their work available
         </p>
@@ -124,7 +124,7 @@
 
 <script>
   jQuery(document).ready(function() {
-    
+
     // this was copied from the chrome plugin which does not use jquery, hence why it is plain js
     document.getElementById('story').onkeyup = function () {
       var length = document.getElementById('story').value.replace(/  +/g,' ').split(' ').length;
@@ -168,7 +168,7 @@
     clogin.login();
 
     var requestwhat;
-    
+
     var locsubmit = function(post,data) {
       /*try {
         if (navigator.geolocation) {
@@ -244,7 +244,7 @@
       }
     }
     $('.startrequest').bind('click',startrequest);
-    
+
     var scrape = function(e) {
       if ( e === undefined || e.keyCode === 13 ) {
         var url = $('#urlconfirm').val();
