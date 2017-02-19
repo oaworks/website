@@ -11,6 +11,7 @@ $.fn.holder.use.oabutton = {
   fields: ['status','type','user.profession','user.affiliation','_id','url','created_date','createdAt','title','email','user.username','location.geo.lat','location.geo.lon','story','count'],
   facets: {
     status: { terms: { field: "status.exact" } },
+    user: { terms: { field: "user.profession.exact" } },
     type: { terms: { field: "type.exact" } },
     //plugin: { terms: { field: "plugin.exact", size: 100 } },
     keyword: { terms: { field: "keywords.exact", size: 1000 } },
@@ -48,16 +49,12 @@ $.fn.holder.use.oabutton = {
   
   placeholder: function() {
     var options = $(this).holder.options;
-    var found = '';
-    found += options.query.size < options.response.hits.total ? options.query.from + options.query.size : options.response.hits.total;
-    found += ' of ' + options.response.hits.total;
-    found += ' open access button requests';
-    $('input.' + options.class + '.search').val("").attr('placeholder',found);
+    $('input.' + options.class + '.search').val("").attr('placeholder',"Search for requests you care about");
   },
 
   record: function(rec,idx) {
     var sts = {
-      moderate: {text:'Awaiting moderation - nearly ready :)',color:'#eee',highlight:'grey'},
+      moderate: {text:'Awaiting moderation',color:'#eee',highlight:'grey'},
       help: {text:'We need more info - can you help?',color:'#fbdad0',highlight:'#f04717'},
       progress: {text:'In progress - read more, support it, provide it!',highlight:'grey',color:'white'},
       received: {text:'Success! This item has made available!',highlight:'#5cb85c',color:'#dcefdc'},
@@ -96,6 +93,7 @@ $.fn.holder.use.oabutton = {
   review: function(data) {
     var options = $(this).holder.options;
     if (data === undefined) data = options.response;
+    $('#requestscount').html(options.response.hits.total);
     var fromclass='.from' + options.query.from;
     if (options.paging) {
       $('.' + options.class + '.results').last().after('<div class="' + options.class + ' additional results ' + fromclass.replace('.','') + '"></div>');

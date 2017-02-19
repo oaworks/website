@@ -274,6 +274,11 @@
           dets += record.user.email;
         }
       }
+      if (record.user && record.user.profession && record.user.profession.toLowerCase() !== 'other') {
+        dets += ' (a';
+        if (['a','e','i','o','u'].indexOf(record.user.profession.toLowerCase().substring(0,1)) !== -1 ) dets += 'n';
+        dets += ' ' + record.user.profession.toLowerCase() + ')';
+      }
       if (record.story) dets += ' who said:<br><blockquote>' + record.story + '</blockquote><br>';
       dets += '</p>';
       dets += '<p>';

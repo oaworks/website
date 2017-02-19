@@ -36,28 +36,17 @@ div.tooltip {
   opacity: 0.9;
   position: absolute;
 }
-#spyglass {
-  margin:0px auto 10px auto;
-  background-image: url('/static/Icon_spyglass_blue.png');
-  background-size:100%;
-  background-position:center center;
-  height: 190px;
-  width: 190px;
-}
-#spyglass:hover {
-  background-image: url('/static/OABeyeglass_200x200.png');
-  background-size:103%;
-}
 #doco {
-  margin:0px auto 10px auto;
+  margin:0px auto 10px 5px;
   background-image: url('/static/Icon_article_blue.png');
   background-size:100%;
-  background-position:center center;
-  height: 190px;
-  width: 160px;
+  background-position:left left;
+  height: 60px;
+  width: 50px;
 }
 #doco:hover {
   background-image: url('/static/Icon_article_orange.png');
+  cursor:pointer;
 }
 #gdl:hover {
   color:#f04717;
@@ -92,34 +81,38 @@ end of alert bar -->
 
 <div class="strap strap-compact">
   <div class="container-fluid">
-    <div class="row" style="text-align:center;padding-top:30px;padding-bottom:30px;">
-      <div class="col-md-4">
-        <h2>Find Available Research</h2>
-        <a href="/request/new"><div id="spyglass"></div></a>
-        <p>
-          <a href="/request/new" style="color:white;">Find the research you need - we search thousands of sources
-            with legal access to millions of articles</a>
-        </p>
-      </div>
-      <div class="col-md-4">
-        <h2>Install our browser extension</h2>
-
-        <p style="font-size:190px;line-height:10px;color:#398bc5;">
-          <a href="/account"><i class="glyphicon glyphicon-download" id="gdl"></i></a>
-        </p>
-        <p>
-          <a href="/account" style="color:white;">Install our browser extension or grab our bookmarklet
-            to quickly search from any web page</a>
-        </p>
-      </div>
-      <div class="col-md-4">
-        <h2>Request Research</h2>
-        <p style="font-size:190px;line-height:10px;color:#398bc5;">
-        <a href="/request"><div id="doco"></div></a>
-        <p>
-          <a href="/request" style="color:white;">We've designed a transparent and effective system to
-            request access to unavailable research</a>
-        </p>
+    <div class="row" style="padding-top:30px;padding-bottom:30px;">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="row">
+          <div class="col-md-2">
+            <p style="font-size:60px;line-height:10px;color:#398bc5;padding-top:5px;">
+              <a href="/account"><i class="glyphicon glyphicon-download" id="gdl"></i></a>
+            </p>
+          </div>
+          <div class="col-md-10">
+            <h4>
+              <a href="/account" style="color:white;">Always have the button by your side. 
+                Get the browser extension now. Search thousands of sources instantly to 
+                find you legal access to research articles and data.
+              </a>
+            </h4>            
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <p style="font-size:190px;line-height:10px;color:#398bc5;">
+              <a href="/request"><div id="doco"></div></a>
+            </p>
+          </div>
+          <div class="col-md-10">
+            <h4>
+              <a href="/request" style="color:white;">If we are unable to get you access, you 
+                can quickly request it from the author. We've designed an effective request 
+                system to help make more research accessible.
+              </a>
+            </h4>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -130,12 +123,10 @@ end of alert bar -->
     <div class="row">
       <div class="col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2" style="text-align:center;">
         <h3>
-          Open Access Button helps you <b style="color:#f04717;">find</b> available research,
-          and <b style="color:#f04717;">request</b> unavailable research.
+          We get you instant, legal access to research - and request research that isn't available.
         </h3>
         <h3 class="notcloggedin">
-          <b style="color:#f04717;">Sign up</b> now to <b style="color:#f04717;">support</b>
-          open requests, so we can send them to the authors, and together we will make progress toward more open research.
+          Join a community changing research by creating a request and sharing your story.
         </h3>
         <div class="notcloggedin" style="margin-top:30px;">
           <input type="text" class="form-control" placeholder="Enter your email address" id="email">

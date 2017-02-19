@@ -114,7 +114,7 @@ jQuery(document).ready(function() {
 
 <div class="container-fluid notcloggedin" id="cloginArea">
   <div class="row">
-    <div class="col-md-8 col-md-offset-2">
+    <div class="col-md-6 col-md-offset-3">
       <div style="margin-top:30px;">
         <div id="cloginEmailArea">
           <h2 style="text-align:center;">Sign in to your account</h2>
@@ -143,16 +143,16 @@ jQuery(document).ready(function() {
       </div>
 
       <div class="row" style="margin-top:70px;margin-bottom:100px;">
-        <div class="col-md-2">
-          <p style="font-size:80px;line-height:10px;color:#398bc5;text-align:center;">
+        <div class="col-md-1 col-md-offset-1">
+          <p style="font-size:40px;line-height:10px;color:#398bc5;text-align:center;">
             <i class="glyphicon glyphicon-download"></i>
           </p>
         </div>
         <div class="col-md-10">
-          <p>
+          <p style="text-align:center;">
             Always have the button by your side.
             <a style="margin-top:5px;" class="chromeinstall" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">
-            Get the browser extension now.
+            <br>Get the browser extension in one click.
             </a>
           </p>
         </div>
@@ -199,6 +199,8 @@ jQuery(document).ready(function() {
           and
           <a target="_blank" href="/terms" style="text-decoration:underline;">terms of service.</a>
         </p>
+        <input id="service.openaccessbutton.profile.confirm_public" type="checkbox" checked style="display:none;" class="cloginSave">
+        <input id="service.openaccessbutton.profile.confirm_terms" type="checkbox" checked style="display:none;" class="cloginSave">
         <button id="cloginSave" type="button" class="btn btn-action" style="margin-top:5px;">Save your details</button>
         <div id="cloginSaveMessages"></div>
       </div>

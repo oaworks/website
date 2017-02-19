@@ -1,6 +1,61 @@
+<!--
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-12">
 <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScwlYUvspACAp8TcenhdpkVjHQel0XGa6WJOx149RVPEG5kTg/viewform?embedded=true" width="100%" height="2350" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe></div>
 </div>
 </div>
+-->
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<script>
+
+var goto = window.location.hash.replace('#','');
+if (got) {
+  
+}
+
+clogin.failureCallback = function(data,action) {
+  if (clogin.loadingId) $('#'+clogin.loadingId).hide();
+  if ( action === 'login' && $('#'+clogin.tokenInputId).length && $('#'+clogin.tokenInputId).val().length === clogin.tokenlength ) {
+    // token login error seems to be occurring, so say token must be invalid
+    $('#'+clogin.messagesDivId).html('<p>Sorry, your login token appears to be invalid. Please refresh the page and try logging in again.</p>');
+  }
+  data.page = window.location.href;
+  data.action = action;
+  data.user = clogin.user;
+  data.cookie = clogin.getCookie();
+  try {
+    data.navigator = {
+      userAgent: navigator.userAgent,
+      platform: navigator.platform,
+      vendor: navigator.vendor,
+      plugins: navigator.plugins
+    }
+  } catch(err) {}
+  $.ajax({
+    type:'POST',
+    url: 'https://dev.api.cottagelabs.com/mail/error?token=08f98hfwhef98wehf9w8ehf98whe98fh98hw9e8h',
+    cache:false,
+    processData:false,
+    contentType: 'application/json',
+    dataType: 'json',
+    data:JSON.stringify(data)
+  });
+  if (typeof clogin.afterFailure === 'function') clogin.afterFailure();
+}
+
+
+
+</script>

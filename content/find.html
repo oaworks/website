@@ -6,42 +6,39 @@
         <h2 style="text-align:center;font-weight:normal;padding-top:20px;color:#212f3f;margin-top:100px;">
           Find research<br>
         </h2>
-        <p><textarea id="url" class="form-control" style="min-height:128px;" placeholder="Give us an article URL, DOI, PMID, or PMC ID"></textarea></p>
+        <p><textarea id="url" class="form-control" style="min-height:128px;" placeholder="Give us an article URL, DOI, PMID, or PMC ID &#10;&#10;For example 10.1186/1758-2946-3-47"></textarea></p>
         <input type="submit" id="find" value="Find it!" class="btn btn-action btn-block"><br><br>
       </div>
     </div>
   </div>
 </div>
 
-<div class="container-fluid" style="min-height:500px;">
-  <div class="row">
-  <!--  <div class="col-md-8 col-md-offset-2 intro" style="z-index:5;margin-top:30px;">
-      <p>
-        Search for what you need - we can look for DOIs, URLs, Pubmed IDs, Pubmed Central IDs, titles, and even citation strings.
-        <br>We'll look all over the world for an open version, and if we can't find it you can create or support a request for access.
-      </p>
-      <p>
-        <br>We also have some convenient URLs you can use to redirect URLs, DOIs, Pubmed IDs, and Pubmed Central IDs to an open version if available, like these examples:<br><br>
-        <a href="http://ineedthisdoi.org/10.1186/1758-2946-3-47">http://ineedthisdoi.org/10.1186/1758-2946-3-47</a><br>
-        <a href="/doi/10.1186/1758-2946-3-47">https://dev.openaccessbutton.org/doi/10.1186/1758-2946-3-47</a><br>
-        <a href="/pmid/21999661">https://dev.openaccessbutton.org/pmid/21999661</a><br>
-        <a href="/pmc/3206455">https://dev.openaccessbutton.org/pmc/3206455</a><br>
-        <a href="/url/http://science.sciencemag.org/content/293/5530/629">https://dev.openaccessbutton.org/url/http://science.sciencemag.org/content/293/5530/629</a><br>
-      </p>-->
-      <div class="row hidden-xs hidden-sm" style="margin-top:10px;">
-        <div class="col-md-2" style="text-align:right;">
-          <p style="font-size:40px;line-height:10px;color:#398bc5;">
-            <a href="/account"><i class="glyphicon glyphicon-download"></i></a>
-          </p>
-        </div>
-        <div class="col-md-10">
-          <p style="padding-left:10px;">
-            <a href="/account">And we have handy browser extensions and bookmarklets you can install to help you search!</a>
-          </p>
+<div class="strap strap-compact intro" style="margin-bottom:-60px;">
+  <div class="container-fluid">
+    <div class="row" style="padding-top:30px;">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="row">
+          <div class="col-md-2">
+            <p style="font-size:60px;line-height:10px;color:#398bc5;padding-top:5px;">
+              <a href="/account"><i class="glyphicon glyphicon-download" id="gdl"></i></a>
+            </p>
+          </div>
+          <div class="col-md-10">
+            <h4>
+              <a href="/account" style="color:white;">Always have the button by your side. 
+                Get the browser extension now. We search thousands of sources instantly to 
+                find you legal access to research articles and data.
+              </a>
+            </h4>            
+          </div>
         </div>
       </div>
     </div>
+  </div>
+</div>
 
+<div class="container-fluid">
+  <div class="row">
     <div class="col-md-8 col-md-offset-2">
       <div class="well" id="loginpls" style="display:none;margin-top:50px;">
         <p style="text-align:center;">
@@ -59,14 +56,14 @@
       </div>
     </div>
 
-    <div class="col-md-8 col-md-offset-2">
+    <div class="col-md-4 col-md-offset-4">
       <img id="loading" style="height:100%;width:100%;display:none;" src="/static/spin_orange.svg">
     </div>
   </div>
 
   <div class="row" id="availability" style="display:none;">
     <div class="col-md-6">
-      <div class="well articlewell" style="background-color:#f04717;border:none;margin:0px;">
+      <div class="well articlewell" style="background-color:#f04717;border:none;margin:0px;margin-bottom:10px;">
         <p style="text-align:center;">
           <a href="#" class="startrequest requestarticle" style="color:#333;">
             <img src="/static/oab_article.png" style="height:250px;"><br><br>
@@ -79,7 +76,7 @@
       <div class="well datawell" style="background-color:#f04717;border:none;margin:0px;">
         <p style="text-align:center;">
           <a href="#" class="startrequest requestdata" style="color:#333;">
-            <img src="/static/oab_data.png" style="height:280px;margin-bottom:-3px;"><br>
+            <img src="/static/oab_data.png" style="height:280px;margin-bottom:-8px;"><br>
             <span class="datatext">Data unavailable - start a request!</span>
           </a>
         </p>
@@ -89,26 +86,17 @@
 
   <div class="row" id="newrequest" style="display:none;">
     <div class="col-md-8 col-md-offset-2">
-      <div class="well" style="margin-top:50px;border:none;">
-        <h3 id="createheader>Create a request</h3>
+      <h3 id="createheader">Create a request</h3>
+      <div style="display:none;">
         <p><input type="text" id="title" class="form-control" placeholder="Title (optional, but useful - can be added later)"></p>
         <p><input type="text" id="urlconfirm" class="form-control" placeholder="URL (we need this, or a DOI)" value=""></p>
         <p><input type="text" id="doi" class="form-control" placeholder="DOI (optional, but useful)" value=""></p>
         <p><input type="text" id="email" class="form-control" placeholder="Author email (so we can contact them)" value=""></p>
-        <p><textarea id="story" class="form-control" placeholder="How would getting access to this research help you? This message will be sent to the author." style="min-height:100px;"></textarea></p>
-        <button type="submit" class="btn btn-action btn-block" id="submit" style="margin-top:5px;background-color:#f04717;color:#212f3f;" disabled>
-          Say why you need this in up to <br><span id="counter">25</span> words to create this request
-        </button>
-        <p style="font-size:0.7em;">
-          <br><br>Notes:
-          <br>The article title helps identify what you need when we look for it again, and helps others know what you are looking for
-          <br>If we were unable to find anything for you this time, we do need at least a URL or a DOI to be able to look further - these can be for any
-          version of the article you need access to or data for, and from there we'll look for an open version
-          <br>An email to contact an author of the item you need access to is required for the request to make progress, but if you can't find one
-          right now, it can be added to the request later, and we'll look for it too.
-          <br>A good story explaining why you need access is very helpful in explaining to authors why they should make their work available
-        </p>
       </div>
+      <p><textarea id="story" class="form-control" placeholder="How would getting access to this research help you? This message will be sent to the author." style="min-height:100px;"></textarea></p>
+      <button type="submit" class="btn btn-action btn-block" id="submit" style="margin-top:5px;background-color:#f04717;color:#212f3f;" disabled>
+        Say why you need this in up to <br><span id="counter">25</span> words to create this request
+      </button>
     </div>
   </div>
 

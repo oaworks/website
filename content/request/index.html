@@ -1,12 +1,12 @@
 <script type="text/javascript" src="//static.cottagelabs.com/d3/d3.v4.min.js"></script>
 <script type="text/javascript" src="/static/oabutton_request_holder.js"></script>
-<script type="text/javascript" src="//static.cottagelabs.com/holdernew/use/export.js"></script>
-<script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/filters.js"></script>
-<script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/export.js"></script>
-<script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/world.js"></script>
-<script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/graph.js"></script>
-<script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/line.js"></script>
-<script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/range.js"></script>
+<!--<script type="text/javascript" src="//static.cottagelabs.com/holdernew/use/export.js"></script>-->
+<script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/facets.js"></script>
+<!--<script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/export.js"></script>-->
+<!--<script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/world.js"></script>-->
+<!--<script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/graph.js"></script>-->
+<!--<script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/line.js"></script>-->
+<!--<script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/range.js"></script>-->
 
 <style>
   .row{
@@ -44,18 +44,18 @@
 </style>
 
 <div class="holder loading" style="margin:0px;padding:0px;position:fixed;top:90px;left:0;right:0;bottom:0;display:none;z-index:1000000000000000000000000000;">
-  <div style="margin:250px auto 0px auto;width:400px;">
+  <div style="margin:60px auto 0px auto;width:400px;">
     <img src="/static/spin_orange.svg" style="width:100%;padding-left:100px;">
   </div>
 </div>
 
-<div class="holder graph view" style="margin:0px;padding:0px;position:fixed;top:90px;left:0;right:0;bottom:0;display:none;background-color:white;">
+<!--<div class="holder graph view" style="margin:0px;padding:0px;position:fixed;top:90px;left:0;right:0;bottom:0;display:none;background-color:white;">
   <svg class="holder graph"></svg>
 </div>
 
 <div class="holder line view" style="margin:0px;padding:0px;position:fixed;top:90px;left:0;right:0;bottom:0;display:none;background-color:white;">
   <svg class="holder line"></svg>
-</div>
+</div>-->
 
 <div class="holder sticker" style="margin-top:50px;"></div>
 <div class="holder sticky" style="z-index:100000000;background-color:#212f3f;">
@@ -63,70 +63,45 @@
     <div class="row">
       <div id="holder" class="col-md-12">
         <div class="panel panel-default holder ui" style="background-color:white;">
-          <div class="panel-heading" style="background-color:white;padding:0px;">
-            <div class="input-group" style="margin-left:-1px;margin-top:-1px;margin-bottom:-7px;margin-right:-2px;">
-              <div class="input-group-btn">
-                <a class="btn btn-default holder" do="previous" alt="previous" title="previous" style="font-weight:bold;height:50px;font-size:1.8em;" href="#">&lt;</a>
-                <a class="btn btn-default" href="/" alt="click to go back to the site homepage" title="click to go back to the site homepage"><img src="https://openaccessbutton.org/static/icon_OAB.png" style="height:30px;margin-top:6px;"></a>
-              </div>
-              <input type="text" class="form-control holder search" do="add" placeholder="Open Access Button" style="font-size:1.6em;height:50px;">
-              <div class="input-group-btn">
-                <a href="#" class="btn btn-action holder toggle" toggle=".options" alt="show/hide search options" title="show/hide search options" style="line-height:1.8em;height:50px;font-size:1.3em;font-weight:bold;">+<span clas="hidden-xs hidden-sm"> options</span></a>
-                <a class="btn btn-default holder" do="next" alt="next" title="next" style="font-weight:bold;height:50px;font-size:1.8em;" href="#">&gt;</a>
-              </div>
-            </div>
-            <div class="holder searches" style="margin-top:5px;"></div>
-          </div>
-          <div class="panel-body section holder options" style="display:none;">
-            <div class="row">
-              <div class="col-md-12" style="padding:15px 15px 10px 15px;">
-                <div class="holder range" style="border:1px solid #ccc;border-radius:3px;padding:0px 15px 17px 20px;">
-                </div>
-              </div>
-            </div>
-            <div class="row" style="margin-bottom:30px;">
-              <div class="holder filters"></div>
-            </div>
-            <div class="row" style="display:none;">
-              <div class="col-md-6">
-                <div class="btn-toolbar" role="toolbar" aria-label="...">
-                  <div class="btn-group" role="group" aria-label="...">
-                    <button type="button" class="btn btn-disabled btn-title" alt="Choose which data view to show" title="Choose which data view to show">Show: </button>
-                    <button type="button" class="btn btn-info show" val="stories">stories</button>
-                    <button type="button" class="btn btn-default show" val="world">map</button>
-                    <button type="button" class="btn btn-default show" val="graph">chart</button>
-                    <button type="button" class="btn btn-default show" val="line">time</button>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="holder export">
-
-                </div>
-              </div>
-            </div>
-          </div>
+          <input type="text" class="form-control holder search" do="add" placeholder="Open Access Button" style="font-size:1.6em;height:50px;border:none;">
+          <div class="holder searches" style="margin-top:5px;"></div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="container-fluid" style="max-width:1000px;margin:0px auto 10px auto;" id="stories">
+<div class="container-fluid" style="max-width:1000px;margin:0px auto 10px auto;min-height:500px;" id="stories">
   <div class="row">
-    <div class="col-md-12" style="margin-bottom:30px;">
-      <div class="well instruct intro" style="background-color:#212f3f;border:none;color:#212f3f;padding-top:8px;margin-top:30px;overflow:hidden;">
+    <div class="col-md-3">
+      <div id="fixer" style="position:fixed;max-width:230px;">
+        <div class="well" style="background-color:#212f3f;border:none;color:#212f3f;padding-top:8px;margin-top:30px;overflow:hidden;">
+          <h3 style="text-align:center;font-size:60px;color:#f04717;">
+            <span id="requestscount">X</span>
+          </h3>
+          <p style="text-align:center;color:white;">Requests</p>
+          <p style="text-align:center;color:white;">
+            Find, support, share and investigate requests that matter to you.           
+          </p>
+          <p style="color:white;text-align:center;">
+            <br>
+            <a class="holder" do="instruct" val="help" href="#" style="text-decoration:underline;color:white;">Help us progress requests</a><br>
+            <a id="viewrequests" class="cloggedin" href="/request" style="text-decoration:underline;color:white;">View your requests</a><br>
+            <a href="/find" style="text-decoration:underline;color:white;">Start a new request</a>
+          </p>
+        </div>
+        <div class="holder facets">
+
+        </div>
+      </div>
+    </div>
+    <div class="col-md-9" style="margin-bottom:30px;">
+      <!--<div class="well instruct intro" style="background-color:#212f3f;border:none;color:#212f3f;padding-top:8px;margin-top:30px;overflow:hidden;">
         <div id="mapper" class="holder world view" style="height:500px;margin-top:-50px;">
           <svg class="holder world"></svg>
         </div>
-        <p id="statements" style="text-align:center;margin-top:-100px;color:white;">
-          <a href="/stats" style="color:white;text-decoration:underline;" alt="Read our stats" title="Read our stats">75 million</a> people need open access to research.<br>
-          <a class="holder" do="instruct" val="help" href="#" style="text-decoration:underline;color:white;padding-right:50px;">Help us progress requests</a>
-          <a id="viewrequests" class="cloggedin" href="/request" style="text-decoration:underline;color:white;padding-right:50px;">View your requests</a>
-          <a href="/find" style="text-decoration:underline;color:white;">Start a new request</a>
-        </p>
-      </div>
-      <div class="holder results from0"></div>          
+      </div-->
+      <div class="holder results from0"></div>
     </div>
   </div>
 </div>
@@ -145,6 +120,7 @@ jQuery(document).ready(function() {
   }
   
   if ( $(window).width() < 1000 ) {
+    $('#fixer').css({'position':'relative','max-width':'1000px'});
     $('#statements').css('margin-top','0px');
     $('#statements').children().each(function() {
       $(this).css('padding-right','0px').after('<br>');
