@@ -110,6 +110,20 @@
     }
 
     var record = undefined;
+    var blacklist = function(e) {
+      e.preventDefault();
+      var email = $('#email').val();
+      $('#email').val("");
+      var opts = {
+        type:'POST',
+        url: api+'/dnr?refuse=false&email=' + email,
+        cache:false,
+        contentType: 'application/json',
+        dataType: 'json'
+      }
+      $.ajax(opts);
+      $("#emailissue").html(email + " blacklisted and removed. Provide a new email address, and/or save this request.").show();
+    }
     var submit = function() {
       var data = {};
       if ( $('#email').length ) data.email = $('#email').val();
@@ -132,12 +146,50 @@
         dataType: 'json',
         success: function(data) {
           $('#savesuccess').show();
-          setTimeout(function() { $('#savesuccess').hide(); }, 2000);
+          setTimeout(function() { $('#savesuccess').html("").hide(); }, 3000);
         },
         beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
       }
       opts.data = JSON.stringify(data);
       $.ajax(opts);
+    }
+    var checkemailthensubmit = function() {
+      $('#emailissue').html("").hide();
+      if ( $('#email').length && $('#email').val() && $('#email').val().length ) {
+        var email = $('#email').val();
+        var opts = {
+          type:'GET',
+          url: api+'/dnr?validate=true&email=' + email + '&request=' + rid + '&user=' + clogin.user.account._id,
+          cache:false,
+          contentType: 'application/json',
+          dataType: 'json',
+          success: function(data) {
+            if (data.data.dnr === false) {
+              submit();
+            } else {
+              var issue = 'Sorry, ' + email + ' ';
+              if (typeof data.data.dnr === 'object') {
+                issue += 'was added to our block list on ' + data.data.dnr.created_date.split(' ')[0].split('-').reverse().join('/') + '. We cannot send email to this address';
+              } else if (data.data.dnr === 'creator') {
+                issue += 'matches the creator of this request, so this cannot be the author email address we should contact';
+              } else if (data.data.dnr === 'user') {
+                issue += 'is your email address! We need an address where we can contact the author. Are you the author? If so, please see below';
+              } else if (data.data.dnr === 'supporter') {
+                issue += 'matches the address of someone who already supports this request - as such, they cannot be a suitable author to contact to request access';
+              } else if (data.data.dnr === 'invalid') {
+                issue += 'is not a valid address';
+                if (data.data.validation.did_you_mean) issue += '. Did you mean ' + data.data.validation.did_you_mean + '?';
+              }
+              $('#email').val("").attr("placeholder",email + " is an unsuitable author email address - please try another");
+              $('#emailissue').html(issue).show();
+            }
+          },
+          error: submit // if we can't do the validation for some reason, just submit anyway
+        }
+        $.ajax(opts);
+      } else {
+        submit();
+      }
     }
     var deleteitem = function() {
       $.ajax({
@@ -278,7 +330,8 @@
       if (isadmin || iseditable) {
         dets += '<p><input type="text" id="email" value="' + record.email + '" placeholder="Author Email"';
         if (isadmin && !iseditable) dets += ' style="background-color:orange;"';
-        dets += 'class="form-control"></p>';
+        dets += 'class="form-control"></p><p id="emailissue" style="display:none;font-size:0.9em;"></p>';
+        if (isadmin && record.email) dets += '<p><a id="blacklist" href="#" class="btn btn-warning btn-block btn-xs">Blacklist (and remove) this email address</a></p>';
       }
 
       if (iseditable) {
@@ -311,7 +364,8 @@
 
       // bind actions
       $('#edit').html(dets);
-      if ($('#submitchanges').length) $('#submitchanges').bind('click',submit);
+      if ($('#blacklist').length) $('#blacklist').bind('click',blacklist);
+      if ($('#submitchanges').length) $('#submitchanges').bind('click',checkemailthensubmit);
       if ($('#delete').length) $('#delete').bind('click',deleteitem);
       if (clogin.hasRole('root')) $('#titlelink').bind('click',scrape);
 

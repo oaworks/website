@@ -1,50 +1,146 @@
 
-<div class="container-fluid" id="no" style="display:none;">
+<style>
+  p {
+    text-align:justify;
+  }
+</style>
+
+<div class="container-fluid">
   <div class="row">
     <div class="col-md-12">
-      <div class="jumbotron">
-        <h2>You cannot access stats - TODO UPDATE AND MAKE PUBLIC, INCLUDE SCIHUB OVERVIEW INFO TOO</h2>
-      </div>
+      <h2>OAB Stats - the numbers, the why, the how</h2>
     </div>
   </div>
 </div>
 
 
-<div class="container-fluid" id="stats" style="display:none;">
+<div class="container-fluid">
   <div class="row">
-    <div class="col-md-12">
-      <input type="text" class="form-control holder holder-search" style="display:none;">
-      <h1>STATS - TODO UPDATE AND MAKE PUBLIC, INCLUDE SCIHUB OVERVIEW INFO TOO</h1>
+    <div class="col-md-6">
+      <h3>The situation</h3>
       <p>
-        More details to come, and graphing of the figures, and exporting, and restricting to time slices.
+        75 million people need access to research - start with some info about this number from scihub, and the stats 
+        of their searches? This would be a fairly static intro to the problem, maybe with a map. Bother with time sliders etc?
       </p>
-      <div id="results">
-        
+      <p>
+        (By starting with scihub data it brings up the point of the difference between scihub/icanhazpdf and oabutton - why 
+        use this instead? - Maybe the answer is don't use it INSTEAD, but use it AS WELL - and in particular cases, prefer it 
+        e.g. we have librarians looking for things, check your local institutional repo with library partnerships, and 
+        seek to make social change rather than just helping any one individual gain access - it is about making open the default, 
+        and making people expect open, and making something open for everyone else, not just the one person seeking immediate access.)
+      </p>
+    </div>
+    <div class="col-md-6">
+      <div style="outline:1px solid blue;margin-top:60px;min-height:300px;">
+        some map of scihub stats or something
+      </div>
+    </div>
+  </div>
+</div>
+      
+<div class="container-fluid" id="availability">
+  <div class="row">
+    <div class="col-md-6">
+      <h3>Availability</h3>
+      <p>
+        Then show how many availability checks people have made using oab, and how many open/closed. Show like we
+        currently do how many of different sorts of users are doing things. Provide at least a line chart of requests, 
+        controlled by time slider (if using time slider, maybe one overall slider for whole page). Worth doing a map of 
+        availability checks? Prob not - a map of requests is probably better, and two maps is too much.
+      </p>
+      
+      <p>
+        So there is the problem of availability, and we help people find available things... something something.
+      </p>
+      
+      <p>
+        Fill this space with more words...
+      </p>
+    </div>
+    <div class="col-md-6">
+      <div style="outline:1px solid blue;margin-top:60px;min-height:300px;">
+        a bar chart of found vs not found availablity checks (open vs closed)
+      </div>      
+    </div>
+  </div>
+</div>
+      
+<div class="container-fluid" id="availability">
+  <div class="row">
+    <div class="col-md-12">
+      <div style="outline:1px solid blue;margin-bottom:20px;min-height:300px;">
+        a line chart of availability requests
+      </div>      
+      <input type="text" class="form-control aholder search" style="display:none;">
+      <div id="results"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6">
+      <h3>Requests</h3>
+      <p>
+        Blurbing about requests and people creating them... more text here
+      </p>
+      <div style="outline:1px solid blue;margin-top:160px;min-height:100px;">
+        Line graph / spark line of requests over time, maybe overlaid with successes?
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div style="outline:1px solid blue;margin-top:60px;min-height:300px;">
+        some graph of requests data - by user type, etc, something.
       </div>
     </div>
   </div>
 </div>
 
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <h3>What next</h3>
+      <p>
+        We have X successful requests, but also Y still in progress. We have more coming in every day. 
+        We have partnerships with libraries. We want to move towards this not being necessary.
+      </p>
+      
+      <p>
+        Do you want to partner with us? Help your users with our institutional capabilities? 
+        (Create and Link to page about institutional stuff). Get in touch.
+      </p>
+      
+      <p>
+        Do you want to help, work with us? <b>Export</b> our data and use it? - export options here.
+        (for admin users, export users info too as extra option)
+      </p>
+    </div>
+  </div>
+</div>
 
-
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div style="outline:1px solid blue;min-height:600px;margin-bottom:30px;">
+        the oabutton world map of requests
+      </div>
+    </div>
+  </div>
+</div>
 
 
 
 <script>
   jQuery(document).ready(function() {
-    if (!clogin.loggedin()) {
-      $('#no').show();
-      window.location = '/account?next=/stats';
-    }
-
     var api = 'https://api.openaccessbutton.org';
     if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
-      api = 'https://dev.api.cottagelabs.com/service/oab';
-      clogin.api = 'https://dev.api.cottagelabs.com/accounts';
+      //api = 'https://dev.api.cottagelabs.com/service/oab';
+      //clogin.api = 'https://dev.api.cottagelabs.com/accounts';
     }
+    //clogin.login();
     
-    var results = function(data) {
-      var info = '<p>There have been ' + data.hits.total + ' availability checks (what used to be blocks) made since we switched to the new site and plugins (24th October 2016)</p>';
+    var availability = function(data) {
+      var info = '<div class="row"><div class="col-md-6"><p>There have been ' + data.hits.total + ' availability checks (what used to be blocks) made since we switched to the new site and plugins (24th October 2016)</p>';
       info += '<p>' + data.facets.email.missing + ' of those were made anonymously, ';
       info += 'and ' + (data.hits.total - data.facets.email.missing) + ' were made by signed in users (but some users have made multiple, so this is not a unique user count).</p>';
       var dt = new Date();
@@ -89,7 +185,7 @@
       info += onetothreemonths + ' between one and three months ago, ';
       info += 'and ' + overthreemonths + ' over three months ago.</p>';
       info += '<p>The number of identified (by most recent access method) and anonymous users is:</p>';
-      info += '<table class="table table-bordered table-striped">';
+      info += '</div><div class="col-md-6"><table class="table table-bordered table-striped">';
       info += '<thead><th>method</th><th>identified</th><th>anonymous</th><th>subtotal</th><th>total</th></thead><tbody>';
       var website = 0;
       var plugins = 0;
@@ -120,65 +216,55 @@
           plugins += (used[p].identified.length + used[p].anonymous);
         }
       }
-      info += '</tbody></table>';
+      info += '</tbody></table></div></div>';
       $('#results').append(info);
     }
 
-    clogin.afterLogin = function() {
-      if (!clogin.hasRole('openaccessbutton.admin')) window.location = '/';
-      
-      $('#no').hide();
-      $('#stats').show();
-      
-      $('#stats').holder({
-        url: api + "/availabilities?apikey="+clogin.apikey,
-        datatype: 'JSON',
-        //apikey: clogin.apikey, // to get this working have to stop ES overriding allowed headers
-        defaultquery: {
-          sort: [
-            {
-              createdAt: {order: 'desc'}
-            }
-          ],
-          size:10000,
-          fields:['plugin','email','createdAt'],
-          query: {
-            filtered: {
-              query: {
-                bool: {
-                  must: []
-                }
-              },
-              filter: {
-                bool: {
-                  must:[]
-                }
+    $('#availability').holder({
+      class: 'aholder',
+      url: api + "/availabilities?apikey="+clogin.apikey,
+      datatype: 'JSON',
+      //apikey: clogin.apikey, // to get this working have to stop ES overriding allowed headers
+      defaultquery: {
+        sort: [
+          {
+            createdAt: {order: 'desc'}
+          }
+        ],
+        size:10000,
+        fields:['plugin','email','createdAt'],
+        query: {
+          filtered: {
+            query: {
+              bool: {
+                must: []
               }
-            }
-          },
-          aggregations: {
-            "availabilities" : {
-              "date_histogram" : {
-                "field" : "createdAt",
-                "interval" : "week"
+            },
+            filter: {
+              bool: {
+                must:[]
               }
             }
           }
         },
-        pushstate: false,
-        results: {
-          default: results
-        },
-        facets: {
-          plugin: { terms: { "field": "plugin.exact", "size": 100 } },
-          email: { terms: { "field": "email.exact", "size": 100 } }, // the "missing" count on this, next to terms list, shows how many anonymous availability requests there were
-          url: { terms: { "field": "url.exact", "size": 100 } }
+        aggregations: {
+          "availabilities" : {
+            "date_histogram" : {
+              "field" : "createdAt",
+              "interval" : "week"
+            }
+          }
         }
-      });
-        
-    }
+      },
+      pushstate: false,
+      review: availability,
+      facets: {
+        plugin: { terms: { "field": "plugin.exact", "size": 100 } },
+        email: { terms: { "field": "email.exact", "size": 100 } }, // the "missing" count on this, next to terms list, shows how many anonymous availability requests there were
+        url: { terms: { "field": "url.exact", "size": 100 } }
+      }
+    });
     
-    clogin.login();
   });
 </script>
 
