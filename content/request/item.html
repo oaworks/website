@@ -169,16 +169,16 @@
             } else {
               var issue = 'Sorry, ' + email + ' ';
               if (typeof data.data.dnr === 'object') {
-                issue += 'was added to our block list on ' + data.data.dnr.created_date.split(' ')[0].split('-').reverse().join('/') + '. We cannot send email to this address';
+                issue += 'was added to our block list on ' + data.data.dnr.created_date.split(' ')[0].split('-').reverse().join('/') + '. We cannot send requests to this email.';
               } else if (data.data.dnr === 'creator') {
-                issue += 'matches the creator of this request, so this cannot be the author email address we should contact';
+                issue += 'matches the creator of this request, so this cannot be the author email address we should contact.';
               } else if (data.data.dnr === 'user') {
-                issue += 'is your email address! We need an address where we can contact the author. Are you the author? If so, please see below';
+                issue += "is your email address! We need the author's email. Are you the author? If so, please see below.";
               } else if (data.data.dnr === 'supporter') {
-                issue += 'matches the address of someone who already supports this request - as such, they cannot be a suitable author to contact to request access';
+                issue += 'matches the address of someone who already supports this request. They cannot be a suitable author to contact to request access.';
               } else if (data.data.dnr === 'invalid') {
-                issue += 'is not a valid address';
-                if (data.data.validation.did_you_mean) issue += '. Did you mean ' + data.data.validation.did_you_mean + '?';
+                issue += 'is not a valid address.';
+                if (data.data.validation.did_you_mean) issue += ' Did you mean ' + data.data.validation.did_you_mean + '?';
               }
               $('#email').val("").attr("placeholder",email + " is an unsuitable author email address - please try another");
               $('#emailissue').html(issue).show();
