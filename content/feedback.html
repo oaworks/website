@@ -1,7 +1,7 @@
 
 <style>
   textarea {
-    min-height:100px;
+    min-height:200px;
   }
 </style>
 
@@ -16,11 +16,8 @@
       </p>
       <select class="form-control" id="goto">
         <option value="">Please choose an option:</option>
-        <option value="feedback">General feedback</option>
-        <option value="dnr">Removing your email address from our system</option>
+        <option value="general">General feedback</option>
         <option value="wrong">We found the wrong article / data</option>
-        <option value="uninstall">You're uninstalling our browser extension</option>
-        <option value="noshare">You can't share the research you were asked for</option>
         <!-- add any needed types of form here so they can be selected -->
       </select>
     </div>
@@ -86,7 +83,7 @@
           <p><input class="form-control" type="text" name="other" placeholder="Other (please explain)"></p>
         </div>
 
-        <div class="goto gotofeedback">
+        <div class="goto gotogeneral">
           <!-- the link to the page for this form could include a param of the previous page -->
           <h4>Let us know what you think!</h4>
           <p>We spend day (and night) making the Open Access Button the best it can be. If you have any feedback (good or bad) or ideas that can help us make the tools better we'd love to hear them.</p>
@@ -151,7 +148,8 @@
       if (e) e.preventDefault();
       $('.goto').hide();
       goto = $(this).val();
-      $('#form').show();
+			if ('pushState' in window.history) window.history.pushState("", "feedback", '#' + goto);
+			$('#form').show();
       $('.goto'+goto).show();
     }
     $('#goto').bind('change',choose);
