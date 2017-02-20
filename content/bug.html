@@ -8,54 +8,166 @@
 -->
 
 
-<div class="container-fluid">
+<div class="container-fluid goto gotochoose">
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-8 col-md-offset-2">
+      <h3>
+        Let us know
+      </h3>
+      <p>
+        What do you want to tell us about?
+      </p>
+      <select class="form-control" id="goto">
+        <option value="">Please choose an option:</option>
+        <option value="dnr">Removing your email address from our system</option>
+        <!-- add any needed types of form here so they can be selected -->
+      </select>
     </div>
   </div>
 </div>
 
 
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2">
+      <form id="form" method="POST" action="https://api.openaccessbutton.org/bug" style="display:none;">
+        
+        <div class="goto gotodnr">
+          <h4>We’re sorry you don’t want to hear from us</h4>
+          <p>We’d love to know why you’d prefer to not hear from us:</p>
+          <p><input type="checkbox" name="why" value="Don't understand what I'm being asked"> Don't understand what I'm being asked</p>
+          <p><input type="checkbox" name="why" value="Don't know or trust oab"> Don’t know or trust oab</p>
+          <p><input type="checkbox" name="why" value="Don't want to share data / articles"> Don’t want to share data / articles</p>
+          <p><input class="form-control" type="text" name="other" placeholder="Other (please state)">
+          <p>Our team is still learning. Can we follow up with you about your experience?</p>
+          <p><input type="radio" name="followup" value="yes"> Yes</p>
+          <p><input type="radio" name="followup" value="no"> No</p>          
+        </div>
+        
+        <!-- put any additional form types here -->
+        
+        <noscript>
+          <input type="hidden" name="nojs" value="nojs">
+        </noscript>
+        <input id="submit" name="submit" value="submit" type="submit" class="btn btn-action btn-block">
+      </form>
+    </div>
+  </div>
+</div>
 
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="goto gotodefaultthanks">
+        <h3>Thanks</h3>
+        <p>Thank you for submitting this information. We'll take action where necessary as soon as possible.</p>
+      </div>
+      
+      <!-- custom thanks areas can be added here -->
+    </div>
+  </div>
+</div>
 
 
 <script>
-
-var goto = window.location.hash.replace('#','');
-if (got) {
-  
-}
-
-clogin.failureCallback = function(data,action) {
-  if (clogin.loadingId) $('#'+clogin.loadingId).hide();
-  if ( action === 'login' && $('#'+clogin.tokenInputId).length && $('#'+clogin.tokenInputId).val().length === clogin.tokenlength ) {
-    // token login error seems to be occurring, so say token must be invalid
-    $('#'+clogin.messagesDivId).html('<p>Sorry, your login token appears to be invalid. Please refresh the page and try logging in again.</p>');
-  }
-  data.page = window.location.href;
-  data.action = action;
-  data.user = clogin.user;
-  data.cookie = clogin.getCookie();
-  try {
-    data.navigator = {
-      userAgent: navigator.userAgent,
-      platform: navigator.platform,
-      vendor: navigator.vendor,
-      plugins: navigator.plugins
+  jQuery(document).ready(function() {
+    var api = 'https://api.openaccessbutton.org';
+    if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
+      api = 'https://dev.api.cottagelabs.com/service/oab';
     }
-  } catch(err) {}
-  $.ajax({
-    type:'POST',
-    url: 'https://dev.api.cottagelabs.com/mail/error?token=08f98hfwhef98wehf9w8ehf98whe98fh98hw9e8h',
-    cache:false,
-    processData:false,
-    contentType: 'application/json',
-    dataType: 'json',
-    data:JSON.stringify(data)
+
+    $('#form').attr('action',api+'/bug');
+    $('.goto').hide();
+    var goto = window.location.hash.replace('#','');
+    if (!goto) {
+      goto = 'choose';
+    } else {
+      $('#form').show();
+    }
+    if (goto.indexOf('thanks') !== -1) {
+      $('#form').hide();
+      if (!$('.goto'+goto).length) goto = 'defaultthanks';
+    } 
+    $('.goto'+goto).show();
+        
+    var choose = function(e) {
+      if (e) e.preventDefault();
+      $('.goto').hide();
+      goto = $(this).val();
+      $('#form').show();
+      $('.goto'+goto).show();
+    }
+    $('#goto').bind('change',choose);
+    
+    var submit = function(e) {
+      if (e) e.preventDefault();
+      
+      var data = {form:goto};
+      
+      $('input,select,textarea').each(function() {
+        if ( $(this).parents('.goto'+goto) ) {
+          var key = $(this).attr('name') ? $(this).attr('name') : $(this).attr('id');
+          var val = $(this).val() ? $(this).val() : $(this).attr('value');
+          if ( ( $(this).attr('type') === 'checkbox' || $(this).attr('type') === 'radio' ) && !$(this).is(':checked') ) val = undefined;
+          if ( key === "submit" ) key = undefined;
+          if ( key && val ) {
+            if (data[key] === undefined) {
+              data[key] = val;
+            } else {
+              if (typeof data[key] !== 'object') data[key] = [data[key]];
+              data[key].push(val);
+            }
+          }
+        }
+      });
+      
+      if (window.location.href.indexOf('?') !== -1) {
+        var p = window.location.href.split('?')[1];
+        var pairs = p.split('&');
+        for ( var pr in pairs ) {
+          var parts = pairs[pr].split('=');
+          if (parts.length === 2 && parts[0].length && parts[1].length) data[parts[0]] = parts[1];
+        }
+      }
+
+      data.page = window.location.href;
+      data.language = navigator.language || navigator.userLanguage
+			data.viewport = {
+				width: window.innerWidth,
+				height: window.innerHeight
+			}
+      try {
+        data.user = clogin.user;
+        data.cookie = clogin.getCookie();
+      } catch(err) {}
+      try {
+        data.navigator = {
+          userAgent: navigator.userAgent,
+          platform: navigator.platform,
+          vendor: navigator.vendor,
+          plugins: navigator.plugins
+        }
+      } catch(err) {}
+      
+      // submit the form with ajax, or just stick stringified data into a form field and submit the form normal?
+      $.ajax({
+        type:'POST',
+        url: api + '/bug',
+        cache:false,
+        processData:false,
+        contentType: 'application/json',
+        dataType: 'json',
+        data:JSON.stringify(data)
+      });
+
+      goto += 'thanks';
+      $('.goto').hide();
+      $('#form').hide();
+      if (!$('.goto'+goto).length ) goto = 'defaultthanks';
+      $('.goto'+goto).show();
+    }
+    $('#submit').bind('click',submit);
   });
-  if (typeof clogin.afterFailure === 'function') clogin.afterFailure();
-}
-
-
 
 </script>

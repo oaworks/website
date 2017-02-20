@@ -1,0 +1,46 @@
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <p>
+        Thank you, your email address <span id="email"></span> has been removed from our system, and we will not contact you in future.
+      </p>
+      <p>
+        Would you mind taking a minute to answer a couple of questions about why you don't want us to contact you?
+      </p>
+      <p>
+        <a id="bug" href="">Please click here to answer our quick survey</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+  jQuery(document).ready(function() {
+    var api = 'https://api.cottagelabs.com/service/oab'; // to ensure this works for now, use only the LOCAL CL api address
+    if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
+      api = 'https://dev.api.cottagelabs.com/service/oab';
+    }
+
+    var email = window.location.pathname.split('/')[2];
+    $('#email').html(email);
+    $('#bug').attr('href','/bug#dnr?email='+email);
+
+    var submit = function() {
+      if ($('#url').val()) data.url = $('#url').val();
+      if ($('#description').val()) data.description = $('#description').val();
+      if ($('#title').val()) data.title = $('#title').val();
+      $.ajax({
+        type: 'POST',
+        url: api + '/dnr?email=' + email,
+        cache: false,
+        processData: false
+      });
+    }
+    submit();
+
+  });
+</script>
