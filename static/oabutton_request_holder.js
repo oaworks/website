@@ -1,7 +1,7 @@
 
 $.fn.holder.use.oabutton = {
   url: "https://api.openaccessbutton.org/requests",
-  pushstate: false,
+  //pushstate: false,
   sticky: true,
   datatype: 'JSON',
   size:500,
