@@ -9,6 +9,9 @@
 <!--<script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/range.js"></script>-->
 
 <style>
+  body {
+    margin-top:100px;
+  }
   .row{
     padding-top:0px;
     padding-bottom:0px;
@@ -40,7 +43,6 @@
     opacity: 0.9;
     position: absolute;
   }
-
 </style>
 
 <div class="holder loading" style="margin:0px;padding:0px;position:fixed;top:90px;left:0;right:0;bottom:0;display:none;z-index:1000000000000000000000000000;">
@@ -57,8 +59,8 @@
   <svg class="holder line"></svg>
 </div>-->
 
-<div class="holder sticker" style="margin-top:50px;"></div>
-<div class="holder sticky" style="z-index:100000000;background-color:#212f3f;">
+<div class="holder sticker"></div>
+<div class="holder sticky" style="z-index:100000000;background-color:#212f3f;margin-top:-50px;">
   <div class="container-fluid" style="max-width:1000px;margin:10px auto 0px auto;padding-top:20px;">
     <div class="row">
       <div id="holder" class="col-md-12">
@@ -73,8 +75,8 @@
 
 <div class="container-fluid" style="max-width:1000px;margin:0px auto 10px auto;min-height:500px;" id="stories">
   <div class="row">
-    <div class="col-md-3">
-      <div id="fixer" style="position:fixed;max-width:230px;">
+    <div class="col-md-3" style="z-index:1;">
+      <div id="fixer" style="position:fixed;max-width:230px;background-color:white;border-radius:3px;padding-left:3px;padding-right:3px;">
         <div class="well" style="background-color:#212f3f;border:none;color:#212f3f;padding-top:8px;margin-top:30px;overflow:hidden;">
           <h3 style="text-align:center;font-size:60px;color:#f04717;">
             <span id="requestscount">X</span>
