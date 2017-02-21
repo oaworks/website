@@ -96,13 +96,6 @@ jQuery(document).ready(function() {
   $('.dl').hide();
   $('.dl'+b).show();
 
-  var chromeinstall = function(e) {
-    e.preventDefault();
-    chrome.webstore.install(undefined, function() { window.location = window.location.href }, function(err) { console.log('install error'); console.log(err); });
-  }
-  $('#chromeinstall').bind('click',chromeinstall);
-  $('.chromeinstall').bind('click',chromeinstall);
-
   $('#viewrequests').bind('click',function(e) {
     $(this).attr('href','/request?q=user.id:'+clogin.user.account._id);
   });
@@ -142,7 +135,7 @@ jQuery(document).ready(function() {
         <div id="cloginLoading" style="display:none;"><img style="height:30px;" src="//static.cottagelabs.com/spinner.gif"></div>
       </div>
 
-      <div class="row" style="margin-top:70px;margin-bottom:100px;">
+      <div class="row dl ch" id="install" style="margin-top:70px;margin-bottom:100px;">
         <div class="col-md-1 col-md-offset-1">
           <p style="font-size:40px;line-height:10px;color:#398bc5;text-align:center;">
             <i class="glyphicon glyphicon-download"></i>

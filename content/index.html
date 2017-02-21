@@ -6,6 +6,15 @@ jQuery(document).ready(function() {
   $('#signup').bind('click',function() { window.location = window.location.origin+'/account?a=signup&email='+$('#email').val() });
   $('#search').bind('click',function() { window.location = window.location.origin+'/find?url='+$('#url').val() });
   $('#url').bind('keyup',function(e) { if (e.keyCode === 13) { window.location = window.location.origin+'/find?url='+$('#url').val(); } });
+
+  var mobile = mobileCheck();
+  if (mobile) {
+    $('#install').hide()
+  } else if (navigator.userAgent.match(/chrome/i)) {
+    $('.install').hide();
+    $('.chromeinstall').show();
+  }
+
 });
 </script>
 
@@ -83,15 +92,24 @@ end of alert bar -->
   <div class="container-fluid">
     <div class="row" style="padding-top:30px;padding-bottom:30px;">
       <div class="col-md-8 col-md-offset-2">
-        <div class="row">
+        <div class="row" id="install">
           <div class="col-md-2">
             <p style="font-size:60px;line-height:10px;color:#398bc5;padding-top:5px;">
-              <a href="/account"><i class="glyphicon glyphicon-download" id="gdl"></i></a>
+              <a class="install" href="/account"><i class="glyphicon glyphicon-download" id="gdl"></i></a>
+              <a style="display:none;" class="chromeinstall" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">
+                <i class="glyphicon glyphicon-download" id="gdl"></i>
+              </a>
             </p>
           </div>
           <div class="col-md-10">
             <h4>
-              <a href="/account" style="color:white;">Always have the Button by your side. 
+              <a class="install" href="/account" style="color:white;">
+                Always have the Button by your side. 
+                Get the browser extension now. Search thousands of sources instantly to 
+                find legal access to research articles and data.
+              </a>
+              <a style="display:none;color:white;" class="chromeinstall" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">
+                Always have the Button by your side. 
                 Get the browser extension now. Search thousands of sources instantly to 
                 find legal access to research articles and data.
               </a>
