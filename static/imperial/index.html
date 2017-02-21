@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Yersinia pestis TIR-domain protein forms dimers that interact with the human adaptor protein MyD88</title>
+    <meta charset="UTF-8">
+    <script>
+      apikey='43ebd25e1697bdd9362203a13be396';
+      document.getElementsByTagName('head')[0].appendChild(document.createElement('script')).setAttribute('src','//oab.test.cottagelabs.com/static/imperial/includer.js?r='+Math.random());
+    </script>
+  </head>
+  <body>
+
+    <h1>Welcome</h1>
+
+This page may be updated as progress is made. This is version v1 of the page and v0.1 of the bookmarklet.
+
+    <p>
+
+    This is a demo of the Imperial Open Access Button bookmarklet.<br>
+      Drag the below link to your bookmarks bar to run it on your system. Please note, in the final version we can change
+      <br>"Imperial Open Access Button" to anything else (e.g GetPDF or Get it now). <br>
+      (NOTE this is on our dev system - do not roll this bookmarklet out widely)
+    </p>
+
+    <p>
+      <a href="javascript:apikey='43ebd25e1697bdd9362203a13be396';document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','//oab.test.cottagelabs.com/static/imperial/includer.js?r='+Math.random());" style="background-color:#ccc;padding:5px;border-radius:3px;">Imperial Open Access Button</a>
+    </p>
+
+    <p style="max-width:600px;">
+      This page is currently using "Yersinia pestis TIR-domain protein forms dimers that interact with the human adaptor protein MyD88" as a test (showing an item that is available in Spiral).
+      <br> See right for a demonstration of how it looks when opened.<br>
+
+      <h2>Example Articles</h2>
+
+      * Here is a page with an article in a journal that Imperial do not appear to subscribe to, and that is not available anywhere (so it immediately offers to start an ILL):
+      <br><a target="_blank" href="http://stm.sciencemag.org/content/9/375/eaah6510">http://stm.sciencemag.org/content/9/375/eaah6510</a>
+
+      <br><br>
+      * Here is an article that is just generically open anyway, and (presumably) not in Spiral and not somewhere that Imperial subscribe to:
+      <br><a target="_blank" href="http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0169629">http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0169629</a>
+
+      <br><br>
+      * Here is an article in a journal that Imperial do subscribe to, although we do not find the journal itself (see PROBLEM, below), we do find
+      that it is available to read locally:
+      <br><a target="_blank" href="https://www.sciandmed.com/sm/journalviewer.aspx?issue=1207&article=2077">https://www.sciandmed.com/sm/journalviewer.aspx?issue=1207&article=2077</a>
+      <br><br>
+
+      The possible results the bookmarklet will currently return are:
+      <br>* if an item is available in the local repo, show a blue "available" link to item
+      <br>* else if relevant journal subscription appears to be available, show a blue link saying to sign in to gain access (PROBLEM - READ BELOW)
+      <br>* else if available locally in library locations, show a blue "available locally" link, when clicked, lists the status and locations
+      <br>* else if available anywhere else by the usual Open Access Button lookup, show blue "open article" link that opens the alternate source
+      <br>* else if we find nothing, the button is red instead of blue and prompts to start an ILL
+      <br>* a general error (if you see one, let us know how to reproduce it)
+
+      <br><br>
+      In each case above (except errors), there will also be a small link text offering to start an ILL if we appear to have the wrong item.
+
+      <br><br>
+      <h2>Exlibris Problem</h2>
+      Exlibris search for journals is not reliably returning the correct journal. For example, a search for the journal "science" from a page like
+      <a href="http://science.sciencemag.org/content/293/5530/629" target="_blank">http://science.sciencemag.org/content/293/5530/629</a> does NOT return
+      the journal "Science" even though presumably Imperial do subscribe to it - because there are many other journals with the word "science" in their title,
+      and starting with the word "science". Until I can find a reliable way to search exlibris for the actual journal title, we will have a problem here.
+
+      <h2>Major changes from mock-ups</h2>
+
+<br>* We've simplied some stages as the request system isn't intergrated here (and as we continue to refine concepts)
+<br>* We've allowed titles to be edited as there is no other point to correct these in the process currently. In our public button we have pages where these can be later checked and edited - we haven't yet shipped that for these yet. That can come after our sprint for the request system.
+<br>* Copy isn't refined yet.
+<br>* We're currently displaying where in the library physical items are, this probably shouldn't be included in future!
+
+For quick references, mockups and comments on them can be found <a href="https://github.com/OAButton/discussion/tree/master/UX%20Mockups/Library/Bookmarklet">here</a>
+
+<h2>Path fowards</h2>
+
+The currently bookmarklet should demonstrate roughly what we're able to do although is clearly not a polished product. Thankfully, we were able to do everything we expected to some degree (bar the problme noted above). To take things forward we would:
+
+<br>* Refining copy and appearance
+<br>* Working on improving Exlibris search
+<br>* Implementing the request system into the tool (as discussion suggests we should)
+<br>* Removing the physical location box
+<br>* Other changes from your feedback
+<br>* Connect up the ILL request to Imperial's script & tweek format (currently just sends email)
+<!-- <br>* We need a link to an item that is physically in Imperial - but where would such an item have a web page we can read from?
+<br>* need a link to an item in a journal Imperial subscribes to, and that we can actually find in exlibris (see below re PROBLEM)-->
+
+
+<h2>Change Log</h2>
+
+We'll note any significant changes to how the tool is working between versions here.
+
+    </p>
+
+  </body>
+</html>

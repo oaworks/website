@@ -95,7 +95,7 @@
 <script>
   jQuery(document).ready(function() {
     var api = 'https://api.openaccessbutton.org';
-    if (window.location.host.indexOf('openaccessbutton.org') === -1) {
+    if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
       api = 'https://dev.api.cottagelabs.com/service/oab';
       clogin.api = 'https://dev.api.cottagelabs.com/accounts';
     }
@@ -110,10 +110,25 @@
     }
 
     var record = undefined;
+    var blacklist = function(e) {
+      e.preventDefault();
+      var email = $('#email').val();
+      $('#email').val("");
+      var opts = {
+        type:'POST',
+        url: api+'/dnr?refuse=false&email=' + email,
+        cache:false,
+        contentType: 'application/json',
+        dataType: 'json'
+      }
+      $.ajax(opts);
+      $("#emailissue").html(email + " blacklisted and removed. Provide a new email address, and/or save this request.").show();
+    }
     var submit = function() {
       var data = {};
       if ( $('#email').length ) data.email = $('#email').val();
       if ( $('#status').length ) data.status = $('#status').val();
+      if ( $('#rating').length ) data.rating = $('#rating').val();
       if ( $('#url').length ) data.url = $('#url').val();
       if ( $('#title').length ) data.title = $('#title').val();
       if ( $('#doi').length ) data.doi = $('#doi').val();
@@ -131,12 +146,50 @@
         dataType: 'json',
         success: function(data) {
           $('#savesuccess').show();
-          setTimeout(function() { $('#savesuccess').hide(); }, 2000);
+          setTimeout(function() { $('#savesuccess').html("").hide(); }, 3000);
         },
         beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
       }
       opts.data = JSON.stringify(data);
       $.ajax(opts);
+    }
+    var checkemailthensubmit = function() {
+      $('#emailissue').html("").hide();
+      if ( $('#email').length && $('#email').val() && $('#email').val().length ) {
+        var email = $('#email').val();
+        var opts = {
+          type:'GET',
+          url: api+'/dnr?validate=true&email=' + email + '&request=' + rid + '&user=' + clogin.user.account._id,
+          cache:false,
+          contentType: 'application/json',
+          dataType: 'json',
+          success: function(data) {
+            if (data.data.dnr === false) {
+              submit();
+            } else {
+              var issue = 'Sorry, ' + email + ' ';
+              if (typeof data.data.dnr === 'object') {
+                issue += 'was added to our block list on ' + data.data.dnr.created_date.split(' ')[0].split('-').reverse().join('/') + '. We cannot send requests to this email.';
+              } else if (data.data.dnr === 'creator') {
+                issue += 'matches the creator of this request, so this cannot be the author email address we should contact.';
+              } else if (data.data.dnr === 'user') {
+                issue += "is your email address! We need the author's email. Are you the author? If so, please see below.";
+              } else if (data.data.dnr === 'supporter') {
+                issue += 'matches the address of someone who already supports this request. They cannot be a suitable author to contact to request access.';
+              } else if (data.data.dnr === 'invalid') {
+                issue += 'is not a valid address.';
+                if (data.data.validation.did_you_mean) issue += ' Did you mean ' + data.data.validation.did_you_mean + '?';
+              }
+              $('#email').val("").attr("placeholder",email + " is an unsuitable author email address - please try another");
+              $('#emailissue').html(issue).show();
+            }
+          },
+          error: submit // if we can't do the validation for some reason, just submit anyway
+        }
+        $.ajax(opts);
+      } else {
+        submit();
+      }
     }
     var deleteitem = function() {
       $.ajax({
@@ -211,9 +264,20 @@
       // add the details
       var dets = '';
       dets += '<p>This request was created on ' + format(record.createdAt);
-      if (record.user && (record.user.username || record.user.email)) {
+      if (record.user && (record.user.username || record.user.firstname || record.user.email)) {
         dets += ' by ';
-        dets += record.user.username ? record.user.username : record.user.email;
+        if (record.user.firstname) {
+          dets += record.user.firstname;
+        } else if (record.user.username) {
+          dets += record.user.username;
+        } else {
+          dets += record.user.email;
+        }
+      }
+      if (record.user && record.user.profession && record.user.profession.toLowerCase() !== 'other') {
+        dets += ' (a';
+        if (['a','e','i','o','u'].indexOf(record.user.profession.toLowerCase().substring(0,1)) !== -1 ) dets += 'n';
+        dets += ' ' + record.user.profession.toLowerCase() + ')';
       }
       if (record.story) dets += ' who said:<br><blockquote>' + record.story + '</blockquote><br>';
       dets += '</p>';
@@ -232,13 +296,15 @@
         dets += 'Unfortunately this has been refused by ' + record.email + ' - can you provide a new author email address to try? <input type="text" id="email" class="form-control" placeholder="Author email address">';
       } else if (record.status === 'received') {
         dets += '</p><p>This request has been successful!';
+      } else if (record.status === 'closed') {
+        dets += '</p><p>This request could not be completed, and has been closed';
       }
       dets += '</p>';
 
       // show admin controls
       if (isadmin) {
-        dets += ' <select id="status" class="form-control" style="background-color:orange;width:130px;display:inline;margin-right:20px;">';
-        var statuses = ['help','moderate','progress','hold','refused','received'];
+        dets += '<p><select id="status" class="form-control" style="background-color:orange;width:130px;display:inline;margin-right:20px;">';
+        var statuses = ['help','moderate','progress','hold','refused','received','closed'];
         for ( var s in statuses ) {
           dets += '<option value="' + statuses[s] + '"';
           if (record.status === statuses[s]) dets += ' selected="selected"';
@@ -249,20 +315,28 @@
         if (record.test === true) dets += ' checked="checked"';
         dets += '> <a style="margin-left:20px;" class="btn btn-warning btn-xs" href="/admin?request=' + rid + '">Email</a>';
         dets += ' <a style="margin-left:20px;" class="btn btn-warning btn-xs" href="/response/' + record.receiver + '">Responder</a>';
-        dets += ' <a style="margin-left:20px;" class="btn btn-danger btn-xs" id="delete" href="#">DELETE</a>';
+        dets += ' <span style="color:orange;margin-top:5px;">rating: <select id="rating" class="form-control" style="background-color:orange;width:80px;display:inline;">';
+        var ratings = ["0","1","2","3","4","5"];
+        for ( var r in ratings ) {
+          dets += '<option value="' + ratings[r] + '"';
+          if (record.rating === ratings[r]) dets += ' selected="selected"';
+          dets += '>' + ratings[r] + '</option>';
+        }
+        dets += '</select>';
         if (record.location && record.location.geo && record.location.geo.lat) {
           dets += '<p style="color:orange;margin-top:5px;">Location: ' + record.location.geo.lat + ',' + record.location.geo.lon
           if (record.location.location) dets += ' - ' + record.location.location;
           dets += '</p>';
         }
+        dets += '</p>';
       }
-      dets += '</p>';
 
       // show the email if at a stage where it can be changed, or if admin
       if (isadmin || iseditable) {
         dets += '<p><input type="text" id="email" value="' + record.email + '" placeholder="Author Email"';
         if (isadmin && !iseditable) dets += ' style="background-color:orange;"';
-        dets += 'class="form-control"></p>';
+        dets += 'class="form-control"></p><p id="emailissue" style="display:none;font-size:0.9em;"></p>';
+        if (isadmin && record.email) dets += '<p><a id="blacklist" href="#" class="btn btn-warning btn-block btn-xs">Blacklist (and remove) this email address</a></p>';
       }
 
       if (iseditable) {
@@ -289,10 +363,14 @@
         dets += '<input type="submit" id="submitchanges" value="Save changes" class="btn btn-action btn-block">';
         dets += '<div id="savesuccess" style="display:none;"><p>Saved</p></div>';
       }
+      if (iscreator || isadmin) {
+        dets += ' <a style="margin-top:10px;" class="btn btn-danger btn-block btn-xs" id="delete" href="#">DELETE</a>';        
+      }
 
       // bind actions
       $('#edit').html(dets);
-      if ($('#submitchanges').length) $('#submitchanges').bind('click',submit);
+      if ($('#blacklist').length) $('#blacklist').bind('click',blacklist);
+      if ($('#submitchanges').length) $('#submitchanges').bind('click',checkemailthensubmit);
       if ($('#delete').length) $('#delete').bind('click',deleteitem);
       if (clogin.hasRole('root')) $('#titlelink').bind('click',scrape);
 
@@ -305,18 +383,19 @@
       }
     }
 
-    var results = function(data) {
+    var record = function(rec) {
       var out = '';
-      if (data.hits && data.hits.hits) {
-        for ( var r in data.hits.hits ) {
-          var s = data.hits.hits[r]._source;
-          out += '<blockquote>';
-          out += s.username ? s.username : s.email;
-          out += ' supports this request';
-          if (s.story) out += ':<br>' + s.story
-          out += '</blockquote>';
-        }
+      out += '<blockquote>';
+      if (rec.firstname) {
+        out += rec.firstname;
+      } else if (rec.username) {
+        out += rec.username;
+      } else {
+        out += rec.email;
       }
+      out += ' supports this request';
+      if (rec.story) out += ':<br>' + rec.story
+      out += '</blockquote>';
       $('#stories').html(out);
     }
 
@@ -346,10 +425,9 @@
           }
         }
       },
+      ui:false,
       pushstate: false,
-      results: {
-        default: results
-      }
+      record: record
     });
 
     var addsupport = function(event) {

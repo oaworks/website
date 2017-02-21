@@ -2,13 +2,25 @@
 
 var oab = {
 
-  debug : false, // this puts the button in debug mode, issues debug warnings
+  debug : true, // this puts the button in debug mode, issues debug warnings
 
   bookmarklet : true, // this lib is also used by a bookmarklet, which sets this to change plugin type
   
-  api_address : /*'https://dev.api.cottagelabs.com/service/oab',*/ 'https://api.openaccessbutton.org',
+  location : false, // whether or not to try geolocation
+  
+  signup : false, // whether or not to prompt signup
+  
+  library : 'imperial', // either false or the name of a library to do a catalogue lookup and ILL for
+  
+  requestable : false, // whether or not a user is allowed to create a request (whether logged in or not)
+  
+  supportable : false, // whether or not a user is allowed to support a request (whether logged in or not)
+  
+  dataable : false, // whether or not to bother with the data icons
 
-  site_address : /*'http://oab.test.cottagelabs.com',*/ 'https://openaccessbutton.org',
+  api_address : 'https://dev.api.cottagelabs.com/service/oab',// 'https://api.openaccessbutton.org',
+
+  site_address : 'http://oab.test.cottagelabs.com',// 'https://openaccessbutton.org',
 
   howto_address : '/instructions',
 
@@ -26,18 +38,24 @@ var oab = {
       data.plugin = manifest.version_name;
     } catch (err) {
       data.plugin = oab.bookmarklet ? 'bookmarklet_'+oab.bookmarklet : 'oab_test_page';
+      if (oab.library) data.plugin = oab.library + '_' + data.plugin;
     }
     if (oab.debug) data.test = true;
     return data;
   },
+  
+  sendILL: function(api_key, data, success_callback, failure_callback) {
+    if (oab.library) oab.postLocated('/ill/' + oab.library, api_key, data, success_callback, failure_callback);
+  },
 
   sendAvailabilityQuery: function(api_key, data, success_callback, failure_callback) {
-    oab.postLocated('/availability', api_key, data, success_callback, failure_callback)
+    if (oab.library) data.library = oab.library;
+    oab.postLocated('/availability', api_key, data, success_callback, failure_callback);
   },
 
   sendRequestPost: function(api_key, data, success_callback, failure_callback) {
     var request_id = data._id ? data._id : '';
-    oab.postLocated('/request/' + request_id, api_key, data, success_callback, failure_callback)
+    oab.postLocated('/request/' + request_id, api_key, data, success_callback, failure_callback);
   },
 
   sendSupportPost: function(api_key, data, success_callback, failure_callback) {
@@ -53,7 +71,7 @@ var oab = {
   // try to append location to the data object before POST
   postLocated: function(request_type,key,data,success_callback,error_callback) {
     try {
-      if (navigator.geolocation) {
+      if (oab.location && navigator.geolocation) {
         var opts = {timeout: 5000};
         navigator.geolocation.getCurrentPosition(function (position) {
           data.location = {geo: {lat: position.coords.latitude, lon: position.coords.longitude}};
@@ -64,7 +82,7 @@ var oab = {
         }, opts);
       } else {
         // Browser does not support location
-        oab.debugLog('GeoLocation is unsupported.');
+        if (oab.location) oab.debugLog('GeoLocation is unsupported.');
         oab.postToAPI(request_type,key,data,success_callback,error_callback);
       }
     } catch (e) {

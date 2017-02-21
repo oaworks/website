@@ -127,7 +127,73 @@ server {
   location /blog/new-apps-find-free-access-to-scientific-and-scholarly-research {
     rewrite ^/.* https://medium.com/@openaccessbutton/21-october-2014-631d530eb8ca permanent;
   }
-  
+
+  location ~ /url/(?<url>.+) {
+    proxy_pass http://clapidev/api/academic/redirect?url=$url;
+    proxy_redirect off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+  location /doi {
+    proxy_pass http://clapi/api/academic/redirect/doi;
+    proxy_redirect off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+  location /pmc {
+    proxy_pass http://clapi/api/academic/redirect/pmc;
+    proxy_redirect off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+  location /pmid {
+    proxy_pass http://clapi/api/academic/redirect/pmid;
+    proxy_redirect off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+  location /title {
+    proxy_pass http://clapi/api/academic/redirect/title;
+    proxy_redirect off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+  location /citation {
+    proxy_pass http://clapi/api/academic/redirect/citation;
+    proxy_redirect off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+
+}
+
+server {
+  listen 80;
+  server_name ineedthisdoi.org;
+  root /home/cloo/live/openresearchbutton/website/ineedthisdoi;
+
+  location /static {
+    try_files $uri $uri.html $uri/index $uri/index.html 404 /404 =404;
+  }
+  location = / {
+    try_files $uri $uri.html /index.html;
+  }
+  location = /index.html {
+    try_files $uri $uri.html /index.html;
+  }
+  location / {
+    proxy_pass http://clapi/api/academic/redirect;
+    proxy_redirect off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
 }
 
 # SERVE LIVE API WITH CONNECT TO PREFERRED METEOR SERVICE (CLUSTER)
