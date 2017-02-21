@@ -19,8 +19,20 @@
       <br>
     </div>
   </div>
+  <div class="row" id="batch" style="display:none;">
+    <div class="col-md-12">
+      <p class="uploader">Upload a csv file, which must have column names including at least one of "url","doi","pmid","pmc","title":</p>
+      <form class="uploader">
+        <input type="file" name="fileupload" id="fileupload" class="form-control" style="padding-bottom:10px;">
+        <input type="submit" class="submit" id="filesubmit" name="filesubmit" value="Submit" style="margin-bottom:-5px;">
+        <div class="well" style="display:none;" id="filereview"></div>
+      </form>
+			<div class="well" id="pollinfo"></div>
+    </div>
+  </div>
   <div class="row">
     <div class="col-md-3">
+      <a class="btn btn-action btn-block" id="showbatch">Submit a batch job</a>
       <a class="btn btn-action btn-block" id="showmailbox">Write an email</a>
       <a class="btn btn-action btn-block" id="refreshtemplates">Refresh templates</a>
       <div class="holder facets" style="margin-top:10px;"></div>
@@ -64,6 +76,16 @@
       api = 'https://dev.api.cottagelabs.com/service/oab';
       clogin.api = 'https://dev.api.cottagelabs.com/accounts';
     }
+
+    // bind lantern ui stuff to a file upload box, and when uploaded show back a list of what can be parsed out of it
+    var batch = function(e) {
+      if (e) e.preventDefault();
+      // get the spreadsheet upload file. Use the lantern UI stuff to process it. submit it to the backend
+      // receive back the job ID. Open new window to the job progress page
+      // clear the file upload box and the other upload info, show success for a few seconds, then close the submit job area
+    }
+    $('#submitbatch').bind('click',batch);
+    $('#showbatch').bind('click',function(e) { e.preventDefault(); $('#batch').toggle(); });
 
     var vars = {};
     var templates = {};
