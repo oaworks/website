@@ -1,5 +1,6 @@
 
 <script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/facets.js"></script>
+<script type="text/javascript" src="/static/dropfile.js"></script>
 <script type="text/javascript" src="/static/job.js"></script>
 
 <div class="container-fluid" id="accounts" style="display:none;">
@@ -21,13 +22,15 @@
     </div>
   </div>
   <div class="row" id="batch" style="display:none;">
-    <div class="col-md-12">
-      <p class="jobupload">Upload a csv file, which must have column names including at least one of "url","doi","pmid","pmc","title":</p>
-      <form class="jobupload">
+    <div class="col-md-3">
+      <p class="jobupload">Upload a csv file, which must have column names including at least one of "url","doi","pmid","pmc","title"</p>
+		</div>
+		<div class="col-md-9">
+      <form>
         <input type="file" name="jobupload" id="jobupload" class="form-control" style="padding-bottom:30px;margin-bottom:5px;">
-        <input type="submit" class="btn btn-action btn-block submit" id="jobsubmit" name="jobsubmit" value="Submit">
+				<div style="display:none;" id="jobinfo"></div>
+        <input type="submit" class="btn btn-action btn-block submit jobupload" id="jobsubmit" name="jobsubmit" value="Submit">
       </form>
-			<div style="display:none;" id="jobinfo"></div>
     </div>
   </div>
   <div class="row">
@@ -77,14 +80,6 @@
       clogin.api = 'https://dev.api.cottagelabs.com/accounts';
     }
 
-    // bind lantern ui stuff to a file upload box, and when uploaded show back a list of what can be parsed out of it
-    var batch = function(e) {
-      if (e) e.preventDefault();
-      // get the spreadsheet upload file. Use the lantern UI stuff to process it. submit it to the backend
-      // receive back the job ID. Open new window to the job progress page
-      // clear the file upload box and the other upload info, show success for a few seconds, then close the submit job area
-    }
-    $('#submitbatch').bind('click',batch);
     $('#showbatch').bind('click',function(e) { e.preventDefault(); $('#batch').toggle(); });
 
     var vars = {};
@@ -338,6 +333,7 @@
     
     clogin.afterLogin = function() {
       if (clogin.hasRole('openaccessbutton.admin')) {
+				job.startup();
         $('#no').hide();
         $('#accounts').show();
         var record = function(res) {

@@ -13,7 +13,7 @@
 		if ( $('#jobinfo').length ) {
 			var msg = '<p style="color:black;">';
 			msg += job.results.length;
-			msg += ' rows extracted</p>';
+			msg += ' rows, with headers ' + job.headers + '</p>';
 			$('#jobinfo').html(msg).show();
 		}
   }
@@ -41,7 +41,7 @@
 			job.file = undefined;
 			job.filename = '';
 		} else {
-			var headers = [];
+			job.headers = [];
 			var hline = lines.shift();
 			var hlines = hline.split(split);
 			var hl = '';
@@ -51,7 +51,7 @@
 				if ( hl.split(wrap).length % 2 !== 0 ) {
 					hl = hl.replace(wrapreplace,'').replace(/(^\s*)|(\s*$)/g,''); // strip whitespace leading and ending header names
 					//hl = hl.toLowerCase().replace(/ /g,'_').replace(/[^a-z0-9_]/g,'');; // could do additional header cleaning here
-					headers.push(hl);
+					job.headers.push(hl);
 					hl = '';
 				}
 			}
@@ -67,7 +67,7 @@
 					cl += currentline[col];
 					if ( cl.split(wrap).length % 2 !== 0 ) {
 						cl = cl.replace(wrapreplace,'');
-						if (headers[counter] && headers[counter].length > 0) obj[headers[counter]] = cl;
+						if (job.headers[counter] && job.headers[counter].length > 0) obj[job.headers[counter]] = cl;
 						if (lengths === 0) lengths = cl.length;
 						cl = '';
 						counter += 1;
@@ -80,6 +80,7 @@
   }
 	
   job.prep = function(e) {
+		if ($(this).attr('id') !== 'jobupload') return;
 		var f;
 		if( window.FormData === undefined ) {
 			f = (e.files || e.dataTransfer.files);
@@ -162,7 +163,7 @@
   }
 	  
 	job.startup = function() {
-	  $('#jobupload').on('change', job.prep);
+	  $('input[type=file]').on('change', job.prep);
 	  $('#jobsubmit').bind('click',job.submit);
 		if (window.location.hash && window.location.hash.replace('#','').length === 17) { // our job IDs are 17 digits long
 			setTimeout(function() {$('.jobupload').hide();},200);
