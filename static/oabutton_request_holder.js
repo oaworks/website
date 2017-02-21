@@ -1,7 +1,6 @@
 
 $.fn.holder.use.oabutton = {
-  //url: "https://api.openaccessbutton.org/requests",
-  url: "https://dev.api.cottagelabs.com/service/oab/requests",
+  url: "https://api.openaccessbutton.org/requests",
   pushstate: false,
   sticky: true,
   datatype: 'JSON',
