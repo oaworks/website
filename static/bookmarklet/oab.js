@@ -52,24 +52,28 @@ var oab = {
 
   // try to append location to the data object before POST
   postLocated: function(request_type,key,data,success_callback,error_callback) {
-    try {
-      if (navigator.geolocation) {
-        var opts = {timeout: 5000};
-        navigator.geolocation.getCurrentPosition(function (position) {
-          data.location = {geo: {lat: position.coords.latitude, lon: position.coords.longitude}};
+    if (oab.bookmarklet) {
+      oab.postToAPI(request_type,key,data,success_callback,error_callback);
+    } else {
+      try {
+        if (navigator.geolocation) {
+          var opts = {timeout: 5000};
+          navigator.geolocation.getCurrentPosition(function (position) {
+            data.location = {geo: {lat: position.coords.latitude, lon: position.coords.longitude}};
+            oab.postToAPI(request_type,key,data,success_callback,error_callback);
+          }, function (error) {
+            oab.debugLog(error.message);
+            oab.postToAPI(request_type,key,data,success_callback,error_callback);
+          }, opts);
+        } else {
+          // Browser does not support location
+          oab.debugLog('GeoLocation is unsupported.');
           oab.postToAPI(request_type,key,data,success_callback,error_callback);
-        }, function (error) {
-          oab.debugLog(error.message);
-          oab.postToAPI(request_type,key,data,success_callback,error_callback);
-        }, opts);
-      } else {
-        // Browser does not support location
-        oab.debugLog('GeoLocation is unsupported.');
+        }
+      } catch (e) {
+        oab.debugLog("A location error has occurred.");
         oab.postToAPI(request_type,key,data,success_callback,error_callback);
       }
-    } catch (e) {
-      oab.debugLog("A location error has occurred.");
-      oab.postToAPI(request_type,key,data,success_callback,error_callback);
     }
   },
 

@@ -89,9 +89,9 @@
             <br>
             <a class="holder" do="instruct" val="help" href="#" style="text-decoration:underline;color:white;">Help us with requests</a><br>
             <a id="viewrequests" class="cloggedin" href="/request" style="text-decoration:underline;color:white;">View your requests</a><br>
-            <a href="/find" style="text-decoration:underline;color:white;">Start a new request</a>
           </p>
         </div>
+        <a href="/" class="btn btn-block btn-action" style="margin-bottom:10px;margin-top:-10px;">Start a request</a>
         <div class="holder facets">
 
         </div>
@@ -113,6 +113,12 @@
 <script>
 jQuery(document).ready(function() {
   
+    var api = 'https://api.openaccessbutton.org';
+    if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
+      api = 'https://dev.api.cottagelabs.com/service/oab';
+      $.fn.holder.use.oabutton.url = api + '/requests';
+    }
+
   var user = clogin.loggedin();
   if (user) {
     $('#viewrequests').bind('click',function(e) {

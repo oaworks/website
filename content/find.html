@@ -1,22 +1,55 @@
 
-<div class="strap strap-compact intro" style="margin-top:-20px;background-image:url(/static/book.jpg);background-color:transparent;height:500px;background-size:100% 100%;background-repeat:no-repeat;border-bottom:1px solid #212f3f;">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-8 col-md-offset-2">
-        <h2 style="text-align:center;font-weight:normal;padding-top:20px;color:#212f3f;margin-top:100px;">
-          Find research<br>
-        </h2>
-        <p><textarea id="url" class="form-control" style="min-height:128px;" placeholder="Enter an article URL, DOI, PMID, or PMC ID. &#10;&#10;For example: 10.1186/1758-2946-3-47"></textarea></p>
-        <input type="submit" id="find" value="Find it!" class="btn btn-action btn-block"><br><br>
+
+
+<div class="container-fluid" style="margin-top:200px;margin-bottom:600px;">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="well" style="background-color:#f04717;margin-top:30px;border:none;color:#212f3f;padding-top:8px;">
+        <h4>
+          This page has moved. You should be redirected, but if not, click here to <a href="/find">/find</a>
+        </h4>
       </div>
     </div>
   </div>
 </div>
 
-<div class="strap strap-compact intro" style="margin-bottom:-60px;">
+
+<script>
+  jQuery(document).ready(function() {
+    window.location = '/find';
+  });
+</script>
+
+<!--
+<div class="strap strap-compact intro" style="margin-top:-20px;background-image:url(/static/book.jpg);background-color:transparent;height:500px;background-size:100% 100%;background-repeat:no-repeat;border-bottom:1px solid #212f3f;">
   <div class="container-fluid">
-    <div class="row" style="padding-top:30px;">
+    <div class="row">
       <div class="col-md-8 col-md-offset-2">
+        <h2 style="text-align:center;font-weight:normal;padding-top:20px;color:#212f3f;margin-top:100px;">
+          Find open research<br><small>If it's not already available, we'll start a request</small>
+        </h2>
+        <p><textarea id="url" class="form-control" style="min-height:128px;" placeholder="Enter an article DOI, URL, Pubmed ID, Pubmed Central ID, Title, or Citation"></textarea></p>
+        <input type="submit" id="find" value="Start" class="btn btn-action btn-block"><br><br>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="strap strap-white intro" style="border-top:2px solid #212f3f;">
+  <div class="container-fluid">
+    <div class="col-md-8 col-md-offset-2">
+      <p>
+        Examples:<br>
+        DOI: <a class="example" href="#">10.1186/1758-2946-3-47</a><br>
+        URL: <a class="example" href="#">http://jcheminf.springeropen.com/articles/10.1186/1758-2946-3-47</a><br>
+        Pubmed ID: <a class="example" href="#">21999661</a><br>
+        Pubmed Central ID: <a class="example" href="#">PMC3206455</a><br>
+        Title: <a class="example" href="#">Open Bibliography for Science, Technology, and Medicine</a><br><br>
+        Citation: <a class="example" href="#">Jones, R., Macgillivray, M., Murray-Rust, P., Pitman, J., Sefton, P., O'steen, B., & Waites, W. (2011). Open Bibliography for Science, Technology, and Medicine. Journal of Cheminformatics, 3(1), 47. http://doi.org/10.1186/1758-2946-3-47</a><br><br>
+        Or try your own favourite citation format (Harvard, Bibtex, etc)<br><br>
+        Interested in how we find open articles? <a href="/sources">Read more about our sources</a>
+      </p>
+      <div class="well" style="background-color:#212f3f;margin-top:50px;">
         <div class="row" id="install">
           <div class="col-md-2">
             <p style="font-size:60px;line-height:10px;color:#398bc5;padding-top:5px;">
@@ -30,13 +63,13 @@
             <h4>
               <a class="install" href="/account" style="color:white;">
                 Always have the Button by your side. 
-                Get the browser extension now. We search thousands of sources instantly to 
-                find you legal access to research articles and data.
+                Get the browser extension now. We search thousands of sources instantly, 
+                and request legal access to research articles and data.
               </a>
               <a style="display:none;color:white;" class="chromeinstall" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">
                 Always have the Button by your side. 
-                Get the browser extension now. Search thousands of sources instantly to 
-                find legal access to research articles and data.
+                Get the browser extension now. Search thousands of sources instantly, 
+                and request legal access to research articles and data.
               </a>
             </h4>            
           </div>
@@ -56,12 +89,12 @@
         <p style="text-align:center;">
           Already have an account? Login now!
         </p>
-        <a class="btn btn-action btn-block login" href="/account?next=/request/new?url=">Sign up / login</a>
+        <a class="btn btn-action btn-block login" href="/account?next=/find?url=">Sign up / login</a>
       </div>
 
       <div class="well" id="moredetails" style="display:none;margin-top:50px;">
         <p>We need a few more details about you before you can make this request. Can you take a second to finish signing up?</p>
-        <a href="/account?next=/request/new?url=" class="btn btn-block btn-action login">Complete your account details</a>
+        <a href="/account?next=/find?url=" class="btn btn-block btn-action login">Complete your account details</a>
       </div>
     </div>
 
@@ -122,6 +155,13 @@
 <script>
   jQuery(document).ready(function() {
 
+    var example = function(e) {
+      if (e) e.preventDefault();
+      $('#url').val($(this).html());
+      setTimeout(function() { $('#find').trigger('click'); }, 700);
+    }
+    $('.example').bind('click',example);
+    
     var mobile = mobileCheck();
     if (mobile) {
       $('#install').hide()
@@ -231,19 +271,19 @@
       if ($(this).attr('href') === '#') {
         e.preventDefault();
         requestwhat = $(this).hasClass('requestarticle') ? 'article' : 'data';
-        $('#createheader').html('Create a ' + requestwhat + ' request');
+        $('#createheader').html('Create ' + requestwhat + ' request');
         $('#availability').hide();
         $('#story').attr('placeholder',$('#story').attr('placeholder').replace('research',requestwhat));
         if (clogin.loggedin()) {
           var acc = clogin.user && clogin.user.account ? clogin.user.account : undefined;
           if (acc && ( !acc.service.openaccessbutton.profile.profession || !acc.profile.firstname ) ) {
-            $('.login').attr('href','/account?next=/request/new?url='+encodeURIComponent($('#url').val()));
+            $('.login').attr('href','/account?next=/find?url='+encodeURIComponent($('#url').val()));
             $('#moredetails').show();
           } else {
             $('#newrequest').show();
           }
         } else {
-          $('.login').attr('href','/account?next=/request/new?url='+encodeURIComponent($('#url').val()));
+          $('.login').attr('href','/account?next=/find?url='+encodeURIComponent($('#url').val()));
           $('#loginpls').show();
         }
       }
@@ -333,3 +373,5 @@
     }
   });
 </script>
+
+-->

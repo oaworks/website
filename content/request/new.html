@@ -1,12 +1,15 @@
 
-<div class="container-fluid" style="margin-top:200px;margin-bottom:600px;">
+<div class="container-fluid">
   <div class="row">
-    <div class="col-md-12">
-      <div class="well" style="background-color:#f04717;margin-top:30px;border:none;color:#212f3f;padding-top:8px;">
-        <h4>
-          This page has moved. You should be redirected, but if not, click here to <a href="/find">/find</a>
-        </h4>
+    <div class="col-md-8 col-md-offset-2">
+      <div id="new" style="display:none;">
+        
       </div>
+
+      <div id="record" style="display:none;">
+        
+      </div>
+      
     </div>
   </div>
 </div>
@@ -14,6 +17,127 @@
 
 <script>
   jQuery(document).ready(function() {
-    window.location = '/find';
+    var api = 'https://api.openaccessbutton.org';
+    if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
+      api = 'https://dev.api.cottagelabs.com/service/oab';
+      clogin.api = 'https://dev.api.cottagelabs.com/accounts';
+    }
+    var rid = window.location.pathname.split('/')[2];
+    var metadata = window.location.href.indexOf('metadata=') !== -1 ? JSON.parse(decodeURIComponent(window.location.href.split('metadata=')[1].split('&')[0])) : {};    
+    var type = window.location.href.indexOf('type=') !== -1 ? decodeURIComponent(window.location.href.split('type=')[1].split('&')[0]) : 'article';
+    
+    var record = function(rec) {
+      var sts = {
+        moderate: {text:'Awaiting moderation',color:'#eee',highlight:'grey'},
+        help: {text:'We need more info - can you help?',color:'#fbdad0',highlight:'#f04717'},
+        progress: {text:'In progress - read more, support it, provide it!',highlight:'grey',color:'white'},
+        received: {text:'Success! This item has been made available!',highlight:'#5cb85c',color:'#dcefdc'},
+        refused: {text:'Refused - can you help us try again?',highlight:'#d9534f',color:'#f1c2c0'},
+        closed: {text:'Closed - this request could not be completed',highlight:'grey',color:'#eee'}
+      }
+      var color = rec.status && sts[rec.status] && sts[rec.status].color ? sts[rec.status].color : '#eee';
+      var status = rec.status && sts[rec.status] && sts[rec.status].text ? sts[rec.status].text : rec.status;
+      var highlight = rec.status && sts[rec.status] && sts[rec.status].highlight ? sts[rec.status].highlight : '#eee';
+      var text = rec.status && sts[rec.status] && sts[rec.status].highlight ? sts[rec.status].highlight : 'blue';
+      var re = '<div class="well" style="margin:30px auto 0px auto;background-color:' + color + '">';
+      re += '<p><b>';
+      if (rec.type && rec.type === 'data') re += 'Data for ';
+      re += '<a href="/request/' + rec._id + '" style="word-wrap:break-word;overflow-wrap:break-word;">';
+      re += rec.title ? rec.title : rec.url;
+      re += '</a></b></p>';
+      if (rec.story && ( parseInt(rec.rating) >= 3 || rec.rating === undefined ) ) re += '<p style="padding:10px 0px 10px 30px;"><a style="color:#383838;font-style:italic;font-weight:bold;font-size:1.2em;" href="/request/' + rec._id + '">' + rec.story + '</a></p>';
+      re += '<p>from ';
+      var un = rec['user.firstname'] ? rec['user.firstname'] : rec['user.username'];
+      if (!un) un = rec['user.email'];
+      re += un;
+      if (rec['user.profession'] && rec['user.profession'] !== 'Other') re += ', ' + rec['user.profession'];
+      if (rec['user.affiliation'] && rec['user.affiliation'].length > 1) re += ' at ' + rec['user.affiliation'];
+      re += rec.created_date ? ', on ' + rec.created_date.split(' ')[0].split('-').reverse().join('/') : '';
+      if (rec.count && rec.count > 1) re += '<br>' + rec.count + ' people support this request';
+      re += '<br><a href="/request/' + rec._id + '" style="color:' + text + ';">' + status + '</a></p>';
+      re += '</div>';
+      $('#record').append(re).show();
+    }
+
+    var newrequest = function(d) {
+      //if (d && d.data) metadata = metadata.extend(d.data);
+      var w = '<h3 style="text-align:center;">Thanks for starting a new request!<br>Just answer some quick questions...</h3><div class="well">';
+      w += '<p><input type="radio" name="type" value="article"';
+      if (type === 'article') w += ' checked';
+      w += '> I want to request access to the article</p>';
+      w += '<p><input type="radio" name="type" value="data"';
+      if (type === 'data') w += ' checked';
+      w += '> I want to request the data supporting the article</p>';
+      w += '</div>';
+      w += '<p><input type="text" id="title" class="form-control" placeholder="Title"></p>';
+      w += '<p><input type="text" id="email" class="form-control" placeholder="Author email"></p>';
+      w += '<p><input type="text" id="url" class="form-control" placeholder="URL"></p>';
+      w += '<p><input type="text" id="doi" class="form-control" placeholder="DOI"></p>';
+      w += '<p><textarea id="story" class="form-control" placeholder="Story" style="min-height:150px;"></textarea></p>';
+      $('#new').html(w).show();
+    }
+
+    var scrape = function() {
+      // see if there is something in the metadata that can be scraped - url, doi - otherwise hope to have enough metadata already... could try to guess what it is?
+      if (metadata.url) {
+        if (metadata.url.indexOf('10.1') === 0) {
+          metadata.doi = metadata.url;
+          metadata.url = 'https://doi.org/' + metadata.url;
+        } else if ( metadata.url.toLowerCase().indexOf('pmc') === 0 ) {
+          metadata.url = 'http://europepmc.org/articles/PMC' + metadata.url.toLowerCase().replace('pmc','');
+        } else if ( metadata.url.length < 10 && metadata.url.indexOf('.') === -1 && !isNaN(parseInt(metadata.url)) ) {
+          metadata.url = 'https://www.ncbi.nlm.nih.gov/pubmed/' + metadata.url;
+        } else if (metadata.url.indexOf('http') !== 0) {
+          metadata.title = metadata.url; // TODO could be citation string...
+          metadata.url = undefined;
+        }
+      }
+      if (metadata.url) {
+        var url = api+'/scrape?url='+encodeURIComponent(metadata.url);
+        if (metadata.doi) url += '&doi=' + metadata.doi;
+        $.ajax({
+          type:'GET',
+          url:url,
+          success: newrequest
+        });
+      } else {
+        newrequest();
+      }
+    }
+
+    var requesturl = api + '/request/' + rid;
+    var getrequest = function() {
+      $.ajax({
+        type: 'GET',
+        url: requesturl,
+        success: record,
+        error: function() { $('#titlelink').html("Sorry, we can't find a request with ID " + rid); }
+      });
+    }
+    if (rid === 'new') {
+      scrape();
+    } else {
+      getrequest();      
+    }
+
   });
+</script>
+
+<script>
+  window.twttr = (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0],
+      t = window.twttr || {};
+    if (d.getElementById(id)) return t;
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "https://platform.twitter.com/widgets.js";
+    fjs.parentNode.insertBefore(js, fjs);
+
+    t._e = [];
+    t.ready = function(f) {
+      t._e.push(f);
+    };
+
+    return t;
+  }(document, "script", "twitter-wjs"));
 </script>

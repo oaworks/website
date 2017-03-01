@@ -240,11 +240,25 @@
       }
 
       // update the title link and message header
-      $('#titlelink').attr('href',record.url);
+      var tu = record.url;
+      if (tu.indexOf('10.1') === 0) {
+        tu = 'https://doi.org/' + tu;
+      } else if ( tu.toLowerCase().indexOf('pmc') === 0 ) {
+        tu = 'http://europepmc.org/articles/PMC' + tu.toLowerCase().replace('pmc','');
+      } else if ( tu.length < 10 && tu.indexOf('.') === -1 && !isNaN(parseInt(tu)) ) {
+        tu = 'https://www.ncbi.nlm.nih.gov/pubmed/' + tu;
+      } else if (tu.indexOf('http') !== 0 && record.status !== 'received') {
+        tu = '#';
+        $('#titlelink').addClass('disabled').css({'text-decoration':'none','cursor':'default'}).bind('click',function(e) { e.preventDefault(); }).attr('alt','').attr('title','');
+      }
+      $('#titlelink').attr('href',tu);
       record.title ? $('#titlelink').html(record.title) : $('#titlelink').html('Untitled article');
       var msg = '';
       var counter = record.count ? record.count : 1;
       if (record.status === 'received') {
+        if (record.received.url) $('#titlelink').attr('href',record.received.url);
+        if (record.received.zenodo) $('#titlelink').attr('href',record.received.zenodo);
+        if (record.received.osf) $('#titlelink').attr('href',record.received.osf);
         msg += 'Success! ';
         msg += '<span style="color:#f04717;font-size:1.2em;">' + counter + '</span> ';
         msg += counter === 1 ? 'person ' : 'people ';
@@ -372,7 +386,7 @@
       if ($('#blacklist').length) $('#blacklist').bind('click',blacklist);
       if ($('#submitchanges').length) $('#submitchanges').bind('click',checkemailthensubmit);
       if ($('#delete').length) $('#delete').bind('click',deleteitem);
-      if (clogin.hasRole('root')) $('#titlelink').bind('click',scrape);
+      if (clogin.hasRole('root') && record.status !== 'received') $('#titlelink').bind('click',scrape);
 
       // if status success, need to show the links to the content, and the data badge for the author if applicable
 

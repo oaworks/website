@@ -1,67 +1,3 @@
-<script type="text/javascript" src="//static.cottagelabs.com/d3/d3.v3.min.js"></script>
-<script type="text/javascript" src="//static.cottagelabs.com/d3/topojson.v1.min.js"></script>
-<script src="/static/map.js"></script>
-<script>
-jQuery(document).ready(function() {
-  $('#signup').bind('click',function() { window.location = window.location.origin+'/account?a=signup&email='+$('#email').val() });
-  $('#search').bind('click',function() { window.location = window.location.origin+'/find?url='+$('#url').val() });
-  $('#url').bind('keyup',function(e) { if (e.keyCode === 13) { window.location = window.location.origin+'/find?url='+$('#url').val(); } });
-
-  var mobile = mobileCheck();
-  if (mobile) {
-    $('#install').hide()
-  } else if (navigator.userAgent.match(/chrome/i)) {
-    $('.install').hide();
-    $('.chromeinstall').show();
-  }
-
-});
-</script>
-
-
-<style>
-#mapspace{
-  background-color:#212f3f;
-  overflow:hidden;
-  width:100%;
-  height:700px;
-  margin-top:0px;
-}
-.country {
-  stroke: #2c3e50;
-  stroke-width: 0.8px;
-  fill:#2c3e50;
-}
-.point {
-  fill:#566573;
-}
-div.tooltip {
-  color: #222;
-  background: #fff;
-  padding: .5em;
-  text-shadow: #f5f5f5 0 1px 0;
-  border-radius: 2px;
-  box-shadow: 0px 0px 2px 0px #a6a6a6;
-  opacity: 0.9;
-  position: absolute;
-}
-#doco {
-  margin:0px auto 10px 5px;
-  background-image: url('/static/Icon_article_blue.png');
-  background-size:100%;
-  background-position:left left;
-  height: 60px;
-  width: 50px;
-}
-#doco:hover {
-  background-image: url('/static/Icon_article_orange.png');
-  cursor:pointer;
-}
-#gdl:hover {
-  color:#f04717;
-}
-</style>
-
 
 <!-- start of alert bar for use when needed
 
@@ -72,88 +8,90 @@ div.tooltip {
 
 end of alert bar -->
 
-<div class="strap strap-compact" style="margin-top:-20px;background-image:url(/static/book.jpg);background-color:transparent;height:500px;background-size:100% 100%;background-repeat:no-repeat;" id="topstrap">
+<div class="strap strap-compact" style="margin-top:-20px;background-image:url(/static/book.jpg);background-color:transparent;min-height:500px;background-size:100% 100%;background-repeat:no-repeat;padding-top:5%;" id="topstrap">
   <div class="container-fluid">
     <div class="row">
-      <div class="col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2">
-        <h1 style="text-align:center;font-weight:normal;padding-top:20px;color:#f04717;">
-          <img src="/static/icon_OAB.png"><br><br>
-          Get the articles and data you need<br>
-          <small style="color:#666;display:none;">Over <span class="oabmapcount">####</span> articles searched</small>
-        </h1>
-        <input type="text" class="form-control" id="url" placeholder="Enter an article URL, DOI or PMID">
-        <a class="btn btn-action btn-block" id="search" href="#" style="height:34px;padding-top:3px;margin-top:5px;">Find it!</a>
+      <div class="col-md-8 col-md-offset-2 intro">
+        <h2 style="text-align:center;font-weight:normal;color:#212f3f;">
+          Find open research<br><small>If it's not already available, we'll <span style="color:#f04717;">start a request</span></small>
+        </h2>
+        <p><textarea id="url" class="form-control" style="min-height:128px;" placeholder="Enter an article DOI, URL, Pubmed ID, Pubmed Central ID, Title, or Citation"></textarea></p>
+        <a class="btn btn-action btn-block" href="#" id="find" style="margin-top:20px;margin-bottom:20px;">Search</a>
+        <a href="#" id="showexamples">Examples</a>
+      </div>
+
+      <div class="col-md-8 col-md-offset-2" id="availability" style="display:none;text-align:center;">
+      </div>
+
+      <div class="col-md-4 col-md-offset-4" id="loading" style="display:none;">
+        <img id="loading" style="height:100%;width:100%;" src="/static/spin_orange.svg">
+      </div>      
+    </div>
+  </div>  
+</div>
+
+<div class="strap strap-white intro" id="examples" style="border-top:2px solid #212f3f;display:none;">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2" style="font-size:1.2em;">
+        <p>
+          DOI: <a class="example" href="#">10.1186/1758-2946-3-47</a><br>
+          URL: <a class="example" href="#">http://jcheminf.springeropen.com/articles/10.1186/1758-2946-3-47</a><br>
+          Pubmed ID: <a class="example" href="#">21999661</a><br>
+          Pubmed Central ID: <a class="example" href="#">PMC3206455</a><br>
+          Title: <a class="example" href="#">Open Bibliography for Science, Technology, and Medicine</a><br><br>
+          Citation: <a class="example" href="#">Jones, R., Macgillivray, M., Murray-Rust, P., Pitman, J., Sefton, P., O'steen, B., & Waites, W. (2011). Open Bibliography for Science, Technology, and Medicine. Journal of Cheminformatics, 3(1), 47. http://doi.org/10.1186/1758-2946-3-47</a><br><br>
+          Or try your own favourite citation format (Harvard, Bibtex, etc)<br><br>
+          Interested in how we find open articles? <a href="/sources">Read more about our sources</a>
+        </p>
       </div>
     </div>
   </div>
 </div>
 
-<div class="strap strap-compact">
+<div class="strap strap-compact" id="install">
   <div class="container-fluid">
-    <div class="row" style="padding-top:30px;padding-bottom:30px;">
+    <div class="row">
       <div class="col-md-8 col-md-offset-2">
-        <div class="row" id="install">
-          <div class="col-md-2">
-            <p style="font-size:60px;line-height:10px;color:#398bc5;padding-top:5px;">
-              <a class="install" href="/account"><i class="glyphicon glyphicon-download" id="gdl"></i></a>
-              <a style="display:none;" class="chromeinstall" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">
-                <i class="glyphicon glyphicon-download" id="gdl"></i>
-              </a>
-            </p>
-          </div>
-          <div class="col-md-10">
-            <h4>
-              <a class="install" href="/account" style="color:white;">
-                Always have the Button by your side. 
-                Get the browser extension now. Search thousands of sources instantly to 
-                find legal access to research articles and data.
-              </a>
-              <a style="display:none;color:white;" class="chromeinstall" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">
-                Always have the Button by your side. 
-                Get the browser extension now. Search thousands of sources instantly to 
-                find legal access to research articles and data.
-              </a>
-            </h4>            
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-2">
-            <p style="font-size:190px;line-height:10px;color:#398bc5;">
-              <a href="/request"><div id="doco"></div></a>
-            </p>
-          </div>
-          <div class="col-md-10">
-            <h4>
-              <a href="/request" style="color:white;">If we are unable to get you access, you 
-                can quickly create a request to the author. We've designed an effective request 
-                system to make more research accessible.
-              </a>
-            </h4>
-          </div>
+        <h4 style="text-align:center;">
+          <a class="install" style="margin-top:20px;" href="/account"><i class="glyphicon glyphicon-download gdl"></i> Always have the Button by your side - get the bookmarklet</a>
+          <a style="margin-top:20px;display:none;" class="chromeinstall" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">
+            <i class="glyphicon glyphicon-download gdl"></i> 
+            Always have the Button by your side - get the chrome plugin
+          </a>
+        </h4>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="strap strap-white strap-compact" style="border-top:2px solid #212f3f;padding-top:60px;padding-bottom:40px;">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2" style="font-size:1.2em;text-align:justify;">
+        <p>
+          Millions of people struggle to get access to vital research every year. 
+          They're trying to make a better world. Imagine what we can achieve if we listen 
+          to their stories.
+        </p>
+        <p>
+          Open Access Button makes research accessible. We search thousands of sources 
+          to get you legal access to millions of open articles and research data, and where research 
+          is not already available, our request system helps and encourages authors to provide access.
+        </p>
+        
+        <div class="notcloggedin">
+          <hr>
+          <div style="margin-top:30px;">
+            <input type="text" class="form-control" placeholder="Enter your email address" id="email">
+            <button class="btn btn-block btn-action" style="margin-top:5px;" id="signup">Sign up now to unlock articles and data</button>
+          </div>          
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="strap strap-white" style="min-height:100px;">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2" style="text-align:center;">
-        <h3>
-          We get you instant, legal access to research - and request research that isn't available.
-        </h3>
-        <h3 class="notcloggedin">
-          Join a community changing research by creating a request and sharing your story.
-        </h3>
-        <div class="notcloggedin" style="margin-top:30px;">
-          <input type="text" class="form-control" placeholder="Enter your email address" id="email">
-          <button class="btn btn-block btn-action" style="margin-top:5px;" id="signup">Sign up now to unlock articles and data</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
 
 
@@ -207,3 +145,182 @@ end of alert bar -->
     </div>
   </div>
 </div>
+
+
+
+<style>
+#mapspace{
+  background-color:#212f3f;
+  overflow:hidden;
+  width:100%;
+  height:700px;
+  margin-top:0px;
+}
+.country {
+  stroke: #2c3e50;
+  stroke-width: 0.8px;
+  fill:#2c3e50;
+}
+.point {
+  fill:#566573;
+}
+div.tooltip {
+  color: #222;
+  background: #fff;
+  padding: .5em;
+  text-shadow: #f5f5f5 0 1px 0;
+  border-radius: 2px;
+  box-shadow: 0px 0px 2px 0px #a6a6a6;
+  opacity: 0.9;
+  position: absolute;
+}
+.gdl {
+  color:#398bc5;
+  font-size:2em;
+  margin-top:-5px;
+  margin-right:10px;
+  vertical-align:middle;
+}
+.gdl:hover {
+  text-decoration:none;
+  color:#f04717;
+}
+.install, .chromeinstall {
+  color:white;
+}
+.install:hover, .chromeinstall:hover {
+  text-decoration:none;
+  color:#f04717;
+}
+</style>
+
+<script type="text/javascript" src="//static.cottagelabs.com/d3/d3.v3.min.js"></script>
+<script type="text/javascript" src="//static.cottagelabs.com/d3/topojson.v1.min.js"></script>
+<script src="/static/map.js"></script>
+<script>
+  jQuery(document).ready(function() {    
+    $('#signup').bind('click',function() { window.location = window.location.origin+'/account?a=signup&email='+$('#email').val() });
+    $('#showexamples').bind('click',function(e) { e.preventDefault(); $('#topstrap').css('height',''); $('#examples').toggle(); });
+
+    var mobile = mobileCheck();
+    if (mobile) {
+      $('#install').hide();
+    } else if (navigator.userAgent.match(/chrome/i)) {
+      $('.install').hide();
+      $('.chromeinstall').show();
+    }
+
+    if ($(window).width() >= 1000) {
+      var height = $(window).height() - $('#install').height() - $('#topnav').height();
+      $('#topstrap').css('height',height+'px');
+    }
+
+    var example = function(e) {
+      if (e) e.preventDefault();
+      $('#url').val($(this).html());
+      setTimeout(function() { $('#find').trigger('click'); }, 700);
+    }
+    $('.example').bind('click',example);
+    
+    var api = 'https://api.openaccessbutton.org';
+    if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
+      api = 'https://dev.api.cottagelabs.com/service/oab';
+      clogin.api = 'https://dev.api.cottagelabs.com/accounts';
+    }
+    clogin.login();
+
+    var availability = function(e) {
+      if ($(this).attr('id') === 'find' || e === undefined || e.keyCode === 13) {
+        var url = $('#url').val().trim();
+        if (!url.length) {
+          $('#url').css('border-color','#f04717').focus();
+          return;
+        }
+        if (url.lastIndexOf('.') === url.length-1) url = url.substring(0,url.length-1);
+        $('.intro').hide();
+        $('#loading').show();
+        var opts = {
+          type:'GET',
+          url:api+'/availability?url='+encodeURIComponent(url),
+          success: function(data) {
+            $('#loading').hide();
+            $('#availability').show();
+            var has = {};
+            if (data.data.availability.length > 0) {
+              for ( var a in data.data.availability ) {
+                has[data.data.availability[a].type] = {url:data.data.availability[a].url};
+              }
+            }
+            if (data.data.requests.length > 0) {
+              for ( var r in data.data.requests ) {
+                if (!has[data.data.requests[r].type]) has[data.data.requests[r].type] = {id:data.data.requests[r].id};
+              }
+            }
+            if (JSON.stringify(has) === '{}') {
+              window.location = '/request/new?metadata=' + encodeURIComponent(JSON.stringify(data.data.meta));
+            } else if (has.article && !has.data) {
+              var availability = '';
+              if (has.article.id) {
+                availability += '<p style="color:#212f3f;text-align:center;padding-top:50px;">There is an open request for this article:</p><p style="text-align:center;"><a class="btn btn-action" href="/request/' + has.data.id + '">Add your support</a></p>';
+              } else {
+                availability += '<h2 style="color:#212f3f;text-align:center;">This article is available!</h2><h3 style="text-align:center;"><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + has.article.url + '</a></h3>';
+              }
+              availability += '<p style="color:#212f3f;text-align:center;padding-top:50px;"><a class="btn btn-action" href="/request/new?type=data&metadata=' + encodeURIComponent(JSON.stringify(data.data.meta)) + '">Start a data request</a></p>';
+              $('#availability').html(availability);
+            } else if (!has.article && has.data) {
+              var availability = '<h2 style="color:#212f3f;text-align:center;">This article is not available</h2><h3 style="text-align:center;"><a class="btn btn-action" href="/request/new?metadata=' + encodeURIComponent(JSON.stringify(data.data.meta)) + '">Start a request</a></h3>';
+              availability += '<p style="color:#212f3f;text-align:center;padding-top:50px;">';
+              if (has.data.id) {
+                availability += 'There is an open request for data for this article:</p><p style="text-align:center;"><a class="btn btn-action" href="/request/' + has.data.id + '">Add your support';
+              } else {
+                availability += 'However there is data available:</p><p style="text-align:center;"><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.data.url + '">' + has.data.url;
+              }
+              availability += '</a></p>';
+              $('#availability').html(availability);
+            } else if (has.article && has.data) {
+              if (has.article.id && has.data.id) {
+                window.location = '/request/' + has.article.id;
+              } else {
+                var availability = '<h2 style="color:#212f3f;text-align:center;">';
+                if (has.article.url) availability += 'This article is available!</h2><h3 style="text-align:center;"><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + has.article.url;
+                if (has.article.id) availability += 'There is an open request for this article</h2><h3 style="text-align:center;"><a class="btn btn-action" href="/request/' + has.article.id + '">Add your support';
+                availability += '</a></h3><p style="color:#212f3f;text-align:center;padding-top:50px;">';
+                if (has.data.url) availability += 'And there is data available for this article:</p><p style="text-align:center;"><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.data.url + '">' + has.data.url;
+                if (has.data.id) availability += 'And there is an open request for data for this article:</p><p style="text-align:center;"><a class="btn btn-action" href="/request/' + has.data.id + '">Add your support';
+                availability += '</a></p>';
+                $('#availability').html(availability);
+              }
+            }
+          },
+          error: function() {
+            $('#loading').hide();
+            $('#loading').after('<p>Sorry, something went wrong.</p>');
+          }
+        };
+        if (clogin.apikey) {
+          opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", clogin.apikey); };
+          opts.type = 'POST';
+          opts.url = api+'/availability';
+          opts.cache = false;
+          opts.processData = false;
+          opts.contentType = 'application/json';
+          opts.dataType = 'json';
+          opts.data = JSON.stringify({url:url});
+        }
+        $.ajax(opts);
+      }
+    }
+    $('#url').bind('keyup',availability);
+    $('#find').bind('click',availability);
+
+    if (window.location.href.indexOf('?url=') !== -1) {
+      var url = decodeURIComponent(window.location.href.split('?url=')[1]);
+      $('#url').val(url);
+      availability();
+    }
+
+  });
+</script>
+
+
+
