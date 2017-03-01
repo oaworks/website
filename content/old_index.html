@@ -1,0 +1,209 @@
+<script type="text/javascript" src="//static.cottagelabs.com/d3/d3.v3.min.js"></script>
+<script type="text/javascript" src="//static.cottagelabs.com/d3/topojson.v1.min.js"></script>
+<script src="/static/map.js"></script>
+<script>
+jQuery(document).ready(function() {
+  $('#signup').bind('click',function() { window.location = window.location.origin+'/account?a=signup&email='+$('#email').val() });
+  $('#search').bind('click',function() { window.location = window.location.origin+'/find?url='+$('#url').val() });
+  $('#url').bind('keyup',function(e) { if (e.keyCode === 13) { window.location = window.location.origin+'/find?url='+$('#url').val(); } });
+
+  var mobile = mobileCheck();
+  if (mobile) {
+    $('#install').hide()
+  } else if (navigator.userAgent.match(/chrome/i)) {
+    $('.install').hide();
+    $('.chromeinstall').show();
+  }
+
+});
+</script>
+
+
+<style>
+#mapspace{
+  background-color:#212f3f;
+  overflow:hidden;
+  width:100%;
+  height:700px;
+  margin-top:0px;
+}
+.country {
+  stroke: #2c3e50;
+  stroke-width: 0.8px;
+  fill:#2c3e50;
+}
+.point {
+  fill:#566573;
+}
+div.tooltip {
+  color: #222;
+  background: #fff;
+  padding: .5em;
+  text-shadow: #f5f5f5 0 1px 0;
+  border-radius: 2px;
+  box-shadow: 0px 0px 2px 0px #a6a6a6;
+  opacity: 0.9;
+  position: absolute;
+}
+#doco {
+  margin:0px auto 10px 5px;
+  background-image: url('/static/Icon_article_blue.png');
+  background-size:100%;
+  background-position:left left;
+  height: 60px;
+  width: 50px;
+}
+#doco:hover {
+  background-image: url('/static/Icon_article_orange.png');
+  cursor:pointer;
+}
+#gdl:hover {
+  color:#f04717;
+}
+</style>
+
+
+<!-- start of alert bar for use when needed
+
+       <div class="alert alert-info">
+         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+          <p>We've released a rebuild of our website & apps. If you spot an issue, <a href="/bug">let us know</a></p>
+          </div>
+
+end of alert bar -->
+
+<div class="strap strap-compact" style="margin-top:-20px;background-image:url(/static/book.jpg);background-color:transparent;height:500px;background-size:100% 100%;background-repeat:no-repeat;" id="topstrap">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2">
+        <h1 style="text-align:center;font-weight:normal;padding-top:20px;color:#f04717;">
+          <img src="/static/icon_OAB.png"><br><br>
+          Get the articles and data you need<br>
+          <small style="color:#666;display:none;">Over <span class="oabmapcount">####</span> articles searched</small>
+        </h1>
+        <input type="text" class="form-control" id="url" placeholder="Enter an article URL, DOI or PMID">
+        <a class="btn btn-action btn-block" id="search" href="#" style="height:34px;padding-top:3px;margin-top:5px;">Find it!</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="strap strap-compact">
+  <div class="container-fluid">
+    <div class="row" style="padding-top:30px;padding-bottom:30px;">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="row" id="install">
+          <div class="col-md-2">
+            <p style="font-size:60px;line-height:10px;color:#398bc5;padding-top:5px;">
+              <a class="install" href="/account"><i class="glyphicon glyphicon-download" id="gdl"></i></a>
+              <a style="display:none;" class="chromeinstall" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">
+                <i class="glyphicon glyphicon-download" id="gdl"></i>
+              </a>
+            </p>
+          </div>
+          <div class="col-md-10">
+            <h4>
+              <a class="install" href="/account" style="color:white;">
+                Always have the Button by your side. 
+                Get the browser extension now. Search thousands of sources instantly to 
+                find legal access to research articles and data.
+              </a>
+              <a style="display:none;color:white;" class="chromeinstall" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">
+                Always have the Button by your side. 
+                Get the browser extension now. Search thousands of sources instantly to 
+                find legal access to research articles and data.
+              </a>
+            </h4>            
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <p style="font-size:190px;line-height:10px;color:#398bc5;">
+              <a href="/request"><div id="doco"></div></a>
+            </p>
+          </div>
+          <div class="col-md-10">
+            <h4>
+              <a href="/request" style="color:white;">If we are unable to get you access, you 
+                can quickly create a request to the author. We've designed an effective request 
+                system to make more research accessible.
+              </a>
+            </h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="strap strap-white" style="min-height:100px;">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2" style="text-align:center;">
+        <h3>
+          We get you instant, legal access to research - and request research that isn't available.
+        </h3>
+        <h3 class="notcloggedin">
+          Join a community changing research by creating a request and sharing your story.
+        </h3>
+        <div class="notcloggedin" style="margin-top:30px;">
+          <input type="text" class="form-control" placeholder="Enter your email address" id="email">
+          <button class="btn btn-block btn-action" style="margin-top:5px;" id="signup">Sign up now to unlock articles and data</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div id="mapspace" class="hidden-xs hidden-sm"></div>
+
+<div class="strap hidden-xs hidden-sm" style="margin-top:-690px;height:700px;background-color:transparent;">
+  <div class="container-fluid">
+    <div id="myCarousel" class="carousel slide" data-ride="carousel" style="height:400px;margin-top:100px;">
+      <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel" data-slide-to="1"></li>
+        <li data-target="#myCarousel" data-slide-to="2"></li>
+      </ol>
+      <div class="carousel-inner">
+        <div class="item active">
+          <div class="container" style="height:100px;width:800px;margin:50px auto 50px auto;">
+            <h1 style="text-align:center;">Tools like the Open Access Button can help catalyse change and create a world where science has more impact,
+              is more efficient and importantly available <br>to everyone.</h1>
+            <p style="text-align:center;color:#f04717;font-weight:bold;">Professor Randy Schekman, Nobel Prize in Physiology or Medicine 2013</p>
+          </div>
+        </div>
+        <div class="item">
+          <div class="container" style="height:100px;width:800px;margin:50px auto 50px auto;">
+            <h1 style="text-align:center;">I am even more impressed by the Open Access Button, a genuinely grass-roots initiative developed by two students.</h1>
+            <p style="text-align:center;color:#f04717;font-weight:bold;">Sander Dekker, State Secretary, Dutch Ministry of Education, Culture and Science</p>
+          </div>
+        </div>
+        <div class="item">
+          <div class="container" style="height:100px;width:800px;margin:50px auto 50px auto;">
+            <h1 style="text-align:center;">The use of the Open Access Button will help more people to find research papers.</h1>
+            <p style="text-align:center;color:#f04717;font-weight:bold;">Professor Stephen Curry, The Guardian</p>
+          </div>
+        </div>
+      </div>
+      <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev" style="background:none;"></a>
+      <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next" style="background:none;"></a>
+    </div>
+  </div>
+</div>
+
+<div class="strap" style="background-color:#c8c8c8;min-height:200px;padding-top:60px;">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12" align="center">
+        <img src="/static/icon_press1.png" style="margin:0px 0px 40px 40px;">
+        <img src="/static/icon_press2.png" style="margin:0px 0px 40px 40px;">
+        <img src="/static/icon_press3.png" style="margin:0px 0px 40px 40px;">
+        <img src="/static/icon_press4.png" style="margin:0px 0px 40px 40px;">
+        <img src="/static/icon_press5.png" style="margin:0px 0px 40px 40px;">
+      </div>
+    </div>
+  </div>
+</div>
