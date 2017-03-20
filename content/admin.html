@@ -333,6 +333,7 @@
     
     clogin.afterLogin = function() {
       if (clogin.hasRole('openaccessbutton.admin')) {
+				job.url = api + '/job';
 				job.startup();
         $('#no').hide();
         $('#accounts').show();

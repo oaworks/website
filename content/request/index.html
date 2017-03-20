@@ -1,108 +1,36 @@
 <script type="text/javascript" src="//static.cottagelabs.com/d3/d3.v4.min.js"></script>
 <script type="text/javascript" src="/static/oabutton_request_holder.js"></script>
-<!--<script type="text/javascript" src="//static.cottagelabs.com/holdernew/use/export.js"></script>-->
 <script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/facets.js"></script>
-<!--<script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/export.js"></script>-->
-<!--<script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/world.js"></script>-->
-<!--<script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/graph.js"></script>-->
-<!--<script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/line.js"></script>-->
-<!--<script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/range.js"></script>-->
 
 <style>
-  body {
-    margin-top:100px;
-  }
   .row{
     padding-top:0px;
     padding-bottom:0px;
   }
-
-  .country {
-    stroke: #2c3e50;
-    stroke-width: 0.1px;
-    fill:#2c3e50;
-  }
-  .country:hover{
-    stroke: #333;
-    stroke-width: 0.8px;
-  }
-  .text{
-    font-size:1px;
-    text-transform:capitalize;
-  }
-  .point {
-    fill:#f04717;
-  }
-  div.tooltip {
-    color: #222;
-    background: #fff;
-    padding: .5em;
-    text-shadow: #f5f5f5 0 1px 0;
-    border-radius: 2px;
-    box-shadow: 0px 0px 2px 0px #a6a6a6;
-    opacity: 0.9;
-    position: absolute;
+  body{
+    margin-top:80px;
   }
 </style>
 
-<div class="holder loading" style="margin:0px;padding:0px;position:fixed;top:90px;left:0;right:0;bottom:0;display:none;z-index:1000000000000000000000000000;">
+<div class="holder loading" style="margin:0px;padding:0px;position:fixed;top:80px;left:0;right:0;bottom:0;display:none;z-index:100;min-height:700px;">
   <div style="margin:60px auto 0px auto;width:400px;">
     <img src="/static/spin_orange.svg" style="width:100%;padding-left:100px;">
   </div>
 </div>
 
-<!--<div class="holder graph view" style="margin:0px;padding:0px;position:fixed;top:90px;left:0;right:0;bottom:0;display:none;background-color:white;">
-  <svg class="holder graph"></svg>
-</div>
-
-<div class="holder line view" style="margin:0px;padding:0px;position:fixed;top:90px;left:0;right:0;bottom:0;display:none;background-color:white;">
-  <svg class="holder line"></svg>
-</div>-->
-
-<div class="holder sticker"></div>
-<div class="holder sticky" style="z-index:100000000;background-color:#212f3f;margin-top:-50px;">
-  <div class="container-fluid" style="max-width:1000px;margin:10px auto 0px auto;padding-top:20px;">
-    <div class="row">
-      <div id="holder" class="col-md-12">
-        <div class="panel panel-default holder ui" style="background-color:white;">
-          <input type="text" class="form-control holder search" do="add" placeholder="Open Access Button" style="font-size:1.6em;height:50px;border:none;">
-          <div class="holder searches" style="margin-top:5px;"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="container-fluid" style="max-width:1000px;margin:0px auto 10px auto;min-height:500px;" id="stories">
+<div class="container-fluid" style="max-width:1000px;margin:0px auto 10px auto;min-height:500px;display:none;" id="stories">
   <div class="row">
-    <div class="col-md-3" style="z-index:1;">
-      <div id="fixer" style="position:fixed;max-width:230px;background-color:white;border-radius:3px;padding-left:3px;padding-right:3px;">
-        <div class="well" style="background-color:#212f3f;border:none;color:#212f3f;padding-top:8px;margin-top:30px;overflow:hidden;">
-          <h3 style="text-align:center;font-size:60px;color:#f04717;">
-            <span id="requestscount">X</span>
-          </h3>
-          <p style="text-align:center;color:white;">Requests</p>
-          <p style="text-align:center;color:white;">
-            Find, support, and share requests that matter to you.           
-          </p>
-          <p style="color:white;text-align:center;">
-            <br>
-            <a class="holder" do="instruct" val="help" href="#" style="text-decoration:underline;color:white;">Help us with requests</a><br>
-            <a id="viewrequests" class="cloggedin" href="/request" style="text-decoration:underline;color:white;">View your requests</a><br>
-            <a href="/find" style="text-decoration:underline;color:white;">Start a new request</a>
-          </p>
-        </div>
+    <div class="col-md-3">
+      <div id="fixer" style="position:fixed;max-width:230px;border-radius:3px;padding-left:3px;padding-right:3px;margin-top:30px;">
+        <a id="help" href="#" class="btn btn-block btn-action">Help us with requests</a>
+        <a id="viewrequests" class="btn btn-block btn-action cloggedin" href="/request" style="display:none;margin-top:5px;">View your requests</a>
+        <a href="/" class="btn btn-block btn-action" style="margin-top:5px;margin-bottom:5px;">Start a request</a>
         <div class="holder facets">
 
         </div>
       </div>
     </div>
     <div class="col-md-9" style="margin-bottom:30px;">
-      <!--<div class="well instruct intro" style="background-color:#212f3f;border:none;color:#212f3f;padding-top:8px;margin-top:30px;overflow:hidden;">
-        <div id="mapper" class="holder world view" style="height:500px;margin-top:-50px;">
-          <svg class="holder world"></svg>
-        </div>
-      </div-->
       <div class="holder results from0"></div>
     </div>
   </div>
@@ -112,10 +40,13 @@
 
 <script>
 jQuery(document).ready(function() {
-  
-    if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
-      $.fn.holder.use.oabutton.url = 'https://dev.api.cottagelabs.com/service/oab/requests';
-    }
+
+  var api = 'https://api.openaccessbutton.org';
+  if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
+    api = 'https://dev.api.cottagelabs.com/service/oab';
+    clogin.api = 'https://dev.api.cottagelabs.com/accounts';
+    $.fn.holder.use.oabutton.url = api + '/requests';
+  }
 
   var user = clogin.loggedin();
   if (user) {
@@ -125,39 +56,73 @@ jQuery(document).ready(function() {
     });    
   }
   
+  var help = function(e) {
+    if (e) e.preventDefault();
+    $('select.holder[key="status.exact"]').val('help').trigger('change');
+  }
+  $('#help').bind('click',help);
+  
   if ( $(window).width() < 1000 ) {
-    $('#fixer').css({'position':'relative','max-width':'1000px'});
-    $('#statements').css('margin-top','0px');
-    $('#statements').children().each(function() {
-      $(this).css('padding-right','0px').after('<br>');
-    });
-    $('#mapper').remove();
-    delete $.fn.holder.display.world;
+    // move the search bar out of top nav
   }
 
-  $('#holder').holder();
-
-  var show = function(e) {
-    if (e) e.preventDefault();
-    $('.show').removeClass('btn-info').addClass('btn-default');
-    $(this).removeClass('btn-default').addClass('btn-info');
-    var what = $(this).attr('val');
-    $('.holder.options').hide();
-    $('.instruct').hide();
-    $('.view').hide();
-    if ( what === 'stories' ) {
-      $('#stories').show();
-      //$('.world').show();
+  var startup = function() {
+    var id;
+    if (window.location.href.indexOf('url=') !== -1) id = decodeURIComponent(window.location.href.split('url=')[1].split('&')[0]);
+    if (window.location.href.indexOf('doi=') !== -1) id = decodeURIComponent(window.location.href.split('doi=')[1].split('&')[0]);
+    if (window.location.href.indexOf('pmid=') !== -1) id = decodeURIComponent(window.location.href.split('pmid=')[1].split('&')[0]);
+    if (window.location.href.indexOf('pmc=') !== -1) id = decodeURIComponent(window.location.href.split('pmc=')[1].split('&')[0]);
+    if (window.location.href.indexOf('pmcid=') !== -1) id = decodeURIComponent(window.location.href.split('pmcid=')[1].split('&')[0]);
+    if (window.location.href.indexOf('title=') !== -1) id = decodeURIComponent(window.location.href.split('title=')[1].split('&')[0]);
+    if (window.location.href.indexOf('citation=') !== -1) id = decodeURIComponent(window.location.href.split('citation=')[1].split('&')[0]);
+    if (window.location.href.indexOf('identifier=') !== -1) id = decodeURIComponent(window.location.href.split('identifier=')[1].split('&')[0]);
+    if (window.location.href.indexOf('ident=') !== -1) id = decodeURIComponent(window.location.href.split('ident=')[1].split('&')[0]);
+    if (window.location.href.indexOf('id=') !== -1) id = decodeURIComponent(window.location.href.split('id=')[1].split('&')[0]);
+    if (id) {
+      $('#footer').hide();
+      $('.loading').append('<h3 style="text-align:center;">Starting a new request... one moment please</h3>').show();
+      var opts = {
+        type: 'POST',
+        url: api+'/request',
+        dataType: 'json',
+        contentType: 'application/json',
+        processData: false,
+        cache: false,
+        data: JSON.stringify({
+          url: id,
+          type: window.location.href.indexOf('?type=') !== -1 ? window.location.href.split('?type=')[1].split('&')[0] : 'article'
+        }),
+        success: function(data) {
+          window.location = '/request/' + data._id;
+        },
+        error: function(err) {
+          window.location = '/request';
+        }
+      };
+      try { opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", clogin.apikey); } } catch(err) {}
+      console.log(opts)
+      $.ajax(opts);
     } else {
-      $('#stories').hide();
-      $('.'+what).show();
+      var srch = '<li><div id="holder" class="holder" style="width:720px;"> \
+        <div class="input-group" style="margin-top:10px;"> \
+          <input type="text" class="form-control holder search" do="add" placeholder="Open Access Button - search" style="min-width:600px;"> \
+          <div class="input-group-btn"> \
+            <a class="btn btn-action btn-block holder" do="add" href="#" style="padding:7px 10px 5px 10px;"><i class="glyphicon glyphicon-search"></i></a> \
+          </div> \
+        </div> \
+        <div class="holder searches" style="margin-top:5px;margin-left:-5px;"></div> \
+      </div></li>';
+      $('#stories').show();
+      $('#navopts').html(srch);
+      $('.holder.search').focus();
+      $('#holder').holder();
     }
   }
-  $('.show').bind('click',show);
 
-  var context = $.params('context');
-  if ( context ) $('.show[val="' + context + '"]').trigger('click');
-  
+  clogin.afterFailure = startup;
+  clogin.afterLogin = startup;
+  clogin.login();
+
 });
 </script>
 

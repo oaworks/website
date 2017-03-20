@@ -13,21 +13,19 @@
   }
 </style>
 
-<div class="container-fluid" id="docs" style="margin-top:-10px;">
-  <div class="row">
-    <div class="col-md-12">
-      <div class="panel panel-default" style="background-color:#212f3f;color:#ffffff;">
-        <div class="panel-body">
-        <h1>
-          API docs
-        </h1>
-      </div>
+<div class="container-fluid">
+  <div class="row" style="margin-top:0px;margin-bottom:50px;background-color:#212f3f;">
+    <div class="col-md-8 col-md-offset-2">
+      <h1 style="text-align:left;color:white;margin-top:50px;margin-bottom:50px;font-size:4em;">
+        API docs
+      </h1>
     </div>
+  </div>
+</div>
 
-      <h2>
-        Getting started
-      </h2>
-      <hr>
+<div class="container-fluid" id="docs" style="margin-bottom:100px;">
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2" style="text-align:justify;">
       <p>
         Our API allows you to find out if an article, published at some URL but perhaps not freely available there,
         is freely available anywhere else. It can also check for supporting data too. You can also search all the
@@ -77,9 +75,12 @@
       -->
 
       <h2>
-        /availability
+        /availability<small><br>Also at /find</small>
       </h2>
       <hr>
+      <p>
+        (For info on how we check availability, read about our <a target="_blank" href="/sources">sources</a>.)
+      </p>
       <h3>
         GET
         <small style="margin-left:10px;">

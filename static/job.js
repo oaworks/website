@@ -1,17 +1,17 @@
 	var job = {
-		apibaseurl: 'https://api.cottagelabs.com',
+		api: 'https://api.cottagelabs.com',
+		url: '/job', // this should default to /job if this lib is to be generic
 		file: undefined,
 		filename: '',
 		results: [],
 		hash: undefined,
     max:3000
 	};
-	if (window.location.host.indexOf('test.cottagelabs.com') !== -1) job.apibaseurl = 'https://dev.api.cottagelabs.com';
-	if (window.location.host.indexOf('dev.openaccessbutton.org') !== -1) job.apibaseurl = 'https://dev.api.cottagelabs.com';
+	job.url = job.api + job.url;
 
   job.review = function() {
 		if ( $('#jobinfo').length ) {
-			var msg = '<p style="color:black;">';
+			var msg = '<p>';
 			msg += job.results.length;
 			msg += ' rows, with headers ' + job.headers + '</p>';
 			$('#jobinfo').html(msg).show();
@@ -113,7 +113,7 @@
 		status += '</p>';
 		if (data.data && data.data.new === true) status += '<p>Your job is new, and is still being loaded into the system. For large jobs this may take a couple of minutes.</p>';
 		status += '<p>Your job is ' + pc + '% complete.</p>';
-		status += '<p><a id="jobdownload" href="' + job.apibaseurl + '/service/job/' + job.hash + '/results?format=csv&apikey=' + clogin.apikey + '" class="btn btn-default btn-block">Download your results</a></p>';
+		status += '<p><a id="jobdownload" href="' + job.url + '/' + job.hash + '/results?format=csv&apikey=' + clogin.apikey + '" class="btn btn-default btn-block">Download your results</a></p>';
 		if (data.data.progress !== 100) setTimeout(job.poll,10000);
 		$('#jobinfo').html(status);
 	}
@@ -125,7 +125,7 @@
 		}
 		if ( hash ) {
 			$.ajax({
-				url: job.apibaseurl + '/service/job/' + hash + '/progress?apikey='+clogin.apikey,
+				url: job.url + '/' + hash + '/progress?apikey='+clogin.apikey,
 				method: 'GET',
 				success: job.polling,
 				error: job.error
@@ -151,7 +151,7 @@
 			$('#jobsubmit').attr('value','Submitting...');
 			var payload = {list:job.results,name:job.filename};
 			$.ajax({
-				url: job.apibaseurl + '/service/job?apikey='+clogin.apikey,
+				url: job.url + '?apikey='+clogin.apikey,
 				method: 'POST',
 				data: JSON.stringify(payload),
 				dataType: 'JSON', // TODO sort issue here, the POST invalidates preflight without jsonp but with jsonp we don't get back a jsonp object
