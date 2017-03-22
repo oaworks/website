@@ -45,6 +45,14 @@ var oab = {
   },
   
   sendILL: function(api_key, data, success_callback, failure_callback) {
+    // data has story id and title by now - but check oab.availabilityResponse for full info
+    if (oab.availabilityResponse) {
+      if (!data.title && oab.availabilityResponse.meta && oab.availabilityResponse.meta.article && oab.availabilityResponse.meta.article.title) data.title = oab.availabilityResponse.meta.article.title;
+      if (oab.availabilityResponse.meta && oab.availabilityResponse.meta.article && oab.availabilityResponse.meta.article.doi) data.doi = oab.availabilityResponse.meta.article.doi;
+      if (oab.availabilityResponse.library && oab.availabilityResponse.library.journal) data.journal = oab.availabilityResponse.library.journal;
+      if (oab.availabilityResponse.library.primo) data.primo = oab.availabilityResponse.library.primo;
+    }
+    data.url = window.location.href;
     if (oab.library) oab.postLocated('/ill/' + oab.library, api_key, data, success_callback, failure_callback);
   },
 
