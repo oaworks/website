@@ -16,39 +16,41 @@
 <div class="container-fluid" id="docs" style="margin-top:-10px;">
   <div class="row">
     <div class="col-md-12">
-      <div class="jumbotron">
-        <h1 style="text-align:center;">
+      <div class="panel panel-default" style="background-color:#212f3f;color:#ffffff;">
+        <div class="panel-body">
+        <h1>
           API docs
         </h1>
       </div>
-      
+    </div>
+
       <h2>
         Getting started
       </h2>
       <hr>
       <p>
-        Our API allows you to find out if an article, published at some URL but perhaps not freely available there, 
-        is freely available anywhere else. It can also check for supporting data too. You can also search all the 
-        availabilty checks we have made, all the requests for access our users have created, and all their declarations 
+        Our API allows you to find out if an article, published at some URL but perhaps not freely available there,
+        is freely available anywhere else. It can also check for supporting data too. You can also search all the
+        availabilty checks we have made, all the requests for access our users have created, and all their declarations
         of support too.
       </p>
       <p>
-        This is a JSON API, and the docs link out to some example responses - install a JSON viewer plugin to your 
-        browser to make them easier to read. Also, when POSTing data, remember to set the Content-Type header, e.g. 
+        This is a JSON API, and the docs link out to some example responses - install a JSON viewer plugin to your
+        browser to make them easier to read. Also, when POSTing data, remember to set the Content-Type header, e.g.
         for curl it is <code>curl -H "Content-Type:application/json"</code>.
       </p>
       <p>
-        There are currently no enforced rate limits, so be nice (1 request per second). If we notice problems we'll suspend 
+        There are currently no enforced rate limits, so be nice (1 request per second). If we notice problems we'll suspend
         your account and contact you about your needs.
       </p>
       <p>
-        Although most endpoints do not yet require authorisation, always include your API key either in a URL param called "apikey" 
+        Although most endpoints do not yet require authorisation, always include your API key either in a URL param called "apikey"
         or a header called "x-apikey". Excessive anonymous usage may result in IP blocking.
       </p>
       <p id="apikey">
         Please <a href="/account?next=/api" class="label label-info">sign up / sign in</a> to see your API key here.
       </p>
-      
+
       <h2>
         https://api.openaccessbutton.org
       </h2>
@@ -90,14 +92,14 @@
         Provide a url-encoded URL in a parameter named "url".
       </p>
       <p>
-        The result lists objects of any "availability" we found, with each object declaring "type" (currently article or data) 
+        The result lists objects of any "availability" we found, with each object declaring "type" (currently article or data)
         and the "url" where we found it.
       </p>
       <p>
         Then there's a list of any open "requests", each object showing the request "type" and the request "id".
       </p>
       <p>
-        Finally there is an "accepts" list which shows what sorts of new requests we will accept - we currently only 
+        Finally there is an "accepts" list which shows what sorts of new requests we will accept - we currently only
         accept "article" or "data" requests, and we won't accept new requests if already available or already requested.
       </p>
       <p>
@@ -107,7 +109,7 @@
         POST
       </h3>
       <p>
-        We are considering enabling bulk availability checks via the API. 
+        We are considering enabling bulk availability checks via the API.
         Would you find this useful? <a target="_blank" href="mailto:hello@openaccessbutton.org">Let us know!</a>
       </p>
 
@@ -124,18 +126,18 @@
         </small>
       </h3>
       <p>
-        This provides an elasticsearch endpoint onto all the availability checks we have 
-        performed for URLs previously received to the system. This allows you to search and explore very 
+        This provides an elasticsearch endpoint onto all the availability checks we have
+        performed for URLs previously received to the system. This allows you to search and explore very
         effectively.
       </p>
       <p>
-        To make full use of this endpoint you should read the 
-        <a href="https://www.elastic.co/guide/en/elasticsearch/reference/1.4/query-dsl.html" target="_blank">elasticsearch query DSL documentation</a> 
+        To make full use of this endpoint you should read the
+        <a href="https://www.elastic.co/guide/en/elasticsearch/reference/1.4/query-dsl.html" target="_blank">elasticsearch query DSL documentation</a>
         (we are currently on ES 1.4, moving soon to 5.x).
       </p>
       <p>
-        The simple method is to add a url parameter called "q", with values to match. The  wildcard is *, 
-        and logic AND, OR, etc can be used too. For example you can find all availability checks made on the sciencedirect 
+        The simple method is to add a url parameter called "q", with values to match. The  wildcard is *,
+        and logic AND, OR, etc can be used too. For example you can find all availability checks made on the sciencedirect
         website by users of our v1.0.0 plugin with the query <code>?q=*sciencedirect* AND plugin:oabutton_1.0.0</code>
       </p>
 
@@ -152,9 +154,9 @@
         </small>
       </h3>
       <p>
-        Returns a list of our currently blacklisted URLs - we won't accept availability checks or requests for URLs on this list, 
-        because we believe the content will not contain anything we would consider to be a research article (so there's not much 
-        we could usefully do with it). 
+        Returns a list of our currently blacklisted URLs - we won't accept availability checks or requests for URLs on this list,
+        because we believe the content will not contain anything we would consider to be a research article (so there's not much
+        we could usefully do with it).
       </p>
 
       <h2>
@@ -173,10 +175,10 @@
         Provide a url-encoded URL in a parameter named "url", and this will return the metadata we can find.
       </p>
       <p>
-        See the example for returned metadata structure - note that we wil not necessarily support the same metadata 
+        See the example for returned metadata structure - note that we wil not necessarily support the same metadata
         for all scraped URLs, and we may change it over time, so don't assume a stable structure here.
       </p>
-      
+
       <h2>
         /request
       </h2>
@@ -199,10 +201,10 @@
       </h3>
       -->
       <p>
-        We are considering allowing creation of requests via the API. 
+        We are considering allowing creation of requests via the API.
         Would you find this useful? <a target="_blank" href="mailto:hello@openaccessbutton.org">Let us know!</a>
       </p>
-      
+
       <h2>
         /request/:id
       </h2>
@@ -216,8 +218,8 @@
         </small>
       </h3>
       <p>
-        Returns the request with the given :id. View the example to see the request object structure. 
-        Note that the metadata fields are all optional, so do not rely on them always being present. 
+        Returns the request with the given :id. View the example to see the request object structure.
+        Note that the metadata fields are all optional, so do not rely on them always being present.
       </p>
       <!--
       <h3>
@@ -225,15 +227,15 @@
       </h3>
       <p>
         <b>Authorisation required</b><br>
-        POST a JSON object to change corresponding values in the identified request. Allowed fields in the 
+        POST a JSON object to change corresponding values in the identified request. Allowed fields in the
         object are "url", "title", "doi". If you are the request creator you can also change the "story".
       </p>
       <p>
-        Also, if there is no author email for this request to be sent to yet, and if the status is help, 
+        Also, if there is no author email for this request to be sent to yet, and if the status is help,
         moderate, or refused, the "email" address can be changed too.<br>
       </p>
       -->
-      
+
       <h2>
         /requests
       </h2>
@@ -247,10 +249,10 @@
         </small>
       </h3>
       <p>
-        This provides an elasticsearch endpoint onto all the requests we have created so far 
+        This provides an elasticsearch endpoint onto all the requests we have created so far
         (works the same as /availabilities, see above).
       </p>
-      
+
       <!--
       <p>
         /support/:rid<br>
@@ -261,7 +263,7 @@
         NOTE: are we going to allow API creation of support?
       </p>
       -->
-      
+
       <h2>
         /supports
       </h2>
@@ -281,7 +283,7 @@
       <p>
         For example to find every declaration of support for the request with ID RBNfJLPX382TZZtRR: <br>
         <code>?q=rid:6GY6Afbg6xnYQGjbt</code>
-      </p>            
+      </p>
       <p>
         Or to find every declaration of support made by a user with username "jimmy": <br>
         <code>?q=username:jimmy</code>
@@ -311,7 +313,7 @@
       }
     }
     clogin.login();
-    
-    
+
+
   });
 </script>
