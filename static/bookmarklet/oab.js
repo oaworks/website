@@ -5,7 +5,7 @@ var oab = {
   debug : false, // this puts the button in debug mode, issues debug warnings
 
   bookmarklet : true, // this lib is also used by a bookmarklet, which sets this to change plugin type
-  
+
   api_address : /*'https://dev.api.cottagelabs.com/service/oab',*/ 'https://api.openaccessbutton.org',
 
   site_address : /*'http://oab.test.cottagelabs.com',*/ 'https://openaccessbutton.org',
@@ -14,7 +14,7 @@ var oab = {
 
   register_address : '/account',
 
-  bug_address : '/bug',
+  bug_address : '/feedback#bug',
 
   messages: 'message', // a div ID name to put error messages etc
 
