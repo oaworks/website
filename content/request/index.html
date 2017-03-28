@@ -24,45 +24,38 @@
 </div>
 
 <div class="holder sticker"></div>
-<div class="holder sticky">
-  <div style="background-color:#212f3f;">
-    <div class="container-fluid">
-      <div class="row">
-        <div id="holder" class="col-md-12" style="padding-top:10px;padding-bottom:5px;">
-          <div class="input-group">
-            <input type="text" class="form-control holder search" do="add" placeholder="Open Access Button - search">
-            <div class="input-group-btn">
-              <a class="btn btn-action btn-block holder" do="add" href="#" style="padding:7px 10px 5px 10px;"><i class="glyphicon glyphicon-search"></i></a>
-            </div>
-          </div>
-          <div class="holder searches" style="margin-top:5px;margin-left:-5px;"></div>
-        </div>        
-      </div>
-    </div>
-  </div>
-  <div class="container-fluid hidden-xs hidden-sm" style="margin-top:-5px;">
+<div class="holder sticky" style="background-color:#212f3f;display:none;">
+  <div class="container-fluid">
     <div class="row">
-      <div class="col-md-3">
-        <div class="well" style="background-color:#212f3f;border:none;color:#212f3f;overflow:hidden;padding-top:0px;margin-bottom:5px;">
-          <h3 style="text-align:center;font-size:60px;color:#f04717;">
-            <span id="requestscount">X</span>
-          </h3>
-          <p style="color:white;text-align:center;">
-            <a class="holder" do="instruct" val="help" href="#" style="text-decoration:underline;color:white;">Help us with requests</a><br>
-            <a id="viewrequests" class="cloggedin" href="/request" style="text-decoration:underline;color:white;">View your requests</a><br>
-            <a href="/find" style="text-decoration:underline;color:white;">Start a new request</a>
-          </p>
+      <div id="holder" class="col-md-12" style="padding-top:10px;padding-bottom:5px;">
+        <div class="input-group">
+          <input type="text" class="form-control holder search" do="add" placeholder="Open Access Button - search">
+          <div class="input-group-btn">
+            <a class="btn btn-action btn-block holder" do="add" href="#" style="padding:7px 10px 5px 10px;"><i class="glyphicon glyphicon-search"></i></a>
+          </div>
         </div>
-        <div class="holder facets"></div>
-      </div>
+        <div class="holder searches" style="margin-top:5px;margin-left:-5px;"></div>
+      </div>        
     </div>
   </div>
 </div>
 
-<div class="container-fluid" style="margin:0px auto 10px auto;min-height:500px;display:none;" id="stories">
+<div class="container-fluid" id="stories" style="display:none;">
   <div class="row">
-    <div class="hidden-xs hidden-sm" style="margin-top:-380px;"></div>
-    <div class="col-md-9 col-md-offset-3" style="margin-bottom:30px;">
+    <div class="col-md-3">
+      <div class="well" style="background-color:#212f3f;border:none;color:#212f3f;overflow:hidden;padding-top:0px;margin-bottom:5px;margin-top:-10px;">
+        <h3 style="text-align:center;font-size:60px;color:#f04717;">
+          <span id="requestscount">X</span>
+        </h3>
+        <p style="color:white;text-align:center;">
+          <a class="holder" do="instruct" val="help" href="#" style="text-decoration:underline;color:white;">Help us with requests</a><br>
+          <a id="viewrequests" class="cloggedin" href="/request" style="text-decoration:underline;color:white;">View your requests</a><br>
+          <a href="/find" style="text-decoration:underline;color:white;">Start a new request</a>
+        </p>
+      </div>
+      <div class="holder facets"></div>
+    </div>
+    <div class="col-md-9" style="margin-bottom:30px;">
       <div class="holder results from0"></div>
     </div>
   </div>
@@ -135,22 +128,8 @@ jQuery(document).ready(function() {
       console.log(opts)
       $.ajax(opts);
     } else {
-      /*var srch = '<div id="holder" class="holder"> \
-        <div class="input-group" style="margin-top:10px;"> \
-          <input type="text" class="form-control holder search" do="add" placeholder="Open Access Button - search"> \
-          <div class="input-group-btn"> \
-            <a class="btn btn-action btn-block holder" do="add" href="#" style="padding:7px 10px 5px 10px;"><i class="glyphicon glyphicon-search"></i></a> \
-          </div> \
-        </div> \
-        <div class="holder searches" style="margin-top:5px;margin-left:-5px;"></div> \
-      </div>';
-      if ($(window).width() < 1000) {
-        $('#bigsearch').hide();
-        $('#littlesearch').html(srch);
-      } else {
-        $('#searchbar').html(srch);      
-      }*/
       $('#stories').show();
+      $('.holder.sticky').show();
       $('.holder.search').focus();
       $('#holder').holder();
     }

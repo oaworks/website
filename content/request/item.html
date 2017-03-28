@@ -16,11 +16,23 @@
 
 <div class="container-fluid">
   <div class="row">
+    <div class="col-md-12">
+      <div id="titleheader">
+        
+      </div>
+    </div>
+  </div>
+  <div class="row">
     <div class="col-md-8">
       <div id="info">
         
       </div>
       <div id="supports" style="margin-top:80px;">
+        
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div id="actions">
         
       </div>
     </div>
@@ -259,7 +271,22 @@
       var rec = data.data;
       $('.article-data').html(rec.type);
       if (rec.status !== 'received') $('body').css('background-color','#fceadf');
-            
+      
+      var ttl = '';
+      if (rec.type && rec.type === 'data') ttl += '<p>Data for </p><h2 style="color:#f04717;">';
+      if (rec.url && rec.url.indexOf('http') === 0) ttl += '<h2><a id="titlelink" target="_blank" href="' + rec.url + '" style="word-wrap:break-word;overflow-wrap:break-word;color:#f04717;">';
+      ttl += rec.title ? rec.title : rec.url;
+      if (rec.url && rec.url.indexOf('http') === 0) ttl += '</a>';
+      ttl += '</h2>';
+      $('#titleheader').html(ttl);
+      
+      var ot = rec.type === 'article' ? 'data' : 'article';
+      if (rec.other) {
+        $('#other').html('<p><a style="text-decoration:underline;color:#FFFFFC;" href="/request/' + rec.other + '">I actually wanted the ' + ot + '</a></p>');
+      } else {
+        $('#other').html('<p><a style="text-decoration:underline;color:#FFFFFC;" href="/request?type=data&url=' + encodeURIComponent(rec.url) + '">I actually wanted the ' + ot + '</a></p>');
+      }
+
       var re = '';
       if (rec.status === 'received' && rec.received !== undefined) {
         re += '<h3 style="text-align:center;">This request has been successful.<br>The ' + rec.type + ' is now available ';
@@ -276,76 +303,41 @@
         }
         re += '<a target="_blank" href="' + surl + '" style="word-wrap:break-word;overflow-wrap:break-word;">' + surl + '</a></h3></div>';
       }
-      if (rec.type && rec.type === 'data') re += '<p>Data for </p><h2 style="color:#f04717;">';
-      if (rec.url && rec.url.indexOf('http') === 0) re += '<h2><a id="titlelink" target="_blank" href="' + rec.url + '" style="word-wrap:break-word;overflow-wrap:break-word;color:#f04717;">';
-      re += rec.title ? rec.title : rec.url;
-      if (rec.url && rec.url.indexOf('http') === 0) re += '</a>';
-      re += '</h2>';
-      if (rec.story ) re += '<p style="padding:10px 0px 10px 30px;color:#383838;font-style:italic;font-weight:bold;font-size:1.2em;">' + rec.story + '</p>';
-      re += '<p>Requested';
-      if ( rec.user && (rec.user.firstname || rec.user.username || rec.user.email) ) {
-        re += ' by ';
-        if (rec.user.firstname) {
-          re += rec.user.firstname;
-        } else if (rec.user.username) {
-          re += rec.user.username;
-        } else {
-          re += rec.user.email;
-        }
-        if (rec.user.profession && rec.user.profession !== 'Other') re += ', ' + rec.user.profession;
-        if (rec.user.affiliation && rec.user.affiliation.length > 1) re += ' at ' + rec.user.affiliation;
-      }
-      re += rec.created_date ? ' on ' + rec.created_date.split(' ')[0].split('-').reverse().join('/') : '';
-      re += '</p>';
-      if (rec.count && rec.count > 1) re += '<p>' + (rec.count - 1) + ' ' + (rec.count === 2 ? 'more person supports' : 'more people support') + ' this request</p>';
-      if (rec.user === undefined) {
-        if (clogin.loggedin()) {
-          re += '<p style="text-align:right;margin-bottom:40px;">This request needs an owner! <a href="#" id="own" class="btn btn-action">Take ownership</a></p>';
-        } else {
-          re += '<p style="text-align:right;margin-bottom:40px;">This request needs an owner! <a href="/account?next=' + encodeURIComponent('/request/' + rid + '?own=true') + '" class="btn btn-block btn-action">Login/signup and take ownership</a></p>';
-        }
-      }
-      if (rec.status === 'help') {
-        if (!rec.title) re += '<p><input class="form-control" type="text" id="title" placeholder="Please provide the article title"></p>';
-        if (!rec.email) re += '<p><input class="form-control" type="text" id="email" placeholder="Please provide an article author email"></p>';
-        if (!rec.doi) re += '<p><input class="form-control" type="text" id="doi" placeholder="Please provide the article DOI"></p>';
-        if (!rec.story) re += '<p><textarea style="min-height:100px;" class="form-control" id="story" placeholder="How would getting access to this research help you? This message will be sent to the author, and helps them to understand why the research should be made available."></textarea></p>';
-        if (!rec.title || !rec.email || !rec.doi || !rec.story) re += '<p style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Update</a></p>';
-      } else {
-        re += '<div class="clearfix" style="margin-bottom:40px;" id="sharebuttons"><a href="#" id="showembed" class="btn btn-xs btn-action panels pull-right" style="margin-left:20px;height:28px;font-size:0.9em;">Embed</a> \
-          <div style="display:inline;margin-bottom:-10px;padding-left:20px;" class="pull-right"> \
-            <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Help us get access to research!" data-size="large"></a> \
-          </div> \
-          <a class="btn btn-xs btn-action pull-right" style="height:28px;font-size:0.9em;" id="fbshare" href="https://www.facebook.com/sharer/sharer.php?u=" target="_blank"><i class="fa fa-facebook-official"></i> facebook</a></div>';
-        re += '<div id="embed" style="display:none;"> \
-          <p>Request URL: <code>' + window.location.href + '</code></p> \
-          <p>Widget embed code:</p> \
-          <textarea id="widget" class="form-control" style="min-height:100px;margin-bottom:40px;" onclick="this.select()">\
-          <div id="oab_insert"></div><script>var oabe = function() {var x = new XMLHttpRequest(); x.onreadystatechange = function() { if (x.readyState == 4 && x.status == 200) { document.getElementById("oab_insert").innerHTML = JSON.parse(x.responseText).data; } }; x.open("GET", "' + api+'/embed/'+rid + '", true); x.send(); }();<\/script>\
-          </textarea>\
-          </div>';
-      }
-      if (rec.status !== 'received') {
-        if (clogin.loggedin() && rec.user && rec.user.id && clogin.user && clogin.user.account && clogin.user.account._id === rec.user.id) {
-          // creator does not get asked to support or told that they support
-        } else if (rec.user === undefined || !rec.supports || rec.supports === undefined || rec.supports.length === 0) {
-          re += '<p>Do you also need this ' + rec.type + '? <a id="showsupport" href="#" style="text-decoration:underline;">Add your support</a></p>';
-          re += '<div id="support" style="display:none;margin-top:40px;margin-bottom:40px;">';
-          if (!clogin.loggedin()) {
-            re += '<p>Support works best with attribution. Please consider <a href="/account?next=' + encodeURIComponent('/request/' + rid + '?support=true') + '">logging in or signing up</a> first.</p>';
+      
+      if (rec.story ) {
+        re += '<div class="well" style="background-color:#FFFFFC;"><p>';
+        if ( rec.user && (rec.user.firstname || rec.user.username || rec.user.email) ) {
+          if (rec.user.firstname) {
+            re += rec.user.firstname;
+          } else if (rec.user.username) {
+            re += rec.user.username;
+          } else {
+            re += rec.user.email;
           }
-          re += '<p><textarea class="form-control" id="supportstory" style="min-height:100px;" placeholder="How would getting access to this research help you? This message will be sent to the author, and helps them to understand why the research should be made available."></textarea></p>';
-          re += '<p><a id="addsupport" class="btn btn-action" href="#">Add your support</a></p>';
-          re += '</div>';
+          if (rec.user.profession && rec.user.profession !== 'Other') re += ', ' + rec.user.profession;
+          if (rec.user.affiliation && rec.user.affiliation.length > 1) re += ' at ' + rec.user.affiliation;
+        }
+        re += rec.created_date ? ' on ' + rec.created_date.split(' ')[0].split('-').reverse().join('/') : '';
+        re += '</p>';
+        re += '<p>' + rec.story + '</p>';
+        re += '</div>';
+      }
+      
+      if (rec.user === undefined) {
+        re += '<p>No-one has requested this from the author yet.</p>';
+        if (clogin.loggedin()) {
+          re += '<p style="margin-bottom:40px;"><a href="#" id="own" class="btn btn-action">Be the first</a></p>';
         } else {
-          re += '<p>You have added your support to this request.</p>';
+          re += '<p style="margin-bottom:40px;"><a href="/account?next=' + encodeURIComponent('/request/' + rid + '?own=true') + '" class="btn btn-block btn-action">Be the first</a></p>';
         }
       }
-      var ot = rec.type === 'article' ? 'data' : 'article';
-      if (rec.other) {
-        $('#other').html('<p><a style="text-decoration:underline;color:#FFFFFC;" href="/request/' + rec.other + '">I actually wanted the ' + ot + '</a></p>');
-      } else {
-        $('#other').html('<p><a style="text-decoration:underline;color:#FFFFFC;" href="/request?type=data&url=' + encodeURIComponent(rec.url) + '">I actually wanted the ' + ot + '</a></p>');
+      if (rec.status === 'help' || rec.status === 'moderate') {
+        if (!rec.title || !rec.email || !rec.doi || !rec.story) re += '<p>We\'re missing some details:</p>';
+        if (!rec.story) re += '<p><textarea style="min-height:100px;" class="form-control" id="story" placeholder="How would getting access to this research help you? This message will be sent to the author, and helps them to understand why the research should be made available."></textarea></p>';
+        if (!rec.title) re += '<p><input class="form-control" type="text" id="title" placeholder="Article title"></p>';
+        if (!rec.email) re += '<p><input class="form-control" type="text" id="email" placeholder="Article author email"></p>';
+        if (!rec.doi) re += '<p><input class="form-control" type="text" id="doi" placeholder="Article DOI"></p>';
+        if (!rec.title || !rec.email || !rec.doi || !rec.story) re += '<p style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Update</a></p>';
       }
       if (rec.status !== 'received') {
         if (clogin.loggedin() && rec.user && rec.user.id && clogin.user && clogin.user.account && clogin.user.account._id === rec.user.id) {
@@ -354,19 +346,49 @@
           re += '<p>Are you the author? Please <a style="text-decoration:underline;" href="mailto:requests@openaccessbutton.org">contact us</a>!</p>';
         }
       }
+      
       if (clogin.hasRole('openaccessbutton.admin')) {
         re += '<p style="text-align:right;"><a href="#" id="showadmin" style="color:orange;">Admin</a></p>';
         re += '<div id="admin" class="well" style="display:none;background-color:orange;">';
         re += admin(rec);
         re += '</div>';
       }
+      
       $('#info').append(re);
+      
+      var acts = ''
+      if (rec.count && rec.count > 1) acts += '<p>' + (rec.count - 1) + ' ' + (rec.count === 2 ? 'more person supports' : 'more people support') + ' this request</p>';
+      if (rec.status !== 'received' && rec.story) {
+        if (clogin.loggedin() && rec.user && rec.user.id && clogin.user && clogin.user.account && clogin.user.account._id === rec.user.id) {
+          // creator does not get asked to support or told that they support
+        } else if (rec.user !== undefined && ( !rec.supports || rec.supports === undefined || rec.supports.length === 0) ) {
+          acts += '<p>Add your support to be notified when this ' + rec.type + ' is released.</p>';
+          if (!clogin.loggedin()) {
+            acts += '<p><input type="text" name="email" id="supportemail" class="form-control" placeholder="Your email"></p>';
+          }
+          acts += '<p><a id="addsupport" class="btn btn-action" href="#">Notify me</a></p>';
+        } else {
+          acts += '<p>You support this request.</p>';
+        }
+      }
+      if (rec.status !== 'help') {
+        acts += '<div class="clearfix" style="margin-bottom:40px;" id="sharebuttons"><a href="#" id="showembed" class="btn btn-xs btn-action panels pull-right" style="margin-left:20px;height:28px;font-size:0.9em;">Embed</a> \
+          <div style="display:inline;margin-bottom:-10px;padding-left:20px;" class="pull-right"> \
+            <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Help us get access to research!" data-size="large"></a> \
+          </div> \
+          <a class="btn btn-xs btn-action pull-right" style="height:28px;font-size:0.9em;" id="fbshare" href="https://www.facebook.com/sharer/sharer.php?u=" target="_blank"><i class="fa fa-facebook-official"></i> facebook</a></div>';
+        acts += '<div id="embed" style="display:none;"> \
+          <p>Request URL: <code>' + window.location.href + '</code></p> \
+          <p>Widget embed code:</p> \
+          <textarea id="widget" class="form-control" style="min-height:100px;margin-bottom:40px;" onclick="this.select()">\
+          <div id="oab_insert"></div><script>var oabe = function() {var x = new XMLHttpRequest(); x.onreadystatechange = function() { if (x.readyState == 4 && x.status == 200) { document.getElementById("oab_insert").innerHTML = JSON.parse(x.responseText).data; } }; x.open("GET", "' + api+'/embed/'+rid + '", true); x.send(); }();<\/script>\
+          </textarea>\
+          </div>';
+      }
+      $('#actions').html(acts);
+      
       $('#showembed').bind('click',function(e) { e.preventDefault(); $('#embed').toggle(); });
       if ($('#showadmin').length) $('#showadmin').bind('click',function(e) { e.preventDefault(); $('#admin').toggle(); });
-      if ($('#showsupport').length) {
-        $('#showsupport').bind('click',function(e) { e.preventDefault(); $('#support').show(); $('#showsupport').parent().hide(); });
-        if (window.location.href.indexOf('support=') !== -1) $('#showsupport').trigger('click');
-      }
       if ($('#addsupport').length) $('#addsupport').bind('click',addsupport);
       if ($('#own').length) $('#own').bind('click',own);
       if ($('#blacklist').length) $('#blacklist').bind('click',blacklist);
