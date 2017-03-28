@@ -8,7 +8,7 @@
     padding-bottom:0px;
   }
   body{
-    margin-top:80px;
+    margin-top:50px;
   }
 </style>
 
@@ -18,19 +18,46 @@
   </div>
 </div>
 
-<div class="container-fluid" style="max-width:1000px;margin:0px auto 10px auto;min-height:500px;display:none;" id="stories">
-  <div class="row">
-    <div class="col-md-3">
-      <div id="fixer" style="position:fixed;max-width:230px;border-radius:3px;padding-left:3px;padding-right:3px;margin-top:30px;">
-        <a id="help" href="#" class="btn btn-block btn-action">Help us with requests</a>
-        <a id="viewrequests" class="btn btn-block btn-action cloggedin" href="/request" style="display:none;margin-top:5px;">View your requests</a>
-        <a href="/" class="btn btn-block btn-action" style="margin-top:5px;margin-bottom:5px;">Start a request</a>
-        <div class="holder facets">
-
-        </div>
+<div class="holder sticker"></div>
+<div class="holder sticky">
+  <div style="background-color:#212f3f;">
+    <div class="container-fluid">
+      <div class="row">
+        <div id="holder" class="col-md-12" style="padding-top:10px;padding-bottom:5px;">
+          <div class="input-group">
+            <input type="text" class="form-control holder search" do="add" placeholder="Open Access Button - search">
+            <div class="input-group-btn">
+              <a class="btn btn-action btn-block holder" do="add" href="#" style="padding:7px 10px 5px 10px;"><i class="glyphicon glyphicon-search"></i></a>
+            </div>
+          </div>
+          <div class="holder searches" style="margin-top:5px;margin-left:-5px;"></div>
+        </div>        
       </div>
     </div>
-    <div class="col-md-9" style="margin-bottom:30px;">
+  </div>
+  <div class="container-fluid hidden-xs hidden-sm" style="margin-top:-5px;">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="well" style="background-color:#212f3f;border:none;color:#212f3f;overflow:hidden;padding-top:0px;margin-bottom:5px;">
+          <h3 style="text-align:center;font-size:60px;color:#f04717;">
+            <span id="requestscount">X</span>
+          </h3>
+          <p style="color:white;text-align:center;">
+            <a class="holder" do="instruct" val="help" href="#" style="text-decoration:underline;color:white;">Help us with requests</a><br>
+            <a id="viewrequests" class="cloggedin" href="/request" style="text-decoration:underline;color:white;">View your requests</a><br>
+            <a href="/find" style="text-decoration:underline;color:white;">Start a new request</a>
+          </p>
+        </div>
+        <div class="holder facets"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid" style="margin:0px auto 10px auto;min-height:500px;display:none;" id="stories">
+  <div class="row">
+    <div class="hidden-xs hidden-sm" style="margin-top:-380px;"></div>
+    <div class="col-md-9 col-md-offset-3" style="margin-bottom:30px;">
       <div class="holder results from0"></div>
     </div>
   </div>
@@ -103,17 +130,22 @@ jQuery(document).ready(function() {
       console.log(opts)
       $.ajax(opts);
     } else {
-      var srch = '<li><div id="holder" class="holder" style="width:720px;"> \
+      /*var srch = '<div id="holder" class="holder"> \
         <div class="input-group" style="margin-top:10px;"> \
-          <input type="text" class="form-control holder search" do="add" placeholder="Open Access Button - search" style="min-width:600px;"> \
+          <input type="text" class="form-control holder search" do="add" placeholder="Open Access Button - search"> \
           <div class="input-group-btn"> \
             <a class="btn btn-action btn-block holder" do="add" href="#" style="padding:7px 10px 5px 10px;"><i class="glyphicon glyphicon-search"></i></a> \
           </div> \
         </div> \
         <div class="holder searches" style="margin-top:5px;margin-left:-5px;"></div> \
-      </div></li>';
+      </div>';
+      if ($(window).width() < 1000) {
+        $('#bigsearch').hide();
+        $('#littlesearch').html(srch);
+      } else {
+        $('#searchbar').html(srch);      
+      }*/
       $('#stories').show();
-      $('#navopts').html(srch);
       $('.holder.search').focus();
       $('#holder').holder();
     }

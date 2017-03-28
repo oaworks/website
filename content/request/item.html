@@ -1,7 +1,22 @@
 
+<div class="strap strap-compact" style="background-image:url(/static/header_locked.jpg);background-color:transparent;background-size:100% 100%;background-repeat:no-repeat;margin-top:-80px;padding-top:100px;padding-bottom:0px;">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <h1 style="color:#FFFFFC;">
+          <b>Access to this <span class="article-data">paper</span> is still closed</b>
+        </h1>
+        <div id="other">
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="container-fluid">
   <div class="row">
-    <div class="col-md-8 col-md-offset-2">
+    <div class="col-md-8">
       <div id="info">
         
       </div>
@@ -16,6 +31,8 @@
 
 <script>
   jQuery(document).ready(function() {
+    $('#topnav').css('background-color','transparent');
+
     var api = 'https://api.openaccessbutton.org';
     if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
       api = 'https://dev.api.cottagelabs.com/service/oab';
@@ -240,23 +257,12 @@
     
     var details = function(data) {
       var rec = data.data;
-      
-      var sts = {
-        moderate: {text:'Awaiting moderation',color:'#eee',highlight:'grey'},
-        help: {text:'this request needs more info - can you fill in some blanks and update it?',color:'#fbdad0',highlight:'#f04717'},
-        progress: {text:'In progress - read more, support it, provide it!',highlight:'grey',color:'white'},
-        received: {text:'Success! This ' + rec.type + ' has been made available!',highlight:'#5cb85c',color:'#dcefdc'},
-        refused: {text:'Refused - can you help us try again?',highlight:'#d9534f',color:'#f1c2c0'},
-        closed: {text:'Closed - this request could not be completed',highlight:'grey',color:'#eee'}
-      }
-      var color = rec.status && sts[rec.status] && sts[rec.status].color ? sts[rec.status].color : '#eee';
-      var status = rec.status && sts[rec.status] && sts[rec.status].text ? sts[rec.status].text : rec.status;
-      var highlight = rec.status && sts[rec.status] && sts[rec.status].highlight ? sts[rec.status].highlight : '#eee';
-      var text = rec.status && sts[rec.status] && sts[rec.status].highlight ? sts[rec.status].highlight : 'blue';
-      
+      $('.article-data').html(rec.type);
+      if (rec.status !== 'received') $('body').css('background-color','#fceadf');
+            
       var re = '';
       if (rec.status === 'received' && rec.received !== undefined) {
-        re += '<div class="well" style="background-color:#dcefdc;margin-bottom:60px;padding-bottom:30px;"><h3 style="text-align:center;">This request has been successful.<br>The ' + rec.type + ' is now available ';
+        re += '<h3 style="text-align:center;">This request has been successful.<br>The ' + rec.type + ' is now available ';
         var surl;
         if (rec.received.url) {
           re += 'at:<br>';
@@ -270,15 +276,11 @@
         }
         re += '<a target="_blank" href="' + surl + '" style="word-wrap:break-word;overflow-wrap:break-word;">' + surl + '</a></h3></div>';
       }
-      re += '<div class="well" style="margin:30px auto 10px auto;background-color:' + color + '">';
-      re += '<p>';
-      if (rec.type && rec.type === 'data') re += 'Data for ';
-      re += '<b>';
-      if (rec.url && rec.url.indexOf('http') === 0) re += '<a id="titlelink" target="_blank" href="' + rec.url + '" style="word-wrap:break-word;overflow-wrap:break-word;">';
+      if (rec.type && rec.type === 'data') re += '<p>Data for </p><h2 style="color:#f04717;">';
+      if (rec.url && rec.url.indexOf('http') === 0) re += '<h2><a id="titlelink" target="_blank" href="' + rec.url + '" style="word-wrap:break-word;overflow-wrap:break-word;color:#f04717;">';
       re += rec.title ? rec.title : rec.url;
       if (rec.url && rec.url.indexOf('http') === 0) re += '</a>';
-      re += '</b></p>';
-      re += '<p style="color:' + text + ';">' + status + '</p>';
+      re += '</h2>';
       if (rec.story ) re += '<p style="padding:10px 0px 10px 30px;color:#383838;font-style:italic;font-weight:bold;font-size:1.2em;">' + rec.story + '</p>';
       re += '<p>Requested';
       if ( rec.user && (rec.user.firstname || rec.user.username || rec.user.email) ) {
@@ -296,7 +298,6 @@
       re += rec.created_date ? ' on ' + rec.created_date.split(' ')[0].split('-').reverse().join('/') : '';
       re += '</p>';
       if (rec.count && rec.count > 1) re += '<p>' + (rec.count - 1) + ' ' + (rec.count === 2 ? 'more person supports' : 'more people support') + ' this request</p>';
-      re += '</div>';
       if (rec.user === undefined) {
         if (clogin.loggedin()) {
           re += '<p style="text-align:right;margin-bottom:40px;">This request needs an owner! <a href="#" id="own" class="btn btn-action">Take ownership</a></p>';
@@ -340,19 +341,17 @@
           re += '<p>You have added your support to this request.</p>';
         }
       }
-      var ot = rec.type === 'data' ? 'an article' : 'a data';
+      var ot = rec.type === 'article' ? 'data' : 'article';
       if (rec.other) {
-        re += '<p>There is also ';
-        re += ot + ' request open for this. <a style="text-decoration:underline;" href="/request/' + rec.other + '">View the ' + (rec.type === 'data' ? 'article' : 'data') + ' request</a></p>';
+        $('#other').html('<p><a style="text-decoration:underline;color:#FFFFFC;" href="/request/' + rec.other + '">I actually wanted the ' + ot + '</a></p>');
       } else {
-        var tot = rec.type === 'data' ? 'article' : 'data';
-        re += '<p>Do you want access to the ' + tot + ' as well? <a style="text-decoration:underline;" href="/?url=' + encodeURIComponent(rec.url) + '">Check ' + tot + ' availability</a></p>';
+        $('#other').html('<p><a style="text-decoration:underline;color:#FFFFFC;" href="/request?type=data&url=' + encodeURIComponent(rec.url) + '">I actually wanted the ' + ot + '</a></p>');
       }
       if (rec.status !== 'received') {
         if (clogin.loggedin() && rec.user && rec.user.id && clogin.user && clogin.user.account && clogin.user.account._id === rec.user.id) {
           // we don't ask the logged in user who created the thing if they can provide it - do we want to ask them anything else here?
         } else {
-          re += '<p>Can you provide this ' + rec.type + '? If so we\'d love to hear from you - please <a style="text-decoration:underline;" href="mailto:requests@openaccessbutton.org">contact us</a>!</p>';
+          re += '<p>Are you the author? Please <a style="text-decoration:underline;" href="mailto:requests@openaccessbutton.org">contact us</a>!</p>';
         }
       }
       if (clogin.hasRole('openaccessbutton.admin')) {

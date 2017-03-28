@@ -116,7 +116,7 @@ jQuery(document).ready(function() {
             Just enter your email address to get started.<br>
             We use a password free system.
           </p>
-          <input type="text" class="form-control" id="cloginEmail" placeholder="Enter your email address">
+          <input type="text" class="form-control" id="cloginEmail" name="email" placeholder="Enter your email address">
           <button id="cloginSubmit" type="submit" class="btn btn-action btn-block" style="margin-top:10px;">Sign up / Login</button>
         </div>
         <div id="cloginTokenArea" style="display:none;">
@@ -172,10 +172,10 @@ jQuery(document).ready(function() {
       <div id="setinfo" style="display:none;">
         <h1>Thanks for signing up!</h1>
         <p>We use these details to make article and data requests on your behalf.</p>
-        <input style="margin-top:5px;" type="text" id="profile.firstname" class="form-control cloginSave" placeholder="First name (required)">
-        <input style="margin-top:5px;" type="text" id="profile.lastname" class="form-control cloginSave" placeholder="Family name (required)">
-        <input style="margin-top:5px;" type="text" id="service.openaccessbutton.profile.affiliation" class="form-control cloginSave" placeholder="Affiliation (University name, Business name etc)">
-        <select id="service.openaccessbutton.profile.profession" class="form-control cloginSave" style="margin-top:5px;">
+        <input style="margin-top:5px;" type="text" id="profile.firstname" name="first name" class="form-control cloginSave" placeholder="First name (required)">
+        <input style="margin-top:5px;" type="text" id="profile.lastname" name="last name" class="form-control cloginSave" placeholder="Family name (required)">
+        <input style="margin-top:5px;" type="text" id="service.openaccessbutton.profile.affiliation" name="affiliation" class="form-control cloginSave" placeholder="Affiliation (University name, Business name etc)">
+        <select id="service.openaccessbutton.profile.profession" name="profession" class="form-control cloginSave" style="margin-top:5px;">
           <option value="">Profession (required)</option>
           <option value="Student">Student</option>
           <option value="Health professional">Health professional</option>
