@@ -21,7 +21,7 @@
           </div>
         </div>
         <div class="input-group">
-          <textarea id="url" class="form-control" style="min-height:34px;height:34px;" placeholder="Enter an article DOI, URL, Pubmed ID, PMC ID, Title, or Citation"></textarea>
+          <textarea id="url" class="form-control" style="min-height:34px;height:34px;" placeholder="Enter an article URL, DOI, Pubmed ID, PMC ID, Title, or Citation"></textarea>
           <div class="input-group-btn">
             <a class="btn btn-action btn-block" href="#" id="find" style="padding:7px 10px 5px 10px;"><i class="glyphicon glyphicon-search"></i></a>
           </div>
@@ -107,10 +107,6 @@
     if ($(window).width() >= 1000) {
       var height = $(window).height() + 30;
       $('#topstrap').css('height',height+'px');
-  $('#showhowitworks').bind('click',function(e) { e.preventDefault(); $('#topstrap').css('height',''); $('#howitworks').toggle(); });
-  if ($(window).width() >= 1000) {
-  var height = $(window).height() + 30;
-  $('#topstrap').css('height',height+'px');
     }
 
     var example = function(e) {
