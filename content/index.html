@@ -1,3 +1,7 @@
+<!-- Start of openaccessbutton Zendesk Widget script -->
+<script>/*<![CDATA[*/window.zEmbed||function(e,t){var n,o,d,i,s,a=[],r=document.createElement("iframe");window.zEmbed=function(){a.push(arguments)},window.zE=window.zE||window.zEmbed,r.src="javascript:false",r.title="",r.role="presentation",(r.frameElement||r).style.cssText="display: none",d=document.getElementsByTagName("script"),d=d[d.length-1],d.parentNode.insertBefore(r,d),i=r.contentWindow,s=i.document;try{o=s}catch(e){n=document.domain,r.src='javascript:var d=document.open();d.domain="'+n+'";void(0);',o=s}o.open()._l=function(){var o=this.createElement("script");n&&(this.domain=n),o.id="js-iframe-async",o.src=e,this.t=+new Date,this.zendeskHost=t,this.zEQueue=a,this.body.appendChild(o)},o.write('<body onload="document._l();">'),o.close()}("https://assets.zendesk.com/embeddable_framework/main.js","openaccessbutton.zendesk.com");
+/*]]>*/</script>
+<!-- End of openaccessbutton Zendesk Widget script -->
 
 <div class="strap strap-compact" style="background-image:url(/static/book.jpg);background-color:transparent;min-height:500px;background-size:100% 100%;background-repeat:no-repeat;padding-top:10%;margin-top:-80px;" id="topstrap">
   <div class="container-fluid">
@@ -33,9 +37,9 @@
 
       <div class="col-md-4 col-md-offset-4" id="loading" style="display:none;min-height:800px;">
         <img id="loading" style="height:100%;width:100%;" src="/static/spin_orange.svg">
-      </div>      
+      </div>
     </div>
-  </div>  
+  </div>
 </div>
 
 <div class="strap strap-white intro" id="examples" style="border-top:2px solid #212f3f;display:none;">
@@ -59,10 +63,10 @@
 
 
 <script>
-  jQuery(document).ready(function() {    
+  jQuery(document).ready(function() {
     $('#topnav').css('background-color','transparent');
     $('#footer').css('margin-top','-65px');
-    
+
     $('#showexamples').bind('click',function(e) { e.preventDefault(); $('#topstrap').css('height',''); $('#examples').toggle(); });
     if ($(window).width() >= 1000) {
       var height = $(window).height() + 30;
@@ -75,7 +79,7 @@
       setTimeout(function() { $('#find').trigger('click'); }, 700);
     }
     $('.example').bind('click',example);
-    
+
     var api = 'https://api.openaccessbutton.org';
     if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
       api = 'https://dev.api.cottagelabs.com/service/oab';
@@ -233,6 +237,3 @@
 
   });
 </script>
-
-
-
