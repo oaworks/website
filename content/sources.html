@@ -1,55 +1,55 @@
 
 <div class="container-fluid">
-  <div class="row" style="margin-top:0px;margin-bottom:50px;background-color:#212f3f;">
+  <div class="row">
     <div class="col-md-8 col-md-offset-2">
-      <h1 style="text-align:left;color:white;margin-top:50px;margin-bottom:50px;font-size:4em;">
+      <h1 style="text-align:left;margin-top:50px;margin-bottom:50px;font-size:4em;">
         Our sources <small style="font-size:0.3em;"><br>(making sure we only make requests when necessary)</small>
       </h1>
     </div>
   </div>
 </div>
-      
+
 <div class="container-fluid" style="margin-bottom:100px;">
   <div class="row">
     <div class="col-md-8 col-md-offset-2" style="text-align:justify;">
       <p>
-        Before we create a request for access, we of course check that an article is not already openly available somewhere else. 
-        To do this we search a lot of places, in various ways, to get the most coverage we can achieve. 
+        Before we create a request for access, we of course check that an article is not already openly available somewhere else.
+        To do this we search a lot of places, in various ways, to get the most coverage we can achieve.
         We do sometimes get false positives, but our aim is to get people as close to what they want as possible.
       </p>
-      
+
       <h3>Starting with identifiers</h3>
-      
+
       <p>
         We start off by receiving some sort of identifying information, which in loose order of preference can be one of:
         <b>URL</b>, <b>DOI</b>, <b>Pubmed ID</b>, <b>Pubmed Central ID</b>, <b>Title</b>, <b>Citation</b>
       </p>
-      
+
       <p>
-        If given a URL, we check the URL itself to see if it contains a DOI, PMID, or PMC ID. If so we extract that identifier 
+        If given a URL, we check the URL itself to see if it contains a DOI, PMID, or PMC ID. If so we extract that identifier
         and it becomes our priority identifier. For example, here is a URL with a DOI in it:<br><br>
         http://jcheminf.springeropen.com/articles/10.1186/1758-2946-3-47<br><br>
-        if we don't find an identifier in the URL, we retrieve the content of the URL and render it, then we search the page 
+        if we don't find an identifier in the URL, we retrieve the content of the URL and render it, then we search the page
         content for DOI, Title, PMID, and PMC ID - again, if we find one, we switch to using that as our priority identifier.
       </p>
-      
+
       <p>
-        If given a full Citation string or just a Title, we search <b>crossref</b> for a DOI and Title that appear to match. 
-        If we can't find anything from a Citation, we try to strip out just a Title, then check crossref again with just that. 
+        If given a full Citation string or just a Title, we search <b>crossref</b> for a DOI and Title that appear to match.
+        If we can't find anything from a Citation, we try to strip out just a Title, then check crossref again with just that.
         If we find a DOI (or Title), it becomes our primary identifier.
       </p>
-      
+
       <h3>Finding by Pubmed ID and Pubmed Central ID</h3>
-      
+
       <p>
         Now, if we have a PMID or a PMC ID, we search <b>Europe PMC</b>. If we find an open access article there, we're done!
         If we find a closed article there, we find the DOI and Title for it if possible.
       </p>
-      
+
       <h3>Finding by DOI</h3>
-      
+
       <p>
-        We prioritise DOI searches over Title searches, and we search for DOIs in the following order, stopping as soon as 
+        We prioritise DOI searches over Title searches, and we search for DOIs in the following order, stopping as soon as
         we find a link to an open article:
       </p>
       <ul>
@@ -63,29 +63,29 @@
         <li><b>Figshare</b></li>
         <li><b>DOAJ</b></li>
       </ul>
-      
+
       <p>
         These sources include most of the major aggregations and repositories in the world, such as...
       </p>
-      
+
       <p>
         Do you think there is one we should add? <a href="/about#contact">Let us know</a>!
       </p>
-      
+
       <p>
-        Also, if in any of the above we found an item that was not open but had additional metadata we did not already have, 
+        Also, if in any of the above we found an item that was not open but had additional metadata we did not already have,
         we will take the Title and journal name for later checks.
       </p>
-      
+
       <h3>Finding by Title</h3>
-      
+
       <p>
-        If we found nothing by DOI but we have a Title, we search a few of the same places 
-        again where they accept Title lookups (and yes, they do have records in there 
-        that can only be found by Title, even if the Title does have a DOI - sometimes the 
-        metadata just does not contain the DOI). If we still don't have a title but do 
-        have a DOI (even though it didn't match anything yet), we check <b>crossref</b> 
-        for metadata and extract a title if available. So now, with title, we search (until 
+        If we found nothing by DOI but we have a Title, we search a few of the same places
+        again where they accept Title lookups (and yes, they do have records in there
+        that can only be found by Title, even if the Title does have a DOI - sometimes the
+        metadata just does not contain the DOI). If we still don't have a title but do
+        have a DOI (even though it didn't match anything yet), we check <b>crossref</b>
+        for metadata and extract a title if available. So now, with title, we search (until
         we find something) through:
       </p>
       <ul>
@@ -97,74 +97,72 @@
         <li><b>Figshare</b></li>
         <li><b>DOAJ</b></li>
       </ul>
-      
+
       <h3>Last resort</h3>
-      
+
       <p>
-        Finally, if we have been unable to find the article but did pick up the journal name along the way, we 
-        check <b>DOAJ</b> to see if the journal is registered as an open journal. If it is, we return the 
-        URL to the journal itself, and at least from there the user can look for the particular article. 
-        (Note in almost all cases, if it is in the DOAJ, we will have already found it by DOI or Title anyway, 
+        Finally, if we have been unable to find the article but did pick up the journal name along the way, we
+        check <b>DOAJ</b> to see if the journal is registered as an open journal. If it is, we return the
+        URL to the journal itself, and at least from there the user can look for the particular article.
+        (Note in almost all cases, if it is in the DOAJ, we will have already found it by DOI or Title anyway,
         so will already have given a direct article link.)
       </p>
-      
+
       <h3>But what about "open but needs login"?</h3>
-      
+
       <p>
-        Unfortunately there are many repositores that contain articles that are "open", but which cannot 
-        be accessed without a login - which is not very open or useful. For these cases, we manage a 
-        list of such repositories and if we have found a URL that matches to one of them we do an additional check 
+        Unfortunately there are many repositores that contain articles that are "open", but which cannot
+        be accessed without a login - which is not very open or useful. For these cases, we manage a
+        list of such repositories and if we have found a URL that matches to one of them we do an additional check
         to see if the item can really be accessed without login. If it can't, we don't consider it open.
       </p>
-      
+
       <p>
         (There are a few other sites too that we just blacklist outright, for various reasons.)
       </p>
-      
+
       <h3>What about institutional access?</h3>
-      
+
       <p>
-        Some of our users are members of institutions, such as universities, that DO have additional access 
-        rights to some content. In these cases, we can provide customised plugins, bookmarklets, and search 
-        methods (such as plugging into your library ex-libris search) that check whether or not "local" 
+        Some of our users are members of institutions, such as universities, that DO have additional access
+        rights to some content. In these cases, we can provide customised plugins, bookmarklets, and search
+        methods (such as plugging into your library ex-libris search) that check whether or not "local"
         access is possible.
       </p>
-      
+
       <p>
-        And we can even hook up to inter-library loan systems and send alerts or triggers 
-        for ILL requests! 
+        And we can even hook up to inter-library loan systems and send alerts or triggers
+        for ILL requests!
       </p>
-      
+
       <p>
         If you're interested in this, <a href="/about#contact">contact us</a>.
       </p>
-      
+
       <h3>If still not open - start a request</h3>
-      
+
       <p>
-        When we can't find an open version of an article anywhere, it is time to start a request! 
-        We search the page content and metadata for an author email address, and create a new request 
-        on our system. This also collects up accessibility and licence information from <b>DOAJ</b>, <b>Sherpa Romeo</b>, 
-        and <b>Lantern</b>, and then we contact the author and ask them to provide a legally accessible copy 
-        either via URL if already online somewhere we couldn't find, or by uploading direct to us. If an 
-        author uploads to us, we store their article in <b>Zenodo</b> on their behalf, to make sure it is 
+        When we can't find an open version of an article anywhere, it is time to start a request!
+        We search the page content and metadata for an author email address, and create a new request
+        on our system. This also collects up accessibility and licence information from <b>DOAJ</b>, <b>Sherpa Romeo</b>,
+        and <b>Lantern</b>, and then we contact the author and ask them to provide a legally accessible copy
+        either via URL if already online somewhere we couldn't find, or by uploading direct to us. If an
+        author uploads to us, we store their article in <b>Zenodo</b> on their behalf, to make sure it is
         available somewhere long term.
       </p>
-      
+
       <p>
-        (We also accept requests for data supporting articles, and in the cases where an author shares 
+        (We also accept requests for data supporting articles, and in the cases where an author shares
         that with us, we store it with the <b>Open Science Foundation</b>.)
       </p>
-      
+
       <p>
-        Our user community also help to fulfil requests, by providing author email addresses, additional 
-        metadata, additional sources, or by adding their support to requests. By collecting the stories 
-        of users requesting access, and those that support them, we can present compelling arguments as 
+        Our user community also help to fulfil requests, by providing author email addresses, additional
+        metadata, additional sources, or by adding their support to requests. By collecting the stories
+        of users requesting access, and those that support them, we can present compelling arguments as
         to why an author should share their research.
       </p>
-            
+
     </div>
   </div>
 </div>
-
-
