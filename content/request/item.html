@@ -174,10 +174,9 @@
           url:api+'/scrape?url='+encodeURIComponent(url),
           success: function(data) {
             if (data.data) {
-              if (data.data.title) $('#title').val(data.data.title);
-              if (data.data.doi) $('#doi').val(data.data.doi);
-              if (data.data.email && data.data.email.length > 0) $('#email').val(data.data.email[0]);
-              $('#admin').show();
+              if (data.data.title && !$('#title').val()) $('#title').val(data.data.title);
+              if (data.data.doi && !$('#doi').val()) $('#doi').val(data.data.doi);
+              if (data.data.email && data.data.email.length > 0 && !$('#email').val()) $('#email').val(data.data.email[0]);
             }
           }
         });
@@ -256,8 +255,9 @@
       var rec = data.data;
       
       var ttl = '';
-      if (rec.type && rec.type === 'data') ttl += '<p style="margin-top:20px;margin-bottom:-20px;">Data for </p><h2 style="color:#f04717;">';
-      if (rec.url && rec.url.indexOf('http') === 0) ttl += '<h2><a id="titlelink" target="_blank" href="' + rec.url + '" style="word-wrap:break-word;overflow-wrap:break-word;color:#f04717;">';
+      if (rec.type && rec.type === 'data') ttl += '<p style="margin-top:20px;margin-bottom:-20px;">Data for </p>';
+      ttl += '<h2 style="color:#f04717;">';
+      if (rec.url && rec.url.indexOf('http') === 0) ttl += '<a id="titlelink" target="_blank" href="' + rec.url + '" style="word-wrap:break-word;overflow-wrap:break-word;color:#f04717;">';
       ttl += rec.title ? rec.title : rec.url;
       if (rec.url && rec.url.indexOf('http') === 0) ttl += '</a>';
       ttl += '</h2>';
@@ -288,7 +288,7 @@
         $('#headline').html('<b>This ' + rec.type + ' request has been successful.</b>');
       } else {
         $('#topper').css('background-image','url(/static/header_locked.jpg');
-        $('#headline').html('<b>Access to this ' + rec.typ + ' is still closed</b>');
+        $('#headline').html('<b>Access to this ' + rec.type + ' is still closed</b>');
         $('body').css('background-color','#fceadf');
       }
         
@@ -377,6 +377,7 @@
       if ($('#update').length) $('#update').bind('click',submit);
       if ($('#delete').length) $('#delete').bind('click',deleteitem);
       //if (clogin.hasRole('root') && record.status !== 'received') $('#titlelink').bind('click',scrape);
+      if (clogin.loggedin() && rec.status !== 'received' && (!rec.title || !rec.email) ) scrape();
       twatit();
     }
     
