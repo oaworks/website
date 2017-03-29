@@ -45,35 +45,33 @@
         </p>
 
         <p class="typedata">
-              <div class="row">
-                  <div class="col-md-6">
-                    <p>Is the request data already available publicly online? That’s great! Just give us the URL address. A good publicly accessible URL is a link to a repository record.</p>
 
-                    <input style="margin-top:50px;margin-bottom:5px;" id="url" type="text" class="form-control" placeholder="Enter the publicly available URL here">
-                    <a href="#" class="btn btn-warning btn-block admin" style="display:none;margin-top:5px;" id="adminsubmiturl">submit URL as Admin</a>
-                    <a href="#" class="btn btn-action btn-block" style="margin-top:5px;margin-bottom:30px;" id="submiturl">Submit your URL</a>
+          Is the request data already available publicly online? That’s great! Just give us the URL address. A good publicly accessible URL is a link to a repository record.
 
-                  </div>
-                  <div class="col-md-6">
+          If the data isn’t publicly available, you can deposit it to a repository and then share the link with us, or you can upload it now. We’ll send it to the <a href="https://osf.io">Open Science Framework</a>. OSF will preserve your data and make it publicly available under a <a target="_blank" href="https://creativecommons.org/publicdomain/zero/1.0/">CC-0 license</a>, the recommended license for sharing data. Once you submit the data we’ll ask our community to validate it. If you have more than one file, please create a zip folder to upload.
 
-                  </p>If the data isn’t publicly available, you can deposit it to a repository and then share the link with us, or you can upload it now. We’ll send it to the <a href="https://osf.io">Open Science Framework</a>. OSF will preserve your data and make it publicly available under a <a target="_blank" href="https://creativecommons.org/publicdomain/zero/1.0/">CC-0 license</a>, the recommended license for sharing data. Once you submit the data we’ll ask our community to validate it. If you have more than one file, please create a zip folder to upload.
+          Need some help curating your data first? Ask your library if they have a research data management specialist.
+          </p>
 
-                  Need some help curating your data first? Ask your library if they have a research data management specialist.
-                  </p>
+        <input style="margin-top:50px;margin-bottom:5px;" id="url" type="text" class="form-control" placeholder="Enter the publicly available URL here">
+        <a href="#" class="btn btn-warning btn-block admin" style="display:none;margin-top:5px;" id="adminsubmiturl">submit URL as Admin</a>
+        <a href="#" class="btn btn-action btn-block" style="margin-top:5px;margin-bottom:30px;" id="submiturl">Submit your URL</a>
 
-                  <form id="fileupload" enctype="multipart/form-data" method="POST">
-                              <input type="file" name="file" id="file" class="form-control">
-                              <input type="hidden" name="service" value="openaccessbutton">
-                              <input type="hidden" name="dirId" id="dirId" value="">
-                              <input style="margin-top:5px;margin-bottom:5px;" id="title" type="text" class="form-control" placeholder="Enter the title here">
-                              <input style="margin-top:5px;margin-bottom:5px;" id="firstname" type="text" class="form-control" placeholder="Enter your (author) first name here">
-                              <input style="margin-top:5px;margin-bottom:5px;" id="lastname" type="text" class="form-control" placeholder="Enter your (author) last name here">
-                              <textarea id="description" class="form-control" style="min-height:150px;margin-top:5px;" placeholder="Please provide an abstract / brief description / further information here"></textarea>
-                              <input type="submit" class="btn btn-warning btn-block admin" style="margin-top:5px;display:none;" id="adminsubmitfile" value="Upload file as Admin">
-                              <input type="submit" class="btn btn-action btn-block" style="margin-top:5px;" id="submitfile" value="Upload your file">
-                            </form>
-                  </div>
-              </div>
+        <p>
+          Or if you don't have a URL, upload your file here instead:
+        </p>
+
+        <form id="fileupload" enctype="multipart/form-data" method="POST">
+          <input type="file" name="file" id="file" class="form-control">
+          <input type="hidden" name="service" value="openaccessbutton">
+          <input type="hidden" name="dirId" id="dirId" value="">
+          <input style="margin-top:5px;margin-bottom:5px;" id="title" type="text" class="form-control" placeholder="Enter the title here">
+          <input style="margin-top:5px;margin-bottom:5px;" id="firstname" type="text" class="form-control" placeholder="Enter your (author) first name here">
+          <input style="margin-top:5px;margin-bottom:5px;" id="lastname" type="text" class="form-control" placeholder="Enter your (author) last name here">
+          <textarea id="description" class="form-control" style="min-height:150px;margin-top:5px;" placeholder="Please provide an abstract / brief description / further information here"></textarea>
+          <input type="submit" class="btn btn-warning btn-block admin" style="margin-top:5px;display:none;" id="adminsubmitfile" value="Upload file as Admin">
+          <input type="submit" class="btn btn-action btn-block" style="margin-top:5px;" id="submitfile" value="Upload your file">
+        </form>
 
       </div>
 
