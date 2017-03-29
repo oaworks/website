@@ -45,26 +45,23 @@
         </p>
 
         <p class="typedata">
-
-
-          <div class="container">
               <div class="row">
-                  <div class="col-xs-6">
-                    Is the request data already available publicly online? That’s great! Just give us the URL address. A good publicly accessible URL is a link to a repository record.
+                  <div class="col-md-6">
+                    <p>Is the request data already available publicly online? That’s great! Just give us the URL address. A good publicly accessible URL is a link to a repository record.</p>
 
                     <input style="margin-top:50px;margin-bottom:5px;" id="url" type="text" class="form-control" placeholder="Enter the publicly available URL here">
                     <a href="#" class="btn btn-warning btn-block admin" style="display:none;margin-top:5px;" id="adminsubmiturl">submit URL as Admin</a>
                     <a href="#" class="btn btn-action btn-block" style="margin-top:5px;margin-bottom:30px;" id="submiturl">Submit your URL</a>
 
                   </div>
-                  <div class="col-xs-6">
+                  <div class="col-md-6">
 
-                              If the data isn’t publicly available, you can deposit it to a repository and then share the link with us, or you can upload it now. We’ll send it to the <a href="https://osf.io">Open Science Framework</a>. OSF will preserve your data and make it publicly available under a <a target="_blank" href="https://creativecommons.org/publicdomain/zero/1.0/">CC-0 license</a>, the recommended license for sharing data. Once you submit the data we’ll ask our community to validate it. If you have more than one file, please create a zip folder to upload.
+                  </p>If the data isn’t publicly available, you can deposit it to a repository and then share the link with us, or you can upload it now. We’ll send it to the <a href="https://osf.io">Open Science Framework</a>. OSF will preserve your data and make it publicly available under a <a target="_blank" href="https://creativecommons.org/publicdomain/zero/1.0/">CC-0 license</a>, the recommended license for sharing data. Once you submit the data we’ll ask our community to validate it. If you have more than one file, please create a zip folder to upload.
 
-                              Need some help curating your data first? Ask your library if they have a research data management specialist.
-                              </p>
+                  Need some help curating your data first? Ask your library if they have a research data management specialist.
+                  </p>
 
-                            <form id="fileupload" enctype="multipart/form-data" method="POST">
+                  <form id="fileupload" enctype="multipart/form-data" method="POST">
                               <input type="file" name="file" id="file" class="form-control">
                               <input type="hidden" name="service" value="openaccessbutton">
                               <input type="hidden" name="dirId" id="dirId" value="">
@@ -77,8 +74,6 @@
                             </form>
                   </div>
               </div>
-          </div>
-
 
       </div>
 
