@@ -51,9 +51,9 @@
           Find, support and share requests that matter to you.
         </p>
         <p style="color:white;text-align:center;">
-          <a class="holder" do="instruct" val="help" href="#" style="text-decoration:underline;color:white;">Help us with requests</a><br>
-          <a id="viewrequests" class="cloggedin" href="/request" style="text-decoration:underline;color:white;">View your requests</a><br>
-          <a href="/find" style="text-decoration:underline;color:white;">Start a new request</a>
+          <a id="viewrequests" class="cloggedin" href="/request" style="text-decoration:underline;color:white;display:none;">View your requests</a><br>
+          <a id ="help" href="#" style="text-decoration:underline;color:white;">Help us with requests</a><br>
+          <a href="/" style="text-decoration:underline;color:white;">Start a new request</a>
         </p>
       </div>
       <div class="holder facets"></div>
@@ -75,14 +75,10 @@ jQuery(document).ready(function() {
     clogin.api = 'https://dev.api.cottagelabs.com/accounts';
     $.fn.holder.use.oabutton.url = api + '/requests';
   }
-
-  var user = clogin.loggedin();
-  if (user) {
-    $('#viewrequests').bind('click',function(e) {
-      e.preventDefault();
-      $('.holder.search').val('user.id:'+user.userId).trigger('change');
-    });
-  }
+  
+  $('#help').bind('click',function() {
+    $('.holder.search').val('status:help').trigger('change');
+  });
 
   var startup = function() {
     var id;
@@ -119,6 +115,13 @@ jQuery(document).ready(function() {
       };
       $.ajax(opts);
     } else {
+      var user = clogin.loggedin();
+      if (user) {
+        $('#viewrequests').show().bind('click',function(e) {
+          e.preventDefault();
+          $('.holder.search').val('user.id:'+user.userId).trigger('change');
+        });
+      }
       $('#stories').show();
       $('.holder.sticky').show();
       $('.holder.search').focus();
@@ -128,6 +131,7 @@ jQuery(document).ready(function() {
 
   clogin.afterFailure = startup;
   clogin.afterLogin = startup;
+  clogin.nologin = startup;
   clogin.login();
 
 });

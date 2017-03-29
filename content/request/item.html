@@ -96,7 +96,6 @@
       if ( $('#title').length ) data.title = $('#title').val();
       if ( $('#doi').length ) data.doi = $('#doi').val();
       if ( $('#story').length ) data.story = $('#story').val();
-      if ( $('#adminstory').length ) data.story = $('#adminstory').val();
       if ( $('#test').length ) {
         $('#test').is(':checked') ? data.test = true : data.test = false;
       }
@@ -226,7 +225,8 @@
       if (record.email) dets += '<div class="input-group-btn"><a id="blacklist" href="#" class="btn btn-action">Blacklist</a></div>';
       dets += '</div>';
       dets += '<p id="emailissue" style="display:none;font-size:0.9em;"></p>';
-      dets += '<p><input type="text" id="title" class="form-control" placeholder="Title" value="';
+      // TODO need a way to know when to try picking these up in the submit function above
+      /*dets += '<p><input type="text" id="title" class="form-control" placeholder="Title" value="';
       if (record.title) dets += record.title;
       dets += '"></p>';
       dets += '<p><input type="text" id="doi" class="form-control" placeholder="DOI" value="';
@@ -234,7 +234,7 @@
       dets += '"></p>';
       dets += '<p><textarea id="adminstory" class="form-control" placeholder="Story" style="min-height:100px;">';
       if (record.story) dets += record.story;
-      dets += '</textarea></p>';
+      dets += '</textarea></p>';*/
       dets += '<p>Story rating: <select id="rating" class="form-control" style="width:100px;display:inline;">';
       var ratings = ["0","1","2","3","4","5"];
       for ( var r in ratings ) {
@@ -320,13 +320,13 @@
         if (!rec.email) re += '<p><input class="form-control" type="text" id="email" placeholder="Article author email"></p>';
         if (!rec.doi) re += '<p><input class="form-control" type="text" id="doi" placeholder="Article DOI"></p>';
         re += '<p style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Save</a></p>';
-      } else if (rec.status !== 'received') {
+      } else if ( rec.status !== 'received' && (!rec.title || !rec.email || !rec.story) ) {
         if (rec.user === undefined) {
           re += '<p>No-one has requested this ' + rec.type + ' from the author before.</p>';
-          re += '<p style="margin-bottom:40px;"><a href="/account?next=' + encodeURIComponent('/request/' + rid) + '" class="btn btn-block btn-action">Be the first</a></p>';
+          re += '<p style="margin-bottom:40px;"><a href="/account?next=/request/' + rid + '" class="btn btn-block btn-action">Be the first</a></p>';
         } else {
           re += '<p>We need a few more details to get this request started.</p>';
-          re += '<p style="margin-bottom:40px;"><a href="/account?next=' + encodeURIComponent('/request/' + rid) + '" class="btn btn-block btn-action">Login / sign up to get started</a></p>';          
+          re += '<p style="margin-bottom:40px;"><a href="/account?next=/request/' + rid + '" class="btn btn-block btn-action">Login / sign up to get started</a></p>';          
         }
       }
 
@@ -347,7 +347,7 @@
       if (rec.count) acts += '<p>' + (rec.count) + ' ' + (rec.count === 1 ? 'person supports' : 'people support') + ' this request</p>';
       if (rec.status !== 'received' && rec.story) {
         if (clogin.loggedin() && rec.user && rec.user.id && clogin.user && clogin.user.account && clogin.user.account._id === rec.user.id) {
-          // creator does not get asked to support or told that they support
+          acts += '<p>You created this request.</p>';
         } else if (rec.user !== undefined && ( !rec.supports || rec.supports === undefined || rec.supports.length === 0) ) {
           acts += '<p>Add your support to be notified when this ' + rec.type + ' is released.</p>';
           if (!clogin.loggedin()) {
