@@ -17,7 +17,7 @@
         </div>
         <div class="row">
           <div class="col-md-12">
-            <h3 style="font-size:1.3em;">Free, legal research articles and data, delivered instantly or automatically requested from authors at the click of a button. </h3>
+            <h3 style="font-size:1.3em;">Free, legal research articles and data, delivered instantly or automatically requested from authors at the click of a button.</h3>
           </div>
         </div>
         <div class="input-group">
@@ -72,7 +72,7 @@
     <h1>Requesting Research</h1>
     <p>If we can’t get you access, we’ll start a request for you. We request articles from authors, and guide them on making the work available to you and everyone who needs it.
 
-    <p>You can do this from our website, browser extensions or our API. Take your pick!</p>
+    <p>You can do this from our website, browser extensions or our <a href="/api">API</a>. Take your pick!</p>
         </p>
       </div>
     </div>
@@ -161,26 +161,26 @@
                 try { if (clogin.apikey) opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", clogin.apikey); } } catch(err) {}
                 $.ajax(opts);
               } else {
-                $('#availability').html('<p>Sorry, we couldn\'t find anything for <b>' + data.data.match + '</b>.</p><p>Please try to find a URL, DOI, PMID or PMCID and <a href="/">try again</a>.</p>');
+                $('#availability').html('<p>Sorry, we couldn\'t find anything for <b>' + data.data.match + '</b>.</p><p>Matching titles and citations can be tricky. Please find a URL, DOI, PMID or PMCID and <a href="/">try again</a>.</p>');
               }
             } else if (has.article && !has.data) {
               var availability = '';
               if (has.article.id) {
-                availability += '<p style="color:#212f3f;text-align:center;padding-top:50px;">';
+                availability += '<p style="color:#212f3f;padding-top:50px;">';
                 if (has.article.ucreated) {
                   availability += 'You already created a request for this article <a class="btn btn-action" href="/request/' + has.article.id + '">View the request</a></p>';
                 } else if (has.article.usupport) {
                   availability += 'You already support a request for this article <a class="btn btn-action" href="/request/' + has.article.id + '">View the request</a></p>';
                 } else {
-                  availability += 'There is an open request for this article <a class="btn btn-action" href="/request/' + has.article.id + '?support=true">Add your support</a></p>';
+                  availability += 'There is an open request for this article <a class="btn btn-action" href="/request/' + has.article.id + '?support=true">Notify me</a></p>';
                 }
               } else {
-                availability += '<h2 style="color:#212f3f;text-align:center;">This article is available!</h2>';
-                availability += '<h3 style="text-align:center;"><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + has.article.url + '</a></h3>';
+                availability += '<h2 style="color:#212f3f;">This article is available!</h2>';
+                availability += '<p"><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + has.article.url + '</a></p>';
               }
               availability += '<p style="color:#212f3f;text-align:center;padding-top:50px;">';
-              availability += 'Do you need access to the data instead? ';
-              availability += '<a class="btn btn-action" href="/request?type=data&url=' + encodeURIComponent(data.data.match) + '">Start a data request</a></p>';
+              availability += 'Want the data supporting the article? ';
+              availability += '<a class="btn btn-action" href="/request?type=data&url=' + encodeURIComponent(data.data.match) + '">Request it from the author</a></p>';
               $('#availability').html(availability);
             } else if (!has.article && has.data) {
               var availability = '<h2 style="color:#212f3f;text-align:center;">This article is not available</h2>';
@@ -192,7 +192,7 @@
                 } else if (has.data.usupport) {
                   availability += 'You already support a request for data for this article <a class="btn btn-action" href="/request/' + has.data.id + '">View the request';
                 } else {
-                  availability += 'There is an open request for data for this article <a class="btn btn-action" href="/request/' + has.data.id + '?support=true">Add your support';
+                  availability += 'Someone has requested access to the data. <a class="btn btn-action" href="/request/' + has.data.id + '?support=true">Notify me';
                 }
               } else {
                 availability += 'However there is data available:</p>';
@@ -215,7 +215,7 @@
                   } else if (has.article.usupport) {
                     availability += 'You already support a request for this article <a class="btn btn-action" href="/request/' + has.article.id + '">View the request';
                   } else {
-                    availability += 'There is an open request for this article <a class="btn btn-action" href="/request/' + has.article.id + '?support=true">Add your support';
+                    availability += 'Someone has requested access to the article. <a class="btn btn-action" href="/request/' + has.article.id + '?support=true">Notify me';
                   }
                 }
                 availability += '</a></h3><p style="color:#212f3f;text-align:center;padding-top:50px;">';
@@ -229,7 +229,7 @@
                   } else if (has.data.usupport) {
                     availability += 'You already support a request for data for this article <a class="btn btn-action" href="/request/' + has.data.id + '">View the request';
                   } else {
-                    availability += 'There is an open request for data for this article <a class="btn btn-action" href="/request/' + has.data.id + '?support=true">Add your support';
+                    availability += 'Someone has requested access to the data. <a class="btn btn-action" href="/request/' + has.data.id + '?support=true">Notify me';
                   }
                 }
                 availability += '</a></p>';
@@ -239,7 +239,7 @@
           },
           error: function() {
             $('#loading').hide();
-            $('#loading').after('<p>Sorry, something went wrong.</p>');
+            $('#loading').after('<p>Sorry, something went wrong. <a href = "/feedback#bugs">Can you let us know?</a></p>');
           }
         };
         if (clogin.apikey) {
