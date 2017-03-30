@@ -78,7 +78,7 @@ jQuery(document).ready(function() {
   clogin.init({api:api,afterLogin: afterlogin, saveValidate: savevalidate, afterSave: aftersave });
 
   if (window.location.href.indexOf('email=') !== -1) {
-    $('#cloginEmail').val(window.location.href.split('next=')[0].split('email=')[1]);
+    $('#cloginEmail').val(window.location.href.split('next=')[0].split('email=')[1].split('&')[0]);
     setTimeout(function() { $('#cloginSubmit').trigger('click'); }, 100);
   }
 

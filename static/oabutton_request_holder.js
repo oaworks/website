@@ -16,6 +16,13 @@ $.fn.holder.use.oabutton = {
     keyword: { terms: { field: "keywords.exact", size: 1000 } },
     journal: { terms: { field: "journal.exact", size: 1000 } }
   },
+  defaultfilters: [
+    {
+      exists: {
+        field: "story"
+      }
+    }
+  ],
   
   ranges: {
     createdAt: {
@@ -48,7 +55,7 @@ $.fn.holder.use.oabutton = {
   
   placeholder: function() {
     var options = $(this).holder.options;
-    $('input.' + options.class + '.search').val("").attr('placeholder',"Search " + options.response.hits.total + " requests");
+    $('input.' + options.class + '.search').val("").attr('placeholder',"Search for requests you care about");
   },
 
   record: function(rec,idx) {

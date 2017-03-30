@@ -26,6 +26,7 @@
   <link rel="stylesheet" href="/static/oabutton.css?v=aoewqoijffwewff">
 
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 
   <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/gknkbkaapnhpmkcgkmdekdffgcddoiel">
 
@@ -62,10 +63,6 @@
       $('.cloggedin').show();
       $('.notcloggedin').hide();
     }
-
-    var diff = $(window).height() - $('#footer').offset().top - $('#footer').height();
-    if (diff <= 0) diff = $(document).height() - $('#footer').offset().top - $('#footer').height();
-    if (diff > 0) $('#footer').css('padding-top',diff+'px');
   });
   </script>
 </head>

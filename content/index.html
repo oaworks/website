@@ -26,26 +26,31 @@
             <a class="btn btn-action btn-block" href="#" id="find" style="min-height:40px;height:40px;font-size:1.1em;padding:7px 10px 5px 10px;"><i class="glyphicon glyphicon-search"></i></a>
           </div>
         </div>
-        <p style="font-size:1em;">
-          <br>
-          <a style="text-decoration:underline;" class="chromeinstall" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">Get the extension</a>
-          <a href="#" id="showexamples" style="text-decoration:underline;">Examples</a>
-          <a href="#" id="showhowitworks" style="text-decoration:underline;">How it works</a>
-        </p>
+        <div class="row">
+          <div class="col-md-4" style="text-align:center;">
+            <a style="text-decoration:underline;" class="chromeinstall" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">Get the extension</a>          
+          </div>
+          <div class="col-md-4" style="text-align:center;">
+            <a href="#" class="show" what="examples" style="text-decoration:underline;">Examples</a>
+          </div>
+          <div class="col-md-4" style="text-align:center;">
+            <a href="#" class="show" what="howitworks" style="text-decoration:underline;">How it works</a>
+          </div>
+        </div>
 
       </div>
 
-      <div class="col-md-8 col-md-offset-2" id="availability" style="display:none;text-align:center;min-height:800px;">
+      <div class="col-md-8 col-md-offset-2" id="availability" style="display:none;text-align:center;min-height:400px;">
       </div>
 
-      <div class="col-md-4 col-md-offset-4" id="loading" style="display:none;min-height:800px;">
+      <div class="col-md-4 col-md-offset-4" id="loading" style="display:none;min-height:400px;">
         <img id="loading" style="height:100%;width:100%;" src="/static/spin_orange.svg">
       </div>
     </div>
   </div>
 </div>
 
-<div class="strap strap-white intro" id="examples" style="border-top:2px solid #212f3f;display:none;">
+<div class="strap strap-white intro shower" id="examples" style="border-top:2px solid #212f3f;display:none;">
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-8 col-md-offset-2" style="font-size:1.2em;">
@@ -62,7 +67,7 @@
     </div>
   </div>
 </div>
-<div class="strap strap-white intro" id="howitworks" style="border-top:2px solid #212f3f;display:none;">
+<div class="strap strap-white intro shower" id="howitworks" style="border-top:2px solid #212f3f;display:none;">
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-8 col-md-offset-2" style="font-size:1.2em;">
@@ -79,22 +84,35 @@
   </div>
 </div>
 
+
 <script>
   jQuery(document).ready(function() {
     $('#topnav').css('background-color','transparent');
-    $('#footer').css('margin-top','-65px');
 
-    $('#showexamples').bind('click',function(e) { e.preventDefault(); $('#topstrap').css('height',''); $('#examples').toggle(); });
-    $('#showhowitworks').bind('click',function(e) { e.preventDefault(); $('#topstrap').css('height',''); $('#howitworks').toggle(); });
-    if ($(window).width() >= 1000) {
-      var height = $(window).height() + 30;
+    var th;
+    $('.show').bind('click',function(e) { 
+      e.preventDefault(); 
+      if (th === undefined) th = $('#topstrap').css('height');
+      if ( $('#'+$(this).attr('what')).is(':visible') ) {
+        $('#topstrap').css('height',th);        
+        $('#'+$(this).attr('what')).hide();
+      } else {
+        $('.shower').hide();
+        $('#topstrap').css('height','');
+        $('#'+$(this).attr('what')).show();
+      }
+    });
+    
+    if ( $(window).width() >= 1000 && ( $('#topstrap').offset().top + $('#topstrap').height() + $('#footer').height() < $(window).height() ) ) {
+      var height = $(window).height() - $('#footer').height() + 40;
       $('#topstrap').css('height',height+'px');
     }
 
     var example = function(e) {
       if (e) e.preventDefault();
+      if (th) $('#topstrap').css('height',th);
       $('#url').val($(this).html()).trigger('keyup');
-      setTimeout(function() { $('#find').trigger('click'); }, 700);
+      setTimeout(function() { $('#find').trigger('click'); }, 400);
     }
     $('.example').bind('click',example);
 
@@ -113,6 +131,9 @@
           $('#url').css('border-color','#f04717').focus();
           return;
         }
+        try {
+          if ('pushState' in window.history) window.history.pushState("", "find", '?url=' + encodeURIComponent(url));
+        } catch(err) {}
         if (url.lastIndexOf('.') === url.length-1) url = url.substring(0,url.length-1);
         $('.intro').hide();
         $('#loading').show();

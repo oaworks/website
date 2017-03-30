@@ -95,16 +95,16 @@
     var submit = function(e) {
       if (e) e.preventDefault();
       var data = {};
-      if ( $('#email').length ) data.email = $('#email').val();
-      if ( $('#status').length ) data.status = $('#status').val();
-      if ( $('#rating').length ) data.rating = $('#rating').val();
-      if ( $('#url').length ) data.url = $('#url').val();
-      if ( $('#title').length ) data.title = $('#title').val();
-      if ( $('#doi').length ) data.doi = $('#doi').val();
-      if ( $('#story').length ) data.story = $('#story').val();
-      if ( $('#test').length ) {
+      if ( $('#email').length && $('#email').val() ) data.email = $('#email').val();
+      //if ( $('#status').length ) data.status = $('#status').val();
+      //if ( $('#rating').length ) data.rating = $('#rating').val();
+      //if ( $('#url').length ) data.url = $('#url').val();
+      if ( $('#title').length && $('#title').val() ) data.title = $('#title').val();
+      if ( $('#doi').length && $('#doi').val() ) data.doi = $('#doi').val();
+      if ( $('#story').length && $('#story').val() ) data.story = $('#story').val();
+      /*if ( $('#test').length ) {
         $('#test').is(':checked') ? data.test = true : data.test = false;
-      }
+      }*/
       var url = api+'/request/'+rid;
       var opts = {
         type:'POST',
@@ -181,7 +181,10 @@
             if (data.data) {
               if (data.data.title && !$('#title').val()) $('#title').val(data.data.title);
               if (data.data.doi && !$('#doi').val()) $('#doi').val(data.data.doi);
-              if (data.data.email && data.data.email.length > 0 && !$('#email').val()) $('#email').val(data.data.email[0]);
+              if (data.data.email && data.data.email.length > 0 && !$('#email').val()) {
+                var e = typeof data.data.email === 'string' ? data.data.email : data.data.email[0];
+                $('#email').val(e);
+              }
             }
           }
         });
@@ -190,22 +193,20 @@
 
     var addsupport = function(e) {
       e.preventDefault();
-      var opts = {
-        type:'POST',
-        url: api+'/support/'+rid,
-        cache:false,
-        processData:false,
-        data: JSON.stringify({
-          story:$('#supportstory').val()
-        }),
-        contentType: 'application/json',
-        dataType: 'json',
-        success: function(data) {
-          window.location = window.location.href;
+      if (clogin.loggedin()) {
+        var opts = {
+          type:'POST',
+          url: api+'/support/'+rid,
+          cache:false,
+          success: function(data) {
+            window.location = window.location.href.split('#')[0].split('?')[0];
+          }
         }
+        opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", clogin.apikey); }
+        $.ajax(opts);        
+      } else {
+        window.location = '/account?next=/request/' + rid + encodeURIComponent('?support=true');
       }
-      try { opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", clogin.apikey); } } catch(err) {}
-      $.ajax(opts);
     }
 
     var admin = function(record) {
@@ -227,10 +228,10 @@
         dets += '</p>';
       }
       dets += '</p>';
-      dets += '<div class="input-group" style="margin-bottom:10px;"><input type="text" id="email" value="' + record.email + '" placeholder="Author Email" class="form-control">';
+      /*dets += '<div class="input-group" style="margin-bottom:10px;"><input type="text" id="email" value="' + record.email + '" placeholder="Author Email" class="form-control">';
       if (record.email) dets += '<div class="input-group-btn"><a id="blacklist" href="#" class="btn btn-action">Blacklist</a></div>';
       dets += '</div>';
-      dets += '<p id="emailissue" style="display:none;font-size:0.9em;"></p>';
+      dets += '<p id="emailissue" style="display:none;font-size:0.9em;"></p>';*/
       // TODO need a way to know when to try picking these up in the submit function above
       /*dets += '<p><input type="text" id="title" class="form-control" placeholder="Title" value="';
       if (record.title) dets += record.title;
@@ -261,7 +262,6 @@
       var rec = data.data;
 
       var ttl = '';
-      if (rec.type && rec.type === 'data') ttl += '<p style="margin-top:20px;margin-bottom:-20px;">Data for </p>';
       ttl += '<h2 style="color:#f04717;">';
       if (rec.url && rec.url.indexOf('http') === 0) ttl += '<a id="titlelink" target="_blank" href="' + rec.url + '" style="word-wrap:break-word;overflow-wrap:break-word;color:#f04717;">';
       ttl += rec.title ? rec.title : rec.url;
@@ -269,10 +269,12 @@
       ttl += '</h2>';
       $('#titleheader').html(ttl);
       var ot = rec.type === 'article' ? 'data' : 'article';
-      if (rec.other) {
-        $('#other').html('<p><a style="text-decoration:underline;color:#FFFFFC;" href="/request/' + rec.other + '">I actually wanted the ' + ot + '</a></p>');
-      } else {
-        $('#other').html('<p><a style="text-decoration:underline;color:#FFFFFC;" href="/request?type=data&url=' + encodeURIComponent(rec.url) + '">I actually wanted the ' + ot + '</a></p>');
+      if (rec.status === 'help') {
+        if (rec.other) {
+          $('#other').html('<p><a style="text-decoration:underline;color:#FFFFFC;" href="/request/' + rec.other + '">I actually wanted the ' + ot + '</a></p>');
+        } else {
+          $('#other').html('<p><a style="text-decoration:underline;color:#FFFFFC;" href="/request?type=data&url=' + encodeURIComponent(rec.url) + '">I actually wanted the ' + ot + '</a></p>');
+        }
       }
 
       if (rec.status === 'received' && rec.received !== undefined) {
@@ -318,21 +320,30 @@
         re += '</div>';
       }
 
-      if (clogin.loggedin() && rec.status !== 'received' && (!rec.title || !rec.email || !rec.story) ) {
-        if (rec.user === undefined) re += '<p>No-one has requested this ' + rec.type + ' from the author before.</p>';
-        re += '<p>We just need a few more details to get started.</p>';
-        if (!rec.story) re += '<p><textarea style="min-height:100px;" class="form-control" id="story" placeholder="How would getting access to this research help you? This message will be sent to the author, and helps them to understand why the research should be made available."></textarea></p>';
-        if (!rec.title) re += '<p><input class="form-control" type="text" id="title" placeholder="Article title"></p>';
-        if (!rec.email) re += '<p><input class="form-control" type="text" id="email" placeholder="Article author email"></p>';
-        if (!rec.doi) re += '<p><input class="form-control" type="text" id="doi" placeholder="Article DOI"></p>';
-        re += '<p style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Save</a></p>';
-      } else if ( rec.status !== 'received' && (!rec.title || !rec.email || !rec.story) ) {
+      if ( rec.status !== 'received' && (!rec.title || !rec.email || !rec.story) ) {
         if (rec.user === undefined) {
-          re += '<p>No-one has requested this ' + rec.type + ' from the author before.</p>';
-          re += '<p style="margin-bottom:40px;"><a href="/account?next=/request/' + rid + '" class="btn btn-block btn-action">Be the first</a></p>';
+          re += '<p>No-one has requested this ' + rec.type + ' from the author yet.</p>';
+          if (clogin.loggedin()) {
+            re += '<p><textarea style="min-height:100px;" class="form-control" id="story" placeholder="How would getting access to this research help you? This message will be sent to the author, and helps them to understand why the research should be made available."></textarea></p>';
+            re += '<p style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Save</a></p>';        
+          } else {
+            re += '<div class="input-group" style="margin-bottom:40px;">\
+              <input type="text" name="email" id="youremail" class="form-control" placeholder="Your email"> \
+              <div class="input-group-btn">\
+                <a id="gologin" href="/account?next=/request/' + rid + '" class="btn btn-action">Be the first</a>\
+              </div>\
+            </div>';
+          }
         } else {
           re += '<p>We need a few more details to get this request started.</p>';
-          re += '<p style="margin-bottom:40px;"><a href="/account?next=/request/' + rid + '" class="btn btn-block btn-action">Login / sign up to get started</a></p>';
+          if (clogin.loggedin()) {
+            if (!rec.title) re += '<p><input class="form-control" type="text" id="title" placeholder="Article title"></p>';
+            if (!rec.email) re += '<p><input class="form-control" type="text" id="email" placeholder="Article author email"></p>';
+            if (!rec.doi) re += '<p><input class="form-control" type="text" id="doi" placeholder="Article DOI"></p>';
+            re += '<p style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Save</a></p>';        
+          } else {
+            re += '<p style="margin-bottom:40px;"><a href="/account?next=/request/' + rid + '" class="btn btn-block btn-action">Login / sign up to get started</a></p>';            
+          }
         }
       }
 
@@ -340,25 +351,22 @@
         re += '<p>Are you the author? Please <a style="text-decoration:underline;" href="mailto:requests@openaccessbutton.org">contact us</a>!</p>';
       }
 
-      if (clogin.hasRole('openaccessbutton.admin')) {
+      /*if (clogin.hasRole('openaccessbutton.admin')) {
         re += '<p style="text-align:right;"><a href="#" id="showadmin" style="color:orange;">Admin</a></p>';
         re += '<div id="admin" class="well" style="display:none;background-color:orange;">';
         re += admin(rec);
         re += '</div>';
-      }
+      }*/
 
       $('#info').append(re);
 
       var acts = ''
-      if (rec.count) acts += '<p>' + (rec.count) + ' ' + (rec.count === 1 ? 'person supports' : 'people support') + ' this request</p>';
+      if (rec.count && rec.count > 1) acts += '<p>' + (rec.count) + ' ' + (rec.count === 1 ? 'person supports' : 'people support') + ' this request</p>';
       if (rec.status !== 'received' && rec.story) {
         if (clogin.loggedin() && rec.user && rec.user.id && clogin.user && clogin.user.account && clogin.user.account._id === rec.user.id) {
           acts += '<p>You created this request.</p>';
         } else if (rec.user !== undefined && ( !rec.supports || rec.supports === undefined || rec.supports.length === 0) ) {
           acts += '<p>Add your support to be notified when this ' + rec.type + ' is released.</p>';
-          if (!clogin.loggedin()) {
-            acts += '<p><input type="text" name="email" id="supportemail" class="form-control" placeholder="Your email"></p>';
-          }
           acts += '<p><a id="addsupport" class="btn btn-action" href="#">Notify me</a></p>';
         } else {
           acts += '<p>You support this request.</p>';
@@ -366,8 +374,9 @@
       } else if (rec.status === 'received') {
         acts = acts.replace(' supports ',' supported ').replace(' support ',' supported ');
       }
-      if (rec.status !== 'help') {
-        acts += '<div class="clearfix" style="margin-top:20px;margin-bottom:40px;" id="sharebuttons"><a href="#" id="showembed" class="btn btn-xs btn-action panels pull-right" style="margin-left:20px;height:28px;font-size:0.9em;">Embed</a> \
+      if (rec.status !== 'help' && rec.status !== 'received') {
+        // taking embed link out <a href="#" id="showembed" class="btn btn-xs btn-action panels pull-right" style="margin-left:20px;height:28px;font-size:0.9em;">Embed</a>
+        acts += '<div class="clearfix" style="margin-top:20px;margin-bottom:40px;" id="sharebuttons"> \
           <div style="display:inline;margin-bottom:-10px;padding-left:20px;" class="pull-right"> \
             <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Help us get access to research!" data-size="large"></a> \
           </div> \
@@ -382,7 +391,17 @@
       if ($('#submitchanges').length) $('#submitchanges').bind('click',checkemailthensubmit);
       if ($('#update').length) $('#update').bind('click',submit);
       if ($('#delete').length) $('#delete').bind('click',deleteitem);
+      if ($('#gologin').length) $('#gologin').bind('click',function(e) {
+        if ($('#youremail').val()) $(this).attr('href',$(this).attr('href').replace('?','?email='+$('#youremail').val()+'&'));        
+      });
       //if (clogin.hasRole('root') && record.status !== 'received') $('#titlelink').bind('click',scrape);
+      if (window.location.href.indexOf('support=') !== -1) {
+        if (rec.user && rec.user.id && clogin.user && clogin.user.account && clogin.user.account._id !== rec.user.id && ( !rec.supports || rec.supports === undefined || rec.supports.length === 0) ) {
+          addsupport();
+        } else if (!clogin.loggedin()) {
+          addsupport(); // which will redirect to login anyway
+        }
+      }
       if (clogin.loggedin() && rec.status !== 'received' && (!rec.title || !rec.email) ) scrape();
       twatit();
     }
@@ -397,7 +416,6 @@
         success: details,
         error: function() { $('#title').html("Sorry, we can't find a request with ID " + rid); }
       });
-
     }
     clogin.afterFailure = runrequest;
     if (clogin.loggedin()) {

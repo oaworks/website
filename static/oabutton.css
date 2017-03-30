@@ -16,11 +16,14 @@ html, body{
   font-family: 'Roboto', sans-serif;
   color:#212f3f;
   background-color:#f8fafd;
-  min-height:1000px;
 }
 
 body{
   margin-top:50px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Montserrat', serif;  
 }
 
 #topnav{
@@ -85,7 +88,6 @@ hr{
 .strap{
   padding-top:40px;
   padding-bottom:40px;
-  z-index:1000;
   background-color:#212f3f;
   min-height:400px;
   margin:-10px 0 0 0;
