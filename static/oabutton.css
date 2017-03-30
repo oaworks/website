@@ -92,8 +92,8 @@ hr{
 }
 .strap-compact{
   min-height:10px;
-  padding-top:20px;
-  padding-bottom:20px;
+  padding-top:2px;
+  padding-bottom:2px;
 }
 .strap-action{
   background-color:#f04717;
@@ -152,13 +152,13 @@ hr{
   text-transform:capitalize;
 }
 div.tooltip {
-  color: #222; 
-  background: #fff; 
-  padding: .5em; 
+  color: #222;
+  background: #fff;
+  padding: .5em;
   text-shadow: #f5f5f5 0 1px 0;
-  border-radius: 2px; 
-  box-shadow: 0px 0px 2px 0px #a6a6a6; 
-  opacity: 0.9; 
+  border-radius: 2px;
+  box-shadow: 0px 0px 2px 0px #a6a6a6;
+  opacity: 0.9;
   position: absolute;
 }
 
