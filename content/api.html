@@ -27,23 +27,22 @@
   <div class="row">
     <div class="col-md-8 col-md-offset-2" style="text-align:justify;">
       <p>
-        Our API allows you to find out if an article, published at some URL but perhaps not freely available there,
+        Our API allows you to find out if an article, published at some URL but not freely available there,
         is freely available anywhere else. It can also check for supporting data too. You can also search all the
         availabilty checks we have made, all the requests for access our users have created, and all their declarations
         of support too.
       </p>
       <p>
-        This is a JSON API, and the docs link out to some example responses - install a JSON viewer plugin to your
-        browser to make them easier to read. Also, when POSTing data, remember to set the Content-Type header, e.g.
+        This is a JSON API, and the docs link out to example responses<!-- - install a JSON viewer plugin to your
+        browser to make them easier to read-->. When POSTing data, remember to set the Content-Type header, e.g.
         for curl it is <code>curl -H "Content-Type:application/json"</code>.
       </p>
       <p>
-        There are currently no enforced rate limits, so be nice (1 request per second). If we notice problems we'll suspend
-        your account and contact you about your needs.
+        There are no enforced rate limits, so be nice (1 request per second). If we notice problems we'll suspend your account and contact you about your needs.
       </p>
       <p>
-        Although most endpoints do not yet require authorisation, always include your API key either in a URL param called "apikey"
-        or a header called "x-apikey". Excessive anonymous usage may result in IP blocking.
+        Although most endpoints do not require authorisation, please include your API key either in a URL param called "apikey"
+        or a header called "x-apikey".
       </p>
       <p id="apikey">
         Please <a href="/account?next=/api" class="label label-info">sign up / sign in</a> to see your API key here.
@@ -156,8 +155,7 @@
       </h3>
       <p>
         Returns a list of our currently blacklisted URLs - we won't accept availability checks or requests for URLs on this list,
-        because we believe the content will not contain anything we would consider to be a research article (so there's not much
-        we could usefully do with it).
+        because we believe the content will not contain anything we would consider to be a research article.
       </p>
 
       <h2>
