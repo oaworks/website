@@ -1,8 +1,3 @@
-<!-- Start of openaccessbutton Zendesk Widget script -->
-<script>/*<![CDATA[*/window.zEmbed||function(e,t){var n,o,d,i,s,a=[],r=document.createElement("iframe");window.zEmbed=function(){a.push(arguments)},window.zE=window.zE||window.zEmbed,r.src="javascript:false",r.title="",r.role="presentation",(r.frameElement||r).style.cssText="display: none",d=document.getElementsByTagName("script"),d=d[d.length-1],d.parentNode.insertBefore(r,d),i=r.contentWindow,s=i.document;try{o=s}catch(e){n=document.domain,r.src='javascript:var d=document.open();d.domain="'+n+'";void(0);',o=s}o.open()._l=function(){var o=this.createElement("script");n&&(this.domain=n),o.id="js-iframe-async",o.src=e,this.t=+new Date,this.zendeskHost=t,this.zEQueue=a,this.body.appendChild(o)},o.write('<body onload="document._l();">'),o.close()}("https://assets.zendesk.com/embeddable_framework/main.js","openaccessbutton.zendesk.com");
-/*]]>*/</script>
-<!-- End of openaccessbutton Zendesk Widget script -->
-
 <script type="text/javascript" src="//static.cottagelabs.com/d3/d3.v4.min.js"></script>
 <script type="text/javascript" src="/static/oabutton_request_holder.js"></script>
 <script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/facets.js"></script>
@@ -35,7 +30,7 @@
           </div>
         </div>
         <div class="holder searches" style="margin-top:5px;margin-left:-5px;"></div>
-      </div>        
+      </div>
     </div>
   </div>
 </div>
@@ -75,7 +70,7 @@ jQuery(document).ready(function() {
     clogin.api = 'https://dev.api.cottagelabs.com/accounts';
     $.fn.holder.use.oabutton.url = api + '/requests';
   }
-  
+
   $('#help').bind('click',function() {
     $('.holder.search').val('status:help').trigger('change');
   });

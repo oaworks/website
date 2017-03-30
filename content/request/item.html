@@ -1,4 +1,10 @@
 
+  <!-- Start of openaccessbutton Zendesk Widget script -->
+  <script>/*<![CDATA[*/window.zEmbed||function(e,t){var n,o,d,i,s,a=[],r=document.createElement("iframe");window.zEmbed=function(){a.push(arguments)},window.zE=window.zE||window.zEmbed,r.src="javascript:false",r.title="",r.role="presentation",(r.frameElement||r).style.cssText="display: none",d=document.getElementsByTagName("script"),d=d[d.length-1],d.parentNode.insertBefore(r,d),i=r.contentWindow,s=i.document;try{o=s}catch(e){n=document.domain,r.src='javascript:var d=document.open();d.domain="'+n+'";void(0);',o=s}o.open()._l=function(){var o=this.createElement("script");n&&(this.domain=n),o.id="js-iframe-async",o.src=e,this.t=+new Date,this.zendeskHost=t,this.zEQueue=a,this.body.appendChild(o)},o.write('<body onload="document._l();">'),o.close()}("https://assets.zendesk.com/embeddable_framework/main.js","openaccessbutton.zendesk.com");
+  /*]]>*/</script>
+  <!-- End of openaccessbutton Zendesk Widget script -->
+
+  
 <div id="topper" class="strap strap-compact" style="background-color:transparent;background-size:100% 100%;background-repeat:no-repeat;margin-top:-80px;padding-top:100px;padding-bottom:0px;">
   <div class="container-fluid">
     <div class="row">
@@ -42,7 +48,7 @@
   jQuery(document).ready(function() {
     $('#topnav').css('background-color','transparent');
     $('code').html(window.location.href.split('#')[0].split('?')[0]);
-    
+
     var api = 'https://api.openaccessbutton.org';
     if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
       api = 'https://dev.api.cottagelabs.com/service/oab';
@@ -154,7 +160,7 @@
         submit(e);
       }
     }
-    
+
     var deleteitem = function() {
       $.ajax({
         type:'DELETE',
@@ -164,7 +170,7 @@
       $('#admin').html('<p>This request has been deleted. You will be redirected to the requests page.</p>');
       setTimeout(function() { window.location = '/request'; }, 2000);
     }
-    
+
     var scrape = function() {
       var url = $('#titlelink').attr('href');
       if (url) {
@@ -201,7 +207,7 @@
       try { opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", clogin.apikey); } } catch(err) {}
       $.ajax(opts);
     }
-    
+
     var admin = function(record) {
       var dets = '';
       dets += '<p>Status: <select id="status" class="form-control" style="width:150px;display:inline;">';
@@ -250,10 +256,10 @@
       dets += '<a class="btn btn-action pull-right" href="/admin?request=' + rid + '">Send email via admin UI about this request</a></p>';
       return dets;
     }
-    
+
     var details = function(data) {
       var rec = data.data;
-      
+
       var ttl = '';
       if (rec.type && rec.type === 'data') ttl += '<p style="margin-top:20px;margin-bottom:-20px;">Data for </p>';
       ttl += '<h2 style="color:#f04717;">';
@@ -261,7 +267,7 @@
       ttl += rec.title ? rec.title : rec.url;
       if (rec.url && rec.url.indexOf('http') === 0) ttl += '</a>';
       ttl += '</h2>';
-      $('#titleheader').html(ttl);      
+      $('#titleheader').html(ttl);
       var ot = rec.type === 'article' ? 'data' : 'article';
       if (rec.other) {
         $('#other').html('<p><a style="text-decoration:underline;color:#FFFFFC;" href="/request/' + rec.other + '">I actually wanted the ' + ot + '</a></p>');
@@ -280,7 +286,7 @@
           surl = rec.received.zenodo;
         } else if (rec.received.osf) {
           suc += 'in the OSF at:<br>';
-          surl = rec.received.osf;          
+          surl = rec.received.osf;
         }
         suc += '<a target="_blank" href="' + surl + '" style="word-wrap:break-word;overflow-wrap:break-word;">' + surl + '</a></h3></div>';
         $('#success').html(suc);
@@ -291,7 +297,7 @@
         $('#headline').html('<b>Access to this ' + rec.type + ' is still closed</b>');
         $('body').css('background-color','#fceadf');
       }
-        
+
       var re = '';
       if (rec.story ) {
         re += '<div class="well" style="background-color:#FFFFFC;"><p>';
@@ -311,7 +317,7 @@
         re += '<p>' + rec.story + '</p>';
         re += '</div>';
       }
-      
+
       if (clogin.loggedin() && rec.status !== 'received' && (!rec.title || !rec.email || !rec.story) ) {
         if (rec.user === undefined) re += '<p>No-one has requested this ' + rec.type + ' from the author before.</p>';
         re += '<p>We just need a few more details to get started.</p>';
@@ -326,23 +332,23 @@
           re += '<p style="margin-bottom:40px;"><a href="/account?next=/request/' + rid + '" class="btn btn-block btn-action">Be the first</a></p>';
         } else {
           re += '<p>We need a few more details to get this request started.</p>';
-          re += '<p style="margin-bottom:40px;"><a href="/account?next=/request/' + rid + '" class="btn btn-block btn-action">Login / sign up to get started</a></p>';          
+          re += '<p style="margin-bottom:40px;"><a href="/account?next=/request/' + rid + '" class="btn btn-block btn-action">Login / sign up to get started</a></p>';
         }
       }
 
       if ( rec.status !== 'received' && !(clogin.loggedin() && rec.user && rec.user.id && clogin.user && clogin.user.account && clogin.user.account._id === rec.user.id) ) {
         re += '<p>Are you the author? Please <a style="text-decoration:underline;" href="mailto:requests@openaccessbutton.org">contact us</a>!</p>';
       }
-      
+
       if (clogin.hasRole('openaccessbutton.admin')) {
         re += '<p style="text-align:right;"><a href="#" id="showadmin" style="color:orange;">Admin</a></p>';
         re += '<div id="admin" class="well" style="display:none;background-color:orange;">';
         re += admin(rec);
         re += '</div>';
       }
-      
+
       $('#info').append(re);
-      
+
       var acts = ''
       if (rec.count) acts += '<p>' + (rec.count) + ' ' + (rec.count === 1 ? 'person supports' : 'people support') + ' this request</p>';
       if (rec.status !== 'received' && rec.story) {
@@ -368,7 +374,7 @@
           <a class="btn btn-xs btn-action pull-right" style="height:28px;font-size:0.9em;" id="fbshare" href="https://www.facebook.com/sharer/sharer.php?u=" target="_blank"><i class="fa fa-facebook-official"></i> facebook</a></div>';
       }
       $('#actions').html(acts);
-      
+
       $('#showembed').bind('click',function(e) { e.preventDefault(); $('#embed').toggle(); });
       if ($('#showadmin').length) $('#showadmin').bind('click',function(e) { e.preventDefault(); $('#admin').toggle(); });
       if ($('#addsupport').length) $('#addsupport').bind('click',addsupport);
@@ -380,8 +386,8 @@
       if (clogin.loggedin() && rec.status !== 'received' && (!rec.title || !rec.email) ) scrape();
       twatit();
     }
-    
-    
+
+
     // login not necessary but returns supports info if possible, so we try
     var rurl = api + '/request/' + rid;
     var runrequest = function() {
@@ -397,14 +403,13 @@
     if (clogin.loggedin()) {
       clogin.afterLogin = function() {
         rurl += '?apikey=' + clogin.apikey;
-        runrequest();          
+        runrequest();
       };
       clogin.login();
     } else {
       runrequest();
     }
-    
+
 
   });
 </script>
-
