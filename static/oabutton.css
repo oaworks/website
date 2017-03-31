@@ -15,11 +15,14 @@ html, body{
   font-size:1em;
   font-family: 'Roboto', sans-serif;
   color:#212f3f;
-  background-color:#f8fafd;
 }
 
-body{
+html {
+  background-color:#212f3f;
+}
+body {
   margin-top:50px;
+  background-color:#f8fafd;
 }
 
 h1, h2, h3, h4, h5, h6 {
