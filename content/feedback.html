@@ -31,14 +31,25 @@
     <div class="col-md-8 col-md-offset-2">
       <form id="form" method="POST" action="https://api.openaccessbutton.org/bug" style="display:none;">
 
-        <div class="goto gotobug">
-          <div class="col-md-12">
-      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScwlYUvspACAp8TcenhdpkVjHQel0XGa6WJOx149RVPEG5kTg/viewform?embedded=true" width="100%" height="2350" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe></div>
-        </div>
-
-
         <!-- particular forms can be directly reached for example by appending #dnr to the page URL -->
         <!-- extra parameters for the bug message can be added as URL params too -->
+
+        <div class="goto gotobug">
+					<h4>Thanks for helping us by reporting a bug</h4>
+					<p class="hideifknown">Your email address</p>
+					<p><input type="text" name="email" class="form-control" placeholder="Your email"></p>
+					<p>Where are you having the issue?</p>
+          <p><input type="checkbox" name="where" value="Chrome plugin"> Chrome plugin</p>
+          <p><input type="checkbox" name="where" value="Firefox plugin"> Firefox plugin</p>
+          <p><input type="checkbox" name="where" value="Website"> Website</p>
+          <p><input type="checkbox" name="where" value="Bookmarklet"> Bookmarklet</p>
+					<p>What's the issue? (It's helpful if you can tell us what happened, what you expect to happen, and how we can reproduce the issue.)</p>
+					<p><textarea name="issue" class="form-control" style="min-height:200px;"></textarea></p>
+					<p>Do you have an error code? If so, please tell us it</p>
+					<p><input type="text" name="code" class="form-control" placeholder="Error code"></p>
+					<p>Anything else we should know?</p>
+					<p><textarea name="info" class="form-control" style="min-height:200px;"></textarea></p>
+        </div>
 
         <div class="goto gotodnr">
           <h4>We’re sorry you don’t want to hear from us</h4>
