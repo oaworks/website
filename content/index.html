@@ -28,7 +28,7 @@
         </div>
         <div class="row">
           <div class="col-md-4" style="text-align:center;">
-            <a style="text-decoration:underline;" class="chromeinstall" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">Get the extension</a>          
+            <a style="text-decoration:underline;" class="chromeinstall" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">Get the extension</a>
           </div>
           <div class="col-md-4" style="text-align:center;">
             <a href="#" class="show" what="examples" style="text-decoration:underline;">Examples</a>
@@ -90,11 +90,11 @@
     $('#topnav').css('background-color','transparent');
 
     var th;
-    $('.show').bind('click',function(e) { 
-      e.preventDefault(); 
+    $('.show').bind('click',function(e) {
+      e.preventDefault();
       if (th === undefined) th = $('#topstrap').css('height');
       if ( $('#'+$(this).attr('what')).is(':visible') ) {
-        $('#topstrap').css('height',th);        
+        $('#topstrap').css('height',th);
         $('#'+$(this).attr('what')).hide();
       } else {
         $('.shower').hide();
@@ -102,7 +102,7 @@
         $('#'+$(this).attr('what')).show();
       }
     });
-    
+
     if ( $(window).width() >= 1000 && ( $('#topstrap').offset().top + $('#topstrap').height() + $('#footer').height() < $(window).height() ) ) {
       var height = $(window).height() - $('#footer').height() + 40;
       $('#topstrap').css('height',height+'px');
@@ -193,20 +193,20 @@
                 } else if (has.article.usupport) {
                   availability += 'You already support a request for this article <a class="btn btn-action" href="/request/' + has.article.id + '">View the request</a></p>';
                 } else {
-                  availability += 'There is an open request for this article <a class="btn btn-action" href="/request/' + has.article.id + '?support=true">Notify me</a></p>';
+                  availability += 'Someone has requested access to the article <a class="btn btn-action" href="/request/' + has.article.id + '?support=true">Notify me</a></p>';
                 }
               } else {
                 availability += '<h2 style="color:#212f3f;">This article is available!</h2>';
-                availability += '<p"><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + has.article.url + '</a></p>';
+                availability += '<p"><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + has.article.url + '</a></p><p>Not what you were expecting? Report an error and we can fix it.</p>';
               }
-              availability += '<p style="color:#212f3f;text-align:center;padding-top:50px;">';
+              availability += '<p style="color:#212f3f;padding-top:50px;">';
               availability += 'Want the data supporting the article? ';
               availability += '<a class="btn btn-action" href="/request?type=data&url=' + encodeURIComponent(data.data.match) + '">Request it from the author</a></p>';
               $('#availability').html(availability);
             } else if (!has.article && has.data) {
-              var availability = '<h2 style="color:#212f3f;text-align:center;">This article is not available</h2>';
+              var availability = '<h2 style="color:#212f3f;">This article is not available</h2>';
               availability += '<h3 style="text-align:center;"><a class="btn btn-action" href="/request?url=' + encodeURIComponent(data.data.match) + '">Start a request</a></h3>';
-              availability += '<p style="color:#212f3f;text-align:center;padding-top:50px;">';
+              availability += '<p style="color:#212f3f;padding-top:50px;">';
               if (has.data.id) {
                 if (has.data.ucreated) {
                   availability += 'You already created a request for data for this article <a class="btn btn-action" href="/request/' + has.data.id + '">View the request';
@@ -225,10 +225,10 @@
               if (has.article.id && has.data.id) {
                 window.location = '/request/' + has.article.id;
               } else {
-                var availability = '<h2 style="color:#212f3f;text-align:center;">';
+                var availability = '<h2 style="color:#212f3f;">';
                 if (has.article.url) {
                   availability += 'This article is available!</h2>';
-                  availability += '<h3 style="text-align:center;"><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + has.article.url;
+                  availability += '<h><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + has.article.url;
                 }
                 if (has.article.id) {
                   if (has.article.ucreated) {
