@@ -293,10 +293,10 @@
         suc += '<a target="_blank" href="' + surl + '" style="word-wrap:break-word;overflow-wrap:break-word;">' + surl + '</a></h3></div>';
         $('#success').html(suc);
         $('#topper').css('background-image','url(/static/header_unlocked.jpg');
-        $('#headline').html('<b>This ' + rec.type + ' request has been successful.</b>');
+        $('#headline').html('<b>This ' + rec.type + ' is now available</b>');
       } else {
         $('#topper').css('background-image','url(/static/header_locked.jpg');
-        $('#headline').html('Access to this ' + rec.type + ' is still closed<p>It can be set free by requesting it from the author</p>');
+        $('#headline').html('This ' + rec.type + ' is inaccessible<p>It can be set free by requesting it from the author</p>');
         $('body').css('background-color','#fceadf');
       }
 
@@ -318,19 +318,20 @@
         re += ' said:</p>';
         re += '<p>' + rec.story + '</p>';
         re += '</div>';
+        re += '<p>By asking the author to share a copy we can make it available to ' re += + rec.user.firstname + ' , and everyone else who needs it.</p>';
       }
 
       if ( rec.status !== 'received' && (!rec.title || !rec.email || !rec.story) ) {
         if (rec.user === undefined) {
-          re += '<p>No-one has requested this ' + rec.type + ' from the author yet.</p>';
+          re += '<p>Finish making your ' + rec.type + ' request to the author.</p>';
           if (clogin.loggedin()) {
             re += '<p><textarea style="min-height:100px;" class="form-control" id="story" placeholder="How would getting access to this research help you? This message will be sent to the author, and helps them to understand why the research should be made available."></textarea></p>';
-            re += '<p style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Save</a></p>';
+            re += '<p style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Submit</a></p>';
           } else {
             re += '<div class="input-group" style="margin-bottom:40px;">\
               <input type="text" name="email" id="youremail" class="form-control" placeholder="Your email"> \
               <div class="input-group-btn">\
-                <a id="gologin" href="/account?next=/request/' + rid + '" class="btn btn-action">Be the first</a>\
+                <a id="gologin" href="/account?next=/request/' + rid + '" class="btn btn-action">Continue</a>\
               </div>\
             </div>';
           }
@@ -342,7 +343,7 @@
             if (!rec.doi) re += '<p><input class="form-control" type="text" id="doi" placeholder="Article DOI"></p>';
             re += '<p style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Save</a></p>';
           } else {
-            re += '<p style="margin-bottom:40px;"><a href="/account?next=/request/' + rid + '" class="btn btn-block btn-action">Login / sign up to get started</a></p>';
+            re += '<p style="margin-bottom:40px;"><a href="/account?next=/request/' + rid + '" class="btn btn-block btn-action">Login / sign up to continue</a></p>';
           }
         }
       }
@@ -366,7 +367,7 @@
         if (clogin.loggedin() && rec.user && rec.user.id && clogin.user && clogin.user.account && clogin.user.account._id === rec.user.id) {
           acts += '<p>You created this request.</p>';
         } else if (rec.user !== undefined && ( !rec.supports || rec.supports === undefined || rec.supports.length === 0) ) {
-          acts += '<p>Add your support to be notified when this ' + rec.type + ' is released.</p>';
+          acts += '<p>Get notified when this ' + rec.type + ' is released.</p>';
           acts += '<p><a id="addsupport" class="btn btn-action" href="#">Notify me</a></p>';
         } else {
           acts += '<p>You will be notified about this request.</p>';
