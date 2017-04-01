@@ -37,7 +37,7 @@
       <div id="info"></div>
     </div>
     <div class="col-md-4">
-      <div id="actions"></div>
+      <div id="actions"><h4>Show your support</h4></div>
     </div>
   </div>
 </div>
@@ -365,9 +365,8 @@
       if (rec.count && rec.count > 1) acts += '<p>' + (rec.count) + ' ' + (rec.count === 1 ? 'person supports' : 'people support') + ' this request</p>';
       if (rec.status !== 'received' && rec.story) {
         if (clogin.loggedin() && rec.user && rec.user.id && clogin.user && clogin.user.account && clogin.user.account._id === rec.user.id) {
-          acts += '<p>You created this request.</p>';
+          acts += '<p>You made this request.</p>';
         } else if (rec.user !== undefined && ( !rec.supports || rec.supports === undefined || rec.supports.length === 0) ) {
-          acts += '<p>Get notified when this ' + rec.type + ' is released.</p>';
           acts += '<p><a id="addsupport" class="btn btn-action" href="#">Notify me</a></p>';
         } else {
           acts += '<p>You will be notified about this request.</p>';
@@ -377,7 +376,7 @@
       }
       if (rec.status !== 'help' && rec.status !== 'received') {
         // taking embed link out <a href="#" id="showembed" class="btn btn-xs btn-action panels pull-right" style="margin-left:20px;height:28px;font-size:0.9em;">Embed</a>
-        acts += '<div class="clearfix" style="margin-top:20px;margin-bottom:40px;" id="sharebuttons"> \
+        acts += '<div class="clearfix" style="margin-top:20px;margin-bottom:40px;" id="sharebuttons"><p>Share this request to help make it successful</p> \
           <div style="display:inline;margin-bottom:-10px;padding-left:20px;" class="pull-right"> \
             <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Help us get access to research!" data-size="large"></a> \
           </div> \
