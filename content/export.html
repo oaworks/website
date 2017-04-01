@@ -6,7 +6,7 @@
   <div class="row">
     <div class="col-md-12">
       <h1>EXPORT</h1>
-      
+
       <div class="row">
         <div class="col-md-12">
           <select id="what" class="form-control">
@@ -14,10 +14,10 @@
             <option value="request">Requests (the requests users create to get access to articles/data)</option>
             <option value="availability">Availabilities (every click on the plugin or check via the site records an availability check)</option>
             <option value="support">Supports (every time a user supports an existing request)</option>
-          </select>          
+          </select>
         </div>
       </div>
-      
+
       <div class="row">
         <div class="col-md-6">
           <input type="text" id="from" class="form-control datepicker" placeholder="From (optional)" style="margin-bottom:2px;">
@@ -26,7 +26,7 @@
           <input type="text" id="to" class="form-control datepicker" placeholder="To (optional)">
         </div>
       </div>
-            
+
       <div class="row">
         <div class="col-md-6">
           <select id="filter" class="form-control" style="margin-bottom:2px;">
@@ -71,8 +71,8 @@
           </select>
         </div>
       </div>
-      
-      
+
+
 
       <div class="row">
         <!--
@@ -111,7 +111,7 @@
       api = 'https://dev.api.cottagelabs.com/service/oab';
       clogin.api = 'https://dev.api.cottagelabs.com/accounts';
     }
-    
+
     $('.datepicker').datepicker({
       format:'dd/mm/yyyy',
       autoclose:true
@@ -160,7 +160,7 @@
       }
     }
     $('#what').bind('change',what);
-    
+
     var filter = function(e) {
       $('#value').html('<option value="">for value:</option>');
       var w = $('#what').val();
@@ -173,10 +173,10 @@
             $('#value').append('<option value="' + data[k].term + '">' + data[k].term + ' (' + data[k].count + ')</option>');
           }
         }
-      });      
+      });
     }
-    $('#filter').bind('change',filter);    
-            
+    $('#filter').bind('change',filter);
+
     var go = function() {
       if (!clogin.hasRole('openaccessbutton.admin') && $('#what').val() === 'account') window.location = '/';
       var size = 10000;
@@ -235,14 +235,12 @@
       $(this).attr('href',curl);
     }
     $('#go').bind('click',go);
-    
+
     clogin.afterLogin = function() {
       if (clogin.hasRole('openaccessbutton.admin')) $('#what').append('<option value="account">Users (the user account details)</option>');
     }
     clogin.login();
-    
-    
+
+
   });
 </script>
-
-
