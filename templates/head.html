@@ -57,7 +57,7 @@
 
     if (window.location.href.indexOf('odb=true') !== -1) $('#fromopendatabutton').show();
     if (window.location.href.indexOf('team=true') !== -1) $('#fromteambutton').show();
-    if (window.location.href.indexOf('/') !== -1) $('#release').show();
+    if (window.location.href.indexOf('index.html') !== -1) $('#release').show();
 
     var logged = clogin.loggedin();
     if (logged) {
