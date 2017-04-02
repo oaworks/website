@@ -32,7 +32,7 @@
 
   <script>
   jQuery(document).ready(function() {
-        
+
     mobileCheck = function() {
       // checks if browser is a mobile or tablet browser
       var check = false;
@@ -57,13 +57,14 @@
 
     if (window.location.href.indexOf('odb=true') !== -1) $('#fromopendatabutton').show();
     if (window.location.href.indexOf('team=true') !== -1) $('#fromteambutton').show();
+    if (window.location.href.indexOf('index.html') !== -1) $('#release').show();
 
     var logged = clogin.loggedin();
     if (logged) {
       $('.cloggedin').show();
       $('.notcloggedin').hide();
     }
-    
+
     var ftsing = false;
     var fts = function () {
       if (!ftsing) {
@@ -79,7 +80,7 @@
           if ( ft + fh < wh ) {
             $('#footer').css('margin-top',fm+(wh-ft-fh)+'px');
           } else if (wh-ft-fh < 0) {
-            $('#footer').css('margin-top','0px');        
+            $('#footer').css('margin-top','0px');
           }
           ftsing = false;
         },200);
