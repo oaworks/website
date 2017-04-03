@@ -74,9 +74,9 @@
           <h4 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">Wrong content? Let's get that fixed</h4>
           <p>We apologize that we didn’t give you the content you were looking for. Linking to the correct version can be difficult sometimes. Please let us know your issue and we’ll work to resolve it:</p>
           <p>What did you search for?</p>
-					<p><input type="text" class="form-control" placeholder="Put what you searched for here"></p>
+					<p><input type="text" name="searched" class="form-control" placeholder="Put what you searched for here"></p>
           <p>What did we find?</p>
-					<p><input type="text" class="form-control" placeholder="Put the URL we sent you to here"></p>
+					<p><input type="text" name="given" class="form-control" placeholder="Put the URL we sent you to here"></p>
           <p><input type="checkbox" name="wrong" value="Wrong paper searched for"> The Button searched for the wrong paper</p>
           <p><input type="checkbox" name="wrong" value="Known open copy not given"> A copy I know is availiable wasn't shown</p>
           <p><input type="checkbox" name="wrong" value="Paper not actually available"> The article wasn't actually available</p>
@@ -154,6 +154,16 @@
     if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
       api = 'https://dev.api.cottagelabs.com/service/oab';
     }
+		
+		if (window.location.href.indexOf('?') !== -1) {
+			var pt = window.location.href.split('?')[1];
+			var pts = pt.split('&');
+			for ( var pt in pts ) {
+				var prts = pts[pt].split('=');
+				if (prts.length === 2 && prts[0].length && prts[1].length && $('[name="' + prts[0] + '"]').length) $('[name="' + prts[0] + '"]').val(decodeURIComponent(prts[1]));
+			}
+		}
+
 
     if (clogin.loggedin()) {
       $('.hideifknown').hide();
@@ -162,7 +172,7 @@
 
     $('#form').attr('action',api+'/bug');
     $('.goto').hide();
-    var goto = window.location.hash.replace('#','');
+    var goto = window.location.hash.split('?')[0].replace('#','');
     if (!goto) {
       goto = 'choose';
     } else {
@@ -211,7 +221,7 @@
         var pairs = p.split('&');
         for ( var pr in pairs ) {
           var parts = pairs[pr].split('=');
-          if (parts.length === 2 && parts[0].length && parts[1].length) data[parts[0]] = parts[1];
+          if (parts.length === 2 && parts[0].length && parts[1].length) data[parts[0]] = decodeURIComponent(parts[1]);
         }
       }
 
