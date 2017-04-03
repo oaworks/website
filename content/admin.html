@@ -429,6 +429,7 @@
       }
     }
     
+		clogin.afterFailure = function() { window.location = '/account?next=/admin'; };
     clogin.login();
   });
 </script>

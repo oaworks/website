@@ -92,19 +92,27 @@
       $.ajax(opts);
       $("#emailissue").html(email + " blacklisted and removed. Provide a new email address, and/or save this request.").show();
     }
+    var adminsubmitting = false;
     var submit = function(e) {
       if (e) e.preventDefault();
       var data = {};
       if ( $('#email').length && $('#email').val() ) data.email = $('#email').val();
-      //if ( $('#status').length ) data.status = $('#status').val();
-      //if ( $('#rating').length ) data.rating = $('#rating').val();
-      //if ( $('#url').length ) data.url = $('#url').val();
       if ( $('#title').length && $('#title').val() ) data.title = $('#title').val();
       if ( $('#doi').length && $('#doi').val() ) data.doi = $('#doi').val();
       if ( $('#story').length && $('#story').val() ) data.story = $('#story').val();
-      /*if ( $('#test').length ) {
-        $('#test').is(':checked') ? data.test = true : data.test = false;
-      }*/
+      if (clogin.hasRole('openaccessbutton.admin') && adminsubmitting) {
+        if ( $('#status').length ) data.status = $('#status').val();
+        if ( $('#rating').length ) data.rating = $('#rating').val();
+        if ( $('#url').length ) data.url = $('#url').val();
+        if ( $('#test').length ) {
+          $('#test').is(':checked') ? data.test = true : data.test = false;
+        }
+        if ( $('#admin_email').length && $('#admin_email').val() ) data.email = $('#admin_email').val();
+        if ( $('#admin_title').length && $('#admin_title').val() ) data.title = $('#admin_title').val();
+        if ( $('#admin_doi').length && $('#admin_doi').val() ) data.doi = $('#admin_doi').val();
+        if ( $('#admin_story').length && $('#admin_story').val() ) data.story = $('#admin_story').val();
+        adminsubmitting = false;
+      }
       var url = api+'/request/'+rid;
       var opts = {
         type:'POST',
@@ -123,9 +131,10 @@
     }
     var checkemailthensubmit = function(e) {
       if (e) e.preventDefault();
-      $('#emailissue').html("").hide();
-      if ( $('#email').length && $('#email').val() && $('#email').val().length ) {
-        var email = $('#email').val();
+      $('.emailissue').html("").hide();
+      var tgt = adminsubmitting ? '#admin_email' : '#email';
+      if ( $(tgt).length && $(tgt).val() && $(tgt).val().length ) {
+        var email = $(tgt).val();
         var opts = {
           type:'GET',
           url: api+'/dnr?validate=true&email=' + email + '&request=' + rid + '&user=' + clogin.user.account._id,
@@ -149,8 +158,8 @@
                 issue += 'is not a valid address.';
                 if (data.data.validation.did_you_mean) issue += ' Did you mean ' + data.data.validation.did_you_mean + '?';
               }
-              $('#email').val("").attr("placeholder",email + " is an unsuitable author email address - please try another");
-              $('#emailissue').html(issue).show();
+              $(tgt).val("").attr("placeholder",email + " is an unsuitable author email address - please try another");
+              $('.emailissue').html(issue).show();
             }
           },
           error: function() {submit(e); } // if we can't do the validation for some reason, just submit anyway
@@ -159,6 +168,10 @@
       } else {
         submit(e);
       }
+    }
+    var adminsubmit = function(e) {
+      adminsubmitting = true;
+      checkemailthensubmit(e);
     }
 
     var deleteitem = function() {
@@ -228,20 +241,19 @@
         dets += '</p>';
       }
       dets += '</p>';
-      /*dets += '<div class="input-group" style="margin-bottom:10px;"><input type="text" id="email" value="' + record.email + '" placeholder="Author Email" class="form-control">';
+      dets += '<div class="input-group" style="margin-bottom:10px;"><input type="text" id="admin_email" value="' + record.email + '" placeholder="Author Email" class="form-control">';
       if (record.email) dets += '<div class="input-group-btn"><a id="blacklist" href="#" class="btn btn-action">Blacklist</a></div>';
       dets += '</div>';
-      dets += '<p id="emailissue" style="display:none;font-size:0.9em;"></p>';*/
-      // TODO need a way to know when to try picking these up in the submit function above
-      /*dets += '<p><input type="text" id="title" class="form-control" placeholder="Title" value="';
+      dets += '<p class="emailissue" style="display:none;font-size:0.9em;"></p>';
+      dets += '<p><input type="text" id="admin_title" class="form-control" placeholder="Title" value="';
       if (record.title) dets += record.title;
       dets += '"></p>';
-      dets += '<p><input type="text" id="doi" class="form-control" placeholder="DOI" value="';
+      dets += '<p><input type="text" id="admin_doi" class="form-control" placeholder="DOI" value="';
       if (record.doi) dets += record.doi;
       dets += '"></p>';
-      dets += '<p><textarea id="adminstory" class="form-control" placeholder="Story" style="min-height:100px;">';
+      dets += '<p><textarea id="admin_story" class="form-control" placeholder="Story" style="min-height:100px;">';
       if (record.story) dets += record.story;
-      dets += '</textarea></p>';*/
+      dets += '</textarea></p>';
       dets += '<p>Story rating: <select id="rating" class="form-control" style="width:100px;display:inline;">';
       var ratings = ["0","1","2","3","4","5"];
       for ( var r in ratings ) {
@@ -269,7 +281,7 @@
       ttl += '</h2>';
       $('#titleheader').html(ttl);
       var ot = rec.type === 'article' ? 'data' : 'article';
-      if (rec.status === 'help' && ( !rec.story || !rec.email || !rec.user )) {
+      if (rec.status === 'help' && ( !rec.story || !rec.user )) {
         if (rec.other) {
           $('#other').html('<p><a style="text-decoration:underline;color:#FFFFFC;" href="/request/' + rec.other + '">I actually wanted the ' + ot + '</a></p>');
         } else {
@@ -341,7 +353,7 @@
           re += '<p>We need more details for this request. Can you take a second to help?</p>';
           if (clogin.loggedin()) {
             if (!rec.title) re += '<p><input class="form-control" type="text" id="title" placeholder="Article title"></p>';
-            if (!rec.email) re += '<p><input class="form-control" type="text" id="email" placeholder="Article author email"></p>';
+            if (!rec.email) re += '<p><input class="form-control" type="text" id="email" placeholder="Article author email"></p><p class="emailissue" style="display:none;font-size:0.9em;"></p>';
             if (!rec.doi) re += '<p><input class="form-control" type="text" id="doi" placeholder="Article DOI"></p>';
             re += '<p style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Save</a></p>';
           } else {
@@ -354,12 +366,12 @@
         re += '<p>Are you the author? Please <a style="text-decoration:underline;" href="mailto:requests@openaccessbutton.org">contact us</a>!</p>';
       }
 
-      /*if (clogin.hasRole('openaccessbutton.admin')) {
+      if (clogin.hasRole('openaccessbutton.admin')) {
         re += '<p style="text-align:right;"><a href="#" id="showadmin" style="color:orange;">Admin</a></p>';
         re += '<div id="admin" class="well" style="display:none;background-color:orange;">';
         re += admin(rec);
         re += '</div>';
-      }*/
+      }
 
       $('#info').append(re);
 
@@ -392,8 +404,8 @@
       if ($('#showadmin').length) $('#showadmin').bind('click',function(e) { e.preventDefault(); $('#admin').toggle(); });
       if ($('#addsupport').length) $('#addsupport').bind('click',addsupport);
       if ($('#blacklist').length) $('#blacklist').bind('click',blacklist);
-      if ($('#submitchanges').length) $('#submitchanges').bind('click',checkemailthensubmit);
-      if ($('#update').length) $('#update').bind('click',submit);
+      if ($('#submitchanges').length) $('#submitchanges').bind('click',adminsubmit);
+      if ($('#update').length) $('#update').bind('click',checkemailthensubmit);
       if ($('#delete').length) $('#delete').bind('click',deleteitem);
       if ($('#gologin').length) $('#gologin').bind('click',function(e) {
         if ($('#youremail').val()) $(this).attr('href',$(this).attr('href').replace('?','?email='+$('#youremail').val()+'&')); 
@@ -418,10 +430,15 @@
         type: 'GET',
         url: rurl,
         success: details,
-        error: function() { $('#title').html("Sorry, we can't find a request with ID " + rid); }
+        error: function() { $('#titleheader').html("Sorry, we can't find a request with ID " + rid); }
       });
     }
-    clogin.afterFailure = runrequest;
+    clogin.afterFailure = function() {
+      clogin.removeCookie(clogin.cookie,'.openaccessbutton.org');
+      clogin.apikey = undefined;
+      clogin.user = {logout:'success'};
+      runrequest();
+    }
     if (clogin.loggedin()) {
       clogin.afterLogin = function() {
         rurl += '?apikey=' + clogin.apikey;
