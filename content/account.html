@@ -78,7 +78,7 @@ jQuery(document).ready(function() {
   clogin.init({api:api,afterLogin: afterlogin, saveValidate: savevalidate, afterSave: aftersave });
 
   if (window.location.href.indexOf('email=') !== -1) {
-    $('#cloginEmail').val(window.location.href.split('next=')[0].split('email=')[1]);
+    $('#cloginEmail').val(window.location.href.split('next=')[0].split('email=')[1].split('&')[0]);
     setTimeout(function() { $('#cloginSubmit').trigger('click'); }, 100);
   }
 
@@ -108,22 +108,21 @@ jQuery(document).ready(function() {
 <div class="container-fluid notcloggedin" id="cloginArea">
   <div class="row">
     <div class="col-md-6 col-md-offset-3">
-      <div style="margin-top:30px;">
+      <div>
         <div id="cloginEmailArea">
           <h2 style="text-align:center;">Sign in to your account</h2>
           <p style="text-align:center;">
             No account yet? <br>
             Just enter your email address to get started.<br>
-            We use a password free system.
           </p>
-          <input type="text" class="form-control" id="cloginEmail" placeholder="Enter your email address">
+          <input type="text" class="form-control" id="cloginEmail" name="email" placeholder="Enter your email address">
           <button id="cloginSubmit" type="submit" class="btn btn-action btn-block" style="margin-top:10px;">Sign up / Login</button>
         </div>
         <div id="cloginTokenArea" style="display:none;">
           <h2 style="text-align:center;">Go check your email!</h2>
           <p style="text-align:center;">
             We use a password free system.<br>
-            It's magical, more secure, and means you have one less password to remember. The link expires in 30 minutes so be sure to use it soon.
+            It's magical, more secure, and means you have one less password to remember. The link expires in 30 minutes so use it soon.
           </p>
           <input type="text" class="form-control" id="cloginToken" placeholder="Enter your login code">
           <p style="text-align:center;">
@@ -171,11 +170,11 @@ jQuery(document).ready(function() {
 
       <div id="setinfo" style="display:none;">
         <h1>Thanks for signing up!</h1>
-        <p>We use these details to make article and data requests on your behalf.</p>
-        <input style="margin-top:5px;" type="text" id="profile.firstname" class="form-control cloginSave" placeholder="First name (required)">
-        <input style="margin-top:5px;" type="text" id="profile.lastname" class="form-control cloginSave" placeholder="Family name (required)">
-        <input style="margin-top:5px;" type="text" id="service.openaccessbutton.profile.affiliation" class="form-control cloginSave" placeholder="Affiliation (University name, Business name etc)">
-        <select id="service.openaccessbutton.profile.profession" class="form-control cloginSave" style="margin-top:5px;">
+        <p>We use these details during requests to help authors understand who you are, and motivate them to share.</p>
+        <input style="margin-top:7px;" type="text" id="profile.firstname" name="first name" class="form-control cloginSave" placeholder="First name (required)">
+        <input style="margin-top:7px;" type="text" id="profile.lastname" name="last name" class="form-control cloginSave" placeholder="Family name (required)">
+        <input style="margin-top:7px;" type="text" id="service.openaccessbutton.profile.affiliation" name="affiliation" class="form-control cloginSave" placeholder="Affiliation (University name, Business name etc)">
+        <select id="service.openaccessbutton.profile.profession" name="profession" class="form-control cloginSave" style="margin-top:7px;">
           <option value="">Profession (required)</option>
           <option value="Student">Student</option>
           <option value="Health professional">Health professional</option>
@@ -184,7 +183,7 @@ jQuery(document).ready(function() {
           <option value="Librarian">Librarian</option>
           <option value="Other">Other</option>
         </select>
-        <p id="agreeterms">
+        <p id="agreeterms" style="margin-top:7px;">
           By signing up
           I understand that information obtained by the Button will be public, and that
           I agree to the Open Access Button
@@ -202,7 +201,7 @@ jQuery(document).ready(function() {
   </div>
 </div>
 
-<div class="container-fluid cloggedin" id="downloads" style="margin-bottom:50px;">
+<div class="container-fluid cloggedin" id="downloads" style="margin-bottom:200px;display:none;">
   <div class="row">
     <div class="col-md-8 col-md-offset-2">
       <h3>Get Started</h3>
@@ -224,18 +223,16 @@ jQuery(document).ready(function() {
         <p><small>Having trouble? See instructions for <a href="http://www.howtogeek.com/231775/how-to-install-and-use-bookmarklets-in-microsoft-edge/" target="_blank" >Edge</a>, <a href="https://support.mozilla.org/en-US/kb/bookmarklets-perform-common-web-page-tasks#w_how-do-i-install-a-bookmarklet" target="_blank" >Firefox</a> and <a href="https://mreidsma.github.io/bookmarklets/installing.html" target="_blank" >Safari</a>.</small>
         </p>
       </div>
-      <a class="btn btn-action btn-block" style="margin-top:5px;" href="/find">Use the Button in your Browser</a>
-      <a class="btn btn-action btn-block" style="margin-top:5px;" id="viewrequests" href="/request">View your requests</a>
 
-      <h3>Instructions</h3>
+      <!--<h3>Instructions</h3>
       <p>We’ve worked hard to make the Button easy to use. Here’s what you need to know:</p>
       <ol>
         <li>The Button works from <a href="https://en.wikipedia.org/wiki/Academic_journal"target="_blank" >academic journal articles</a>. Click the Button when you want the article or data supporting a paper.</li>
         <li>If you get an email from us, it’s important.</li>
         <li>If you need help, email us at <a href="mailto:help@openaccessbutton.org">help@openaccessbutton.org</a></li>
       </ol>
-      <p>Want to test it out? Try searching for <a href="http://science.sciencemag.org/content/293/5530/629" target="_blank">this article</a>.</p>
-      <p><a id="cloginLogout" class="btn btn-warning" href="#">Logout</a></p>
+      <p>Want to test it out? Try searching for <a href="http://science.sciencemag.org/content/293/5530/629" target="_blank">this article</a>.</p>-->
+      <p><br><a id="cloginLogout" class="btn btn-warning" href="#">Logout</a></p>
     </div>
   </div>
 </div>

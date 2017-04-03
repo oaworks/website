@@ -8,6 +8,8 @@ var oabutton_ui = function(api_key) {
   function handleAvailabilityResponse(response) {
     // The main extension logic - do different things depending on what the API returns about URL's status
     oab.debugLog('API response: ' + JSON.stringify(response.data));
+    
+    oab.availabilityResponse = response.data;
 
     document.getElementById('buttonstatus').className = document.getElementById('buttonstatus').className.replace('collapse','').replace('  ',' ');
     document.getElementById('loading_area').className = 'row collapse';
@@ -16,7 +18,7 @@ var oabutton_ui = function(api_key) {
     if (response.data.library) {
       if (oab.library === 'imperial') {
         // TODO could configure a list of terms for libraries somewhere, or always provide a generic linked set?
-        document.getElementById('terms').innerHTML = 'By submitting an inter-library loan request you agree to the <a target="_blank" href="https://openaccessbutton.org"><b>terms</b></a>';
+        document.getElementById('terms').innerHTML = 'By submitting a request you agree to the <b>Terms and Conditions</b>';
       }
       var title;
       if (response.data.library.repository) {
@@ -32,15 +34,14 @@ var oabutton_ui = function(api_key) {
         document.getElementById('iconarticle').setAttribute('data-action','signin');
         document.getElementById('iconarticle').setAttribute('alt',title);
         document.getElementById('iconarticle').setAttribute('title',title);
-        document.getElementById('iconarticle').setAttribute('href',response.data.library.repository);
-        document.getElementById('iconarticletext').innerHTML = 'Accessible (login)';
+        document.getElementById('iconarticletext').innerHTML = 'Accessible via Library Services.<br>Sign in to gain access';
       } else if (response.data.library.local && response.data.library.local.length) {
         document.getElementById('iconarticle').style.backgroundColor = '#398bc5';
-        title = 'This item appears to be available locally. Click to view locations.';
+        title = 'This item appears to be available locally.';
         document.getElementById('iconarticle').setAttribute('data-action','locals');
         document.getElementById('iconarticle').setAttribute('alt',title);
         document.getElementById('iconarticle').setAttribute('title',title);
-        document.getElementById('iconarticletext').innerHTML = 'Available locally';
+        document.getElementById('iconarticletext').innerHTML = 'Available in your library';
         var locals = '';
         for ( var l in response.data.library.local) {
           var libs = response.data.library.local[l]
@@ -53,11 +54,12 @@ var oabutton_ui = function(api_key) {
         document.getElementById('library').style.backgroundColor = '#398bc5';
       } else {
         document.getElementById('ill').className = 'collapse';
-        title = 'This item does not appear to be available. Click to start an inter-library loan request.';
+        title = 'This item does not appear to be available. Click to request it.';
         document.getElementById('iconarticle').setAttribute('data-action','ill');
         document.getElementById('iconarticle').setAttribute('alt',title);
         document.getElementById('iconarticle').setAttribute('title',title);
-        document.getElementById('iconarticletext').innerHTML = 'Request an inter-library loan';
+        document.getElementById('iconarticletext').innerHTML = 'Request Full PDF through your Library and author';
+        document.getElementById('title').value = response.data.library.title;
       }
     }
     
@@ -166,7 +168,7 @@ var oabutton_ui = function(api_key) {
     document.getElementById('id').value = "";
     document.getElementById('story').value = "";
     var msg = "<p>Thank you for submitting an inter-library loan request!</p>";
-    msg += "You will receive an email confirmation and can track progress via your library system.";
+    msg += "You will receive an email confirmation and can track progress via Library Search.";
     document.getElementById('message').innerHTML = msg;
   }
 
@@ -258,6 +260,7 @@ var oabutton_ui = function(api_key) {
           document.getElementById('library').className = '';
         } else if (action === 'signin') {
           // nothing to do - user should be trying to sign in
+          document.getElementById('oabutton_popup').style.display = 'none';
         } else {
           var what = action === 'ill' ? 'inter-library loan' : type;
           var ask = action === 'support' ? 'Someone else has started a request for this ' + what + '. Add your support. ' : 'Create a new ' + what + ' request. ';
@@ -276,7 +279,7 @@ var oabutton_ui = function(api_key) {
           if (action === 'ill') {
             document.getElementById('submit').removeAttribute('disabled');
             document.getElementById('submit').style.backgroundColor = '#398bc5';
-            document.getElementById('submit').innerHTML = 'Submit inter-library loan request';
+            document.getElementById('submit').innerHTML = 'Submit request';
             document.getElementById('story').className = 'collapse';
           }
           document.getElementById('story_div').className = '';
@@ -295,7 +298,7 @@ var oabutton_ui = function(api_key) {
     document.getElementById('submit').setAttribute('data-action','ill');
     document.getElementById('submit').removeAttribute('disabled');
     document.getElementById('submit').style.backgroundColor = '#398bc5';
-    document.getElementById('submit').innerHTML = 'Submit inter-library loan request';
+    document.getElementById('submit').innerHTML = 'Submit request';
     document.getElementById('story').className = 'collapse';
     document.getElementById('story_div').className = '';
   }

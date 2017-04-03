@@ -1,25 +1,21 @@
-  <div id="topnav" class="navbar navbar-fixed-top" style="background-color:white;">
-    <div class="container-fluid">
-      <div class="navbar-header visible-xs" style="padding-top:10px;">
-        <a href="/" class="pull-left" style="color:#212f3f;">Open Access Button</a>
-        <button type="button" class="mobnavtoggle pull-right" style="z-index:1000000;padding-top:0px;border:none;background-color:transparent;">
-          <span class="sr-only">Toggle navigation</span>
-          <i class="fa fa-bars"></i>
-        </button>
-      </div>
-      <div class="navbar-collapse collapse">
-        <ul class="nav navbar-nav">
-          <li class="hidden-xs hidden-sm"><img class="img" src="/static/icon_OAB.png" style="height:45px;margin-top:6px;"></li>
-          <li><a href="/" style="padding-top:16px;">Open Access Button</a></li>
-        </ul>
-        <ul class="nav navbar-nav pull-right">
-          <li><a href="/find" style="padding-top:16px;">Find</a></li>
-          <li><a href="/request" style="padding-top:16px;">Requests</a></li>
-          <li class="cloggedin" style="display:none;"><a href="/account" style="padding-top:16px;">Your Account</a></li>
-          <li class="notcloggedin"><a href="/account?a=login" style="padding-top:16px;">Login</a></li>
-          <li id="downloader" class="hidden-xs hidden-sm notcloggedin"><a id="dllink" href="/account?a=signup" style="font-size:1.2em;font-weight:bold;">Sign up</a></li>
-        </ul>
-      </div>
+  <div id="topnav" class="navbar navbar-fixed-top">
+    <div class="navbar-header visible-xs" style="padding-top:10px;">
+      <a href="/" class="pull-left" style="color:#212f3f;">Open Access Button</a>
+      <button type="button" class="mobnavtoggle pull-right" style="z-index:1000000;padding-top:0px;border:none;background-color:transparent;">
+        <span class="sr-only">Toggle navigation</span>
+        <i class="fa fa-bars"></i>
+      </button>
+    </div>
+
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav" id="oab_brand">
+        <li><a href="/" style="padding-top:16px;">Open Access Button</a></li>
+      </ul>
+      <ul class="nav navbar-nav pull-right" id="navopts">
+        <li><a href="/request" style="padding-top:16px;">Requests</a></li>
+        <!--<li class="cloggedin" style="display:none;"><a href="/account" style="padding-top:16px;">Account</a></li>
+        <li class="notcloggedin"><a href="/account" style="padding-top:16px;">Login</a></li>-->
+      </ul>
     </div>
 
     <div class="alert alert-info" style="display:none;" id="fromopendatabutton">
@@ -43,41 +39,18 @@
             <a class="mobnavtoggle" href="#" style="color:#212f3f;margin-right:12px;margin-top:-2px;"><i class="glyphicon glyphicon-remove"></i></a>
           </p>
           <h2><a href="/">Home</a></h2>
-          <h2><a href="/find">Find</a></h2>
           <h2><a href="/request">Requests</a></h2>
           <h2 class="cloggedin" style="display:none;"><a href="/account">Your Account</a></h2>
           <h2 class="notcloggedin"><a href="/account" style="padding-top:16px;">Login</a></h2>
-          <h2><a href="/about">About us</a></h2>
+          <h2><a href="/about#landing">About</a></h2>
         <!--  <h2><a href="/resources">Resources</a></h2> -->
-          <h2><a href="https://blog.openaccessbutton.org/">Blog</a></h2>
-          <h2><a href="/bug">File a bug</a></h2>
-          <h2><a href="/api">API docs</a></h2>
+        <!-- <h2><a href="https://blog.openaccessbutton.org/">Blog</a></h2>-->
+          <h2><a href="/feedback#bug">Bugs</a></h2>
+          <h2><a href="/api">API</a></h2>
         </div>
       </div>
     </div>
   </div>
-
-  <style>
-    #mobnav {
-      display:none;
-      width:100%;
-      height:100%;
-      margin:0;
-      padding:5px;
-      position:fixed;
-      top:0;
-      left:1200;
-      z-index:100000000000;
-      background-color:#212f3f;
-    }
-    #mobnav h2 {
-      padding-bottom:5px;
-      border-bottom:1px solid #212f3f;
-    }
-    #mobnav h2 a {
-      color:#398bc5;
-    }
-  </style>
 
   <script>
     jQuery(document).ready(function() {

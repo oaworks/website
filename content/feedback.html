@@ -1,3 +1,7 @@
+<!-- Start of openaccessbutton Zendesk Widget script -->
+<script>/*<![CDATA[*/window.zEmbed||function(e,t){var n,o,d,i,s,a=[],r=document.createElement("iframe");window.zEmbed=function(){a.push(arguments)},window.zE=window.zE||window.zEmbed,r.src="javascript:false",r.title="",r.role="presentation",(r.frameElement||r).style.cssText="display: none",d=document.getElementsByTagName("script"),d=d[d.length-1],d.parentNode.insertBefore(r,d),i=r.contentWindow,s=i.document;try{o=s}catch(e){n=document.domain,r.src='javascript:var d=document.open();d.domain="'+n+'";void(0);',o=s}o.open()._l=function(){var e=this.createElement("script");n&&(this.domain=n),e.id="js-iframe-async",e.src="https://assets.zendesk.com/embeddable_framework/main.js",this.t=+new Date,this.zendeskHost="openaccessbutton.zendesk.com",this.zEQueue=a,this.body.appendChild(e)},o.write('<body onload="document._l();">'),o.close()}();
+/*]]>*/</script>
+<!-- End of openaccessbutton Zendesk Widget script -->
 
 <style>
   textarea {
@@ -8,16 +12,17 @@
 <div class="container-fluid goto gotochoose">
   <div class="row">
     <div class="col-md-8 col-md-offset-2">
-      <h3>
-        Let us know
-      </h3>
+      <h1 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">
+        Feedback
+      </h1>
       <p>
         What do you want to tell us about?
       </p>
       <select class="form-control" id="goto">
         <option value="">Please choose an option:</option>
-        <option value="general">General feedback</option>
-        <option value="wrong">We found the wrong article / data</option>
+        <option value="general">General feedback and ideas</option>
+        <option value="wrong">We found the wrong content</option>
+        <option value="bug">I found a bug</option>
         <!-- add any needed types of form here so they can be selected -->
       </select>
     </div>
@@ -29,38 +34,63 @@
   <div class="row">
     <div class="col-md-8 col-md-offset-2">
       <form id="form" method="POST" action="https://api.openaccessbutton.org/bug" style="display:none;">
-        
+
         <!-- particular forms can be directly reached for example by appending #dnr to the page URL -->
         <!-- extra parameters for the bug message can be added as URL params too -->
+
+        <div class="goto gotobug">
+					<h4 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">Report a bug</h4>
+          <p>We'll get it fixed as soon as we can, and let you know.</p>
+					<p class="hideifknown">Your email address</p>
+					<p><input type="text" name="email" class="form-control" placeholder="Your email"></p>
+					<p>Where are you having the issue?</p>
+          <p><input type="checkbox" name="where" value="Chrome plugin"> Chrome plugin</p>
+          <p><input type="checkbox" name="where" value="Firefox plugin"> Firefox plugin</p>
+          <p><input type="checkbox" name="where" value="Website"> Website</p>
+          <p><input type="checkbox" name="where" value="Bookmarklet"> Bookmarklet</p>
+					<p>What's the issue?</p>
+          <p><small>(It's helpful if you can tell us what happened, what you expect to happen, and how we can reproduce the issue.)</small></p>
+					<p><textarea name="issue" class="form-control" style="min-height:200px;"></textarea></p>
+					<p>Do you have an error code? If so, please tell us it</p>
+					<p><input type="text" name="code" class="form-control" placeholder="Error code"></p>
+					<p>Anything else we should know?</p>
+					<p><textarea name="info" class="form-control" style="min-height:200px;"></textarea></p>
+        </div>
+
         <div class="goto gotodnr">
-          <h4>We’re sorry you don’t want to hear from us</h4>
+          <h4 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">Sorry you don’t want to hear from us</h4>
           <p>We’d love to know why you’d prefer to not hear from us:</p>
-          <p><input type="checkbox" name="why" value="Don't understand what I'm being asked"> Don't understand what I'm being asked</p>
-          <p><input type="checkbox" name="why" value="Don't know or trust oab"> Don’t know or trust oab</p>
-          <p><input type="checkbox" name="why" value="Don't want to share data / articles"> Don’t want to share data / articles</p>
+          <p><input type="checkbox" name="why" value="Don't understand what I'm being asked"> I don't understand what I'm being asked</p>
+          <p><input type="checkbox" name="why" value="Don't know or trust oab"> I don’t know or trust the Open Access Button</p>
+          <p><input type="checkbox" name="why" value="Don't want to share data / articles"> I don’t want to share my data or article</p>
           <p><input class="form-control" type="text" name="other" placeholder="Other (please state)"></p>
           <p>Our team is still learning. Can we follow up with you about your experience?</p>
           <p><input type="radio" name="followup" value="yes"> Yes</p>
           <p><input type="radio" name="followup" value="no"> No</p>
         </div>
-        
+
         <div class="goto gotowrong">
           <!-- the link to this bug form could include a URL param "request", with the ID of the request the user is saying is wrong -->
-          <h4>We're sorry if we found the wrong content</h4>
-          <p>Please let us know the particular issue and we'll try to resolve it:</p>
-          <p><input type="checkbox" name="wrong" value="Wrong paper searched for"> Wrong paper searched for</p>
-          <p><input type="checkbox" name="wrong" value="Known open copy not given"> Known open copy not given</p>
-          <p><input type="checkbox" name="wrong" value="Paper not actually available"> Paper not actually available</p>
-          <p>Can you tell us what we should have found? Do you know the correct URL to the content?</p>
-          <p><input class="form-control" type="text" name="correction" placeholder="Correct URL, if known"></p>
+          <h4 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">Wrong content? Let's get that fixed</h4>
+          <p>We apologize that we didn’t give you the content you were looking for. Linking to the correct version can be difficult sometimes. Please let us know your issue and we’ll work to resolve it:</p>
+          <p>What did you search for?</p>
+					<p><input type="text" name="searched" class="form-control" placeholder="Put what you searched for here"></p>
+          <p>What did we find?</p>
+					<p><input type="text" name="given" class="form-control" placeholder="Put the URL we sent you to here"></p>
+          <p><input type="checkbox" name="wrong" value="Wrong paper searched for"> The Button searched for the wrong paper</p>
+          <p><input type="checkbox" name="wrong" value="Known open copy not given"> A copy I know is availiable wasn't shown</p>
+          <p><input type="checkbox" name="wrong" value="Paper not actually available"> The article wasn't actually available</p>
+          <p><input type="checkbox" name="wrong" value="Not full text"> I didn't get sent directly to the full-text</p>
+          <p>Can you tell us the correct URL to the content?</p>
+          <p><input class="form-control" type="text" name="correction" placeholder="(optional) Correct URL, if known"></p>
         </div>
 
         <div class="goto gotouninstall">
           <!-- for this form, set the URL in google chrome extension uninstall link: -->
           <!-- https://developer.chrome.com/extensions/runtime#method-setUninstallURL -->
           <!-- link should be https://openaccessbutton.org/bug#uninstall -->
-          <h4>We're sad to see you go :(</h4>
-          <p>Why are you uninstalling the Open Access Button? Check all that apply:</p>
+          <h4 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">We're sad to see you go</h4>
+          <p>We're constantly trying to improve the Button, can you help by giving us some quick feedback? Why are you uninstalling the Open Access Button? Check all that apply:</p>
           <p><input type="checkbox" name="why" value="It never found what I needed"> It never found what I needed</p>
           <p><input type="checkbox" name="why" value="It's hard to use"> It's hard to use</p>
           <p><input type="checkbox" name="why" value="I don't want to make requests"> I don't want to make requests</p>
@@ -70,13 +100,13 @@
           <p class="hideifknown">What's your email address?</p>
           <p><input class="form-control" type="text" name="email"></p>
         </div>
-        
+
         <div class="goto gotonoshare">
           <!-- the link to the page for this form could include the request ID -->
           <h4>Why can't you share this research?</h4>
           <p><input type="checkbox" name="why" value="I don't have the time"> I don't have the time</p>
           <p><input type="checkbox" name="why" value="I don't have the expertise"> I don't have the expertise</p>
-          <p><input type="checkbox" name="why" value="There is privacy issues"> There is privacy issues</p>
+          <p><input type="checkbox" name="why" value="There are privacy issues"> There are privacy issues</p>
           <p><input type="checkbox" name="why" value="It's not my data"> It's not my data</p>
           <p><input type="checkbox" name="why" value="I don't have the files needed anymore"> I don't have the files needed anymore</p>
           <p><input type="checkbox" name="why" value="I need to publish more from the data"> I need to publish more from the data</p>
@@ -85,7 +115,7 @@
 
         <div class="goto gotogeneral">
           <!-- the link to the page for this form could include a param of the previous page -->
-          <h4>Let us know what you think!</h4>
+          <h4 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">Let us know what you think!</h4>
           <p>We spend day (and night) making the Open Access Button the best it can be. If you have any feedback (good or bad) or ideas that can help us make the tools better we'd love to hear them.</p>
           <p><textarea class="form-control" name="feedback"></textarea></p>
           <p class="hideifknown">What's your email address?</p>
@@ -93,11 +123,11 @@
         </div>
 
         <!-- put any additional form types here -->
-        
+
         <noscript>
           <input type="hidden" name="nojs" value="nojs">
         </noscript>
-        <input id="submit" name="submit" value="submit" type="submit" class="btn btn-action btn-block">
+        <input id="submit" name="submit" value="Submit" type="submit" class="btn btn-action btn-block">
       </form>
     </div>
   </div>
@@ -108,10 +138,10 @@
   <div class="row">
     <div class="col-md-8 col-md-offset-2">
       <div class="goto gotodefaultthanks">
-        <h3>Thanks</h3>
-        <p>Thank you for submitting this information. We'll take action where necessary as soon as possible.</p>
+        <h3 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">Thanks</h3>
+        <p>Thanks for your response.</p>
       </div>
-      
+
       <!-- custom thanks areas can be added here -->
     </div>
   </div>
@@ -124,15 +154,25 @@
     if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
       api = 'https://dev.api.cottagelabs.com/service/oab';
     }
+		
+		if (window.location.href.indexOf('?') !== -1) {
+			var pt = window.location.href.split('?')[1];
+			var pts = pt.split('&');
+			for ( var pt in pts ) {
+				var prts = pts[pt].split('=');
+				if (prts.length === 2 && prts[0].length && prts[1].length && $('[name="' + prts[0] + '"]').length) $('[name="' + prts[0] + '"]').val(decodeURIComponent(prts[1]));
+			}
+		}
+
 
     if (clogin.loggedin()) {
       $('.hideifknown').hide();
       $('[name="email"]').val(clogin.getCookie().email).hide();
     }
-    
+
     $('#form').attr('action',api+'/bug');
     $('.goto').hide();
-    var goto = window.location.hash.replace('#','');
+    var goto = window.location.hash.split('?')[0].replace('#','');
     if (!goto) {
       goto = 'choose';
     } else {
@@ -141,9 +181,9 @@
     if (goto.indexOf('thanks') !== -1) {
       $('#form').hide();
       if (!$('.goto'+goto).length) goto = 'defaultthanks';
-    } 
+    }
     $('.goto'+goto).show();
-        
+
     var choose = function(e) {
       if (e) e.preventDefault();
       $('.goto').hide();
@@ -153,12 +193,12 @@
       $('.goto'+goto).show();
     }
     $('#goto').bind('change',choose);
-    
+
     var submit = function(e) {
       if (e) e.preventDefault();
-      
+
       var data = {form:goto};
-      
+
       $('input,select,textarea').each(function() {
         if ( $(this).parents('.goto'+goto) ) {
           var key = $(this).attr('name') ? $(this).attr('name') : $(this).attr('id');
@@ -175,13 +215,13 @@
           }
         }
       });
-      
+
       if (window.location.href.indexOf('?') !== -1) {
         var p = window.location.href.split('?')[1];
         var pairs = p.split('&');
         for ( var pr in pairs ) {
           var parts = pairs[pr].split('=');
-          if (parts.length === 2 && parts[0].length && parts[1].length) data[parts[0]] = parts[1];
+          if (parts.length === 2 && parts[0].length && parts[1].length) data[parts[0]] = decodeURIComponent(parts[1]);
         }
       }
 
@@ -203,7 +243,7 @@
           plugins: navigator.plugins
         }
       } catch(err) {}
-      
+
       // submit the form with ajax, or just stick stringified data into a form field and submit the form normal?
       $.ajax({
         type:'POST',

@@ -384,22 +384,3 @@ server {
   }
 }
 
-server {
-  listen 80;
-  server_name ineedthisdoi.org;
-  root /home/cloo/dev/openresearchbutton/website/ineedthisdoi;
-
-  location = / {
-    try_files $uri $uri.html /index.html;
-  }
-  location = /index.html {
-    try_files $uri $uri.html /index.html;
-  }
-  location / {
-    proxy_pass http://clapidev/api/academic/redirect/;
-    proxy_redirect off;
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-  }
-}

@@ -333,6 +333,7 @@
     
     clogin.afterLogin = function() {
       if (clogin.hasRole('openaccessbutton.admin')) {
+				job.url = api + '/job';
 				job.startup();
         $('#no').hide();
         $('#accounts').show();
@@ -382,7 +383,7 @@
           $('.adminify').bind('click',adminify);
           $('.unadmin').bind('click',unadmin);
           $('.email').bind('click',email);
-          $('.holder.searches').children().first().hide();
+          //$('.holder.searches').children().first().hide();
         }
 
         $('#accounts').holder({
@@ -428,6 +429,7 @@
       }
     }
     
+		clogin.afterFailure = function() { window.location = '/account?next=/admin'; };
     clogin.login();
   });
 </script>

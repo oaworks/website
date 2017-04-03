@@ -35,65 +35,59 @@
       <div class="panels" id="upload" style="margin-bottom:100px;">
         <h3>Thank you for responding to our request</h3>
         <p>
-          To complete the request we need to know where we can find the content that has been requested.
-          If it is already publicly available online somewhere that anyone can access without restriction, 
-          all we need you to do is provide us with the URL address where we can find it.
+          Let’s help more people get access to your research.
         </p>
 
         <p class="typearticle">
-          It's best if the URL goes directly to the web page where the article full text
-          can be found, rather than to a journal splash page for example. However, we'll 
-          take whatever works best for you!
+          Is your article already available publicly online? That’s great! Just give us the URL address. A good publicly accessible URL is a link to the full-text on a repository or your website.
           <br>
-          If you don't have the article publicly online anywhere yet, you can upload it to us and 
-          we will send it to <a target="_blank" href="https://zenodo.org">Zenodo</a> on 
-          your behalf for safe keeping, where it will be hosted, preserved, and made 
-          available to others under a CC-BY licence.
+          If the article isn’t publicly available, you can deposit it to your institutional repository and then share the link with us, or you can upload it now. We’ll send it to <a target="_blank" href="https://zenodo.org">Zenodo</a> where it will be preserved and publicly accessible under a CC-BY license.
         </p>
 
         <p class="typedata">
-          If you don't have the data publicly online anywhere yet, you can upload it to us and 
-          we will send it to the <a href="https://osf.io">Open Science Framework</a>.
-          The Open Science Framework will host and preserve your data, and make it available to 
-          others under a <a target="_blank" href="https://creativecommons.org/publicdomain/zero/1.0/">CC-0</a> 
-          licence (the <a target="_blank" href="http://pantonprinciples.org/">recommended licence</a> for sharing data).<br>
-          
-          We’ll use the paper title and abstract to provide initial metadata, which you can edit below.
-          <br>
-          Once you submit the data, we'll ask our community to validate it. When they've checked it's what they need, you'll receive an Open Data Badge.
-          <br>
-          If you have more than one file, or a folder of files, please zip them first.
-        </p>
+
+          Is the request data already available publicly online? That’s great! Just give us the URL address. A good publicly accessible URL is a link to a repository record.
+
+          If the data isn’t publicly available, you can deposit it to a repository and then share the link with us, or you can upload it now. We’ll send it to the <a href="https://osf.io">Open Science Framework</a>. OSF will preserve your data and make it publicly available under a <a target="_blank" href="https://creativecommons.org/publicdomain/zero/1.0/">CC-0 license</a>, the recommended license for sharing data. Once you submit the data we’ll ask our community to validate it. If you have more than one file, please create a zip folder to upload.
+
+          Need some help curating your data first? Ask your library if they have a research data management specialist.
+          </p>
 
         <input style="margin-top:50px;margin-bottom:5px;" id="url" type="text" class="form-control" placeholder="Enter the publicly available URL here">
+        <a href="#" class="btn btn-warning btn-block admin" style="display:none;margin-top:5px;" id="adminsubmiturl">submit URL as Admin</a>
         <a href="#" class="btn btn-action btn-block" style="margin-top:5px;margin-bottom:30px;" id="submiturl">Submit your URL</a>
-    
+
         <p>
           Or if you don't have a URL, upload your file here instead:
         </p>
-        
+
         <form id="fileupload" enctype="multipart/form-data" method="POST">
           <input type="file" name="file" id="file" class="form-control">
           <input type="hidden" name="service" value="openaccessbutton">
           <input type="hidden" name="dirId" id="dirId" value="">
           <input style="margin-top:5px;margin-bottom:5px;" id="title" type="text" class="form-control" placeholder="Enter the title here">
+          <input style="margin-top:5px;margin-bottom:5px;" id="firstname" type="text" class="form-control" placeholder="Enter your (author) first name here">
+          <input style="margin-top:5px;margin-bottom:5px;" id="lastname" type="text" class="form-control" placeholder="Enter your (author) last name here">
           <textarea id="description" class="form-control" style="min-height:150px;margin-top:5px;" placeholder="Please provide an abstract / brief description / further information here"></textarea>
+          <input type="submit" class="btn btn-warning btn-block admin" style="margin-top:5px;display:none;" id="adminsubmitfile" value="Upload file as Admin">
           <input type="submit" class="btn btn-action btn-block" style="margin-top:5px;" id="submitfile" value="Upload your file">
         </form>
-    
-        <div class="panels" id="loading" style="display:none;">
-          <img style="height:20px;" src="//static.cottagelabs.com/spin_grey.svg">
-        </div>
+
+      </div>
+
+      <div class="panels" id="loading" style="display:none;">
+        <img style="height:20px;" src="/static/spin_orange.svg"><br>
+        <p>Loading, please wait a minute (or longer if your file was large)</p>
       </div>
 
       <div class="panels" id="submitted">
         <div class="jumbotron">
           <h3>Thank you for submitting your content!</h3>
           <p>
-            The link to your content saved 
-            <span class="typearticle">on Zenodo</span> will appear on the 
-            <span class="typedata">at the Open Science Foundation</span> will appear on the 
-            <a class="requestlink" href="/request" style="color:white;">request</a> 
+            The link to your content, saved
+            <span class="typearticle">on Zenodo</span>
+            <span class="typedata">at the Open Science Foundation</span>, will appear on the
+            <a class="requestlink" href="/request" style="color:white;">request</a>
             page in a few minutes.
           </p>
           <p>
@@ -119,6 +113,11 @@
             This content has already been received and validated. Please view the original request (above) for further information.
           </p>
         </div>
+      </div>
+
+      <div class="admin" style="display:none;color:orange;">
+        <a href="#" class="btn btn-warning showupload" style="display:none;">Show upload form</a>
+        <a href="#" class="btn btn-warning redeposit" style="display:none;">Re-deposit</a>
       </div>
 
       <div class="panels" id="hold">
@@ -150,10 +149,11 @@
 
 <script>
   jQuery(document).ready(function() {
-    var api = 'https://lapi.cottagelabs.com/service/oab'; // to ensure this works for now, use only the LOCAL CL api address
+    var api = 'https://api.cottagelabs.com/service/oab'; // to ensure this works for now, use only the LOCAL CL api address
     var uploadapi = 'https://accounts.cottagelabs.com/upload';
     if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
       api = 'https://dev.api.cottagelabs.com/service/oab';
+      clogin.api = 'https://dev.api.cottagelabs.com/accounts';
     }
 
     $('.typearticle').hide();
@@ -161,17 +161,21 @@
     $('.panels').hide();
     var request;
     var rid = window.location.pathname.split('/')[2];
+    var clickedadmin = false;
 
-    var submit = function() {
+    var submit = function(e) {
+      try { if (e) e.preventDefault(); } catch(err) {}
       // once the file is successfully posted, submit to the receive endpoint and show confirmation
       // the receive endpoint will trigger forwarding to zenodo or osf
       var data = {};
       if ($('#url').val()) data.url = $('#url').val();
       if ($('#description').val()) data.description = $('#description').val();
       if ($('#title').val()) data.title = $('#title').val();
+      if ($('#firstname').val()) data.firstname = $('#firstname').val();
+      if ($('#lastname').val()) data.lastname = $('#lastname').val();
       // TODO really this should have a way to upload files built into it, and grab the #file and put it in the content var
       // but for now that is handled separately via the file upload route
-      $.ajax({
+      var opts = {
         type: 'POST',
         url: api + '/receive/' + rid,
         cache: false,
@@ -181,10 +185,19 @@
         data: JSON.stringify(data),
         success: function() { $('.panels').hide(); $('#submitted').show(); },
         error: function() { $('.panels').hide(); $('#error').show(); }
-      });
+      }
+      // TODO if admin and admin user clicked the submit as admin button, add admin:true to data and add api key to ajax
+      if (clickedadmin) {
+        data.admin = true;
+        opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", clogin.apikey); };
+      }
+      $.ajax(opts);
+      clickedadmin = false;
     }
-    $('#submiturl').bind('click',submit);    
-    $('form#fileupload').submit(function() {
+    $('#submiturl').bind('click',submit);
+    $('#adminsubmiturl').bind('click',function(e) { clickedadmin = true; submit(); });
+    $('form#fileupload').submit(function(e) {
+      if (e) e.preventDefault();
       $('#loading').show();
       $('#dirId').attr('value',rid);
       var formData = new FormData(this);
@@ -197,10 +210,37 @@
         contentType: false,
         processData: false,
         success: submit,
+        error: function() { clickedadmin = false; $('.panels').hide(); $('#error').show(); }
+      });
+      return false;
+    });
+    $('#adminsubmitfile').bind('click',function(e) { clickedadmin = true; });
+
+    var redeposit = function(e) {
+      e.preventDefault();
+      $('#loading').show();
+      $.ajax({
+        url: api + '/redeposit/' + rid,
+        type: 'POST',
+        async: false,
+        beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
+        cache: false,
+        contentType: false,
+        success: function(data) {
+          $('#loading').hide();
+          var u, w;
+          if (data.data.received.zenodo) {
+            w = 'zenodo';
+            u = data.data.received.zenodo;
+          } else {
+            w = 'OSF';
+            u = data.data.received.osf;
+          }
+          $('div.admin').append('<p>Redeposit complete. Content on ' + w + ' at <a target="_blank" href="' + u + '">' + u + '</a>.</p>');
+        },
         error: function() { $('.panels').hide(); $('#error').show(); }
       });
-      return false;      
-    });
+    }
 
     var details = function(data) {
       request = data;
@@ -214,15 +254,33 @@
       $('.requestlink').attr('href','/request/'+request._id);
       $('.type' + request.type).show();
       if (request.title) $('#title').val(request.title);
+      if (request.author) {
+        for ( var a in request.author ) {
+          if (request.author[a].family && request.email.toLowerCase().indexOf(request.author[a].family.toLowerCase()) !== -1 ) {
+            $('#lastname').val(request.author[a].family);
+            if (request.author[a].given) $('#firstname').val(request.author[a].given);
+          }
+        }
+      }
 
       if (request.status === 'received') {
+        $('.showupload').show();
         request.received.validated === false ? $('#validating').show() : $('#validated').show();
+        if (request.received.url) {
+          $('.admin').append('<p>Submitted URL: <a target="_blank" href="' + request.received.url + '">' + request.received.url + '</a></p>');
+        } else {
+          var where = request.type === 'article' ? 'Re-deposit to zenodo' : 'Re-deposit to OSF';
+          $('.redeposit').html(where).show();
+          $('.redeposit').bind('click',redeposit);
+        }
       } else if (window.location.href.indexOf('hold=') !== -1) {
+        $('.showupload').show();
         var hold = parseInt(window.location.href.split('hold=')[1].split('&')[0].replace('day','').replace('s',''));
         $.ajax({type: 'GET',url: api + '/receive/' + rid + '/'+hold});
         $('#holdlength').html(hold);
         $('#hold').show();
       } else if (window.location.href.indexOf('refuse=') !== -1) {
+        $('.showupload').show();
         $.ajax({type: 'GET',url: api + '/receive/' + rid + '/refuse'});
         $('#refuse').show();
       } else {
@@ -236,5 +294,12 @@
       error: function() { $('.panels').hide(); $('#missing').show(); }
     });
 
+    clogin.afterLogin = function() {
+      if (clogin.hasRole('openaccessbutton.admin')) {
+        $('.admin').show();
+        $('.showupload').bind('click',function(e) { e.preventDefault(); $('.panels').hide(); $('#upload').show(); });
+      }
+    }
+    clogin.login();
   });
 </script>

@@ -1,129 +1,12 @@
 
-<style>
-  p {
-    text-align:justify;
-  }
-</style>
-
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-12">
-      <h2>OAB Stats - the numbers, the why, the how</h2>
-    </div>
-  </div>
-</div>
-
-
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-6">
-      <h3>The situation</h3>
-      <p>
-        75 million people need access to research - start with some info about this number from scihub, and the stats 
-        of their searches? This would be a fairly static intro to the problem, maybe with a map. Bother with time sliders etc?
-      </p>
-      <p>
-        (By starting with scihub data it brings up the point of the difference between scihub/icanhazpdf and oabutton - why 
-        use this instead? - Maybe the answer is don't use it INSTEAD, but use it AS WELL - and in particular cases, prefer it 
-        e.g. we have librarians looking for things, check your local institutional repo with library partnerships, and 
-        seek to make social change rather than just helping any one individual gain access - it is about making open the default, 
-        and making people expect open, and making something open for everyone else, not just the one person seeking immediate access.)
-      </p>
-    </div>
-    <div class="col-md-6">
-      <div style="outline:1px solid blue;margin-top:60px;min-height:300px;">
-        some map of scihub stats or something
-      </div>
-    </div>
-  </div>
-</div>
-      
-<div class="container-fluid" id="availability">
-  <div class="row">
-    <div class="col-md-6">
-      <h3>Availability</h3>
-      <p>
-        Then show how many availability checks people have made using oab, and how many open/closed. Show like we
-        currently do how many of different sorts of users are doing things. Provide at least a line chart of requests, 
-        controlled by time slider (if using time slider, maybe one overall slider for whole page). Worth doing a map of 
-        availability checks? Prob not - a map of requests is probably better, and two maps is too much.
-      </p>
-      
-      <p>
-        So there is the problem of availability, and we help people find available things... something something.
-      </p>
-      
-      <p>
-        Fill this space with more words...
-      </p>
-    </div>
-    <div class="col-md-6">
-      <div style="outline:1px solid blue;margin-top:60px;min-height:300px;">
-        a bar chart of found vs not found availablity checks (open vs closed)
-      </div>      
-    </div>
-  </div>
-</div>
-      
 <div class="container-fluid" id="availability">
   <div class="row">
     <div class="col-md-12">
-      <div style="outline:1px solid blue;margin-bottom:20px;min-height:300px;">
-        a line chart of availability requests
-      </div>      
-      <input type="text" class="form-control aholder search" style="display:none;">
+      <h2>
+        Stats
+      </h2>
+      <input type="text" class="form-control holder search" style="display:none;">
       <div id="results"></div>
-    </div>
-  </div>
-</div>
-
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-6">
-      <h3>Requests</h3>
-      <p>
-        Blurbing about requests and people creating them... more text here
-      </p>
-      <div style="outline:1px solid blue;margin-top:160px;min-height:100px;">
-        Line graph / spark line of requests over time, maybe overlaid with successes?
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div style="outline:1px solid blue;margin-top:60px;min-height:300px;">
-        some graph of requests data - by user type, etc, something.
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-12">
-      <h3>What next</h3>
-      <p>
-        We have X successful requests, but also Y still in progress. We have more coming in every day. 
-        We have partnerships with libraries. We want to move towards this not being necessary.
-      </p>
-      
-      <p>
-        Do you want to partner with us? Help your users with our institutional capabilities? 
-        (Create and Link to page about institutional stuff). Get in touch.
-      </p>
-      
-      <p>
-        Do you want to help, work with us? <b>Export</b> our data and use it? - export options here.
-        (for admin users, export users info too as extra option)
-      </p>
-    </div>
-  </div>
-</div>
-
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-12">
-      <div style="outline:1px solid blue;min-height:600px;margin-bottom:30px;">
-        the oabutton world map of requests
-      </div>
     </div>
   </div>
 </div>
@@ -221,7 +104,7 @@
     }
 
     $('#availability').holder({
-      class: 'aholder',
+      class: 'holder',
       url: api + "/availabilities?apikey="+clogin.apikey,
       datatype: 'JSON',
       //apikey: clogin.apikey, // to get this working have to stop ES overriding allowed headers

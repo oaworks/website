@@ -2,12 +2,12 @@
 $.fn.holder.use.oabutton = {
   url: "https://api.openaccessbutton.org/requests",
   //pushstate: false,
-  sticky: true,
+  sticky:true,
   datatype: 'JSON',
   size:500,
   scroll:true,
   sort:[{createdAt:'desc'}],
-  fields: ['status','type','user.profession','user.affiliation','_id','url','created_date','createdAt','title','email','user.username','location.geo.lat','location.geo.lon','story','count'],
+  fields: ['status','type','user.profession','user.affiliation','_id','url','created_date','createdAt','title','email','user.username','user.firstname','user.email','location.geo.lat','location.geo.lon','story','count'],
   facets: {
     status: { terms: { field: "status.exact" } },
     user: { terms: { field: "user.profession.exact" } },
@@ -16,6 +16,13 @@ $.fn.holder.use.oabutton = {
     keyword: { terms: { field: "keywords.exact", size: 1000 } },
     journal: { terms: { field: "journal.exact", size: 1000 } }
   },
+  defaultfilters: [
+    {
+      exists: {
+        field: "story"
+      }
+    }
+  ],
   
   ranges: {
     createdAt: {
@@ -56,7 +63,7 @@ $.fn.holder.use.oabutton = {
       moderate: {text:'Awaiting moderation',color:'#eee',highlight:'grey'},
       help: {text:'We need more info - can you help?',color:'#fbdad0',highlight:'#f04717'},
       progress: {text:'In progress - read more, support it, provide it!',highlight:'grey',color:'white'},
-      received: {text:'Success! This item has made available!',highlight:'#5cb85c',color:'#dcefdc'},
+      received: {text:'Success! This item has been made available!',highlight:'#5cb85c',color:'#dcefdc'},
       refused: {text:'Refused - can you help us try again?',highlight:'#d9534f',color:'#f1c2c0'},
       closed: {text:'Closed - this request could not be completed',highlight:'grey',color:'#eee'}
     }
@@ -65,17 +72,22 @@ $.fn.holder.use.oabutton = {
     var highlight = rec.status && sts[rec.status] && sts[rec.status].highlight ? sts[rec.status].highlight : '#eee';
     var text = rec.status && sts[rec.status] && sts[rec.status].highlight ? sts[rec.status].highlight : 'blue';
     var re = '<div class="well" style="margin:30px auto 0px auto;background-color:' + color + '">';
-    re += '<p><b>';
+    re += '<p>';
     if (rec.type && rec.type === 'data') re += 'Data for ';
-    re += '<a href="/request/' + rec._id + '">' + rec.title + '</a></b></p>';
+    re += '<b><a href="/request/' + rec._id + '" style="word-wrap:break-word;overflow-wrap:break-word;">';
+    re += rec.title ? rec.title : rec.url;
+    re += '</a></b></p>';
+    re += '<p><a href="/request/' + rec._id + '" style="color:' + text + ';">' + status + '</a></p>';
     if (rec.story && ( parseInt(rec.rating) >= 3 || rec.rating === undefined ) ) re += '<p style="padding:10px 0px 10px 30px;"><a style="color:#383838;font-style:italic;font-weight:bold;font-size:1.2em;" href="/request/' + rec._id + '">' + rec.story + '</a></p>';
-    re += '<p>from ';
-    re += rec['user.firstname'] ? rec['user.firstname'] : rec['user.username'];
+    re += '<p>Requested ';
+    var un = rec['user.firstname'] ? rec['user.firstname'] : rec['user.username'];
+    if (!un) un = rec['user.email'];
+    re += un ? 'by ' + un : '';
     if (rec['user.profession'] && rec['user.profession'] !== 'Other') re += ', ' + rec['user.profession'];
     if (rec['user.affiliation'] && rec['user.affiliation'].length > 1) re += ' at ' + rec['user.affiliation'];
-    re += rec.created_date ? ', on ' + rec.created_date.split(' ')[0].split('-').reverse().join('/') : '';
-    if (rec.count && rec.count > 1) re += '<br>' + rec.count + ' people support this request';
-    re += '<br><a href="/request/' + rec._id + '" style="color:' + text + ';">' + status + '</a></p>';
+    re += rec.created_date ? ' on ' + rec.created_date.split(' ')[0].split('-').reverse().join('/') : '';
+    re += '</p>';
+    if (rec.count && rec.count > 1) re += '<p>' + rec.count + ' people support this request</p>';
     re += '</div>';
     return re;
   },
@@ -85,7 +97,8 @@ $.fn.holder.use.oabutton = {
     if (res.type) res.type = res.type[0];
     if (res['user.profession']) res['user.profession'] = res['user.profession'][0];
     if (res['user.affiliation']) res['user.affiliation'] = res['user.affiliation'][0];
-    if (res['status']) res['status'] = res['status'][0];
+    if (res.status) res.status = res.status[0];
+    if (res.title) res.title = res.title[0];
     if (res.created_date) res.created_date = res.created_date[0];
     return res;
   },
@@ -109,27 +122,7 @@ $.fn.holder.use.oabutton = {
       $('.' + options.class + '.results'+fromclass).append(options.record(rec,r));
     }
     $('.requestcount').html(options.response.hits.total);
-  },
-  
-  instruct: function(e) {
-    if (e) e.preventDefault();
-    var options = $(this).holder.options;
-    var which = $(e.target).attr('val');
-    if (which !== 'search') $('.holder.options').hide();
-    if (which === 'help') {
-      $('select.holder[key="status.exact"]').val('help').trigger('change');
-      //$('input.holder.search').val('status.exact:help').trigger('change');
-    } else if (which === 'respond') {
-      $('.holder[do="remove"]').trigger('click');
-      $('select.holder[key="status.exact"]').val('progress').trigger('change');
-    } else if (which === 'support') {
-      $('.holder[do="remove"]').trigger('click');      
-    } else if (which === 'request') {
-      $('.holder.results').hide();
-    }
-    $('.instruct').hide();
-    $('.instruct.'+which).show();
   }
-
+  
 };
 

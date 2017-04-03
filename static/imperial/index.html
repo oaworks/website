@@ -28,10 +28,13 @@ This page may be updated as progress is made. This is version v1 of the page and
 
     <p style="max-width:600px;">
       This page is currently using "Yersinia pestis TIR-domain protein forms dimers that interact with the human adaptor protein MyD88" as a test (showing an item that is available in Spiral).
-      <br> See right for a demonstration of how it looks when opened.<br>
+      <br> See right for a demonstration of how it looks when opened.
+    </p>
 
-      <h2>Example Articles</h2>
-
+    <h2>Example Articles</h2>
+    <p>
+      * O'Connor and O'Hagan 2015 doi:10.1080/03075079.2014.1000292 - Imperial don't have a subscription and the button finds it at the author's repo
+      
       * Here is a page with an article in a journal that Imperial do not appear to subscribe to, and that is not available anywhere (so it immediately offers to start an ILL):
       <br><a target="_blank" href="http://stm.sciencemag.org/content/9/375/eaah6510">http://stm.sciencemag.org/content/9/375/eaah6510</a>
 
@@ -57,40 +60,65 @@ This page may be updated as progress is made. This is version v1 of the page and
       In each case above (except errors), there will also be a small link text offering to start an ILL if we appear to have the wrong item.
 
       <br><br>
-      <h2>Exlibris Problem</h2>
+    </p>
+
+    <h2>Exlibris Problem</h2>
+    <p>
       Exlibris search for journals is not reliably returning the correct journal. For example, a search for the journal "science" from a page like
       <a href="http://science.sciencemag.org/content/293/5530/629" target="_blank">http://science.sciencemag.org/content/293/5530/629</a> does NOT return
       the journal "Science" even though presumably Imperial do subscribe to it - because there are many other journals with the word "science" in their title,
       and starting with the word "science". Until I can find a reliable way to search exlibris for the actual journal title, we will have a problem here.
-
-      <h2>Major changes from mock-ups</h2>
-
-<br>* We've simplied some stages as the request system isn't intergrated here (and as we continue to refine concepts)
-<br>* We've allowed titles to be edited as there is no other point to correct these in the process currently. In our public button we have pages where these can be later checked and edited - we haven't yet shipped that for these yet. That can come after our sprint for the request system.
-<br>* Copy isn't refined yet.
-<br>* We're currently displaying where in the library physical items are, this probably shouldn't be included in future!
-
-For quick references, mockups and comments on them can be found <a href="https://github.com/OAButton/discussion/tree/master/UX%20Mockups/Library/Bookmarklet">here</a>
-
-<h2>Path fowards</h2>
-
-The currently bookmarklet should demonstrate roughly what we're able to do although is clearly not a polished product. Thankfully, we were able to do everything we expected to some degree (bar the problme noted above). To take things forward we would:
-
-<br>* Refining copy and appearance
-<br>* Working on improving Exlibris search
-<br>* Implementing the request system into the tool (as discussion suggests we should)
-<br>* Removing the physical location box
-<br>* Other changes from your feedback
-<br>* Connect up the ILL request to Imperial's script & tweek format (currently just sends email)
-<!-- <br>* We need a link to an item that is physically in Imperial - but where would such an item have a web page we can read from?
-<br>* need a link to an item in a journal Imperial subscribes to, and that we can actually find in exlibris (see below re PROBLEM)-->
-
-
-<h2>Change Log</h2>
-
-We'll note any significant changes to how the tool is working between versions here.
-
     </p>
+
+    <h2>Major changes from mock-ups</h2>
+    <p>
+      * We've simplied some stages as the request system isn't intergrated here (and as we continue to refine concepts)
+      <br>* We've allowed titles to be edited as there is no other point to correct these in the process currently. In our public button we have pages where these can be later checked and edited - we haven't yet shipped that for these yet. That can come after our sprint for the request system.
+      <br>* Copy isn't refined yet.
+      <br>* We're currently displaying where in the library physical items are, this probably shouldn't be included in future!<br><br>
+
+      For quick references, mockups and comments on them can be found <a href="https://github.com/OAButton/discussion/tree/master/UX%20Mockups/Library/Bookmarklet">here</a>
+    </p>
+
+    <h2>Path fowards</h2>
+    <p>
+      The currently bookmarklet should demonstrate roughly what we're able to do although is clearly not a polished product. Thankfully, we were able to do everything we expected to some degree (bar the problme noted above). To take things forward we would:
+
+      <br>* Refining copy and appearance
+      <br>* Working on improving Exlibris search
+      <br>* Implementing the request system into the tool (as discussion suggests we should)
+      <br>* Removing the physical location box
+      <br>* Other changes from your feedback
+      <br>* Connect up the ILL request to Imperial's script & tweek format (currently just sends email)
+      <!-- <br>* We need a link to an item that is physically in Imperial - but where would such an item have a web page we can read from?
+      <br>* need a link to an item in a journal Imperial subscribes to, and that we can actually find in exlibris (see below re PROBLEM)-->
+    </p>
+
+    <h2>Change Log</h2>
+    <p>
+      We'll note any significant changes to how the tool is working between versions here.
+    </p>
+    <p>
+      20/03/2017
+      <br>NOTE: we still ask for email rather than Imperial username, just because during testing this is easier. However, at any point we can switch to picking up the username
+      BUT if we take username instead, we can't send a confirmation email saying the request has been started. Currently the box asks for an Imperial email - we can also add
+      filters to this to ensure the email they supply is in a domain that counts as Imperial, if we can get a list of the domains. but if it HAS to be a username, that is easy
+      enough to switch out and collect instead - it just means no email confirmation, unless we collect email as well as username. (If we decide to push requests through an OAB
+      page though, we could potentially collect user details there just once, and then in future times send them emails - so there are some options to consider here.)
+      <br><br>NOTE 2: Journal search has been improved, and may be fixed, but there is a question - if finding a journal in Primo, is it definitely subscribed? Is there a journal Imperial
+      don't subscribe to that we could use to check this?
+      <br>
+      <ul>
+        <li>Darker thicker border added</li>
+        <li>close button forces bookmarklet close and page reload to be sure (on demo page this triggers an automatic bookmarklet open again, but does not on real bookmarklet)</li>
+        <li>Crenshaw 1991 10.2307/1229039 we linked to wrong thing at https://ojs.uv.es/index.php/RELIEVE/article/view/6832 but now find right thing at http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.695.5934</li>
+        <li>Added "powered by" statement with links, can add as logos later, but a bookmarklet redesign is needed anyway, so just text for now</li>
+        <li>Changed wording at various points, as requested</li>
+        <li>Hooked up our ILL requests to the Imperial script, should now receive requests</li>
+        <li>Increased the content of what is sent in ILL requests to the script (can be seen in test emails and presumably caught by the script)</li>
+      </ul>
+    </p>
+
 
   </body>
 </html>

@@ -1,5 +1,5 @@
 (function() {
-  var version = '1.0.3.19';
+  var version = '1.0.3.26';
   var url = 'https://openaccessbutton.org/static/imperial';
   url = 'https://oab.test.cottagelabs.com/static/imperial'; // COMMENT THIS OUT BEFORE GOING TO LIVE
   var fls = ['bookmarklet.css','oab.js','ui.js','bookmarklet.js'];

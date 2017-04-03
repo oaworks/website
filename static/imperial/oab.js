@@ -5,17 +5,17 @@ var oab = {
   debug : true, // this puts the button in debug mode, issues debug warnings
 
   bookmarklet : true, // this lib is also used by a bookmarklet, which sets this to change plugin type
-  
+
   location : false, // whether or not to try geolocation
-  
+
   signup : false, // whether or not to prompt signup
-  
+
   library : 'imperial', // either false or the name of a library to do a catalogue lookup and ILL for
-  
+
   requestable : false, // whether or not a user is allowed to create a request (whether logged in or not)
-  
+
   supportable : false, // whether or not a user is allowed to support a request (whether logged in or not)
-  
+
   dataable : false, // whether or not to bother with the data icons
 
   api_address : 'https://dev.api.cottagelabs.com/service/oab',// 'https://api.openaccessbutton.org',
@@ -26,7 +26,7 @@ var oab = {
 
   register_address : '/account',
 
-  bug_address : '/bug',
+  bug_address : '/feedback#bug',
 
   messages: 'message', // a div ID name to put error messages etc
 
@@ -43,8 +43,16 @@ var oab = {
     if (oab.debug) data.test = true;
     return data;
   },
-  
+
   sendILL: function(api_key, data, success_callback, failure_callback) {
+    // data has story id and title by now - but check oab.availabilityResponse for full info
+    if (oab.availabilityResponse) {
+      if (!data.title && oab.availabilityResponse.meta && oab.availabilityResponse.meta.article && oab.availabilityResponse.meta.article.title) data.title = oab.availabilityResponse.meta.article.title;
+      if (oab.availabilityResponse.meta && oab.availabilityResponse.meta.article && oab.availabilityResponse.meta.article.doi) data.doi = oab.availabilityResponse.meta.article.doi;
+      if (oab.availabilityResponse.library && oab.availabilityResponse.library.journal) data.journal = oab.availabilityResponse.library.journal;
+      if (oab.availabilityResponse.library.primo) data.primo = oab.availabilityResponse.library.primo;
+    }
+    data.url = window.location.href;
     if (oab.library) oab.postLocated('/ill/' + oab.library, api_key, data, success_callback, failure_callback);
   },
 

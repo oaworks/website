@@ -1,99 +1,54 @@
 
-<div class="container-fluid" id="infopanel">
-  <div class="row">
-    <div class="col-md-4" style="z-index:10;">
-      <div class="well" id="msgcol" style="background-color:#212f3f;color:white;padding-top:30px;padding-bottom:40px;margin-top:-10px;border:1px solid #212f3f;min-height:300px;">
-        <h1 style="text-align:center;" id="msg"></h1>
-      </div>
-    </div>
-    <div class="col-md-8" style="z-index:5;" id="requestpanel">
-      <div class="panel panel-default" style="border-color:#398bc5;margin-top:-10px;">
-        <div class="panel-heading" style="background-color:#398bc5;padding-top:30px;padding-bottom:30px;min-height:242px;">
-          <h1 style="text-align:center;">
-            <a href="" target="_blank" id="titlelink" style="color:white;" alt="Click to open the source in a new page" title="Click to open the source in a new page"></a>
-          </h1>
-        </div>
-        <div class="panel-body">
-          <a href="#" id="details" class="panels" alt="Click to view and edit request details" title="Click to view and edit request details">+ details</a>
-          <a href="#" id="shares" class="btn btn-xs btn-action panels pull-right" style="margin-left:20px;margin-right:20px;height:28px;font-size:0.9em;">Embed</a>
-          <div style="display:inline;margin-bottom:-10px;padding-left:20px;" class="pull-right">
-            <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Help us get access to research!" data-size="large"></a>
-          </div>
-          <a class="btn btn-xs btn-action pull-right" style="height:28px;font-size:0.9em;" id="fbshare" href="https://www.facebook.com/sharer/sharer.php?u=" target="_blank"><i class="fa fa-facebook-official"></i> facebook</a>
-          <div id="edit" class="panels details" style="display:none;margin-top:20px;"></div>
-        </div>
+  <!-- Start of openaccessbutton Zendesk Widget script -->
+  <script>/*<![CDATA[*/window.zEmbed||function(e,t){var n,o,d,i,s,a=[],r=document.createElement("iframe");window.zEmbed=function(){a.push(arguments)},window.zE=window.zE||window.zEmbed,r.src="javascript:false",r.title="",r.role="presentation",(r.frameElement||r).style.cssText="display: none",d=document.getElementsByTagName("script"),d=d[d.length-1],d.parentNode.insertBefore(r,d),i=r.contentWindow,s=i.document;try{o=s}catch(e){n=document.domain,r.src='javascript:var d=document.open();d.domain="'+n+'";void(0);',o=s}o.open()._l=function(){var o=this.createElement("script");n&&(this.domain=n),o.id="js-iframe-async",o.src=e,this.t=+new Date,this.zendeskHost=t,this.zEQueue=a,this.body.appendChild(o)},o.write('<body onload="document._l();">'),o.close()}("https://assets.zendesk.com/embeddable_framework/main.js","openaccessbutton.zendesk.com");
+  /*]]>*/</script>
+  <!-- End of openaccessbutton Zendesk Widget script -->
+
+
+<div id="topper" class="strap strap-compact" style="background-color:transparent;background-size:100% 100%;background-repeat:no-repeat;margin-top:-80px;padding-top:100px;padding-bottom:0px;">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <h1 id="headline" style="color:#FFFFFC;"></h1>
+        <div id="other"></div>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="row panels shares" style="display:none;">
-    <div class="col-md-12">
-      <p>Share this request! Sharing helps a request gain more support and the research be made accessible.</p>
-      <p>Request URL: <code id="requesturl"></code></p>
-      <p>Want to share this request on your website? Embed the widget! Copy and paste the text below:</p>
-      <textarea id="widget" class="form-control" style="min-height:100px;" onclick="this.select()"><div id="oab_insert"></div><script>var oabe = function() {var x = new XMLHttpRequest(); x.onreadystatechange = function() { if (x.readyState == 4 && x.status == 200) { document.getElementById("oab_insert").innerHTML = JSON.parse(x.responseText).data; } }; x.open("GET", "WIDGETURL", true); x.send(); }();</script></textarea>
-    </div>
-  </div>
-
+<div class="container-fluid">
   <div class="row">
     <div class="col-md-12">
-      <div id="supportpanel" class="panel panel-default" style="border-color:#212f3f;">
-        <div class="panel-heading" style="background-color:#212f3f;"><h1 style="text-align:center;color:white;">Need this, too? Add your support</h1></div>
-        <div class="panel-body">
-
-          <div class="cloggedin" style="display:none;">
-            <div id="supportarea">
-              <p>Do you also need access to this research? Add your support! Requests are more likely to be fulfilled when multiple people need access to the research. Together we can make this a successful request.</p>
-              <textarea class="form-control addsupport" style="min-height:100px;" placeholder="How would getting access to this research help you? This message will be sent to the author. (This is optional, however it will help the request get fulfilled)" id="supportstory"></textarea>
-              <a class="btn btn-action btn-block addsupport" id="addsupport" href="#" style="margin-top:2px;">Add your support</a>
-              <p class="addsupport" style="display:none;">Thank you! Your support has been added to this request, and you will be notified when this content becomes available.</p>
-            </div>
-
-            <div id="youcreated" style="display:none;">
-              <p>
-                You don't have to add your support, you created this request!<br>
-                Try sharing your request and asking others to support you!
-              </p>
-            </div>
-
-            <div id="supported" style="display:none;">
-              <p>
-                Thanks! You have added your support to this request! You are awesome!
-                <br>Please share this request to help everyone get access.
-              </p>
-            </div>
-          </div>
-
-          <div class="notcloggedin">
-            <p>
-              Thanks for wanting to support this request! You need to create an account first. Sign up now
-              to begin supporting requests and creating your own. Already have an account? Login now!
-            </p>
-            <a class="btn btn-action btn-block login" href="/account">Login (or sign up) please!</a>
-          </div>
-
-          <p style="padding-top:30px;font-size:0.8em;">Can you provide this content? If you have the right to share it,
-            we'd love to hear from you.<br>Please <a class="label label-default" style="background-color:#212f3f;color:white;" href="mailto:requests@openaccessbutton.org">contact us</a> to discuss providing a copy.
-            <!--Or help us with a <a class="label label-default" style="background-color:#212f3f;color:white;" href="https://openaccessbutton.org/donate">donation</a> to support open access.-->
-          </p>
-        </div>
-      </div>
+      <div id="titleheader"></div>
     </div>
-  </div>
-
-  <div class="row">
     <div class="col-md-12">
-      <div id="stories">
+      <div id="success"></div>
+    </div>
+    <div class="col-md-12">
+      <div id="embed" style="display:none;">
+        <p>Request URL: <code></code></p>
+        <p>Widget embed code:</p>
+        <textarea id="widget" class="form-control" style="min-height:100px;margin-bottom:40px;" onclick="this.select()"></textarea>
       </div>
     </div>
   </div>
-
+  <div class="row">
+    <div class="col-md-8">
+      <div id="info"></div>
+    </div>
+    <div class="col-md-4">
+      <div id="actions"></div>
+    </div>
+  </div>
 </div>
 
 
 
 <script>
   jQuery(document).ready(function() {
+    $('#topnav').css('background-color','transparent');
+    $('code').html(window.location.href.split('#')[0].split('?')[0]);
+
     var api = 'https://api.openaccessbutton.org';
     if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
       api = 'https://dev.api.cottagelabs.com/service/oab';
@@ -102,14 +57,27 @@
 
     var rid = window.location.pathname.split('/')[2];
 
-    var format = function(date) {
-      var pubDate = new Date(parseInt(date));
-      var weekday = new Array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
-      var monthname = new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
-      return weekday[pubDate.getDay()] + ' ' + monthname[pubDate.getMonth()] + ' ' + pubDate.getDate() + ', ' + pubDate.getFullYear();
+    $('#widget').val('<div id="oab_insert"></div><script>var oabe = function() {var x = new XMLHttpRequest(); x.onreadystatechange = function() { if (x.readyState == 4 && x.status == 200) { document.getElementById("oab_insert").innerHTML = JSON.parse(x.responseText).data; } }; x.open("GET", "' + api+'/embed/'+rid + '", true); x.send(); }();<\/script>')
+
+    var twatit = function() {
+      window.twttr = (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0],
+          t = window.twttr || {};
+        if (d.getElementById(id)) return t;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://platform.twitter.com/widgets.js";
+        fjs.parentNode.insertBefore(js, fjs);
+
+        t._e = [];
+        t.ready = function(f) {
+          t._e.push(f);
+        };
+
+        return t;
+      }(document, "script", "twitter-wjs"));
     }
 
-    var record = undefined;
     var blacklist = function(e) {
       e.preventDefault();
       var email = $('#email').val();
@@ -124,17 +92,26 @@
       $.ajax(opts);
       $("#emailissue").html(email + " blacklisted and removed. Provide a new email address, and/or save this request.").show();
     }
-    var submit = function() {
+    var adminsubmitting = false;
+    var submit = function(e) {
+      if (e) e.preventDefault();
       var data = {};
-      if ( $('#email').length ) data.email = $('#email').val();
-      if ( $('#status').length ) data.status = $('#status').val();
-      if ( $('#rating').length ) data.rating = $('#rating').val();
-      if ( $('#url').length ) data.url = $('#url').val();
-      if ( $('#title').length ) data.title = $('#title').val();
-      if ( $('#doi').length ) data.doi = $('#doi').val();
-      if ( $('#story').length ) data.story = $('#story').val();
-      if ( $('#test').length ) {
-        $('#test').is(':checked') ? data.test = true : data.test = false;
+      if ( $('#email').length && $('#email').val() ) data.email = $('#email').val();
+      if ( $('#title').length && $('#title').val() ) data.title = $('#title').val();
+      if ( $('#doi').length && $('#doi').val() ) data.doi = $('#doi').val();
+      if ( $('#story').length && $('#story').val() ) data.story = $('#story').val();
+      if (clogin.hasRole('openaccessbutton.admin') && adminsubmitting) {
+        if ( $('#status').length ) data.status = $('#status').val();
+        if ( $('#rating').length ) data.rating = $('#rating').val();
+        if ( $('#url').length ) data.url = $('#url').val();
+        if ( $('#test').length ) {
+          $('#test').is(':checked') ? data.test = true : data.test = false;
+        }
+        if ( $('#admin_email').length && $('#admin_email').val() ) data.email = $('#admin_email').val();
+        if ( $('#admin_title').length && $('#admin_title').val() ) data.title = $('#admin_title').val();
+        if ( $('#admin_doi').length && $('#admin_doi').val() ) data.doi = $('#admin_doi').val();
+        if ( $('#admin_story').length && $('#admin_story').val() ) data.story = $('#admin_story').val();
+        adminsubmitting = false;
       }
       var url = api+'/request/'+rid;
       var opts = {
@@ -145,18 +122,19 @@
         contentType: 'application/json',
         dataType: 'json',
         success: function(data) {
-          $('#savesuccess').show();
-          setTimeout(function() { $('#savesuccess').html("").hide(); }, 3000);
+          window.location = window.location.href;
         },
-        beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
+        beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); }
       }
       opts.data = JSON.stringify(data);
       $.ajax(opts);
     }
-    var checkemailthensubmit = function() {
-      $('#emailissue').html("").hide();
-      if ( $('#email').length && $('#email').val() && $('#email').val().length ) {
-        var email = $('#email').val();
+    var checkemailthensubmit = function(e) {
+      if (e) e.preventDefault();
+      $('.emailissue').html("").hide();
+      var tgt = adminsubmitting ? '#admin_email' : '#email';
+      if ( $(tgt).length && $(tgt).val() && $(tgt).val().length ) {
+        var email = $(tgt).val();
         var opts = {
           type:'GET',
           url: api+'/dnr?validate=true&email=' + email + '&request=' + rid + '&user=' + clogin.user.account._id,
@@ -165,7 +143,7 @@
           dataType: 'json',
           success: function(data) {
             if (data.data.dnr === false) {
-              submit();
+              submit(e);
             } else {
               var issue = 'Sorry, ' + email + ' ';
               if (typeof data.data.dnr === 'object') {
@@ -180,284 +158,270 @@
                 issue += 'is not a valid address.';
                 if (data.data.validation.did_you_mean) issue += ' Did you mean ' + data.data.validation.did_you_mean + '?';
               }
-              $('#email').val("").attr("placeholder",email + " is an unsuitable author email address - please try another");
-              $('#emailissue').html(issue).show();
+              $(tgt).val("").attr("placeholder",email + " is an unsuitable author email address - please try another");
+              $('.emailissue').html(issue).show();
             }
           },
-          error: submit // if we can't do the validation for some reason, just submit anyway
+          error: function() {submit(e); } // if we can't do the validation for some reason, just submit anyway
         }
         $.ajax(opts);
       } else {
-        submit();
+        submit(e);
       }
     }
+    var adminsubmit = function(e) {
+      adminsubmitting = true;
+      checkemailthensubmit(e);
+    }
+
     var deleteitem = function() {
       $.ajax({
         type:'DELETE',
         url:api+'/request/'+rid,
         beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
       });
-      $('#edit').html('<p>This request has been deleted. You will be redirected to the requests page.</p>');
+      $('#admin').html('<p>This request has been deleted. You will be redirected to the requests page.</p>');
       setTimeout(function() { window.location = '/request'; }, 2000);
     }
+
     var scrape = function() {
       var url = $('#titlelink').attr('href');
       if (url) {
-        $('#loadingscrape').show();
         $.ajax({
           type:'GET',
           url:api+'/scrape?url='+encodeURIComponent(url),
           success: function(data) {
-            $('#loadingscrape').hide();
             if (data.data) {
-              if (data.data.title) $('#title').val(data.data.title);
-              if (data.data.doi) $('#doi').val(data.data.doi);
-              if (data.data.email && data.data.email.length > 0) $('#email').val(data.data.email[0]);
-              $('#edit').show();
+              if (data.data.title && !$('#title').val()) $('#title').val(data.data.title);
+              if (data.data.doi && !$('#doi').val()) $('#doi').val(data.data.doi);
+              if (data.data.email && data.data.email.length > 0 && !$('#email').val()) {
+                var e = typeof data.data.email === 'string' ? data.data.email : data.data.email[0];
+                $('#email').val(e);
+              }
             }
-          },
-          error: function() { $('#loadingscrape').hide(); }
+          }
         });
       }
     }
 
-    $('#requesturl').html(window.location.protocol + '//' + window.location.host + window.location.pathname);
-    $('#fbshare').attr('href',$('#fbshare').attr('href') + encodeURIComponent(window.location.host + window.location.pathname));
-    $('.login').attr('href','/account?next='+window.location.pathname);
-    $('#widget').val( $('#widget').val().replace('WIDGETURL',api+'/embed/'+rid) );
-
-    var details = function(data) {
-      record = data.data;
-      var iscreator = clogin.user && clogin.user.account && record && record.user && clogin.user.account._id === record.user.id;
-      var isadmin = clogin.hasRole('openaccessbutton.admin');
-      var iseditable = clogin.loggedin() && (record.status === 'help' || record.status === 'moderate' || record.status === 'refused');
-      if (record.supports && record.supports.length) {
-        $('#supportarea').hide();
-        $('#supported').show();
-      } else if (iscreator) {
-        $('#supportarea').hide();
-        $('#youcreated').show();
-      }
-
-      // update the title link and message header
-      $('#titlelink').attr('href',record.url);
-      record.title ? $('#titlelink').html(record.title) : $('#titlelink').html('Untitled article');
-      var msg = '';
-      var counter = record.count ? record.count : 1;
-      if (record.status === 'received') {
-        msg += 'Success! ';
-        msg += '<span style="color:#f04717;font-size:1.2em;">' + counter + '</span> ';
-        msg += counter === 1 ? 'person ' : 'people ';
-        msg += 'got access to this ';
-        msg += record.type === 'article' ? 'article' : 'data';
-        $('#msgcol').css('background-color','#52be80');
+    var addsupport = function(e) {
+      e.preventDefault();
+      if (clogin.loggedin()) {
+        var opts = {
+          type:'POST',
+          url: api+'/support/'+rid,
+          cache:false,
+          success: function(data) {
+            window.location = window.location.href.split('#')[0].split('?')[0];
+          }
+        }
+        opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", clogin.apikey); }
+        $.ajax(opts);
       } else {
-        msg += '<span style="color:#f04717;font-size:1.2em;">' + counter + '</span> ';
-        msg += counter === 1 ? 'person supports ' : 'people support ';
-        msg += 'this request for ';
-        msg += record.type === 'article' ? 'access' : 'data';
+        window.location = '/account?next=/request/' + rid + encodeURIComponent('?support=true');
       }
-      $('#msg').html(msg);
+    }
 
-      // TODO check for other requests for the same URL but of different types
-
-      // add the details
+    var admin = function(record) {
       var dets = '';
-      dets += '<p>This request was created on ' + format(record.createdAt);
-      if (record.user && (record.user.username || record.user.firstname || record.user.email)) {
-        dets += ' by ';
-        if (record.user.firstname) {
-          dets += record.user.firstname;
-        } else if (record.user.username) {
-          dets += record.user.username;
-        } else {
-          dets += record.user.email;
-        }
+      dets += '<p>Status: <select id="status" class="form-control" style="width:150px;display:inline;">';
+      var statuses = ['help','moderate','progress','hold','refused','received','closed'];
+      for ( var s in statuses ) {
+        dets += '<option value="' + statuses[s] + '"';
+        if (record.status === statuses[s]) dets += ' selected="selected"';
+        dets += '>' + statuses[s] + '</option>';
       }
-      if (record.user && record.user.profession && record.user.profession.toLowerCase() !== 'other') {
-        dets += ' (a';
-        if (['a','e','i','o','u'].indexOf(record.user.profession.toLowerCase().substring(0,1)) !== -1 ) dets += 'n';
-        dets += ' ' + record.user.profession.toLowerCase() + ')';
-      }
-      if (record.story) dets += ' who said:<br><blockquote>' + record.story + '</blockquote><br>';
-      dets += '</p>';
-      dets += '<p>';
-
-      // set the status statement
-      if (record.status === 'help') {
-        dets += 'It just needs a bit more detail then it can get started.'
-      } else if (record.status === 'moderate') {
-        dets += 'We will be sending it once our team have approved it.';
-      } else if (record.status === 'progress') {
-        dets += 'We are waiting to hear back.';
-      } else if (record.status === 'hold') {
-        dets += 'The request is on hold while the author prepares content.'; // TODO add hold info as well
-      } else if (record.status === 'refused') {
-        dets += 'Unfortunately this has been refused by ' + record.email + ' - can you provide a new author email address to try? <input type="text" id="email" class="form-control" placeholder="Author email address">';
-      } else if (record.status === 'received') {
-        dets += '</p><p>This request has been successful!';
-      } else if (record.status === 'closed') {
-        dets += '</p><p>This request could not be completed, and has been closed';
-      }
-      dets += '</p>';
-
-      // show admin controls
-      if (isadmin) {
-        dets += '<p><select id="status" class="form-control" style="background-color:orange;width:130px;display:inline;margin-right:20px;">';
-        var statuses = ['help','moderate','progress','hold','refused','received','closed'];
-        for ( var s in statuses ) {
-          dets += '<option value="' + statuses[s] + '"';
-          if (record.status === statuses[s]) dets += ' selected="selected"';
-          dets += '>' + statuses[s] + '</option>';
-        }
-        dets += '</select>';
-        dets += ' <span style="color:orange;">test:</span> <input type="checkbox" id="test"';
-        if (record.test === true) dets += ' checked="checked"';
-        dets += '> <a style="margin-left:20px;" class="btn btn-warning btn-xs" href="/admin?request=' + rid + '">Email</a>';
-        dets += ' <a style="margin-left:20px;" class="btn btn-warning btn-xs" href="/response/' + record.receiver + '">Responder</a>';
-        dets += ' <span style="color:orange;margin-top:5px;">rating: <select id="rating" class="form-control" style="background-color:orange;width:80px;display:inline;">';
-        var ratings = ["0","1","2","3","4","5"];
-        for ( var r in ratings ) {
-          dets += '<option value="' + ratings[r] + '"';
-          if (record.rating === ratings[r]) dets += ' selected="selected"';
-          dets += '>' + ratings[r] + '</option>';
-        }
-        dets += '</select>';
-        if (record.location && record.location.geo && record.location.geo.lat) {
-          dets += '<p style="color:orange;margin-top:5px;">Location: ' + record.location.geo.lat + ',' + record.location.geo.lon
-          if (record.location.location) dets += ' - ' + record.location.location;
-          dets += '</p>';
-        }
+      dets += '</select>';
+      dets += ' &nbsp;&nbsp;&nbsp;test: <input type="checkbox" id="test"';
+      if (record.test === true) dets += ' checked="checked"';
+      dets += '></p>';
+      if (record.location && record.location.geo && record.location.geo.lat) {
+        dets += '<p>Location: ' + record.location.geo.lat + ',' + record.location.geo.lon
+        if (record.location.location) dets += ' - ' + record.location.location;
         dets += '</p>';
       }
-
-      // show the email if at a stage where it can be changed, or if admin
-      if (isadmin || iseditable) {
-        dets += '<p><input type="text" id="email" value="' + record.email + '" placeholder="Author Email"';
-        if (isadmin && !iseditable) dets += ' style="background-color:orange;"';
-        dets += 'class="form-control"></p><p id="emailissue" style="display:none;font-size:0.9em;"></p>';
-        if (isadmin && record.email) dets += '<p><a id="blacklist" href="#" class="btn btn-warning btn-block btn-xs">Blacklist (and remove) this email address</a></p>';
+      dets += '</p>';
+      dets += '<div class="input-group" style="margin-bottom:10px;"><input type="text" id="admin_email" value="' + record.email + '" placeholder="Author Email" class="form-control">';
+      if (record.email) dets += '<div class="input-group-btn"><a id="blacklist" href="#" class="btn btn-action">Blacklist</a></div>';
+      dets += '</div>';
+      dets += '<p class="emailissue" style="display:none;font-size:0.9em;"></p>';
+      dets += '<p><input type="text" id="admin_title" class="form-control" placeholder="Title" value="';
+      if (record.title) dets += record.title;
+      dets += '"></p>';
+      dets += '<p><input type="text" id="admin_doi" class="form-control" placeholder="DOI" value="';
+      if (record.doi) dets += record.doi;
+      dets += '"></p>';
+      dets += '<p><textarea id="admin_story" class="form-control" placeholder="Story" style="min-height:100px;">';
+      if (record.story) dets += record.story;
+      dets += '</textarea></p>';
+      dets += '<p>Story rating: <select id="rating" class="form-control" style="width:100px;display:inline;">';
+      var ratings = ["0","1","2","3","4","5"];
+      for ( var r in ratings ) {
+        dets += '<option value="' + ratings[r] + '"';
+        if (record.rating === ratings[r]) dets += ' selected="selected"';
+        dets += '>' + ratings[r] + '</option>';
       }
-
-      if (iseditable) {
-        dets += '<p><input type="text" id="title" class="form-control" placeholder="Title" value="';
-        if (record.title) dets += record.title;
-        dets += '"></p>';
-        dets += '<p><input type="text" id="doi" class="form-control" placeholder="DOI" value="';
-        if (record.doi) dets += record.doi;
-        dets += '"></p>';
-      } else if (record.doi) {
-        dets += '<p>DOI: ' + record.doi + '</p>';
-      }
-      if (isadmin || (iscreator && iseditable)) {
-        dets += '<p><textarea id="story" class="form-control" placeholder="How would getting access to this research help you? This message will be sent to the author." style="min-height:100px;';
-        if (isadmin && !iseditable) dets += 'background-color:orange;';
-        dets += '">';
-        if (record.story) dets += record.story;
-        dets += '</textarea></p>';
-      }
-      if (!clogin.loggedin()) dets += '<p><a href="/account?next=/request/' + rid + '">Sign up now</a> to get your Open Access Button and to edit and create requests</p>';
-
-      // save button for anyone logged and if status allows, or if admin user
-      if ( isadmin || iseditable ) {
-        dets += '<input type="submit" id="submitchanges" value="Save changes" class="btn btn-action btn-block">';
-        dets += '<div id="savesuccess" style="display:none;"><p>Saved</p></div>';
-      }
-      if (iscreator || isadmin) {
-        dets += ' <a style="margin-top:10px;" class="btn btn-danger btn-block btn-xs" id="delete" href="#">DELETE</a>';        
-      }
-
-      // bind actions
-      $('#edit').html(dets);
-      if ($('#blacklist').length) $('#blacklist').bind('click',blacklist);
-      if ($('#submitchanges').length) $('#submitchanges').bind('click',checkemailthensubmit);
-      if ($('#delete').length) $('#delete').bind('click',deleteitem);
-      if (clogin.hasRole('root')) $('#titlelink').bind('click',scrape);
-
-      // if status success, need to show the links to the content, and the data badge for the author if applicable
-
-      if (record.status === 'help' && clogin.loggedin()) {
-        $('#supportpanel').before("<div class=\"alert alert-info\"><p>We need a bit more information for this request. Can you look at the details and fill in what's missing?</p></div>");
-      } else if ( record.status === 'refused' && clogin.loggedin()) {
-        $('#supportpanel').before("<div class=\"alert alert-info\"><p>This request was refused, but we could try again with another author - can you have a look at the details and provide an alternative contact email address to try?</p></div>");
-      }
+      dets += '</select>';
+      dets += '<a class="btn btn-danger pull-right" id="delete" href="#">DELETE</a>';
+      dets += '<input type="submit" id="submitchanges" value="Save changes" class="btn btn-action pull-right" style="margin-right:5px;">';
+      dets += '</p>';
+      dets += '<p style="margin-top:20px;"><a class="btn btn-action" href="/response/' + record.receiver + '">View the response page for this request</a> ';
+      dets += '<a class="btn btn-action pull-right" href="/admin?request=' + rid + '">Send email via admin UI about this request</a></p>';
+      return dets;
     }
 
-    var record = function(rec) {
-      var out = '';
-      out += '<blockquote>';
-      if (rec.firstname) {
-        out += rec.firstname;
-      } else if (rec.username) {
-        out += rec.username;
+    var details = function(data) {
+      var rec = data.data;
+
+      var ttl = '';
+      ttl += '<h2 style="color:#f04717;">';
+      if (rec.url && rec.url.indexOf('http') === 0) ttl += '<a id="titlelink" target="_blank" href="' + rec.url + '" style="word-wrap:break-word;overflow-wrap:break-word;color:#f04717;">';
+      ttl += rec.title ? rec.title : rec.url;
+      if (rec.url && rec.url.indexOf('http') === 0) ttl += '</a>';
+      ttl += '</h2>';
+      $('#titleheader').html(ttl);
+      var ot = rec.type === 'article' ? 'data' : 'article';
+      if (rec.status === 'help' && ( !rec.story || !rec.user )) {
+        if (rec.other) {
+          $('#other').html('<p><a style="text-decoration:underline;color:#FFFFFC;" href="/request/' + rec.other + '">I actually wanted the ' + ot + '</a></p>');
+        } else {
+          $('#other').html('<p><a style="text-decoration:underline;color:#FFFFFC;" href="/request?type=data&url=' + encodeURIComponent(rec.url) + '">I actually wanted the ' + ot + '</a></p>');
+        }
+      }
+
+      if (rec.status === 'received' && rec.received !== undefined) {
+        var suc = '<div class="well" style="background-color:#dcefdc;padding-top:0px;margin-top:30px;"><h3 style="text-align:center;">The ' + rec.type + ' is now available ';
+        var surl;
+        if (rec.received.url) {
+          suc += 'at:<br>';
+          surl = rec.received.url;
+        } else if (rec.received.zenodo) {
+          suc += 'in Zenodo at:<br>';
+          surl = rec.received.zenodo;
+        } else if (rec.received.osf) {
+          suc += 'in the OSF at:<br>';
+          surl = rec.received.osf;
+        }
+        suc += '<a target="_blank" href="' + surl + '" style="word-wrap:break-word;overflow-wrap:break-word;">' + surl + '</a></h3></div>';
+        $('#success').html(suc);
+        $('#topper').css('background-image','url(/static/header_unlocked.jpg');
+        $('#headline').html('<b>This ' + rec.type + ' request is now available.</b>');
       } else {
-        out += rec.email;
+        $('#topper').css('background-image','url(/static/header_locked.jpg');
+        $('#headline').html('<b>This ' + rec.type + ' is inaccessible</b>');
+        $('body').css('background-color','#fceadf');
       }
-      out += ' supports this request';
-      if (rec.story) out += ':<br>' + rec.story
-      out += '</blockquote>';
-      $('#stories').html(out);
-    }
 
-    $('#stories').holder({
-      url: api + "/supports",
-      datatype: 'JSON',
-      defaultquery: {
-        sort: [
-          {
-            createdAt: {order: 'desc'}
+      var re = '';
+      if (rec.story ) {
+        re += '<div class="well" style="background-color:#FFFFFC;"><p>';
+        var frn;
+        if (rec.user.firstname) {
+          frn = rec.user.firstname;
+        } else if (rec.user.username) {
+          frn = rec.user.username;
+        } else {
+          frn = rec.user.email;
+        }
+        if ( rec.user && (rec.user.firstname || rec.user.username || rec.user.email) ) {
+          re += frn;
+          if (rec.user.profession && rec.user.profession !== 'Other') re += ', ' + rec.user.profession;
+          if (rec.user.affiliation && rec.user.affiliation.length > 1) re += ' at ' + rec.user.affiliation;
+        }
+        re += rec.created_date ? ' on ' + rec.created_date.split(' ')[0].split('-').reverse().join('/') : '';
+        re += ' said:</p>';
+        re += '<p>"' + rec.story + '"</p>';
+        re += '<p>By asking the author to share a copy we can make it available to ' + frn + ' , and everyone else who needs it.</p>';
+        re += '</div>';
+      }
+
+      if ( rec.status !== 'received' && (!rec.title || !rec.email || !rec.story) ) {
+        if (rec.user === undefined) {
+          re += '<p>Finish making your ' + rec.type + ' request to the author.</p>';
+          if (clogin.loggedin()) {
+            re += '<p><textarea style="min-height:100px;" class="form-control" id="story" placeholder="How would getting access to this research help you? This message will be sent to the author, and helps them to understand why the research should be made available."></textarea></p>';
+            re += '<p style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Submit</a></p>';
+          } else {
+            re += '<div class="input-group" style="margin-bottom:40px;">\
+              <input type="text" name="email" id="youremail" class="form-control" placeholder="Your email address"> \
+              <div class="input-group-btn">\
+                <a id="gologin" href="/account?next=/request/' + rid + '" class="btn btn-action">Continue</a>\
+              </div>\
+            </div>';
           }
-        ],
-        size:1000,
-        query: {
-          filtered: {
-            query: {
-              bool: {
-                must: [
-                  {
-                    query_string: {
-                      query:'rid:'+rid
-                    }
-                  }
-                ]
-              }
-            }
+        } else {
+          re += '<p>We need more details for this request. Can you take a second to help?</p>';
+          if (clogin.loggedin()) {
+            if (!rec.title) re += '<p><input class="form-control" type="text" id="title" placeholder="Article title"></p>';
+            if (!rec.email) re += '<p><input class="form-control" type="text" id="email" placeholder="Article author email"></p><p class="emailissue" style="display:none;font-size:0.9em;"></p>';
+            if (!rec.doi) re += '<p><input class="form-control" type="text" id="doi" placeholder="Article DOI"></p>';
+            re += '<p style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Save</a></p>';
+          } else {
+            re += '<p style="margin-bottom:40px;"><a href="/account?next=/request/' + rid + '" class="btn btn-block btn-action">Login / sign up to continue</a></p>';
           }
         }
-      },
-      ui:false,
-      pushstate: false,
-      record: record
-    });
-
-    var addsupport = function(event) {
-      event.preventDefault();
-      var data = {story:$('#supportstory').val()};
-      var url = api+'/support/'+rid;
-      var opts = {
-        type:'POST',
-        url: url,
-        cache:false,
-        processData:false,
-        contentType: 'application/json',
-        dataType: 'json',
-        success: function(data) {
-          $('#supportarea').hide();
-          $('#supported').show();
-        },
-        beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
       }
-      opts.data = JSON.stringify(data);
-      $.ajax(opts);
-    }
-    $('#addsupport').bind('click',addsupport);
 
-    var panels = function(event) {
-      event.preventDefault();
-      $('div.panels:not(.' + $(this).attr('id') + ')').hide();
-      $('div.'+$(this).attr('id')).toggle();
+      if ( rec.status !== 'received' && !(clogin.loggedin() && rec.user && rec.user.id && clogin.user && clogin.user.account && clogin.user.account._id === rec.user.id) ) {
+        re += '<p>Are you the author? Please <a style="text-decoration:underline;" href="mailto:requests@openaccessbutton.org">contact us</a>!</p>';
+      }
+
+      if (clogin.hasRole('openaccessbutton.admin')) {
+        re += '<p style="text-align:right;"><a href="#" id="showadmin" style="color:orange;">Admin</a></p>';
+        re += '<div id="admin" class="well" style="display:none;background-color:orange;">';
+        re += admin(rec);
+        re += '</div>';
+      }
+
+      $('#info').append(re);
+
+      var acts = '';
+      if (rec.status !== 'help') acts += '<h4>Show your support</h4>';
+      if (rec.count && rec.count > 1) acts += '<p>' + (rec.count) + ' ' + (rec.count === 1 ? 'person supports' : 'people support') + ' this request</p>';
+      if (rec.status !== 'received' && rec.story) {
+        if (clogin.loggedin() && rec.user && rec.user.id && clogin.user && clogin.user.account && clogin.user.account._id === rec.user.id) {
+          acts += '<p>You made this request.</p>';
+        } else if (rec.user !== undefined && ( !rec.supports || rec.supports === undefined || rec.supports.length === 0) ) {
+          acts += '<p>Add your support to be notified when this ' + rec.type + ' is released.</p>';
+          acts += '<p><a id="addsupport" class="btn btn-action" href="#">Notify me</a></p>';
+        } else {
+          acts += '<p>You will be notified about this request.</p>';
+        }
+      } else if (rec.status === 'received') {
+        acts = acts.replace(' supports ',' supported ').replace(' support ',' supported ');
+      }
+      if (rec.status !== 'help' && rec.status !== 'received') {
+        // taking embed link out <a href="#" id="showembed" class="btn btn-xs btn-action panels pull-right" style="margin-left:20px;height:28px;font-size:0.9em;">Embed</a>
+        acts += '<div class="clearfix" style="margin-top:20px;margin-bottom:40px;" id="sharebuttons"><p>Share this request to help make it successful</p> \
+          <div style="display:inline;margin-bottom:-10px;padding-left:20px;" class="pull-right"> \
+            <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Help us get access to research!" data-size="large"></a> \
+          </div> \
+          <a class="btn btn-xs btn-action pull-right" style="height:28px;font-size:0.9em;" id="fbshare" href="https://www.facebook.com/sharer/sharer.php?u=" target="_blank"><i class="fa fa-facebook-official"></i> facebook</a></div>';
+      }
+      $('#actions').html(acts);
+
+      $('#showembed').bind('click',function(e) { e.preventDefault(); $('#embed').toggle(); });
+      if ($('#showadmin').length) $('#showadmin').bind('click',function(e) { e.preventDefault(); $('#admin').toggle(); });
+      if ($('#addsupport').length) $('#addsupport').bind('click',addsupport);
+      if ($('#blacklist').length) $('#blacklist').bind('click',blacklist);
+      if ($('#submitchanges').length) $('#submitchanges').bind('click',adminsubmit);
+      if ($('#update').length) $('#update').bind('click',checkemailthensubmit);
+      if ($('#delete').length) $('#delete').bind('click',deleteitem);
+      if ($('#gologin').length) $('#gologin').bind('click',function(e) {
+        if ($('#youremail').val()) $(this).attr('href',$(this).attr('href').replace('?','?email='+$('#youremail').val()+'&'));
+      });
+      //if (clogin.hasRole('root') && record.status !== 'received') $('#titlelink').bind('click',scrape);
+      if (window.location.href.indexOf('support=') !== -1) {
+        if (rec.user && rec.user.id && clogin.user && clogin.user.account && clogin.user.account._id !== rec.user.id && ( !rec.supports || rec.supports === undefined || rec.supports.length === 0) ) {
+          addsupport();
+        } else if (!clogin.loggedin()) {
+          addsupport(); // which will redirect to login anyway
+        }
+      }
+      if (clogin.loggedin() && rec.status !== 'received' && (!rec.title || !rec.email) ) scrape();
+      twatit();
     }
-    $('a.panels').bind('click',panels);
+
 
     // login not necessary but returns supports info if possible, so we try
     var rurl = api + '/request/' + rid;
@@ -466,11 +430,15 @@
         type: 'GET',
         url: rurl,
         success: details,
-        error: function() { $('#titlelink').html("Sorry, we can't find a request with ID " + rid); }
+        error: function() { $('#titleheader').html("Sorry, we can't find a request with ID " + rid); }
       });
-
     }
-    clogin.afterFailure = runrequest;
+    clogin.afterFailure = function() {
+      clogin.removeCookie(clogin.cookie,'.openaccessbutton.org');
+      clogin.apikey = undefined;
+      clogin.user = {logout:'success'};
+      runrequest();
+    }
     if (clogin.loggedin()) {
       clogin.afterLogin = function() {
         rurl += '?apikey=' + clogin.apikey;
@@ -481,24 +449,6 @@
       runrequest();
     }
 
+
   });
-</script>
-
-<script>
-  window.twttr = (function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0],
-      t = window.twttr || {};
-    if (d.getElementById(id)) return t;
-    js = d.createElement(s);
-    js.id = id;
-    js.src = "https://platform.twitter.com/widgets.js";
-    fjs.parentNode.insertBefore(js, fjs);
-
-    t._e = [];
-    t.ready = function(f) {
-      t._e.push(f);
-    };
-
-    return t;
-  }(document, "script", "twitter-wjs"));
 </script>
