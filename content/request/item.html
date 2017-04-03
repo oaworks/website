@@ -4,7 +4,7 @@
   /*]]>*/</script>
   <!-- End of openaccessbutton Zendesk Widget script -->
 
-  
+
 <div id="topper" class="strap strap-compact" style="background-color:transparent;background-size:100% 100%;background-repeat:no-repeat;margin-top:-80px;padding-top:100px;padding-bottom:0px;">
   <div class="container-fluid">
     <div class="row">
@@ -37,7 +37,7 @@
       <div id="info"></div>
     </div>
     <div class="col-md-4">
-      <div id="actions"></div>
+      <div id="actions"><h4>Show your support</h4></div>
     </div>
   </div>
 </div>
@@ -203,7 +203,7 @@
           }
         }
         opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", clogin.apikey); }
-        $.ajax(opts);        
+        $.ajax(opts);
       } else {
         window.location = '/account?next=/request/' + rid + encodeURIComponent('?support=true');
       }
@@ -293,10 +293,10 @@
         suc += '<a target="_blank" href="' + surl + '" style="word-wrap:break-word;overflow-wrap:break-word;">' + surl + '</a></h3></div>';
         $('#success').html(suc);
         $('#topper').css('background-image','url(/static/header_unlocked.jpg');
-        $('#headline').html('<b>This ' + rec.type + ' request has been successful.</b>');
+        $('#headline').html('<b>This ' + rec.type + ' is now available</b>');
       } else {
         $('#topper').css('background-image','url(/static/header_locked.jpg');
-        $('#headline').html('<b>Access to this ' + rec.type + ' is still closed</b>');
+        $('#headline').html('This ' + rec.type + ' is inaccessible');
         $('body').css('background-color','#fceadf');
       }
 
@@ -318,31 +318,32 @@
         re += ' said:</p>';
         re += '<p>' + rec.story + '</p>';
         re += '</div>';
+        re += '<p>By asking the author to share a copy we can make it available to ' re += + rec.user.firstname + ' , and everyone else who needs it.</p>';
       }
 
       if ( rec.status !== 'received' && (!rec.title || !rec.email || !rec.story) ) {
         if (rec.user === undefined) {
-          re += '<p>No-one has requested this ' + rec.type + ' from the author yet.</p>';
+          re += '<p>Finish making your ' + rec.type + ' request to the author.</p>';
           if (clogin.loggedin()) {
             re += '<p><textarea style="min-height:100px;" class="form-control" id="story" placeholder="How would getting access to this research help you? This message will be sent to the author, and helps them to understand why the research should be made available."></textarea></p>';
-            re += '<p style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Save</a></p>';        
+            re += '<p style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Submit</a></p>';
           } else {
             re += '<div class="input-group" style="margin-bottom:40px;">\
-              <input type="text" name="email" id="youremail" class="form-control" placeholder="Your email"> \
+              <input type="text" name="email" id="youremail" class="form-control" placeholder="Your email address"> \
               <div class="input-group-btn">\
-                <a id="gologin" href="/account?next=/request/' + rid + '" class="btn btn-action">Be the first</a>\
+                <a id="gologin" href="/account?next=/request/' + rid + '" class="btn btn-action">Continue</a>\
               </div>\
             </div>';
           }
         } else {
-          re += '<p>We need a few more details to get this request started.</p>';
+          re += '<p>We need more details for this request. Can you take a second to help?</p>';
           if (clogin.loggedin()) {
             if (!rec.title) re += '<p><input class="form-control" type="text" id="title" placeholder="Article title"></p>';
             if (!rec.email) re += '<p><input class="form-control" type="text" id="email" placeholder="Article author email"></p>';
             if (!rec.doi) re += '<p><input class="form-control" type="text" id="doi" placeholder="Article DOI"></p>';
-            re += '<p style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Save</a></p>';        
+            re += '<p style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Save</a></p>';
           } else {
-            re += '<p style="margin-bottom:40px;"><a href="/account?next=/request/' + rid + '" class="btn btn-block btn-action">Login / sign up to get started</a></p>';            
+            re += '<p style="margin-bottom:40px;"><a href="/account?next=/request/' + rid + '" class="btn btn-block btn-action">Login / sign up to continue</a></p>';
           }
         }
       }
@@ -364,19 +365,18 @@
       if (rec.count && rec.count > 1) acts += '<p>' + (rec.count) + ' ' + (rec.count === 1 ? 'person supports' : 'people support') + ' this request</p>';
       if (rec.status !== 'received' && rec.story) {
         if (clogin.loggedin() && rec.user && rec.user.id && clogin.user && clogin.user.account && clogin.user.account._id === rec.user.id) {
-          acts += '<p>You created this request.</p>';
+          acts += '<p>You made this request.</p>';
         } else if (rec.user !== undefined && ( !rec.supports || rec.supports === undefined || rec.supports.length === 0) ) {
-          acts += '<p>Add your support to be notified when this ' + rec.type + ' is released.</p>';
           acts += '<p><a id="addsupport" class="btn btn-action" href="#">Notify me</a></p>';
         } else {
-          acts += '<p>You support this request.</p>';
+          acts += '<p>You will be notified about this request.</p>';
         }
       } else if (rec.status === 'received') {
         acts = acts.replace(' supports ',' supported ').replace(' support ',' supported ');
       }
       if (rec.status !== 'help' && rec.status !== 'received') {
         // taking embed link out <a href="#" id="showembed" class="btn btn-xs btn-action panels pull-right" style="margin-left:20px;height:28px;font-size:0.9em;">Embed</a>
-        acts += '<div class="clearfix" style="margin-top:20px;margin-bottom:40px;" id="sharebuttons"> \
+        acts += '<div class="clearfix" style="margin-top:20px;margin-bottom:40px;" id="sharebuttons"><p>Share this request to help make it successful</p> \
           <div style="display:inline;margin-bottom:-10px;padding-left:20px;" class="pull-right"> \
             <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Help us get access to research!" data-size="large"></a> \
           </div> \
@@ -392,7 +392,7 @@
       if ($('#update').length) $('#update').bind('click',submit);
       if ($('#delete').length) $('#delete').bind('click',deleteitem);
       if ($('#gologin').length) $('#gologin').bind('click',function(e) {
-        if ($('#youremail').val()) $(this).attr('href',$(this).attr('href').replace('?','?email='+$('#youremail').val()+'&'));        
+        if ($('#youremail').val()) $(this).attr('href',$(this).attr('href').replace('?','?email='+$('#youremail').val()+'&'));
       });
       //if (clogin.hasRole('root') && record.status !== 'received') $('#titlelink').bind('click',scrape);
       if (window.location.href.indexOf('support=') !== -1) {
@@ -414,7 +414,7 @@
         type: 'GET',
         url: rurl,
         success: details,
-        error: function() { $('#title').html("Sorry, we can't find a request with ID " + rid); }
+        error: function() { $('#title').html("Sorry, we can't find a request with ID " + rid +"Can you report a bug?"); }
       });
     }
     clogin.afterFailure = runrequest;
