@@ -26,7 +26,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Montserrat', serif;  
+  font-family: 'Montserrat', serif;
 }
 
 #topnav{
@@ -61,7 +61,7 @@ hr{
 .navbar-nav li > a{
   font-weight:bold;
   font-size:1.2em;
-  color:#c8c8c8;
+  color:black;
   height:51px;
   padding:13px 10px 13px 10px;
 }
