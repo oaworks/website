@@ -205,7 +205,7 @@
     }
 
     var addsupport = function(e) {
-      e.preventDefault();
+      if (e) e.preventDefault();
       if (clogin.loggedin()) {
         var opts = {
           type:'POST',
