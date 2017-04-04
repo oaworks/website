@@ -1,5 +1,5 @@
 <script type="text/javascript" src="//static.cottagelabs.com/d3/d3.v4.min.js"></script>
-<script type="text/javascript" src="/static/oabutton_request_holder.js?v=012fewfw30"></script>
+<script type="text/javascript" src="/static/oabutton_request_holder.js?v=012few8098080"></script>
 <script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/facets.js?v=9fwef9813"></script>
 
 <style>
@@ -110,12 +110,31 @@ jQuery(document).ready(function() {
       };
       $.ajax(opts);
     } else {
+      var df = [
+        {
+          exists: {
+            field: "story"
+          }
+        },
+        {
+          query: {
+            query_string: {
+              query: "story:*"
+            }
+          }
+        }
+      ];
       var user = clogin.loggedin();
       if (user) {
         $('#viewrequests').show().bind('click',function(e) {
           e.preventDefault();
           $('.holder.search').val('user.id:'+user.userId).trigger('change');
         });
+        if ( !clogin.hasRole('openaccessbutton.admin') ) {
+          $.fn.holder.use.oabutton.defaultfilters = df;
+        }
+      } else {
+        $.fn.holder.use.oabutton.defaultfilters = df;
       }
       $('#stories').show();
       $('.holder.sticky').show();
@@ -123,6 +142,14 @@ jQuery(document).ready(function() {
       $('#holder').holder();
     }
   }
+  
+  $.ajax({
+    url:api+'/requests',
+    success:function(data) {
+      console.log(data)
+      $('#requestscount').html(data.hits.total);
+    }
+  });
 
   clogin.afterFailure = startup;
   clogin.afterLogin = startup;

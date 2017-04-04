@@ -16,20 +16,6 @@ $.fn.holder.use.oabutton = {
     keyword: { terms: { field: "keywords.exact", size: 1000 } },
     journal: { terms: { field: "journal.exact", size: 1000 } }
   },
-  defaultfilters: [
-    {
-      exists: {
-        field: "story"
-      }
-    },
-    {
-      query: {
-        query_string: {
-          query: "story:*"
-        }
-      }
-    }
-  ],
 
   ranges: {
     createdAt: {
@@ -112,7 +98,6 @@ $.fn.holder.use.oabutton = {
   review: function(data) {
     var options = $(this).holder.options;
     if (data === undefined) data = options.response;
-    $('#requestscount').html(options.response.hits.total);
     var fromclass='.from' + options.query.from;
     if (options.paging) {
       $('.' + options.class + '.results').last().after('<div class="' + options.class + ' additional results ' + fromclass.replace('.','') + '"></div>');
