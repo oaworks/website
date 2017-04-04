@@ -21,6 +21,13 @@ $.fn.holder.use.oabutton = {
       exists: {
         field: "story"
       }
+    },
+    {
+      query: {
+        query_string: {
+          query: "story:*"
+        }
+      }
     }
   ],
 
