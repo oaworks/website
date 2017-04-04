@@ -21,9 +21,16 @@ $.fn.holder.use.oabutton = {
       exists: {
         field: "story"
       }
+    },
+    {
+      query: {
+        query_string: {
+          query: "story:*"
+        }
+      }
     }
   ],
-  
+
   ranges: {
     createdAt: {
       name: 'Created',
@@ -52,7 +59,7 @@ $.fn.holder.use.oabutton = {
       min: 1356998400
     }
   },
-  
+
   placeholder: function() {
     var options = $(this).holder.options;
     $('input.' + options.class + '.search').val("").attr('placeholder',"Search for requests you care about");
@@ -61,10 +68,10 @@ $.fn.holder.use.oabutton = {
   record: function(rec,idx) {
     var sts = {
       moderate: {text:'Awaiting moderation',color:'#eee',highlight:'grey'},
-      help: {text:'We need more info - can you help?',color:'#fbdad0',highlight:'#f04717'},
-      progress: {text:'In progress - read more, support it, provide it!',highlight:'grey',color:'white'},
+      help: {text:'Information needed - can you help?',color:'#fbdad0',highlight:'#f04717'},
+      progress: {text:'In progress - join and share the request',highlight:'grey',color:'white'},
       received: {text:'Success! This item has been made available!',highlight:'#5cb85c',color:'#dcefdc'},
-      refused: {text:'Refused - can you help us try again?',highlight:'#d9534f',color:'#f1c2c0'},
+      refused: {text:'Refused',highlight:'#d9534f',color:'#f1c2c0'},
       closed: {text:'Closed - this request could not be completed',highlight:'grey',color:'#eee'}
     }
     var color = rec.status && sts[rec.status] && sts[rec.status].color ? sts[rec.status].color : '#eee';
@@ -123,6 +130,5 @@ $.fn.holder.use.oabutton = {
     }
     $('.requestcount').html(options.response.hits.total);
   }
-  
-};
 
+};

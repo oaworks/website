@@ -20,7 +20,7 @@ jQuery(document).ready(function() {
     if ( $('#profile\\.firstname').val() && $('#profile\\.lastname').val() && $('#service\\.openaccessbutton\\.profile\\.profession').val() ) {
       return true;
     } else {
-      $('#cloginSaveMessages').html('<p>Some information is missing. Please confirm you have completed all the fields and checked the boxes. Then save again.</p>');
+      $('#cloginSaveMessages').html('<p>Some information is missing. Please confirm you have completed all the fields. Then save again.</p>');
       return false;
     }
   }
@@ -171,8 +171,14 @@ jQuery(document).ready(function() {
       <div id="setinfo" style="display:none;">
         <h1>Thanks for signing up!</h1>
         <p>We use these details during requests to help authors understand who you are, and motivate them to share.</p>
-        <input style="margin-top:7px;" type="text" id="profile.firstname" name="first name" class="form-control cloginSave" placeholder="First name (required)">
-        <input style="margin-top:7px;" type="text" id="profile.lastname" name="last name" class="form-control cloginSave" placeholder="Family name (required)">
+        <div class="row">
+          <div class="col-md-6">
+            <input style="margin-top:7px;" type="text" id="profile.firstname" name="first name" class="form-control cloginSave" placeholder="First name (required)">
+          </div>
+          <div class="col-md-6">
+            <input style="margin-top:7px;" type="text" id="profile.lastname" name="last name" class="form-control cloginSave" placeholder="Family name (required)">
+          </div>
+        </div>
         <input style="margin-top:7px;" type="text" id="service.openaccessbutton.profile.affiliation" name="affiliation" class="form-control cloginSave" placeholder="Affiliation (University name, Business name etc)">
         <select id="service.openaccessbutton.profile.profession" name="profession" class="form-control cloginSave" style="margin-top:7px;">
           <option value="">Profession (required)</option>
@@ -212,16 +218,13 @@ jQuery(document).ready(function() {
       <div class="well dl bk ff" style="margin:5px 0px 5px 0px;"> <!-- for now show bookmarklet on ff too -->
         <p>
         To install just drag the Button to your bookmarks bar.
-        <p>
-        Your bookmarks bar may be hidden. Here's how to show it:
-        <p>
-        Chrome, Safari, Edge: Control (Command on a Mac) + Shift + B
-        <p>
-        Firefox: Control (Command on a Mac) + B
         </p>
         <a id="bookmarklet" class="btn btn-action btn-block disabled" href="javascript:apikey='XXXX';document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','YYYY/static/bookmarklet/includer.js?r='+Math.random());">Open Access Button</a>
-        <p><small>Having trouble? See instructions for <a href="http://www.howtogeek.com/231775/how-to-install-and-use-bookmarklets-in-microsoft-edge/" target="_blank" >Edge</a>, <a href="https://support.mozilla.org/en-US/kb/bookmarklets-perform-common-web-page-tasks#w_how-do-i-install-a-bookmarklet" target="_blank" >Firefox</a> and <a href="https://mreidsma.github.io/bookmarklets/installing.html" target="_blank" >Safari</a>.</small>
-        </p>
+        <p><small>Having trouble? See instructions for <a href="http://www.howtogeek.com/231775/how-to-install-and-use-bookmarklets-in-microsoft-edge/" target="_blank" >Edge</a>, <a href="https://support.mozilla.org/en-US/kb/bookmarklets-perform-common-web-page-tasks#w_how-do-i-install-a-bookmarklet" target="_blank" >Firefox</a> and <a href="https://mreidsma.github.io/bookmarklets/installing.html" target="_blank" >Safari</a>. Your bookmarks bar may be hidden. Here's how to show it:
+                <br>
+                Chrome, Safari, Edge: Control (Command on a Mac) + Shift + B
+                <br>
+                Firefox: Control (Command on a Mac) + B</small>
       </div>
 
       <!--<h3>Instructions</h3>
