@@ -146,7 +146,6 @@ jQuery(document).ready(function() {
   $.ajax({
     url:api+'/requests',
     success:function(data) {
-      console.log(data)
       $('#requestscount').html(data.hits.total);
     }
   });
