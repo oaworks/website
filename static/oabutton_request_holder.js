@@ -74,9 +74,18 @@ $.fn.holder.use.oabutton = {
     if (rec.story && ( parseInt(rec.rating) >= 3 || rec.rating === undefined ) ) re += '<p style="padding:10px 0px 10px 30px;"><a style="color:#383838;font-style:italic;font-weight:bold;font-size:1.2em;" href="/request/' + rec._id + '">' + rec.story + '</a></p>';
     re += '<p>Requested ';
     var un = rec['user.firstname'] ? rec['user.firstname'] : rec['user.username'];
-    if (!un) un = rec['user.email'];
+    if (un.indexOf('@') !== -1) un = undefined;
     re += un ? 'by ' + un : '';
-    if (rec['user.profession'] && rec['user.profession'] !== 'Other') re += ', ' + rec['user.profession'];
+    if (rec['user.profession'] && rec['user.profession'] !== 'Other') {
+      if (un) {
+        re += ', a ';
+      } else {
+        re += 'by a ';
+      }
+      re += rec['user.profession'];
+    } else if (!un) {
+      re += 'by an anonymous user ';
+    }
     if (rec['user.affiliation'] && rec['user.affiliation'].length > 1) re += ' at ' + rec['user.affiliation'];
     re += rec.created_date ? ' on ' + rec.created_date.split(' ')[0].split('-').reverse().join('/') : '';
     re += '</p>';
