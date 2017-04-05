@@ -332,7 +332,7 @@
               
             }
             re += ' ' + rec.user.profession.toLowerCase();
-          } else {
+          } else if (frn === 'An anonymous') {
             re += ' user';
           }
           if (rec.user.affiliation && rec.user.affiliation.length > 1) re += ' at ' + rec.user.affiliation;
