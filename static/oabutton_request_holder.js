@@ -10,7 +10,7 @@ $.fn.holder.use.oabutton = {
   fields: ['status','type','user.profession','user.affiliation','_id','url','created_date','createdAt','title','email','user.username','user.firstname','user.email','location.geo.lat','location.geo.lon','story','count'],
   facets: {
     status: { terms: { field: "status.exact" } },
-    user: { terms: { field: "user.profession.exact" } },
+    user: { terms: { field: "user.profession.exact", size: 100 } },
     type: { terms: { field: "type.exact" } },
     //plugin: { terms: { field: "plugin.exact", size: 100 } },
     keyword: { terms: { field: "keywords.exact", size: 1000 } },
