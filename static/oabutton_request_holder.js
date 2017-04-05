@@ -74,7 +74,7 @@ $.fn.holder.use.oabutton = {
     if (rec.story && ( parseInt(rec.rating) >= 3 || rec.rating === undefined ) ) re += '<p style="padding:10px 0px 10px 30px;"><a style="color:#383838;font-style:italic;font-weight:bold;font-size:1.2em;" href="/request/' + rec._id + '">' + rec.story + '</a></p>';
     re += '<p>Requested ';
     var un = rec['user.firstname'] ? rec['user.firstname'] : rec['user.username'];
-    if (typeof un !== 'string') un = un[0];
+    if (un && typeof un !== 'string') un = un[0];
     if (un && un.indexOf('@') !== -1) un = undefined;
     re += un ? 'by ' + un : '';
     if (rec['user.profession'] && rec['user.profession'] !== 'Other') {
