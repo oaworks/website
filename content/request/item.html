@@ -350,13 +350,13 @@
 
       if ( rec.status !== 'received' && (!rec.title || !rec.email || !rec.story) ) {
         if (rec.user === undefined) {
-          re += '<p>Finish making your ' + rec.type + ' request to the author.</p>';
+          re += '<p>You can make this ' + rec.type + ' available to yourself, and everyone else, by requesting it from the author. We\'ll help you contact the author, guide them in making their work available, and share it with everyone. Let\'s get started.</p>';
           if (clogin.loggedin()) {
             re += '<p><textarea style="min-height:100px;" class="form-control" id="story" placeholder="How would getting access to this research help you? This message will be sent to the author, and helps them to understand why the research should be made available."></textarea></p>';
             re += '<p style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Submit</a></p>';
           } else {
             re += '<div class="input-group" style="margin-bottom:40px;">\
-              <input type="text" name="email" id="youremail" class="form-control" placeholder="Your email address"> \
+              <input type="text" name="email" id="youremail" class="form-control" placeholder="Your email address"><small>Any concerns? We can <mailto: hello@openaccessbutton.org>talk you through it</a></small> \
               <div class="input-group-btn">\
                 <a id="gologin" href="/account?next=/request/' + rid + '" class="btn btn-action">Continue</a>\
               </div>\
