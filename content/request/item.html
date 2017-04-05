@@ -318,20 +318,33 @@
         var frn;
         if (rec.user.firstname) {
           frn = rec.user.firstname;
-        } else if (rec.user.username) {
+        } else if (rec.user.username && rec.user.username.indexOf('@') === -1) {
           frn = rec.user.username;
         } else {
-          frn = rec.user.email;
+          frn = 'An anonymous';
         }
-        if ( rec.user && (rec.user.firstname || rec.user.username || rec.user.email) ) {
+        if ( rec.user ) {
           re += frn;
-          if (rec.user.profession && rec.user.profession !== 'Other') re += ', ' + rec.user.profession;
+          if (rec.user.profession && rec.user.profession !== 'Other') {
+            if (frn !== 'An anonymous') {
+              re += ', ' + rec.user.profession;
+            } else {
+              
+            }
+            re += ' ' + rec.user.profession.toLowerCase();
+          } else {
+            re += ' user';
+          }
           if (rec.user.affiliation && rec.user.affiliation.length > 1) re += ' at ' + rec.user.affiliation;
         }
         re += rec.created_date ? ' on ' + rec.created_date.split(' ')[0].split('-').reverse().join('/') : '';
         re += ' said:</p>';
         re += '<p>"' + rec.story + '"</p>';
-        re += '<p>By asking the author to share a copy we can make it available to ' + frn + ', and everyone else who needs it.</p>';
+        re += '<p>By asking the author to share a copy we can make it available to ';
+        if (frn !== 'An anonymous') re += frn + ', and ';
+        re += 'everyone ';
+        if (frn !== 'An anonymous') re += 'else ';
+        re += 'who needs it.</p>';
         re += '</div>';
       }
 
