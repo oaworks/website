@@ -350,7 +350,7 @@
 
       if ( rec.status !== 'received' && (!rec.title || !rec.email || !rec.story) ) {
         if (rec.user === undefined) {
-          re += '<p>You can make this ' + rec.type + ' available to yourself, and everyone else, by requesting it from the author. We\'ll help you contact the author, guide them in making their work available, and share it with everyone. Let\'s get started.</p>';
+          re += '<p>The author can make this ' + rec.type + ' available to everyone legally, for free. Start a request, and we\'ll take care of the rest.</p>';
           if (clogin.loggedin()) {
             re += '<p><textarea style="min-height:100px;" class="form-control" id="story" placeholder="How would getting access to this research help you? This message will be sent to the author, and helps them to understand why the research should be made available."></textarea></p>';
             re += '<p style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Submit</a></p>';
@@ -376,7 +376,7 @@
       }
 
       if ( rec.status !== 'received' && !(clogin.loggedin() && rec.user && rec.user.id && clogin.user && clogin.user.account && clogin.user.account._id === rec.user.id) ) {
-        re += '<p>Are you the author? Please <a style="text-decoration:underline;" href="mailto:requests@openaccessbutton.org">contact us</a>!</p>';
+        re += '<p>Are you the author? Please <a style="text-decoration:underline;" href="mailto:requests@openaccessbutton.org?subject=I\'m%20the%20author%20for%20request%20' + rid + '">contact us</a>!</p>';
       }
 
       if (clogin.hasRole('openaccessbutton.admin')) {
