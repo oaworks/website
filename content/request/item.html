@@ -350,7 +350,7 @@
 
       if ( rec.status !== 'received' && (!rec.title || !rec.email || !rec.story) ) {
         if (rec.user === undefined) {
-          re += '<p>The author can make this ' + rec.type + ' available to everyone legally, for free. Start a request, and we\'ll take care of the rest.</p>';
+          re += '<p>If we ask the author can make this ' + rec.type + ' available to everyone legally, for free. Start a request, and we\'ll take care of the rest.</p>';
           if (clogin.loggedin()) {
             re += '<p><textarea style="min-height:100px;" class="form-control" id="story" placeholder="How would getting access to this research help you? This message will be sent to the author, and helps them to understand why the research should be made available."></textarea></p>';
             re += '<p style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Submit</a></p>';
