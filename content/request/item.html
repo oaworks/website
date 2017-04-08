@@ -355,12 +355,13 @@
             re += '<p><textarea style="min-height:100px;" class="form-control" id="story" placeholder="How would getting access to this research help you? This message will be sent to the author, and helps them to understand why the research should be made available."></textarea></p>';
             re += '<p style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Submit</a></p>';
           } else {
-            re += '<div class="input-group" style="margin-bottom:40px;">\
-              <input type="text" name="email" id="youremail" class="form-control" placeholder="Your email address"><div><small>Any concerns? We can <a href = "mailto:hello@openaccessbutton.org?subject=Author%20request%20question">talk you through it</a>.</small></div> \
+            re += '<div class="input-group">\
+              <input type="text" name="email" id="youremail" class="form-control" placeholder="Your email address"> \
               <div class="input-group-btn">\
                 <a id="gologin" href="/account?next=/request/' + rid + '" class="btn btn-action">Continue</a>\
               </div>\
-            </div>';
+            </div>\
+            <p style="margin-bottom:40px;"><small>Any concerns? We can <a href = "mailto:hello@openaccessbutton.org?subject=Author%20request%20question">talk you through it</a>.</small></p>';
           }
         } else {
           re += '<p>We need more details for this request. Can you take a second to help?</p>';
