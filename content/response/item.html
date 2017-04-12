@@ -149,7 +149,7 @@
 
 <script>
   jQuery(document).ready(function() {
-    var api = 'https://api.cottagelabs.com/service/oab'; // to ensure this works for now, use only the LOCAL CL api address
+    var api = 'https://lapi.cottagelabs.com/service/oab'; // to ensure this works for now, use only the LOCAL CL api address
     var uploadapi = 'https://accounts.cottagelabs.com/upload';
     if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
       api = 'https://dev.api.cottagelabs.com/service/oab';
@@ -186,7 +186,6 @@
         success: function() { $('.panels').hide(); $('#submitted').show(); },
         error: function() { $('.panels').hide(); $('#error').show(); }
       }
-      // TODO if admin and admin user clicked the submit as admin button, add admin:true to data and add api key to ajax
       if (clickedadmin) {
         data.admin = true;
         opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", clogin.apikey); };
@@ -265,10 +264,10 @@
 
       if (request.status === 'received') {
         $('.showupload').show();
-        request.received.validated === false ? $('#validating').show() : $('#validated').show();
-        if (request.received.url) {
+        reqeust.received && request.received.validated === false ? $('#validating').show() : $('#validated').show();
+        if (request.received && request.received.url) {
           $('.admin').append('<p>Submitted URL: <a target="_blank" href="' + request.received.url + '">' + request.received.url + '</a></p>');
-        } else {
+        } else if (request.received) {
           var where = request.type === 'article' ? 'Re-deposit to zenodo' : 'Re-deposit to OSF';
           $('.redeposit').html(where).show();
           $('.redeposit').bind('click',redeposit);
