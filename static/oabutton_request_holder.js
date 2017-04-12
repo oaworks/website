@@ -1,4 +1,6 @@
 
+var firstrequestcount = true;
+
 $.fn.holder.use.oabutton = {
   url: "https://api.openaccessbutton.org/requests",
   //pushstate: false,
@@ -48,6 +50,11 @@ $.fn.holder.use.oabutton = {
 
   placeholder: function() {
     var options = $(this).holder.options;
+    if (firstrequestcount) {
+      firstrequestcount = false;
+    } else {
+      $('#requestscount').html(options.response.hits.total);
+    }
     $('input.' + options.class + '.search').val("").attr('placeholder',"Search for requests you care about");
   },
 

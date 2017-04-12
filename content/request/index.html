@@ -1,6 +1,7 @@
 <script type="text/javascript" src="//static.cottagelabs.com/d3/d3.v4.min.js"></script>
 <script type="text/javascript" src="/static/oabutton_request_holder.js?v=012few89weqqdwq80"></script>
 <script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/facets.js?v=9fwef9813"></script>
+<script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/range.js?v=9fwef9813"></script>
 
 <style>
   .row{
@@ -45,11 +46,12 @@
         <p style="text-align:center;color:white;">
           Help make more research available to everyone by supporting requests that matter to you.
         </p>
-        <p style="color:white;text-align:center;">
+        <p id="requestfilters" style="color:white;text-align:center;">
           <a id="viewrequests" class="cloggedin" href="/request" style="text-decoration:underline;color:white;display:none;">View your requests</a><br>
           <a id ="help" href="#" style="text-decoration:underline;color:white;">Help with requests</a><br>
           <a href="/" style="text-decoration:underline;color:white;">Start a new request</a>
         </p>
+        <div id="rangedisplay" class="holder range" style="display:none;"></div>
       </div>
       <div class="holder facets"></div>
     </div>
@@ -74,6 +76,22 @@ jQuery(document).ready(function() {
   $('#help').bind('click',function() {
     $('.holder.search').val('status:help').trigger('change');
   });
+
+  var dfd = false;
+  var df = [
+    {
+      exists: {
+        field: "story"
+      }
+    },
+    {
+      query: {
+        query_string: {
+          query: "story:*"
+        }
+      }
+    }
+  ];
 
   var startup = function() {
     var id;
@@ -110,20 +128,6 @@ jQuery(document).ready(function() {
       };
       $.ajax(opts);
     } else {
-      var df = [
-        {
-          exists: {
-            field: "story"
-          }
-        },
-        {
-          query: {
-            query_string: {
-              query: "story:*"
-            }
-          }
-        }
-      ];
       var user = clogin.loggedin();
       if (user) {
         $('#viewrequests').show().bind('click',function(e) {
@@ -132,6 +136,21 @@ jQuery(document).ready(function() {
         });
         if ( !clogin.hasRole('openaccessbutton.admin') ) {
           $.fn.holder.use.oabutton.defaultfilters = df;
+        } else {
+          $('#rangedisplay').show();
+          $('#requestfilters').append('<br><br><a id="shstory" href="#" style="text-decoration:underline;color:orange;">Show/hide requests without story</a>');
+          $('#shstory').bind('click',function() {
+            if (dfd === false) {
+              dfd = true;
+              if ($.fn.holder.options.query.query.filtered.filter === undefined) $.fn.holder.options.query.query.filtered.filter = {};
+              if ($.fn.holder.options.query.query.filtered.filter.bool === undefined) $.fn.holder.options.query.query.filtered.filter.bool = {};
+              $.fn.holder.options.query.query.filtered.filter.bool.must = df;
+            } else {
+              dfd = false;
+              $.fn.holder.options.query.query.filtered.filter.bool.must = [];
+            }
+            $.fn.holder.options.execute();
+          });
         }
       } else {
         $.fn.holder.use.oabutton.defaultfilters = df;
