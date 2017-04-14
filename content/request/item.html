@@ -297,7 +297,7 @@
           surl = rec.received.url;
         } else if (rec.received.zenodo) {
           suc += 'in Zenodo at:<br>';
-          surl = rec.received.zenodo.split('#')[0];
+          surl = rec.received.zenodo.split('/files/')[0];
         } else if (rec.received.osf) {
           suc += 'in the OSF at:<br>';
           surl = rec.received.osf;
