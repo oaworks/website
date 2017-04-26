@@ -174,6 +174,20 @@
       checkemailthensubmit(e);
     }
 
+    var action = function() {
+      var act = $('#action').val();
+      if (act) {
+        $('#admin').hide();
+        $('#admin').after('<p style="color:orange;">Executing, please wait a few seconds for page refresh...</p>');
+        $.ajax({
+          type:'GET',
+          url:api+'/request/' + rid + '/admin/' + act,
+          beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
+        });
+        setTimeout(function() { window.location = window.location.href; }, 4000);
+      }
+    }
+
     var deleteitem = function() {
       $.ajax({
         type:'DELETE',
@@ -225,27 +239,34 @@
     var admin = function(record) {
       var dets = '';
       dets += '<p>Status: <select id="status" class="form-control" style="width:150px;display:inline;">';
-      var statuses = ['help','moderate','progress','hold','refused','received','closed'];
+      var statuses = ['help','moderate','progress',/*'hold',*/'refused','received','closed'];
       for ( var s in statuses ) {
         dets += '<option value="' + statuses[s] + '"';
         if (record.status === statuses[s]) dets += ' selected="selected"';
         dets += '>' + statuses[s] + '</option>';
       }
       dets += '</select>';
-      dets += ' &nbsp;&nbsp;&nbsp;test: <input type="checkbox" id="test"';
+      dets += ' &nbsp;&nbsp;test: <input type="checkbox" id="test"';
       if (record.test === true) dets += ' checked="checked"';
-      dets += '></p>';
+      dets += '>';
+      dets += ' &nbsp;&nbsp;Action: <select id="action" class="form-control" style="width:150px;display:inline;">';
+      var actions = ['','send_to_author','story_too_bad','not_a_scholarly_article','dead_author','user_testing','broken_link'];
+      for ( var a in actions ) {
+        dets += '<option value="' + actions[a] + '">' + actions[a].replace(/_/g,' ') + '</option>';
+      }
+      dets += '</select>';
+      dets += '</p>';
       if (record.location && record.location.geo && record.location.geo.lat) {
         dets += '<p>Location: ' + record.location.geo.lat + ',' + record.location.geo.lon
         if (record.location.location) dets += ' - ' + record.location.location;
         dets += '</p>';
       }
       dets += '</p>';
-      dets += '<div class="input-group" style="margin-bottom:10px;"><input type="text" id="admin_email" value="' + record.email + '" placeholder="Author Email" class="form-control">';
-      if (record.email) dets += '<div class="input-group-btn"><a id="blacklist" href="#" class="btn btn-action">Blacklist</a></div>';
-      dets += '</div>';
+      if (record.email) dets += '<div class="input-group">';
+      dets += '<input type="text" id="admin_email" value="' + (record.email ? record.email : '') + '" placeholder="Author Email" class="form-control">';
+      if (record.email) dets += '<div class="input-group-btn"><a id="blacklist" href="#" class="btn btn-action">Blacklist</a></div></div>';
       dets += '<p class="emailissue" style="display:none;font-size:0.9em;"></p>';
-      dets += '<p><input type="text" id="admin_title" class="form-control" placeholder="Title" value="';
+      dets += '<p style="margin-top:10px;"><input type="text" id="admin_title" class="form-control" placeholder="Title" value="';
       if (record.title) dets += record.title;
       dets += '"></p>';
       dets += '<p><input type="text" id="admin_doi" class="form-control" placeholder="DOI" value="';
@@ -255,7 +276,8 @@
       if (record.story) dets += record.story;
       dets += '</textarea></p>';
       dets += '<p>Story rating: <select id="rating" class="form-control" style="width:100px;display:inline;">';
-      var ratings = ["0","1","2","3","4","5"];
+      //var ratings = ["0","1","2","3","4","5"];
+      var ratings = ['','fail','pass'];
       for ( var r in ratings ) {
         dets += '<option value="' + ratings[r] + '"';
         if (record.rating === ratings[r]) dets += ' selected="selected"';
@@ -303,6 +325,7 @@
           surl = rec.received.osf;
         }
         suc += '<a target="_blank" href="' + surl + '" style="word-wrap:break-word;overflow-wrap:break-word;">' + surl + '</a></h3></div>';
+        suc += '<p><small>Not what you expected? <a href="/feedback#wrong?searched=' + rec._id + '&given=' + surl + '">Report an issue</a>.</small></p>';
         $('#success').html(suc);
         $('#topper').css('background-image','url(/static/header_unlocked.jpg');
         $('#headline').html('<b>This ' + rec.type + ' request is now available.</b>');
@@ -421,6 +444,7 @@
       if ($('#submitchanges').length) $('#submitchanges').bind('click',adminsubmit);
       if ($('#update').length) $('#update').bind('click',checkemailthensubmit);
       if ($('#delete').length) $('#delete').bind('click',deleteitem);
+      if ($('#action').length) $('#action').bind('change',action);
       if ($('#gologin').length) $('#gologin').bind('click',function(e) {
         if ($('#youremail').val()) $(this).attr('href',$(this).attr('href').replace('?','?email='+$('#youremail').val()+'&'));
       });

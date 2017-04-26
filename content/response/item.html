@@ -27,51 +27,71 @@
       <div id="error" style="display:none;">
         <div class="jumbotron">
           <p>
-            Sorry, there has been a file upload error. Please <a href="mailto:requests@openaccessbutton.org">get in touch</a>
+            Sorry, there has been a submission error. Please <a href="mailto:requests@openaccessbutton.org">get in touch</a>
             and let us know what you were trying to upload, and the URL of this page.</p>
         </div>
       </div>
 
       <div class="panels" id="upload" style="margin-bottom:100px;">
-        <h3>Thank you for responding to our request</h3>
-        <p>
-          Let’s help more people get access to your research.
-        </p>
+        <div class="row">
+          <div class="col-md-6">
+            <p>Thank you for responding to our request</p>
+            <p>
+              Let’s help more people get access to your research.
+            </p>
 
-        <p class="typearticle">
-          Is your article already available publicly online? That’s great! Just give us the URL address. A good publicly accessible URL is a link to the full-text on a repository or your website.
-          <br>
-          If the article isn’t publicly available, you can deposit it to your institutional repository and then share the link with us, or you can upload it now. We’ll send it to <a target="_blank" href="https://zenodo.org">Zenodo</a> where it will be preserved and publicly accessible under a CC-BY license.
-        </p>
+            <p class="typearticle">
+              Is your article already available publicly online? That’s great! Just give us the URL address. 
+              A good publicly accessible URL is a link to the full-text on a repository or your website.
+            </p>
+            <p class="typearticle">
+              If the article isn’t publicly available, you can deposit it to your institutional repository and 
+              then share the link with us.
+            </p>
+            
+            <p class="typedata">
+              Is the request data already available publicly online? That’s great! Just give us the URL address. 
+              A good publicly accessible URL is a link to a repository record.
+            </p>
+            <p class="typedata">
+              If the data isn’t publicly available, you can deposit it to a repository and then share the link with us.
+              Need some help curating your data first? Ask your library if they have a research data management specialist.
+            </p>
+            
+            <input style="margin-bottom:5px;" id="url" type="text" class="form-control" placeholder="Enter the publicly available URL here">
+            <a href="#" class="btn btn-warning btn-block admin" style="display:none;margin-top:5px;" id="adminsubmiturl">submit URL as Admin</a>
+            <a href="#" class="btn btn-action btn-block" style="margin-top:5px;margin-bottom:30px;" id="submiturl">Submit your URL</a>
+          </div>
+          
+          <div class="col-md-6">
+            <p class="typearticle">
+              Or if you don't have a URL, upload your file here instead.
+              We’ll send it to <a target="_blank" href="https://zenodo.org">Zenodo</a> 
+              where it will be preserved and publicly accessible under a CC-BY license.
+            </p>
+            
+            <p class="typedata">
+              Or if you don't have a URL, upload your file here instead. 
+              We’ll send it to the <a href="https://osf.io">Open Science Framework</a>. 
+              OSF will preserve your data and make it publicly available under a 
+              <a target="_blank" href="https://creativecommons.org/publicdomain/zero/1.0/">CC-0 license</a>, 
+              the recommended license for sharing data. Once you submit the data we’ll ask our community to validate it. 
+              If you have more than one file, please create a zip folder to upload.              
+            </p>
 
-        <p class="typedata">
-
-          Is the request data already available publicly online? That’s great! Just give us the URL address. A good publicly accessible URL is a link to a repository record.
-
-          If the data isn’t publicly available, you can deposit it to a repository and then share the link with us, or you can upload it now. We’ll send it to the <a href="https://osf.io">Open Science Framework</a>. OSF will preserve your data and make it publicly available under a <a target="_blank" href="https://creativecommons.org/publicdomain/zero/1.0/">CC-0 license</a>, the recommended license for sharing data. Once you submit the data we’ll ask our community to validate it. If you have more than one file, please create a zip folder to upload.
-
-          Need some help curating your data first? Ask your library if they have a research data management specialist.
-          </p>
-
-        <input style="margin-top:50px;margin-bottom:5px;" id="url" type="text" class="form-control" placeholder="Enter the publicly available URL here">
-        <a href="#" class="btn btn-warning btn-block admin" style="display:none;margin-top:5px;" id="adminsubmiturl">submit URL as Admin</a>
-        <a href="#" class="btn btn-action btn-block" style="margin-top:5px;margin-bottom:30px;" id="submiturl">Submit your URL</a>
-
-        <p>
-          Or if you don't have a URL, upload your file here instead:
-        </p>
-
-        <form id="fileupload" enctype="multipart/form-data" method="POST">
-          <input type="file" name="file" id="file" class="form-control">
-          <input type="hidden" name="service" value="openaccessbutton">
-          <input type="hidden" name="dirId" id="dirId" value="">
-          <input style="margin-top:5px;margin-bottom:5px;" id="title" type="text" class="form-control" placeholder="Enter the title here">
-          <input style="margin-top:5px;margin-bottom:5px;" id="firstname" type="text" class="form-control" placeholder="Enter your (author) first name here">
-          <input style="margin-top:5px;margin-bottom:5px;" id="lastname" type="text" class="form-control" placeholder="Enter your (author) last name here">
-          <textarea id="description" class="form-control" style="min-height:150px;margin-top:5px;" placeholder="Please provide an abstract / brief description / further information here"></textarea>
-          <input type="submit" class="btn btn-warning btn-block admin" style="margin-top:5px;display:none;" id="adminsubmitfile" value="Upload file as Admin">
-          <input type="submit" class="btn btn-action btn-block" style="margin-top:5px;" id="submitfile" value="Upload your file">
-        </form>
+            <form id="fileupload" enctype="multipart/form-data" method="POST">
+              <input type="file" name="file" id="file" class="form-control">
+              <input type="hidden" name="service" value="openaccessbutton">
+              <input type="hidden" name="dirId" id="dirId" value="">
+              <input style="margin-top:5px;margin-bottom:5px;" id="title" type="text" class="form-control" placeholder="Enter the title here">
+              <input style="margin-top:5px;margin-bottom:5px;" id="firstname" type="text" class="form-control" placeholder="Enter your (author) first name here">
+              <input style="margin-top:5px;margin-bottom:5px;" id="lastname" type="text" class="form-control" placeholder="Enter your (author) last name here">
+              <textarea id="description" class="form-control" style="min-height:150px;margin-top:5px;" placeholder="Please provide an abstract / brief description / further information here"></textarea>
+              <input type="submit" class="btn btn-warning btn-block admin" style="margin-top:5px;display:none;" id="adminsubmitfile" value="Upload file as Admin">
+              <input type="submit" class="btn btn-action btn-block" style="margin-top:5px;" id="submitfile" value="Upload your file">
+            </form>
+          </div>
+        </div>
 
       </div>
 
@@ -84,9 +104,11 @@
         <div class="jumbotron">
           <h3>Thank you for submitting your content!</h3>
           <p>
-            The link to your content, saved
+            The link to your content
+            <span class="noturl" style="display:none;">, saved
             <span class="typearticle">on Zenodo</span>
-            <span class="typedata">at the Open Science Foundation</span>, will appear on the
+            <span class="typedata">at the Open Science Foundation</span>,
+            </span> will appear on the
             <a class="requestlink" href="/request" style="color:white;">request</a>
             page in a few minutes.
           </p>
@@ -182,14 +204,18 @@
         processData: false,
         contentType: 'application/json',
         dataType: 'json',
-        data: JSON.stringify(data),
-        success: function() { $('.panels').hide(); $('#submitted').show(); },
+        success: function() { 
+          $('.panels').hide();
+          if (!$('#url').val()) $('.noturl').show();
+          $('#submitted').show(); 
+        },
         error: function() { $('.panels').hide(); $('#error').show(); }
       }
       if (clickedadmin) {
         data.admin = true;
         opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", clogin.apikey); };
       }
+      opts.data = JSON.stringify(data);
       $.ajax(opts);
       clickedadmin = false;
     }
@@ -243,9 +269,9 @@
 
     var details = function(data) {
       request = data;
-      var dets = '<div class="jumbotron" style="margin-top:-10px;">';
-      dets += '<h3 style="text-align:center;">Request for ' + request.type + '</h3>';
-      dets += '<h2 style="text-align:center;"><a style="color:white;" target="_blank" href="/request/' + request._id + '">';
+      var dets = '<div>';
+      dets += '<h1 style="text-align:center;margin-top:25px;margin-bottom:25px;font-size:4em;">Request for ' + request.type + '</h1>';
+      dets += '<h2 style="text-align:center;"><a target="_blank" href="/request/' + request._id + '">';
       dets += request.title ? request.title : 'Untitled article';
       dets += '</a></h2>';
       dets += '</div>';
@@ -264,9 +290,9 @@
 
       if (request.status === 'received') {
         $('.showupload').show();
-        reqeust.received && request.received.validated === false ? $('#validating').show() : $('#validated').show();
+        request.received && request.received.validated === false ? $('#validating').show() : $('#validated').show();
         if (request.received && request.received.url) {
-          $('.admin').append('<p>Submitted URL: <a target="_blank" href="' + request.received.url + '">' + request.received.url + '</a></p>');
+          //$('div.admin').append('<p>Submitted URL: <a target="_blank" href="' + request.received.url + '">' + request.received.url + '</a></p>');
         } else if (request.received) {
           var where = request.type === 'article' ? 'Re-deposit to zenodo' : 'Re-deposit to OSF';
           $('.redeposit').html(where).show();
