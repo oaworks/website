@@ -78,7 +78,7 @@ $.fn.holder.use.oabutton = {
     re += rec.title ? rec.title : rec.url;
     re += '</a></b></p>';
     re += '<p><a href="/request/' + rec._id + '" style="color:' + text + ';">' + status + '</a></p>';
-    if (rec.story && ( rec.rating === 'pass' || rec.rating === undefined ) ) re += '<p style="padding:10px 0px 10px 30px;"><a style="color:#383838;font-style:italic;font-weight:bold;font-size:1.2em;" href="/request/' + rec._id + '">' + rec.story + '</a></p>';
+    if (rec.story && ( parseInt(rec.rating) === 1 || rec.rating === undefined ) ) re += '<p style="padding:10px 0px 10px 30px;"><a style="color:#383838;font-style:italic;font-weight:bold;font-size:1.2em;" href="/request/' + rec._id + '">' + rec.story + '</a></p>';
     re += '<p>Requested ';
     var un = rec['user.firstname'] ? rec['user.firstname'] : rec['user.username'];
     if (un && typeof un !== 'string') un = un[0];

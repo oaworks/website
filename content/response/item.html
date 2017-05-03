@@ -61,6 +61,13 @@
             <input style="margin-bottom:5px;" id="url" type="text" class="form-control" placeholder="Enter the publicly available URL here">
             <a href="#" class="btn btn-warning btn-block admin" style="display:none;margin-top:5px;" id="adminsubmiturl">submit URL as Admin</a>
             <a href="#" class="btn btn-action btn-block" style="margin-top:5px;margin-bottom:30px;" id="submiturl">Submit your URL</a>
+            <p id="warn" style="display:none;">
+              Papers posted on ResearchGate and Academia.edu are often illegal and aren't properly preserved. Most publishers allow 
+              you to publicly share the accepted version of your paper in a repository. We suggest checking 
+              <a target="_blank" href="http://www.sherpa.ac.uk/romeo/">SHERPA/RoMEO</a> or looking at your publishing agreement to determine what you're allowed to post and where. 
+              If you want it to be available to everyone, forever, we suggest uploading a copy to 
+              <a target="_blank" href="https://zenodo.org/">Zenodo</a>. If you give us a copy, we'll upload it to Zenodo for you!
+            </p>
           </div>
           
           <div class="col-md-6">
@@ -184,9 +191,20 @@
     var request;
     var rid = window.location.pathname.split('/')[2];
     var clickedadmin = false;
+    var firstsubmit = true;
 
     var submit = function(e) {
       try { if (e) e.preventDefault(); } catch(err) {}
+      var warns = ['researchgate.com','academia.edu','readcube.com'];
+      if (firstsubmit) {
+        firstsubmit = false;
+        for ( var w in warns ) {
+          if ( $('#url').val().indexOf(warns[w]) !== -1 ) {
+            $('#warn').show();
+            return;
+          }
+        }
+      }
       // once the file is successfully posted, submit to the receive endpoint and show confirmation
       // the receive endpoint will trigger forwarding to zenodo or osf
       var data = {};

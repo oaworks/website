@@ -101,6 +101,7 @@
       if ( $('#doi').length && $('#doi').val() ) data.doi = $('#doi').val();
       if ( $('#story').length && $('#story').val() ) data.story = $('#story').val();
       if (clogin.hasRole('openaccessbutton.admin') && adminsubmitting) {
+        if ( $('#name').length ) data.name = $('#name').val();
         if ( $('#status').length ) data.status = $('#status').val();
         if ( $('#rating').length ) data.rating = $('#rating').val();
         if ( $('#url').length ) data.url = $('#url').val();
@@ -261,7 +262,7 @@
         if (record.location.location) dets += ' - ' + record.location.location;
         dets += '</p>';
       }
-      dets += '</p>';
+      dets += '<p><input type="text" id="name" value="' + (record.name ? record.name : '') + '" placeholder="Author Name" class="form-control"></p>';
       if (record.email) dets += '<div class="input-group">';
       dets += '<input type="text" id="admin_email" value="' + (record.email ? record.email : '') + '" placeholder="Author Email" class="form-control">';
       if (record.email) dets += '<div class="input-group-btn"><a id="blacklist" href="#" class="btn btn-action">Blacklist</a></div></div>';
@@ -275,14 +276,13 @@
       dets += '<p><textarea id="admin_story" class="form-control" placeholder="Story" style="min-height:100px;">';
       if (record.story) dets += record.story;
       dets += '</textarea></p>';
-      dets += '<p>Story rating: <select id="rating" class="form-control" style="width:100px;display:inline;">';
-      //var ratings = ["0","1","2","3","4","5"];
-      var ratings = ['','fail','pass'];
-      for ( var r in ratings ) {
-        dets += '<option value="' + ratings[r] + '"';
-        if (record.rating === ratings[r]) dets += ' selected="selected"';
-        dets += '>' + ratings[r] + '</option>';
-      }
+      dets += '<p>Story rating: <select id="rating" class="form-control" style="width:100px;display:inline;"><option></option>';
+      dets += '<option value="0"';
+      if (parseInt(record.rating) === 0) dets += ' selected="selected"';
+      dets += '>fail</option>';
+      dets += '<option value="1"';
+      if (parseInt(record.rating) === 1) dets += ' selected="selected"';
+      dets += '>pass</option>';
       dets += '</select>';
       dets += '<a class="btn btn-danger pull-right" id="delete" href="#">DELETE</a>';
       dets += '<input type="submit" id="submitchanges" value="Save changes" class="btn btn-action pull-right" style="margin-right:5px;">';
