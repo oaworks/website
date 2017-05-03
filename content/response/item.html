@@ -39,6 +39,19 @@
             <p>
               Let’s help more people get access to your research.
             </p>
+            
+            <p id="sherpa_green" style="display:none;">
+              You can legally give us the accepted version of your article!
+            </p>
+            <p id="sherpa_blue" style="display:none;">
+              You can legally give us the accepted version of your article!
+            </p>
+            <p id="sherpa_yellow" style="display:none;">
+              You can legally give us the submitted version of your article!
+            </p>
+            <p id="sherpa_unknown" style="display:none;">
+              SHERPA/RoMEO doesn't have this journal. Contact us or your librarian for advice on what you can deposit.
+            </p>
 
             <p class="typearticle">
               Is your article already available publicly online? That’s great! Just give us the URL address. 
@@ -285,6 +298,18 @@
       });
     }
 
+    var romeo = function(data) {
+      var color;
+      try {
+        color = data.data.publishers[0].publisher[0].romeocolour[0];  
+      } catch(err) {}
+      if (color && ['green','blue','yellow'].indexOf(color)) {
+        $('#sherpa_'+color).show();
+      } else {
+        $('#sherpa_unknown').show();
+      }
+    }
+    
     var details = function(data) {
       request = data;
       var dets = '<div>';
@@ -328,6 +353,13 @@
         $('#refuse').show();
       } else {
         $('#upload').show();
+      }
+      if (request.journal) {
+        $.ajax({
+          type: 'GET',
+          url: 'https://dev.api.cottagelabs.com/use/sherpa/romeo/search?jtitle=' + request.journal,
+          success: romeo
+        });
       }
     }
     $.ajax({
