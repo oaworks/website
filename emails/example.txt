@@ -21,6 +21,7 @@ then they can be included like this: {{VARIABLE}}
 
 The variables that are available in a request context are:
 
+{{name}} (author's name, as suggested by admin side box. If nothing, it shows a colleague)
 {{_id}} (the ID of the request)
 {{url}} (the URL of the page the request was created on)
 {{title}} (the title of the article the request is about)
