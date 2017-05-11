@@ -324,8 +324,10 @@
           suc += 'in the OSF at:<br>';
           surl = rec.received.osf;
         }
-        suc += '<a target="_blank" href="' + surl + '" style="word-wrap:break-word;overflow-wrap:break-word;">' + surl + '</a></h3></div>';
+        if (surl.indexOf('http') !== 0) surl = 'http://' + surl;
+        suc += '<a target="_blank" href="' + surl + '" style="word-wrap:break-word;overflow-wrap:break-word;">' + surl + '</a></h3>';
         suc += '<p><small>Not what you expected? <a href="/feedback#wrong?searched=' + rec._id + '&given=' + surl + '">Report an issue</a>.</small></p>';
+        suc += '</div>';
         $('#success').html(suc);
         $('#topper').css('background-image','url(/static/header_unlocked.jpg');
         $('#headline').html('<b>This ' + rec.type + ' request is now available.</b>');

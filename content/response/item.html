@@ -222,6 +222,7 @@
       // the receive endpoint will trigger forwarding to zenodo or osf
       var data = {};
       if ($('#url').val()) data.url = $('#url').val();
+      if (data.url && data.url.indexOf('http') !== 0) data.url = 'http://' + data.url;
       if ($('#description').val()) data.description = $('#description').val();
       if ($('#title').val()) data.title = $('#title').val();
       if ($('#firstname').val()) data.firstname = $('#firstname').val();
