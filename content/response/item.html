@@ -39,7 +39,7 @@
             <p>
               Let’s help more people get access to your research.
             </p>
-            
+
             <p id="sherpa_green" style="display:none;">
               You can legally give us the accepted version of your article!
             </p>
@@ -54,49 +54,49 @@
             </p>
 
             <p class="typearticle">
-              Is your article already available publicly online? That’s great! Just give us the URL address. 
+              Is your article already available publicly online? That’s great! Just give us the URL address.
               A good publicly accessible URL is a link to the full-text on a repository or your website.
             </p>
             <p class="typearticle">
-              If the article isn’t publicly available, you can deposit it to your institutional repository and 
+              If the article isn’t publicly available, you can deposit it to your institutional repository and
               then share the link with us.
             </p>
-            
+
             <p class="typedata">
-              Is the request data already available publicly online? That’s great! Just give us the URL address. 
+              Is the request data already available publicly online? That’s great! Just give us the URL address.
               A good publicly accessible URL is a link to a repository record.
             </p>
             <p class="typedata">
               If the data isn’t publicly available, you can deposit it to a repository and then share the link with us.
               Need some help curating your data first? Ask your library if they have a research data management specialist.
             </p>
-            
+
             <input style="margin-bottom:5px;" id="url" type="text" class="form-control" placeholder="Enter the publicly available URL here">
             <a href="#" class="btn btn-warning btn-block admin" style="display:none;margin-top:5px;" id="adminsubmiturl">submit URL as Admin</a>
             <a href="#" class="btn btn-action btn-block" style="margin-top:5px;margin-bottom:30px;" id="submiturl">Submit your URL</a>
             <p id="warn" style="display:none;">
-              Papers posted on ResearchGate and Academia.edu are often illegal and aren't properly preserved. Most publishers allow 
-              you to publicly share the accepted version of your paper in a repository. We suggest checking 
-              <a target="_blank" href="http://www.sherpa.ac.uk/romeo/">SHERPA/RoMEO</a> or looking at your publishing agreement to determine what you're allowed to post and where. 
-              If you want it to be available to everyone, forever, we suggest uploading a copy to 
-              <a target="_blank" href="https://zenodo.org/">Zenodo</a>. If you give us a copy, we'll upload it to Zenodo for you!
+              Papers posted on ResearchGate and Academia.edu are often illegal and aren't properly preserved. Most publishers allow
+              you to publicly share the accepted version of your paper in a repository. We suggest checking
+              <a target="_blank" href="http://www.sherpa.ac.uk/romeo/">SHERPA/RoMEO</a> or looking at your publishing agreement to determine what you're allowed to post and where.
+              If you want it to be available to everyone, forever, we suggest uploading a copy to
+              <a target="_blank" href="https://zenodo.org/">Zenodo</a>. If you give us a copy, we'll upload it to Zenodo for you! If you're sure the copy your entering is legal, you can hit submit again and we'll accept it!
             </p>
           </div>
-          
+
           <div class="col-md-6">
             <p class="typearticle">
               Or if you don't have a URL, upload your file here instead.
-              We’ll send it to <a target="_blank" href="https://zenodo.org">Zenodo</a> 
+              We’ll send it to <a target="_blank" href="https://zenodo.org">Zenodo</a>
               where it will be preserved and publicly accessible under a CC-BY license.
             </p>
-            
+
             <p class="typedata">
-              Or if you don't have a URL, upload your file here instead. 
-              We’ll send it to the <a href="https://osf.io">Open Science Framework</a>. 
-              OSF will preserve your data and make it publicly available under a 
-              <a target="_blank" href="https://creativecommons.org/publicdomain/zero/1.0/">CC-0 license</a>, 
-              the recommended license for sharing data. Once you submit the data we’ll ask our community to validate it. 
-              If you have more than one file, please create a zip folder to upload.              
+              Or if you don't have a URL, upload your file here instead.
+              We’ll send it to the <a href="https://osf.io">Open Science Framework</a>.
+              OSF will preserve your data and make it publicly available under a
+              <a target="_blank" href="https://creativecommons.org/publicdomain/zero/1.0/">CC-0 license</a>,
+              the recommended license for sharing data. Once you submit the data we’ll ask our community to validate it.
+              If you have more than one file, please create a zip folder to upload.
             </p>
 
             <form id="fileupload" enctype="multipart/form-data" method="POST">
@@ -236,10 +236,10 @@
         processData: false,
         contentType: 'application/json',
         dataType: 'json',
-        success: function() { 
+        success: function() {
           $('.panels').hide();
           if (!$('#url').val()) $('.noturl').show();
-          $('#submitted').show(); 
+          $('#submitted').show();
         },
         error: function() { $('.panels').hide(); $('#error').show(); }
       }
@@ -302,7 +302,7 @@
     var romeo = function(data) {
       var color;
       try {
-        color = data.data.publishers[0].publisher[0].romeocolour[0];  
+        color = data.data.publishers[0].publisher[0].romeocolour[0];
       } catch(err) {}
       if (color && ['green','blue','yellow'].indexOf(color)) {
         $('#sherpa_'+color).show();
@@ -310,7 +310,7 @@
         $('#sherpa_unknown').show();
       }
     }
-    
+
     var details = function(data) {
       request = data;
       var dets = '<div>';
