@@ -41,47 +41,48 @@
         <div class="goto gotobug">
 					<h4 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">Report a bug</h4>
           <p>We'll get it fixed as soon as we can, and let you know.</p>
-					<p class="hideifknown">Your email address</p>
+					<h3 class="hideifknown">Your email address</h3>
 					<p><input type="text" name="email" class="form-control" placeholder="Your email"></p>
-					<p>Where are you having the issue?</p>
+					<h3>Where are you having the issue?</h3>
           <p><input type="checkbox" name="where" value="Chrome plugin"> Chrome plugin</p>
           <p><input type="checkbox" name="where" value="Firefox plugin"> Firefox plugin</p>
           <p><input type="checkbox" name="where" value="Website"> Website</p>
           <p><input type="checkbox" name="where" value="Bookmarklet"> Bookmarklet</p>
-					<p>What's the issue?</p>
-          <p><small>(It's helpful if you can tell us what happened, what you expect to happen, and how we can reproduce the issue.)</small></p>
-					<p><textarea name="issue" class="form-control" style="min-height:200px;"></textarea></p>
-					<p>Do you have an error code? If so, please tell us it</p>
+					<h3>What's the issue?</h3>
+					<p><textarea name="issue" class="form-control" style="min-height:200px;" placeholder="It's helpful if you can tell us what happened, what you expect to happen, and how we can reproduce the issue."></textarea></p>
+					<h3>Do you have an error code? If so, please tell us it</h3>
 					<p><input type="text" name="code" class="form-control" placeholder="Error code"></p>
-					<p>Anything else we should know?</p>
-					<p><textarea name="info" class="form-control" style="min-height:200px;"></textarea></p>
+					<h3>Anything else we should know?</h3>
+					<p><textarea name="info" class="form-control" style="min-height:200px;" placeholder="Tell us anything you think might help us solve the issue."></textarea></p>
         </div>
 
         <div class="goto gotodnr">
           <h4 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">Sorry you don’t want to hear from us</h4>
-          <p>We’d love to know why you’d prefer to not hear from us:</p>
+          <h3>We’d love to know why you’d prefer to not hear from us:</h3>
           <p><input type="checkbox" name="why" value="Don't understand what I'm being asked"> I don't understand what I'm being asked</p>
           <p><input type="checkbox" name="why" value="Don't know or trust oab"> I don’t know or trust the Open Access Button</p>
           <p><input type="checkbox" name="why" value="Don't want to share data / articles"> I don’t want to share my data or article</p>
           <p><input class="form-control" type="text" name="other" placeholder="Other (please state)"></p>
-          <p>Our team is still learning. Can we follow up with you about your experience?</p>
+          <h3>Our team is still learning. Can we follow up with you about your experience?</h3>
           <p><input type="radio" name="followup" value="yes"> Yes</p>
           <p><input type="radio" name="followup" value="no"> No</p>
         </div>
 
         <div class="goto gotowrong">
           <!-- the link to this bug form could include a URL param "request", with the ID of the request the user is saying is wrong -->
-          <h4 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">Wrong content? Let's get that fixed</h4>
+          <h4 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">Wrong content?</h4>
+          <h2>Let's get that fixed</h2>
           <p>We apologize that we didn’t give you the content you were looking for. Linking to the correct version can be difficult sometimes. Please let us know your issue and we’ll work to resolve it:</p>
-          <p>What did you search for?</p>
+          <h3>What did you search for?</h3>
 					<p><input type="text" name="searched" class="form-control" placeholder="Put what you searched for here"></p>
-          <p>What did we find?</p>
+          <h3>What did we find?</h3>
 					<p><input type="text" name="given" class="form-control" placeholder="Put the URL we sent you to here"></p>
+          <h3>What was wrong?</h3>
           <p><input type="checkbox" name="wrong" value="Wrong paper searched for"> The Button searched for the wrong paper</p>
-          <p><input type="checkbox" name="wrong" value="Known open copy not given"> A copy I know is availiable wasn't shown</p>
+          <p><input type="checkbox" name="wrong" value="Known open copy not given"> A copy I know is available wasn't shown</p>
           <p><input type="checkbox" name="wrong" value="Paper not actually available"> The article wasn't actually available</p>
           <p><input type="checkbox" name="wrong" value="Not full text"> I didn't get sent directly to the full-text</p>
-          <p>Can you tell us the correct URL to the content?</p>
+          <h3>Can you tell us the correct URL to the content?</h3>
           <p><input class="form-control" type="text" name="correction" placeholder="(optional) Correct URL, if known"></p>
         </div>
 
@@ -90,15 +91,17 @@
           <!-- https://developer.chrome.com/extensions/runtime#method-setUninstallURL -->
           <!-- link should be https://openaccessbutton.org/bug#uninstall -->
           <h4 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">We're sad to see you go</h4>
-          <p>We're constantly trying to improve the Button, can you help by giving us some quick feedback? Why are you uninstalling the Open Access Button? Check all that apply:</p>
+          <p>We're constantly trying to improve the Button, can you help by giving us some quick feedback?</p>
+          <h3>Why are you uninstalling the Open Access Button? Check all that apply:</h3>
           <p><input type="checkbox" name="why" value="It never found what I needed"> It never found what I needed</p>
           <p><input type="checkbox" name="why" value="It's hard to use"> It's hard to use</p>
           <p><input type="checkbox" name="why" value="I don't want to make requests"> I don't want to make requests</p>
           <p><input type="checkbox" name="why" value="It didn't work"> It didn't work</p>
-          <p>Please let us know any other feedback you have:</p>
-          <p><textarea class="form-control" name="feedback"></textarea></p>
-          <p class="hideifknown">What's your email address?</p>
-          <p><input class="form-control" type="text" name="email"></p>
+          <p><input type="checkbox" name="why" value="Using something else"> I found a better tool</p>
+          <h3>Please let us know any other feedback you have:</h3>
+          <p><textarea class="form-control" name="feedback" placeholder="How can we improve?"></textarea></p>
+          <h3 class="hideifknown">What's your email address?</h3>
+          <p><input type="text" name="email" class="form-control" placeholder="Your email"></p>
         </div>
 
         <div class="goto gotonoshare">
@@ -116,10 +119,10 @@
         <div class="goto gotogeneral">
           <!-- the link to the page for this form could include a param of the previous page -->
           <h4 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">Let us know what you think!</h4>
-          <p>We spend day (and night) making the Open Access Button the best it can be. If you have any feedback (good or bad) or ideas we'd love to hear them.</p>
-          <p><textarea class="form-control" name="feedback"></textarea></p>
-          <p class="hideifknown">What's your email address?</p>
-          <p><input class="form-control" type="text" name="email"></p>
+          <p>We spend day (and night) making the Open Access Button the best it can be. If you have any feedback or ideas we'd love to hear them.</p>
+          <p><textarea class="form-control" name="feedback" placeholder="Tell us what you think."></textarea></p>
+          <h3 class="hideifknown">What's your email address?</h3>
+          <p><input class="form-control" type="text" name="email" placeholder="email address"></p>
         </div>
 
         <!-- put any additional form types here -->

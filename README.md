@@ -27,6 +27,7 @@ Changes should be committed to the develop branch first and viewed on the test s
 Actual editing of the files themselves can be done in any text editor or code editing tool, as you prefer.
 
 ### How to edit & release via Github Web UI (good for small changes)
+
 Your steps should be:
 
 1. Change to the develop branch
@@ -47,7 +48,7 @@ If you're happy with the above changes & everything has been tested
 Although before point 5 you probably could do other pushes to develop and view them too. Most of the time it should work
 These occasional conflicts are slightly annoying when they occur, but it is still far better than versions of docs flying all over the place anyway!
 
-### How to Edit via Github command line
+### How to Edit via GitHub command line
 
 1. git clone git@github.com:OAButton/odb_static.git
 2. git checkout develop

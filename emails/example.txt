@@ -21,6 +21,7 @@ then they can be included like this: {{VARIABLE}}
 
 The variables that are available in a request context are:
 
+{{name}} (author's name, as suggested by admin side box. If nothing, it shows a colleague)
 {{_id}} (the ID of the request)
 {{url}} (the URL of the page the request was created on)
 {{title}} (the title of the article the request is about)
@@ -39,9 +40,9 @@ And in a user context are:
 {{userid}}
 {{username}}
 {{useremail}}
-{{fullname}}
+{{fullname}} Note: never uses email and reverts to "a user" if nothing shown.
 {{affiliation}}
-{{profession}}
+{{profession}} Note: reverts to "person" if not known or Other
 {{logincode}}
 {{loginurl}}
 
@@ -66,7 +67,7 @@ set by the system; this may be updated in future.
 
 Variables can also be PROVIDED to the system within an email template, so that the system can use them when
 sending the email. The main example of this is the SUBJECT variable, which is demonstrated at the top of this
-email example. These are similar to including variables, but should be capitalised and after the variable 
+email example. These are similar to including variables, but should be capitalised and after the variable
 name there should be a space and then the value for the variable.
 
 The list of variables that can be provided:
