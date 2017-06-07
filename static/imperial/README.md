@@ -1,4 +1,13 @@
-# bookmarklet
+# Imperial Experimental ILL Bookmarklet
+
+The backstory to this work is described: [here](INSERT-LINK) & [here](https://blog.openaccessbutton.org/putting-the-oa-into-interlibrary-loan-9d5fa5eb25d4).
+
+## Relavent OAB links
+
+* Discussion repo: https://github.com/OAButton/discussion
+* API code: https://github.com/CottageLabs/api/tree/master/apps/clapi/server/endpoints/service
+
+## More on how the Bookmarklet works
 
 TODO this should be in the /static/bookmarklet folder but it is 
 causing an error in the build, so moving it out here for now.

@@ -324,8 +324,10 @@
           suc += 'in the OSF at:<br>';
           surl = rec.received.osf;
         }
-        suc += '<a target="_blank" href="' + surl + '" style="word-wrap:break-word;overflow-wrap:break-word;">' + surl + '</a></h3></div>';
-        suc += '<p><small>Not what you expected? <a href="/feedback#wrong?searched=' + rec._id + '&given=' + surl + '">Report an issue</a>.</small></p>';
+        if (surl.indexOf('http') !== 0) surl = 'http://' + surl;
+        suc += '<a target="_blank" href="' + surl + '" style="word-wrap:break-word;overflow-wrap:break-word;">' + surl + '</a></h3>';
+        suc += '<p style="text-align:center;"><small>Not what you expected? <a href="/feedback#wrong?searched=' + rec._id + '&given=' + surl + '">Report an issue</a>.</small></p>';
+        suc += '</div>';
         $('#success').html(suc);
         $('#topper').css('background-image','url(/static/header_unlocked.jpg');
         $('#headline').html('<b>This ' + rec.type + ' request is now available.</b>');
@@ -349,11 +351,7 @@
         if ( rec.user ) {
           re += frn;
           if (rec.user.profession && rec.user.profession !== 'Other') {
-            if (frn !== 'An anonymous') {
-              re += ', ' + rec.user.profession;
-            } else {
-
-            }
+            if (frn !== 'An anonymous') re += ',';
             re += ' ' + rec.user.profession.toLowerCase();
           } else if (frn === 'An anonymous') {
             re += ' user';

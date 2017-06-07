@@ -16,30 +16,25 @@
     <div class="col-md-12">
 
       <div id="missing" style="display:none;">
-        <div class="jumbotron">
           <p>Sorry, we have no record of expecting to receive any items at this URL. If you think we should be, please <a href="mailto:requests@openaccessbutton.org">get in touch</a> and mention this URL.</p>
-        </div>
       </div>
 
       <div id="request" style="display:none;">
       </div>
 
       <div id="error" style="display:none;">
-        <div class="jumbotron">
           <p>
             Sorry, there has been a submission error. Please <a href="mailto:requests@openaccessbutton.org">get in touch</a>
             and let us know what you were trying to upload, and the URL of this page.</p>
-        </div>
       </div>
 
       <div class="panels" id="upload" style="margin-bottom:100px;">
         <div class="row">
-          <div class="col-md-6">
-            <p>Thank you for responding to our request</p>
+          <div class="col-md-12">
             <p>
-              Let’s help more people get access to your research.
+              Thank you for responding to our request. Let’s help more people get access to your research.
             </p>
-            
+
             <p id="sherpa_green" style="display:none;">
               You can legally give us the accepted version of your article!
             </p>
@@ -50,53 +45,47 @@
               You can legally give us the submitted version of your article!
             </p>
             <p id="sherpa_unknown" style="display:none;">
-              SHERPA/RoMEO doesn't have this journal. Contact us or your librarian for advice on what you can deposit.
+              If you're unsure what you can legally send us get in touch with us or your librarian for advice on what you can deposit.
             </p>
 
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+
+            <h3>Share by URL</h3>
             <p class="typearticle">
-              Is your article already available publicly online? That’s great! Just give us the URL address. 
-              A good publicly accessible URL is a link to the full-text on a repository or your website.
+              Is the requested article publicly available online? That’s great! Just give us the URL. We suggest a link to the full text on a repository or your website, preferably a PDF or HTML version. <!--If your article isn't in a repository, please consider uploading it instead.-->
             </p>
-            <p class="typearticle">
-              If the article isn’t publicly available, you can deposit it to your institutional repository and 
-              then share the link with us.
-            </p>
-            
+
             <p class="typedata">
-              Is the request data already available publicly online? That’s great! Just give us the URL address. 
-              A good publicly accessible URL is a link to a repository record.
+              Is the requested data publicly available online? That’s great! Just give us the URL. We suggest a link to a repository record. <!--If your data isn't in a repository, please consider uploading it instead.-->
             </p>
-            <p class="typedata">
-              If the data isn’t publicly available, you can deposit it to a repository and then share the link with us.
-              Need some help curating your data first? Ask your library if they have a research data management specialist.
-            </p>
-            
+
             <input style="margin-bottom:5px;" id="url" type="text" class="form-control" placeholder="Enter the publicly available URL here">
             <a href="#" class="btn btn-warning btn-block admin" style="display:none;margin-top:5px;" id="adminsubmiturl">submit URL as Admin</a>
             <a href="#" class="btn btn-action btn-block" style="margin-top:5px;margin-bottom:30px;" id="submiturl">Submit your URL</a>
             <p id="warn" style="display:none;">
-              Papers posted on ResearchGate and Academia.edu are often illegal and aren't properly preserved. Most publishers allow 
-              you to publicly share the accepted version of your paper in a repository. We suggest checking 
-              <a target="_blank" href="http://www.sherpa.ac.uk/romeo/">SHERPA/RoMEO</a> or looking at your publishing agreement to determine what you're allowed to post and where. 
-              If you want it to be available to everyone, forever, we suggest uploading a copy to 
-              <a target="_blank" href="https://zenodo.org/">Zenodo</a>. If you give us a copy, we'll upload it to Zenodo for you!
+              Papers posted on ResearchGate and Academia.edu are often illegal and aren't properly preserved. Most publishers allow
+              you to publicly share the accepted version of your paper in a repository. We suggest checking
+              <a target="_blank" href="http://www.sherpa.ac.uk/romeo/">SHERPA/RoMEO</a> or looking at your publishing agreement to determine what you're allowed to post and where.
+              If you want it to be available to everyone, forever, we suggest uploading a copy to
+              <a target="_blank" href="https://zenodo.org/">Zenodo</a>. If you give us a copy, we'll upload it to Zenodo for you! If you're sure the copy your entering is legal, you can hit submit again and we'll accept it!
             </p>
           </div>
-          
+
           <div class="col-md-6">
+            <h3>Upload a file</h3>
             <p class="typearticle">
-              Or if you don't have a URL, upload your file here instead.
-              We’ll send it to <a target="_blank" href="https://zenodo.org">Zenodo</a> 
-              where it will be preserved and publicly accessible under a CC-BY license.
+              If you want to upload your article, we’ll send it to <a target="_blank" href="https://zenodo.org">Zenodo</a>. Zenodo will preserve and make it available under a CC-BY license.
             </p>
-            
+
             <p class="typedata">
-              Or if you don't have a URL, upload your file here instead. 
-              We’ll send it to the <a href="https://osf.io">Open Science Framework</a>. 
-              OSF will preserve your data and make it publicly available under a 
-              <a target="_blank" href="https://creativecommons.org/publicdomain/zero/1.0/">CC-0 license</a>, 
-              the recommended license for sharing data. Once you submit the data we’ll ask our community to validate it. 
-              If you have more than one file, please create a zip folder to upload.              
+              If you want to upload your data, we’ll send it to the <a href="https://osf.io">Open Science Framework</a>.
+              OSF will preserve your data and make it publicly available under a
+              <a target="_blank" href="https://creativecommons.org/publicdomain/zero/1.0/">CC-0 license</a>,
+              the recommended license for sharing data. Once you submit the data we’ll ask our community to validate it. If you have more than one file, please create a zip folder to upload.<br><br>
+              Need some help organizing your data first? Ask your library if they have a research data management specialist who can help.
             </p>
 
             <form id="fileupload" enctype="multipart/form-data" method="POST">
@@ -104,13 +93,24 @@
               <input type="hidden" name="service" value="openaccessbutton">
               <input type="hidden" name="dirId" id="dirId" value="">
               <input style="margin-top:5px;margin-bottom:5px;" id="title" type="text" class="form-control" placeholder="Enter the title here">
-              <input style="margin-top:5px;margin-bottom:5px;" id="firstname" type="text" class="form-control" placeholder="Enter your (author) first name here">
-              <input style="margin-top:5px;margin-bottom:5px;" id="lastname" type="text" class="form-control" placeholder="Enter your (author) last name here">
-              <textarea id="description" class="form-control" style="min-height:150px;margin-top:5px;" placeholder="Please provide an abstract / brief description / further information here"></textarea>
+              <input style="margin-top:5px;margin-bottom:5px;" id="firstname" type="text" class="form-control" placeholder="first name">
+              <input style="margin-top:5px;margin-bottom:5px;" id="lastname" type="text" class="form-control" placeholder="last name">
+              <textarea id="description" class="form-control" style="min-height:150px;margin-top:5px;" placeholder="Please provide an abstract / brief description"></textarea>
               <input type="submit" class="btn btn-warning btn-block admin" style="margin-top:5px;display:none;" id="adminsubmitfile" value="Upload file as Admin">
               <input type="submit" class="btn btn-action btn-block" style="margin-top:5px;" id="submitfile" value="Upload your file">
             </form>
           </div>
+          <div class="row">
+        <div class="col-md-12">
+          <h3>Refuse this request</h3>
+          <p class="typearticle">
+            If you can't share your article, or don't want to, you can simply <a href="?refuse=true">click here</a> and we'll let the requestor know.
+          </p>
+          <p class="typedata">
+            If you can't share your data, or don't want to, you can simply <a href="?refuse=true">click here</a> and we'll let the requestor know.
+          </p>
+        </div>
+              </div>
         </div>
 
       </div>
@@ -121,7 +121,6 @@
       </div>
 
       <div class="panels" id="submitted">
-        <div class="jumbotron">
           <h3>Thank you for submitting your content!</h3>
           <p>
             The link to your content
@@ -136,25 +135,20 @@
             We will inform our community that you have provided this,
             and it will be validated to ensure it is what is needed.
           </p>
-        </div>
       </div>
 
       <div class="panels" id="validating">
-        <div class="jumbotron">
           <h3>This content has already been received</h3>
           <p>
             It is awaiting validation from the requestor. Please view the original request (above) for further information.
           </p>
-        </div>
       </div>
 
       <div class="panels" id="validated">
-        <div class="jumbotron">
           <h3>There is no further action to take.</h3>
           <p>
             This content has already been received and validated. Please view the original request (above) for further information.
           </p>
-        </div>
       </div>
 
       <div class="admin" style="display:none;color:orange;">
@@ -163,21 +157,17 @@
       </div>
 
       <div class="panels" id="hold">
-        <div class="jumbotron">
           <h3>Thank you for your response.</h3>
           <p>
             We will put this request on hold for <span id="holdlength">X</span> days.
           </p>
-        </div>
       </div>
 
       <div class="panels" id="refuse">
-        <div class="jumbotron">
           <h3>Thank you for your response</h3>
           <p>
             We are sorry that you are unable to provide the content. We will let requestors know it cannot be made available, and display that publically on the request page.
           </p>
-        </div>
       </div>
 
     </div>
@@ -222,6 +212,7 @@
       // the receive endpoint will trigger forwarding to zenodo or osf
       var data = {};
       if ($('#url').val()) data.url = $('#url').val();
+      if (data.url && data.url.indexOf('http') !== 0) data.url = 'http://' + data.url;
       if ($('#description').val()) data.description = $('#description').val();
       if ($('#title').val()) data.title = $('#title').val();
       if ($('#firstname').val()) data.firstname = $('#firstname').val();
@@ -235,10 +226,10 @@
         processData: false,
         contentType: 'application/json',
         dataType: 'json',
-        success: function() { 
+        success: function() {
           $('.panels').hide();
           if (!$('#url').val()) $('.noturl').show();
-          $('#submitted').show(); 
+          $('#submitted').show();
         },
         error: function() { $('.panels').hide(); $('#error').show(); }
       }
@@ -301,7 +292,7 @@
     var romeo = function(data) {
       var color;
       try {
-        color = data.data.publishers[0].publisher[0].romeocolour[0];  
+        color = data.data.publishers[0].publisher[0].romeocolour[0];
       } catch(err) {}
       if (color && ['green','blue','yellow'].indexOf(color)) {
         $('#sherpa_'+color).show();
@@ -309,7 +300,7 @@
         $('#sherpa_unknown').show();
       }
     }
-    
+
     var details = function(data) {
       request = data;
       var dets = '<div>';
