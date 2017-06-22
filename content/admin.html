@@ -1,7 +1,6 @@
 
 <script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/facets.js"></script>
 <script type="text/javascript" src="/static/dropfile.js"></script>
-<script type="text/javascript" src="/static/job.js"></script>
 
 <div class="container-fluid" id="accounts" style="display:none;">
   <div class="row" id="mailbox" style="display:none;">
@@ -23,19 +22,19 @@
   </div>
   <div class="row" id="batch" style="display:none;">
     <div class="col-md-3">
-      <p class="jobupload">Upload a csv file, which must have column names including at least one of "url","doi","pmid","pmc","title"</p>
+      <p class="jobupload">Upload a csv file, which must have column names including at least one of "url","doi","pmid","pmcid","title"</p>
 		</div>
 		<div class="col-md-9">
       <form>
         <input type="file" name="jobupload" id="jobupload" class="form-control" style="padding-bottom:30px;margin-bottom:5px;">
-				<div style="display:none;" id="jobinfo"></div>
-        <input type="submit" class="btn btn-action btn-block submit jobupload" id="jobsubmit" name="jobsubmit" value="Submit">
+				<div style="display:none;" id="jobinfo">Uploading...</div>
       </form>
+			<div id="jobhistory"></div>
     </div>
   </div>
   <div class="row">
     <div class="col-md-3">
-      <a class="btn btn-action btn-block" id="showbatch">Submit a batch job</a>
+      <a class="btn btn-action btn-block" id="showbatch">Manage batch jobs</a>
       <a class="btn btn-action btn-block" id="showmailbox">Write an email</a>
       <a class="btn btn-action btn-block" id="refreshtemplates">Refresh templates</a>
       <div class="holder facets" style="margin-top:10px;"></div>
@@ -81,6 +80,113 @@
     }
 
     $('#showbatch').bind('click',function(e) { e.preventDefault(); $('#batch').toggle(); });
+
+		var getJobs = function(e) {
+			$.ajax({
+				url: api + '/job?apikey='+clogin.apikey,
+				method: 'GET',
+				contentType: "application/json; charset=utf-8",
+				success: function(data) {
+					var jh = '';
+					for ( var j in data ) {
+						var job = data[j];
+						jh += '<p>' + job.created_date + ': ' + job.name + ' (ID #' + job._id + ') ' + job.progress + '% - get ';
+						jh += '<a href="' + api + '/job/' + job._id + '/results.json">JSON</a> or <a href="' + api + '/job/' + job._id + '/results.csv">CSV</a></p>';
+					}
+					$('#jobhistory').html(jh);
+				}
+			});
+		}
+
+		var identifiers = [];
+		var file, filename;
+
+		var submitJob = function(e) {
+			identifiers = [];
+			var split = ',';
+			var wrap = '"';
+			var wrapreplace = new RegExp(wrap,"g");
+
+			file = file.replace(/\r\n/g,'\n'); // switch MS line breaks to unix
+			file = file.replace(/\n{2,}/g,'\n'); // get rid of any blank lines
+			file = file.replace(/\n*$/g,''); // remove newlines at end of file
+
+			var lines = [];
+			var fls = file.split('\n');
+			var il = '';
+			for ( var f in fls ) {
+				il += fls[f];
+				if ( il.split(wrap).length % 2 !== 0 ) {
+					lines.push(il);
+					il = '';
+				}
+			}
+			var headers = [];
+			var hline = lines.shift();
+			var hlines = hline.split(split);
+			var hl = '';
+			for ( var h in hlines ) {
+				if (hl.length > 0) hl += ',';
+				hl += hlines[h];
+				if ( hl.split(wrap).length % 2 !== 0 ) {
+					hl = hl.replace(wrapreplace,'').replace(/(^\s*)|(\s*$)/g,'');
+					headers.push(hl.toLowerCase());
+					hl = '';
+				}
+			}
+
+			for (var i = 0; i < lines.length; i++) {
+				var obj = {};
+				var currentline = lines[i].split(split);
+				var cl = '';
+				var counter = 0;
+				var lengths = 0;
+				for ( var col in currentline ) {
+					if (cl.length > 0) cl += ',';
+					cl += currentline[col];
+					if ( cl.split(wrap).length % 2 !== 0 ) {
+						cl = cl.replace(wrapreplace,'');
+						if (headers[counter] && headers[counter].length > 0) obj[headers[counter]] = cl;
+						if (lengths === 0) lengths = cl.length;
+						cl = '';
+						counter += 1;
+					}
+				}
+				if (lengths) identifiers.push(obj);
+			}
+
+			var payload = {processes:identifiers,name:filename};
+			$.ajax({
+				url: api + '/job?apikey='+clogin.apikey,
+				method: 'POST',
+				data: JSON.stringify(payload),
+				dataType: 'JSON', // TODO sort issue here, the POST invalidates preflight without jsonp but with jsonp we don't get back a jsonp object
+				contentType: "application/json; charset=utf-8",
+				success: function() { $('#jobinfo').html('<p>Job added. Refresh the page to update job list, and to check on jobs progress.</p>'); },
+				error: function() { $('#jobinfo').html('<p>Sorry, this job could not be uploaded.</p>'); }
+			});
+		}
+
+		var uploadJob = function(e) {
+			$('#jobinfo').show();
+			var f;
+			if( window.FormData === undefined ) {
+				f = (e.files || e.dataTransfer.files);
+			} else {
+				f = e.target.files[0];
+			}
+			filename = f.name;
+			var reader = new FileReader();
+			reader.onload = (function(theFile) {
+				return function(e) {
+					file = e.target.result;
+					submitJob();
+				};
+			})(f);
+			reader.readAsBinaryString(f);
+		}
+
+		$('input[type=file]').on('change', uploadJob);
 
     var vars = {};
     var templates = {};
@@ -333,8 +439,7 @@
     
     clogin.afterLogin = function() {
       if (clogin.hasRole('openaccessbutton.admin')) {
-				job.url = api + '/job';
-				job.startup();
+				getJobs();
         $('#no').hide();
         $('#accounts').show();
         var record = function(res) {
@@ -433,3 +538,4 @@
     clogin.login();
   });
 </script>
+
