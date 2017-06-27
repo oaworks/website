@@ -289,11 +289,12 @@
       });
     }
 
-    var romeo = function(data) {
-      var color;
-      try {
-        color = data.data.publishers[0].publisher[0].romeocolour[0];
-      } catch(err) {}
+    var romeo = function(data,color) {
+      if (data !== undefined && color === undefined) {
+        try {
+          color = data.data.publishers[0].publisher[0].romeocolour[0];
+        } catch(err) {}
+      }
       if (color && ['green','blue','yellow'].indexOf(color)) {
         $('#sherpa_'+color).show();
       } else {
@@ -346,11 +347,15 @@
         $('#upload').show();
       }
       if (request.journal) {
-        $.ajax({
-          type: 'GET',
-          url: 'https://dev.api.cottagelabs.com/use/sherpa/romeo/search?jtitle=' + request.journal,
-          success: romeo
-        });
+        if (request.sherpa) {
+          romeo(undefined,request.sherpa.color);
+        } else {
+          $.ajax({
+            type: 'GET',
+            url: 'https://dev.api.cottagelabs.com/use/sherpa/romeo/search?jtitle=' + request.journal,
+            success: romeo
+          });
+        }
       }
     }
     $.ajax({

@@ -110,8 +110,10 @@
         }
         if ( $('#admin_email').length && $('#admin_email').val() ) data.email = $('#admin_email').val();
         if ( $('#admin_title').length && $('#admin_title').val() ) data.title = $('#admin_title').val();
+        if ( $('#admin_journal').length && $('#admin_journal').val() ) data.title = $('#admin_journal').val();
         if ( $('#admin_doi').length && $('#admin_doi').val() ) data.doi = $('#admin_doi').val();
         if ( $('#admin_story').length && $('#admin_story').val() ) data.story = $('#admin_story').val();
+        if ( $('#admin_notes').length && $('#admin_notes').val() ) data.notes = $('#admin_notes').val();
         adminsubmitting = false;
       }
       var url = api+'/request/'+rid;
@@ -138,7 +140,7 @@
         var email = $(tgt).val();
         var opts = {
           type:'GET',
-          url: api+'/dnr?validate=true&email=' + email + '&request=' + rid + '&user=' + clogin.user.account._id,
+          url: api+'/dnr?validate=true&email=' + encodeURIComponent(email) + '&request=' + rid + '&user=' + clogin.user.account._id,
           cache:false,
           contentType: 'application/json',
           dataType: 'json',
@@ -236,6 +238,22 @@
         window.location = '/account?next=/request/' + rid + encodeURIComponent('?support=true');
       }
     }
+    
+    var history = function(rid) {
+      try {
+        $.ajax({
+          type:'GET',
+          url:api+'/history/'+rid,
+          success: function(data) {
+            var h = '';
+            for ( var d in data ) {
+              h += '<p>' + /*data[d].userId + ' at ' +*/ data[d].created_date + '<br>' + JSON.stringify(data[d].modifier) + '</p><hr>';
+            }
+            $('#history').html(h);
+          }
+        });
+      } catch(err) {}
+    }
 
     var admin = function(record) {
       var dets = '';
@@ -252,6 +270,7 @@
       dets += '>';
       dets += ' &nbsp;&nbsp;Action: <select id="action" class="form-control" style="width:150px;display:inline;">';
       var actions = ['','send_to_author','story_too_bad','not_a_scholarly_article','dead_author','user_testing','broken_link'];
+      if (record.received && record.received.url) actions.push('remove_submitted_url');
       for ( var a in actions ) {
         dets += '<option value="' + actions[a] + '">' + actions[a].replace(/_/g,' ') + '</option>';
       }
@@ -269,6 +288,9 @@
       dets += '<p class="emailissue" style="display:none;font-size:0.9em;"></p>';
       dets += '<p style="margin-top:10px;"><input type="text" id="admin_title" class="form-control" placeholder="Title" value="';
       if (record.title) dets += record.title;
+      dets += '"></p>';
+      dets += '<p style="margin-top:10px;"><input type="text" id="admin_journal" class="form-control" placeholder="Journal" value="';
+      if (record.journal) dets += record.journal;
       dets += '"></p>';
       dets += '<p><input type="text" id="admin_doi" class="form-control" placeholder="DOI" value="';
       if (record.doi) dets += record.doi;
@@ -289,6 +311,9 @@
       dets += '</p>';
       dets += '<p style="margin-top:20px;"><a class="btn btn-action" href="/response/' + record.receiver + '">View the response page for this request</a> ';
       dets += '<a class="btn btn-action pull-right" href="/admin?request=' + rid + '">Send email via admin UI about this request</a></p>';
+      dets += '<p><textarea id="admin_notes" class="form-control" placeholder="Admin notes" style="min-height:200px;">';
+      if (record.notes) dets += record.notes;
+      dets += '</textarea></p>';
       return dets;
     }
 
@@ -403,9 +428,10 @@
 
       if (clogin.hasRole('openaccessbutton.admin')) {
         re += '<p style="text-align:right;"><a href="#" id="showadmin" style="color:orange;">Admin</a></p>';
-        re += '<div id="admin" class="well" style="display:none;background-color:orange;">';
+        re += '<div id="admin" style="display:none;"><div class="well" style="background-color:orange;">';
         re += admin(rec);
-        re += '</div>';
+        re += '</div><div id="history"></div></div>';
+        history(rec._id);
       }
 
       $('#info').append(re);
