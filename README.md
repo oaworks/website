@@ -2,7 +2,6 @@
 
 Static content of OAButton site like the homepage, blogs and the about page, and the email templates.
 
-
 ## How to edit our site
 
 This repo will automatically deploy changes committed to the site. There is a develop branch and a master branch.
@@ -10,7 +9,6 @@ Changes should be committed to the develop branch first and viewed on the test s
 they should be committed to the master branch and they will appear on the live site.
 
 Actual editing of the files themselves can be done in any text editor or code editing tool, as you prefer.
-
 
 ### How to Edit via GitHub Web UI (needs work)
 Your steps should be:
@@ -27,16 +25,60 @@ Your steps should be:
 9. Push to `master`
 
 Although before point 7 you probably could do other pushes to Develop and view them too. Most of the time it should work
-These occasional conflicts are slightly annoying when they occur, but it is still far better than versions of docs flying all over the place anyway!
 
+This is the content of Open Access Button site.
 
+## Contributing
+
+Our [main repository](https:www.github.org/oabutton/backend) contains far more information on the project, how to contribute etc.
+
+Quick guide:
+
+* If you have an issue (e.g bug, suggestion, question), make it [here](https://github.com/OAButton/backend/issues/new)
+* If you want to contribute code to the plugin do it in this repository. Pull requests are always welcome. Some useful information is below.
+
+# Development Notes
+
+## How to edit our site
+
+### Branches, master vs develop.
+
+This repo will automatically deploy changes committed to the site.
+
+* master is our stable, released code.
+* develop is what we're currently working on now.
+
+Changes should be committed to the develop branch first and viewed on the test site. Once confirmed as being acceptable, they should be committed to the master branch and they will appear on the live site. The email system & data displayed on the site can be used without causing real database changes or emailing authors. 
+
+Actual editing of the files themselves can be done in any text editor or code editing tool, as you prefer.
+
+### How to edit & release via Github Web UI (good for small changes)
+
+Your steps should be:
+
+1. Change to the develop branch
+2. Make some changes as you wish
+3. commit them when you're ready
+4. View on the test site: oab.test.cottagelabs.com
+
+#### to release
+
+If you're happy with the above changes & everything has been tested
+
+5. Go to: https://github.com/OAButton/oab_static/tree/master. You'll be invited to make a pull request from the develop branch. Do this. 
+6. On the new screen, check that the commits you made are lised & others have been tested. If there are commits that haven't been tested either test them or ask Mark to make a pull request for just your changes.  
+8. Hit a the "Create a pull request" button.
+9. If all checks pass & you have no conflits, keep clicking until it's successfully merged. DON'T delete "develop".
+10. Wait for your changes to appear on the live site (this may take a few minutes). If you're changes dont appear, you may need to bug Mark. 
+
+Although before point 5 you probably could do other pushes to develop and view them too. Most of the time it should work
 
 ### How to Edit via GitHub command line
 
 - Clone the repository and switch to `develop` branch.
 
   ```sh
-  git clone git@github.com:OAButton/odb_static.git
+  git clone git@github.com:OAButton/oab_static.git
   git checkout develop
   ```
 
@@ -81,10 +123,7 @@ These occasional conflicts are slightly annoying when they occur, but it is stil
   ```sh
   git checkout develop
   ```
-
-
----
-
+  
 ## Repo Structure and URLs
 
 The usual index.html file naming paradigm can be used inside any folder in the usual way, as the default file to be served if the URL entered matches only the folder name.
@@ -110,6 +149,12 @@ And then the content of individual pages just goes in the `/content` folder.
 
 
 ---
+
+## The Bookmarklet
+
+* The bookmarklet is generated from code that runs the [Open Access Button Plugin](https://github.com/oabutton/unified-extension).
+* The bookmarklet can be instantly updated for users similar to how we update the website. 
+* You can view the bookmarklet in development at oabb.test.cottagelabs.com
 
 ## Approval Process
 
