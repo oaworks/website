@@ -110,7 +110,7 @@
         }
         if ( $('#admin_email').length && $('#admin_email').val() ) data.email = $('#admin_email').val();
         if ( $('#admin_title').length && $('#admin_title').val() ) data.title = $('#admin_title').val();
-        if ( $('#admin_journal').length && $('#admin_journal').val() ) data.title = $('#admin_journal').val();
+        if ( $('#admin_journal').length && $('#admin_journal').val() ) data.journal = $('#admin_journal').val();
         if ( $('#admin_doi').length && $('#admin_doi').val() ) data.doi = $('#admin_doi').val();
         if ( $('#admin_story').length && $('#admin_story').val() ) data.story = $('#admin_story').val();
         if ( $('#admin_notes').length && $('#admin_notes').val() ) data.notes = $('#admin_notes').val();
@@ -238,7 +238,7 @@
         window.location = '/account?next=/request/' + rid + encodeURIComponent('?support=true');
       }
     }
-    
+
     var history = function(rid) {
       try {
         $.ajax({
@@ -269,7 +269,7 @@
       if (record.test === true) dets += ' checked="checked"';
       dets += '>';
       dets += ' &nbsp;&nbsp;Action: <select id="action" class="form-control" style="width:150px;display:inline;">';
-      var actions = ['','send_to_author','story_too_bad','not_a_scholarly_article','dead_author','user_testing','broken_link'];
+      var actions = ['','send_to_author','story_too_weak','not_a_scholarly_article','deceased_author','user_testing','broken_link'];
       if (record.received && record.received.url) actions.push('remove_submitted_url');
       for ( var a in actions ) {
         dets += '<option value="' + actions[a] + '">' + actions[a].replace(/_/g,' ') + '</option>';

@@ -70,7 +70,7 @@
               you to publicly share the accepted version of your paper in a repository. We suggest checking
               <a target="_blank" href="http://www.sherpa.ac.uk/romeo/">SHERPA/RoMEO</a> or looking at your publishing agreement to determine what you're allowed to post and where.
               If you want it to be available to everyone, forever, we suggest uploading a copy to
-              <a target="_blank" href="https://zenodo.org/">Zenodo</a>. If you give us a copy, we'll upload it to Zenodo for you! If you're sure the copy your entering is legal, you can hit submit again and we'll accept it!
+              <a target="_blank" href="https://zenodo.org/">Zenodo</a>. If you give us a copy, we'll upload it to Zenodo for you! If you're sure the copy you're entering is legal, hit submit again and we'll accept it.
             </p>
           </div>
 
@@ -117,28 +117,30 @@
 
       <div class="panels" id="loading" style="display:none;">
         <img style="height:20px;" src="/static/spin_orange.svg"><br>
-        <p>Loading, please wait a minute (or longer if your file was large)</p>
+        <p>Loading, please wait a few moments</p>
       </div>
 
       <div class="panels" id="submitted">
-          <h3>Thank you for submitting your content!</h3>
+          <h3>Thank you for submitting your research!</h3>
           <p>
-            The link to your content
+            The link to your work
             <span class="noturl" style="display:none;">, saved
-            <span class="typearticle">on Zenodo</span>
+            <span class="typearticle">in Zenodo</span>
             <span class="typedata">at the Open Science Foundation</span>,
-            </span> will appear on the
-            <a class="requestlink" href="/request" style="color:white;">request</a>
-            page in a few minutes.
+            </span> is now available to everyone and can be accessed from our list of 
+            <a class="requestlink" href="/request?q=status:received">completed requests</a>.
+        </p>
+          <p><span class="typedata">
+            The data will be validated by our community.
+            </span>
           </p>
-          <p>
-            We will inform our community that you have provided this,
-            and it will be validated to ensure it is what is needed.
-          </p>
+        <p>Please take a minute to search your own name on <a href="http://www.dissem.in">Dissem.in</a>, 
+          and see if more of your work can be shared with the research community.
+        </p>
       </div>
 
       <div class="panels" id="validating">
-          <h3>This content has already been received</h3>
+          <h3>This research has already been received</h3>
           <p>
             It is awaiting validation from the requestor. Please view the original request (above) for further information.
           </p>
@@ -147,7 +149,7 @@
       <div class="panels" id="validated">
           <h3>There is no further action to take.</h3>
           <p>
-            This content has already been received and validated. Please view the original request (above) for further information.
+            This research has already been received and validated. Please view the original request (above) for further information.
           </p>
       </div>
 
@@ -166,7 +168,7 @@
       <div class="panels" id="refuse">
           <h3>Thank you for your response</h3>
           <p>
-            We are sorry that you are unable to provide the content. We will let requestors know it cannot be made available, and display that publically on the request page.
+            We are sorry that you are unable to provide your work. We will let requestors know it cannot be made available, and display that publically on the request page.
           </p>
       </div>
 
@@ -290,12 +292,12 @@
     }
 
     var romeo = function(data,color) {
-      if (data !== undefined && color === undefined) {
+      if (data !== undefined) {
         try {
           color = data.data.publishers[0].publisher[0].romeocolour[0];
         } catch(err) {}
       }
-      if (color && ['green','blue','yellow'].indexOf(color)) {
+      if (color && ['green','blue','yellow'].indexOf(color) !== -1) {
         $('#sherpa_'+color).show();
       } else {
         $('#sherpa_unknown').show();
@@ -352,7 +354,7 @@
         } else {
           $.ajax({
             type: 'GET',
-            url: 'https://dev.api.cottagelabs.com/use/sherpa/romeo/search?jtitle=' + request.journal,
+            url: 'https://api.cottagelabs.com/use/sherpa/romeo/search?jtitle=' + request.journal,
             success: romeo
           });
         }
