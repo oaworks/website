@@ -292,12 +292,12 @@
     }
 
     var romeo = function(data,color) {
-      if (data !== undefined && color === undefined) {
+      if (data !== undefined) {
         try {
           color = data.data.publishers[0].publisher[0].romeocolour[0];
         } catch(err) {}
       }
-      if (color && ['green','blue','yellow'].indexOf(color)) {
+      if (color && ['green','blue','yellow'].indexOf(color) !== -1) {
         $('#sherpa_'+color).show();
       } else {
         $('#sherpa_unknown').show();
@@ -354,7 +354,7 @@
         } else {
           $.ajax({
             type: 'GET',
-            url: 'https://dev.api.cottagelabs.com/use/sherpa/romeo/search?jtitle=' + request.journal,
+            url: 'https://api.cottagelabs.com/use/sherpa/romeo/search?jtitle=' + request.journal,
             success: romeo
           });
         }
