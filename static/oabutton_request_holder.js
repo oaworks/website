@@ -9,7 +9,7 @@ $.fn.holder.use.oabutton = {
   size:500,
   scroll:true,
   sort:[{createdAt:'desc'}],
-  fields: ['status','type','user.profession','user.affiliation','_id','url','created_date','createdAt','title','email','user.username','user.firstname','user.email','location.geo.lat','location.geo.lon','story','count'],
+  fields: ['status','type','user.profession','user.affiliation','_id','url','created_date','createdAt','title','email','user.username','user.firstname','user.email','location.geo.lat','location.geo.lon','story','rating','count'],
   facets: {
     status: { terms: { field: "status.exact" } },
     user: { terms: { field: "user.profession.exact", size: 100 } },
