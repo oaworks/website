@@ -55,11 +55,11 @@
         // So test for fullscreen mode. If we are fullscreen, give up on JS approach.
         // Browser will follow link to the web store defined in the link's href attr.
         if( window.outerHeight == screen.height) {
-          console.log("chrome is in fullscreen view. Quitting inline install.")
-          return false
-        }       
-        e.preventDefault();
-        chrome.webstore.install(undefined, function() { window.location = window.location.href }, function(err) { console.log('install error'); console.log(err); });
+          console.log("chrome is in fullscreen view. Quitting inline install.");
+        } else {
+          e.preventDefault();
+          chrome.webstore.install(undefined, function() { window.location = window.location.href }, function(err) { console.log('install error'); console.log(err); });
+        }
       } else {
         e.preventDefault();
         window.location = '/account';

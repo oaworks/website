@@ -27,7 +27,7 @@ jQuery(document).ready(function() {
   var afterlogin = function() {
     //$('#downloads').hide();
     if (clogin.user.account.username || (clogin.user.account.profile && clogin.user.account.profile.firstname ) ) {
-      var hl = clogin.user.account.profile.firstname ? clogin.user.account.profile.firstname : clogin.user.account.username;
+      var hl = clogin.user.account.profile && clogin.user.account.profile.firstname ? clogin.user.account.profile.firstname : clogin.user.account.username;
       $('.username').html(hl);
       if (clogin.next) {
         $('#tonext').attr('href',clogin.next);
