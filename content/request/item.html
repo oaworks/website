@@ -366,9 +366,9 @@
       if (rec.story ) {
         re += '<div class="well" style="background-color:#FFFFFC;"><p>';
         var frn;
-        if (rec.user.firstname) {
+        if (rec.user && rec.user.firstname) {
           frn = rec.user.firstname;
-        } else if (rec.user.username && rec.user.username.indexOf('@') === -1) {
+        } else if (rec.user && rec.user.username && rec.user.username.indexOf('@') === -1) {
           frn = rec.user.username;
         } else {
           frn = 'An anonymous';
