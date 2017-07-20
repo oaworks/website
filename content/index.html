@@ -150,7 +150,7 @@
         $('#loading').show();
         var opts = {
           type:'GET',
-          url:api+'/availability?url='+encodeURIComponent(url),
+          url:api+'/availability?plugin=website&url='+encodeURIComponent(url),
           success: function(data) {
             $('#loading').hide();
             $('#availability').show();
@@ -284,7 +284,7 @@
           opts.processData = false;
           opts.contentType = 'application/json';
           opts.dataType = 'json';
-          opts.data = JSON.stringify({url:url});
+          opts.data = JSON.stringify({url:url,plugin:'website'});
         }
         $.ajax(opts);
       } else {
