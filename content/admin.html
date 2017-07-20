@@ -91,7 +91,7 @@
 					for ( var j in data ) {
 						var job = data[j];
 						jh += '<p>' + job.created_date + ': ' + job.name + ' (ID #' + job._id + ') ' + job.progress + '% - get ';
-						jh += '<a href="' + api + '/job/' + job._id + '/results.json">JSON</a> or <a href="' + api + '/job/' + job._id + '/results.csv">CSV</a></p>';
+						jh += '<a target="_blank" href="' + api + '/job/' + job._id + '/results.json">JSON</a> or <a href="' + api + '/job/' + job._id + '/results.csv">CSV</a></p>';
 					}
 					$('#jobhistory').html(jh);
 				}
