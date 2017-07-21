@@ -128,6 +128,29 @@
       info += '<p>We have ' + status.users + ' users in total, and ' + status.requested + ' have made requests while signed in. ' + status.supports;
       info += ' users have added their support to requests that someone else made. ' + data.aggregations.tm1.tm1v.value + ' users have done an availability ';
       info += ' check whilst signed in during the last month, and ' + data.aggregations.tm3.tm3v.value + ' greater than 1 month but less than 3 months ago.</p>';
+      
+      var plugins = {};
+      for ( var p in data.facets.plugin.terms ) {
+        var pl = data.facets.plugin.terms[p];
+        var at = pl.term.split('_')[0].replace('oabutton','plugin');
+        if (plugins[at] === undefined) plugins[at] = {all:0,week:0}
+        plugins[at].all += pl.count;
+      }
+      for ( var wp in data.facets.plugin_week.terms ) {
+        var pw = data.facets.plugin_week.terms[wp];
+        var wt = pw.term.split('_')[0].replace('oabutton','plugin');
+        if (plugins[wt] === undefined) plugins[wt] = {all:0,week:0}
+        plugins[wt].week += pw.count;
+      }
+
+      info += '<p>Users have been using these tools:</p>';
+      info += '<table class="table table-bordered"><thead><tr><th></th>';
+      for ( var plug in plugins ) info += '<th>' + plug + '</th>';
+      info += '</tr></thead><tbody><tr><td><b>all-time</b></td>';
+      for ( var pla in plugins ) info += '<td>' + plugins[pla].all + '</td>';
+      info += '</tr><tr><td><b>the last week</b></td>';
+      for ( var plw in plugins ) info += '<td>' + plugins[plw].week + '</td>';
+      info += '</tr></tbody></table>';
 
       $('#results').html(info);
       lineit(data,"svg.line");
@@ -173,9 +196,8 @@
 
     $('#availability').holder({
       class: 'holder',
-      url: api + "/availabilities?apikey="+clogin.apikey,
+      url: api + "/availabilities",
       datatype: 'JSON',
-      //apikey: clogin.apikey, // to get this working have to stop ES overriding allowed headers
       defaultquery: {
         size:0,
         query: {
