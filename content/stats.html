@@ -109,6 +109,8 @@
       info += 'The rest are going through our moderation process. 6184 of these requests in moderation are imports from our old system.</p>';
       info += '<p>New requests over time, grouped by week:</p>';
       info += '<svg class="rline"></svg>';
+      info += '<p>New requests with stories over time, grouped by week:</p>';
+      info += '<svg class="rsline"></svg>';
       info += '<p>Requests successful over time, grouped by week:</p>';
       info += '<svg class="rrline"></svg>';
       
@@ -132,7 +134,7 @@
       info += ' users have added their support to requests that someone else made. ' + data.aggregations.tm1.tm1v.value + ' users have done an availability ';
       info += ' check whilst signed in during the last month, and ' + data.aggregations.tm3.tm3v.value + ' greater than 1 month but less than 3 months ago.</p>';
       
-      var plugins = {};
+      var plugins = {api:{all:data.facets.plugin.missing,week:data.facets.plugin_week.missing}};
       for ( var p in data.facets.plugin.terms ) {
         var pl = data.facets.plugin.terms[p];
         if (pl.term.indexOf('test') === -1) {
@@ -170,10 +172,11 @@
           success: function(rs) {
             status = rs.data;
             $.ajax({
-              url: api + '/requests?q=story:*',
+              url: api + '/requests?&source=%7B%22size%22%3A0%2C%22query%22%3A%7B%22filtered%22%3A%7B%22query%22%3A%7B%22bool%22%3A%7B%22must%22%3A%5B%7B%22query_string%22%3A%7B%22query%22%3A%22story%3A*%22%7D%7D%5D%7D%7D%7D%7D%2C%22aggregations%22%3A%7B%22availabilities%22%3A%7B%22date_histogram%22%3A%7B%22field%22%3A%22createdAt%22%2C%22interval%22%3A%22week%22%7D%7D%7D%2C%22from%22%3A0%7D',
               success: function(d) {
                 status.requests_with_story = d.hits.total;
                 availability(data);
+                lineit(d,"svg.rsline");
                 $.ajax({
                   url: api + '/requests?&source=%7B%22size%22%3A0%2C%22query%22%3A%7B%22filtered%22%3A%7B%22query%22%3A%7B%22bool%22%3A%7B%22must%22%3A%5B%7B%22match_all%22%3A%7B%7D%7D%5D%7D%7D%7D%7D%2C%22aggregations%22%3A%7B%22availabilities%22%3A%7B%22date_histogram%22%3A%7B%22field%22%3A%22createdAt%22%2C%22interval%22%3A%22week%22%7D%7D%2C%22received%22%3A%7B%22date_histogram%22%3A%7B%22field%22%3A%22received.date%22%2C%22interval%22%3A%22week%22%7D%7D%7D%2C%22from%22%3A0%7D',
                   success: function(dt) {
