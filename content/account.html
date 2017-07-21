@@ -90,7 +90,7 @@ jQuery(document).ready(function() {
   };
   var mobile = mobileCheck();
   var b = '.bk';
-  if (navigator.userAgent.match(/chrome/i) && !mobile) b = '.ch';
+  if (navigator.userAgent.match(/chrome/i) && !navigator.userAgent.match(/edge/i) && !mobile) b = '.ch';
   if (navigator.userAgent.match(/firefox/i) && !mobile) b = '.ff';
   if (mobile) b = '.mob';
   $('.dl').hide();
