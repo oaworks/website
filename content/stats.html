@@ -80,14 +80,14 @@
         .text(function(d) { return d.val + " on " + (d.text ? d.text : d.date); });
   	}
 
-    var parseTime = d3.timeParse("%Y-%m-%d");
     var lineit = function(data,tgt) {
     	if ( !$(tgt).attr('height') ) $(tgt).attr('height',200);
     	if ( !$(tgt).attr('width') ) $(tgt).attr('width',$('#results').width());
   		var points = [];
-      for ( var d in data.aggregations.availabilities.buckets ) {
-        var text = data.aggregations.availabilities.buckets[d].key_as_string.split(' ')[0];
-        points.push({text:text,date:parseTime(text),val:data.aggregations.availabilities.buckets[d].doc_count});
+  		var t = tgt === 'svg.rrline' ? data.aggregations.received.buckets : data.aggregations.availabilities.buckets;
+      for ( var d in t ) {
+        var text = moment.unix(t[d].key/1000).format('DD/MM/YYYY');
+        points.push({text:text,date:t[d].key,val:t[d].doc_count});
       }
       line(points,tgt);
   	}
@@ -104,10 +104,13 @@
       
       info += '<h3>Requests</h3>';
       info += '<p>We have ' + status.requests + ' requests, ' + status.article + ' for articles and ' + status.data + ' for data. ';
+      info += status.requests_with_story + ' have stories, ';
       info += status.received + ' have been successful, ' + status.progress + ' are in progress, and ' + status.refused + ' were refused. ';
       info += 'The rest are going through our moderation process. 6184 of these requests in moderation are imports from our old system.</p>';
       info += '<p>Requests over time, grouped by week:</p>';
       info += '<svg class="rline"></svg>';
+      info += '<p>Requests successful over time, grouped by week:</p>';
+      info += '<svg class="rrline"></svg>';
       
       var found = 0;
       for ( var sc in data.facets.sources.terms) {
@@ -144,7 +147,7 @@
       }
 
       info += '<p>Users have been using these tools:</p>';
-      info += '<table class="table table-bordered"><thead><tr><th></th>';
+      info += '<table class="table table-bordered table-striped"><thead><tr><th></th>';
       for ( var plug in plugins ) info += '<th>' + plug + '</th>';
       info += '</tr></thead><tbody><tr><td><b>all-time</b></td>';
       for ( var pla in plugins ) info += '<td>' + plugins[pla].all + '</td>';
@@ -162,11 +165,18 @@
           url: api + '/status',
           success: function(rs) {
             status = rs.data;
-            availability(data);
             $.ajax({
-              url: api + '/requests?source=%7B%22size%22%3A0%2C%22query%22%3A%7B%22filtered%22%3A%7B%22query%22%3A%7B%22bool%22%3A%7B%22must%22%3A%5B%7B%22match_all%22%3A%7B%7D%7D%5D%7D%7D%7D%7D%2C%22aggregations%22%3A%7B%22availabilities%22%3A%7B%22date_histogram%22%3A%7B%22field%22%3A%22createdAt%22%2C%22interval%22%3A%22week%22%7D%7D%7D%2C%22from%22%3A0%7D',
-              success: function(dt) {
-                lineit(dt,"svg.rline");
+              url: api + '/requests?q=story:*',
+              success: function(d) {
+                status.requests_with_story = d.hits.total;
+                availability(data);
+                $.ajax({
+                  url: api + '/requests?&source=%7B%22size%22%3A0%2C%22query%22%3A%7B%22filtered%22%3A%7B%22query%22%3A%7B%22bool%22%3A%7B%22must%22%3A%5B%7B%22match_all%22%3A%7B%7D%7D%5D%7D%7D%7D%7D%2C%22aggregations%22%3A%7B%22availabilities%22%3A%7B%22date_histogram%22%3A%7B%22field%22%3A%22createdAt%22%2C%22interval%22%3A%22week%22%7D%7D%2C%22received%22%3A%7B%22date_histogram%22%3A%7B%22field%22%3A%22received.date%22%2C%22interval%22%3A%22week%22%7D%7D%7D%2C%22from%22%3A0%7D',
+                  success: function(dt) {
+                    lineit(dt,"svg.rline");
+                    lineit(dt,"svg.rrline");
+                  }
+                });
               }
             });
           }
