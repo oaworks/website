@@ -135,15 +135,19 @@
       var plugins = {};
       for ( var p in data.facets.plugin.terms ) {
         var pl = data.facets.plugin.terms[p];
-        var at = pl.term.split('_')[0].replace('oabutton','plugin');
-        if (plugins[at] === undefined) plugins[at] = {all:0,week:0}
-        plugins[at].all += pl.count;
+        if (pl.term.indexOf('test') === -1) {
+          var at = pl.term.split('_')[0].replace('oabutton','plugin');
+          if (plugins[at] === undefined) plugins[at] = {all:0,week:0}
+          plugins[at].all += pl.count;
+        }
       }
       for ( var wp in data.facets.plugin_week.terms ) {
         var pw = data.facets.plugin_week.terms[wp];
-        var wt = pw.term.split('_')[0].replace('oabutton','plugin');
-        if (plugins[wt] === undefined) plugins[wt] = {all:0,week:0}
-        plugins[wt].week += pw.count;
+        if (pw.term.indexOf('test') === -1) {
+          var wt = pw.term.split('_')[0].replace('oabutton','plugin');
+          if (plugins[wt] === undefined) plugins[wt] = {all:0,week:0}
+          plugins[wt].week += pw.count;
+        }
       }
 
       info += '<p>Users have been using these tools:</p>';
