@@ -1,10 +1,15 @@
 
 <div class="container-fluid" id="availability">
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-8 col-md-offset-2">
       <h2>
         Stats
       </h2>
+      <p>
+        We have been recording usage statistics since we switched to our new system, on 24th October 2016. 
+        We don't track individual users usage, and we allow most features of our service to be used anonymously. 
+        So we have more data about overall usage, and a bit about certain types of usage.
+      </p>
       <input type="text" class="form-control holder search" style="display:none;">
       <div id="results"></div>
     </div>
@@ -23,7 +28,7 @@
     //clogin.login();
     
     var availability = function(data) {
-      var info = '<div class="row"><div class="col-md-6"><p>There have been ' + data.hits.total + ' availability checks (what used to be blocks) made since we switched to the new site and plugins (24th October 2016)</p>';
+      var info = '<p>We have done ' + data.hits.total + ' availability checks.</p>';
       info += '<p>' + data.facets.email.missing + ' of those were made anonymously, ';
       info += 'and ' + (data.hits.total - data.facets.email.missing) + ' were made by signed in users (but some users have made multiple, so this is not a unique user count).</p>';
       var dt = new Date();
@@ -68,7 +73,7 @@
       info += onetothreemonths + ' between one and three months ago, ';
       info += 'and ' + overthreemonths + ' over three months ago.</p>';
       info += '<p>The number of identified (by most recent access method) and anonymous users is:</p>';
-      info += '</div><div class="col-md-6"><table class="table table-bordered table-striped">';
+      info += '<table class="table table-bordered table-striped">';
       info += '<thead><th>method</th><th>identified</th><th>anonymous</th><th>subtotal</th><th>total</th></thead><tbody>';
       var website = 0;
       var plugins = 0;
@@ -99,7 +104,7 @@
           plugins += (used[p].identified.length + used[p].anonymous);
         }
       }
-      info += '</tbody></table></div></div>';
+      info += '</tbody></table>';
       $('#results').append(info);
     }
 
@@ -114,7 +119,7 @@
             createdAt: {order: 'desc'}
           }
         ],
-        size:10000,
+        size:10,
         fields:['plugin','email','createdAt'],
         query: {
           filtered: {
