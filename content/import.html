@@ -44,7 +44,7 @@
       clogin.api = 'https://dev.api.cottagelabs.com/accounts';
     }
     
-    var acceptedfields = ['_id','created_date','type','count','status','title','url','doi','journal','publisher','email','user.username','user.email','story','rating','receiver','refused.email','refused.date','received.date','received.from','received.description','received.url','received.admin','received.cron','received.notfromauthor'];
+    var acceptedfields = ['_id','created_date','type','count','status','title','url','doi','journal','publisher','sherpa.color','email','user.username','user.email','story','rating','receiver','refused.email','refused.date','received.date','received.from','received.description','received.url','received.admin','received.cron','received.notfromauthor'];
     for ( var a in acceptedfields ) {
       if (a !== '0') $('#acceptedfields').append(', ');
       $('#acceptedfields').append(acceptedfields[a]);

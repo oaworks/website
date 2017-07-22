@@ -189,7 +189,7 @@
         var fields = {
           account: ['_id','created_date','emails.address','profile.name','service.openaccessbutton.profile.affiliation','service.openaccessbutton.profile.profession','roles.openaccessbutton','username'],
           //request: ['_id','created_date','type','count','status','title','url','doi','journal','publisher','email','user.username','story','rating'],
-          request: ['_id','created_date','type','count','status','title','url','doi','journal','publisher','email','user.username','user.email','story','rating','receiver','refused.email','refused.date','received.date','received.from','received.description','received.url','received.admin','received.cron','received.notfromauthor'],
+          request: ['_id','created_date','type','count','status','title','url','doi','journal','publisher','sherpa.color','email','user.username','user.email','story','rating','receiver','refused.email','refused.date','received.date','received.from','received.description','received.url','received.admin','received.cron','received.notfromauthor'],
           support: ['created_date','url','type','story','username','rid'],
           availability: ['created_date','username','url','discovered.article','discovered.data','plugin']
         }
@@ -245,7 +245,7 @@
     $('#go').bind('click',go);
 
     clogin.afterLogin = function() {
-      if (clogin.hasRole('openaccessbutton.admin')) $('#what').append('<option value="account">Users (the user account details)</option><option value="mail">Mail stats</option><option value="changes">Changes to requests</option>');
+      if (clogin.hasRole('openaccessbutton.admin')) $('#what').append('<option value="account">Users (the user account details)</option><option value="mail">Mail stats</option><option value="changes">Changes to requests</option><option value="dnr">DNR list of emails we cannot send to</option>');
     }
     clogin.login();
 
