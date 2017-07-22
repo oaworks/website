@@ -25,6 +25,9 @@
       <a class="btn btn-action btn-block" id="showbatch">Manage batch jobs</a>
       <a class="btn btn-action btn-block" id="showmailbox">Write an email</a>
       <a class="btn btn-action btn-block" id="refreshtemplates">Refresh templates</a>
+      <a class="btn btn-action btn-block" a href="/export">Export Data</a>
+      <a class="btn btn-action btn-block" a href="/import">Import Data</a>
+      <a class="btn btn-action btn-block" a href="/stats">See Stats</a>
       <div class="holder facets" style="margin-top:10px;"></div>
     </div>
     <div class="col-md-9">
@@ -97,7 +100,7 @@
   			});
 			}
     }
-    
+
 		var getJobs = function(e) {
 			$.ajax({
 				url: api + '/job?apikey='+clogin.apikey,
@@ -117,7 +120,7 @@
 				}
 			});
 		}
-		
+
     var start = moment().startOf('isoWeek');
     var today = moment().endOf('day');
     $('#batchfrom').val(moment(start,"x").format("DDMMYYYY"));
@@ -129,9 +132,9 @@
 			$.ajax({
 				url: api + '/job/generate/' + from + '/' + to + '?apikey='+clogin.apikey,
 				method: 'POST',
-				success: function(data) { 
+				success: function(data) {
 				  if (data.count) {
-				    $('#jobinfo').show().html('<p>Job added, with ' + data.count + ' rows. Refresh the page to update job list, and to check on jobs progress.</p>'); 
+				    $('#jobinfo').show().html('<p>Job added, with ' + data.count + ' rows. Refresh the page to update job list, and to check on jobs progress.</p>');
 				  } else {
 				    $('#jobinfo').show().html('<p>There are no open requests between these dates. No job created.</p>');
 				  }
@@ -245,7 +248,7 @@
     var firstpopulate = true;
 
     $('#showmailbox').bind('click',function(e) { e.preventDefault(); $('#mailbox').toggle(); });
-    
+
     $('#refreshtemplates').bind('click',function(e) {
       e.preventDefault();
       $('#refreshtemplates').html('<img src="//static.cottagelabs.com/spin_grey.svg" style="height:20px;">').addClass('disabled');
@@ -265,7 +268,7 @@
       };
       $.ajax(opts);
     });
-    
+
     var reset = function() {
       vars = {};
       $('#from').val("");
@@ -280,7 +283,7 @@
       if ($('#notes').length) $('#notes').remove();
       if ($('#populate').length) $('#populate').removeClass('disabled');
     }
-    
+
     var sendemail = function(e) {
       e.preventDefault();
       if ($('#from').val()) vars.from = $('#from').val();
@@ -303,7 +306,7 @@
         if ($('#secondary').val()) vars.html = $('#secondary').val();
       } else {
         vars.text = $('#content').val();
-        vars.html = $('#secondary').val();        
+        vars.html = $('#secondary').val();
       }
       if (vars.content) delete vars.content;
       var opts = {
@@ -330,7 +333,7 @@
       }
     }
     $('#sendemail').bind('click',sendemail);
-    
+
     var populate = function(event) {
       $('#populate').addClass('disabled');
       firstpopulate = true;
@@ -343,7 +346,7 @@
         dataType: 'json',
         beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
         url:api+'/substitute',
-        success: function(data) { 
+        success: function(data) {
           if (request) {
             if (firstpopulate) {
               firstpopulate = false;
@@ -407,19 +410,19 @@
       $.ajax({
         type:'GET',
         url:api+'/request/'+rid,
-        success: function(data) { 
+        success: function(data) {
           request = data.data;
           $('#sendemail').before('<a style="margin-top:5px;display:none;" href="" id="populate" class="btn btn-info btn-xs btn-block">Preview the email with variables for request ' + rid + '</a>');
           $('#populate').bind('click',populate);
           $('#mailbox').show();
         }
-      });      
+      });
     }
-    
+
     $.ajax({
       type:'GET',
       url:api+'/templates',
-      success: function(data) { 
+      success: function(data) {
         $('#template').html('<option val="">Select a template (optional)</option>');
         for ( var t in data.data ) {
           templates[data.data[t]._id] = data.data[t];
@@ -451,7 +454,7 @@
       }
     }
     $('#template').bind('change',template);
-        
+
     var del = function(e) {
       alert('TODO will remove a user account from oabutton');
       e.preventDefault();
@@ -480,12 +483,12 @@
       $(this).hide();
     }
     var unadmin = function(e) {
-      e.preventDefault();      
+      e.preventDefault();
       clogin.removerole('openaccessbutton.admin',$(this).attr('href'));
       $(this).siblings('.adminify').show();
       $(this).hide();
     }
-    
+
     clogin.afterLogin = function() {
       if (clogin.hasRole('openaccessbutton.admin')) {
 				getJobs();
@@ -582,9 +585,8 @@
         window.location = '/';
       }
     }
-    
+
 		clogin.afterFailure = function() { window.location = '/account?next=/admin'; };
     clogin.login();
   });
 </script>
-
