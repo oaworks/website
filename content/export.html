@@ -180,7 +180,9 @@
     var go = function() {
       if (!clogin.hasRole('openaccessbutton.admin') && $('#what').val() === 'account') window.location = '/';
       if ( $('#what').val() === 'mail' || $('#what').val() === 'changes' ) {
-        var curl = api + '/dump/' + $('#what').val() + '?apikey=' + clogin.apikey;
+        var curl = api + '/export/' + $('#what').val() + '?apikey=' + clogin.apikey;
+        if (changed.from) curl += '&from=' + moment(changed.from,'DD/MM/YYYY').valueOf();
+        if (changed.to) curl += '&to=' + moment(changed.to,'DD/MM/YYYY').valueOf();
         $(this).attr('href',curl);
       } else {
         var size = 100000;

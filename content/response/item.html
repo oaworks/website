@@ -63,6 +63,7 @@
             </p>
 
             <input style="margin-bottom:5px;" id="url" type="text" class="form-control" placeholder="Enter the publicly available URL here">
+            <p class="admin" style="display:none;color:orange;"><input type="checkbox" id="urlnotfromauthor"> Tick if URL not provided by author</p>
             <a href="#" class="btn btn-warning btn-block admin" style="display:none;margin-top:5px;" id="adminsubmiturl">submit URL as Admin</a>
             <a href="#" class="btn btn-action btn-block" style="margin-top:5px;margin-bottom:30px;" id="submiturl">Submit your URL</a>
             <p id="warn" style="display:none;">
@@ -96,6 +97,7 @@
               <input style="margin-top:5px;margin-bottom:5px;" id="firstname" type="text" class="form-control" placeholder="first name">
               <input style="margin-top:5px;margin-bottom:5px;" id="lastname" type="text" class="form-control" placeholder="last name">
               <textarea id="description" class="form-control" style="min-height:150px;margin-top:5px;" placeholder="Please provide an abstract / brief description"></textarea>
+              <p class="admin" style="display:none;color:orange;"><input type="checkbox" id="filenotfromauthor"> Tick if file not provided by author</p>
               <input type="submit" class="btn btn-warning btn-block admin" style="margin-top:5px;display:none;" id="adminsubmitfile" value="Upload file as Admin">
               <input type="submit" class="btn btn-action btn-block" style="margin-top:5px;" id="submitfile" value="Upload your file">
             </form>
@@ -234,6 +236,7 @@
         error: function() { $('.panels').hide(); $('#error').show(); }
       }
       if (clickedadmin) {
+        if ( $('#urlnotfromauthor').is(':checked') || $('#filenotfromauthor').is(':checked') ) data.notfromauthor = true;
         data.admin = true;
         opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", clogin.apikey); };
       }
