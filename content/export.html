@@ -179,65 +179,70 @@
 
     var go = function() {
       if (!clogin.hasRole('openaccessbutton.admin') && $('#what').val() === 'account') window.location = '/';
-      var size = 10000;
-      var fields = {
-        account: ['_id','created_date','emails.address','profile.name','service.openaccessbutton.profile.affiliation','service.openaccessbutton.profile.profession','roles.openaccessbutton','username'],
-        request: ['_id','created_date','type','count','status','title','url','doi','journal','publisher','email','user.username','story','rating'],
-        support: ['created_date','url','type','story','username','rid'],
-        availability: ['created_date','username','url','discovered.article','discovered.data','plugin']
-      }
-      var endpoint = 'requests';
-      if ($('#what').val() === 'account') endpoint = 'users';
-      if ($('#what').val() === 'availability') endpoint = 'availabilities';
-      if ($('#what').val() === 'support') endpoint = 'supports';
-
-      var query = {
-        size: size, // perhaps there needs to be a download batch size option, and/or a check on how many records are available to download
-        query: {
-          filtered: {
-            query: {
-              bool: {
-                must: [
-                  {"match_all":{}}
-                ]
-              }
-            },
-            filter: {
-              bool: {
-                must:[]
+      if ( $('#what').val() === 'mail' || $('#what').val() === 'changes' ) {
+        var curl = api + '/dump/' + $('#what').val() + '?apikey=' + clogin.apikey;
+        $(this).attr('href',curl);
+      } else {
+        var size = 100000;
+        var fields = {
+          account: ['_id','created_date','emails.address','profile.name','service.openaccessbutton.profile.affiliation','service.openaccessbutton.profile.profession','roles.openaccessbutton','username'],
+          request: ['_id','created_date','type','count','status','title','url','doi','journal','publisher','email','user.username','story','rating'],
+          support: ['created_date','url','type','story','username','rid'],
+          availability: ['created_date','username','url','discovered.article','discovered.data','plugin']
+        }
+        var endpoint = 'requests';
+        if ($('#what').val() === 'account') endpoint = 'users';
+        if ($('#what').val() === 'availability') endpoint = 'availabilities';
+        if ($('#what').val() === 'support') endpoint = 'supports';
+  
+        var query = {
+          size: size, // perhaps there needs to be a download batch size option, and/or a check on how many records are available to download
+          query: {
+            filtered: {
+              query: {
+                bool: {
+                  must: [
+                    {"match_all":{}}
+                  ]
+                }
+              },
+              filter: {
+                bool: {
+                  must:[]
+                }
               }
             }
           }
         }
-      }
-      if ( $('#value').val() ) {
-        var t = {term:{}};
-        t.term[$('#filter').val()+'.exact'] = $('#value').val();
-        query.query.filtered.filter.bool.must.push(t);
-      }
-      if (changed.from || changed.to) {
-        var rg = {
-          range : {
-            createdAt : {
+        if ( $('#value').val() ) {
+          var t = {term:{}};
+          t.term[$('#filter').val()+'.exact'] = $('#value').val();
+          query.query.filtered.filter.bool.must.push(t);
+        }
+        if (changed.from || changed.to) {
+          var rg = {
+            range : {
+              createdAt : {
+              }
             }
           }
+          if (changed.from) rg.range.createdAt.gte = moment(changed.from,'DD/MM/YYYY').valueOf();
+          if (changed.to) rg.range.createdAt.lte = moment(changed.to,'DD/MM/YYYY').valueOf();
+          query.query.filtered.filter.bool.must.push(rg);
         }
-        if (changed.from) rg.range.createdAt.gte = moment(changed.from,'DD/MM/YYYY').valueOf();
-        if (changed.to) rg.range.createdAt.lte = moment(changed.to,'DD/MM/YYYY').valueOf();
-        query.query.filtered.filter.bool.must.push(rg);
+        if ( query.query.filtered.filter.bool.must.length === 0 ) query.query = {"match_all":{}};
+  
+        var url = api + '/' + endpoint + '?';
+        if ($('#what').val() === 'account') url += 'apikey=' + clogin.apikey + '&';
+        url += 'source=' + JSON.stringify(query);
+        var curl = clogin.api.replace('/accounts','/convert?from=json&to=csv&subset=hits.hits._source&fields=' + fields[$('#what').val()].join(',') + '&url='+encodeURIComponent(url));
+        $(this).attr('href',curl);
       }
-      if ( query.query.filtered.filter.bool.must.length === 0 ) query.query = {"match_all":{}};
-
-      var url = api + '/' + endpoint + '?';
-      if ($('#what').val() === 'account') url += 'apikey=' + clogin.apikey + '&';
-      url += 'source=' + JSON.stringify(query);
-      var curl = clogin.api.replace('/accounts','/convert?from=json&to=csv&subset=hits.hits._source&fields=' + fields[$('#what').val()].join(',') + '&url='+encodeURIComponent(url));
-      $(this).attr('href',curl);
     }
     $('#go').bind('click',go);
 
     clogin.afterLogin = function() {
-      if (clogin.hasRole('openaccessbutton.admin')) $('#what').append('<option value="account">Users (the user account details)</option>');
+      if (clogin.hasRole('openaccessbutton.admin')) $('#what').append('<option value="account">Users (the user account details)</option><option value="mail">Mail stats</option><option value="changes">Changes to requests</option>');
     }
     clogin.login();
 
