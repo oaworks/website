@@ -17,6 +17,10 @@
         The accepted fields match what you can export for requests from <a href="/export">/export</a>, and they are: <br>
       </p>
       <p>
+        Note, although _id is required and created_date is accepted, you cannot alter the values of those fields - if they 
+        are changed in the import csv, they will be ignored.
+      </p>
+      <p>
         If you want to create new records, you must create them in the system FIRST and then submit a sheet here to edit them. 
         You can create requests in bulk by using the <a href="/admin">/admin</a> page bulk job upload feature - upload a csv 
         full of the identifiers you want to check for, and then once the job is done and all have been checked, you can use 
@@ -44,7 +48,7 @@
       clogin.api = 'https://dev.api.cottagelabs.com/accounts';
     }
     
-    var acceptedfields = ['_id','created_date','type','count','status','title','url','doi','journal','publisher','sherpa.color','email','user.username','user.email','story','rating','receiver','refused.email','refused.date','received.date','received.from','received.description','received.url','received.admin','received.cron','received.notfromauthor'];
+    var acceptedfields = ['_id','created_date','type','count','status','title','url','doi','journal','publisher','sherpa.color','name','email','user.username','user.email','story','rating','receiver','refused.email','refused.date','received.date','received.from','received.description','received.url','received.admin','received.cron','received.notfromauthor','notes'];
     for ( var a in acceptedfields ) {
       if (a !== '0') $('#acceptedfields').append(', ');
       $('#acceptedfields').append(acceptedfields[a]);
@@ -116,7 +120,7 @@
         identifiers = [];
         file = undefined;
         filename = undefined;
-      } else if (false) { // TODO not enabled yet
+      } else {
   			$.ajax({
   				url: api + '/import?apikey='+clogin.apikey,
   				method: 'POST',
