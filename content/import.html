@@ -124,7 +124,7 @@
   				dataType: 'JSON',
   				contentType: "application/json; charset=utf-8",
   				success: function(data) { 
-  				  $('#jobinfo').html('<p>Changes saved. ' + data.data.updated + ' records updated.</p>');
+  				  $('#jobinfo').html('<p>Changes saved. ' + data.data.found + ' records found. ' + data.data.updated + ' records updated.</p>');
   				  if (data.data.missing && data.data.missing.length) {
   				    $('#jobinfo').append('<p>' + data.data.missing.length  + ' request IDs could not be found:<br>' + JSON.stringify(data.data.missing) + '</p>');
   				  }
