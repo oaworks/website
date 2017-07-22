@@ -1,7 +1,7 @@
 
 <script type="text/javascript" src="/static/dropfile.js"></script>
 
-<div class="container-fluid" id="import" style="display:none;">
+<div class="container-fluid" id="import" style="display:none;margin-bottom:200px;">
   <div class="row">
     <div class="col-md-8 col-md-offset-2">
       <h2>Import</h2>
@@ -36,7 +36,7 @@
 
 <script>
   jQuery(document).ready(function() {
-    if (!clogin.loggedin()) window.location = '/account?next=/admin';
+    if (!clogin.loggedin()) window.location = '/account?next=/import';
 
     var api = 'https://api.openaccessbutton.org';
     if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
@@ -161,7 +161,7 @@
         window.location = '/';
       }
     }
-		clogin.afterFailure = function() { window.location = '/account?next=/admin'; };
+		clogin.afterFailure = function() { window.location = '/account?next=/import'; };
     clogin.login();
   });
 </script>
