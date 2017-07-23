@@ -66,8 +66,8 @@ server {
   add_header Cache-Control "public";
   add_header Access-Control-Allow-Origin *;
 
-  rewrite ^/request/((?!new).)*$ /request/item last;
-  rewrite ^/response/((?!new).)*$ /response/item last;
+  rewrite ^/request/.*$ /request/item last;
+  rewrite ^/response/.*$ /response/item last;
 
   location / {
     try_files /serve/$uri.html /serve/$uri/index.html /404.html =404;
