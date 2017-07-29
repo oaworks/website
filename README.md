@@ -166,7 +166,7 @@ And then the content of individual pages just goes in the `/content` folder.
 
 This keeps branches aligned and ensures content on the sight is properly vetted.
 
-* Anyone can commit to `develop` branch to test changes
+* Anyone with at least "contributor access" (_i.e._ permission to push) can commit to `develop` branch to test changes
 * Joe to approve change
 * Joe merges on to `master`
 
