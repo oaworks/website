@@ -15,7 +15,7 @@
   				<div style="display:none;" id="jobinfo">Uploading...</div>
         </form>
         <p>OR create job of open requests between <input id="batchfrom" type="text" style="width:100px;"> and <input id="batchto" type="text" style="width:100px;"> <a class="btn btn-primary" id="generatebatch" href="#">Go</a></p>
-  			<div id="jobhistory" style="margin-top:10px;margin-bottom:50px;">Loading job history... can take a while to review progress of all jobs. Delete old big jobs that are close to but not 100% to improve this.</div>
+  			<div id="jobhistory" style="margin-top:10px;margin-bottom:50px;">Loading job history...</div>
       </div>
     </div>
   </div>
@@ -64,6 +64,20 @@
       });
     }
     
+    var checkprogress = function(e) {
+      e.preventDefault();
+      var uid = $(this).attr('href');
+      var u = api + '/job/' + uid + '/progress';
+		  $('.checkprogress[href="' + uid + '"]').html('Checking...');
+   		$.ajax({
+  			url: u,
+  			method: 'GET',
+  			success: function(data) {
+  			  $('.checkprogress[href="' + uid + '"]').html(data.progress.toFixed(2) + '%');
+  			}
+			});
+    }
+    
     var removejob = function(e) {
       e.preventDefault();
       var confirmed = confirm('Are you sure you want to delete this job?');
@@ -89,13 +103,15 @@
 					var jh = '';
 					for ( var j in data ) {
 						var job = data[j];
-		        jh += '<p class="job' + job._id + '">' + job.created_date + ': ' + job.name + ' (ID #' + job._id + ') ' + job.processes + ' rows ' + job.progress + '% - get ';
-						jh += '<a target="_blank" href="' + api + '/job/' + job._id + '/results.json">JSON</a> or <a href="' + api + '/job/' + job._id + '/results.csv">CSV</a> ';
+		        jh += '<p class="job' + job._id + '">' + job.created_date + ': ' + job.name + ' (ID #' + job._id + ') ' + job.processes + ' rows. ';
+		        jh += job.done ? '<span style="color:orange;">Complete</span>' : '<a class="checkprogress" href="' + job._id + '">Check progress</a>';
+		        jh += ' - get <a target="_blank" href="' + api + '/job/' + job._id + '/results.json">JSON</a> or <a href="' + api + '/job/' + job._id + '/results.csv">CSV</a> ';
 						jh += '- or <a class="createrequests" href="' + job._id + '">Request</a> ';
 						jh += '- <a class="removejob" href="' + job._id + '" style="color:red;">x</a></p>';
 					}
 					$('#jobinfo').hide();
 					$('#jobhistory').html(jh);
+					$('.checkprogress').bind('click',checkprogress);
 					$('.removejob').bind('click',removejob);
 					$('.createrequests').bind('click',createrequests);
 				}
@@ -115,7 +131,7 @@
 				method: 'POST',
 				success: function(data) {
 				  if (data.count) {
-				    $('#jobinfo').show().html('<p>Job added, with ' + data.count + ' rows. Refresh the page to update job list, and to check on jobs progress.</p>');
+				    $('#jobinfo').show().html('<p>Job added, with ' + data.count + ' rows. Refresh the page to update job list.</p>');
 				  } else {
 				    $('#jobinfo').show().html('<p>There are no open requests between these dates. No job created.</p>');
 				  }
@@ -195,7 +211,7 @@
 				data: JSON.stringify(payload),
 				dataType: 'JSON', // TODO sort issue here, the POST invalidates preflight without jsonp but with jsonp we don't get back a jsonp object
 				contentType: "application/json; charset=utf-8",
-				success: function() { $('#jobinfo').html('<p>Job added. Refresh the page to update job list, and to check on jobs progress.</p>'); },
+				success: function() { $('#jobinfo').html('<p>Job added. Refresh the page to update job list.</p>'); },
 				error: function() { $('#jobinfo').html('<p>Sorry, this job could not be uploaded.</p>'); }
 			});
 		}
