@@ -68,6 +68,9 @@ jQuery(document).ready(function() {
       $('#tonextalert').show();
     }
   }
+  var afterfailure = function() {
+    $('#cloginMessages').html('<p>This link or code expired! They do that after their first use, 30 minutes, or if you get sent another. Refresh the page and reenter your email to try again.</p>');
+  }
   var api = 'https://api.cottagelabs.com/accounts';
   if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
     api = 'https://dev.api.cottagelabs.com/accounts';
@@ -75,7 +78,7 @@ jQuery(document).ready(function() {
   } else {
     $('#bookmarklet').attr('href',$('#bookmarklet').attr('href').replace('YYYY','https://openaccessbutton.org'));
   }
-  clogin.init({api:api,afterLogin: afterlogin, saveValidate: savevalidate, afterSave: aftersave });
+  clogin.init({api:api,afterLogin: afterlogin, saveValidate: savevalidate, afterSave: aftersave, afterFailure: afterfailure });
 
   if (window.location.href.indexOf('email=') !== -1) {
     $('#cloginEmail').val(window.location.href.split('next=')[0].split('email=')[1].split('&')[0]);
@@ -90,7 +93,7 @@ jQuery(document).ready(function() {
   };
   var mobile = mobileCheck();
   var b = '.bk';
-  if (navigator.userAgent.match(/chrome/i) && !mobile) b = '.ch';
+  if (navigator.userAgent.match(/chrome/i) && !navigator.userAgent.match(/edge/i) && !mobile) b = '.ch';
   if (navigator.userAgent.match(/firefox/i) && !mobile) b = '.ff';
   if (mobile) b = '.mob';
   $('.dl').hide();
@@ -223,9 +226,9 @@ jQuery(document).ready(function() {
         To install just drag the Button to your bookmarks bar.
         </p>
         <a id="bookmarklet" class="btn btn-action btn-block disabled" href="javascript:apikey='XXXX';document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','YYYY/static/bookmarklet/includer.js?r='+Math.random());">Open Access Button</a>
-        <p><small>Having trouble? See instructions for <a href="http://www.howtogeek.com/231775/how-to-install-and-use-bookmarklets-in-microsoft-edge/" target="_blank" >Edge</a>, <a href="https://support.mozilla.org/en-US/kb/bookmarklets-perform-common-web-page-tasks#w_how-do-i-install-a-bookmarklet" target="_blank" >Firefox</a> and <a href="https://mreidsma.github.io/bookmarklets/installing.html" target="_blank" >Safari</a>. If your bookmarks bar is hidden here's how to show it:
+        <p><small>Having trouble? See instructions for <a href="http://www.howtogeek.com/231775/how-to-install-and-use-bookmarklets-in-microsoft-edge/" target="_blank" >Edge</a>, <a href="/bookmarklet_install_ie" target="_blank" >Internet Explorer</a>, <a href="/bookmarklet_install_ff" target="_blank" >Firefox</a> and <a href="https://mreidsma.github.io/bookmarklets/installing.html" target="_blank" >Safari</a>. If your bookmarks bar is hidden here's how to show it:
                 <br>
-                Chrome, Safari, Edge: Control (Command on a Mac) + Shift + B
+                Chrome, Safari, Edge and Internet Explorer: Control (Command on a Mac) + Shift + B
                 <br>
                 Firefox: Control (Command on a Mac) + B</small>
       </div>

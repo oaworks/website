@@ -43,7 +43,7 @@
     var mobile = mobileCheck();
     if (mobile) {
       $('#install').hide();
-    } else if (navigator.userAgent.match(/chrome/i)) {
+    } else if (navigator.userAgent.match(/chrome/i) && !navigator.userAgent.match(/edge/i)) {
       $('.install').hide();
       $('.chromeinstall').show();
     }

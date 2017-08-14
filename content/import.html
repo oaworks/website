@@ -1,0 +1,171 @@
+
+<script type="text/javascript" src="/static/dropfile.js"></script>
+
+<div class="container-fluid" id="import" style="display:none;margin-bottom:200px;">
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2">
+      <h2>Import</h2>
+      <p>
+        You can import a csv file of requests, and it will update the existing requests in the system.
+        <span style="color:red">BEWARE</span> this means you can edit and potentially damage many records. PLEASE export records from the system before you import so we can recover any damage caused. 
+        Every row in the csv must contain values for the fields you want to change in each request - so each
+        row needs at least an _id, to identify which request the changes are for. Blank cells will have no effect.
+        If you want to remove a particular value from a request and replace it with nothing, enter the value DELETE
+        in the relevant cell.
+      </p>
+      <p id="acceptedfields">
+        The accepted fields match what you can export for requests from <a href="/export">/export</a>, and they are: <br>
+      </p>
+      <p>
+        Note, although _id is required and created_date is accepted, you cannot alter the values of those fields - if they
+        are changed in the import csv, they will be ignored.
+      </p>
+      <p>
+        If you want to create new records, you must create them in the system FIRST and then submit a sheet here to edit them.
+        You can create requests in bulk by using the <a href="/admin">/admin</a> page bulk job upload feature - upload a csv
+        full of the identifiers you want to check for, and then once the job is done and all have been checked, you can use
+        the "create requests for unavailable" option there (coming soon). Once you have created the requests, go to the export
+        page again, and do an export restricted to today, then you can filter the list you receive down to just the new ones
+        you just created. From that csv you can then generate your import csv to import here.
+      </p>
+      <form>
+        <input type="file" name="jobupload" id="jobupload" class="form-control" style="padding-bottom:30px;margin-bottom:5px;">
+				<div style="display:none;" id="jobinfo">Uploading...</div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+  jQuery(document).ready(function() {
+    if (!clogin.loggedin()) window.location = '/account?next=/import';
+
+    var api = 'https://api.openaccessbutton.org';
+    if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
+      api = 'https://dev.api.cottagelabs.com/service/oab';
+      clogin.api = 'https://dev.api.cottagelabs.com/accounts';
+    }
+
+    var acceptedfields = ['_id','created_date','type','count','status','title','url','doi','journal','publisher','sherpa.color','name','email','user.username','user.email','story','rating','receiver','refused.email','refused.date','received.date','received.from','received.description','received.url','received.admin','received.cron','received.notfromauthor','notes'];
+    for ( var a in acceptedfields ) {
+      if (a !== '0') $('#acceptedfields').append(', ');
+      $('#acceptedfields').append(acceptedfields[a]);
+    }
+
+		var identifiers = [];
+		var file, filename;
+
+		var submitJob = function(e) {
+			identifiers = [];
+			var split = ',';
+			var wrap = '"';
+			var wrapreplace = new RegExp(wrap,"g");
+
+			file = file.replace(/\r\n/g,'\n'); // switch MS line breaks to unix
+			file = file.replace(/\n{2,}/g,'\n'); // get rid of any blank lines
+			file = file.replace(/\n*$/g,''); // remove newlines at end of file
+
+			var lines = [];
+			var fls = file.split('\n');
+			var il = '';
+			for ( var f in fls ) {
+				il += fls[f];
+				if ( il.split(wrap).length % 2 !== 0 ) {
+					lines.push(il);
+					il = '';
+				}
+			}
+			var headers = [];
+			var hline = lines.shift();
+			var hlines = hline.split(split);
+			var hl = '';
+			for ( var h in hlines ) {
+				if (hl.length > 0) hl += ',';
+				hl += hlines[h];
+				if ( hl.split(wrap).length % 2 !== 0 ) {
+					hl = hl.replace(wrapreplace,'').replace(/(^\s*)|(\s*$)/g,'');
+					headers.push(hl.toLowerCase());
+					hl = '';
+				}
+			}
+
+			for (var i = 0; i < lines.length; i++) {
+				var obj = {};
+				var currentline = lines[i].split(split);
+				var cl = '';
+				var counter = 0;
+				var lengths = 0;
+				for ( var col in currentline ) {
+					if (cl.length > 0) cl += ',';
+					cl += currentline[col];
+					if ( cl.split(wrap).length % 2 !== 0 ) {
+						cl = cl.replace(wrapreplace,'');
+						if (headers[counter] && headers[counter].length > 0) obj[headers[counter]] = cl;
+						if (lengths === 0) lengths = cl.length;
+						cl = '';
+						counter += 1;
+					}
+				}
+				if (lengths) identifiers.push(obj);
+			}
+
+      var unacceptable= [];
+      for ( var h in headers ) {
+        if (acceptedfields.indexOf(headers[h]) === -1) unacceptable.push(headers[h])
+      }
+      if (unacceptable.length) {
+        $('#jobinfo').html('<p>Sorry please fix and try again. Your csv contains columns with unacceptable field names: ' + JSON.stringify(unacceptable) + '</p>').show();
+        identifiers = [];
+        file = undefined;
+        filename = undefined;
+      } else {
+  			$.ajax({
+  				url: api + '/import?apikey='+clogin.apikey,
+  				method: 'POST',
+  				data: JSON.stringify(identifiers),
+  				dataType: 'JSON',
+  				contentType: "application/json; charset=utf-8",
+  				success: function(data) {
+  				  $('#jobinfo').html('<p>Changes saved. ' + data.data.found + ' records found. ' + data.data.updated + ' records updated.</p>');
+  				  if (data.data.missing && data.data.missing.length) {
+  				    $('#jobinfo').append('<p>' + data.data.missing.length  + ' request IDs could not be found:<br>' + JSON.stringify(data.data.missing) + '</p>');
+  				  }
+  				},
+  				error: function() { $('#jobinfo').html('<p>Sorry, this file could not be uploaded.</p>'); }
+  			});
+      }
+		}
+
+		var uploadJob = function(e) {
+			$('#jobinfo').html('Uploading...').show();
+			var f;
+			if( window.FormData === undefined ) {
+				f = (e.files || e.dataTransfer.files);
+			} else {
+				f = e.target.files[0];
+			}
+			filename = f.name;
+			var reader = new FileReader();
+			reader.onload = (function(theFile) {
+				return function(e) {
+					file = e.target.result;
+					submitJob();
+				};
+			})(f);
+			reader.readAsBinaryString(f);
+		}
+		$('input[type=file]').on('change', uploadJob);
+
+    clogin.afterLogin = function() {
+      if (clogin.hasRole('openaccessbutton.admin')) {
+        $('#import').show();
+      } else {
+        window.location = '/';
+      }
+    }
+		clogin.afterFailure = function() { window.location = '/account?next=/import'; };
+    clogin.login();
+  });
+</script>

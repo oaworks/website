@@ -125,8 +125,8 @@
         contentType: 'application/json',
         dataType: 'json',
         success: function(data) {
-          $('#saved').show();
-          setTimeout(function() {$('#saved').hide()},2000);
+          $('.saved').show();
+          setTimeout(function() {$('.saved').hide()},2000);
         },
         beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); }
       }
@@ -257,7 +257,7 @@
     }
 
     var admin = function(record) {
-      var dets = '';
+      var dets = '<p>Dear admin, please notify when you are moderating in a few clicks at <a href="https://app.timebridge.com/mwm/requests">https://app.timebridge.com/mwm/requests</a></p>';
       dets += '<p>Status: <select id="status" class="form-control" style="width:150px;display:inline;">';
       var statuses = ['help','moderate','progress',/*'hold',*/'refused','received','closed'];
       for ( var s in statuses ) {
@@ -310,6 +310,7 @@
       dets += '</select>';
       dets += '<a class="btn btn-danger pull-right" id="delete" href="#">DELETE</a></p>';
       dets += '<p><input type="submit" id="submitchanges" value="Save changes before sending to author or any other action" class="btn btn-action btn-block"></p>';
+      dets += '<p class="saved" style="display:none;">Changes saved.</p>';
       dets += '<p style="margin-top:20px;"><a class="btn btn-action" href="/response/' + record.receiver + '">View the response page for this request</a> ';
       dets += '<a class="btn btn-action pull-right" href="/admin?request=' + rid + '">Send email via admin UI about this request</a></p>';
       dets += '<p><textarea id="admin_notes" class="form-control" placeholder="Admin notes" style="min-height:200px;">';
@@ -417,6 +418,7 @@
             if (!rec.email) re += '<p><input class="form-control" type="text" id="email" placeholder="Article author email"></p><p class="emailissue" style="display:none;font-size:0.9em;"></p>';
             if (!rec.doi) re += '<p><input class="form-control" type="text" id="doi" placeholder="Article DOI"></p>';
             re += '<p style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Save</a></p>';
+            re += '<p class="saved" style="display:none;">Changes saved.</p>';
           } else {
             re += '<p style="margin-bottom:40px;"><a href="/account?next=/request/' + rid + '" class="btn btn-block btn-action">Login / sign up to continue</a></p>';
           }
