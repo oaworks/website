@@ -14,17 +14,17 @@ jQuery(document).ready(function() {
 
 </script>
 <style type="text/css">
- 
+
  @media (max-width: 768px){
 .outercolumn{
-  display: flex; 
-  background-color: white; 
+  display: flex;
+  background-color: white;
   flex-direction:column;
   border-radius: 5px;"
 }
 .vertline{
- height: 1px; 
- background-color:#cccccc; 
+ height: 1px;
+ background-color:#cccccc;
  margin:10px;"
 }
 .innercolumns{
@@ -42,14 +42,14 @@ jQuery(document).ready(function() {
 }
 
 .outercolumn{
-display: flex; 
-background-color: white;  
+display: flex;
+background-color: white;
 border-radius:5px;"
 }
 
 .vertline{
- width: 1px; 
- background-color:#cccccc; 
+ width: 1px;
+ background-color:#cccccc;
  margin:10px;"
 }
 
@@ -61,7 +61,7 @@ border-radius:5px;"
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-md-12">
-			<h1>
+			<h1 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">
         Embed OA wherever you are.
 			</h1>
 			<p>
@@ -88,26 +88,26 @@ Great for libguides!
 		</div>
 
     <div class="vertline">
-      
+
     </div>
 
 		<div class="innercolumns">
       <h2>Get it</h2>
-      
+
       <pre>
 &lt;script src="https://static.cottagelabs.com/jquery-1.10.2.min.js"&gt;&lt;/script&gt;
 &lt;link rel="stylesheet" href="https://static.cottagelabs.com/bootstrap-3.0.3/css/bootstrap.min.css"&gt;
 &lt;script src="https://openaccessbutton.org/static/oabutton_widget.js"&gt;&lt;/script&gt;
 &lt;script&gt;jQuery(document).ready(function() { oabutton_widget(); });&lt;/script&gt;
 </pre>
-      
+
       <p>If your site already includes jquery and twitter-bootstrap css, then all you need to include is:</p>
       <pre>
 &lt;script src="https://openaccessbutton.org/static/oabutton_widget.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){oabutton_widget();});&lt;/script&gt;
 </pre>
 
       <p>
-        To control where the search widget gets displayed, just put a div on the page where you want it with the ID 
+        To control where the search widget gets displayed, just put a div on the page where you want it with the ID
         "oabutton_widget", as follows:</p>
       <pre>
 &lt;div id="oabutton_widget"&gt;&lt;/div&gt;
