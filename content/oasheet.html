@@ -25,26 +25,44 @@ TODO
 
       <!-- End of intro -->
 
+<!-- This is where you login or sign up-->
 
-<div>
-<a href="/account?next=/oasheet" class="btn btn-block btn-action">Login / sign up to continue</a>
+<div id="cloginEmailArea">
+  <p style="text-align:center;">
+    Just enter your email address to get started.<br>
+  </p>
+  <input type="email" class="form-control" id="cloginEmail" name="email" placeholder="Enter your email address">
+  <button id="cloginSubmit" type="submit" class="btn btn-action btn-block" style="margin-top:10px;">Sign up / Login</button>
 </div>
 
-<!-- Start of upload button & instructions -->
+<!-- end of login -->
 
-      <div>
-        <p class="jobupload">Upload a csv file, which must have column names including at least one of "url", "doi", "pmid", "pmcid", "title":</p>
+<!-- Start of upload button & instructions. This should be shown only when logged in. -->
+
+      <div id="upload">
+        <p class="jobupload">Upload a csv file, which must have column names including at least one of "url", "doi", "pmid", "pmcid", "title".</p>
         <form>
           <input type="file" name="jobupload" id="jobupload" class="form-control" style="padding-bottom:30px;margin-bottom:5px;">
-  				<div style="display:none;" id="jobinfo">Uploading, for big files this can take a minute</div>
+  				<div style="display:none;" id="jobinfo">Uploading, for large files this can take a minute</div>
         </form>
       </div>
 
 <!-- end of upload button & instructions -->
 
-<!-- Start of places to read more -->
+<!-- Start of places to read more. This should always be shown.  -->
 
 <div>
+
+    <p>
+      Help
+    </p>
+    <p>
+      Example
+    </p>
+    <p>
+      FAQ
+    </p>
+
 </div>
 <!-- End of places to read more -->
 
@@ -57,9 +75,9 @@ TODO
 
 <script>
   jQuery(document).ready(function() {
-//    if (!clogin.loggedin()) {
-//      window.location = '/account?next=/bulk';
-//    }
+    if (!clogin.loggedin()) {
+      window.location = '/account?next=/bulk';
+    }
 
     var api = 'https://api.openaccessbutton.org';
     if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
@@ -268,15 +286,15 @@ TODO
 
 		$('input[type=file]').on('change', uploadJob);
 
-//    clogin.afterLogin = function() {
-//      if (clogin.hasRole('openaccessbutton.admin')) {
-//				getJobs();
-//        $('#bulk').show();
-//      } else {
-//        window.location = '/';
-//      }
-//    }
-//		clogin.afterFailure = function() { window.location = '/account?next=/bulk'; };
-//    clogin.login();
+    clogin.afterLogin = function() {
+      if (clogin.hasRole('openaccessbutton.admin')) {
+				getJobs();
+        $('#bulk').show();
+      } else {
+        window.location = '/';
+      }
+    }
+		clogin.afterFailure = function() { window.location = '/account?next=/bulk'; };
+    clogin.login();
   });
 </script>
