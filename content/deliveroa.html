@@ -3,6 +3,22 @@
   <script>/*<![CDATA[*/window.zEmbed||function(e,t){var n,o,d,i,s,a=[],r=document.createElement("iframe");window.zEmbed=function(){a.push(arguments)},window.zE=window.zE||window.zEmbed,r.src="javascript:false",r.title="",r.role="presentation",(r.frameElement||r).style.cssText="display: none",d=document.getElementsByTagName("script"),d=d[d.length-1],d.parentNode.insertBefore(r,d),i=r.contentWindow,s=i.document;try{o=s}catch(e){n=document.domain,r.src='javascript:var d=document.open();d.domain="'+n+'";void(0);',o=s}o.open()._l=function(){var o=this.createElement("script");n&&(this.domain=n),o.id="js-iframe-async",o.src=e,this.t=+new Date,this.zendeskHost=t,this.zEQueue=a,this.body.appendChild(o)},o.write('<body onload="document._l();">'),o.close()}("https://assets.zendesk.com/embeddable_framework/main.js","openaccessbutton.zendesk.com");
   /*]]>*/</script>
   <!-- End of openaccessbutton Zendesk Widget script -->
+
+  <style>
+    div:not(:target) {
+      display: none;
+    }
+
+    div:target {
+      display: block;
+    }
+
+    /* Make the div big, so we would jump, if the JS was still broken */
+    div {
+      height: 100vh;
+    }
+  </style>
+
 <!--
 
 TODO
@@ -46,10 +62,9 @@ TODO
 	<div class="row">
 
 		<div class="col-xs-12 col-sm-6">
-
-			<h4 style="line-height: 24px;">
+      <h2>
 			Wipe up to 10% off your ILL budget and delivery times, today. No complex installation, no training, no fuss.
-			</h4>
+    </h2>
 
 		</div>
 
@@ -80,22 +95,48 @@ TODO
 
 			</ul>
 			</div>
+
+
+      <div id="alma">
+        <h3> ALMA Installation guide</h3>
+
+        <br>
+        <h4>First Step</h4>
+        <p>Do this</p>
+        <br>
+        <h4>Second Step</h4>
+        <p>Do this</p>
+      </div>      </div>
+
+      <div style="height:1px; width=100%; background-color: #212f3f; margin:10px;"></div>
+
+
+    <div style="margin: 15px;">
+
+
+
+
+      <div id="primo">
+        Tab two contents
+      </div>
+
 		</div>
-				<div style="height:1px; width=100%; background-color: #212f3f; margin:10px;"></div>
-
-
-			<div style="margin: 15px;">
-				<h3> ALMA Installation guide</h3>
-
-				<br>
-				<h4>First Step</h4>
-				<p>Do this</p>
-				<br>
-				<h4>Second Step</h4>
-				<p>Do this</p>
-			</div>
-
 
 
 	</div>
 </div>
+
+<!-- powers tabs -->
+
+<script>
+// Stop href="#hashtarget" links jumping around the page
+var hashLinks = document.querySelectorAll("a[href^='#']");
+[].forEach.call(hashLinks, function (link) {
+  link.addEventListener("click", function (event) {
+    event.preventDefault();
+    history.pushState({}, "", link.href);
+    history.pushState({}, "", link.href);
+    history.back();
+  });
+});
+</script>
