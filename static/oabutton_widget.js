@@ -17,9 +17,9 @@ var oabutton_widget = function(opts) {
   if (opts === undefined) opts = {};
   var api = opts.api ? opts.api : 'https://api.openaccessbutton.org';
   var site = opts.site ? opts.site : 'https://openaccessbutton.org';
-  if (opts.element === undefined && $('#oabutton_widget').length === 0) opts.element = 'body';
+  if (opts.element === undefined) opts.element = '#oabutton_widget';
+  if ($(opts.element).length === 0) $('body').append('<div id="oabutton_widget"></div>');
   
-  if (opts.element) $(opts.element).append('<div id="oabutton_widget"></div>');
   var w = '<div class="input-group">\
     <textarea id="oabutton_url" class="form-control" style="min-height:40px;height:40px;font-size:1.1em;" placeholder="Search Open Access Button with URL, DOI, PMID, PMC ID, Title, or Citation"></textarea>\
     <div class="input-group-btn">\
@@ -28,7 +28,7 @@ var oabutton_widget = function(opts) {
   </div>\
   <div id="oabutton_loading" style="display:none;"><img style="width:30px;" src="' + site + '/static/spin_orange.svg"></div>\
   <div id="oabutton_availability"></div>';
-  $('#oabutton_widget').html(w);
+  $(opts.element).html(w);
 
   var availability = function(e) {
     if ($(this).attr('id') === 'oabutton_find' || e === undefined || e.keyCode === 13) {
