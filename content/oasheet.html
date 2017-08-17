@@ -268,15 +268,15 @@ TODO
 
 		$('input[type=file]').on('change', uploadJob);
 
-    clogin.afterLogin = function() {
-      if (clogin.hasRole('openaccessbutton.admin')) {
-				getJobs();
-        $('#bulk').show();
-      } else {
-        window.location = '/';
-      }
-    }
-		clogin.afterFailure = function() { window.location = '/account?next=/bulk'; };
-    clogin.login();
+//    clogin.afterLogin = function() {
+//      if (clogin.hasRole('openaccessbutton.admin')) {
+//				getJobs();
+//        $('#bulk').show();
+//      } else {
+//        window.location = '/';
+//      }
+//    }
+//		clogin.afterFailure = function() { window.location = '/account?next=/bulk'; };
+//    clogin.login();
   });
 </script>
