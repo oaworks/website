@@ -1,3 +1,16 @@
+<script src="dist/clipboard.min.js"></script>
+
+<script>
+    var btn = document.getElementById('btn');
+    var clipboard = new Clipboard(btn);
+    clipboard.on('success', function(e) {
+        console.log(e);
+    });
+    clipboard.on('error', function(e) {
+        console.log(e);
+    });
+    </script>
+
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-md-12">
@@ -20,7 +33,15 @@ Great for libguides!
 
 <p>Don't have a article to hand? Try:
 <ol>
-  <li>10.1145/2908080.2908114</li>
+  <li id="ex1">10.1145/2908080.2908114</li>
+
+
+  <!-- Trigger -->
+  <button class="btn" data-clipboard-text="10.1145/2908080.2908114">
+      Copy to clipboard
+  </button>
+
+
   <li>http://journals.sagepub.com/doi/abs/10.1177/0037549715583150</li>
   <li>Nusch, C., & Percivale, B. (2016). El Bicentenario argentino como territorio en disputa. Analecta política, 6(10).</li>
 </ol>
