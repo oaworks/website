@@ -5,10 +5,11 @@
   <!-- End of openaccessbutton Zendesk Widget script -->
 <style type="text/css">
   
-.control-label{
+.desctext{
   text-align: left;
   text-decoration: none;
   padding: 0px;
+  font-weight: inherit;
 }
 
 .whitebox{
@@ -50,11 +51,12 @@
 
 <!-- Intro Text -->
 <p>We just need some additional information about your request, please complete as many fields as you can.</p>
+<br>
 
 <!-- Text input-->
-<div class="form-group">
-  <label class="col-md-2 control-label" for="article_title">Article Title</label>
-  <div class="col-md-6">
+<div class="form-group" style="margin:0px;">
+  <label class="col-md-3 control-label desctext" for="article_title">Article Title</label>
+  <div class="col-md-9" style="padding:0px;">
   <input id="article_title" name="article_title" type="text" placeholder="Why most published research findings are wrong" class="form-control input-md" required="">
 
   </div>
