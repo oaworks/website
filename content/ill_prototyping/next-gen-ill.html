@@ -2,6 +2,29 @@
 <script>/*<![CDATA[*/window.zEmbed||function(e,t){var n,o,d,i,s,a=[],r=document.createElement("iframe");window.zEmbed=function(){a.push(arguments)},window.zE=window.zE||window.zEmbed,r.src="javascript:false",r.title="",r.role="presentation",(r.frameElement||r).style.cssText="display: none",d=document.getElementsByTagName("script"),d=d[d.length-1],d.parentNode.insertBefore(r,d),i=r.contentWindow,s=i.document;try{o=s}catch(e){n=document.domain,r.src='javascript:var d=document.open();d.domain="'+n+'";void(0);',o=s}o.open()._l=function(){var o=this.createElement("script");n&&(this.domain=n),o.id="js-iframe-async",o.src=e,this.t=+new Date,this.zendeskHost=t,this.zEQueue=a,this.body.appendChild(o)},o.write('<body onload="document._l();">'),o.close()}("https://assets.zendesk.com/embeddable_framework/main.js","openaccessbutton.zendesk.com");
 /*]]>*/</script>
 <!-- End of openaccessbutton Zendesk Widget script -->
+
+<style>
+
+.example {
+
+border: 2px;
+border-style: solid;
+border-color: black;
+
+}
+
+</style>
+
+<!--
+
+TODO
+
+* Add styling
+* Update links to go to actual example pages
+* Probably replace HTML inserts with full code when it's done
+*
+-->
+
 <a class="github-fork-ribbon left-bottom fixed" href="http://url.to-your.repo" title="Prototype">Prototype</a>
 
 <script src="https://www.w3schools.com/lib/w3.js"></script>
@@ -35,6 +58,9 @@ all, Open Source, fully customisable and free. We're not quite ready for prime t
 <!-- start of left box -->
 
 		<div class="col-md-6">
+
+			<h1>Description</h1>
+
 			<p>
 				On the right you can see a prototype of the first part of our form embedded (yes, that's it).
 			</p>
@@ -56,8 +82,9 @@ all, Open Source, fully customisable and free. We're not quite ready for prime t
 <!-- Start of right box -->
 
 			<div class="col-md-6" style="background-color:white">
+				<h1>Example</h1>
 
-				<div w3-include-html="/ill_prototyping/simple_form"></div>
+				<div class="example" w3-include-html="/ill_prototyping/simple_form"></div>
 
 			</div>
 
