@@ -3,6 +3,19 @@
   /*]]>*/</script>
   <!-- End of openaccessbutton Zendesk Widget script -->
 
+  <style type="text/css">
+  	.focal{
+  		background-color: white;
+  		text-align: left;
+  		border-radius: 5px;
+  		/*
+  		border-width: 1px;
+  		border-style: solid;
+  		border-color:#212f3f;
+  		*/
+  	}
+  </style>
+
 <!--
 
 TODO
@@ -39,7 +52,7 @@ TODO
 
 <!-- This is where you login or sign up-->
 
-<div id="cloginEmailArea">
+<div id="cloginEmailArea" class="focal">
   <p style="text-align:center;">
     Just enter your email address to get started. We'll email you your results.<br>
   </p>
@@ -51,7 +64,7 @@ TODO
 
 <!-- Start of upload button & instructions. This should be shown only when logged in. -->
 
-      <div id="upload">
+      <div id="upload" class="focal">
         <p class="jobupload">Upload a csv file, which must have column names including at least one of "url", "doi", "pmid", "pmcid", "title".</p>
         <form>
           <input type="file" name="jobupload" id="jobupload" class="form-control" style="padding-bottom:30px;margin-bottom:5px;">
@@ -63,7 +76,7 @@ TODO
 
 <!-- Start of places to read more. This should always be shown.  -->
 
-  <div class="row">
+  <div class="row" class="focal">
     <div class="col-md-4" style="text-align:center;">
       <a href="#tab-1" style="text-decoration:underline;">Help</a>
     </div>
