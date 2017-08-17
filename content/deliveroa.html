@@ -5,16 +5,18 @@
   <!-- End of openaccessbutton Zendesk Widget script -->
 
   <style>
-    div:not(:target) {
+
+
+    .ill_system_content div:not(:target) {
       display: none;
     }
 
-    div:target {
+    .ill_system_content div:target {
       display: block;
     }
 
     /* Make the div big, so we would jump, if the JS was still broken */
-    div {
+    .ill_system_content div {
       height: 100vh;
     }
   </style>
@@ -52,7 +54,7 @@ TODO
 
 <!-- end of banner for pages that are early days -->
 
-<div class="container-fluid " style="max-width: 660px;" >
+<div class="container-fluid" style="max-width: 660px;" >
 
 <!-- Title -->
 
@@ -97,6 +99,7 @@ TODO
 			</ul>
 			</div>
 
+<div class="ill_system_content">
 
       <div id="alma">
         <h3> ALMA Installation guide</h3>
@@ -107,15 +110,13 @@ TODO
         <br>
         <h4>Second Step</h4>
         <p>Do this</p>
-      </div>      </div>
-
-      <div style="height:1px; width=100%; background-color: #212f3f; margin:10px;"></div>
+      </div>
 
       <div id="primo">
         Tab two contents
       </div>
 
-	</div>
+    </div>
 
 <!-- end of download box -->
 
