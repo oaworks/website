@@ -1,25 +1,53 @@
+<!--
+
+TODO
+* Make page available without login
+* Get a way to capture people's emails
+*
+-->
+
+
 
 <script type="text/javascript" src="/static/dropfile.js"></script>
 
 <div class="container-fluid" id="bulk" style="display:none;">
   <div class="row">
     <div class="col-md-8 col-md-offset-2">
+
+<!-- Headline & 1 liner -->
+
       <div>
 
 <h1 style="text-align:center;">DeliverOA</h1>
-<h2 style="text-align:center;">Give us a spreadsheet of articles, we'll tell you which can be found Open Access</h2>
+<h3 style="text-align:center;">Give us a spreadsheet of articles, we'll email you which can be found Open Access</h3>
 
       </div>
+
+      <!-- End of intro -->
+
+
 <div>
 <a href="/account?next=/oasheet" class="btn btn-block btn-action">Login / sign up to continue</a>
-</div>  
+</div>
+
+<!-- Start of upload button & instructions -->
+
       <div>
         <p class="jobupload">Upload a csv file, which must have column names including at least one of "url", "doi", "pmid", "pmcid", "title":</p>
         <form>
           <input type="file" name="jobupload" id="jobupload" class="form-control" style="padding-bottom:30px;margin-bottom:5px;">
-  				<div style="display:none;" id="jobinfo">Uploading...</div>
+  				<div style="display:none;" id="jobinfo">Uploading, for big files this can take a minute</div>
         </form>
       </div>
+
+<!-- end of upload button & instructions -->
+
+<!-- Start of places to read more -->
+
+<div>
+</div>
+<!-- End of places to read more -->
+
     </div>
   </div>
 </div>
@@ -214,8 +242,8 @@
 				data: JSON.stringify(payload),
 				dataType: 'JSON', // TODO sort issue here, the POST invalidates preflight without jsonp but with jsonp we don't get back a jsonp object
 				contentType: "application/json; charset=utf-8",
-				success: function() { $('#jobinfo').html('<p>Job added. Refresh the page to update job list.</p>'); },
-				error: function() { $('#jobinfo').html('<p>Sorry, this job could not be uploaded.</p>'); }
+				success: function() { $('#jobinfo').html('<p>Job accepted! We will email you the results when they are ready. </p>'); },
+				error: function() { $('#jobinfo').html('<p>Sorry, this job could not be uploaded. Contact help@openaccessbutton.org</p>'); }
 			});
 		}
 
