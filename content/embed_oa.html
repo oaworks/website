@@ -11,7 +11,26 @@ jQuery(document).ready(function() {
   });
   oabutton_widget();
 });
+
 </script>
+<style type="text/css">
+  @media (min-width: 900px){
+.innercolumns{
+  felx-direction:column;
+}
+.vertline{
+  display:none;
+}
+}
+
+.innercolumns{
+  width:50%
+  padding:10px;
+  overflow: hidden;
+}
+</style>
+
+
 
 <div class="container-fluid">
 	<div class="row">
@@ -24,11 +43,11 @@ Great for libguides!
 			</p>
 		</div>
 	</div>
-	<div class="row">
+	<div style="display: flex; background-color: white;  border-right: 5px;">
 
 
 
-		<div class="col-md-6">
+		<div class="innercolumns">
       <h2>Try it</h2>
 
       <div id="oabutton_widget"></div>
@@ -42,7 +61,11 @@ Great for libguides!
       </p>
 		</div>
 
-		<div class="col-md-6">
+    <div class="vertline" style="width: 1px; background-color: black; height: 100%;">
+      
+    </div>
+
+		<div class="innercolumns">
       <h2>Get it</h2>
       
       <pre>
