@@ -29,10 +29,15 @@
   <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 
   <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/gknkbkaapnhpmkcgkmdekdffgcddoiel">
+<!-- code for release banners -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.min.css" />
+  <!--[if lt IE 9]>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.ie.min.css" />
+  <![endif]-->
 
   <script>
   jQuery(document).ready(function() {
-        
+
     mobileCheck = function() {
       // checks if browser is a mobile or tablet browser
       var check = false;
@@ -76,7 +81,7 @@
       $('.cloggedin').show();
       $('.notcloggedin').hide();
     }
-    
+
     var ftsing = false;
     var fts = function () {
       if (!ftsing) {
@@ -89,7 +94,7 @@
           if ( ft + fh < wh ) {
             $('#footer').css('margin-top',fm+(wh-ft-fh)+'px');
           } else if (wh-ft-fh < 0) {
-            $('#footer').css('margin-top','0px');        
+            $('#footer').css('margin-top','0px');
           }
           ftsing = false;
         },200);
