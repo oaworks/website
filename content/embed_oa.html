@@ -17,13 +17,20 @@ jQuery(document).ready(function() {
  
  @media (max-width: 768px){
 .outercolumn{
+  display: flex; 
+  background-color: white; 
   flex-direction:column;
+  border-radius: 5px;"
 }
 .vertline{
-  display:none;
+ height: 1px; 
+ background-color:#cccccc; 
+ margin:10px;"
 }
 .innercolumns{
   width:100%;
+  padding:10px;
+  overflow: hidden;
 }
 }
 
@@ -37,8 +44,15 @@ jQuery(document).ready(function() {
 .outercolumn{
 display: flex; 
 background-color: white;  
-border-radius: : 5px;"
+border-radius:5px;"
 }
+
+.vertline{
+ width: 1px; 
+ background-color:#cccccc; 
+ margin:10px;"
+}
+
 }
 </style>
 
@@ -73,7 +87,7 @@ Great for libguides!
       </p>
 		</div>
 
-    <div class="vertline" style="width: 1px; background-color:#cccccc; margin:10px;">
+    <div class="vertline">
       
     </div>
 
