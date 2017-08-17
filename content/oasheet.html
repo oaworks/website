@@ -5,22 +5,6 @@ TODO
 * Get a way to capture people's emails
 *
 -->
-<style>
-    div:not(:target) {
-      display: none;
-    }
-
-    div:target {
-      display: block;
-    }
-
-    /* Make the div big, so we would jump, if the JS was still broken */
-    div {
-      height: 100vh;
-    }
-  </style>
-
-
 <script type="text/javascript" src="/static/dropfile.js"></script>
 
 <div class="container-fluid" id="bulk" style="display:none;">
@@ -87,21 +71,6 @@ TODO
   <div id="tab-2">
     Tab two contents
   </div>
-
-  <script>
-  // Stop href="#hashtarget" links jumping around the page
-  var hashLinks = document.querySelectorAll("a[href^='#']");
-  [].forEach.call(hashLinks, function (link) {
-    link.addEventListener("click", function (event) {
-      event.preventDefault();
-      history.pushState({}, "", link.href);
-      history.pushState({}, "", link.href);
-      history.back();
-    });
-  });
-  </script>
-  </body>
-
 
 </div>
 
