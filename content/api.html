@@ -116,6 +116,44 @@
         We are considering enabling bulk availability checks via the API.
         Would you find this useful? <a target="_blank" href="mailto:hello@openaccessbutton.org">Let us know!</a>
       </p>
+      
+      <h2>
+        /request
+      </h2>
+      <hr>
+      <h3>
+        POST
+      </h3>
+      <p>
+        Create a new request by POSTing a JSON object to this endpoint - remember content-type:"application/json".
+        The JSON object must contain at least "url", which should provide the URL to create a request for. The
+        "url" parameter can also be a DOI, PMID, PMC ID, title, or citation - NOTE these fields should NOT be
+        provided speciifcally by name; just put the values in the "url" field.
+      </p>
+      <p style="text-align:left;">
+        We try to disambiguate requests to ensure there are as few duplicates as possible, so for DOI, PMID and PMC ID,
+        these are best provided in a URL-like format - DOI can be provided as https://doi.org/10.1234/567890, PMID
+        as https://www.ncbi.nlm.nih.gov/pubmed/12345678, and PMC ID as https://www.ncbi.nlm.nih.gov/pubmed/1234567.
+      </p>
+      <p>
+        The request "type" should also be provided, and can be "article" or "data". If not provided it defaults to "article".
+      </p>
+      <p>
+        Ideally, a "story" should also be provided, explaining why the request is necessary. Also an "email" should
+        be provided which should be the email address of the author to contact about the request (we will try to find
+        an email address if one is not provided).
+      </p>
+      <p>
+        A "title" and "doi" field can also be provided as extra information for the resource.
+      </p>
+      <p>
+        NOTE that it is possible to create a request even for something that is available, so before
+        creating a request please use the /availability endpoint to check if the item is already available, and
+        if we already have an open request for it.
+      </p>
+      <p>
+        The response will be a JSON object of the new request, which will include the new request ID in the "_id" parameter.
+      </p>
 
       <h2>
         /availabilities
@@ -180,44 +218,6 @@
       <p>
         See the example for returned metadata structure - note that we wil not necessarily support the same metadata
         for all scraped URLs, and we may change it over time, so don't assume a stable structure here.
-      </p>
-
-      <h2>
-        /request
-      </h2>
-      <hr>
-      <h3>
-        POST
-      </h3>
-      <p>
-        Create a new request by POSTing a JSON object to this endpoint - remember content-type:"application/json".
-        The JSON object must contain at least "url", which should provide the URL to create a request for. The
-        "url" parameter can also be a DOI, PMID, PMC ID, title, or citation - NOTE these fields should NOT be
-        provided speciifcally by name; just put the values in the "url" field.
-      </p>
-      <p style="text-align:left;">
-        We try to disambiguate requests to ensure there are as few duplicates as possible, so for DOI, PMID and PMC ID,
-        these are best provided in a URL-like format - DOI can be provided as https://doi.org/10.1234/567890, PMID
-        as https://www.ncbi.nlm.nih.gov/pubmed/12345678, and PMC ID as https://www.ncbi.nlm.nih.gov/pubmed/1234567.
-      </p>
-      <p>
-        The request "type" should also be provided, and can be "article" or "data". If not provided it defaults to "article".
-      </p>
-      <p>
-        Ideally, a "story" should also be provided, explaining why the request is necessary. Also an "email" should
-        be provided which should be the email address of the author to contact about the request (we will try to find
-        an email address if one is not provided).
-      </p>
-      <p>
-        A "title" and "doi" field can also be provided as extra information for the resource.
-      </p>
-      <p>
-        NOTE that it is possible to create a request even for something that is available, so before
-        creating a request please use the /availability endpoint to check if the item is already available, and
-        if we already have an open request for it.
-      </p>
-      <p>
-        The response will be a JSON object of the new request, which will include the new request ID in the "_id" parameter.
       </p>
 
       <h2>
