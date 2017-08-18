@@ -101,7 +101,8 @@ border-radius:5px;"
 
 		<div class="innercolumns">
       <h2>Get it</h2>
-
+      <p>To install the widget you'll need to access the source code of the page you want it on.</p>
+      <p>Step 1 (optional): Include the following links in the page:</p>
       <pre>
 &lt;script src="https://static.cottagelabs.com/jquery-1.10.2.min.js"&gt;&lt;/script&gt;
 &lt;link rel="stylesheet" href="https://static.cottagelabs.com/bootstrap-3.0.3/css/bootstrap.min.css"&gt;
@@ -109,19 +110,18 @@ border-radius:5px;"
 &lt;script&gt;jQuery(document).ready(function() { oabutton_widget(); });&lt;/script&gt;
 </pre>
 
-      <p>If your site already includes jquery and twitter-bootstrap css, then all you need to include is:</p>
+      <p>Step 2: If your site already includes jquery and twitter-bootstrap css, then all you need to include is:</p>
       <pre>
 &lt;script src="https://openaccessbutton.org/static/oabutton_widget.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){oabutton_widget();});&lt;/script&gt;
 </pre>
 
       <p>
-        To control where the search widget gets displayed, just put a div on the page where you want it with the ID
-        "oabutton_widget", as follows:</p>
+        Step 3: To control where the search widget gets displayed, put the following on the page where you want it:</p>
       <pre>
 &lt;div id="oabutton_widget"&gt;&lt;/div&gt;
 </pre>
 
-      <p>Or if you prefer using an iframe:</p>
+      <p>You can also include it using an iframe (ignoring the above) using the following:</p>
 <!--
 
 <p>TODO change this example to using a URL to the live site, not dev, once ready to push to live. Just using a dev one so you can see it working now.</p>
