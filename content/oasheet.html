@@ -29,7 +29,6 @@ TODO
 
 <a class="github-fork-ribbon left-bottom fixed" data-toggle="modal" data-target="#alpha" title="Alpha Release">Alpha Release</a>
 
-
 <!-- Button trigger modal -->
 
 <!-- Modal -->
@@ -335,8 +334,9 @@ TODO
 		$('input[type=file]').on('change', uploadJob);
 
     clogin.afterLogin = function() {
-      if (clogin.hasRole('openaccessbutton.admin')) {
-				getJobs();
+      if (clogin.hasRole('openaccessbutton.user')) {
+// the above was .admin, but I changed it to allow trinity to use
+  			getJobs();
         $('#bulk').show();
       } else {
         window.location = '/';
