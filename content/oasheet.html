@@ -128,7 +128,8 @@ TODO
 <script>
   jQuery(document).ready(function() {
     if (!clogin.loggedin()) {
-      window.location = '/account?next=/bulk';
+// the below was /bulk but I changed for trinity
+      window.location = '/account?next=/oasheet';
     }
 
     var api = 'https://api.openaccessbutton.org';
@@ -347,7 +348,8 @@ TODO
         window.location = '/';
       }
     }
-		clogin.afterFailure = function() { window.location = '/account?next=/bulk'; };
+//the below was /bulk but changed for trinity
+		clogin.afterFailure = function() { window.location = '/account?next=/oasheet'; };
     clogin.login();
   });
 </script>
