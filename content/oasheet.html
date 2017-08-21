@@ -315,8 +315,8 @@ TODO
 				data: JSON.stringify(payload),
 				dataType: 'JSON', // TODO sort issue here, the POST invalidates preflight without jsonp but with jsonp we don't get back a jsonp object
 				contentType: "application/json; charset=utf-8",
-				success: function() { $('#jobinfo').html('<p>Job accepted! We will email you the results when they are ready. </p>'); },
-				error: function() { $('#jobinfo').html('<p>Sorry, this job could not be uploaded. Contact help@openaccessbutton.org</p>'); }
+				success: function() { $('#jobinfo').html('<p>Job accepted! We will email you the results when they are ready.</p>'); },
+				error: function() { $('#jobinfo').html('<p>Sorry, this job could not be uploaded. Email help@openaccessbutton.org with your file attached.</p>'); }
 			});
 		}
 
