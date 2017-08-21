@@ -73,7 +73,7 @@ TODO
 
 
 <!-- This is where you login or sign up-->
-<!-- This is hidden as currently the login is done before as we normally do with admins. 
+<!-- This is hidden as currently the login is done before as we normally do with admins.
 <div id="cloginEmailArea" class="focal">
   <p style="text-align:center;">
     Just enter your email address to get started. We'll email you your results.<br>
@@ -85,9 +85,11 @@ TODO
 -->
 <!-- end of login -->
 
+<div class="focal">
+
 <!-- Start of upload button & instructions. This should be shown only when logged in. -->
 
-      <div id="upload" class="focal">
+      <div id="upload">
         <p class="jobupload">Upload a csv file, which must have column names including at least one of "url", "doi", "pmid", "pmcid", "title".</p>
         <form>
           <input type="file" name="jobupload" id="jobupload" class="form-control" style="padding-bottom:30px;margin-bottom:5px;">
@@ -99,9 +101,9 @@ TODO
 
 <!-- Start of places to read more. This should always be shown.  -->
 
-  <div class="row focal">
+  <div id="help" class="row">
     <div class="col-md-4" style="text-align:center;">
-      <a href="#tab-1" style="text-decoration:underline;">Help</a>
+      <a href="#tab-1">Help</a>
     </div>
     <div class="col-md-4" style="text-align:center;">
       <a href="#tab-2" style="text-decoration:underline;">Examples and Ideas</a>
@@ -111,6 +113,9 @@ TODO
     </div>
   </div>
 <!-- End of places to read more -->
+
+</div>
+
 
     </div>
   </div>
