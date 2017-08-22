@@ -47,7 +47,7 @@ var oabutton_widget = function(opts) {
         processData: false,
         contentType: 'application/json',
         dataType: 'json',
-        data: JSON.stringify({url:url,plugin:'widget',embedded:window.location.href}),
+        data: JSON.stringify({url:url,from:opts.uid,plugin:'widget',embedded:window.location.href}),
         success: function(data) {
           $('#oabutton_loading').hide();
           $('#oabutton_availability').show();
