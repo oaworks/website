@@ -18,9 +18,16 @@ jQuery(document).ready(function() {
     },500)
   });
   oabutton_widget();
-});
 
+  if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) clogin.api = 'https://dev.api.cottagelabs.com/accounts';
+  clogin.afterLogin = function() {
+    var uid = clogin.user.account._id;
+    $('.stickidin').html($('.stickidin').html().replace('oabutton_widget()','oabutton_widget({uid:' + uid + '})'));
+  }
+  clogin.login();
+});
 </script>
+
 <style type="text/css">
 
  @media (max-width: 768px){
@@ -28,12 +35,12 @@ jQuery(document).ready(function() {
   display: flex;
   background-color: white;
   flex-direction:column;
-  border-radius: 5px;"
+  border-radius: 5px;
 }
 .vertline{
  height: 1px;
  background-color:#cccccc;
- margin:10px;"
+ margin:10px;
 }
 .innercolumns{
   width:100%;
@@ -52,13 +59,13 @@ jQuery(document).ready(function() {
 .outercolumn{
 display: flex;
 background-color: white;
-border-radius:5px;"
+border-radius:5px;
 }
 
 .vertline{
  width: 1px;
  background-color:#cccccc;
- margin:10px;"
+ margin:10px;
 }
 
 }
@@ -103,7 +110,7 @@ border-radius:5px;"
       <h2>Get it</h2>
       <p>To install the widget you'll need to access the source code of the page you want it on.</p>
       <p>Step 1 (optional): Include the following links in the page:</p>
-      <pre>
+      <pre class="stickidin">
 &lt;script src="https://static.cottagelabs.com/jquery-1.10.2.min.js"&gt;&lt;/script&gt;
 &lt;link rel="stylesheet" href="https://static.cottagelabs.com/bootstrap-3.0.3/css/bootstrap.min.css"&gt;
 &lt;script src="https://openaccessbutton.org/static/oabutton_widget.js"&gt;&lt;/script&gt;
@@ -111,7 +118,7 @@ border-radius:5px;"
 </pre>
 
       <p>Step 2: If your site already includes jquery and twitter-bootstrap css, then all you need to include is:</p>
-      <pre>
+      <pre class="stickidin">
 &lt;script src="https://openaccessbutton.org/static/oabutton_widget.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){oabutton_widget();});&lt;/script&gt;
 </pre>
 
