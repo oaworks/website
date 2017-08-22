@@ -7,6 +7,9 @@ TODO
 * figure out why white boxes go into footer
 
 -->
+<script src="https://www.w3schools.com/lib/w3.js"></script>
+<div w3-include-html="/static/alpha.html"></div>
+
 <script src="/static/oabutton_widget.js"></script>
 <script>
 jQuery(document).ready(function() {
@@ -139,3 +142,11 @@ border-radius:5px;"
 		</div>
 	</div>
 </div>
+
+<!-- start of code enabling the pulling in of other html pages so we don't double up on code -->
+
+	<script>
+	w3.includeHTML();
+	</script>
+
+<!-- end of code enabling the pulling in of other html pages so we don't double up on code-->
