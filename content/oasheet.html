@@ -18,42 +18,6 @@
   	}
   </style>
 
-<!--
-
-TODO
-* Make page available without login
-* Make tabs only show when clicked.
-* Make login section only show when login is needed.
-* Allow upload only to show when logged in
--->
-
-<!-- start of banner for pages that are early days -->
-
-<a class="github-fork-ribbon left-bottom fixed" data-toggle="modal" data-target="#alpha" title="Alpha Release">Alpha Release</a>
-
-<!-- Button trigger modal -->
-
-<!-- Modal -->
-<div class="modal fade" id="alpha" tabindex="-1" role="dialog" aria-labelledby="alphaLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="alphaLabel">You're viewing a work in progress</h4>
-      </div>
-      <div class="modal-body">
-        <p>This is an early work in progress. We'd love to know what you think!</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" a href="mailto:help@openaccessbutton.org">Give feedback</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- end of banner for pages that are early days -->
-
 <script type="text/javascript" src="/static/dropfile.js"></script>
 
 <div class="container-fluid" id="bulk" style="display:none;">
@@ -354,4 +318,12 @@ TODO
 		clogin.afterFailure = function() { window.location = '/account?next=/oasheet'; };
     clogin.login();
   });
+</script>
+
+<!-- Code to pull in alpha release banner -->
+<script src="https://www.w3schools.com/lib/w3.js"></script>
+<div w3-include-html="/static/alpha.html"></div>
+
+<script>
+w3.includeHTML();
 </script>
