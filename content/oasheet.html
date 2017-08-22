@@ -17,16 +17,16 @@
   		*/
   	}
 
-      div:not(:target) {
+      .tabs div:not(:target) {
         display: none;
       }
 
-      div:target {
+      .tabs div:target {
         display: block;
       }
 
       /* Make the div big, so we would jump, if the JS was still broken */
-      div {
+      .tabs div {
         height: 100vh;
       }
     </style>
@@ -91,7 +91,7 @@
 <!-- End of places to read more -->
 
 <!-- start of tab contents -->
-
+<div id="tabs">
 <div id="help">
   <p>blank</p>
 </div>
@@ -103,7 +103,7 @@
 <div id="faq">
   <p>blank</p>
 </div>
-
+</div>
 <!-- end of tab contents -->
 
 </div>
