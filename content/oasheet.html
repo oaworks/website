@@ -17,18 +17,18 @@
   		*/
   	}
 
-      .tabs div:not(:target) {
-        display: none;
-      }
+    .tabs div:not(:target) {
+      display: none;
+    }
 
-      .tabs div:target {
-        display: block;
-      }
+    .tabs div:target {
+      display: block;
+    }
 
-      /* Make the div big, so we would jump, if the JS was still broken */
-      .tabs div {
-        height: 100vh;
-      }
+    /* Make the div big, so we would jump, if the JS was still broken */
+    .tabs div {
+      height: 100vh;
+    }
     </style>
 
 <script type="text/javascript" src="/static/dropfile.js"></script>
@@ -47,9 +47,7 @@
 
       </div>
 
-      <!-- End of intro -->
-
-
+<!-- End of intro -->
 
 <div id="loginRedirect" class="focal">
   <p style="text-align:center;">
@@ -57,9 +55,8 @@
   </p>
   <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email address">
   <button id="emailredirect" type="submit" class="btn btn-action btn-block" style="margin-top:10px;">Submit</button>
-  <p>or try it one at a time on <a href="/">our homepage</a></p>
+  <p>or try one at a time on <a href="/">our homepage</a></p>
 </div>
-
 
 <div id="uploadarea" class="focal row" style="display:none;">
 
@@ -79,34 +76,16 @@
 
   <div id="help" class="row">
     <div class="col-md-4" style="text-align:center;">
-      <a href="#helps" style="text-decoration:underline;">Help</a>
     </div>
     <div class="col-md-4" style="text-align:center;">
-      <a href="#example" style="text-decoration:underline;">Examples and Ideas</a>
+      <a href="https://docs.google.com/spreadsheets/d/1RB9URQvE-TWuSeCwv8BusoArra4avD4rA0kBusRW1d0/edit?usp=sharing" style="text-decoration:underline;">Examples</a>
     </div>
     <div class="col-md-4" style="text-align:center;">
-      <a href="#faq" style="text-decoration:underline;">FAQ</a>
     </div>
   </div>
 <!-- End of places to read more -->
 
 </div>
-
-<!-- start of tab contents -->
-<div id="tabs focal">
-<div id="helps">
-  <p>blank</p>
-</div>
-
-<div id="example">
-  <p>blank</p>
-</div>
-
-<div id="faq">
-  <p>blank</p>
-</div>
-</div>
-<!-- end of tab contents -->
 
     </div>
   </div>
@@ -284,22 +263,6 @@
 <!-- Code to pull in alpha release banner -->
 <script src="https://www.w3schools.com/lib/w3.js"></script>
 <div w3-include-html="/static/alpha.html"></div>
-
 <script>
 w3.includeHTML();
-</script>
-
-<!-- powers tabs -->
-
-<script>
-// Stop href="#hashtarget" links jumping around the page
-var hashLinks = document.querySelectorAll("a[href^='#']");
-[].forEach.call(hashLinks, function (link) {
-  link.addEventListener("click", function (event) {
-    event.preventDefault();
-    history.pushState({}, "", link.href);
-    history.pushState({}, "", link.href);
-    history.back();
-  });
-});
 </script>
