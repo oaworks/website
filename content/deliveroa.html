@@ -3,6 +3,25 @@
   /*]]>*/</script>
   <!-- End of openaccessbutton Zendesk Widget script -->
 
+<!-- code for generating unique api links -->
+
+  <script>
+    jQuery(document).ready(function() {
+
+      clogin.afterLogin = function() {
+        if (clogin.apikey) {
+          $('#apikey').html('Your API key is <code>' + clogin.apikey + '</code>');
+          $('.auth').each(function() { $(this).attr('href',$(this).attr('href')+'?apikey='+clogin.apikey); });
+        } else {
+          $('.auth').hide();
+        }
+      }
+      clogin.login();
+
+
+    });
+  </script>
+
   <style>
 
     .ill_system_content div:not(:target) {
@@ -115,7 +134,11 @@ TODO
 
           <div id="clio">
             <p>clio contents</p>
-            <p>use this <code>www.openaccessbutton.org/?url=</code></p>. 
+            <p>use this <code>www.openaccessbutton.org/?url=</code></p>.
+
+            <p id="apikey">
+              Please <a href="/account?next=/api" class="label label-info">sign up / sign in</a> to see your API key here.
+            </p>
 
           </div>
 
