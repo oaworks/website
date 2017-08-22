@@ -3,7 +3,7 @@
   /*]]>*/</script>
   <!-- End of openaccessbutton Zendesk Widget script -->
 
-  <style type="text/css">
+  <style>
   	.focal{
   		background-color: white;
   		text-align: left;
@@ -16,7 +16,20 @@
   		border-color:#212f3f;
   		*/
   	}
-  </style>
+
+      div:not(:target) {
+        display: none;
+      }
+
+      div:target {
+        display: block;
+      }
+
+      /* Make the div big, so we would jump, if the JS was still broken */
+      div {
+        height: 100vh;
+      }
+    </style>
 
 <script type="text/javascript" src="/static/dropfile.js"></script>
 
@@ -66,16 +79,32 @@
 
   <div id="help" class="row">
     <div class="col-md-4" style="text-align:center;">
-      <a href="#tab-1">Help</a>
+      <a href="#help" style="text-decoration:underline;">Help</a>
     </div>
     <div class="col-md-4" style="text-align:center;">
-      <a href="#tab-2" style="text-decoration:underline;">Examples and Ideas</a>
+      <a href="#example" style="text-decoration:underline;">Examples and Ideas</a>
     </div>
     <div class="col-md-4" style="text-align:center;">
-      <a href="#" class="show" what="howitworks" style="text-decoration:underline;">FAQ</a>
+      <a href="#faq" style="text-decoration:underline;">FAQ</a>
     </div>
   </div>
 <!-- End of places to read more -->
+
+<!-- start of tab contents -->
+
+<div id="help">
+  <p>blank</p>
+</div>
+
+<div id="example">
+  <p>blank</p>
+</div>
+
+<div id="faq">
+  <p>blank</p>
+</div>
+
+<!-- end of tab contents -->
 
 </div>
 
@@ -90,13 +119,13 @@
 
 <script>
   jQuery(document).ready(function() {
-  	
+
     var emailredirect = function(e) {
     	e.preventDefault();
     	window.location = '/account?email=' + $('#email').val() + '&next=/oasheet';
     }
     $('#emailredirect').bind('click',emailredirect);
-    $('#email').bind('keyup',function(e) { 
+    $('#email').bind('keyup',function(e) {
     	e.preventDefault();
     	if (e.keyCode === 13) $('#emailredirect').trigger('click');
     });
@@ -259,4 +288,19 @@
 
 <script>
 w3.includeHTML();
+</script>
+
+<!-- powers tabs -->
+
+<script>
+// Stop href="#hashtarget" links jumping around the page
+var hashLinks = document.querySelectorAll("a[href^='#']");
+[].forEach.call(hashLinks, function (link) {
+  link.addEventListener("click", function (event) {
+    event.preventDefault();
+    history.pushState({}, "", link.href);
+    history.pushState({}, "", link.href);
+    history.back();
+  });
+});
 </script>
