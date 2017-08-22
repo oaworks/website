@@ -31,7 +31,8 @@
         </div>
         <div class="row">
           <div class="col-md-4" style="text-align:center;">
-            <a style="text-decoration:underline;" class="chromeinstall" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">Get the extension</a>
+            <a id="getfromaccount" style="text-decoration:underline;" href="/account">Get the extension</a>
+            <a style="text-decoration:underline;display:none;" class="chromeinstall" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">Get the extension</a>
           </div>
           <div class="col-md-4" style="text-align:center;">
             <a href="#" class="show" what="examples" style="text-decoration:underline;">Examples</a>
@@ -98,6 +99,11 @@
 
 <script>
   jQuery(document).ready(function() {
+    if (navigator.userAgent.match(/chrome/i) && !navigator.userAgent.match(/edge/i)) {
+      $('#getfromaccount').hide();
+      $('.chromeinstall').show();
+    }
+      
     $('#topnav').css('background-color','transparent');
 
     var th;
