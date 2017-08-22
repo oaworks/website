@@ -56,7 +56,7 @@ TODO
 
 <script type="text/javascript" src="/static/dropfile.js"></script>
 
-<div class="container-fluid" id="bulk" style="display:none;">
+<div class="container-fluid">
 
   <div class="row">
     <div class="col-md-8 col-md-offset-2">
@@ -74,20 +74,17 @@ TODO
 
 
 
-<!-- This is where you login or sign up-->
-<!-- This is hidden as currently the login is done before as we normally do with admins.
-<div id="cloginEmailArea" class="focal">
+<div id="loginRedirect" class="focal">
   <p style="text-align:center;">
     Just enter your email address to get started. We'll email you your results.<br>
   </p>
-  <input type="email" class="form-control" id="cloginEmail" name="email" placeholder="Enter your email address">
-  <button id="cloginSubmit" type="submit" class="btn btn-action btn-block" style="margin-top:10px;">Submit</button>
+  <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email address">
+  <button id="emailredirect" type="submit" class="btn btn-action btn-block" style="margin-top:10px;">Submit</button>
   <p>or try it one at a time on <a href="/">our homepage</a></p>
 </div>
--->
-<!-- end of login -->
 
-<div class="focal row">
+
+<div id="uploadarea" class="focal row" style="display:none;">
 
 <!-- Start of upload button & instructions. This should be shown only when logged in. -->
 
@@ -129,10 +126,16 @@ TODO
 
 <script>
   jQuery(document).ready(function() {
-    if (!clogin.loggedin()) {
-// the below was /bulk but I changed for trinity
-      window.location = '/account?next=/oasheet';
+  	
+    var emailredirect = function(e) {
+    	e.preventDefault();
+    	window.location = '/account?email=' + $('#email').val() + '&next=/oasheet';
     }
+    $('#emailredirect').bind('click',emailredirect);
+    $('#email').bind('keyup',function(e) { 
+    	e.preventDefault();
+    	if (e.keyCode === 13) $('#emailredirect').trigger('click');
+    });
 
     var api = 'https://api.openaccessbutton.org';
     if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
@@ -181,69 +184,6 @@ TODO
   			}
 			});
     }
-
-    var removejob = function(e) {
-      e.preventDefault();
-      var confirmed = confirm('Are you sure you want to delete this job?');
-      if (confirmed) {
-        var uid = $(this).attr('href');
-        var u = api + '/job/' + uid + '/remove?apikey=' + clogin.apikey;
-     		$.ajax({
-    			url: u,
-    			method: 'GET',
-    			success: function(data) {
-    			  $('.job'+uid).remove();
-    			}
-  			});
-			}
-    }
-
-		var getJobs = function(e) {
-			$.ajax({
-				url: api + '/job?apikey='+clogin.apikey,
-				method: 'GET',
-				contentType: "application/json; charset=utf-8",
-				success: function(data) {
-					var jh = '';
-					for ( var j in data ) {
-						var job = data[j];
-		        jh += '<p class="job' + job._id + '">' + job.created_date + ': ' + job.name + ' (ID #' + job._id + ') ' + job.processes + ' rows. ';
-		        jh += job.done ? '<span style="color:orange;">Complete</span>' : '<a class="checkprogress" href="' + job._id + '">Check progress</a>';
-		        jh += ' - get <a target="_blank" href="' + api + '/job/' + job._id + '/results.json">JSON</a> or <a href="' + api + '/job/' + job._id + '/results.csv">CSV</a> ';
-						jh += '- or <a class="createrequests" href="' + job._id + '">Request</a> ';
-						jh += '- <a class="removejob" href="' + job._id + '" style="color:red;">x</a></p>';
-					}
-					$('#jobinfo').hide();
-					$('#jobhistory').html(jh);
-					$('.checkprogress').bind('click',checkprogress);
-					$('.removejob').bind('click',removejob);
-					$('.createrequests').bind('click',createrequests);
-				}
-			});
-		}
-
-    var start = moment().startOf('isoWeek');
-    var today = moment().endOf('day');
-    $('#batchfrom').val(moment(start,"x").format("DDMMYYYY"));
-    $('#batchto').val(moment(today,"x").format("DDMMYYYY"));
-    var generatebatch = function(e) {
-      e.preventDefault();
-      var from = $('#batchfrom').val();
-      var to = $('#batchto').val();
-			$.ajax({
-				url: api + '/job/generate/' + from + '/' + to + '?apikey='+clogin.apikey,
-				method: 'POST',
-				success: function(data) {
-				  if (data.count) {
-				    $('#jobinfo').show().html('<p>Job added, with ' + data.count + ' rows. Refresh the page to update job list.</p>');
-				  } else {
-				    $('#jobinfo').show().html('<p>There are no open requests between these dates. No job created.</p>');
-				  }
-				},
-				error: function() { $('#jobinfo').show().html('<p>Sorry, there was an error creating this job.</p>'); }
-			});
-    }
-    $('#generatebatch').bind('click',generatebatch);
 
 		var identifiers = [];
 		var file, filename;
@@ -341,17 +281,10 @@ TODO
 
 		$('input[type=file]').on('change', uploadJob);
 
-    clogin.afterLogin = function() {
-      if (clogin.hasRole('openaccessbutton.user')) {
-// the above was .admin, but I changed it to allow trinity to use
-  			getJobs();
-        $('#bulk').show();
-      } else {
-        window.location = '/';
-      }
-    }
-//the below was /bulk but changed for trinity
-		clogin.afterFailure = function() { window.location = '/account?next=/oasheet'; };
+		clogin.afterLogin = function() {
+    	$('#uploadarea').show();
+    	$('#loginRedirect').hide();
+		}
     clogin.login();
   });
 </script>
