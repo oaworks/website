@@ -191,7 +191,8 @@
           //request: ['_id','created_date','type','count','status','title','url','doi','journal','publisher','email','user.username','story','rating'],
           request: ['_id','created_date','type','count','status','title','url','doi','journal','publisher','sherpa.color','name','email','user.username','user.email','story','rating','receiver','refused.email','refused.date','received.date','received.from','received.description','received.url','received.admin','received.cron','received.notfromauthor','notes'],
           support: ['created_date','url','type','story','username','rid'],
-          availability: ['created_date','username','url','discovered.article','discovered.data','plugin','from']
+          availability: ['created_date','username','url','discovered.article','discovered.data','plugin','from'],
+          dnr: ['email']
         }
         var endpoint = 'requests';
         if ($('#what').val() === 'account') endpoint = 'users';
@@ -233,6 +234,7 @@
           if (changed.to) rg.range.createdAt.lte = moment(changed.to,'DD/MM/YYYY').valueOf();
           query.query.filtered.filter.bool.must.push(rg);
         }
+        if ($('#what').val() === 'account') query.query.filtered.filter.bool.must.push({query:{query_string:{query:'roles.openaccessbutton:*'}}});
         if ( query.query.filtered.filter.bool.must.length === 0 ) query.query = {"match_all":{}};
   
         var url = api + '/' + endpoint + '?';
