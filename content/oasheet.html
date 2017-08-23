@@ -43,7 +43,7 @@
       <div>
 
 <h1 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">OAsheet</h1>
-<h3 style="text-align:center;">Give us a spreadsheet of articles, we'll email you which can be found Open Access</h3>
+<h3 style="text-align:center;">Give us a spreadsheet of articles, we'll tell you which can be found Open Access</h3>
 
       </div>
 
@@ -51,7 +51,7 @@
 
 <div id="loginRedirect" class="focal">
   <p style="text-align:center;">
-    Just enter your email address to get started. We'll email you your results.<br>
+    Just enter your email address so we can email you your results.<br>
   </p>
   <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email address">
   <button id="emailredirect" type="submit" class="btn btn-action btn-block" style="margin-top:10px;">Submit</button>
@@ -63,7 +63,7 @@
 <!-- Start of upload button & instructions. This should be shown only when logged in. -->
 
       <div id="upload">
-        <p class="jobupload">Upload a csv file, which must have column names including at least one of "url", "doi", "pmid", "pmcid", "title".</p>
+        <p class="jobupload">Upload a .csv file, which must have column names including at least one of "url", "doi", "pmid", "pmcid", "title".</p>
         <form>
           <input type="file" name="jobupload" id="jobupload" class="form-control" style="padding-bottom:30px;margin-bottom:5px;">
   				<div style="display:none;" id="jobinfo">Uploading, for large files this can take a minute</div>
@@ -226,8 +226,8 @@
 				data: JSON.stringify(payload),
 				dataType: 'JSON', // TODO sort issue here, the POST invalidates preflight without jsonp but with jsonp we don't get back a jsonp object
 				contentType: "application/json; charset=utf-8",
-				success: function() { $('#jobinfo').html('<p>Job accepted! We will email you the results when they are ready.</p>'); },
-				error: function() { $('#jobinfo').html('<p>Sorry, this job could not be uploaded. Email help@openaccessbutton.org with your file attached.</p>'); }
+				success: function() { $('#jobinfo').html('<p>Upload successful! We will email you the results when they are ready.</p>'); },
+				error: function() { $('#jobinfo').html('<p>Hmmm, something has gone wrong. We are still testing so that can happen. Email help@openaccessbutton.org with your file attached and we will figure it out!</p>'); }
 			});
 		}
 
