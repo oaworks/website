@@ -4,30 +4,37 @@
   /*]]>*/</script>
   <!-- End of openaccessbutton Zendesk Widget script -->
 
-<div class="container-fluid" style="margin-top:200px;margin-bottom:600px;">
-  <div class="row">
-    <div class="col-md-12">
-      <div class="well" style="background-color:#f04717;margin-top:30px;border:none;color:#212f3f;padding-top:8px;">
-        <h4>
-          This page has moved. You should be redirected, but if not, click here to <a href="/feedback">report a bug</a>
-        </h4>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2" style="text-align:justify;">
+          <div id="ill-results">
+
+            <div id="article-name">
+
+  <h1>This is an article title</h1>
+  <p>authors</p>
+  <p>Jurnl</p>
+  <p>DOI / URL</p>
+
+  <p><a href="/ill_prototyping/full_form" style="text-align:right">Not what you wanted?</a></p>
+
+            </div>
+
+            <div id="result-ill">
+                <h1>Ask the library to get you a copy</h1>
+                <p>There is a $3 charge for each request. This request will take 8 days to be fulfiled.</p>
+                <a href="">Ask the library</a>
+            </div>
+
+        </div>
       </div>
     </div>
   </div>
-</div>
 
+<!-- Code to pull in alpha release banner -->
+<script src="https://www.w3schools.com/lib/w3.js"></script>
+<div w3-include-html="/static/alpha.html"></div>
 
 <script>
-  jQuery(document).ready(function() {
-    window.location = '/feedback';
-  });
+w3.includeHTML();
 </script>
-
-<!--
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-12">
-<iframe src="https://docs.google.com/forms/d/e/1FAIpQLScwlYUvspACAp8TcenhdpkVjHQel0XGa6WJOx149RVPEG5kTg/viewform?embedded=true" width="100%" height="2350" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe></div>
-</div>
-</div>
--->

@@ -46,6 +46,10 @@ And in a user context are:
 {{logincode}}
 {{loginurl}}
 
+and EXTRA in the bulk job context are:
+{{jobname}} : the name of the job (usually the file name)
+{{_id}} : the id of the job (allows download)
+
 (Also see the author_request example for a fuller demonstration of an actual email template the system could send.)
 
 Emails should be written as generically as possible, so they fit as many logical flows as can be allowed,

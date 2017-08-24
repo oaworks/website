@@ -1,25 +1,95 @@
+  <!-- Start of openaccessbutton Zendesk Widget script -->
+  <script>/*<![CDATA[*/window.zEmbed||function(e,t){var n,o,d,i,s,a=[],r=document.createElement("iframe");window.zEmbed=function(){a.push(arguments)},window.zE=window.zE||window.zEmbed,r.src="javascript:false",r.title="",r.role="presentation",(r.frameElement||r).style.cssText="display: none",d=document.getElementsByTagName("script"),d=d[d.length-1],d.parentNode.insertBefore(r,d),i=r.contentWindow,s=i.document;try{o=s}catch(e){n=document.domain,r.src='javascript:var d=document.open();d.domain="'+n+'";void(0);',o=s}o.open()._l=function(){var o=this.createElement("script");n&&(this.domain=n),o.id="js-iframe-async",o.src=e,this.t=+new Date,this.zendeskHost=t,this.zEQueue=a,this.body.appendChild(o)},o.write('<body onload="document._l();">'),o.close()}("https://assets.zendesk.com/embeddable_framework/main.js","openaccessbutton.zendesk.com");
+  /*]]>*/</script>
+  <!-- End of openaccessbutton Zendesk Widget script -->
+
+  <style>
+  	.focal{
+  		background-color: white;
+  		text-align: left;
+  		border-radius: 5px;
+      padding-left: 20px;
+      padding-right: 20px;
+  		/*
+  		border-width: 1px;
+  		border-style: solid;
+  		border-color:#212f3f;
+  		*/
+  	}
+
+    .tabs div:not(:target) {
+      display: none;
+    }
+
+    .tabs div:target {
+      display: block;
+    }
+
+    /* Make the div big, so we would jump, if the JS was still broken */
+    .tabs div {
+      height: 100vh;
+    }
+    </style>
 
 <script type="text/javascript" src="/static/dropfile.js"></script>
 
-<div class="container-fluid" id="bulk" style="display:none;">
+<div class="container-fluid">
+
   <div class="row">
     <div class="col-md-8 col-md-offset-2">
+
+<!-- Headline & 1 liner -->
+
       <div>
-        <p class="jobupload">Upload a csv file, which must have column names including at least one of "url", "doi", "pmid", "pmcid", "title":</p>
-  		  <p>
-  		    Include library catalogue checks in the bulk job?<br>
-  		    <input type="checkbox" name="bulklibraries" class="bulklibraries" value="imperial"> Imperial<br>
-  		    <input type="checkbox" name="bulklibraries" class="bulklibraries" value="york"> York<br>
-  		  </p>
+
+<h1 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">OAsheet</h1>
+<h3 style="text-align:center;">Give us a spreadsheet of articles, we'll tell you which can be found Open Access</h3>
+
+      </div>
+
+<!-- End of intro -->
+
+<div id="loginRedirect" class="focal">
+  <p style="text-align:center;">
+    Just enter your email address so we can email you your results.<br>
+  </p>
+  <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email address">
+  <button id="emailredirect" type="submit" class="btn btn-action btn-block" style="margin-top:10px;">Submit</button>
+  <p>or try one at a time on <a href="/">our homepage</a></p>
+</div>
+
+<div id="uploadarea" class="focal row" style="display:none;">
+
+<!-- Start of upload button & instructions. This should be shown only when logged in. -->
+
+      <div id="upload">
+        <p class="jobupload">Upload a .csv file, which must have column names including at least one of "url", "doi", "pmid", "pmcid", "title".</p>
         <form>
           <input type="file" name="jobupload" id="jobupload" class="form-control" style="padding-bottom:30px;margin-bottom:5px;">
-  				<div style="display:none;" id="jobinfo">Uploading...</div>
+  				<div style="display:none;" id="jobinfo">Uploading, for large files this can take a minute</div>
         </form>
-        <p>OR create job of open requests between <input id="batchfrom" type="text" style="width:100px;"> and <input id="batchto" type="text" style="width:100px;"> <a class="btn btn-primary" id="generatebatch" href="#">Go</a></p>
-  			<div id="jobhistory" style="margin-top:10px;margin-bottom:50px;">Loading job history...</div>
       </div>
+
+<!-- end of upload button & instructions -->
+
+<!-- Start of places to read more. This should always be shown.  -->
+
+  <div id="help" class="row">
+    <div class="col-md-4" style="text-align:center;">
+    </div>
+    <div class="col-md-4" style="text-align:center;">
+      <a href="https://docs.google.com/spreadsheets/d/1RB9URQvE-TWuSeCwv8BusoArra4avD4rA0kBusRW1d0/edit?usp=sharing" style="text-decoration:underline;">Examples</a>
+    </div>
+    <div class="col-md-4" style="text-align:center;">
     </div>
   </div>
+<!-- End of places to read more -->
+
+</div>
+
+    </div>
+  </div>
+
 </div>
 
 
@@ -27,9 +97,16 @@
 
 <script>
   jQuery(document).ready(function() {
-    if (!clogin.loggedin()) {
-      window.location = '/account?next=/bulk';
+
+    var emailredirect = function(e) {
+    	e.preventDefault();
+    	window.location = '/account?email=' + $('#email').val() + '&next=/oasheet';
     }
+    $('#emailredirect').bind('click',emailredirect);
+    $('#email').bind('keyup',function(e) {
+    	e.preventDefault();
+    	if (e.keyCode === 13) $('#emailredirect').trigger('click');
+    });
 
     var api = 'https://api.openaccessbutton.org';
     if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
@@ -64,7 +141,7 @@
         }
       });
     }
-    
+
     var checkprogress = function(e) {
       e.preventDefault();
       var uid = $(this).attr('href');
@@ -78,69 +155,6 @@
   			}
 			});
     }
-    
-    var removejob = function(e) {
-      e.preventDefault();
-      var confirmed = confirm('Are you sure you want to delete this job?');
-      if (confirmed) {
-        var uid = $(this).attr('href');
-        var u = api + '/job/' + uid + '/remove?apikey=' + clogin.apikey;
-     		$.ajax({
-    			url: u,
-    			method: 'GET',
-    			success: function(data) {
-    			  $('.job'+uid).remove();
-    			}
-  			});
-			}
-    }
-
-		var getJobs = function(e) {
-			$.ajax({
-				url: api + '/job?apikey='+clogin.apikey,
-				method: 'GET',
-				contentType: "application/json; charset=utf-8",
-				success: function(data) {
-					var jh = '';
-					for ( var j in data ) {
-						var job = data[j];
-		        jh += '<p class="job' + job._id + '">' + job.created_date + ': ' + job.name + ' (ID #' + job._id + ') ' + job.processes + ' rows. ';
-		        jh += job.done ? '<span style="color:orange;">Complete</span>' : '<a class="checkprogress" href="' + job._id + '">Check progress</a>';
-		        jh += ' - get <a target="_blank" href="' + api + '/job/' + job._id + '/results.json">JSON</a> or <a href="' + api + '/job/' + job._id + '/results.csv">CSV</a> ';
-						jh += '- or <a class="createrequests" href="' + job._id + '">Request</a> ';
-						jh += '- <a class="removejob" href="' + job._id + '" style="color:red;">x</a></p>';
-					}
-					$('#jobinfo').hide();
-					$('#jobhistory').html(jh);
-					$('.checkprogress').bind('click',checkprogress);
-					$('.removejob').bind('click',removejob);
-					$('.createrequests').bind('click',createrequests);
-				}
-			});
-		}
-
-    var start = moment().startOf('isoWeek');
-    var today = moment().endOf('day');
-    $('#batchfrom').val(moment(start,"x").format("DDMMYYYY"));
-    $('#batchto').val(moment(today,"x").format("DDMMYYYY"));
-    var generatebatch = function(e) {
-      e.preventDefault();
-      var from = $('#batchfrom').val();
-      var to = $('#batchto').val();
-			$.ajax({
-				url: api + '/job/generate/' + from + '/' + to + '?apikey='+clogin.apikey,
-				method: 'POST',
-				success: function(data) {
-				  if (data.count) {
-				    $('#jobinfo').show().html('<p>Job added, with ' + data.count + ' rows. Refresh the page to update job list.</p>');
-				  } else {
-				    $('#jobinfo').show().html('<p>There are no open requests between these dates. No job created.</p>');
-				  }
-				},
-				error: function() { $('#jobinfo').show().html('<p>Sorry, there was an error creating this job.</p>'); }
-			});
-    }
-    $('#generatebatch').bind('click',generatebatch);
 
 		var identifiers = [];
 		var file, filename;
@@ -212,8 +226,8 @@
 				data: JSON.stringify(payload),
 				dataType: 'JSON', // TODO sort issue here, the POST invalidates preflight without jsonp but with jsonp we don't get back a jsonp object
 				contentType: "application/json; charset=utf-8",
-				success: function() { $('#jobinfo').html('<p>Job added. Refresh the page to update job list.</p>'); },
-				error: function() { $('#jobinfo').html('<p>Sorry, this job could not be uploaded.</p>'); }
+				success: function() { $('#jobinfo').html('<p>Upload successful! We will email you the results when they are ready.</p>'); },
+				error: function() { $('#jobinfo').html('<p>Hmmm, something has gone wrong. We are still testing so that can happen. Email help@openaccessbutton.org with your file attached and we will figure it out!</p>'); }
 			});
 		}
 
@@ -238,15 +252,17 @@
 
 		$('input[type=file]').on('change', uploadJob);
 
-    clogin.afterLogin = function() {
-      if (clogin.hasRole('openaccessbutton.admin')) {
-				getJobs();
-        $('#bulk').show();
-      } else {
-        window.location = '/';
-      }
-    }
-		clogin.afterFailure = function() { window.location = '/account?next=/bulk'; };
+		clogin.afterLogin = function() {
+    	$('#uploadarea').show();
+    	$('#loginRedirect').hide();
+		}
     clogin.login();
   });
+</script>
+
+<!-- Code to pull in alpha release banner -->
+<script src="https://www.w3schools.com/lib/w3.js"></script>
+<div w3-include-html="/static/alpha.html"></div>
+<script>
+w3.includeHTML();
 </script>
