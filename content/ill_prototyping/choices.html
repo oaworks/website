@@ -42,9 +42,6 @@
   margin-bottom: 20px;
 }
 
-.regularbutton{
-  width:100px;
-}
 
 </style>
 <div class="whitecontainer">
@@ -61,8 +58,8 @@
 
     <!-- Select Multiple -->
     <div class="form-group">
-      <label class="col-md-4 control-label desctext" for="selectmultiple">Select Multiple</label>
-      <div class="col-md-8">
+      <label class="col-sm-3 control-label desctext" for="selectmultiple">Select Multiple</label>
+      <div class="col-md-9">
         <select id="selectmultiple" name="selectmultiple" class="form-control" multiple="multiple">
           <option value="1">Article one, author example 1, doi.org/this</option>
           <option value="2">Article two, author example 2, doi.org/that</option>
@@ -72,10 +69,10 @@
 
     <!-- Button (Double) -->
     <div class="form-group">
-      <label class="col-md-4 control-label" for="item_confirm"></label>
-      <div class="col-md-8">
-        <button id="item_confirm" name="success" class="btn btn-default regularbutton">That's it!</button>
-        <p><a href="#">I can't see it</a></p>
+      <label class="col-sm-3 control-label" for="item_confirm"></label>
+      <div class="col-sm-9" style="display: flex;"">
+        <button id="item_confirm" name="success" class="btn btn-default">That's it!</button>
+        <p style="margin:10px 15px 0px 15px;"><a href="#">I can't see it</a></p>
       </div>
     </div>
 
