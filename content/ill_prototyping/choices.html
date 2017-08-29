@@ -22,6 +22,7 @@
   background-color: white;
   padding:10px 0px;
   margin: auto;
+  max-width: 500px;
 }
 
 .desctext{
@@ -41,7 +42,8 @@
   margin:auto;
   margin-bottom: 20px;
 }
-
+.form-group{
+ style="margin:10px 0px;"
 
 </style>
 <div class="whitecontainer">
@@ -54,12 +56,12 @@
     <fieldset>
 
     <!-- Form Name -->
-    <h1>Can you see what you want? </h1>
+    <h1 style="margin-bottom: 20px">Can you see what you want? </h1>
 
     <!-- Select Multiple -->
     <div class="form-group">
       <label class="col-sm-3 control-label desctext" for="selectmultiple">Select Multiple</label>
-      <div class="col-md-9">
+      <div class="col-md-9" style="padding:0px;">
         <select id="selectmultiple" name="selectmultiple" class="form-control" multiple="multiple">
           <option value="1">Article one, author example 1, doi.org/this</option>
           <option value="2">Article two, author example 2, doi.org/that</option>
@@ -70,7 +72,7 @@
     <!-- Button (Double) -->
     <div class="form-group">
       <label class="col-sm-3 control-label" for="item_confirm"></label>
-      <div class="col-sm-9" style="display: flex;"">
+      <div class="col-sm-9" style="display: flex;">
         <button id="item_confirm" name="success" class="btn btn-default">That's it!</button>
         <p style="margin:10px 15px 0px 15px;"><a href="#">I can't see it</a></p>
       </div>
