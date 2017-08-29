@@ -6,23 +6,35 @@
 
 <style>
 
+@media(min-width: 518px){
+  .whitecontainer{
+    width:500px;
+  }
+}
+
+
+@media(max-width: 517px){
+  .whitecontainer{
+    width:100%;
+  }
+}
+
+.whitecontainer{
+  background-color: white;
+  padding:10px 0px;
+  margin: auto;
+}
+
 .whitebox{
   background-color: white;
-  flex-direction:column;
   border-width: 1px;
   border-style: solid;
   border-color: #c8c8c8;
-  max-width: 450px;
-  margin:auto;
   margin-bottom: 20px;
 }
 
 .whiteboxblue{
   background-color: white;
-  flex-direction:column;
-  border-radius: 1px;
-  max-width: 450px;
-  margin:auto;
   margin-bottom: 20px;
   border-width: 1px;
   border-style: solid;
@@ -39,29 +51,30 @@ h3{
 
 </style>
 
-
-<div class="container-fluid" style="max-width: 470px; margin: auto;">
-  <div id="ill-results">
-   
-    <div id="article-name">
-      <h1>This is an article title</h1>
-      <p>authors</p>
-      <p>Jurnl</p>
-      <p>DOI / URL</p>
-    </div>
-
-    <div class="whitebox">
-      <div class="whiteboxinner">
-        <p><a href="/ill_prototyping/full_form" style="text-align:right">Not what you wanted?</a></p>
+<div class="whitecontainer">
+  <div class="container-fluid">
+    <div id="ill-results">
+     
+      <div id="article-name">
+        <h1>This is an article title</h1>
+        <p>authors</p>
+        <p>Jurnl</p>
+        <p>DOI / URL</p>
       </div>
-    </div>
+
+      <div class="whitebox">
+        <div class="whiteboxinner">
+          <p><a href="/ill_prototyping/full_form" style="text-align:right">Not what you wanted?</a></p>
+        </div>
+      </div>
 
 
-    <div id="result-ill" class="whitebox">
-      <div class="whiteboxinner">
-        <h3>Ask the library to get you a copy</h3>
-        <p>There is a $3 charge for each request. This request will take 8 days to be fulfiled.</p>
-        <p><a href="">Ask the library</a></p>
+      <div id="result-ill" class="whitebox">
+        <div class="whiteboxinner">
+          <h3>Ask the library to get you a copy</h3>
+          <p>There is a $3 charge for each request. This request will take 8 days to be fulfiled.</p>
+          <p><a href="">Ask the library</a></p>
+        </div>
       </div>
     </div>
   </div>
