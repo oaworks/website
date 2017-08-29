@@ -4,32 +4,68 @@
   /*]]>*/</script>
   <!-- End of openaccessbutton Zendesk Widget script -->
 
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-8 col-md-offset-2" style="text-align:justify;">
-          <div id="ill-results">
+<style>
 
-            <div id="article-name">
+.whitebox{
+  background-color: white;
+  flex-direction:column;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #c8c8c8;
+  max-width: 450px;
+  margin:auto;
+  margin-bottom: 20px;
+}
 
-  <h1>This is an article title</h1>
-  <p>authors</p>
-  <p>Jurnl</p>
-  <p>DOI / URL</p>
+.whiteboxblue{
+  background-color: white;
+  flex-direction:column;
+  border-radius: 1px;
+  max-width: 450px;
+  margin:auto;
+  margin-bottom: 20px;
+  border-width: 1px;
+  border-style: solid;
+  border-color:#428bca;
+}
 
-  <p><a href="/ill_prototyping/full_form" style="text-align:right">Not what you wanted?</a></p>
+.whiteboxinner{
+ padding: 10px 10px 1px 10px;
+}
 
-            </div>
+h3{
+  margin-top: 5px;
+}
 
-            <div id="result-ill">
-                <h1>Ask the library to get you a copy</h1>
-                <p>There is a $3 charge for each request. This request will take 8 days to be fulfiled.</p>
-                <a href="">Ask the library</a>
-            </div>
+</style>
 
-        </div>
+
+<div class="container-fluid" style="max-width: 470px; margin: auto;">
+  <div id="ill-results">
+   
+    <div id="article-name">
+      <h1>This is an article title</h1>
+      <p>authors</p>
+      <p>Jurnl</p>
+      <p>DOI / URL</p>
+    </div>
+
+    <div class="whitebox">
+      <div class="whiteboxinner">
+        <p><a href="/ill_prototyping/full_form" style="text-align:right">Not what you wanted?</a></p>
       </div>
     </div>
+
+
+  <div id="result-ill" class="whitebox">
+    <div class="whiteboxinner">
+      <h3>Ask the library to get you a copy</h3>
+      <p>There is a $3 charge for each request. This request will take 8 days to be fulfiled.</p>
+      <a href="">Ask the library</a>
+    </div>
   </div>
+    
+</div>
 
 <!-- Code to pull in alpha release banner -->
 <script src="https://www.w3schools.com/lib/w3.js"></script>
