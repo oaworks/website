@@ -60,6 +60,20 @@ jQuery(document).ready(function() {
   .ill_system_content div {
     height: 100vh;
   }
+  
+  @media (max-width: 768px){
+ .vertline{
+  height: 1px;
+  background-color:#cccccc;
+  margin:10px;
+ }
+ .innercolumns{
+   width:100%;
+   padding:10px;
+   overflow: hidden;
+ }
+ }  
+  
 </style>
 
 <div class="container-fluid">
@@ -117,9 +131,8 @@ jQuery(document).ready(function() {
             </div>
         </div>
     </div>
-
+    <div class="vertline"></div>
     <div class="col-md-6">
-      <div class="vertline"></div>
       <div class="ill_system_content downloadbox">
 
         <div id="springshare" class="innercolumns">
