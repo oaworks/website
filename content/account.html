@@ -80,7 +80,7 @@ jQuery(document).ready(function() {
   }
   // TODO set these for oabutton to have its own oauth accounts:
   // clogin.oauthGoogleClientId = '';
-  // clogin.oauthFacebookClientId = '';
+  clogin.oauthFacebookAppId = '114282989239097';
   clogin.init({api:api,afterLogin: afterlogin, saveValidate: savevalidate, afterSave: aftersave, afterFailure: afterfailure });
 
   if (window.location.href.indexOf('email=') !== -1) {
