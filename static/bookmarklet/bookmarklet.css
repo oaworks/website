@@ -2,14 +2,15 @@
 #oabutton_popup {
   color:#212f3f;
   font-family:sans-serif;
-  font-size:20px;
+  font-size:12px;
   z-index:10000000;
   position:fixed;
   top:0px;
   right:20px;
   border:1px solid #ccc;
+  border-top:0px;
   border-radius:0px 0px 2px 2px;
-  background-color:#eee;
+  background-color:#fff;
   margin: 0;
   padding:10px 10px 7px 10px;
 }
