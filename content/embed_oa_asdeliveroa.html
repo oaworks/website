@@ -41,6 +41,14 @@ jQuery(document).ready(function() {
   border-color:#212f3f;
   */
 }
+
+@media (min-width: 769px){
+.innercolumns{
+  width:50%;
+  padding:10px;
+  overflow: hidden;
+}
+
   .ill_system_content div:not(:target) {
     display: none;
   }
@@ -133,7 +141,7 @@ jQuery(document).ready(function() {
 
         </div>
 
-        <div id="other_libguide">
+        <div id="other_libguide" class="innercolumns">
           <!-- TODO
           <p>let us help you</p>
            -->
@@ -169,7 +177,7 @@ jQuery(document).ready(function() {
           
         </div>
 
-        <div id="other">
+        <div id="other" class="innercolumns">
           <p>To install the widget you'll need to access the source code of the page you want it on.</p>
           <p>Step 1 (optional): Include the following links in the page:</p>
           <pre class="stickidin">
