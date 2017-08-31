@@ -18,6 +18,7 @@ var oabutton_widget = function(opts) {
   var api = opts.api ? opts.api : 'https://api.openaccessbutton.org';
   var site = opts.site ? opts.site : 'https://openaccessbutton.org';
   if (opts.element === undefined) opts.element = '#oabutton_widget';
+  if (opts.uid === undefined) opts.uid = 'anonymous';
   if ($(opts.element).length === 0) $('body').append('<div id="oabutton_widget"></div>');
   
   var w = '<div class="input-group">\
@@ -40,7 +41,7 @@ var oabutton_widget = function(opts) {
       }
       if (url.lastIndexOf('.') === url.length-1) url = url.substring(0,url.length-1);
       $('#oabutton_loading').show();
-      var opts = {
+      var avopts = {
         type:'POST',
         url:api+'/availability',
         cache: false,
@@ -69,7 +70,7 @@ var oabutton_widget = function(opts) {
               try { dr.title = data.data.meta.article.title; } catch(err) {}
               try { dr.doi = data.data.meta.article.doi; } catch(err) {}
               try { dr.url = data.data.match; } catch(err) {}
-              var opts = {
+              var ropts = {
                 type:'POST',
                 url: api+'/request?fast=true',
                 cache:false,
@@ -84,7 +85,7 @@ var oabutton_widget = function(opts) {
                   window.location = site + '/request?url=' + encodeURIComponent(data.data.match);
                 }
               }
-              $.ajax(opts);
+              $.ajax(ropts);
             } else {
               $('#oabutton_availability').html('<p>Sorry, we couldn\'t find anything for <b>' + data.data.match + '</b>.</p><p>Matching titles and citations can be tricky. Please find a URL, DOI, PMID or PMCID and <a href="/">try again</a>.</p>');
             }
@@ -151,7 +152,7 @@ var oabutton_widget = function(opts) {
           $('#oabutton_loading').after('<p>Sorry, something went wrong with Open Access Button. <a target="_blank" href="' + site + '/feedback#bug">Can you let them know?</a></p>');
         }
       };
-      $.ajax(opts);
+      $.ajax(avopts);
     }
   }
   $('#oabutton_url').bind('keyup',availability);

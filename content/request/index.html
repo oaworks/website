@@ -108,6 +108,13 @@ jQuery(document).ready(function() {
     if (id) {
       $('#footer').hide();
       $('.loading').append('<h3 style="text-align:center;">Starting a new request. One moment please</h3>').show();
+      var dt = {
+        url: id,
+        type: window.location.href.indexOf('type=') !== -1 ? window.location.href.split('type=')[1].split('&')[0] : 'article'
+      }
+      if (window.location.href.indexOf('embedded=') !== -1) dt.embedded = window.location.href.split('embedded=')[1].split('&')[0];
+      if (window.location.href.indexOf('plugin=') !== -1) dt.plugin = window.location.href.split('plugin=')[1].split('&')[0];
+      if (window.location.href.indexOf('from=') !== -1) dt.from = window.location.href.split('from=')[1].split('&')[0];
       var opts = {
         type: 'POST',
         url: api+'/request',
@@ -115,12 +122,9 @@ jQuery(document).ready(function() {
         contentType: 'application/json',
         processData: false,
         cache: false,
-        data: JSON.stringify({
-          url: id,
-          type: window.location.href.indexOf('?type=') !== -1 ? window.location.href.split('?type=')[1].split('&')[0] : 'article'
-        }),
+        data: JSON.stringify(dt),
         success: function(data) {
-          window.location = '/request/' + data._id;
+          window.location = '/request/' + data._id + (window.location.search.indexOf('data=false') === -1 ? '' : '?data=false');
         },
         error: function(err) {
           window.location = '/request';
