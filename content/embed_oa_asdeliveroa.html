@@ -4,6 +4,27 @@
 <!-- End of openaccessbutton Zendesk Widget script -->
 <style>
 
+<script src="/static/oabutton_widget.js"></script>
+<script>
+jQuery(document).ready(function() {
+  $('.tryit').bind('click',function(e) {
+    e.preventDefault();
+    $('#oabutton_url').val($(this).html());
+    setTimeout(function() {
+      $('#oabutton_find').trigger('click');
+    },500)
+  });
+  oabutton_widget();
+
+  if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) clogin.api = 'https://dev.api.cottagelabs.com/accounts';
+  clogin.afterLogin = function() {
+    var uid = clogin.user.account._id;
+    $('.stickidin').html($('.stickidin').html().replace('oabutton_widget()','oabutton_widget({uid:' + uid + '})'));
+  }
+  clogin.login();
+});
+</script>
+
 .downloadbox {
   background-color: white;
   text-align: left;
