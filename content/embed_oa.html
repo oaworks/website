@@ -6,7 +6,7 @@ TODO
 * figure out why white boxes go into footer
 
 -->
-<script src="/static/oabutton_widget.js"></script>
+<script src="/static/openaccessbutton_widget.js"></script>
 <script>
 jQuery(document).ready(function() {
   $('.tryit').bind('click',function(e) {
@@ -16,12 +16,12 @@ jQuery(document).ready(function() {
       $('#oabutton_find').trigger('click');
     },500)
   });
-  oabutton_widget();
+  openaccessbutton_widget();
 
   if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) clogin.api = 'https://dev.api.cottagelabs.com/accounts';
   clogin.afterLogin = function() {
     var uid = clogin.user.account._id;
-    $('.stickidin').html($('.stickidin').html().replace('oabutton_widget()','oabutton_widget({uid:' + uid + '})'));
+    $('.stickidin').html($('.stickidin').html().replace('openaccessbutton_widget()','openaccessbutton_widget({uid:' + uid + '})'));
   }
   clogin.login();
 });
@@ -88,7 +88,7 @@ border-radius:5px;
 		<div class="innercolumns">
       <h2>Try it</h2>
 
-      <div id="oabutton_widget"></div>
+      <div id="openaccessbutton_widget"></div>
 
       <p style="margin-top:30px;">Don't have a article to hand? Try:
         <ol>
@@ -122,19 +122,19 @@ border-radius:5px;
       <pre class="stickidin">
 &lt;script src="https://static.cottagelabs.com/jquery-1.10.2.min.js"&gt;&lt;/script&gt;
 &lt;link rel="stylesheet" href="https://static.cottagelabs.com/bootstrap-3.0.3/css/bootstrap.min.css"&gt;
-&lt;script src="https://openaccessbutton.org/static/oabutton_widget.js"&gt;&lt;/script&gt;
-&lt;script&gt;jQuery(document).ready(function() { oabutton_widget(); });&lt;/script&gt;
+&lt;script src="https://openaccessbutton.org/static/openaccessbutton_widget.js"&gt;&lt;/script&gt;
+&lt;script&gt;jQuery(document).ready(function() { openaccessbutton_widget(); });&lt;/script&gt;
       </pre>
 
       <p>Step 2: If your site already includes jquery and twitter-bootstrap css, then all you need to include is:</p>
       <pre class="stickidin">
-&lt;script src="https://openaccessbutton.org/static/oabutton_widget.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){oabutton_widget();});&lt;/script&gt;
+&lt;script src="https://openaccessbutton.org/static/openaccessbutton_widget.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){openaccessbutton_widget();});&lt;/script&gt;
       </pre>
 
       <p>
         Step 3: To control where the search widget gets displayed, put the following on the page where you want it:</p>
         <pre>
-&lt;div id="oabutton_widget"&gt;&lt;/div&gt;
+&lt;div id="openaccessbutton_widget"&gt;&lt;/div&gt;
         </pre>
 
       <p>You can also include it using an iframe (ignoring the above) using the following:</p>

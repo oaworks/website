@@ -1,26 +1,26 @@
 
-// to use this widget, just include this js file, and then call oabutton_widget() in a script on the page
+// to use this widget, just include this js file, and then call openaccessbutton_widget() in a script on the page
 // If jquery is not already used on the site, jquery is required too.
 // bootstrap can optionally be used to apply styling
 // this can be done like so:
 // <script src="https://static.cottagelabs.com/jquery-1.10.2.min.js"></script>
 // <link rel="stylesheet" href="https://static.cottagelabs.com/bootstrap-3.0.3/css/bootstrap.min.css">
-// <script src="https://openaccessbutton.org/static/oabutton_widget.js"></script>
-// <script>jQuery(document).ready(function() { oabutton_widget(); });</script>
+// <script src="https://openaccessbutton.org/static/openaccessbutton_widget.js"></script>
+// <script>jQuery(document).ready(function() { openaccessbutton_widget(); });</script>
 
 // need an input field called oabutton_url
 // and an oabutton_find button to trigger it (although triggers on enter too)
 // and oabutton_availability div required for inserting results
 // and optional oabutton_loading
 
-var oabutton_widget = function(opts) {
+var openaccessbutton_widget = function(opts) {
   if (opts === undefined) opts = {};
   if (opts.data === undefined) opts.data = false;
   var api = opts.api ? opts.api : 'https://api.openaccessbutton.org';
   var site = opts.site ? opts.site : 'https://openaccessbutton.org';
-  if (opts.element === undefined) opts.element = '#oabutton_widget';
+  if (opts.element === undefined) opts.element = '#openaccessbutton_widget';
   if (opts.uid === undefined) opts.uid = 'anonymous';
-  if ($(opts.element).length === 0) $('body').append('<div id="oabutton_widget"></div>');
+  if ($(opts.element).length === 0) $('body').append('<div id="openaccessbutton_widget"></div>');
 
   var w = '<div class="input-group">\
     <textarea id="oabutton_url" class="form-control" style="min-height:40px;height:40px;font-size:1.1em;" placeholder="Skip the paywall using a URL, DOI, PMID, PMC ID, Title, or Citation"></textarea>\
