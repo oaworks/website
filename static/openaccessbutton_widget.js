@@ -23,7 +23,7 @@ var openaccessbutton_widget = function(opts) {
   if ($(opts.element).length === 0) $('body').append('<div id="openaccessbutton_widget"></div>');
 
   var w = '<div class="input-group">\
-    <textarea id="oabutton_url" class="form-control" style="min-height:40px;height:40px;font-size:1.1em;" placeholder="Skip the paywall using a URL, DOI, PMID, PMC ID, Title, or Citation"></textarea>\
+    <textarea id="oabutton_url" class="form-control" style="min-height:40px;height:40px;font-size:1.1em;" placeholder="Skip the paywall using a URL, DOI, Title, or Citation"></textarea>\
     <div class="input-group-btn">\
       <a class="btn btn-primary btn-block" href="#" id="oabutton_find" style="min-height:40px;height:40px;font-size:1.1em;padding:7px 10px 5px 10px;"><i class="glyphicon glyphicon-search"></i></a>\
     </div>\
