@@ -149,7 +149,7 @@
           return;
         }
         try {
-          if ('pushState' in window.history) window.history.pushState("", "find", '?url=' + encodeURIComponent(url));
+          if (window.location.search.length === 0 && 'pushState' in window.history) window.history.pushState("", "find", '?url=' + encodeURIComponent(url));
         } catch(err) {}
         if (url.lastIndexOf('.') === url.length-1) url = url.substring(0,url.length-1);
         $('.intro').hide();

@@ -78,6 +78,9 @@ jQuery(document).ready(function() {
   } else {
     $('#bookmarklet').attr('href',$('#bookmarklet').attr('href').replace('YYYY','https://openaccessbutton.org'));
   }
+  // TODO set these for oabutton to have its own oauth accounts:
+  // clogin.oauthGoogleClientId = '';
+  // clogin.oauthFacebookClientId = '';
   clogin.init({api:api,afterLogin: afterlogin, saveValidate: savevalidate, afterSave: aftersave, afterFailure: afterfailure });
 
   if (window.location.href.indexOf('email=') !== -1) {
@@ -120,15 +123,15 @@ jQuery(document).ready(function() {
           </p>
           <input type="email" class="form-control" id="cloginEmail" name="email" placeholder="Enter your email address">
           <button id="cloginSubmit" type="submit" class="btn btn-action btn-block" style="margin-top:10px;">Sign up / Login</button>
-          <!-- <div>
+          <div>
             <p style="text-align:center;margin-top:15px;">
               Or use your favourite service<br>
             </p>
             <p style="text-align:center; margin-top:15px;">
-              <a id="cloginOauthGoogle" class="btn btn-primary" style="font-size:0.8em;" href="#"><img style="height:20px;" src=""> Sign in with Google</a>
-              <a id="cloginOauthFacebook" class="btn btn-primary" style="font-size:0.8em;" href="#"><img style="height:20px;" src=""> Sign in with Facebook</a>
+              <a id="cloginOauthGoogle" class="btn btn-default" style="font-size:0.8em;" href="#"><img style="height:20px;" src="https://static.cottagelabs.com/google.png"> Sign in with Google</a>
+              <a id="cloginOauthFacebook" class="btn btn-default" style="font-size:0.8em;" href="#"><img style="height:20px;" src="https://static.cottagelabs.com/facebook.png"> Sign in with Facebook</a>
             </p>
-          </div> -->
+          </div>
         </div>
         <div id="cloginTokenArea" style="display:none;">
           <h2 style="text-align:center;">Go check your email!</h2>

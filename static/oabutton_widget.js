@@ -15,6 +15,7 @@
 
 var oabutton_widget = function(opts) {
   if (opts === undefined) opts = {};
+  if (opts.data === undefined) opts.data = false;
   var api = opts.api ? opts.api : 'https://api.openaccessbutton.org';
   var site = opts.site ? opts.site : 'https://openaccessbutton.org';
   if (opts.element === undefined) opts.element = '#oabutton_widget';
@@ -104,27 +105,31 @@ var oabutton_widget = function(opts) {
               availability += '<h2>This article is available!</h2>';
               availability += '<p"><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + has.article.url + '</a></p>';
               availability += '<p>Not what you were expecting? <a target="_blank" href ="' + site + '/feedback#wrong?searched=' + encodeURIComponent(url) + '&given=' + encodeURIComponent(has.article.url) + '">Report an error</a>.</p>';
-              availability += '<p> You can <a target="_blank" href="' + site + '/request?url=' + encodeURIComponent(data.data.match) + '">request it from the author</a> if it isn\'t available.</p>';
+              availability += '<p> You can <a target="_blank" href="' + site + '/request?data=false&url=' + encodeURIComponent(data.data.match) + '">request it from the author</a> if it isn\'t available.</p>';
             }
-            availability += '<p>';
-            availability += 'Want the data supporting the article? ';
-            availability += '<a target="_blank" class="btn btn-action" href="' + site + '/request?type=data&url=' + encodeURIComponent(data.data.match) + '">Request it from the author</a></p>';
+            if (opts.data) {
+              availability += '<p>';
+              availability += 'Want the data supporting the article? ';
+              availability += '<a target="_blank" class="btn btn-action" href="' + site + '/request?type=data&url=' + encodeURIComponent(data.data.match) + '">Request it from the author</a></p>';
+            }
             $('#oabutton_availability').html(availability);
           } else if (!has.article && has.data) {
             var availability = '<h2>This article is not available</h2>';
-            availability += '<h3 style="text-align:center;"><a target="_blank" class="btn btn-action" href="' + site + '/request?url=' + encodeURIComponent(data.data.match) + '">Start a request</a></h3>';
-            availability += '<p>';
-            if (has.data.id) {
-                availability += 'Someone has requested access to the data. <a target="_blank" class="btn btn-action" href="' + site + '/request/' + has.data.id + '?support=true">Notify me';
-            } else {
-              availability += 'However there is data available:</p>';
-              availability += '<p style="text-align:center;"><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.data.url + '">' + has.data.url;
+            availability += '<h3 style="text-align:center;"><a target="_blank" class="btn btn-action" href="' + site + '/request?data=false&url=' + encodeURIComponent(data.data.match) + '">Start a request</a></h3>';
+            if (opts.data) {
+              availability += '<p>';
+              if (has.data.id) {
+                  availability += 'Someone has requested access to the data. <a target="_blank" class="btn btn-action" href="' + site + '/request/' + has.data.id + '?support=true">Notify me';
+              } else {
+                availability += 'However there is data available:</p>';
+                availability += '<p style="text-align:center;"><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.data.url + '">' + has.data.url;
+              }
+              availability += '</a></p>';
             }
-            availability += '</a></p>';
             $('#oabutton_availability').html(availability);
           } else if (has.article && has.data) {
             if (has.article.id && has.data.id) {
-              window.location = site + '/request/' + has.article.id;
+              window.location = site + '/request/' + has.article.id + '?data=false';
             } else {
               var availability = '<h2>';
               if (has.article.url) {
@@ -132,17 +137,20 @@ var oabutton_widget = function(opts) {
                 availability += '<h><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + has.article.url;
               }
               if (has.article.id) {
-                availability += 'Someone has requested access to the article. <a target="_blank" class="btn btn-action" href="' + site + '/request/' + has.article.id + '?support=true">Notify me';
+                availability += 'Someone has requested access to the article. <a target="_blank" class="btn btn-action" href="' + site + '/request/' + has.article.id + '?data=false&support=true">Notify me';
               }
-              availability += '</a></h3><p style="text-align:center;">';
-              if (has.data.url) {
-                availability += 'And there is data available for this article:</p><p style="text-align:center;">';
-                availability += '<a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.data.url + '">' + has.data.url;
+              availability += '</a></h3>';
+              if (opts.data) {
+                availability += '<p style="text-align:center;">';
+                if (has.data.url) {
+                  availability += 'And there is data available for this article:</p><p style="text-align:center;">';
+                  availability += '<a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.data.url + '">' + has.data.url;
+                }
+                if (has.data.id) {
+                  availability += 'Someone has requested access to the data. <a target="_blank" class="btn btn-action" href="' + site + '/request/' + has.data.id + '?support=true">Notify me';
+                }
+                availability += '</a></p>';
               }
-              if (has.data.id) {
-                availability += 'Someone has requested access to the data. <a target="_blank" class="btn btn-action" href="' + site + '/request/' + has.data.id + '?support=true">Notify me';
-              }
-              availability += '</a></p>';
               $('#oabutton_availability').html(availability);
             }
           }
