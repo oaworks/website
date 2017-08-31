@@ -13,7 +13,7 @@ jQuery(document).ready(function() {
   if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) clogin.api = 'https://dev.api.cottagelabs.com/accounts';
   clogin.afterLogin = function() {
     var uid = clogin.user.account._id;
-    $('.stickidin').html($('.stickidin').html().replace('openaccessbutton_widget()','openaccessbutton_widget({uid:' + uid + '})'));
+    $('.stickidin').html($('.stickidin').html().replace('openaccessbutton_widget()','openaccessbutton_widget({u_id:' + u_id + '})'));
   }
   clogin.login();
 });
@@ -54,15 +54,15 @@ jQuery(document).ready(function() {
   .ill_system_content div {
     height: 100vh;
   }
-  
+
   @media (max-width: 768px){
  .innercolumns{
    width:100%;
    padding:10px;
    overflow: hidden;
  }
- }  
-  
+ }
+
 </style>
 
 <div class="container-fluid">
@@ -102,7 +102,7 @@ jQuery(document).ready(function() {
       Great news, if you're interested in bringing self-archived Open Access into your library search or ILL systems we've got you covered there too.
     </p>
     -->
-       
+
        <h2>Get it</h2>
 
         <div style="display: inline;">
@@ -126,15 +126,16 @@ jQuery(document).ready(function() {
         <div id="springshare" class="innercolumns">
           <h2>Springshare Libguides</h2>
           <p>It's easy to get set up in Springshare!</p>
-          <p>Go to the page you'd like the widget in, and chose where you want it. Add a box, and open the menu to embed a widget</p>
-          <p>Copy and paste the below isn't the box.</p>
+          <p>Go to the page you'd like the widget in, and chose where you want it.</p>
+          <p>Add a box, and open the menu to embed a widget</p>
+          <p>Copy and paste the below into the box.</p>
           <pre class="stickidin">
 &lt;script src="https://openaccessbutton.org/static/openaccessbutton_widget.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){openaccessbutton_widget();});&lt;/script&gt;
 &lt;div id="openaccessbutton_widget"&gt;&lt;/div&gt;
           </pre>
 
           <p>
-          You're done! Give it a try with the examples shown. Time to tell everyone on campus! 
+          You're done! Give it a try with the examples shown. Time to tell everyone on campus!
           </p>
 
         </div>
@@ -172,7 +173,7 @@ jQuery(document).ready(function() {
           <pre>
     &lt;iframe src="https://dev.openaccessbutton.org/static/iframed.html" width="100%" height="50"&gt;&lt;/iframe&gt;
           </pre>
-          
+
         </div>
 
         <div id="other" class="innercolumns">
@@ -235,10 +236,10 @@ link.addEventListener("click", function (event) {
 
 <script>
 jQuery(document).ready(function() {
-  
+
   $('.chooseill').bind('click',function() { $('#maininfo').removeClass('col-md-offset-3'); });
   if (window.location.hash) $('#maininfo').removeClass('col-md-offset-3');
-  
+
   var mobileCheck = function() {
     // checks if browser is a mobile or tablet browser
     var check = false;
