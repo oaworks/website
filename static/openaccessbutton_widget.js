@@ -102,7 +102,7 @@ var openaccessbutton_widget = function(opts) {
                 availability += 'Someone has requested access to the article <a class="btn btn-action" href="/request/' + has.article.id + '?support=true">Notify me</a></p>';
               }
             } else {
-              availability += '<h2>This article is available!</h2>';
+              availability += '<h3>This article is available!</h3>';
               availability += '<p"><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + has.article.url + '</a></p>';
               availability += '<p>Not what you were expecting? <a target="_blank" href ="' + site + '/feedback#wrong?searched=' + encodeURIComponent(url) + '&given=' + encodeURIComponent(has.article.url) + '">Report an error</a>.</p>';
               availability += '<p> You can <a target="_blank" href="' + site + '/request?data=false&url=' + encodeURIComponent(data.data.match) + '">request it from the author</a> if it isn\'t available.</p>';
@@ -114,7 +114,7 @@ var openaccessbutton_widget = function(opts) {
             }
             $('#oabutton_availability').html(availability);
           } else if (!has.article && has.data) {
-            var availability = '<h2>This article is not available</h2>';
+            var availability = '<h3>This article is not available</h3>';
             availability += '<h3 style="text-align:center;"><a target="_blank" class="btn btn-action" href="' + site + '/request?data=false&url=' + encodeURIComponent(data.data.match) + '">Start a request</a></h3>';
             if (opts.data) {
               availability += '<p>';
@@ -131,9 +131,9 @@ var openaccessbutton_widget = function(opts) {
             if (has.article.id && has.data.id) {
               window.location = site + '/request/' + has.article.id + '?data=false';
             } else {
-              var availability = '<h2>';
+              var availability = '<h3>';
               if (has.article.url) {
-                availability += 'This article is available!</h2>';
+                availability += 'This article is available!</h3>';
                 availability += '<h><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + has.article.url;
               }
               if (has.article.id) {
