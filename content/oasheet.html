@@ -54,7 +54,7 @@
   </p>
   <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email address">
   <button id="emailredirect" type="submit" class="btn btn-action btn-block" style="margin-top:10px;">Submit</button>
-  <p>or try one at a time on <a href="/">our homepage</a></p>
+  <p style="padding:5px">or try one at a time on <a href="/">our homepage</a></p>
 </div>
 
 <div id="uploadarea" class="focal row" style="display:none;">
@@ -226,8 +226,8 @@
 				data: JSON.stringify(payload),
 				dataType: 'JSON', // TODO sort issue here, the POST invalidates preflight without jsonp but with jsonp we don't get back a jsonp object
 				contentType: "application/json; charset=utf-8",
-				success: function() { $('#jobinfo').html('<p>Upload successful! We will email you the results when they are ready.</p>'); },
-				error: function() { $('#jobinfo').html('<p>Hmmm, something has gone wrong. We are still testing so that can happen. Email help@openaccessbutton.org with your file attached and we will figure it out!</p>'); }
+				success: function() { $('#jobinfo').html('<p>Upload successful! We will email you the results. This can take some some time, depending on your file size.</p>'); },
+				error: function() { $('#jobinfo').html('<p>Something has gone wrong. Email help@openaccessbutton.org with your file attached and we will figure it out!</p>'); }
 			});
 		}
 
