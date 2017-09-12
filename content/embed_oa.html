@@ -105,8 +105,8 @@ jQuery(document).ready(function() {
                 <button type="button"  class="btn btn-default dropdown-toggle" data-toggle="dropdown">page type <span class="caret"></span>
             </button>
             <ul class="dropdown-menu"  style="width: 100%;" role="menu">
-                 <li><a class="chooseill" href="#springshare">Springshare</a></li>
-                 <li><a class="chooseill" href="#other_libguide">other libguide</a></li>
+                 <li><a class="chooseill" href="#libguide">LibGuide</a></li>
+                 <li><a class="chooseill" href="#ill">ILL page</a></li>
                  <li><a class="chooseill" href="#other">other webpage</a></li>
             </ul>
             </div>
@@ -115,30 +115,27 @@ jQuery(document).ready(function() {
     <div class="col-md-6">
       <div class="ill_system_content downloadbox">
 
-        <div id="springshare" class="innercolumns">
-          <p class="alert alert-danger">
-            Currently these instructions don't work (updated Sep 1st). Check other tabs, or use the iframe for testing. 
-          </p>
-          <h2>Springshare Libguides</h2>
-          <p>It's easy to get set up in Springshare!</p>
-          <p>Go to the page you'd like the widget in, and chose where you want it.</p>
-          <p>Add a box, and open the menu to embed a widget</p>
-          <p>Copy and paste the below into the box.</p>
-          <pre class="stickidin">
-&lt;script src="https://openaccessbutton.org/static/openaccessbutton_widget.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){openaccessbutton_widget();});&lt;/script&gt;
-&lt;div id="openaccessbutton_widget"&gt;&lt;/div&gt;
-          </pre>
-
-          <p>
-          You're done! Give it a try with the examples shown. Time to tell everyone on campus!
-          </p>
-
+        <div id="libguide" class="innercolumns">
+          <h2>LibGuides</h2>
+          <ol>
+            <li>In Libguides, create a new box (if needed)</li>
+            <li>Choose to add "Media / Widget"</li>
+            <li>Add a title to your widget, we suggest "Search for Open Access articles"</li>
+            <li>Copy and paste the below into the box.</li>
+            <pre class="stickidin">
+  &lt;script src="https://dev.openaccessbutton.org/static/openaccessbutton_widget.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){openaccessbutton_widget();});&lt;/script&gt;
+  &lt;div id="openaccessbutton_widget"&gt;&lt;/div&gt;
+            </pre>
+            <p>It should look like this. </p><img src="/static/add_widget_embed_code.png"
+            <li>You’re Done. Now try it with the examples shown! (Note, you may need to refresh the page)</li>
+            <li>Time to tell everyone on campus!</li>
+          </ol>
         </div>
 
-        <div id="other_libguide" class="innercolumns">
-          <!-- TODO
-          <p>let us help you</p>
-           -->
+        <div id="ill" class="innercolumns">
+          <p class="alert alert-info">
+            If you have any trouble getting the widget working in your page reach out and we'll lend a hand.
+          </p>
           <p>To install the widget you'll need to access the source code of the page you want it on.</p>
           <p>Step 1 (optional): Include the following links in the page:</p>
           <pre class="stickidin">
@@ -229,10 +226,10 @@ link.addEventListener("click", function (event) {
 
 <script>
 jQuery(document).ready(function() {
-  
+
   $('.chooseill').bind('click',function() { $('#maininfo').removeClass('col-md-offset-3'); });
   if (window.location.hash) $('#maininfo').removeClass('col-md-offset-3');
-  
+
   var mobileCheck = function() {
     // checks if browser is a mobile or tablet browser
     var check = false;
