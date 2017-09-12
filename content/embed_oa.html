@@ -88,12 +88,6 @@ jQuery(document).ready(function() {
     Checkout some real life examples here & here & here!
     </p>
     -->
-    <!--
-    TODO
-    <p>
-      Great news, if you're interested in bringing self-archived Open Access into your library search or ILL systems we've got you covered there too.
-    </p>
-    -->
 
        <h2>Get it</h2>
 
@@ -115,8 +109,10 @@ jQuery(document).ready(function() {
     <div class="col-md-6">
       <div class="ill_system_content downloadbox">
 
+        <!-- LIBGUIDE PAGE SECTION -->
+
         <div id="libguide" class="innercolumns">
-          <h1>For LibGuides</h1>
+          <h1 style="margin-top:40px">For LibGuides</h1>
 <!-- TODO: a refined statement for why they should do this -->
           <ol>
             <li>In Libguides, create a new box (if needed)</li>
@@ -124,8 +120,8 @@ jQuery(document).ready(function() {
             <li>Add a title to your widget, we suggest "Search for Open Access articles"</li>
             <li>Copy and paste the below into the box.</li>
             <pre class="stickidin">
-  &lt;script src="https://dev.openaccessbutton.org/static/openaccessbutton_widget.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){openaccessbutton_widget();});&lt;/script&gt;
-  &lt;div id="openaccessbutton_widget"&gt;&lt;/div&gt;
+&lt;script src="https://dev.openaccessbutton.org/static/openaccessbutton_widget.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){openaccessbutton_widget();});&lt;/script&gt;
+&lt;div id="openaccessbutton_widget"&gt;&lt;/div&gt;
             </pre>
             <p>It should look like this. </p><img src="/static/add_widget_embed_code.png" / style="width:100%">
             <li>You’re Done. Now try it with the examples shown! (Note, you may need to refresh the page). If anything is wrong, get in touch.</li>
@@ -136,41 +132,48 @@ jQuery(document).ready(function() {
           </ol>
         </div>
 
+<!-- ILL PAGE SECTION -->
+
         <div id="ill" class="innercolumns">
+          <h1 style="margin-top:40px">For Interlibary Loan pages</h1>
+
           <p class="alert alert-info">
             If you have any trouble getting the widget working in your page reach out and we'll lend a hand.
           </p>
-          <p>To install the widget you'll need to access the source code of the page you want it on.</p>
-          <p>Step 1 (optional): Include the following links in the page:</p>
-          <pre class="stickidin">
-    &lt;script src="https://static.cottagelabs.com/jquery-1.10.2.min.js"&gt;&lt;/script&gt;
-    &lt;link rel="stylesheet" href="https://static.cottagelabs.com/bootstrap-3.0.3/css/bootstrap.min.css"&gt;
-    &lt;script src="https://openaccessbutton.org/static/openaccessbutton_widget.js"&gt;&lt;/script&gt;
-    &lt;script&gt;jQuery(document).ready(function() { openaccessbutton_widget(); });&lt;/script&gt;
-          </pre>
-
-          <p>Step 2: If your site already includes jquery and twitter-bootstrap css, then all you need to include is:</p>
-          <pre class="stickidin">
-    &lt;script src="https://openaccessbutton.org/static/openaccessbutton_widget.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){openaccessbutton_widget();});&lt;/script&gt;
-          </pre>
-
           <p>
-            Step 3: To control where the search widget gets displayed, put the following on the page where you want it:</p>
+            Save your patrons time, and your library money, by helping patrons search for legal Open Access alternatives to paywalled papers without leaving the ILL pages.
+          </p>
+          <p>To install the widget you'll need to access the source code of the page you want it on.</p>
+          <ol>
+          <li>
+            Step 1: Include the following links in the page:
+          </li>
+          <pre class="stickidin">
+&lt;script src="https://dev.openaccessbutton.org/static/openaccessbutton_widget.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){openaccessbutton_widget();});&lt;/script&gt;
+&lt;div id="openaccessbutton_widget"&gt;&lt;/div&gt;
+          </pre>
+          <li>
+            If it looks like the version on this page, you're done! However, if it doesn't show up you probably need to include
+          </li>
+          <pre class="stickidin">
+            &lt;script src="https://static.cottagelabs.com/jquery-1.10.2.min.js"&gt;&lt;/script&gt;
+          </pre>
+          <li>
+            If you can now see something on the page, but it doesn't look right, add this.
+          </li>
+          <pre class="stickidin">
+            &lt;link rel="stylesheet" href="https://static.cottagelabs.com/bootstrap-3.0.3/css/bootstrap.min.css"&gt;
+          </pre>
+          <li>
+            You should now be good to go! You can control where the search widget gets displayed by moving
+          </li>
             <pre>
     &lt;div id="openaccessbutton_widget"&gt;&lt;/div&gt;
             </pre>
-
-          <p>You can also include it using an iframe (ignoring the above) using the following:</p>
-    <!--
-
-    <p>TODO change this example to using a URL to the live site, not dev, once ready to push to live. Just using a dev one so you can see it working now.</p>
-
-    -->
-          <pre>
-    &lt;iframe src="https://dev.openaccessbutton.org/static/iframed.html" width="100%" height="50"&gt;&lt;/iframe&gt;
-          </pre>
-
+          </ol>
         </div>
+
+        <!-- GENERAL WEBPAGE SECTION -->
 
         <div id="other" class="innercolumns">
           <p>To install the widget you'll need to access the source code of the page you want it on.</p>
