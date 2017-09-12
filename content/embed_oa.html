@@ -135,41 +135,44 @@ jQuery(document).ready(function() {
 <!-- ILL PAGE SECTION -->
 
         <div id="ill" class="innercolumns">
-          <h1 style="margin-top:40px">For Interlibary Loan pages</h1>
+          <h1 style="margin-top:40px">For Interlibary Loan</h1>
 
           <p class="alert alert-info">
             If you have any trouble getting the widget working in your page reach out and we'll lend a hand.
           </p>
+
+<!-- TODO: Make a nice email -->
+
           <p>
             Save your patrons time, and your library money, by helping patrons search for legal Open Access alternatives to paywalled papers without leaving the ILL pages.
           </p>
           <p>To install the widget you'll need to access the source code of the page you want it on.</p>
           <ol>
           <li>
-            Step 1: Include the following links in the page:
+            Include the following links in the page:
           </li>
           <pre class="stickidin">
 &lt;script src="https://dev.openaccessbutton.org/static/openaccessbutton_widget.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){openaccessbutton_widget();});&lt;/script&gt;
 &lt;div id="openaccessbutton_widget"&gt;&lt;/div&gt;
-          </pre>
+</pre>
           <li>
             If it looks like the version on this page, you're done! However, if it doesn't show up you probably need to include
           </li>
           <pre class="stickidin">
-            &lt;script src="https://static.cottagelabs.com/jquery-1.10.2.min.js"&gt;&lt;/script&gt;
-          </pre>
+&lt;script src="https://static.cottagelabs.com/jquery-1.10.2.min.js"&gt;&lt;/script&gt;
+</pre>
           <li>
             If you can now see something on the page, but it doesn't look right, add this.
           </li>
           <pre class="stickidin">
             &lt;link rel="stylesheet" href="https://static.cottagelabs.com/bootstrap-3.0.3/css/bootstrap.min.css"&gt;
-          </pre>
+</pre>
           <li>
             You should now be good to go! You can control where the search widget gets displayed by moving
           </li>
             <pre>
     &lt;div id="openaccessbutton_widget"&gt;&lt;/div&gt;
-            </pre>
+</pre>
           </ol>
         </div>
 
