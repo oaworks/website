@@ -113,6 +113,9 @@ jQuery(document).ready(function() {
           <h1 style="margin-top:40px">For LibGuides</h1>
 <!-- TODO: a refined statement for why they should do this -->
           <ol>
+            <li id="promptsignup">
+              Please <a href="/account?next=/embed_oa#libguide" class="label label-info">sign up / sign in</a> first so we can customise this link for you and give you better service.
+            </li>
             <li>In Libguides, create a new box (if needed)</li>
             <li>Choose to add "Media / Widget"</li>
             <li>Add a title to your widget, we suggest "Search for Open Access articles"</li>
@@ -154,13 +157,13 @@ jQuery(document).ready(function() {
           <li>
             If it looks like the version on this page, you're done! However, if it doesn't show up you probably need to include the below.
           </li>
-          <pre class="stickidin">
+          <pre>
 &lt;script src="https://static.cottagelabs.com/jquery-1.10.2.min.js"&gt;&lt;/script&gt;
 </pre>
           <li>
             If you can now see something on the page, but it doesn't look right, add this.
           </li>
-          <pre class="stickidin">
+          <pre>
 &lt;link rel="stylesheet" href="https://static.cottagelabs.com/bootstrap-3.0.3/css/bootstrap.min.css"&gt;
 </pre>
           <li>
@@ -249,6 +252,12 @@ jQuery(document).ready(function() {
   if (mobile) b = '.mob';
   $('.dl').hide();
   $('.dl'+b).show();
+
+  if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) clogin.api = 'https://dev.api.cottagelabs.com/accounts';
+  clogin.afterLogin = function() {
+    $('#promptsignup').hide();
+  }
+  clogin.login();
 
 });
 </script>
