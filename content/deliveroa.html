@@ -3,6 +3,11 @@
   /*]]>*/</script>
   <!-- End of openaccessbutton Zendesk Widget script -->
   <style>
+  .innercolumns{
+    width:100%;
+    padding:10px;
+  /*  overflow: hidden;*/
+  }
 
   .downloadbox {
 		background-color: white;
@@ -69,24 +74,26 @@
 
         <div class="ill_system_content downloadbox">
 
-          <div id="blank">
-            <p>blank</p>
-          </div>
-
-          <div id="alma">
-            <h2>Getting started in ALMA</h2>
+          <div id="alma" class="innercolumns">
+            <h1 style="margin-top:40px">For ALMA</h1>
             <img src="/static/DeliverOA_image.png">
             <p>You can just click the normal Open Access Button on this page.</p>
           </div>
 
-          <div id="illiad">
-            <h2>Getting started in ILLiad</h2>
+          <div id="illiad" class="innercolumns">
+
+<!-- TODO: Figure out a way to track usage here. -->
+
+            <h1 style="margin-top:40px">For ILLiad</h1>
             <p>Download the add-on here, get it installed, and you're away! The add-on will automatically check if OA is available for the request you're on.</p>
             <a href="https://github.com/OAButton/Open-Access-Button-for-Illiad/archive/v.03-alpha.zip"><button class="btn btn-action btn-block">Download Add-on</button></a>
 
           </div>
 
-          <div id="primo">
+          <div id="primo" class="innercolumns">
+
+            <h1 style="margin-top:40px">For Primo</h1>
+
             <a id="chromeinstall" style="margin-top:5px;" class="btn btn-action btn-block dl ch" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">Get the Chrome Extension</a>
             <a id="firefoxinstall" style="margin-top:5px;" class="btn btn-action btn-block dl ff disabled" target="_blank" href="https://addons.mozilla.org/en-GB/firefox/addon/openaccessbutton/">Firefox Plugin Coming Soon</a>
             <p class="dl mob">Doing research on the move? We'd like to make an app for your phone. But, right now you can use it in your browser. Check back when you're by your computer for our plugins.</p>
@@ -103,8 +110,10 @@
             </div>
           </div>
 
-          <div id="clio">
-            <p>clio contents</p>
+          <div id="clio" class="innercolumns">
+
+            <h1 style="margin-top:40px">For Clio</h1>
+
             <p>use this <code id="cliocode">openaccessbutton.org/?from=clio&url=</code></p>.
 
             <p id="promptsignup">
@@ -114,50 +123,16 @@
 
           </div>
 
-          <div id="other">
-            <p>other contents</p>
+          <div id="other" class="innercolumns">
 
-            <h1 style="margin-top:40px">For Interlibary Loan</h1>
-
-            <p class="alert alert-info">
-              If you have any trouble getting the widget working in your page reach out and we'll lend a hand.
-            </p>
-
-  <!-- TODO: Make a nice email -->
+            <h1 style="margin-top:40px">For Primo</h1>
 
             <p>
-              Save your patrons time, and your library money, by helping patrons search for legal Open Access alternatives to paywalled papers without leaving the ILL pages.
+              We want to make it easy to intergrate Open Access into any system. If your system isn't covered get in touch and we'll try and figure it out (we haven't failed yet). However, we'd also encourage you to try methods similar to other methods described.
             </p>
-          <ol>
-            <li id="promptsignup">
-              Please <a href="/account?next=/embed_oa#libguide" class="label label-info">sign up / sign in</a> first so we can customise this widget for you and give you better service.
-            </li>
-            <li>
-              To get started include the following in the source code of your page
-            </li>
-            <pre class="stickidin">
-  &lt;script src="https://dev.openaccessbutton.org/static/openaccessbutton_widget.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){openaccessbutton_widget();});&lt;/script&gt;
-  &lt;div id="openaccessbutton_widget"&gt;&lt;/div&gt;
-  </pre>
-            <li>
-              If it looks like the version on this page, you're done! However, if it doesn't show up you probably need to include the below.
-            </li>
-            <pre>
-  &lt;script src="https://static.cottagelabs.com/jquery-1.10.2.min.js"&gt;&lt;/script&gt;
-  </pre>
-            <li>
-              If you can now see something on the page, but it doesn't look right, add this.
-            </li>
-            <pre>
-  &lt;link rel="stylesheet" href="https://static.cottagelabs.com/bootstrap-3.0.3/css/bootstrap.min.css"&gt;
-  </pre>
-            <li>
-              You should now be good to go! You can control where the search widget gets displayed by moving
-            </li>
-              <pre>
-  &lt;div id="openaccessbutton_widget"&gt;&lt;/div&gt;
-  </pre>
-            </ol>
+            <p>
+              Get in touch to help us integrate with your system.
+            </p>
 
           </div>
 
