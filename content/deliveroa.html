@@ -1,4 +1,4 @@
-  <!-- Start of openaccessbutton Zendesk Widget script -->
+    <!-- Start of openaccessbutton Zendesk Widget script -->
   <script>/*<![CDATA[*/window.zEmbed||function(e,t){var n,o,d,i,s,a=[],r=document.createElement("iframe");window.zEmbed=function(){a.push(arguments)},window.zE=window.zE||window.zEmbed,r.src="javascript:false",r.title="",r.role="presentation",(r.frameElement||r).style.cssText="display: none",d=document.getElementsByTagName("script"),d=d[d.length-1],d.parentNode.insertBefore(r,d),i=r.contentWindow,s=i.document;try{o=s}catch(e){n=document.domain,r.src='javascript:var d=document.open();d.domain="'+n+'";void(0);',o=s}o.open()._l=function(){var o=this.createElement("script");n&&(this.domain=n),o.id="js-iframe-async",o.src=e,this.t=+new Date,this.zendeskHost=t,this.zEQueue=a,this.body.appendChild(o)},o.write('<body onload="document._l();">'),o.close()}("https://assets.zendesk.com/embeddable_framework/main.js","openaccessbutton.zendesk.com");
   /*]]>*/</script>
   <!-- End of openaccessbutton Zendesk Widget script -->
@@ -35,10 +35,14 @@
 
 		<div id="maininfo" class="col-md-6 col-md-offset-3">
   		<h1 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">DeliverOA</h1>
-  
+
       <h3>
-			Wipe up to 10% off your ILL budget and delivery times, today. No complex installation, no training, no fuss.
+			   Wipe up to 10% off your ILL budget and delivery times, today. No complex installation, no training, no fuss.
       </h3>
+
+<!-- TODO:  -->
+
+<!-- TODO:  -->
 
 	     <div class="row">
 
@@ -103,8 +107,8 @@
             <p>clio contents</p>
             <p>use this <code id="cliocode">openaccessbutton.org/?from=clio&url=</code></p>.
 
-            <p id="primptsignup">
-              Please <a href="/account?next=/deliveroa#clio" class="label label-info">sign up / sign in</a> 
+            <p id="promptsignup">
+              Please <a href="/account?next=/deliveroa#clio" class="label label-info">sign up / sign in</a>
               first so we can customise this link for you and give you better service.
             </p>
 
@@ -140,10 +144,10 @@ var hashLinks = document.querySelectorAll("a[href^='#']");
 
   <script>
   jQuery(document).ready(function() {
-    
+
     $('.chooseill').bind('click',function() { $('#maininfo').removeClass('col-md-offset-3'); });
     if (window.location.hash) $('#maininfo').removeClass('col-md-offset-3');
-    
+
     var mobileCheck = function() {
       // checks if browser is a mobile or tablet browser
       var check = false;
