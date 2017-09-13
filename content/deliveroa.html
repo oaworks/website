@@ -31,6 +31,9 @@
     .ill_system_content div {
       height: 100vh;
     }
+    a {
+	word-wrap: break-word;
+    }
   </style>
 
 <div class="container-fluid">
@@ -140,13 +143,37 @@
           <div id="clio" class="innercolumns">
 
             <h1 style="margin-top:40px">For Clio</h1>
-
-            <p>use this <code id="cliocode">openaccessbutton.org/?from=clio&url=</code></p>.
-
-            <p id="promptsignup">
-              Please <a href="/account?next=/deliveroa#clio" class="label label-info">sign up / sign in</a>
-              first so we can customise this link for you and give you better service.
-            </p>
+            <ol>
+              <li>
+                <p id="promptsignup">
+                  Please <a href="/account?next=/deliveroa#clio" class="label label-info">sign up / sign in</a>
+                  first so we can customise this link for you and give you better service.
+                </p>    
+              </li>
+              <li>
+                Use this <br><code id="cliocode">openaccessbutton.org/?from=clio&url=</code>
+              </li>
+              <li>
+                Take a look at your new tab!
+              </li>
+              <li>
+                Consider what email you'll send when you find stuff. Here's a head start:
+              </li>
+              <blockquote id="ill-email">
+                <p>
+                  The article you requested is available online for free from an Open Access repository at the link below.
+                </p>
+                <p>
+                  <i>insert link</i>
+                </p>
+                <p>
+                  Please review the article and let us know whether or not it is sufficient for your research.
+                </p>
+                <p>
+                  If you still require a version of the article from the original publication, we are happy to request that for you. You do not need to place a second request for the article, just respond to this email.
+                </p>
+              </blockquote>
+            </ol>
 
           </div>
 
