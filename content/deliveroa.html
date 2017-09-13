@@ -31,7 +31,6 @@
     /* Make the div big, so we would jump, if the JS was still broken */
     .ill_system_content div {
       height: 100%;
-      min-height: 70vh;
     }
     .code {
 	     word-wrap: break-word;
@@ -54,7 +53,7 @@
       </p>
 
 			    <div>
-			         <p style="float: left; margin: 6px 10px;">Get started by choosing your</p>
+			         <p style="float: left; margin: 6px 10px;"><b>Get started by choosing your</p>
 			    </div>
 			       <div class="btn-group" >
 			            <button type="button"  class="btn btn-default dropdown-toggle" data-toggle="dropdown">ILL system <span class="caret"></span>
@@ -63,7 +62,7 @@
 			             <li><a class="chooseill" href="#alma">Alma</a></li>
 			             <li><a class="chooseill" href="#clio">Clio</a></li>
 				           <li><a class="chooseill" href="#illiad">Illiad</a></li>
-				           <li><a class="chooseill" href="#other">Other</a></li>
+				           <li><a class="chooseill" href="#other">Other</a></li></b>
 			        </ul>
 			        </div>
 
@@ -75,10 +74,10 @@
                       oasheet: find the open access version of thousands of articles in one go. Great for running your previous ILL's and seeing how much you could save.
                     </li>
                     <li>
-                      Our ILL form demo: We're redesigning ILL systems from the ground up. Get a taste of what we're thinking.
+                      embedoa: help your patrons discover Open Access alternatives before they even submit an ILL.
                     </li>
                     <li>
-                      embedoa: help your patrons discover Open Access alternatives before they even submit and ILL!
+                      Our ILL form demo: We're redesigning ILL systems from the ground up. Get a taste of what we're thinking.
                     </li>
                   </ul>
       </div>
@@ -145,11 +144,15 @@
 <!-- TODO: Put email in -->
 
             <h1 style="margin-top:40px">For ILLiad</h1>
-          
+            <p>
+              <!-- TODO: Cite the person properly -->
+              We've made add-on that will automatically check if OA is available for the request you're on.
+            </p>          
             <ol>            
-            <li>Download the add-on here, get it installed, and you're away! The add-on will automatically check if OA is available for the request you're on.</li>
+            <li>Download the add-on, and get it installed. If you need to ask your tech person to install the add-on, here is a draft email for them.</li>
+            <!-- TODO: Draft the above email -->
             <a href="https://github.com/OAButton/Open-Access-Button-for-Illiad/archive/v.04-alpha.zip"><button class="btn btn-action btn-block">Download Add-on</button></a>
-            
+            <!-- TODO: Choose english paper, from front page. -->
             <li>
               Test your new tab. Make a request for <blockquote>Nusch, C., & Percivale, B. (2016). El Bicentenario argentino como territorio en disputa. Analecta política, 6(10)</blockquote> 
               
@@ -159,7 +162,7 @@
               Consider what email you'll send when you find stuff. Here's what others use:
             </li>
             
-            <!-- TODO: work out why               <div w3-include-html="https://dev.openaccessbutton.org/static/ill_oa_email.html"></div>  doesn't work here -->
+            <!-- TODO: work out why <div w3-include-html="https://dev.openaccessbutton.org/static/ill_oa_email.html"></div>  doesn't work here -->
 
             
             <blockquote id="ill-email">
@@ -175,10 +178,12 @@
               <p>
                 If you still require a version of the article from the original publication, we are happy to request that for you. You do not need to place a second request for the article, just respond to this email.
               </p>
-              <li>
-                You're done! 
-              </li>
             </blockquote>
+            
+            <li>
+              You're done! 
+            </li>
+            
           </ol>
                         
           </div>
@@ -187,6 +192,11 @@
 
             <h1 style="margin-top:40px">For Clio</h1>
             <img src="/static/success-clio.png" / style="width:100%;" class="responsive">
+            
+            <p>
+              You can set up a new tab that will automatically check if OA is available for the request you're on.
+            </p>
+            
             <ol>
                 <li id="promptsignup">
                   Please <a href="/account?next=/deliveroa#clio" class="label label-info">sign up / sign in</a>
