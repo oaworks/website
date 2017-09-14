@@ -30,33 +30,58 @@ TODO
 <div class="container-fluid">
 	<div class="row">
 
-<!-- Start of intro section -->
+<!-- start of left box -->
 
-	<div class="col-md-8 col-md-offset-2">
+		<div class="col-md-6">
 
-	<h1 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">
-		Next Generation ILL is nearly here!
-	</h1>
-	<p>
-We're working to build ILL forms that allow:
-		<ul>
-			<li>Instant delivery of OA and paid-for content</li>
-			<li>Embeding anywhere</li>
-			<li>Easy installation</li>
-			<li>Great on mobile</li>
-			<li>No data entry for patrons</li>
-		</ul>
-all, Open Source, fully customisable and free. We're not quite ready for prime time, but here is a demo of what we're thinking.
-	</p>
-	<p>If you're interested in following our work, see here.</p>
+			<h1>Description</h1>
 
-<button class="btn btn-action">Let me check it out!</button>
+			<p>
+				On the right you can see a prototype of the first part of our form embedded (yes, that's it).
+			</p>
+			<p>
+			Try it with these three types of results:
+			<ol>
+				<li><a href="/ill_prototyping/result_cat">Where you already have access</a></li>
+				<li><a href="/ill_prototyping/result_oa">Where it's Open Access already</a></li>
+				<li><a href="/ill_prototyping/result_ill">When we can't get all the info you need instantly</a></li>
+				<li><a href="/ill_prototyping/full_form">Where you can't do the above!</a></li>
+			</ol>
 
-</div>
-<!-- End of intro section -->
+			</p>
 
+		</div>
+
+<!-- end of left box -->
+
+<!-- Start of right box -->
+
+			<div class="col-md-6 example" style="background-color:white">
+				<h1>Example</h1>
+
+				<div w3-include-html="/static/simple_form"></div>
+
+			</div>
+
+<!-- end of right box -->
 
 
 	</div>
 
+<!-- start of code enabling the pulling in of other html pages so we don't double up on code -->
+
+	<script>
+	w3.includeHTML();
+	</script>
+
+<!-- end of code enabling the pulling in of other html pages so we don't double up on code-->
+
 </div>
+
+<!-- Code to pull in alpha release banner -->
+<script src="https://www.w3schools.com/lib/w3.js"></script>
+<div w3-include-html="/static/alpha.html"></div>
+
+<script>
+w3.includeHTML();
+</script>
