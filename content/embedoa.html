@@ -67,7 +67,7 @@ jQuery(document).ready(function() {
     <h1 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">EmbedOA</h1>
 
     <h3>
-      Make it easy for your researchers to discover legal, Open Access articles while they make Interlibrary loans or browse your Libguide. No coding skills required.
+      Make it easy for your researchers to discover, Open Access articles while they make Interlibrary loans or browse your Libguide. No coding skills required.
     </h3>
 
     <h2>Try it</h2>
@@ -76,20 +76,23 @@ jQuery(document).ready(function() {
 
     <p style="margin-top:30px;">Don't have a article to hand? Try:
       <ol>
-        <li><a class="tryit" href="#">10.1145/2908080.2908114</a></li>
-        <li><a class="tryit" href="#">http://journals.sagepub.com/doi/abs/10.1177/0037549715583150</a></li>
-        <li><a class="tryit" href="#">Nusch, C., & Percivale, B. (2016). El Bicentenario argentino como territorio en disputa. Analecta política, 6(10).</a></li>
+        <li>a DOI<a class="tryit" href="#">10.1145/2908080.2908114</a></li>
+        <li>a URL<a class="tryit" href="#">http://journals.sagepub.com/doi/abs/10.1177/0037549715583150</a></li>
+        <li>a citation<a class="tryit" href="#">Nusch, C., & Percivale, B. (2016). El Bicentenario argentino como territorio en disputa. Analecta política, 6(10).</a></li>
         <!-- TODO: OR look at what an unsuccessful one looks like -->
       </ol>
     </p>
 
     <p>
-      Checkout some examples from the librarians that inspired to tool <a href="http://libraryguides.centennialcollege.ca/openaccess">here</a> and <a href="http://libguides.bates.edu/c.php?g=634434&p=4448328">here</a>.
+      Checkout some examples from the librarians that inspired the tool <a href="http://libraryguides.centennialcollege.ca/openaccess">here</a> and <a href="http://libguides.bates.edu/c.php?g=634434&p=4448328">here</a>.
     </p>
 
+    <div id="getit" class="focal">
 
        <h2>Get it</h2>
-
+       <p>
+          You can install this in your webpage in just a few easy steps.
+       </p>
         <div style="display: inline;">
         <div>
              <p style="float: left; margin: 6px 10px;">Get started by choosing your</p>
@@ -104,6 +107,7 @@ jQuery(document).ready(function() {
             </ul>
             </div>
         </div>
+      </div>
     </div>
     <div class="col-md-6">
       <div class="ill_system_content downloadbox">
@@ -124,7 +128,7 @@ jQuery(document).ready(function() {
 &lt;script src="https://dev.openaccessbutton.org/static/openaccessbutton_widget.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){openaccessbutton_widget();});&lt;/script&gt;
 &lt;div id="openaccessbutton_widget"&gt;&lt;/div&gt;
 </pre>
-            <p>It should look like this. </p><img src="/static/add_widget_embed_code.png" / style="width:100%">
+            <p>It should look like this. </p><img src="/static/add_widget_embed_code.png" style="width:100%">
             <li>You’re done. Now try it with the examples shown! (Note, you may need to refresh the page). If anything is wrong, get in touch.</li>
 
 <!-- TODO: include a pre-written email with a link to their page etc etc to make this easy for us -->
@@ -144,7 +148,7 @@ jQuery(document).ready(function() {
 <!-- TODO: Make a nice email -->
 
           <p>
-            Save your patrons time, and your library money, by helping patrons search for legal Open Access alternatives to paywalled papers without leaving the ILL pages.
+            Save your patrons time, your library money, and help advance Open Access by helping patrons search for Open Access alternatives to paywalled papers without leaving the ILL pages.
           </p>
         <ol>
           <li id="promptsignup">
@@ -241,6 +245,9 @@ jQuery(document).ready(function() {
 
   $('.chooseill').bind('click',function() { $('#maininfo').removeClass('col-md-offset-3'); });
   if (window.location.hash) $('#maininfo').removeClass('col-md-offset-3');
+
+  $('.chooseill').bind('click',function() { $('#getit').removeClass('focal'); });
+  if (window.location.hash) $('#getit').removeClass('focal');
 
   var mobileCheck = function() {
     // checks if browser is a mobile or tablet browser
