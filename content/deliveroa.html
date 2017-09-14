@@ -58,10 +58,10 @@
   		<h1 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">DeliverOA</h1>
 
       <h3>
-			   Wipe up to 10% off your ILL budget and delivery times, today. No complex installation, no training required.
+			   Wipe up to 10% off your ILL budget and delivery times, and discover a new way to advocate for Open Access, today. No complex installation, no training required.
       </h3>
       <p>
-        Millions of articles behind paywalls your researchers need can be found Open Access, and we make that easy. We take <a href="/about" target="_blank">legal, self-archived Open Access versions of articles</a> and deliver them inside your ILL workflow.
+        Millions of articles behind paywalls your researchers need can be found Open Access, and we make that easy. We take <a href="/about" target="_blank"> self-archived Open Access versions of articles</a> and deliver them inside your ILL workflow.
       </p>
       <div class="focal">
 			    <div>
@@ -132,7 +132,7 @@
               Click it on request processing pages (see below). Check it's working by making a test request for: <blockquote>Nusch, C., & Percivale, B. (2016). El Bicentenario argentino como territorio en disputa. Analecta política, 6(10)</blockquote>
               We should find it. If you have any trouble, get in touch.
             </li>
-            <img src="/static/alma-page.png" / width="100%;" class="responsive">
+            <img src="/static/alma-page.png" width="100%;" class="responsive">
             <li>
               Consider what email you'll send when you find stuff. Here's what others use:
             </li>
@@ -144,7 +144,7 @@
                 <i>insert link</i>
               </p>
               <p>
-                Please review the article and let us know whether or not it is sufficient for your research.
+                Please review the article and let us know whether or not it is sufficient for your research. <!-- TODO: say how it'll differ -->
               </p>
               <p>
                 If you still require a version of the article from the original publication, we are happy to request that for you. You do not need to place a second request for the article, just respond to this email.
@@ -201,7 +201,8 @@
             </blockquote>
 
             <li>
-              You're done!
+              To make sure your success with OA is tracked, consider setting up a new email template that you only send when you find an Open Access link.
+              <!-- TODO: See how this would work with file upload -->
             </li>
 
 <!-- TODO: think of a better ending! Perhaps give them a quick users guide, or ask them to give feedback or say what we want to do next???? etc etc. -->
@@ -315,8 +316,8 @@ var hashLinks = document.querySelectorAll("a[href^='#']");
   <script>
   jQuery(document).ready(function() {
 
-    $('.chooseill').bind('click',function() { $('#maininfo').removeClass('col-md-offset-3'); });
-    if (window.location.hash) $('#maininfo').removeClass('col-md-offset-3');
+    $('.chooseill').bind('click',function() { $('#maininfo').removeClass('col-md-offset-3 focal'); });
+    if (window.location.hash) $('#maininfo').removeClass('col-md-offset-3 focal');
 
     var mobileCheck = function() {
       // checks if browser is a mobile or tablet browser
