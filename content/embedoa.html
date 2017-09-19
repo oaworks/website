@@ -80,14 +80,14 @@ jQuery(document).ready(function() {
     <h1 style="text-align:left; font-size:4em;">EmbedOA</h1>
 
     <h3>
-      Make it easy to discover Open Access articles from your Interlibrary loan pages and Libguide. No coding skills required.
+      Easily find Open Access articles from your Interlibrary loan pages or Libguides. No coding required.
     </h3>
 
     <h2>Try it now</h2>
 
     <div id="openaccessbutton_widget"></div>
 
-    <p style="margin-top:10px;">Don't have a article to hand? Try:
+    <p style="margin-top:10px;">Test it with:
       <ul>
         <li>a DOI: <a class="tryit" href="#">10.1145/2908080.2908114</a></li>
         <li>a URL: <a class="tryit" href="#">http://journals.sagepub.com/doi/abs/10.1177/0037549715583150</a></li>
@@ -97,11 +97,11 @@ jQuery(document).ready(function() {
     </p>
 
     <p>
-      Checkout examples from the librarians that inspired the tool <a href="http://libraryguides.centennialcollege.ca/openaccess" target="_blank">here</a> and <a href="http://libguides.bates.edu/c.php?g=634434&p=4448328" target="_blank">here</a>.
+      Check out examples <a href="http://libraryguides.centennialcollege.ca/openaccess" target="_blank">here</a> and <a href="http://libguides.bates.edu/c.php?g=634434&p=4448328" target="_blank">here</a>, from the librarians that inspired the tool.
     </p>
 
 
-       <h2>Put on a webpage in a few easy steps</h2>
+       <h2>Put on your webpage in a few easy steps</h2>
         <div id="getit" class="focal">
         <div>
              <p style="float: left; margin: 6px 10px;">Get started by choosing your</p>
@@ -116,6 +116,30 @@ jQuery(document).ready(function() {
             </ul>
             </div>
         </div>
+<!-- inserting the upsell code from deliverOA; let's hope this works!!!!! -->
+  
+  <div id="upsell" style="display: none">
+              <p style="padding-top:15px;">
+                You'll also love:
+              </p>
+                  <ul>
+                    <li>
+                      <a href="/embedoa#ill" target="_blank">deliverOA</a>: put an Open Access search into your ILL workflow.
+                    </li>
+                    <li>
+                      <a href="/oasheet" target="_blank">OAsheet</a>: upload a spreadsheet of articles, and we'll find Open Access versions. Try uploading old ILLs to see what you could save.
+                    </li>
+                    <!--
+                    TODO unhide this when it's ready
+                    <li>
+                      <a href="">Our ILL form demo</a>: We're redesigning ILL systems from the ground up. Get a taste of what we're thinking.
+                    </li>
+                  -->
+                  </ul>
+                </div>
+
+  
+  
     </div>
     <div class="col-md-6">
       <div class="ill_system_content downloadbox">
@@ -130,21 +154,21 @@ jQuery(document).ready(function() {
 
           <ol>
             <li id="promptsignup">
-              Please <a href="/account?next=/embedoa#libguide" class="label label-info">sign up / sign in</a> first so we can customise this link for you and give you better service.
+              Please <a href="/account?next=/embedoa#libguide" class="label label-info">sign up / sign in</a> so we can customise this link for you and give you better service.
             </li>
-            <li>In Libguides, create a new box (if needed). Add a title to your widget, we suggest "Search for Open Access articles"</li>
-            <li>Choose to add "Media / Widget"</li>
-            <li>Copy and paste the below into the "embed code" box.</li>
+            <li>In your Libguide, create a new box if needed. Add a title to your widget (we suggest "Search for Open Access articles").</li>
+            <li>Choose to add "Media / Widget".</li>
+            <li>Copy and paste the below code into the "embed code" box:</li>
             <pre class="stickidin">
 &lt;script src="https://dev.openaccessbutton.org/static/openaccessbutton_widget.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){openaccessbutton_widget();});&lt;/script&gt;
 &lt;div id="openaccessbutton_widget"&gt;&lt;/div&gt;
 </pre>
-            <p>It should look like this. If it does hit save!</p>
+            <p>It should look like this. If it does, hit save!</p>
             <img src="/static/add_widget_embed_code.png" style="width:100%">
 
             <!-- TODO: include a pre-written email with a link to their page etc etc to make this easy for us -->
 
-            <li>You’re done. Now try it with the examples shown! (Note, you may need to refresh the page). If anything is wrong, get in touch.</li>
+            <li>You’re done. Now try it with the examples shown! (You may need to refresh the page.) If anything is wrong, <a href="mailto:hello@openaccessbutton.org?Subject=EmbedOA%20and%20LibGuide">get in touch</a>.</li>
             <img src="/static/widget_complete.png" style="width:100%">
 
 <!-- TODO: it's been suggested we link to our about page here, or some resources for outreach. -->
@@ -161,33 +185,33 @@ jQuery(document).ready(function() {
 <!-- TODO: plug deliveroa here somewhere -->
 
           <p class="alert alert-info">
-            If you have any trouble getting the widget working in your page reach out and we'll lend a hand.
+            If you have trouble getting the widget working, <a href="mailto:hello@openaccessbutton.org?Subject=EmbedOA%20and%20ILL">get in touch</a>.
           </p>
 
 <!-- TODO: Make a nice email -->
 
           <p>
-            Save your patrons time, your library money, and help advance Open Access by helping patrons search for Open Access alternatives to paywalled papers without leaving the ILL pages.
+            Save time and money, and help advance Open Access by helping patrons search for alternatives to paywalled papers before requesting an ILL.
           </p>
         <ol>
           <li id="promptsignup">
             Please <a href="/account?next=/embedoa#libguide" class="label label-info">sign up / sign in</a> first so we can customise this widget for you and give you better service.
           </li>
           <li>
-            To get started include the following in the source code of your page
+            To get started, include the following in the source code of your page:
           </li>
           <pre class="stickidin">
 &lt;script src="https://dev.openaccessbutton.org/static/openaccessbutton_widget.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){openaccessbutton_widget();});&lt;/script&gt;
 &lt;div id="openaccessbutton_widget"&gt;&lt;/div&gt;
 </pre>
           <li>
-            If it looks like the version on this page, you're done! However, if it doesn't show up you probably need to include the below.
+            If it looks like the version on this page, you're done! If it doesn't show up, you probably need to include the below code:
           </li>
           <pre>
 &lt;script src="https://static.cottagelabs.com/jquery-1.10.2.min.js"&gt;&lt;/script&gt;
 </pre>
           <li>
-            If you can now see something on the page, but it doesn't look right, add this.
+            If you can now see something on the page, but it doesn't look right, add this:
           </li>
           <pre>
 &lt;link rel="stylesheet" href="https://static.cottagelabs.com/bootstrap-3.0.3/css/bootstrap.min.css"&gt;
@@ -206,8 +230,8 @@ jQuery(document).ready(function() {
 <!-- NOTE won't now work well for non-library use cases as it mentions using the ILL system. May oneday offer to make a new verison without this, but that's not happening anytime soon.
 
         <div id="other" class="innercolumns">
-          <p>To install the widget you'll need to access the source code of the page you want it on.</p>
-          <p>Step 1 (optional): Include the following links in the page:</p>
+          <p>To install the widget, you'll need to access the source code of the page you want it on.</p>
+          <p>Step 1 (optional): Include the following in the header of the page:</p>
           <pre class="stickidin">
     &lt;script src="https://static.cottagelabs.com/jquery-1.10.2.min.js"&gt;&lt;/script&gt;
     &lt;link rel="stylesheet" href="https://static.cottagelabs.com/bootstrap-3.0.3/css/bootstrap.min.css"&gt;
@@ -215,13 +239,13 @@ jQuery(document).ready(function() {
     &lt;script&gt;jQuery(document).ready(function() { openaccessbutton_widget(); });&lt;/script&gt;
           </pre>
 
-          <p>Step 2: If your site already includes jquery and twitter-bootstrap css, then all you need to include is:</p>
+          <p>Step 2: If your site already includes jQuery and twitter-bootstrap css, then all you need to include is:</p>
           <pre class="stickidin">
     &lt;script src="https://openaccessbutton.org/static/openaccessbutton_widget.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){openaccessbutton_widget();});&lt;/script&gt;
           </pre>
 
           <p>
-            Step 3: To control where the search widget gets displayed, put the following on the page where you want it:</p>
+            Step 3: You can control where the search widget gets displayed by moving </p>
             <pre>
     &lt;div id="openaccessbutton_widget"&gt;&lt;/div&gt;
             </pre>
