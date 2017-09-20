@@ -233,7 +233,7 @@ jQuery(document).ready(function() {
 
         <div id="other" class="innercolumns">
           <p>To install the widget, you'll need to access the source code of the page you want it on.</p>
-          <p>Step 1 (optional): Include the following in the header of the page:</p>
+          <ol><li>(optional) Include the following in the header of the page:</li>
           <pre class="stickidin">
     &lt;script src="https://static.cottagelabs.com/jquery-1.10.2.min.js"&gt;&lt;/script&gt;
     &lt;link rel="stylesheet" href="https://static.cottagelabs.com/bootstrap-3.0.3/css/bootstrap.min.css"&gt;
@@ -241,26 +241,25 @@ jQuery(document).ready(function() {
     &lt;script&gt;jQuery(document).ready(function() { openaccessbutton_widget(); });&lt;/script&gt;
           </pre>
 
-          <p>Step 2: If your site already includes jQuery and twitter-bootstrap css, then all you need to include is:</p>
+          <li>If your site already includes jQuery and Bootstrap, then all you need to include is:</li>
           <pre class="stickidin">
     &lt;script src="https://openaccessbutton.org/static/openaccessbutton_widget.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){openaccessbutton_widget();});&lt;/script&gt;
           </pre>
 
-          <p>
-            Step 3: You can control where the search widget gets displayed by moving </p>
+          <li>You can control where the search widget gets displayed by moving </li>
             <pre>
     &lt;div id="openaccessbutton_widget"&gt;&lt;/div&gt;
             </pre>
 
-          <p>You can also include it using an iframe (ignoring the above) using the following:</p>
-    <!--
-
-    <p>TODO change this example to using a URL to the live site, not dev, once ready to push to live. Just using a dev one so you can see it working now.</p>
-
-    -->
-<!--          <pre>
+          <p>You can also include it using an iFrame (ignoring the above) using the following:</p> <- TODO change this example to using a URL to the live site, not dev, once ready to push to live. Just using a dev one so you can see it working now. ->
+<pre>
     &lt;iframe src="https://dev.openaccessbutton.org/static/iframed.html" width="100%" height="50"&gt;&lt;/iframe&gt;
           </pre>
+</ol>
+
+<p class="alert alert-info">
+            If you have trouble getting the widget working, <a href="mailto:help@openaccessbutton.org?Subject=Trouble%20setting%20up%20EmbedOA%20in%20my%20Webpage&body=Please%20send%20us%20the%20URL%20of%20the%20page%20you're%20working%20on,%20or%20a%20screenshot%20of%20what%20you're%20seeing%20and%20a%20copy%20of%20the%20page's%20code%20-%20right-click%20on%20the%20page%20and%20View%20Page%20Source.">get in touch</a>.
+          </p>
 
           </div>
 
