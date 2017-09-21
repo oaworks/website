@@ -1,24 +1,53 @@
-
-  <!-- Start of openaccessbutton Zendesk Widget script -->
-  <script>/*<![CDATA[*/window.zEmbed||function(e,t){var n,o,d,i,s,a=[],r=document.createElement("iframe");window.zEmbed=function(){a.push(arguments)},window.zE=window.zE||window.zEmbed,r.src="javascript:false",r.title="",r.role="presentation",(r.frameElement||r).style.cssText="display: none",d=document.getElementsByTagName("script"),d=d[d.length-1],d.parentNode.insertBefore(r,d),i=r.contentWindow,s=i.document;try{o=s}catch(e){n=document.domain,r.src='javascript:var d=document.open();d.domain="'+n+'";void(0);',o=s}o.open()._l=function(){var o=this.createElement("script");n&&(this.domain=n),o.id="js-iframe-async",o.src=e,this.t=+new Date,this.zendeskHost=t,this.zEQueue=a,this.body.appendChild(o)},o.write('<body onload="document._l();">'),o.close()}("https://assets.zendesk.com/embeddable_framework/main.js","openaccessbutton.zendesk.com");
-  /*]]>*/</script>
-  <!-- End of openaccessbutton Zendesk Widget script -->
+<!-- Start of openaccessbutton Zendesk Widget script -->
+<script>/*<![CDATA[*/window.zEmbed||function(e,t){var n,o,d,i,s,a=[],r=document.createElement("iframe");window.zEmbed=function(){a.push(arguments)},window.zE=window.zE||window.zEmbed,r.src="javascript:false",r.title="",r.role="presentation",(r.frameElement||r).style.cssText="display: none",d=document.getElementsByTagName("script"),d=d[d.length-1],d.parentNode.insertBefore(r,d),i=r.contentWindow,s=i.document;try{o=s}catch(e){n=document.domain,r.src='javascript:var d=document.open();d.domain="'+n+'";void(0);',o=s}o.open()._l=function(){var o=this.createElement("script");n&&(this.domain=n),o.id="js-iframe-async",o.src=e,this.t=+new Date,this.zendeskHost=t,this.zEQueue=a,this.body.appendChild(o)},o.write('<body onload="document._l();">'),o.close()}("https://assets.zendesk.com/embeddable_framework/main.js","openaccessbutton.zendesk.com");
+/*]]>*/</script>
+<!-- End of openaccessbutton Zendesk Widget script -->
 
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-8 col-md-offset-2" style="text-align:justify;">
 
-  <h1 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">Getting Started</h1>
+        <h1 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">Instructions</h1>
+  
+          <p id="blacklisted" class="alert alert-info" style="display:none;">
+            It looks like you tried to use the Open Access Button on something other than a journal article or academic database. The Button doesn't work on those types of pages.
+            <br />If you think the Button should work on this page, <a href="/feedback#bug">let us know</a>.
+          </p>
 
-<p>We’ve worked hard to make the Button easy to use. Here’s what you need to know:</p>
-<ol>
-<li>The Button works from <a href = "https://en.wikipedia.org/wiki/Academic_journal" target="_blank">Journal articles</a>. You can request the full article from a paywall, and the data from a paywall or full text page.</li>
-<li>If you get an email from us, it’s important.</li>
-<li>If you need help, email us at <a href="mailto:help@openaccessbutton.org">help@openaccessbutton.org</a></li>
-</ol>
-<p>Want to test it out? Try searching for <a href="http://science.sciencemag.org/content/293/5530/629" target="_blank">this article</a>.</p>
+          <p>
+            The Open Access Button works on <a href = "https://en.wikipedia.org/wiki/Academic_journal" target="_blank">journal articles</a>. You can request the full article from a paywall, and the data from a paywall or full-text page.
+          </p>
 
+          <p>
+            Want to test it out? Try clicking the Button on <a href="http://science.sciencemag.org/content/293/5530/629" target="_blank">this article</a>, or pasting the link <code>http://science.sciencemag.org/content/293/5530/629</code> into the <a href="/">homepage</a>. 
+          </p>
 
+          <p>Need more help? Email us at <a href="mailto:help@openaccessbutton.org">help@openaccessbutton.org</a>
+          </p>
+        
+        <p><img src="/static/instructions.gif" style="width: 100%;border:1px solid #212f3f;margin:10px;"></p>
+        
       </div>
     </div>
   </div>
+
+<script>
+  jQuery(document).ready(function() {
+    var api = 'https://api.openaccessbutton.org';
+    if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
+      api = 'https://dev.api.cottagelabs.com/service/oab';
+      clogin.api = 'https://dev.api.cottagelabs.com/accounts';
+    }
+
+    $.ajax({
+      url: api + '/blacklist',
+      success: function(data) {
+        for ( var d in data.data ) {
+          $('#blacklist').append('<p>' + data.data[d] + '</p>');
+        }
+      }
+    });
+    
+    if (window.location.hash.replace('#','') === 'blacklist') $('#blacklisted').show();
+  });
+</script>

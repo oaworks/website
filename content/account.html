@@ -78,6 +78,9 @@ jQuery(document).ready(function() {
   } else {
     $('#bookmarklet').attr('href',$('#bookmarklet').attr('href').replace('YYYY','https://openaccessbutton.org'));
   }
+  // TODO set these for oabutton to have its own oauth accounts:
+  // clogin.oauthGoogleClientId = '';
+  clogin.oauthFacebookAppId = '114282989239097';
   clogin.init({api:api,afterLogin: afterlogin, saveValidate: savevalidate, afterSave: aftersave, afterFailure: afterfailure });
 
   if (window.location.href.indexOf('email=') !== -1) {
@@ -120,6 +123,15 @@ jQuery(document).ready(function() {
           </p>
           <input type="email" class="form-control" id="cloginEmail" name="email" placeholder="Enter your email address">
           <button id="cloginSubmit" type="submit" class="btn btn-action btn-block" style="margin-top:10px;">Sign up / Login</button>
+          <div>
+            <p style="text-align:center;margin-top:15px;">
+              Or use your favourite service<br>
+            </p>
+            <p style="text-align:center; margin-top:15px;">
+              <a id="cloginOauthGoogle" class="btn btn-default" style="font-size:0.8em;" href="#"><img style="height:20px;" src="https://static.cottagelabs.com/google.png"> Sign in with Google</a>
+              <a id="cloginOauthFacebook" class="btn btn-default" style="font-size:0.8em;" href="#"><img style="height:20px;" src="https://static.cottagelabs.com/facebook.png"> Sign in with Facebook</a>
+            </p>
+          </div>
         </div>
         <div id="cloginTokenArea" style="display:none;">
           <h2 style="text-align:center;">Go check your email!</h2>
@@ -132,13 +144,14 @@ jQuery(document).ready(function() {
           </p>
           <input type="text" class="form-control" id="cloginToken" placeholder="Enter your login code">
           <p style="text-align:center;">
-            <br>If you don't receive an email within a few minutes, check your spam folder. Contact us at
-            <a href="mailto:help@openaccessbutton.org?subject=issues signing in">help@openaccessbutton.org</a> if you have trouble logging in.
+            <br>If you don't receive an email within a few minutes, check your spam folder. If you have trouble, try using Google or Facebook to login. Otherwise, Contact us at
+            <a href="mailto:help@openaccessbutton.org?subject=issues signing in">help@openaccessbutton.org</a>.
           </p>
         </div>
         <div id="cloginMessages" style="margin-top:5px;"></div>
         <div id="cloginLoading" style="display:none;"><img style="height:30px;" src="//static.cottagelabs.com/spinner.gif"></div>
       </div>
+
 
       <div class="row dl ch" id="install" style="margin-top:70px;margin-bottom:100px;">
         <div class="col-md-1 col-md-offset-1">
