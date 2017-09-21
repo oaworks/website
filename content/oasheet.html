@@ -62,8 +62,16 @@
 <!-- Start of upload button & instructions. This should be shown only when logged in. -->
 
       <div id="upload">
-        <p class="jobupload">Upload a CSV file with your article identifiers, including column headers. 
-	<br />Our tool will look for at least one column named "url", "doi", "pmid", "pmcid", or "title".</p>
+        <div class="row">
+                  <div class="col-md-6">
+          <p class="jobupload">Upload a CSV file with your article identifiers, including column headers. 
+          <br />Our tool will look for at least one column named "url", "doi", "pmid", "pmcid", or "title".</p>
+        </div>
+        <div class="col-md-6">
+
+    <img src="/static/oasheet_results.png" style="width:100%; border:1px solid #212f3f;margin:10px;">
+        </div>
+      </div>
 
 <!-- TODO: Put in an image like the example here, perhaps 50% width. -->
 
@@ -87,7 +95,6 @@
     </div>
   </div>
 <!-- End of places to read more -->
-	<img src="/static/oasheet_results.png" style="width:100%; border:1px solid #212f3f;margin:10px;">
 
 <!-- TODO: hide the lantern plug until it's released -->
 
