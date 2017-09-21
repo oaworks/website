@@ -1,34 +1,32 @@
 
-// to use this widget, just include this js file, and then call openaccessbutton_widget() in a script on the page
+// to use this widget, just include this js file, and then call oabutton_widget() in a script on the page
 // If jquery is not already used on the site, jquery is required too.
 // bootstrap can optionally be used to apply styling
 // this can be done like so:
 // <script src="https://static.cottagelabs.com/jquery-1.10.2.min.js"></script>
 // <link rel="stylesheet" href="https://static.cottagelabs.com/bootstrap-3.0.3/css/bootstrap.min.css">
-// <script src="https://openaccessbutton.org/static/openaccessbutton_widget.js"></script>
-// <script>jQuery(document).ready(function() { openaccessbutton_widget(); });</script>
+// <script src="https://openaccessbutton.org/static/oabutton_widget.js"></script>
+// <script>jQuery(document).ready(function() { oabutton_widget(); });</script>
 
 // need an input field called oabutton_url
 // and an oabutton_find button to trigger it (although triggers on enter too)
 // and oabutton_availability div required for inserting results
 // and optional oabutton_loading
 
-var openaccessbutton_widget = function(opts) {
+var oabutton_widget = function(opts) {
   if (opts === undefined) opts = {};
-  if (opts.data === undefined) opts.data = false;
   var api = opts.api ? opts.api : 'https://api.openaccessbutton.org';
   var site = opts.site ? opts.site : 'https://openaccessbutton.org';
-  if (opts.element === undefined) opts.element = '#openaccessbutton_widget';
-  if (opts.uid === undefined) opts.uid = 'anonymous';
-  if ($(opts.element).length === 0) $('body').append('<div id="openaccessbutton_widget"></div>');
-
+  if (opts.element === undefined) opts.element = '#oabutton_widget';
+  if ($(opts.element).length === 0) $('body').append('<div id="oabutton_widget"></div>');
+  
   var w = '<div class="input-group">\
-    <textarea id="oabutton_url" class="form-control" style="min-height:40px;height:40px;font-size:1.1em;" placeholder="Skip the paywall using a URL, DOI, Title, or Citation"></textarea>\
+    <textarea id="oabutton_url" class="form-control" style="min-height:40px;height:40px;font-size:1.1em;" placeholder="Search Open Access Button with URL, DOI, PMID, PMC ID, Title, or Citation"></textarea>\
     <div class="input-group-btn">\
       <a class="btn btn-primary btn-block" href="#" id="oabutton_find" style="min-height:40px;height:40px;font-size:1.1em;padding:7px 10px 5px 10px;"><i class="glyphicon glyphicon-search"></i></a>\
     </div>\
   </div>\
-  <div id="oabutton_loading" style="display:none;"><p><img style="width:30px;" src="' + site + '/static/spin_orange.svg">   Powered by <a href="https://openaccessbutton.org" target="_blank">Open Access Button</a></p></div>\
+  <div id="oabutton_loading" style="display:none;"><img style="width:30px;" src="' + site + '/static/spin_orange.svg"></div>\
   <div id="oabutton_availability"></div>';
   $(opts.element).html(w);
 
@@ -42,7 +40,7 @@ var openaccessbutton_widget = function(opts) {
       }
       if (url.lastIndexOf('.') === url.length-1) url = url.substring(0,url.length-1);
       $('#oabutton_loading').show();
-      var avopts = {
+      var opts = {
         type:'POST',
         url:api+'/availability',
         cache: false,
@@ -71,7 +69,7 @@ var openaccessbutton_widget = function(opts) {
               try { dr.title = data.data.meta.article.title; } catch(err) {}
               try { dr.doi = data.data.meta.article.doi; } catch(err) {}
               try { dr.url = data.data.match; } catch(err) {}
-              var ropts = {
+              var opts = {
                 type:'POST',
                 url: api+'/request?fast=true',
                 cache:false,
@@ -86,7 +84,7 @@ var openaccessbutton_widget = function(opts) {
                   window.location = site + '/request?url=' + encodeURIComponent(data.data.match);
                 }
               }
-              $.ajax(ropts);
+              $.ajax(opts);
             } else {
               $('#oabutton_availability').html('<p>Sorry, we couldn\'t find anything for <b>' + data.data.match + '</b>.</p><p>Matching titles and citations can be tricky. Please find a URL, DOI, PMID or PMCID and <a href="/">try again</a>.</p>');
             }
@@ -102,55 +100,48 @@ var openaccessbutton_widget = function(opts) {
                 availability += 'Someone has requested access to the article <a class="btn btn-action" href="/request/' + has.article.id + '?support=true">Notify me</a></p>';
               }
             } else {
-              availability += '<p><b>This article is available!</b></p>';
+              availability += '<h2>This article is available!</h2>';
               availability += '<p"><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + has.article.url + '</a></p>';
               availability += '<p>Not what you were expecting? <a target="_blank" href ="' + site + '/feedback#wrong?searched=' + encodeURIComponent(url) + '&given=' + encodeURIComponent(has.article.url) + '">Report an error</a>.</p>';
-              availability += '<p> You can <a target="_blank" href="' + site + '/request?data=false&url=' + encodeURIComponent(data.data.match) + '">request it from the author</a> if it isn\'t available.</p>';
+              availability += '<p> You can <a target="_blank" href="' + site + '/request?url=' + encodeURIComponent(data.data.match) + '">request it from the author</a> if it isn\'t available.</p>';
             }
-            if (opts.data) {
-              availability += '<p>';
-              availability += 'Want the data supporting the article? ';
-              availability += '<a target="_blank" class="btn btn-action" href="' + site + '/request?type=data&url=' + encodeURIComponent(data.data.match) + '">Request it from the author</a></p>';
-            }
+            availability += '<p>';
+            availability += 'Want the data supporting the article? ';
+            availability += '<a target="_blank" class="btn btn-action" href="' + site + '/request?type=data&url=' + encodeURIComponent(data.data.match) + '">Request it from the author</a></p>';
             $('#oabutton_availability').html(availability);
           } else if (!has.article && has.data) {
-            var availability = '<p><b>This article is not available</b></p>';
-            availability += '<p style="text-align:center;"><a target="_blank" class="btn btn-action" href="' + site + '/request?data=false&url=' + encodeURIComponent(data.data.match) + '">Start a request</a></p>';
-            if (opts.data) {
-              availability += '<p>';
-              if (has.data.id) {
-                  availability += 'Someone has requested access to the data. <a target="_blank" class="btn btn-action" href="' + site + '/request/' + has.data.id + '?support=true">Notify me';
-              } else {
-                availability += 'However there is data available:</p>';
-                availability += '<p style="text-align:center;"><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.data.url + '">' + has.data.url;
-              }
-              availability += '</a></p>';
+            var availability = '<h2>This article is not available</h2>';
+            availability += '<h3 style="text-align:center;"><a target="_blank" class="btn btn-action" href="' + site + '/request?url=' + encodeURIComponent(data.data.match) + '">Start a request</a></h3>';
+            availability += '<p>';
+            if (has.data.id) {
+                availability += 'Someone has requested access to the data. <a target="_blank" class="btn btn-action" href="' + site + '/request/' + has.data.id + '?support=true">Notify me';
+            } else {
+              availability += 'However there is data available:</p>';
+              availability += '<p style="text-align:center;"><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.data.url + '">' + has.data.url;
             }
+            availability += '</a></p>';
             $('#oabutton_availability').html(availability);
           } else if (has.article && has.data) {
             if (has.article.id && has.data.id) {
-              window.location = site + '/request/' + has.article.id + '?data=false';
+              window.location = site + '/request/' + has.article.id;
             } else {
-              var availability = '<p><b>';
+              var availability = '<h2>';
               if (has.article.url) {
-                availability += 'This article is available!</b></p>';
+                availability += 'This article is available!</h2>';
                 availability += '<h><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + has.article.url;
               }
               if (has.article.id) {
-                availability += 'Someone has requested access to the article. <a target="_blank" class="btn btn-action" href="' + site + '/request/' + has.article.id + '?data=false&support=true">Notify me';
+                availability += 'Someone has requested access to the article. <a target="_blank" class="btn btn-action" href="' + site + '/request/' + has.article.id + '?support=true">Notify me';
               }
-              availability += '</a></b></p>';
-              if (opts.data) {
-                availability += '<p style="text-align:center;">';
-                if (has.data.url) {
-                  availability += 'And there is data available for this article:</p><p style="text-align:center;">';
-                  availability += '<a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.data.url + '">' + has.data.url;
-                }
-                if (has.data.id) {
-                  availability += 'Someone has requested access to the data. <a target="_blank" class="btn btn-action" href="' + site + '/request/' + has.data.id + '?support=true">Notify me';
-                }
-                availability += '</a></p>';
+              availability += '</a></h3><p style="text-align:center;">';
+              if (has.data.url) {
+                availability += 'And there is data available for this article:</p><p style="text-align:center;">';
+                availability += '<a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.data.url + '">' + has.data.url;
               }
+              if (has.data.id) {
+                availability += 'Someone has requested access to the data. <a target="_blank" class="btn btn-action" href="' + site + '/request/' + has.data.id + '?support=true">Notify me';
+              }
+              availability += '</a></p>';
               $('#oabutton_availability').html(availability);
             }
           }
@@ -160,9 +151,10 @@ var openaccessbutton_widget = function(opts) {
           $('#oabutton_loading').after('<p>Sorry, something went wrong with Open Access Button. <a target="_blank" href="' + site + '/feedback#bug">Can you let them know?</a></p>');
         }
       };
-      $.ajax(avopts);
+      $.ajax(opts);
     }
   }
   $('#oabutton_url').bind('keyup',availability);
   $('#oabutton_find').bind('click',availability);
 }
+
