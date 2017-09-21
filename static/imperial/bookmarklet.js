@@ -47,14 +47,14 @@ var oabutton_bookmarklet = function(apikey) {
     form += '<div id="terms" style="font-size:0.7em;margin-top:5px;"></div>';
   }
   form += '</div> \
-    <p style="font-size:14px;margin-top:40px;margin-bottom:-20px;">Powered by <a target="_blank" href="https://openaccessbutton.org"><b>Open Access Button</b></a><br>and <a target="_blank" href="https://www.imperial.ac.uk/admin-services/library"><b>Imperial College London Library</b></a></p>\
+    <p style="font-size:14px;margin-top:40px;margin-bottom:-20px;">Powered by <a target="_blank" href="https://openaccessbutton.org"><b>Open Access Button</b></a><br>and <a target="_blank" href="https://www.imperial.ac.uk/admin-services/library"><b>Imperial Library</b></a></p>\
     <p style="text-align:right;"> \
       <a href="" id="oab_close" style="font-size:18px;font-weight:bold;color:#999;" alt="close" title="close">x</a> \
     </p>';
   popup.innerHTML = form;
   document.body.appendChild(popup);
   document.getElementById('oab_close').onclick = function() { document.getElementById('oabutton_popup').style.display = 'none'; };
-
+  
   oabutton_ui(apikey);
 
 }

@@ -126,11 +126,7 @@
         dataType: 'json',
         success: function(data) {
           $('.saved').show();
-          if ($('#askingforstory').length) {
-            setTimeout(function() { window.location = window.location },1500);
-          } else {
-            setTimeout(function() {$('.saved').hide()},2000);
-          }
+          setTimeout(function() {$('.saved').hide()},2000);
         },
         beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); }
       }
@@ -334,7 +330,7 @@
       ttl += '</h2>';
       $('#titleheader').html(ttl);
       var ot = rec.type === 'article' ? 'data' : 'article';
-      if (rec.status === 'help' && ( !rec.story || !rec.user ) && ( (rec.type === 'article' && window.location.search.indexOf('data=false') === -1) || rec.type === 'data' ) ) {
+      if (rec.status === 'help' && ( !rec.story || !rec.user )) {
         if (rec.other) {
           $('#other').html('<p><a style="text-decoration:underline;color:#FFFFFC;" href="/request/' + rec.other + '">I actually wanted the ' + ot + '</a></p>');
         } else {
@@ -405,8 +401,7 @@
           re += '<p>We ask the author to make this ' + rec.type + ' available to everyone for free - legally. Start a request and we\'ll take care of the rest!</p>';
           if (clogin.loggedin()) {
             re += '<p><textarea style="min-height:100px;" class="form-control" id="story" placeholder="How would getting access to this research help you? This message will be sent to the author, and helps them to understand why the research should be made available."></textarea></p>';
-            re += '<p id="askingforstory" style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Submit</a></p>';
-            re += '<p class="saved" style="display:none;">Thanks! Please wait a moment while we reload the page...</p>';
+            re += '<p style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Submit</a></p>';
           } else {
             re += '<div class="input-group">\
               <input type="text" name="email" id="youremail" class="form-control" placeholder="Your email address"> \

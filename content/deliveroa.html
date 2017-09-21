@@ -1,26 +1,8 @@
-    <!-- Start of openaccessbutton Zendesk Widget script -->
+  <!-- Start of openaccessbutton Zendesk Widget script -->
   <script>/*<![CDATA[*/window.zEmbed||function(e,t){var n,o,d,i,s,a=[],r=document.createElement("iframe");window.zEmbed=function(){a.push(arguments)},window.zE=window.zE||window.zEmbed,r.src="javascript:false",r.title="",r.role="presentation",(r.frameElement||r).style.cssText="display: none",d=document.getElementsByTagName("script"),d=d[d.length-1],d.parentNode.insertBefore(r,d),i=r.contentWindow,s=i.document;try{o=s}catch(e){n=document.domain,r.src='javascript:var d=document.open();d.domain="'+n+'";void(0);',o=s}o.open()._l=function(){var o=this.createElement("script");n&&(this.domain=n),o.id="js-iframe-async",o.src=e,this.t=+new Date,this.zendeskHost=t,this.zEQueue=a,this.body.appendChild(o)},o.write('<body onload="document._l();">'),o.close()}("https://assets.zendesk.com/embeddable_framework/main.js","openaccessbutton.zendesk.com");
   /*]]>*/</script>
   <!-- End of openaccessbutton Zendesk Widget script -->
   <style>
-
-  .focal{
-    background-color: white;
-    text-align: left;
-    border-radius: 5px;
-    padding: 20px;
-    /*
-    border-width: 1px;
-    border-style: solid;
-    border-color:#212f3f;
-    */
-  }
-
-  .innercolumns{
-    width:100%;
-    padding:10px;
-    overflow: hidden;
-  }
 
   .downloadbox {
 		background-color: white;
@@ -42,10 +24,7 @@
 
     /* Make the div big, so we would jump, if the JS was still broken */
     .ill_system_content div {
-      height: 100%;
-    }
-    .code {
-	     word-wrap: break-word;
+      height: 100vh;
     }
   </style>
 
@@ -55,73 +34,58 @@
 	<div class="row">
 
 		<div id="maininfo" class="col-md-6 col-md-offset-3">
-  		<h1 style="text-align:left;font-size:4em;">DeliverOA</h1>
-
+  		<h1 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">DeliverOA</h1>
+  
       <h3>
-			   Wipe 5% off your ILL budget and delivery times, and discover a new way to advocate for Open Access, today. No complex installation, no training required.
+			Wipe up to 10% off your ILL budget and delivery times, today. No complex installation, no training, no fuss.
       </h3>
-      <p>
-        We make it easy to give your researchers Open Access version of the millions of paywalled articles they need. We find <a href="/about" target="_blank">self-archived Open Access versions of articles</a> and deliver them right inside your ILL workflow.
-      </p>
-      <div id="getit" class="focal">
+
+	     <div class="row">
+
+		      <div style="display: inline;">
 			    <div>
 			         <p style="float: left; margin: 6px 10px;">Get started by choosing your</p>
 			    </div>
 			       <div class="btn-group" >
-			            <button type="button"  class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="border-width:2px; border-radius: 8px;">ILL system      <span class="caret"></span>
+			            <button type="button"  class="btn btn-default dropdown-toggle" data-toggle="dropdown">ILL system <span class="caret"></span>
 			        </button>
 			        <ul class="dropdown-menu"  style="width: 100%;" role="menu">
-			             <li><a class="chooseill" href="#alma">Alma</a></li>
-			             <li><a class="chooseill" href="#clio">Clio</a></li>
-				           <li><a class="chooseill" href="#illiad">ILLiad</a></li>
+			             <li><a class="chooseill" href="#alma">ALMA</a></li>
+			             <li><a class="chooseill" href="#primo">Primo</a></li>
+			             <li><a class="chooseill" href="#clio">CLIO</a></li>
+				           <li><a class="chooseill" href="#illiad">Illiad</a></li>
 				           <li><a class="chooseill" href="#other">Other</a></li>
 			        </ul>
 			        </div>
+          </div>
         </div>
-
-			
-          <div id="upsell" style="display: none">
-              <p style="padding-top:15px;">
-               You'll also love:
-              </p>
-                  <ul>
-                    <li>
-                      <a href="/embedoa#ill" target="_blank">embedOA</a>: help patrons find Open Access alternatives before they submit an ILL.
-                    </li>
-                    <li>
-                      <a href="/oasheet" target="_blank">OAsheet</a>: upload a spreadsheet of articles, and we'll find Open Access versions. Try uploading old ILLs to see what you could save.
-                    </li>
-                    <!--
-
-                    TODO unhide this when it's ready
-
-                    <li>
-                      <a href="">Our ILL form demo</a>: We're redesigning ILL systems from the ground up. Get a taste of what we're thinking.
-                    </li>
-                  -->
-                  </ul>
-                </div>
-
-
-
-              </div>
+      </div>
 
       <div class="col-md-6">
 
         <div class="ill_system_content downloadbox">
 
-          <div id="alma" class="innercolumns">
-            <h1 style="margin-top:40px">For Alma</h1>
+          <div id="blank">
+            <p>blank</p>
+          </div>
 
-            <p>
-              The Open Access Button extension works on Alma. Simply click it on an ILL request while you process.
-            </p>
-          <ol>
-            <li>
-               Install the Open Access Button - it takes just a second.
-            </li>
+          <div id="alma">
+            <h2>Getting started in ALMA</h2>
+            <img src="/static/DeliverOA_image.png">
+            <p>You can just click the normal Open Access Button on this page.</p>
+          </div>
 
+          <div id="illiad">
+            <h2>Getting started in ILLiad</h2>
+            <p>Download the add-on here, get it installed, and you're away! The add-on will automatically check if OA is available for the request you're on.</p>
+            <a href="https://github.com/OAButton/Open-Access-Button-for-Illiad/archive/v.03-alpha.zip"><button class="btn btn-action btn-block">Download Add-on</button></a>
+
+          </div>
+
+          <div id="primo">
             <a id="chromeinstall" style="margin-top:5px;" class="btn btn-action btn-block dl ch" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">Get the Chrome Extension</a>
+            <a id="firefoxinstall" style="margin-top:5px;" class="btn btn-action btn-block dl ff disabled" target="_blank" href="https://addons.mozilla.org/en-GB/firefox/addon/openaccessbutton/">Firefox Plugin Coming Soon</a>
+            <p class="dl mob">Doing research on the move? We'd like to make an app for your phone. But, right now you can use it in your browser. Check back when you're by your computer for our plugins.</p>
             <div class="well dl bk ff" style="margin:5px 0px 5px 0px;"> <!-- for now show bookmarklet on ff too -->
               <p>
               To install just drag the Button to your bookmarks bar.
@@ -131,164 +95,23 @@
                       <br>
                       Chrome, Safari and Internet Explorer: Control (Command on a Mac) + Shift + B
                       <br>
-                      Firefox: Alt + V, then T, then B</small></p>
+                      Firefox: Alt + V, then T, then B</small>
             </div>
-
-            <li>
-              Click it on request processing pages (like the one in the image below). Check it's working by making a test request for: <blockquote>Effect of Saxagliptin on Renal Outcomes in the SAVOR-TIMI 53 Trial</blockquote>
-              We should find it. If you have any trouble, <a href="mailto:help@openaccessbutton.org?Subject=Having%20Trouble%20Installing%20DeliverOA%20in%20Alma&body=Please%20send%20us%20the%20URL%20of%20the%20page%20you're%20working%20on,%20or%20a%20screenshot%20of%20what%20you're%20seeing%20and%20a%20copy%20of%20the%20page's%20code%20-%20right-click%20on%20the%20page%20and%20View%20Page%20Source.">get in touch</a>.
-            </li>
-            <img src="/static/alma-page.png" width="100%;" class="responsive">
-            <li>
-              Consider what email you'll send when you find an Open Access copy. Here's what others use:
-            </li>
-            <blockquote id="ill-email">
-              <p>
-                The article you requested is available online, for free, from an Open Access repository at the link below.
-              </p>
-              <p>
-                <i>insert link</i>
-              </p>
-              <p>
-                Please review the article and let us know whether or not it is sufficient for your research. For example, it may be a version without graphs or images.<!-- TODO: say how it'll differ -->
-              </p>
-              <p>
-                If you still require a version of the article from the original publication, we are happy to request that for you. You do not need to place a second request for the article, just respond to this email.
-              </p>
-            </blockquote>
-            <li>
-              You're done. Let us know what you think!
-            </li>
-          </ol>
           </div>
 
-          <div id="illiad" class="innercolumns">
+          <div id="clio">
+            <p>clio contents</p>
+            <p>use this <code id="cliocode">openaccessbutton.org/?from=clio&url=</code></p>.
 
-<!-- TODO: Figure out a way to track usage here. -->
-
-            <h1 style="margin-top:40px">For ILLiad</h1>
-            <p>
-              <!-- TODO: Cite the person properly -->
-              We've made an add-on that will automatically check if Open Access is available for the request you're on.
+            <p id="primptsignup">
+              Please <a href="/account?next=/deliveroa#clio" class="label label-info">sign up / sign in</a> 
+              first so we can customise this link for you and give you better service.
             </p>
-            <ol>
-            <li>
-              Download the add-on, and get it installed. If you need to ask your tech person to install the add-on,            
-		<a href="mailto:?subject=Help%20Installing%20DeliverOA%20widget%20in%20ILLiad&body=Hello,%0AI'd%20like%20to%20start%20using%20this%20widget%20in%20ILLiad,%20which%20will%20help%20us%20find%20available%20copies%20of%20articles%20quickly%20and%20easily.%0AI%20need%20your%20help%20to%20install%20and%20activate%20the%20widget.%20Please%20follow%20the%20instructions%20here:%20https://dev.openaccessbutton.org/deliveroa#illiad.
-%0AIf%20you%20need%20help%20at%20any%20point,%20contact%20joe@openaccessbutton.org.">here's a draft email you can send them</a>.
-    
-         </li>
-            <a href="https://github.com/OAButton/Open-Access-Button-for-Illiad/archive/v.04-alpha.zip"><button class="btn btn-action btn-block">Download Add-on</button></a>
-
-            <li>
-              Check it's working by making a test request for: <blockquote>Mosenzon, O., Leibowitz, G., Bhatt, D. L., Cahn, A., Hirshberg, B., Wei, C., ... & Ray, K. K. (2017). Effect of saxagliptin on renal outcomes in the SAVOR-TIMI 53 trial. Diabetes care, 40(1), 69-76.</blockquote>
-
-              We should find it. If you have any trouble, <a href="mailto:help@openaccessbutton.org?Subject=DeliverOA%20and%20ILLiad&body=Please%20send%20us%20the%20URL%20of%20the%20page%20you're%20working%20on,%20or%20a%20screenshot%20of%20what%20you're%20seeing%20and%20a%20copy%20of%20the%20page's%20code%20-%20right-click%20on%20the%20page%20and%20View%20Page%20Source.">get in touch</a>.
-            </li>
-            <li>
-              Consider what email you'll send to your users when you succeed. Here's what others use:
-            </li>
-            <!-- TODO: work out why <div w3-include-html="https://dev.openaccessbutton.org/static/ill_oa_email.html"></div>  doesn't work here -->
-            <blockquote id="ill-email">
-              <p>
-                The article you requested is available online, for free, from an Open Access repository at the link below.
-              </p>
-              <p>
-                <i>insert link</i>
-              </p>
-              <p>
-                Please review the article and let us know whether or not it is sufficient for your research. For example, it may be a version without graphs or images.
-              </p>
-              <p>
-                If you still require a version of the article from the original publication, we are happy to request that for you. You do not need to place a second request for the article, just respond to this email.
-              </p>
-            </blockquote>
-
-            <li>
-              You may want to track your successes with Open Access, for example by setting up a separate email template.
-              <!-- TODO: See how this would work with file upload -->
-		    </li>
-	    <li>
-		You're done. Let us know what you think!
-	    </li>
-          </ol>
 
           </div>
 
-          <div id="clio" class="innercolumns">
-
-            <h1 style="margin-top:40px">For Clio</h1>
-
-            <p>
-              When you set this up, Clio can automatically check if an Open Access copy is available for the request you're on.
-            </p>
-
-            <img src="/static/success-clio.png" style="width:100%;" class="responsive">
-
-            <ol>
-                <li id="promptsignup">
-                  Please <a href="/account?next=/deliveroa#clio" class="label label-info">sign up / sign in</a>
-                  first so we can customise this link for you and give you better service.
-                </li>
-                <li>
-                  Set up a new tab in Clio. Use the following details:
-                  <ul>
-                    <li>
-                      Name: Open Access
-                    </li>
-                      <li>
-                        First Part of URL: <pre id="cliocode">https://openaccessbutton.org/?from=clio&url=</pre>
-                      </li>
-                      <li>
-                        Second Part of URL: Leave Blank
-                      </li>
-                      <li>
-                        Use Article Title: Yes
-                      </li>
-                      <li>
-                        Use Plus sign for spaces: Yes
-                      </li>
-                    </ul>
-              </li>
-              <li>
-                Check it's working by making a test request for: <blockquote>Mosenzon, O., Leibowitz, G., Bhatt, D. L., Cahn, A., Hirshberg, B., Wei, C., ... & Ray, K. K. (2017). Effect of saxagliptin on renal outcomes in the SAVOR-TIMI 53 trial. Diabetes care, 40(1), 69-76.</blockquote>
-
-                We should find it. If you have any trouble, <a href="mailto:help@openaccessbutton.org?Subject=DeliverOA%20and%20Clio&body=Please%20send%20us%20the%20URL%20of%20the%20page%20you're%20working%20on,%20or%20a%20screenshot%20of%20what%20you're%20seeing%20and%20a%20copy%20of%20the%20page's%20code%20-%20right-click%20on%20the%20page%20and%20View%20Page%20Source.">get in touch</a>.
-
-              </li>
-              <li>
-                 Consider what email you'll send to your users when you succeed. Here's what others use:
-              </li>
-              <blockquote id="ill-email">
-                <p>
-                  The article you requested is available online, for free, from an Open Access repository at the link below.
-                </p>
-                <p>
-                  <i>insert link</i>
-                </p>
-                <p>
-                  Please review the article and let us know whether or not it is sufficient for your research. For example, it may be a version without graphs or images.
-                </p>
-                <p>
-                  If you still require a version of the article from the original publication, we are happy to request that for you. You do not need to place a second request for the article, just respond to this email.
-                </p>
-              </blockquote>
-
-              <li>
-                You're done. Let us know what you think!
-              </li>
-
-            </ol>
-          </div>
-
-          <div id="other" class="innercolumns">
-
-            <h1 style="margin-top:40px">For Other Systems</h1>
-            <p>
-              We want to make it easy to intergrate Open Access into any system. If your system isn't covered, <a href="mailto:help@openaccessbutton.org?Subject=DeliverOA%20and%20Other%20Systems&body=Please%20let%20us%20know%20what%20systems%20you're%20working%20with,%20and%20whether%20they're%20cloud-based%20or%20locally%20installed.%20Please%20also%20send%20us%20a%20screenshot%20of%20where%20you'd%20like%20the%20Button%20to%20appear.">get in touch</a> and we'll try and figure it out (we haven't failed yet).     
-            </p>
-        
-
+          <div id="other">
+            <p>other contents</p>
           </div>
 
         </div>
@@ -317,15 +140,10 @@ var hashLinks = document.querySelectorAll("a[href^='#']");
 
   <script>
   jQuery(document).ready(function() {
-
+    
     $('.chooseill').bind('click',function() { $('#maininfo').removeClass('col-md-offset-3'); });
     if (window.location.hash) $('#maininfo').removeClass('col-md-offset-3');
-
-    $('.chooseill').bind('click',function() { $('#getit').removeClass('focal'); });
-    if (window.location.hash) $('#getit').removeClass('focal');
-
-    $('.chooseill').bind('click',function() { $('#upsell').css('display', 'block'); });
-
+    
     var mobileCheck = function() {
       // checks if browser is a mobile or tablet browser
       var check = false;
@@ -350,8 +168,8 @@ var hashLinks = document.querySelectorAll("a[href^='#']");
   </script>
 
 <!-- Code to pull in alpha release banner -->
-<div w3-include-html="/static/alpha.html"></div>
 <script src="https://www.w3schools.com/lib/w3.js"></script>
+<div w3-include-html="/static/alpha.html"></div>
 
 <script>
 w3.includeHTML();
