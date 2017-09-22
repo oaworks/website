@@ -8,6 +8,7 @@
 // <script src="https://openaccessbutton.org/static/oabutton_widget.js"></script>
 // <script>jQuery(document).ready(function() { oabutton_widget(); });</script>
 
+// a comment to fix merge oddities
 // need an input field called oabutton_url
 // and an oabutton_find button to trigger it (although triggers on enter too)
 // and oabutton_availability div required for inserting results
