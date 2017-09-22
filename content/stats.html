@@ -135,12 +135,15 @@
       info += ' check whilst signed in during the last month, and ' + data.aggregations.tm3.tm3v.value + ' greater than 1 month but less than 3 months ago.</p>';
       
       var plugins = {api:{all:data.facets.plugin.missing,week:data.facets.plugin_week.missing}};
+      var alltotal = 0 + plugins.api.all;
+      var weektotal = 0 + plugins.api.week;
       for ( var p in data.facets.plugin.terms ) {
         var pl = data.facets.plugin.terms[p];
         if (pl.term.indexOf('test') === -1) {
-          var at = pl.term.split('_')[0].replace('oabutton','plugin');
+          var at = pl.term.split('_')[0].replace('oabutton','plugin').replace('oab','plugin');
           if (plugins[at] === undefined) plugins[at] = {all:0,week:0}
           plugins[at].all += pl.count;
+          alltotal += pl.count;
         }
       }
       for ( var wp in data.facets.plugin_week.terms ) {
@@ -149,16 +152,20 @@
           var wt = pw.term.split('_')[0].replace('oabutton','plugin');
           if (plugins[wt] === undefined) plugins[wt] = {all:0,week:0}
           plugins[wt].week += pw.count;
+          weektotal += pw.count;
         }
       }
 
       info += '<p>Users have been using these tools:</p>';
       info += '<table class="table table-bordered table-striped"><thead><tr><th></th>';
       for ( var plug in plugins ) info += '<th>' + plug + '</th>';
+      info += '<th>TOTAL</th>';
       info += '</tr></thead><tbody><tr><td><b>all-time</b></td>';
       for ( var pla in plugins ) info += '<td>' + plugins[pla].all + '</td>';
+      info += '<td>' + alltotal + '</td>';
       info += '</tr><tr><td><b>the last week</b></td>';
       for ( var plw in plugins ) info += '<td>' + plugins[plw].week + '</td>';
+      info += '<td>' + weektotal + '</td>';
       info += '</tr></tbody></table>';
       
       if (data.facets.embeds.terms.length) info += '<p>We have embedded availability checks from the following locations:</p>';
