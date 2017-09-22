@@ -63,7 +63,17 @@
 <!-- Start of upload button & instructions. This should be shown only when logged in. -->
 
       <div id="upload">
-        <p class="jobupload">Upload a .csv file, which must have column names including at least one of "url", "doi", "pmid", "pmcid", "title".</p>
+        <div class="row">
+          <div class="col-md-6">
+          <p class="jobupload" >Upload a CSV file with your article identifiers, including column headers.
+          <br />Our tool will look for at least one column named "url", "doi", "pmid", "pmcid", or "title".</p>
+        </div>
+        <div class="col-md-6">
+
+    <img src="/static/oasheet_results.png" style="width:60%;">
+        </div>
+      </div>
+
         <form>
           <input type="file" name="jobupload" id="jobupload" class="form-control" style="padding-bottom:30px;margin-bottom:5px;">
   				<div style="display:none;" id="jobinfo">Uploading, for large files this can take a minute</div>
@@ -213,7 +223,7 @@
 				if (lengths) identifiers.push(obj);
 			}
 
-			var payload = {processes:identifiers,name:filename};
+			var payload = {processes:identifiers,name:filename,plugin:'oasheet'};
 			if ( $('.bulklibraries:checked').length ) {
 			  payload.libraries = [];
 			  $('.bulklibraries:checked').each(function() {

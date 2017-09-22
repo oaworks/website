@@ -1,0 +1,304 @@
+<script src="/static/openaccessbutton_widget.js"></script>
+<script>
+jQuery(document).ready(function() {
+  $('.tryit').bind('click',function(e) {
+    e.preventDefault();
+    $('#oabutton_url').val($(this).html());
+    setTimeout(function() {
+      $('#oabutton_find').trigger('click');
+    },500)
+  });
+  openaccessbutton_widget({uid:'oab_site'});
+
+  if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) clogin.api = 'https://dev.api.cottagelabs.com/accounts';
+  clogin.afterLogin = function() {
+    $('#promptsignup').hide();
+    var uid = clogin.user.account._id;
+    $('.stickidin').html($('.stickidin').html().replace('openaccessbutton_widget()','openaccessbutton_widget({uid:"' + uid + '"})'));
+  }
+  clogin.login();
+});
+</script>
+
+<!-- Start of openaccessbutton Zendesk Widget script -->
+<script>/*<![CDATA[*/window.zEmbed||function(e,t){var n,o,d,i,s,a=[],r=document.createElement("iframe");window.zEmbed=function(){a.push(arguments)},window.zE=window.zE||window.zEmbed,r.src="javascript:false",r.title="",r.role="presentation",(r.frameElement||r).style.cssText="display: none",d=document.getElementsByTagName("script"),d=d[d.length-1],d.parentNode.insertBefore(r,d),i=r.contentWindow,s=i.document;try{o=s}catch(e){n=document.domain,r.src='javascript:var d=document.open();d.domain="'+n+'";void(0);',o=s}o.open()._l=function(){var o=this.createElement("script");n&&(this.domain=n),o.id="js-iframe-async",o.src=e,this.t=+new Date,this.zendeskHost=t,this.zEQueue=a,this.body.appendChild(o)},o.write('<body onload="document._l();">'),o.close()}("https://assets.zendesk.com/embeddable_framework/main.js","openaccessbutton.zendesk.com");
+/*]]>*/</script>
+<!-- End of openaccessbutton Zendesk Widget script -->
+<style>
+
+
+.focal{
+  background-color: white;
+  text-align: left;
+  border-radius: 5px;
+  padding: 20px;
+  }
+
+.innercolumns{
+  width:100%;
+  padding:10px;
+  overflow: hidden;
+}
+
+.downloadbox {
+  background-color: white;
+  text-align: left;
+  border-radius: 5px;
+}
+
+  .ill_system_content div:not(:target) {
+    display: none;
+  }
+
+  .ill_system_content div:target {
+    display: block;
+  }
+
+  /* Make the div big, so we would jump, if the JS was still broken */
+  .ill_system_content div {
+    height: 100%;
+  }
+
+</style>
+
+<div class="container-fluid">
+
+
+<div class="row">
+
+  <div id="maininfo" class="col-md-6 col-md-offset-3">
+    <h1 style="text-align:left; font-size:4em;">EmbedOA</h1>
+
+    <h3>
+      Easily find Open Access articles from your Interlibrary loan pages or Libguides. No coding required.
+    </h3>
+
+    <h2>Try it now</h2>
+
+    <div id="openaccessbutton_widget"></div>
+
+    <p style="margin-top:10px;">Test it with:
+      <ul>
+        <li>a DOI: <a class="tryit" href="#">10.1145/2908080.2908114</a></li>
+        <li>a URL: <a class="tryit" href="#">http://journals.sagepub.com/doi/abs/10.1177/0037549715583150</a></li>
+        <li>a title: <a class="tryit" href="#">Effect of Saxagliptin on Renal Outcomes in the SAVOR-TIMI 53 Trial</a></li>
+        <!-- TODO: OR look at what an unsuccessful one looks like -->
+      </ul>
+    </p>
+
+    <p>
+      Check out examples <a href="http://libraryguides.centennialcollege.ca/openaccess" target="_blank">here</a> and <a href="http://libguides.bates.edu/c.php?g=634434&p=4448328" target="_blank">here</a>, from the librarians that inspired the tool.
+    </p>
+
+
+       <h2>Put on your webpage in a few easy steps</h2>
+        <div id="getit" class="focal">
+        <div>
+             <p style="float: left; margin: 6px 10px;">Get started by choosing your</p>
+        </div>
+           <div class="btn-group" >
+                <button type="button"  class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="border-width:2px; border-radius: 8px;">page type     <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu"  style="width: 100%;" role="menu">
+                 <li><a class="chooseill" href="#libguide">LibGuide</a></li>
+                 <li><a class="chooseill" href="#interlibraryloan">Interlibrary Loan page</a></li>
+            <!--     <li><a class="chooseill" href="#other">General webpage</a></li> -->
+            </ul>
+            </div>
+        </div>
+<!-- inserting the upsell code from deliverOA; let's hope this works!!!!! -->
+
+  <div id="upsell" style="display: none">
+              <p style="padding-top:15px;">
+                You'll also love:
+              </p>
+                  <ul>
+                    <li>
+                      <a href="/deliveroa" target="_blank">DeliverOA</a>: put an Open Access search into your ILL workflow.
+                    </li>
+                    <li>
+                      <a href="/oasheet" target="_blank">OAsheet</a>: upload a spreadsheet of articles, and we'll find Open Access versions. Try uploading old ILLs to see what you could save.
+                    </li>
+                    <!--
+                    TODO unhide this when it's ready
+                    <li>
+                      <a href="">Our ILL form demo</a>: We're redesigning ILL systems from the ground up. Get a taste of what we're thinking.
+                    </li>
+                  -->
+                  </ul>
+                </div>
+
+
+
+    </div>
+    <div class="col-md-6">
+      <div class="ill_system_content downloadbox">
+
+        <!-- LIBGUIDE PAGE SECTION -->
+
+        <div id="libguide" class="innercolumns">
+          <h1 style="margin-top:40px">For LibGuides</h1>
+           <p>
+            Power up your Open Access Libguide with a search bar showing patrons how to find alternatives to paywalled papers.
+          </p>
+
+          <ol>
+            <li id="promptsignup">
+              Please <a href="/account?next=/embedoa#libguide" class="label label-info">sign up / sign in</a> so we can customise this link for you and give you better service.
+            </li>
+            <li>In your Libguide, create a new box if needed. Add a title to your widget (we suggest "Search for Open Access articles").</li>
+            <li>Choose to add "Media / Widget".</li>
+            <li>Copy and paste the below code into the "embed code" box:</li>
+            <pre class="stickidin">
+&lt;script src="https://dev.openaccessbutton.org/static/openaccessbutton_widget.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){openaccessbutton_widget();});&lt;/script&gt;
+&lt;div id="openaccessbutton_widget"&gt;&lt;/div&gt;
+</pre>
+            <p>It should look like this. If it does, hit save!</p>
+            <img src="/static/add_widget_embed_code.png" style="width:100%">
+
+            <li>You’re done. Now try it with the examples shown! (You may need to refresh the page.)</li>
+                   <img src="/static/widget_complete.png" style="width:100%">
+
+<!-- NOTE: it's been suggested we link to our about page here, or some resources for outreach. -->
+
+            <li>Time to tell everyone on campus!</li>
+          </ol>
+
+         <p class="alert alert-info">
+            If anything is wrong, <a href="mailto:help@openaccessbutton.org?Subject=Trouble%20setting%20up%20EmbedOA%20in%20my%20Libguide&body=Please%20send%20us%20the%20URL%20of%20the%20page%20you're%20working%20on,%20or%20a%20screenshot%20of%20what%20you're%20seeing%20and%20a%20copy%20of%20the%20page's%20code%20-%20right-click%20on%20the%20page%20and%20View%20Page%20Source.">get in touch</a>.
+        </p>
+        </div>
+
+<!-- ILL PAGE SECTION -->
+
+        <div id="interlibraryloan" class="innercolumns">
+          <h1 style="margin-top:40px">For Interlibary Loan</h1>
+
+          <p>
+            Save time and money, and advance Open Access, by helping patrons search for alternatives to paywalled papers before requesting an ILL.
+          </p>
+        <ol>
+          <li id="promptsignup">
+            Please <a href="/account?next=/embedoa#libguide" class="label label-info">sign up / sign in</a> first so we can customise this widget for you and give you better service.
+          </li>
+          <li>
+            To get started, include the following in the source code of your page:
+          </li>
+          <pre class="stickidin">
+&lt;script src="https://dev.openaccessbutton.org/static/openaccessbutton_widget.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){openaccessbutton_widget();});&lt;/script&gt;
+&lt;div id="openaccessbutton_widget"&gt;&lt;/div&gt;
+</pre>
+          <li>
+            If it looks like the version on this page, you're done! If it doesn't show up, you probably need to include the below code:
+          </li>
+          <pre>
+&lt;script src="https://static.cottagelabs.com/jquery-1.10.2.min.js"&gt;&lt;/script&gt;
+</pre>
+          <li>
+            If you can now see something on the page, but it doesn't look right, add this:
+          </li>
+          <pre>
+&lt;link rel="stylesheet" href="https://static.cottagelabs.com/bootstrap-3.0.3/css/bootstrap.min.css"&gt;
+</pre>
+          <li>
+            You should now be good to go! You can control where the search widget gets displayed by moving
+          </li>
+            <pre>
+&lt;div id="openaccessbutton_widget"&gt;&lt;/div&gt;
+</pre>
+          </ol>
+
+        <p class="alert alert-info">
+            If you have trouble getting the widget working, <a href="mailto:help@openaccessbutton.org?Subject=Trouble%20setting%20up%20EmbedOA%20in%20my%20ILL&body=Please%20send%20us%20the%20URL%20of%20the%20page%20you're%20working%20on,%20or%20a%20screenshot%20of%20what%20you're%20seeing%20and%20a%20copy%20of%20the%20page's%20code%20-%20right-click%20on%20the%20page%20and%20View%20Page%20Source.">get in touch</a>.
+          </p>
+
+        </div>
+
+        <!-- GENERAL WEBPAGE SECTION -->
+
+<!-- NOTE won't now work well for non-library use cases as it mentions using the ILL system. May oneday offer to make a new verison without this, but that's not happening anytime soon.
+
+        <div id="other" class="innercolumns">
+          <p>To install the widget, you'll need to access the source code of the page you want it on.</p>
+          <ol><li>(optional) Include the following in the header of the page:</li>
+          <pre class="stickidin">
+    &lt;script src="https://static.cottagelabs.com/jquery-1.10.2.min.js"&gt;&lt;/script&gt;
+    &lt;link rel="stylesheet" href="https://static.cottagelabs.com/bootstrap-3.0.3/css/bootstrap.min.css"&gt;
+    &lt;script src="https://openaccessbutton.org/static/openaccessbutton_widget.js"&gt;&lt;/script&gt;
+    &lt;script&gt;jQuery(document).ready(function() { openaccessbutton_widget(); });&lt;/script&gt;
+          </pre>
+
+          <li>If your site already includes jQuery and Bootstrap, then all you need to include is:</li>
+          <pre class="stickidin">
+    &lt;script src="https://openaccessbutton.org/static/openaccessbutton_widget.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){openaccessbutton_widget();});&lt;/script&gt;
+          </pre>
+
+          <li>You can control where the search widget gets displayed by moving </li>
+            <pre>
+    &lt;div id="openaccessbutton_widget"&gt;&lt;/div&gt;
+            </pre>
+
+
+          <p>You can also include it using an iframe (ignoring the above) using the following:</p>
+    <!--
+
+    <p>TODO change this example to using a URL to the live site, not dev, once ready to push to live. Just using a dev one so you can see it working now.</p>
+
+    -->
+<!--
+          <pre>
+    &lt;iframe src="https://dev.openaccessbutton.org/static/iframed.html" width="100%" height="50"&gt;&lt;/iframe&gt;
+          </pre>
+</ol>
+
+<p class="alert alert-info">
+            If you have trouble getting the widget working, <a href="mailto:help@openaccessbutton.org?Subject=Trouble%20setting%20up%20EmbedOA%20in%20my%20Webpage&body=Please%20send%20us%20the%20URL%20of%20the%20page%20you're%20working%20on,%20or%20a%20screenshot%20of%20what%20you're%20seeing%20and%20a%20copy%20of%20the%20page's%20code%20-%20right-click%20on%20the%20page%20and%20View%20Page%20Source.">get in touch</a>.
+          </p>
+
+          </div>
+
+-->
+
+        </div>
+
+      </div>
+    </div>
+
+<!-- end of download box -->
+
+</div>
+</div>
+<!-- powers tabs -->
+
+<script>
+// Stop href="#hashtarget" links jumping around the page
+var hashLinks = document.querySelectorAll("a[href^='#']");
+[].forEach.call(hashLinks, function (link) {
+link.addEventListener("click", function (event) {
+  event.preventDefault();
+  history.pushState({}, "", link.href);
+  history.pushState({}, "", link.href);
+  history.back();
+});
+});
+</script>
+
+<script>
+jQuery(document).ready(function() {
+
+  $('.chooseill').bind('click',function() { $('#maininfo').removeClass('col-md-offset-3'); });
+  if (window.location.hash) $('#maininfo').removeClass('col-md-offset-3');
+
+  $('.chooseill').bind('click',function() { $('#getit').removeClass('focal'); });
+  if (window.location.hash) $('#getit').removeClass('focal');
+
+});
+</script>
+
+<!-- Code to pull in alpha release banner -->
+<script src="https://www.w3schools.com/lib/w3.js"></script>
+<div w3-include-html="/static/alpha.html"></div>
+
+<script>
+w3.includeHTML();
+</script>
