@@ -1,4 +1,4 @@
-    <!-- Start of openaccessbutton Zendesk Widget script -->
+  <!-- Start of openaccessbutton Zendesk Widget script -->
   <script>/*<![CDATA[*/window.zEmbed||function(e,t){var n,o,d,i,s,a=[],r=document.createElement("iframe");window.zEmbed=function(){a.push(arguments)},window.zE=window.zE||window.zEmbed,r.src="javascript:false",r.title="",r.role="presentation",(r.frameElement||r).style.cssText="display: none",d=document.getElementsByTagName("script"),d=d[d.length-1],d.parentNode.insertBefore(r,d),i=r.contentWindow,s=i.document;try{o=s}catch(e){n=document.domain,r.src='javascript:var d=document.open();d.domain="'+n+'";void(0);',o=s}o.open()._l=function(){var o=this.createElement("script");n&&(this.domain=n),o.id="js-iframe-async",o.src=e,this.t=+new Date,this.zendeskHost=t,this.zEQueue=a,this.body.appendChild(o)},o.write('<body onload="document._l();">'),o.close()}("https://assets.zendesk.com/embeddable_framework/main.js","openaccessbutton.zendesk.com");
   /*]]>*/</script>
   <!-- End of openaccessbutton Zendesk Widget script -->
@@ -9,11 +9,6 @@
     text-align: left;
     border-radius: 5px;
     padding: 20px;
-    /*
-    border-width: 1px;
-    border-style: solid;
-    border-color:#212f3f;
-    */
   }
 
   .innercolumns{
@@ -26,11 +21,6 @@
 		background-color: white;
 		text-align: left;
 		border-radius: 5px;
-		/*
-		border-width: 1px;
-		border-style: solid;
-		border-color:#212f3f;
-		*/
 	}
     .ill_system_content div:not(:target) {
       display: none;
@@ -72,14 +62,14 @@
 			        </button>
 			        <ul class="dropdown-menu"  style="width: 100%;" role="menu">
 			             <li><a class="chooseill" href="#alma">Alma</a></li>
-			      <!--       <li><a class="chooseill" href="#clio">Clio</a></li> -->
+			             <li><a class="chooseill" href="#clio">Clio</a></li>
 				           <li><a class="chooseill" href="#illiad">ILLiad</a></li>
 				           <li><a class="chooseill" href="#other">Other</a></li>
 			        </ul>
 			        </div>
         </div>
 
-			
+
           <div id="upsell" style="display: none">
               <p style="padding-top:15px;">
                You'll also love:
@@ -112,17 +102,34 @@
 
           <div id="alma" class="innercolumns">
             <h1 style="margin-top:40px">For Alma</h1>
-
+            <!--
             <p>
               The Open Access Button extension works on Alma. Simply click it on an ILL request while you process.
+            </p> -->
+
+            <p>
+              The Open Access Button extension will soon work on Alma. You'll be able to click it on an ILL request while you process.
             </p>
+            <!-- TODO: add in a form with an email, first / last name / institution & opt-in to library list-->
+            <p style="text-align: center;">
+              <a href="" target="_blank">
+                <button class="btn btn-action" style="width:50%;">
+                  Join the Waitlist
+                </button>
+              </a>
+            </p>
+
+          <!--
           <ol>
             <li>
                Install the Open Access Button - it takes just a second.
             </li>
 
             <a id="chromeinstall" style="margin-top:5px;" class="btn btn-action btn-block dl ch" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">Get the Chrome Extension</a>
-            <div class="well dl bk ff" style="margin:5px 0px 5px 0px;"> <!-- for now show bookmarklet on ff too -->
+            <div class="well dl bk ff" style="margin:5px 0px 5px 0px;">
+            <!-- for now show bookmarklet on ff too -->
+
+            <!-- hiding until ready for release
               <p>
               To install just drag the Button to your bookmarks bar.
               </p>
@@ -151,6 +158,7 @@
               </p>
               <p>
                 Please review the article and let us know whether or not it is sufficient for your research. For example, it may be a version without graphs or images.<!-- TODO: say how it'll differ -->
+            <!--
               </p>
               <p>
                 If you still require a version of the article from the original publication, we are happy to request that for you. You do not need to place a second request for the article, just respond to this email.
@@ -160,6 +168,7 @@
               You're done. Let us know what you think!
             </li>
           </ol>
+        -->
           </div>
 
           <div id="illiad" class="innercolumns">
@@ -173,11 +182,10 @@
             </p>
             <ol>
             <li>
-              Download the add-on, and get it installed. If you need to ask your tech person to install the add-on,            
-		<a href="mailto:?subject=Help%20Installing%20DeliverOA%20widget%20in%20ILLiad&body=Hello,%0AI'd%20like%20to%20start%20using%20this%20widget%20in%20ILLiad,%20which%20will%20help%20us%20find%20available%20copies%20of%20articles%20quickly%20and%20easily.%0AI%20need%20your%20help%20to%20install%20and%20activate%20the%20widget.%20Please%20follow%20the%20instructions%20here:%20https://dev.openaccessbutton.org/deliveroa#illiad.
-%0AIf%20you%20need%20help%20at%20any%20point,%20contact%20joe@openaccessbutton.org.">here's a draft email you can send them</a>.
-    
-         </li>
+              Download the add-on, and get it installed. If you need to ask your tech person to install the add-on,
+		            <a href="mailto:?subject=Help%20Installing%20DeliverOA%20widget%20in%20ILLiad&body=Hello,%0AI'd%20like%20to%20start%20using%20this%20widget%20in%20ILLiad,%20which%20will%20help%20us%20find%20available%20copies%20of%20articles%20quickly%20and%20easily.%0AI%20need%20your%20help%20to%20install%20and%20activate%20the%20widget.%20Please%20follow%20the%20instructions%20here:%20https://dev.openaccessbutton.org/deliveroa#illiad.%0AIf%20you%20need%20help%20at%20any%20point,%20contact%20joe@openaccessbutton.org.">here's a draft email you can send them</a>.
+
+            </li>
             <a href="https://github.com/OAButton/Open-Access-Button-for-Illiad/archive/v.04-alpha.zip"><button class="btn btn-action btn-block">Download Add-on</button></a>
 
             <li>
@@ -207,17 +215,31 @@
             <li>
               You may want to track your successes with Open Access, for example by setting up a separate email template.
               <!-- TODO: See how this would work with file upload -->
-		    </li>
-	    <li>
-		You're done. Let us know what you think!
-	    </li>
+		         </li>
+	         <li>
+		           You're done. Let us know what you think!
+	         </li>
           </ol>
 
           </div>
-<!--
+
           <div id="clio" class="innercolumns">
 
             <h1 style="margin-top:40px">For Clio</h1>
+
+            <p>
+              The Open Access Button is on it's way to Clio. Sign up to get notified when it's released.
+            </p>
+            <!-- TODO: add in a form with an email, first / last name / institution & opt-in to library list-->
+            <p style="text-align: center;">
+              <a href="" target="_blank">
+                <button class="btn btn-action" style="width:50%;">
+                  Join the Waitlist
+                </button>
+              </a>
+            </p>
+
+            <!--
 
             <p>
               When you set this up, Clio can automatically check if an Open Access copy is available for the request you're on.
@@ -279,15 +301,16 @@
               </li>
 
             </ol>
+            -->
           </div>
--->
+
           <div id="other" class="innercolumns">
 
             <h1 style="margin-top:40px">For Other Systems</h1>
             <p>
-              We want to make it easy to intergrate Open Access into any system. If your system isn't covered, <a href="mailto:help@openaccessbutton.org?Subject=DeliverOA%20and%20Other%20Systems&body=Please%20let%20us%20know%20what%20systems%20you're%20working%20with,%20and%20whether%20they're%20cloud-based%20or%20locally%20installed.%20Please%20also%20send%20us%20a%20screenshot%20of%20where%20you'd%20like%20the%20Button%20to%20appear.">get in touch</a> and we'll try and figure it out (we haven't failed yet).     
+              We want to make it easy to intergrate Open Access into any ILL system. If your system isn't covered, <a href="mailto:help@openaccessbutton.org?Subject=DeliverOA%20and%20Other%20Systems&body=Please%20let%20us%20know%20what%20systems%20you're%20working%20with,%20and%20whether%20they're%20cloud-based%20or%20locally%20installed.%20Please%20also%20send%20us%20a%20screenshot%20of%20where%20you'd%20like%20the%20Button%20to%20appear.">get in touch</a> and we'll try and figure it out (we haven't failed yet).
             </p>
-        
+
 
           </div>
 
