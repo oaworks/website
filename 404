@@ -1,0 +1,9 @@
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <h1>Oh no! We couldn't find the page you were looking for!</h1>
+      <p>If you think there should be a page, let us know via <a href = "https://github.com/OAButton/backend/issues/new">a GitHub issue</a> or via <a href = "mailto:bugs@openaccessbutton.org">email</a>.</p>
+    </div>
+  </div>
+</div>

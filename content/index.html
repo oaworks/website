@@ -104,7 +104,7 @@
       $('#getfromaccount').hide();
       $('.chromeinstall').show();
     }
-
+      
     $('#topnav').css('background-color','transparent');
 
     var th;
@@ -150,7 +150,7 @@
           return;
         }
         try {
-          if (window.location.search.length === 0 && 'pushState' in window.history) window.history.pushState("", "find", '?url=' + encodeURIComponent(url));
+          if ('pushState' in window.history) window.history.pushState("", "find", '?url=' + encodeURIComponent(url));
         } catch(err) {}
         if (url.lastIndexOf('.') === url.length-1) url = url.substring(0,url.length-1);
         $('.intro').hide();
@@ -223,31 +223,27 @@
                 availability += '<p>Not what you were expecting? <a target="_blank" href ="/feedback#wrong?searched=' + encodeURIComponent(url) + '&given=' + encodeURIComponent(has.article.url) + '">Report an error</a>.</p>';
                 availability += '<p> You can <a href="/request?url=' + encodeURIComponent(data.data.match) + '">request it from the author</a> if it isn\'t available.</p>';
               }
-              if (window.location.search.indexOf('data=false') === -1) {
-                availability += '<p style="color:#212f3f;padding-top:50px;">';
-                availability += 'Want the data supporting the article? ';
-                availability += '<a class="btn btn-action" href="/request?type=data&url=' + encodeURIComponent(data.data.match) + '">Request it from the author</a></p>';
-              }
+              availability += '<p style="color:#212f3f;padding-top:50px;">';
+              availability += 'Want the data supporting the article? ';
+              availability += '<a class="btn btn-action" href="/request?type=data&url=' + encodeURIComponent(data.data.match) + '">Request it from the author</a></p>';
               $('#availability').html(availability);
             } else if (!has.article && has.data) {
               var availability = '<h2 style="color:#212f3f;">This article is not available</h2>';
               availability += '<h3 style="text-align:center;"><a class="btn btn-action" href="/request?url=' + encodeURIComponent(data.data.match) + '">Start a request</a></h3>';
-              if (window.location.search.indexOf('data=false') === -1) {
-                availability += '<p style="color:#212f3f;padding-top:50px;">';
-                if (has.data.id) {
-                  if (has.data.ucreated) {
-                    availability += 'You already created a request for data for this article <a class="btn btn-action" href="/request/' + has.data.id + '">View the request';
-                  } else if (has.data.usupport) {
-                    availability += 'You already support a request for data for this article <a class="btn btn-action" href="/request/' + has.data.id + '">View the request';
-                  } else {
-                    availability += 'Someone has requested access to the data. <a class="btn btn-action" href="/request/' + has.data.id + '?support=true">Notify me';
-                  }
+              availability += '<p style="color:#212f3f;padding-top:50px;">';
+              if (has.data.id) {
+                if (has.data.ucreated) {
+                  availability += 'You already created a request for data for this article <a class="btn btn-action" href="/request/' + has.data.id + '">View the request';
+                } else if (has.data.usupport) {
+                  availability += 'You already support a request for data for this article <a class="btn btn-action" href="/request/' + has.data.id + '">View the request';
                 } else {
-                  availability += 'However there is data available:</p>';
-                  availability += '<p style="text-align:center;"><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.data.url + '">' + has.data.url;
+                  availability += 'Someone has requested access to the data. <a class="btn btn-action" href="/request/' + has.data.id + '?support=true">Notify me';
                 }
-                availability += '</a></p>';
+              } else {
+                availability += 'However there is data available:</p>';
+                availability += '<p style="text-align:center;"><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.data.url + '">' + has.data.url;
               }
+              availability += '</a></p>';
               $('#availability').html(availability);
             } else if (has.article && has.data) {
               if (has.article.id && has.data.id) {
@@ -257,8 +253,6 @@
                 if (has.article.url) {
                   availability += 'This article is available!</h2>';
                   availability += '<h><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + has.article.url;
-                  availability += '<p>Not what you were expecting? <a target="_blank" href ="/feedback#wrong?searched=' + encodeURIComponent(url) + '&given=' + encodeURIComponent(has.article.url) + '">Report an error</a>.</p>';
-                  availability += '<p> You can <a href="/request?url=' + encodeURIComponent(data.data.match) + '">request it from the author</a> if it isn\'t available.</p>';
                 }
                 if (has.article.id) {
                   if (has.article.ucreated) {
@@ -269,24 +263,21 @@
                     availability += 'Someone has requested access to the article. <a class="btn btn-action" href="/request/' + has.article.id + '?support=true">Notify me';
                   }
                 }
-                availability += '</a></h3>';
-                if (window.location.search.indexOf('data=false') === -1) {
-                  availability += '<p style="color:#212f3f;text-align:center;padding-top:50px;">';
-                  if (has.data.url) {
-                    availability += 'And there is data available for this article:</p><p style="text-align:center;">';
-                    availability += '<a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.data.url + '">' + has.data.url;
-                  }
-                  if (has.data.id) {
-                    if (has.data.ucreated) {
-                      availability += 'You already created a request for data for this article <a class="btn btn-action" href="/request/' + has.data.id + '">View the request';
-                    } else if (has.data.usupport) {
-                      availability += 'You already support a request for data for this article <a class="btn btn-action" href="/request/' + has.data.id + '">View the request';
-                    } else {
-                      availability += 'Someone has requested access to the data. <a class="btn btn-action" href="/request/' + has.data.id + '?support=true">Notify me';
-                    }
-                  }
-                  availability += '</a></p>';
+                availability += '</a></h3><p style="color:#212f3f;text-align:center;padding-top:50px;">';
+                if (has.data.url) {
+                  availability += 'And there is data available for this article:</p><p style="text-align:center;">';
+                  availability += '<a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.data.url + '">' + has.data.url;
                 }
+                if (has.data.id) {
+                  if (has.data.ucreated) {
+                    availability += 'You already created a request for data for this article <a class="btn btn-action" href="/request/' + has.data.id + '">View the request';
+                  } else if (has.data.usupport) {
+                    availability += 'You already support a request for data for this article <a class="btn btn-action" href="/request/' + has.data.id + '">View the request';
+                  } else {
+                    availability += 'Someone has requested access to the data. <a class="btn btn-action" href="/request/' + has.data.id + '?support=true">Notify me';
+                  }
+                }
+                availability += '</a></p>';
                 $('#availability').html(availability);
               }
             }

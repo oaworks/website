@@ -20,7 +20,7 @@ var oab = {
 
   api_address : 'https://dev.api.cottagelabs.com/service/oab',// 'https://api.openaccessbutton.org',
 
-  site_address : 'https://dev.openaccessbutton.org',// 'https://openaccessbutton.org',
+  site_address : 'http://oab.test.cottagelabs.com',// 'https://openaccessbutton.org',
 
   howto_address : '/instructions',
 

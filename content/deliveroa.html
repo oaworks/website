@@ -32,10 +32,7 @@
 
     /* Make the div big, so we would jump, if the JS was still broken */
     .ill_system_content div {
-      height: 100%;
-    }
-    .code {
-	     word-wrap: break-word;
+      height: 100vh;
     }
   </style>
 
@@ -45,29 +42,30 @@
 	<div class="row">
 
 		<div id="maininfo" class="col-md-6 col-md-offset-3">
-  		<h1 style="text-align:left;font-size:4em;">DeliverOA</h1>
-
+  		<h1 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">DeliverOA</h1>
+  
       <h3>
-        <!-- a comment ot try and get a merge to work -->
 			   Wipe 5% off your ILL budget and delivery times, and discover a new way to advocate for Open Access, today. No complex installation, no training required.
       </h3>
-      <p>
-        We make it easy to give your researchers Open Access version of the millions of paywalled articles they need. We find <a href="/about" target="_blank">self-archived Open Access versions of articles</a> and deliver them right inside your ILL workflow.
-      </p>
-      <div id="getit" class="focal">
+
+	     <div class="row">
+
+		      <div style="display: inline;">
 			    <div>
 			         <p style="float: left; margin: 6px 10px;">Get started by choosing your</p>
 			    </div>
 			       <div class="btn-group" >
-			            <button type="button"  class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="border-width:2px; border-radius: 8px;">ILL system      <span class="caret"></span>
+			            <button type="button"  class="btn btn-default dropdown-toggle" data-toggle="dropdown">ILL system <span class="caret"></span>
 			        </button>
 			        <ul class="dropdown-menu"  style="width: 100%;" role="menu">
-			             <li><a class="chooseill" href="#alma">Alma</a></li>
-			             <li><a class="chooseill" href="#clio">Clio</a></li>
-				           <li><a class="chooseill" href="#illiad">ILLiad</a></li>
+			             <li><a class="chooseill" href="#alma">ALMA</a></li>
+			             <li><a class="chooseill" href="#primo">Primo</a></li>
+			             <li><a class="chooseill" href="#clio">CLIO</a></li>
+				           <li><a class="chooseill" href="#illiad">Illiad</a></li>
 				           <li><a class="chooseill" href="#other">Other</a></li>
 			        </ul>
 			        </div>
+          </div>
         </div>
 
 
@@ -125,6 +123,7 @@
                Install the Open Access Button - it takes just a second.
             </li>
 
+          <div id="primo">
             <a id="chromeinstall" style="margin-top:5px;" class="btn btn-action btn-block dl ch" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">Get the Chrome Extension</a>
             <div class="well dl bk ff" style="margin:5px 0px 5px 0px;">
             <!-- for now show bookmarklet on ff too -->
@@ -138,7 +137,7 @@
                       <br>
                       Chrome, Safari and Internet Explorer: Control (Command on a Mac) + Shift + B
                       <br>
-                      Firefox: Alt + V, then T, then B</small></p>
+                      Firefox: Alt + V, then T, then B</small>
             </div>
 
             <li>
@@ -171,14 +170,13 @@
         -->
           </div>
 
-          <div id="illiad" class="innercolumns">
+          <div id="clio">
+            <p>clio contents</p>
+            <p>use this <code id="cliocode">openaccessbutton.org/?from=clio&url=</code></p>.
 
-<!-- TODO: Figure out a way to track usage here. -->
-
-            <h1 style="margin-top:40px">For ILLiad</h1>
-            <p>
-              <!-- TODO: Cite the person properly -->
-              We've made an add-on that will automatically check if Open Access is available for the request you're on.
+            <p id="primptsignup">
+              Please <a href="/account?next=/deliveroa#clio" class="label label-info">sign up / sign in</a> 
+              first so we can customise this link for you and give you better service.
             </p>
             <ol>
             <li>
@@ -339,15 +337,10 @@ var hashLinks = document.querySelectorAll("a[href^='#']");
 
   <script>
   jQuery(document).ready(function() {
-
+    
     $('.chooseill').bind('click',function() { $('#maininfo').removeClass('col-md-offset-3'); });
     if (window.location.hash) $('#maininfo').removeClass('col-md-offset-3');
-
-    $('.chooseill').bind('click',function() { $('#getit').removeClass('focal'); });
-    if (window.location.hash) $('#getit').removeClass('focal');
-
-    $('.chooseill').bind('click',function() { $('#upsell').css('display', 'block'); });
-
+    
     var mobileCheck = function() {
       // checks if browser is a mobile or tablet browser
       var check = false;
@@ -372,8 +365,8 @@ var hashLinks = document.querySelectorAll("a[href^='#']");
   </script>
 
 <!-- Code to pull in alpha release banner -->
-<div w3-include-html="/static/alpha.html"></div>
 <script src="https://www.w3schools.com/lib/w3.js"></script>
+<div w3-include-html="/static/alpha.html"></div>
 
 <script>
 w3.includeHTML();
