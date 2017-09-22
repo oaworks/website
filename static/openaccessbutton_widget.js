@@ -15,8 +15,13 @@
 
 var openaccessbutton_widget = function(opts) {
   if (opts === undefined) opts = {};
+  if (opts.redirect === undefined) opts.redirect = false;
   if (opts.data === undefined) opts.data = false;
   var api = opts.api ? opts.api : 'https://api.openaccessbutton.org';
+  if (window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
+    if (!opts.api) api = 'https://dev.api.cottagelabs.com/service/oab';
+    if (!opts.site) site = 'https://dev.openaccessbutton.org';
+  }
   var site = opts.site ? opts.site : 'https://openaccessbutton.org';
   if (opts.element === undefined) opts.element = '#openaccessbutton_widget';
   if (opts.uid === undefined) opts.uid = 'anonymous';
@@ -67,26 +72,32 @@ var openaccessbutton_widget = function(opts) {
           if (data.data.match && data.data.match.indexOf('http') !== 0 && data.data.meta && data.data.meta.article && data.data.meta.article.doi) data.data.match = 'https://doi.org/' + data.data.meta.article.doi;
           if (JSON.stringify(has) === '{}') {
             if (data.data.match.indexOf('http') === 0) {
-              var dr = {};
-              try { dr.title = data.data.meta.article.title; } catch(err) {}
-              try { dr.doi = data.data.meta.article.doi; } catch(err) {}
-              try { dr.url = data.data.match; } catch(err) {}
-              var ropts = {
-                type:'POST',
-                url: api+'/request?fast=true',
-                cache:false,
-                processData:false,
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify(dr),
-                success: function(resp) {
-                  window.location = site + '/request/' + resp._id;
-                },
-                error: function() {
-                  window.location = site + '/request?url=' + encodeURIComponent(data.data.match);
+              if (opts.redirect) {
+                var dr = {};
+                try { dr.title = data.data.meta.article.title; } catch(err) {}
+                try { dr.doi = data.data.meta.article.doi; } catch(err) {}
+                try { dr.url = data.data.match; } catch(err) {}
+                var ropts = {
+                  type:'POST',
+                  url: api+'/request?fast=true',
+                  cache:false,
+                  processData:false,
+                  contentType: 'application/json',
+                  dataType: 'json',
+                  data: JSON.stringify(dr),
+                  success: function(resp) {
+                    window.location = site + '/request/' + resp._id;
+                  },
+                  error: function() {
+                    window.location = site + '/request?url=' + encodeURIComponent(data.data.match);
+                  }
                 }
+                $.ajax(ropts);
+              } else {
+                var availability = '<p><b>This article is not available</b></p>';
+                availability += '<p><a target="_blank" class="btn btn-action" href="' + site + '/request?data=false&url=' + encodeURIComponent(data.data.match) + '">Start a request</a></p>';
+                $('#oabutton_availability').html(availability);
               }
-              $.ajax(ropts);
             } else {
               $('#oabutton_availability').html('<p>Sorry, we couldn\'t find anything for <b>' + data.data.match + '</b>.</p><p>Matching titles and citations can be tricky. Please find a URL, DOI, PMID or PMCID and <a href="/">try again</a>.</p>');
             }
@@ -115,20 +126,20 @@ var openaccessbutton_widget = function(opts) {
             $('#oabutton_availability').html(availability);
           } else if (!has.article && has.data) {
             var availability = '<p><b>This article is not available</b></p>';
-            availability += '<p style="text-align:center;"><a target="_blank" class="btn btn-action" href="' + site + '/request?data=false&url=' + encodeURIComponent(data.data.match) + '">Start a request</a></p>';
+            availability += '<p><a target="_blank" class="btn btn-action" href="' + site + '/request?data=false&url=' + encodeURIComponent(data.data.match) + '">Start a request</a></p>';
             if (opts.data) {
               availability += '<p>';
               if (has.data.id) {
                   availability += 'Someone has requested access to the data. <a target="_blank" class="btn btn-action" href="' + site + '/request/' + has.data.id + '?support=true">Notify me';
               } else {
                 availability += 'However there is data available:</p>';
-                availability += '<p style="text-align:center;"><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.data.url + '">' + has.data.url;
+                availability += '<p"><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.data.url + '">' + has.data.url;
               }
               availability += '</a></p>';
             }
             $('#oabutton_availability').html(availability);
           } else if (has.article && has.data) {
-            if (has.article.id && has.data.id) {
+            if (has.article.id && has.data.id && opts.redirect) {
               window.location = site + '/request/' + has.article.id + '?data=false';
             } else {
               var availability = '<p><b>';
@@ -141,9 +152,9 @@ var openaccessbutton_widget = function(opts) {
               }
               availability += '</a></b></p>';
               if (opts.data) {
-                availability += '<p style="text-align:center;">';
+                availability += '<p>';
                 if (has.data.url) {
-                  availability += 'And there is data available for this article:</p><p style="text-align:center;">';
+                  availability += 'And there is data available for this article:</p><p>';
                   availability += '<a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.data.url + '">' + has.data.url;
                 }
                 if (has.data.id) {
