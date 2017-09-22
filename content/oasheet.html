@@ -227,7 +227,7 @@
 				if (lengths) identifiers.push(obj);
 			}
 
-			var payload = {processes:identifiers,name:filename};
+			var payload = {processes:identifiers,name:filename,plugin:'oasheet'};
 			if ( $('.bulklibraries:checked').length ) {
 			  payload.libraries = [];
 			  $('.bulklibraries:checked').each(function() {
