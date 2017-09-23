@@ -116,7 +116,7 @@
         We are considering enabling bulk availability checks via the API.
         Would you find this useful? <a target="_blank" href="mailto:hello@openaccessbutton.org">Let us know!</a>
       </p>
-      
+
       <h2>
         /request
       </h2>
@@ -311,14 +311,12 @@
 
 <script>
   jQuery(document).ready(function() {
-
     var api = 'https://api.openaccessbutton.org';
     if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
       api = 'https://dev.api.cottagelabs.com/service/oab';
       $('.api').each(function() { $(this).attr('href',$(this).attr('href').replace('https://api.openaccessbutton.org',api)); });
       clogin.api = 'https://dev.api.cottagelabs.com/accounts';
     }
-
     clogin.afterLogin = function() {
       if (clogin.apikey) {
         $('#apikey').html('Your API key is <code>' + clogin.apikey + '</code>');
@@ -328,7 +326,5 @@
       }
     }
     clogin.login();
-
-
   });
 </script>
