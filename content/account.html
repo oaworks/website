@@ -11,11 +11,9 @@ jQuery(document).ready(function() {
   // hide the download buttons
   // set button as already downloaded, if not already set as such
   // verify that the plugin is successfully installed and has registered the api key
-
   if (window.innerWidth > 991) {
     $('#cloginArea .well').css('min-height','250px');
   }
-
   var savevalidate = function() {
     if ( $('#profile\\.firstname').val() && $('#profile\\.lastname').val() && $('#service\\.openaccessbutton\\.profile\\.profession').val() ) {
       return true;
@@ -78,13 +76,14 @@ jQuery(document).ready(function() {
   } else {
     $('#bookmarklet').attr('href',$('#bookmarklet').attr('href').replace('YYYY','https://openaccessbutton.org'));
   }
+  // TODO set these for oabutton to have its own oauth accounts:
+  // clogin.oauthGoogleClientId = '';
+  clogin.oauthFacebookAppId = '114282989239097';
   clogin.init({api:api,afterLogin: afterlogin, saveValidate: savevalidate, afterSave: aftersave, afterFailure: afterfailure });
-
   if (window.location.href.indexOf('email=') !== -1) {
     $('#cloginEmail').val(window.location.href.split('next=')[0].split('email=')[1].split('&')[0]);
     setTimeout(function() { $('#cloginSubmit').trigger('click'); }, 100);
   }
-
   var mobileCheck = function() {
     // checks if browser is a mobile or tablet browser
     var check = false;
@@ -98,11 +97,9 @@ jQuery(document).ready(function() {
   if (mobile) b = '.mob';
   $('.dl').hide();
   $('.dl'+b).show();
-
   $('#viewrequests').bind('click',function(e) {
     $(this).attr('href','/request?q=user.id:'+clogin.user.account._id);
   });
-
   var a = window.location.href.indexOf('a=') !== -1 ? window.location.href.split('a=')[1].split('&')[0] : undefined;
   if ( a && a.length > 0 ) $('#cloginSubmit').html(a.substring(0,1).toUpperCase() + a.substring(1,a.length).replace('nup','n up'));
 });
@@ -120,6 +117,15 @@ jQuery(document).ready(function() {
           </p>
           <input type="email" class="form-control" id="cloginEmail" name="email" placeholder="Enter your email address">
           <button id="cloginSubmit" type="submit" class="btn btn-action btn-block" style="margin-top:10px;">Sign up / Login</button>
+          <div>
+            <p style="text-align:center;margin-top:15px;">
+              Or use your favourite service<br>
+            </p>
+            <p style="text-align:center; margin-top:15px;">
+              <a id="cloginOauthGoogle" class="btn btn-default" style="font-size:0.8em;" href="#"><img style="height:20px;" src="https://static.cottagelabs.com/google.png"> Sign in with Google</a>
+              <a id="cloginOauthFacebook" class="btn btn-default" style="font-size:0.8em;" href="#"><img style="height:20px;" src="https://static.cottagelabs.com/facebook.png"> Sign in with Facebook</a>
+            </p>
+          </div>
         </div>
         <div id="cloginTokenArea" style="display:none;">
           <h2 style="text-align:center;">Go check your email!</h2>
@@ -132,13 +138,14 @@ jQuery(document).ready(function() {
           </p>
           <input type="text" class="form-control" id="cloginToken" placeholder="Enter your login code">
           <p style="text-align:center;">
-            <br>If you don't receive an email within a few minutes, check your spam folder. Contact us at
-            <a href="mailto:help@openaccessbutton.org?subject=issues signing in">help@openaccessbutton.org</a> if you have trouble logging in.
+            <br>If you don't receive an email within a few minutes, check your spam folder. If you have trouble, try using Google or Facebook to login. Otherwise, Contact us at
+            <a href="mailto:help@openaccessbutton.org?subject=issues signing in">help@openaccessbutton.org</a>.
           </p>
         </div>
         <div id="cloginMessages" style="margin-top:5px;"></div>
         <div id="cloginLoading" style="display:none;"><img style="height:30px;" src="//static.cottagelabs.com/spinner.gif"></div>
       </div>
+
 
       <div class="row dl ch" id="install" style="margin-top:70px;margin-bottom:100px;">
         <div class="col-md-1 col-md-offset-1">
