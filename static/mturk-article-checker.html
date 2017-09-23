@@ -1,0 +1,73 @@
+<section class="container" id="WebsiteDataCollection"><!-- Instructions -->
+<div class="row">
+<div class="col-xs-12 col-md-12">
+<div class="panel panel-primary"><!-- WARNING: the ids "collapseTrigger" and "instructionBody" are being used to enable expand/collapse feature --><a class="panel-heading" href="javascript:void(0);" id="collapseTrigger"><strong>Website data collection - Instructions</strong> <span class="collapse-text">(Click to expand)</span> </a>
+<div class="panel-body" id="instructionBody">
+<p>Click the link below to review the Website. Tell us if you can read the &quot;full-text&quot; of the article linked.</p>
+
+<p>Instructions:</p>
+
+<ul>
+	<li>Normally you will land on a &quot;splash page&quot; without the full text of the article (but not always).</li>
+	<li>You normally have to click a link on the page shown to see the full text.</li>
+	<li>The full text of these articles are usually (but not always) are long, and you&#39;ll have several pages of text. You should see sections named &quot;Introduction&quot;, &quot;Methods&quot;, &quot;Discussion&quot; &amp; &quot;Conclusion&quot; as headers.</li>
+	<li>For example <a href="https://spiral.imperial.ac.uk:8443/handle/10044/1/41053">this is a splash page</a> while <a href="https://spiral.imperial.ac.uk:8443/bitstream/10044/1/41053/2/1119.pdf">this is a full text link</a></li>
+</ul>
+
+<p>&nbsp;</p>
+</div>
+</div>
+</div>
+</div>
+<!-- End Instructions --><!-- Layout -->
+
+<div class="row">
+<div class="col-xs-12 col-md-8 col-md-offset-2 image"><label>We were looking for an article titled:</label>
+
+<div class="well">
+<p>${articleTitle}</p>
+<p><small>Sometimes we don't get the article title above. If that happens, you should be able to find it here: <a class="dont-break-out" href="${articleID}" target="_blank">${articleID}</a></small></p>
+
+</div>
+</div>
+
+<div class="col-xs-12 col-md-8 col-md-offset-2 image"><label>We found the following link:</label>
+
+<div class="well"><a class="dont-break-out" href="${website_url}" target="_blank">${website_url}</a></div>
+</div>
+</div>
+
+<!-- Was FT available? -->
+
+<p><strong>Could you read the full text?</strong></p>
+<input name="ft available" type="radio" value="yes" /> Yes<br />
+<input name="ft available" type="radio" value="no" /> No<br />
+<input name="ft available" type="radio" value="not sure" /> Not sure<br />
+
+<!-- gathering FT links -->
+
+<p><strong>If yes, can you give us the link?</strong></p>
+
+<p><small>Remember to include https:// or http:// (this is best just copied from your URL bar)</small></p>
+<input class="form-control" id="web_url" name="Full-Text URL" placeholder="put a url to the full text here" type="url" />
+
+<!-- gathering why this is wrong -->
+
+<p><strong>If no, why?</strong></p>
+<input name="whats wrong" type="radio" value="login" /> I was asked to login<br />
+<input name="whats wrong" type="radio" value="wrong article" /> It didn&#39;t appear to be the same as the article above<br />
+<input name="whats wrong" type="radio" value="not available" /> The file wasn&#39;t available<br />
+<input name="whats wrong" type="radio" value="broken" /> Broken link<br />
+<input name="whats wrong" type="radio" value="Not sure" /> Not sure
+
+<!-- gathering login URLs -->
+
+<p><strong>If asked to login, can you give us the link?</strong></p>
+<p><small>Remember to include https:// or http:// (this is best just copied from your URL bar)</small></p>
+<input class="form-control" id="web_url" name="Login URL" placeholder="put a url of a login page" type="url" /><br />
+
+
+<!-- End Layout --><!-- Please note that Bootstrap CSS/JS and JQuery are 3rd party libraries that may update their url/code at any time. Amazon Mechanical Turk (MTurk) is including these libraries as a default option for you, but is not responsible for any changes to the external libraries --></section>
+<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" integrity="sha384-IS73LIqjtYesmURkDE9MXKbXqYA8rvKEp/ghicjem7Vc3mGRdQRptJSz60tvrB6+" rel="stylesheet" />
+<style type="text/css">.form-inline select.form-control{ width: 100%; } input.form-control{ width: 100%; } #collapseTrigger{ color:#fff; display: block; text-decoration: none; } #submitButton{ white-space: normal; } .image{ margin-bottom: 15px; } .group-label{ display: block; } .radio-inline>label{ font-weight: normal; } .col-margin{ padding: 0 2px 0 0; margin-bottom: 5px; } .col-margin:last-child{ padding-right: 0; } .form-group, .form-group.col-margin{ width: 100%; margin-bottom: 5px; } .form-group.fieldset, .fieldset{ margin-bottom: 15px; } .hour-label{ margin-top: 5px; font-weight: normal; } /* CSS for breaking long words/urls */ .dont-break-out { overflow-wrap: break-word; word-wrap: break-word; -ms-word-break: break-all; word-break: break-all; word-break: break-word; -ms-hyphens: auto; -moz-hyphens: auto; -webkit-hyphens: auto; hyphens: auto; }
+</style>
