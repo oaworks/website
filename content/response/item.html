@@ -130,7 +130,7 @@
             <span class="typearticle">on Zenodo</span>
             <span class="typedata">at the Open Science Foundation</span>,
             </span> will appear on the
-            <a class="requestlink" href="/request" style="color:white;">request</a>
+            <a class="requestlink" href="/request">request</a>
             page in a few minutes.
           </p>
           <p>
@@ -198,7 +198,7 @@
     var clickedadmin = false;
     var firstsubmit = true;
 
-    var submit = function(e) {
+    var submit = function(e,upload) {
       try { if (e) e.preventDefault(); } catch(err) {}
       var warns = ['researchgate.com','academia.edu','readcube.com'];
       if (firstsubmit) {
@@ -226,8 +226,6 @@
         url: api + '/receive/' + rid,
         cache: false,
         processData: false,
-        contentType: 'application/json',
-        dataType: 'json',
         success: function() {
           $('.panels').hide();
           if (!$('#url').val()) $('.noturl').show();
@@ -240,7 +238,15 @@
         data.admin = true;
         opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", clogin.apikey); };
       }
-      opts.data = JSON.stringify(data);
+      if (upload) {
+        for ( var d in data ) upload.append(d,data[d]);
+        opts.data = upload;
+        opts.contentType = false;
+      } else {
+        opts.data = JSON.stringify(data);
+        opts.contentType = 'application/json';
+        opts.dataType = 'json';
+      }
       $.ajax(opts);
       clickedadmin = false;
     }
@@ -248,7 +254,8 @@
     $('#adminsubmiturl').bind('click',function(e) { clickedadmin = true; submit(); });
     $('form#fileupload').submit(function(e) {
       if (e) e.preventDefault();
-      $('#loading').show();
+      submit(undefined,new FormData(this));
+      /*$('#loading').show();
       $('#dirId').attr('value',rid);
       var formData = new FormData(this);
       $.ajax({
@@ -261,7 +268,7 @@
         processData: false,
         success: submit,
         error: function() { clickedadmin = false; $('.panels').hide(); $('#error').show(); }
-      });
+      });*/
       return false;
     });
     $('#adminsubmitfile').bind('click',function(e) { clickedadmin = true; });
