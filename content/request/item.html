@@ -80,8 +80,8 @@
 
     var blacklist = function(e) {
       e.preventDefault();
-      var email = $('#email').val();
-      $('#email').val("");
+      var email = $('#admin_email').val();
+      $('#admin_email').val("");
       var opts = {
         type:'POST',
         url: api+'/dnr?refuse=false&email=' + email,
@@ -161,6 +161,8 @@
               } else if (data.data.dnr === 'invalid') {
                 issue += 'is not a valid address.';
                 if (data.data.validation.did_you_mean) issue += ' Did you mean ' + data.data.validation.did_you_mean + '?';
+              } else  if (data.data.dnr === true) {
+                issue += 'is on the blacklist and cannot be used.';
               }
               $(tgt).val("").attr("placeholder",email + " is an unsuitable author email address - please try another");
               $('.emailissue').html(issue).show();
