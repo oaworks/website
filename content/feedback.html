@@ -183,7 +183,8 @@
     if (code) {
       goto = 'bug';
       $('[name="code"]').val(code);
-      $('codeknown').hide();
+      $('.codeknown').hide();
+      $('#form').show();
     } else if (!goto) {
       goto = 'choose';
     } else {
