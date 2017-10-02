@@ -95,6 +95,7 @@
     var adminsubmitting = false;
     var submit = function(e) {
       if (e) e.preventDefault();
+      console.log('Submitting');
       var data = {};
       if ( $('#email').length && $('#email').val() ) data.email = $('#email').val();
       if ( $('#title').length && $('#title').val() ) data.title = $('#title').val();
@@ -125,20 +126,28 @@
         contentType: 'application/json',
         dataType: 'json',
         success: function(data) {
+          console.log('Saved changes. Should show saved msg on page.');
           $('.saved').show();
           setTimeout(function() {$('.saved').hide()},2000);
+        },
+        error: function(data) {
+          console.log('Save error');
+          console.log(data);
         },
         beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); }
       }
       opts.data = JSON.stringify(data);
+      console.log(opts)
       $.ajax(opts);
     }
     var checkemailthensubmit = function(e) {
+      console.log('check email then submit');
       if (e) e.preventDefault();
       $('.emailissue').html("").hide();
       var tgt = adminsubmitting ? '#admin_email' : '#email';
       if ( $(tgt).length && $(tgt).val() && $(tgt).val().length ) {
         var email = $(tgt).val();
+        console.log('checking email ' + email);
         var opts = {
           type:'GET',
           url: api+'/dnr?validate=true&email=' + encodeURIComponent(email) + '&request=' + rid + '&user=' + clogin.user.account._id,
@@ -146,6 +155,8 @@
           contentType: 'application/json',
           dataType: 'json',
           success: function(data) {
+            console.log('Email check complete');
+            console.log(data.data.dnr)
             if (data.data.dnr === false) {
               submit(e);
             } else {
@@ -168,10 +179,11 @@
               $('.emailissue').html(issue).show();
             }
           },
-          error: function() {submit(e); } // if we can't do the validation for some reason, just submit anyway
+          error: function() {console.log('Check email error, submitting anyway'); submit(e); } // if we can't do the validation for some reason, just submit anyway
         }
         $.ajax(opts);
       } else {
+        console.log('No need to check email, going to submit');
         submit(e);
       }
     }
