@@ -95,7 +95,6 @@
     var adminsubmitting = false;
     var submit = function(e) {
       if (e) e.preventDefault();
-      console.log('Submitting');
       var data = {};
       if ( $('#email').length && $('#email').val() ) data.email = $('#email').val();
       if ( $('#title').length && $('#title').val() ) data.title = $('#title').val();
@@ -126,9 +125,12 @@
         contentType: 'application/json',
         dataType: 'json',
         success: function(data) {
-          console.log('Saved changes. Should show saved msg on page.');
           $('.saved').show();
-          setTimeout(function() {$('.saved').hide()},2000);
+          if ($('#askingforstory').length) {
+            setTimeout(function() { window.location = window.location },1500);
+          } else {
+            setTimeout(function() {$('.saved').hide()},2000);
+          }
         },
         error: function(data) {
           console.log('Save error');
@@ -137,17 +139,14 @@
         beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); }
       }
       opts.data = JSON.stringify(data);
-      console.log(opts)
       $.ajax(opts);
     }
     var checkemailthensubmit = function(e) {
-      console.log('check email then submit');
       if (e) e.preventDefault();
       $('.emailissue').html("").hide();
       var tgt = adminsubmitting ? '#admin_email' : '#email';
       if ( $(tgt).length && $(tgt).val() && $(tgt).val().length ) {
         var email = $(tgt).val();
-        console.log('checking email ' + email);
         var opts = {
           type:'GET',
           url: api+'/dnr?validate=true&email=' + encodeURIComponent(email) + '&request=' + rid + '&user=' + clogin.user.account._id,
@@ -155,8 +154,6 @@
           contentType: 'application/json',
           dataType: 'json',
           success: function(data) {
-            console.log('Email check complete');
-            console.log(data.data.dnr)
             if (data.data.dnr === false) {
               submit(e);
             } else {
@@ -183,7 +180,6 @@
         }
         $.ajax(opts);
       } else {
-        console.log('No need to check email, going to submit');
         submit(e);
       }
     }
@@ -415,7 +411,8 @@
           re += '<p>We ask the author to make this ' + rec.type + ' available to everyone for free - legally. Start a request and we\'ll take care of the rest!</p>';
           if (clogin.loggedin()) {
             re += '<p><textarea style="min-height:100px;" class="form-control" id="story" placeholder="How would getting access to this research help you? This message will be sent to the author, and helps them to understand why the research should be made available."></textarea></p>';
-            re += '<p style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Submit</a></p>';
+            re += '<p id="askingforstory" style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Submit</a></p>';
+            re += '<p class="saved" style="display:none;">Thanks! Please wait a moment while we reload the page...</p>';
           } else {
             re += '<div class="input-group">\
               <input type="text" name="email" id="youremail" class="form-control" placeholder="Your email address"> \
