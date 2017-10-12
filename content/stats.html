@@ -292,7 +292,7 @@
 	email: { terms: { "field": "email.exact", "size": 1 } },
         sources: { terms: { "field": "source.article", "size": 100 } },
         embeds: { terms: { "field": "embedded.exact", "size": 100 } },
-        from: { terms: { "field": "from.exact", "size": 100 } }
+        from: { terms: { "field": "from.exact", "size": 100 } },
         sources: { terms: { "field": "source.article", "size": 100 } }
       }
     });
