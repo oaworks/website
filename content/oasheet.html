@@ -174,6 +174,7 @@
 			var wrapreplace = new RegExp(wrap,"g");
 
 			file = file.replace(/\r\n/g,'\n'); // switch MS line breaks to unix
+			file = file.replace(/\r/g,'\n'); // switch Mac line breaks to unix (could just strip all \r but this stands out better for testing for now)
 			file = file.replace(/\n{2,}/g,'\n'); // get rid of any blank lines
 			file = file.replace(/\n*$/g,''); // remove newlines at end of file
 

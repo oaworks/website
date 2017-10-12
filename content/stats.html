@@ -15,7 +15,7 @@
   jQuery(document).ready(function() {
     var api = 'https://api.openaccessbutton.org';
     if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
-      //api = 'https://dev.api.cottagelabs.com/service/oab';
+      api = 'https://dev.api.cottagelabs.com/service/oab';
       //clogin.api = 'https://dev.api.cottagelabs.com/accounts';
     }
     //clogin.login();
@@ -168,6 +168,18 @@
       info += '<td>' + weektotal + '</td>';
       info += '</tr></tbody></table>';
 
+      if (data.facets.embeds.terms.length) info += '<p>We have embedded availability checks from the following locations:</p>';
+      for ( var e in data.facets.embeds.terms ) {
+        var em = data.facets.embeds.terms[e];
+        info += '<p>' + em.term + ' (' + em.count  + ')</p>';
+      }
+
+      if (data.facets.from.terms.length) info += '<p>We also have availability checks from the following services:</p>';
+      for ( var f in data.facets.from.terms ) {
+        var fr = data.facets.from.terms[f];
+        info += '<p>' + fr.term + ' (' + fr.count  + ')</p>';
+      }
+
       $('#results').html(info);
       lineit(data,"svg.line");
     }
@@ -277,7 +289,10 @@
       facets: {
         plugin: { terms: { "field": "plugin.exact", "size": 100 } },
         plugin_week: { terms: { "field": "plugin.exact", "size": 100 }, "facet_filter" : { "range" : { "createdAt" : { "gt" : tmwk.valueOf() } } } },
-        email: { terms: { "field": "email.exact", "size": 1 } },
+	email: { terms: { "field": "email.exact", "size": 1 } },
+        sources: { terms: { "field": "source.article", "size": 100 } },
+        embeds: { terms: { "field": "embedded.exact", "size": 100 } },
+        from: { terms: { "field": "from.exact", "size": 100 } }
         sources: { terms: { "field": "source.article", "size": 100 } }
       }
     });
