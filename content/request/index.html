@@ -1,7 +1,8 @@
-<script type="text/javascript" src="//static.cottagelabs.com/d3/d3.v4.min.js"></script>
-<script type="text/javascript" src="/static/oabutton_request_holder.js?v=012few89weqqdwq80"></script>
-<script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/facets.js?v=9fwef9813"></script>
-<script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/range.js?v=9fwef9813"></script>
+
+<script type="text/javascript" src="/static/holder/jquery.holder.js"></script>
+<script type="text/javascript" src="/static/holder/display/facets.js"></script>
+<script type="text/javascript" src="/static/holder/display/range.js"></script>
+<script type="text/javascript" src="/static/oabutton_request_holder.js"></script>
 
 <style>
   .row{
@@ -47,7 +48,7 @@
           Help make more research available to everyone by supporting requests that matter to you.
         </p>
         <p id="requestfilters" style="color:white;text-align:center;">
-          <a id="viewrequests" class="cloggedin" href="/request" style="text-decoration:underline;color:white;display:none;">View your requests</a><br>
+          <a id="viewrequests" class="noddin" href="/request" style="text-decoration:underline;color:white;display:none;">View your requests</a><br>
           <a id ="help" href="#" style="text-decoration:underline;color:white;">Help with requests</a><br>
           <a href="/" style="text-decoration:underline;color:white;">Start a new request</a>
         </p>
@@ -66,12 +67,7 @@
 <script>
 jQuery(document).ready(function() {
 
-  var api = 'https://api.openaccessbutton.org';
-  if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
-    api = 'https://dev.api.cottagelabs.com/service/oab';
-    clogin.api = 'https://dev.api.cottagelabs.com/accounts';
-    $.fn.holder.use.oabutton.url = api + '/requests';
-  }
+  $.fn.holder.use.oabutton.url = api + '/requests';
 
   $('#help').bind('click',function() {
     $('.holder.search').val('status:help').trigger('change');
@@ -123,8 +119,8 @@ jQuery(document).ready(function() {
         processData: false,
         cache: false,
         data: JSON.stringify(dt),
-	success: function(data) {
-          window.location = '/request/' + data._id + (window.location.search.indexOf('data=false') === -1 ? '' : '?data=false');
+      	success: function(data) {
+          window.location = '/request/' + data.data._id + (window.location.search.indexOf('data=false') === -1 ? '' : '?data=false');
         },
         error: function(err) {
           window.location = '/request';
@@ -132,13 +128,13 @@ jQuery(document).ready(function() {
       };
       $.ajax(opts);
     } else {
-      var user = clogin.loggedin();
+      var user = noddy.loggedin();
       if (user) {
         $('#viewrequests').show().bind('click',function(e) {
           e.preventDefault();
           $('.holder.search').val('user.id:'+user.userId).trigger('change');
         });
-        if ( !clogin.hasRole('openaccessbutton.admin') ) {
+        if ( !noddy.hasRole('openaccessbutton.admin') ) {
           $.fn.holder.use.oabutton.defaultfilters = df;
         } else {
           $('#rangedisplay').show();
@@ -165,7 +161,7 @@ jQuery(document).ready(function() {
       $('#holder').holder();
     }
   }
-  
+
   $.ajax({
     url:api+'/requests',
     success:function(data) {
@@ -173,10 +169,10 @@ jQuery(document).ready(function() {
     }
   });
 
-  clogin.afterFailure = startup;
-  clogin.afterLogin = startup;
-  clogin.nologin = startup;
-  clogin.login();
+  noddy.afterFailure = startup;
+  noddy.afterLogin = startup;
+  noddy.nologin = startup;
+  noddy.login();
 
 });
 </script>

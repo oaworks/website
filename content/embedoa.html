@@ -10,13 +10,12 @@ jQuery(document).ready(function() {
   });
   openaccessbutton_widget({uid:'oab_site'});
 
-  if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) clogin.api = 'https://dev.api.cottagelabs.com/accounts';
-  clogin.afterLogin = function() {
+  noddy.afterLogin = function() {
     $('#promptsignup').hide();
-    var uid = clogin.user.account._id;
+    var uid = noddy.user.account._id;
     $('.stickidin').html($('.stickidin').html().replace('openaccessbutton_widget()','openaccessbutton_widget({uid:"' + uid + '"})'));
   }
-  clogin.login();
+  noddy.login();
 });
 </script>
 

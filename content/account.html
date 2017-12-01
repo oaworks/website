@@ -4,6 +4,12 @@
   /*]]>*/</script>
   <!-- End of openaccessbutton Zendesk Widget script -->
 
+<style>
+  .has-success {
+    background-color:#90ee90;
+  }
+</style>
+
 <script>
 jQuery(document).ready(function() {
   // on this page, an installed plugin should:
@@ -12,77 +18,67 @@ jQuery(document).ready(function() {
   // set button as already downloaded, if not already set as such
   // verify that the plugin is successfully installed and has registered the api key
   if (window.innerWidth > 991) {
-    $('#cloginArea .well').css('min-height','250px');
-  }
-  var savevalidate = function() {
-    if ( $('#profile\\.firstname').val() && $('#profile\\.lastname').val() && $('#service\\.openaccessbutton\\.profile\\.profession').val() ) {
-      return true;
-    } else {
-      $('#cloginSaveMessages').html('<p>Some information is missing. Please confirm you have completed all the fields. Then save again.</p>');
-      return false;
-    }
-  }
-  var afterlogin = function() {
-    //$('#downloads').hide();
-    if (clogin.user.account.username || (clogin.user.account.profile && clogin.user.account.profile.firstname ) ) {
-      var hl = clogin.user.account.profile && clogin.user.account.profile.firstname ? clogin.user.account.profile.firstname : clogin.user.account.username;
-      $('.username').html(hl);
-      if (clogin.next) {
-        $('#tonext').attr('href',clogin.next);
-        $('#tonextalert').show();
-        window.location = clogin.next;
-      }
-    }
-    if (clogin.apikey) {
-      $('#apikey').html(clogin.apikey);
-      $('#bookmarklet').attr('href',$('#bookmarklet').attr('href').replace('XXXX',clogin.apikey));
-      $('#bookmarklet').removeClass('disabled');
-    }
-    try {
-      var p = clogin.user.account.profile ? clogin.user.account.profile : {};
-      var s = clogin.user.account.service.openaccessbutton.profile ? clogin.user.account.service.openaccessbutton.profile : {};
-      if (!p.firstname || !p.lastname || !s.profession || !s.confirm_public || !s.confirm_terms ) {
-        if (p.firstname) $('#profile\\.firstname').val(p.firstname);
-        if (p.lastname) $('#profile\\.lastname').val(p.lastname);
-        //if (s.orcid) $('#service\\.openaccessbutton\\.profile\\.orcid').val(s.orcid);
-        if (s.affiliation) $('#service\\.openaccessbutton\\.profile\\.affiliation').val(s.affiliation);
-        if (s.profession) $('#service\\.openaccessbutton\\.profile\\.profession').val(s.profession);
-        if (s.confirm_public && s.confirm_terms) $('#agreeterms').hide();
-        $('#setinfo').show();
-        $('#sayhello').hide();
-      } else {
-        //$('#downloads').show();
-      }
-    } catch(err) {
-      $('#setinfo').show();
-      $('#sayhello').hide();
-    }
+    $('#login .well').css('min-height','250px');
   }
   var aftersave = function() {
-    $('#setinfo').hide();
-    //$('#downloads').show();
-    if (clogin.next) {
-      $('#tonext').attr('href',clogin.next);
-      $('#tonextalert').show();
+    if (nod._object.profile.firstname && ($('.username').html().length === 0 || $('.username').html().indexOf('@') !== -1)) {
+      $('.username').html(nod.profile.firstname);
+    }
+    if (nod._object.profile.firstname && nod._object.profile.lastname && nod._object.service && nod._object.service.openaccessbutton && nod._object.service.openaccessbutton.profile && nod._object.service.openaccessbutton.profile.profession) {
+      $('#setinfo').hide();
+      $('#sayhello').show();
+      if (noddy.next) {
+        $('#tonext').attr('href',noddy.next);
+        $('#tonextalert').show();
+      }
+    }
+  }
+
+  var afterlogin = function() {
+    if (noddy.user.account.username || (noddy.user.account.profile && noddy.user.account.profile.firstname ) ) {
+      var hl = noddy.user.account.profile && noddy.user.account.profile.firstname ? noddy.user.account.profile.firstname : noddy.user.account.username;
+      $('.username').html(hl);
+    }
+    if (noddy.apikey) {
+      $('#apikey').html(noddy.apikey);
+      $('#bookmarklet').attr('href',$('#bookmarklet').attr('href').replace('XXXX',noddy.apikey));
+      $('#bookmarklet').removeClass('disabled');
+    }
+    nod = new nobject(noddy.user.account,'#account');
+    nod.success = aftersave;
+    var p = noddy.user.account.profile ? noddy.user.account.profile : {};
+    var s = noddy.user.account.service && noddy.user.account.service.openaccessbutton && noddy.user.account.service.openaccessbutton.profile ? noddy.user.account.service.openaccessbutton.profile : {};
+    if (!s.confirm_public || !s.confirm_terms) {
+      nod.update('service.openaccessbutton.profile.confirm_public',true);
+      nod.update('service.openaccessbutton.profile.confirm_terms',true);
+    }
+    if (!p.firstname || !p.lastname || !s.profession ) {
+      $('#agreeterms').css('font-size','1em').appendTo('#setinfo');
+      $('#setinfo').show();
+    } else {
+      $('#sayhello').show();
+      if (noddy.next) {
+        $('#tonext').attr('href',noddy.next);
+        $('#tonextalert').show();
+        window.location = noddy.next;
+      }
     }
   }
   var afterfailure = function() {
-    $('#cloginMessages').html('<p>This link or code expired! They do that after their first use, 30 minutes, or if you get sent another. Refresh the page and reenter your email to try again.</p>');
+    $('.noddyMessage').html('<p>This link or code expired! They do that after their first use, 30 minutes, or if you get sent another. Refresh the page and reenter your email to try again.</p>');
   }
-  var api = 'https://api.cottagelabs.com/accounts';
   if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
-    api = 'https://dev.api.cottagelabs.com/accounts';
     $('#bookmarklet').attr('href',$('#bookmarklet').attr('href').replace('YYYY','https://dev.openaccessbutton.org'));
   } else {
     $('#bookmarklet').attr('href',$('#bookmarklet').attr('href').replace('YYYY','https://openaccessbutton.org'));
   }
   // TODO set these for oabutton to have its own oauth accounts:
-  // clogin.oauthGoogleClientId = '';
-  clogin.oauthFacebookAppId = '114282989239097';
-  clogin.init({api:api,afterLogin: afterlogin, saveValidate: savevalidate, afterSave: aftersave, afterFailure: afterfailure });
+  // noddy.oauthGoogleClientId = '';
+  noddy.oauthFacebookAppId = '114282989239097';
+  noddy.init({afterLogin: afterlogin, afterFailure: afterfailure });
   if (window.location.href.indexOf('email=') !== -1) {
-    $('#cloginEmail').val(window.location.href.split('next=')[0].split('email=')[1].split('&')[0]);
-    setTimeout(function() { $('#cloginSubmit').trigger('click'); }, 100);
+    $('#noddyEmail').val(window.location.href.split('next=')[0].split('email=')[1].split('&')[0]);
+    setTimeout(function() { $('#noddyLogin').trigger('click'); }, 100);
   }
   var mobileCheck = function() {
     // checks if browser is a mobile or tablet browser
@@ -98,36 +94,36 @@ jQuery(document).ready(function() {
   $('.dl').hide();
   $('.dl'+b).show();
   $('#viewrequests').bind('click',function(e) {
-    $(this).attr('href','/request?q=user.id:'+clogin.user.account._id);
+    $(this).attr('href','/request?q=user.id:'+noddy.user.account._id);
   });
   var a = window.location.href.indexOf('a=') !== -1 ? window.location.href.split('a=')[1].split('&')[0] : undefined;
-  if ( a && a.length > 0 ) $('#cloginSubmit').html(a.substring(0,1).toUpperCase() + a.substring(1,a.length).replace('nup','n up'));
+  if ( a && a.length > 0 ) $('#noddyLogin').html(a.substring(0,1).toUpperCase() + a.substring(1,a.length).replace('nup','n up'));
 });
 </script>
 
-<div class="container-fluid notcloggedin" id="cloginArea">
+<div class="container-fluid nottin" id="login">
   <div class="row">
     <div class="col-md-6 col-md-offset-3">
       <div>
-        <div id="cloginEmailArea">
+        <div class="noddyLogin">
           <h2 style="text-align:center;">Sign in to your account</h2>
           <p style="text-align:center;">
             No account yet? <br>
             Just enter your email address to get started.<br>
           </p>
-          <input type="email" class="form-control" id="cloginEmail" name="email" placeholder="Enter your email address">
-          <button id="cloginSubmit" type="submit" class="btn btn-action btn-block" style="margin-top:10px;">Sign up / Login</button>
+          <input type="email" class="form-control" id="noddyEmail" name="email" placeholder="Enter your email address">
+          <button id="noddyLogin" type="submit" class="btn btn-action btn-block" style="margin-top:10px;">Sign up / Login</button>
           <div>
             <p style="text-align:center;margin-top:15px;">
               Or use your favourite service<br>
             </p>
             <p style="text-align:center; margin-top:15px;">
-              <a id="cloginOauthGoogle" class="btn btn-default" style="font-size:0.8em;" href="#"><img style="height:20px;" src="https://static.cottagelabs.com/google.png"> Sign in with Google</a>
-              <a id="cloginOauthFacebook" class="btn btn-default" style="font-size:0.8em;" href="#"><img style="height:20px;" src="https://static.cottagelabs.com/facebook.png"> Sign in with Facebook</a>
+              <a id="noddyOauthGoogle" class="btn btn-default" style="font-size:0.8em;" href="#"><img style="height:20px;" src="https://static.cottagelabs.com/google.png"> Sign in with Google</a>
+              <a id="noddyOauthFacebook" class="btn btn-default" style="font-size:0.8em;" href="#"><img style="height:20px;" src="https://static.cottagelabs.com/facebook.png"> Sign in with Facebook</a>
             </p>
           </div>
         </div>
-        <div id="cloginTokenArea" style="display:none;">
+        <div class="noddyToken" style="display:none;">
           <h2 style="text-align:center;">Go check your email!</h2>
           <p style="text-align:center;">
             We use a password-free system.<br>
@@ -136,14 +132,14 @@ jQuery(document).ready(function() {
           <p style="text-align:center;">
             We sent you a login code via email. Enter it below.
           </p>
-          <input type="text" class="form-control" id="cloginToken" placeholder="Enter your login code">
+          <input type="text" class="form-control" id="noddyToken" placeholder="Enter your login code">
           <p style="text-align:center;">
             <br>If you don't receive an email within a few minutes, check your spam folder. If you have trouble, try using Google or Facebook to login. Otherwise, Contact us at
             <a href="mailto:help@openaccessbutton.org?subject=issues signing in">help@openaccessbutton.org</a>.
           </p>
         </div>
-        <div id="cloginMessages" style="margin-top:5px;"></div>
-        <div id="cloginLoading" style="display:none;"><img style="height:30px;" src="//static.cottagelabs.com/spinner.gif"></div>
+        <div class="noddyMessages" style="margin-top:5px;"></div>
+        <div class="noddyLoading" style="display:none;"><img style="height:30px;" src="//static.cottagelabs.com/spinner.gif"></div>
       </div>
 
 
@@ -167,7 +163,7 @@ jQuery(document).ready(function() {
 </div>
 
 
-<div class="container-fluid cloggedin" id="userinfo" style="display:none;">
+<div class="container-fluid noddin" id="userinfo" style="display:none;">
   <div id="tonextalert" class="row" style="display:none;">
     <div class="col-md-8 col-md-offset-2">
       <div class="alert alert-info">
@@ -178,22 +174,24 @@ jQuery(document).ready(function() {
 
   <div class="row">
     <div class="col-md-8 col-md-offset-2">
-      <h2 id="sayhello">Hello <span class="username"></span></h2>
+      <h2 id="sayhello" style="display:none;">Hello <span class="username"></span></h2>
       <p id="apikey" style="display:none;"></p>
 
+      <h3>Your details</h3>
       <div id="setinfo" style="display:none;">
         <h1>Thanks for signing up!</h1>
-        <p>We use these details during requests to help authors understand who you are, and motivate them to share.</p>
+        <p>Tell us about yourself! We use these details during requests to help authors understand who you are, and motivate them to share.</p>
+      </div>
+      <div id="account">
         <div class="row">
           <div class="col-md-6">
-            <input style="margin-top:7px;" type="text" id="profile.firstname" name="first name" class="form-control cloginSave" placeholder="First name (required)">
+            <input style="margin-top:7px;" type="text" nobject="profile.firstname" name="first name" class="form-control nobject" placeholder="First name (required)">
           </div>
           <div class="col-md-6">
-            <input style="margin-top:7px;" type="text" id="profile.lastname" name="last name" class="form-control cloginSave" placeholder="Family name (required)">
+            <input style="margin-top:7px;" type="text" nobject="profile.lastname" name="last name" class="form-control nobject" placeholder="Family name (required)">
           </div>
         </div>
-        <input style="margin-top:7px;" type="text" id="service.openaccessbutton.profile.affiliation" name="affiliation" class="form-control cloginSave" placeholder="Affiliation (University name, Business name etc)">
-        <select id="service.openaccessbutton.profile.profession" name="profession" class="form-control cloginSave" style="margin-top:7px;">
+        <select nobject="service.openaccessbutton.profile.profession" name="profession" class="form-control nobject" style="margin-top:-12px;margin-bottom:8px;">
           <option value="">Profession (required)</option>
           <option value="Student">Student</option>
           <option value="Health professional">Health professional</option>
@@ -202,25 +200,14 @@ jQuery(document).ready(function() {
           <option value="Librarian">Librarian</option>
           <option value="Other">Other</option>
         </select>
-        <p id="agreeterms" style="margin-top:7px;">
-          By signing up
-          I understand that information obtained by the Button will be public, and that
-          I agree to the Open Access Button
-          <a target="_blank" href="/privacy" style="text-decoration:underline;">privacy policy</a>
-          and
-          <a target="_blank" href="/terms" style="text-decoration:underline;">terms of service.</a>
-        </p>
-        <input id="service.openaccessbutton.profile.confirm_public" type="checkbox" checked style="display:none;" class="cloginSave">
-        <input id="service.openaccessbutton.profile.confirm_terms" type="checkbox" checked style="display:none;" class="cloginSave">
-        <button id="cloginSave" type="button" class="btn btn-action" style="margin-top:5px;">Save your details</button>
-        <div id="cloginSaveMessages"></div>
+        <input type="text" nobject="service.openaccessbutton.profile.affiliation" name="affiliation" class="form-control nobject" placeholder="Affiliation (optional - university name, business name etc)">
+        <div class="nobjectMessage"></div>
       </div>
-
     </div>
   </div>
 </div>
 
-<div class="container-fluid cloggedin" id="downloads" style="margin-bottom:200px;display:none;">
+<div class="container-fluid noddin" id="downloads" style="margin-bottom:200px;display:none;">
   <div class="row">
     <div class="col-md-8 col-md-offset-2">
       <h3>Get Started</h3>
@@ -238,6 +225,7 @@ jQuery(document).ready(function() {
                 Chrome, Safari and Internet Explorer: Control (Command on a Mac) + Shift + B
                 <br>
                 Firefox: Alt + V, then T, then B</small>
+        </p>
       </div>
 
       <!--<h3>Instructions</h3>
@@ -248,7 +236,15 @@ jQuery(document).ready(function() {
         <li>If you need help, email us at <a href="mailto:help@openaccessbutton.org">help@openaccessbutton.org</a></li>
       </ol>
       <p>Want to test it out? Try searching for <a href="http://science.sciencemag.org/content/293/5530/629" target="_blank">this article</a>.</p>-->
-      <p><br><a id="cloginLogout" class="btn btn-warning" href="#">Logout</a></p>
+      <p id="agreeterms" style="margin-top:10px;font-size:0.8em;">
+        By using Open Access Button
+        you agree that some information obtained by the Button will be public, and that
+        you agree to the Open Access Button
+        <a target="_blank" href="/privacy" style="text-decoration:underline;">privacy policy</a>
+        and
+        <a target="_blank" href="/terms" style="text-decoration:underline;">terms of service.</a>
+      </p>
+      <p><br><a id="noddyLogout" class="btn btn-warning" href="#">Logout</a></p>
     </div>
   </div>
 </div>

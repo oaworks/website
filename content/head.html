@@ -7,23 +7,6 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
   <link href="/static/favicon.ico" rel="icon" type="image/x-icon">
-
-  <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
-  <!--[if lt IE 9]>
-    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif]-->
-
-  <script type="text/javascript" src="//static.cottagelabs.com/jquery-1.10.2.min.js"></script>
-  <script type="text/javascript" src="//static.cottagelabs.com/bootstrap-3.0.3/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="//static.cottagelabs.com/bootstrap-3.0.3/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-  <script type="text/javascript" src="//static.cottagelabs.com/moment.min.js"></script>
-  <script type="text/javascript" src="//static.cottagelabs.com/holdernew/jquery.holder.js?v=aoewfewfwffwefweff"></script>
-  <script type="text/javascript" src="//static.cottagelabs.com/fingerprint2.min.js?v=aoewqofwffwef"></script>
-  <script type="text/javascript" src="//static.cottagelabs.com/clogin.js?v=aoewfwefwffewf"></script>
-
-  <link rel="stylesheet" href="/static/oabutton.css?v=aoewqoijffwefwwff">
-
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 
@@ -35,6 +18,15 @@
   <![endif]-->
 
   <script>
+  var api = '{{api}}';
+  noddy.service = '{{service}}';
+  noddy.debug = {{debug}};
+  noddy.api = api.replace('/service/oab','');
+  if (window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
+    api = 'https://dev.api.cottagelabs.com/service/oab';
+    noddy.api = 'https://dev.api.cottagelabs.com';
+  }
+
   jQuery(document).ready(function() {
 
     mobileCheck = function() {
@@ -75,10 +67,10 @@
     if (window.location.href.indexOf('odb=true') !== -1) $('#fromopendatabutton').show();
     if (window.location.href.indexOf('team=true') !== -1) $('#fromteambutton').show();
 
-    var logged = clogin.loggedin();
+    var logged = noddy.loggedin();
     if (logged) {
-      $('.cloggedin').show();
-      $('.notcloggedin').hide();
+      $('.noddin').show();
+      $('.nottin').hide();
     }
 
     var ftsing = false;
