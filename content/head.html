@@ -22,10 +22,6 @@
   noddy.service = '{{service}}';
   noddy.debug = {{debug}};
   noddy.api = api.replace('/service/oab','');
-  if (window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
-    api = 'https://dev.api.cottagelabs.com/service/oab';
-    noddy.api = 'https://dev.api.cottagelabs.com';
-  }
 
   jQuery(document).ready(function() {
 
