@@ -34,7 +34,7 @@ var openaccessbutton_widget = function(opts) {
       <a class="btn btn-primary btn-block" href="#" id="oabutton_find" style="min-height:40px;height:40px;font-size:1.1em;padding:7px 10px 5px 10px;"><i class="glyphicon glyphicon-search"></i></a>\
     </div>\
   </div>\
-  <div id="oabutton_loading" style="display:none;"><p><img style="width:30px;" src="' + site + '/static/spin_orange.svg">   Powered by <a href="https://openaccessbutton.org" target="_blank">Open Access Button</a></p></div>\
+  <div id="oabutton_loading" style="display:none;"><p><img style="width:30px;" src="' + site + '/static/spin_orange.svg">   Powered by <a href="https://openaccessbutton.org" target="_blank">the Open Access Button</a></p></div>\
   <div id="oabutton_availability"></div>';
   $(opts.element).html(w);
 
