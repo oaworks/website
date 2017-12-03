@@ -96,7 +96,7 @@ var openaccessbutton_widget = function(opts) {
                 $.ajax(ropts);
               } else {
                 var availability = '<p><b>This article is not available</b></p>';
-                availability += '<p><a target="_blank" class="btn btn-action" href="' + site + '/request?data=false&url=' + encodeURIComponent(data.data.match) + '">Start a request</a></p>';
+                availability += '<p><a target="_blank" href="' + site + '/request?data=false&url=' + encodeURIComponent(data.data.match) + '">Start a request to the author to share it</a> or consider using your universities Interlibrary Loan system.</p>';
                 $('#oabutton_availability').html(availability);
               }
             } else {
@@ -116,8 +116,6 @@ var openaccessbutton_widget = function(opts) {
             } else {
               availability += '<p><b>This article is available!</b></p>';
               availability += '<p"><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + has.article.url + '</a></p>';
-              availability += '<p>Not what you were expecting? <a target="_blank" href ="' + site + '/feedback#wrong?searched=' + encodeURIComponent(url) + '&given=' + encodeURIComponent(has.article.url) + '">Report an error</a>.</p>';
-              availability += '<p> You can <a target="_blank" href="' + site + '/request?data=false&url=' + encodeURIComponent(data.data.match) + '">request it from the author</a> if it isn\'t available.</p>';
             }
             if (opts.data) {
               availability += '<p>';
