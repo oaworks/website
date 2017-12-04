@@ -34,7 +34,7 @@ var openaccessbutton_widget = function(opts) {
       <a class="btn btn-primary btn-block" href="#" id="oabutton_find" style="min-height:40px;height:40px;font-size:1.1em;padding:7px 10px 5px 10px;"><i class="glyphicon glyphicon-search"></i></a>\
     </div>\
   </div>\
-  <div id="oabutton_loading" style="display:none;"><p><img style="width:30px;" src="' + site + '/static/spin_orange.svg">   Powered by <a href="https://openaccessbutton.org" target="_blank">the Open Access Button</a></p></div>\
+  <div id="oabutton_loading" style="display:none;"><p><img style="width:30px;" src="' + site + '/static/spin_orange.svg">   Powered by the <a href="https://openaccessbutton.org" target="_blank">Open Access Button</a></p></div>\
   <div id="oabutton_availability"></div>';
   $(opts.element).html(w);
 
@@ -95,8 +95,8 @@ var openaccessbutton_widget = function(opts) {
                 }
                 $.ajax(ropts);
               } else {
-                var availability = '<p><b>This article is not available</b></p>';
-                availability += '<p><a target="_blank" href="' + site + '/request?data=false&url=' + encodeURIComponent(data.data.match) + '">Start a request to the author to share it</a> or consider using your universities Interlibrary Loan system.</p>';
+                var availability = '<p><b>This article is not available for free</b></p>';
+                availability += '<p><a target="_blank" href="' + site + '/request?data=false&url=' + encodeURIComponent(data.data.match) + '">Start a request to the author to share it with you</a> or ask the library to get you a copy through an Interlibrary Loan.</p>';
                 $('#oabutton_availability').html(availability);
               }
             } else {
@@ -167,7 +167,7 @@ var openaccessbutton_widget = function(opts) {
         },
         error: function() {
           $('#oabutton_loading').hide();
-          $('#oabutton_loading').after('<p>Sorry, something went wrong with Open Access Button. <a target="_blank" href="' + site + '/feedback#bug">Can you let them know?</a></p>');
+          $('#oabutton_loading').after('<p>Sorry, something went wrong. <a target="_blank" href="' + site + '/feedback#bug">Can you let us know?</a></p>');
         }
       };
       $.ajax(avopts);
