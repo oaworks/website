@@ -33,23 +33,26 @@
       <p>
         Our API allows you to find out if an article, published at some URL but not freely available there,
         is freely available anywhere else. It can also check for supporting data too. You can also search all the
-        availabilty checks we have made, all the requests for access our users have created, and all their declarations
+        availability checks we have made, all the requests for access our users have created, and all their declarations
         of support too.
       </p>
       <p>
-        This is a JSON API, and the docs link out to example responses<!-- - install a JSON viewer plugin to your
-        browser to make them easier to read-->. When POSTing data, remember to set the Content-Type header, e.g.
-        for curl it is <code>curl -H "Content-Type:application/json"</code>.
+        The API uses JSON for all posts and responses.  Links to example responses are shown for each api operation documented below.<!-- - install a JSON viewer plugin to your
+        browser to make them easier to read-->. When POSTing data, remember to set the Content-Type header to application/json, e.g.
+        for curl this header is added like so: <code>curl -H "Content-Type:application/json"</code>.
       </p>
       <p>
-        There are no enforced rate limits, so be nice (1 request per second). If we notice problems we'll suspend your account and contact you about your needs.
-      </p>
-      <p>
-        Although most endpoints do not require authorisation, please include your API key either in a URL param called "apikey"
-        or a header called "x-apikey".
+        There are no enforced rate limits, so limit your requests to a maximum of one request per second. If we notice problems we'll suspend your account and contact you about your needs.
+        Although most api operations do not require authorisation, we ask that you please obtain your own API key.
       </p>
       <p id="apikey">
         Please <a href="/account?next=/api" class="label label-info">sign up / sign in</a> to see your API key here.
+      </p>
+      <p>
+        Include the API key you are provided in either a URL param called "apikey"
+        or in a header called "x-apikey".
+        So, a curl call to the availability operation below might look like so (if you choose to use headers):
+        curl -H "Content-Type: application/json" -H "x-apikey: yourRegisteredApikey" 'https://api.openaccessbutton.org'
       </p>
 
       <h2>
@@ -65,7 +68,8 @@
         </small>
       </h3>
       <p>
-        This is the root, it returns a status success message and 200 response code - if it does not, the API is down.
+        This is the prefix for all api calls and simply returns an indication of api status.
+        The API returns a json status success message and 200 response code if the api is operational; otherwise the API is not in operation.
       </p>
       <!--
       <h3>
@@ -90,20 +94,21 @@
         </small>
       </h3>
       <p>
-        Provide a url-encoded URL in a parameter named "url". It can also accept DOIs, PMIDs, PMC IDs, titles, and citations.
-        Each of these can be passed in as the "url" parameter and the API will try to guess which is provided, or it can be
-        specified by passing the specific type as the parameter name = "doi", "pmid", "pmc", "title", or "citation". Note that
-        only one parameter should be provided, and the preference for which to provide is url, doi, pmc, pmid, title, citation.
+        Provide a url-encoded URL in a parameter named "url". The api will accept DOIs, PMIDs, PMC IDs, titles, and citations all of
+        which can alternately be passed in the "url" parameter.  The API will try to guess which type is being provided.  
+        Alternately, the specific type can be passed in by using a more specific parameter name: "doi", "pmc", "pmid", "title", "citation".
+        In any case, note that only one parameter can be provided, and the preference for which to provide is:
+        url, doi, pmc, pmid, title, citation.
       </p>
       <p>
-        The result lists objects of any "availability" we found, with each object declaring "type" (currently article or data)
-        and the "url" where we found it.
+        The response returned lists objects of any "availability" found, with each object declaring "type" (currently either article or data)
+        and the "url" where this object is found.
       </p>
       <p>
-        Then there's a list of any open "requests", each object showing the request "type" and the request "id".
+        The response also includes a list of any open "requests", each object showing the request "type" and the request "id".
       </p>
       <p>
-        Finally there is an "accepts" list which shows what sorts of new requests we will accept - we currently only
+        Finally the response includes an "accepts" list which shows what sorts of new requests we will accept.  we currently only
         accept "article" or "data" requests, and we won't accept new requests if already available or already requested.
       </p>
       <p>
