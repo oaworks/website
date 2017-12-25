@@ -169,12 +169,11 @@ var dereference = function(bundlefile) {
         ncontent += refparts[c];
       } else {
         var quote = refparts[c].indexOf('"') === 0 ? '"' : (refparts[c].indexOf("'") === 0 ? "'" : '');
-        var refurl = refparts[c].replace(quote, '').split(quote + ')')[0].split('?')[0].split('#')[0];
+        var refurl = refparts[c].replace(quote, '').split(quote + ')')[0];
         var remainder = refparts[c].split(refurl)[1];
         var filename = refurl.split('/').pop();
         if (refurl.indexOf('http') !== 0) {
           var pieces = refurl.split('/');
-          // it came from a remote URL, need to get what it refers from there
           var sourceparts = retrieved[bundlefile] !== undefined ? retrieved[bundlefile].split('/') : bundlefile.replace('./serve/static','').replace('./static','').split('/');
           sourceparts.pop();
           var tgt = '';
@@ -191,7 +190,7 @@ var dereference = function(bundlefile) {
           } else {
             filename = sourceparts.join('/') + tgt;
           }
-          ncontent += 'url(' + quote + ('/static/' + filename).replace('//','/') + remainder;
+          ncontent += 'url(' + quote + ('/static/' + filename.replace('static/','')).replace('//','/') + remainder;
         } else {
           fs.writeFileSync('./serve/static/' + refurl.split('/').pop(), request('GET', refurl).getBody());
           ncontent += 'url(' + quote + '/static/' + refurl.split('/').pop() + remainder;

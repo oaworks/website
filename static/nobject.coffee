@@ -129,11 +129,13 @@ nobject.prototype.populate = (keys,val) ->
   keys = [keys] if typeof keys is 'string'
   for k in keys
     val ?= dot this._object, k
-    console.log('Nobject populating loop', k, val) if this._debug
+    console.log('Nobject populating loop', k, val, typeof val) if this._debug
     # TODO has to depend on the type of value to be displayed, and into what type of element
     # and what if no vals? Does that mean it should be blank, or that it should not be changed from whatever it is???
     # what about mandatory vals?
+    console.log val?
     if val?
+      console.log 'why am i working...'
       if $(this._element + ' [nobject="' + k + '"]').is('select')
         $(this._element + ' [nobject="' + k + '"]').val(val)
       else
@@ -149,7 +151,8 @@ nobject.prototype.display = (obj,keys,element) ->
     display = '<div class="nobjectMessage" style="margin-top:5px;"></div>'
     for k in this.keys()
       val = dot this._object, k
-      display += '<p><textarea class="nobject form-control" nobject="' + k + '" placeholder="' + k.replace('profile','').replace('service','').replace(/\./g,'') + '">' + val + '</textarea></p>'
+      val = '' if not val?
+      display += '<p><textarea class="nobject form-control" nobject="' + k + '" placeholder="' + k.replace('profile','').replace('service','').split('.').pop() + '">' + val + '</textarea></p>'
       # TODO need to know how to display different kinds of value - checkbox, radio. And for data types, lists, bools
       # and a way to add things like suggestion dropdowns and calendar displays on certain fields
     $(this._element).html display
