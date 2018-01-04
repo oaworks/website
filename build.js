@@ -277,7 +277,7 @@ if (args.bundle && typeof bundle === 'object') {
   if (js.length) {
     var uglify = require("uglify-js");
     uglyjs = uglify.minify(js);
-    jshash = crypto.createHash('md5').update(uglyjs.code).digest("hex");
+    jshash = 'bundled_' + crypto.createHash('md5').update(uglyjs.code).digest("hex");
     fs.writeFileSync('./serve/static/' + jshash + '.min.js', uglyjs.code);
   }
   if (css.length) {
@@ -285,14 +285,14 @@ if (args.bundle && typeof bundle === 'object') {
     // if not retrieved, change what it refers because it will be called from /static/bundle.css instead of where it did exist
     var uglifycss = require('uglifycss');
     uglycss = uglifycss.processFiles(css);
-    csshash = crypto.createHash('md5').update(uglycss).digest("hex");
+    csshash = 'bundled_' + crypto.createHash('md5').update(uglycss).digest("hex");
     fs.writeFileSync('./serve/static/' + csshash + '.min.css', uglycss);
   }
 }
 if (!args.dev && !args.bundle && jshash === undefined && csshash === undefined) {
   fs.readdirSync('./serve/static/').forEach(function(file, index) {
-    if (file.indexOf('.min.js') !== -1 && jshash === undefined) jshash = file.replace('.min.js', '');
-    if (file.indexOf('.min.css') !== -1 && csshash === undefined) csshash = file.replace('.min.css', '');
+    if (file.indexOf('bundled_') === 0 && file.indexOf('.min.js') !== -1 && jshash === undefined) jshash = file.replace('.min.js', '');
+    if (file.indexOf('bundled_') === 0 && file.indexOf('.min.css') !== -1 && csshash === undefined) csshash = file.replace('.min.css', '');
   });
 }
 
@@ -396,9 +396,11 @@ walk('./content', function(err, results) {
 
       var marked;
       if (fl.indexOf('.md') !== -1) {
+        console.log('Rendering markdown for file ' + fl);
         marked = require('marked');
         content = marked(content);
       } else if (content.indexOf('<markdown>') !== -1) {
+        console.log('Rendering markdown within file ' + fl);
         marked = require('marked');
         var nc = '';
         var cp = content.split('<markdown>');

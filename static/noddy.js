@@ -342,6 +342,7 @@ noddy.oauthLogin = function() {
   }
   var data = {
     oauth: noddy.oauth,
+    service: noddy.service,
     location: window.location.protocol + '//' + window.location.hostname
   }
   if (window.location.pathname !== '/') data.location += window.location.pathname;
@@ -504,6 +505,7 @@ noddy.login = function(e) {
       email: noddy.user.email,
       token: $('#noddyToken').val(),
       hash: noddy.user.hash,
+      service: noddy.service,
       url: window.location.protocol + '//' + window.location.hostname
     }
     noddy.user.token = data.token;

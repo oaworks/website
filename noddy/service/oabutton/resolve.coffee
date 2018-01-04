@@ -139,6 +139,12 @@ API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=tr
         if res.data?.DOI is meta.doi and res.data.title
           meta.title = res.data.title[0].toLowerCase().replace(/(<([^>]+)>)/g,'').replace(/[^a-z0-9 ]/g,' ')
 
+    # we can get a 404 for an article behind a loginwall if the service does not do splash pages,
+    # and then we can accidentally get the article that exists called "404 not found". So we just don't
+    # run checks for titles that start with 404
+    # See https://github.com/OAButton/discussion/issues/931
+    # this is the article: http://research.sabanciuniv.edu/34037/
+    meta.title = undefined if meta.title and meta.title.indexOf('404 ') isnt 0
     if meta.title
       meta.titles = true
       API.log 'Resolving for title', title: meta.title

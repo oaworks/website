@@ -20,8 +20,8 @@
 }
 ###
 API.service.oab.find = (opts={url:undefined,type:undefined}) ->
-  console.log opts.refresh
   opts.refresh ?= 30 # default refresh. If true then we won't even use successful previous lookups, otherwise if number only use failed lookups within refresh days
+  opts.sources ?= ['oabutton','eupmc','oadoi','share','core','openaire','figshare','doaj']
   if typeof opts.refresh isnt 'number'
     try
       n = parseInt opts.refresh
@@ -53,7 +53,7 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
   opts.discovered = {article:false,data:false}
   opts.source = {article:false,data:false}
   if opts.type is 'article' or not opts.type?
-    if opts.refresh isnt 0 and opts.url
+    if opts.refresh isnt 0 and opts.url and 'oabutton' in opts.sources
       avail = oab_availability.find {'url':opts.url,'discovered':{exists:{field:'discovered.article'}}}
       if avail?.discovered?.article and ret.meta.article.redirect = API.service.oab.redirect(avail.discovered.article) isnt false
         ret.meta.article.url = avail.discovered.article
@@ -61,8 +61,8 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
         ret.meta.cache = true
         ret.meta.refresh = opts.refresh # if we have a discovered article that is not since blacklisted we always reuse it - this is just for info
     d = new Date()
-    if not ret.meta.article.url and (opts.refresh is 0 or not oab_availability.find 'url.exact:"'+opts.url + '" AND createdAt:>' + d.setDate(d.getDate() - opts.refresh) )
-      ret.meta.article = API.service.oab.resolve opts.url, opts.dom, ['oabutton','eupmc','oadoi','share','core','openaire','figshare','doaj']
+    if not ret.meta.article.url and ('oabutton' not in opts.sources or opts.refresh is 0 or not oab_availability.find 'url.exact:"'+opts.url + '" AND createdAt:>' + d.setDate(d.getDate() - opts.refresh) )
+      ret.meta.article = API.service.oab.resolve opts.url, opts.dom, opts.sources, opts.all, opts.titles
       ret.match = 'https://doi.org/' + ret.meta.article.doi if ret.meta.article.doi and ret.match.indexOf('http') isnt 0
     if ret.meta.article.url and ret.meta.article.source and ret.meta.article.redirect isnt false and not ret.meta.article.journal_url
       opts.source.article = ret.meta.article.source

@@ -11,6 +11,30 @@
   		    <input type="checkbox" name="bulklibraries" class="bulklibraries" value="imperial"> Imperial<br>
   		    <input type="checkbox" name="bulklibraries" class="bulklibraries" value="york"> York<br>
   		  </p>
+  		  <p>
+					Which sources to check? (default is to keep checking each until a result is found)<br>
+					(Note that if you want to ensure you are checking what the remote sources currently respond with, don't select "oabutton",
+					otherwise if we have an older result you will just get that back - and this will happen by default, so DO explicitly select
+					the sources you want, if what you really want to do is check the status at the sources.)<br>
+  		    <input type="checkbox" name="sources" class="sources" value="oabutton"> oabutton<br>
+  		    <input type="checkbox" name="sources" class="sources" value="eupmc"> eupmc<br>
+  		    <input type="checkbox" name="sources" class="sources" value="oadoi"> oadoi<br>
+  		    <input type="checkbox" name="sources" class="sources" value="share"> share<br>
+  		    <input type="checkbox" name="sources" class="sources" value="core"> core<br>
+  		    <input type="checkbox" name="sources" class="sources" value="openaire"> openaire<br>
+  		    <input type="checkbox" name="sources" class="sources" value="figshare"> figshare<br>
+  		    <input type="checkbox" name="sources" class="sources" value="doaj"> doaj<br>
+  		  </p>
+  		  <p>
+  		  	Keep checking more sources even if a result is found in one?<br>
+  		  	(as mentioned above, by default this does not happen - instead we stop as soon as a result is found)<br>
+  		    <input type="checkbox" name="all" class="all"> yes, keep checking all sources (or all the ones selected above)<br>
+  		  </p>
+  		  <p>
+  		  	Check for titles where possible, if search by identifiers does not succeed?<br>
+  		  	(we do this by default)<br>
+  		    <input type="checkbox" name="titles" class="titles" checked="checked"> yes, check titles where possible<br>
+  		  </p>
         <form>
           <input type="file" name="jobupload" id="jobupload" class="form-control" style="padding-bottom:30px;margin-bottom:5px;">
   				<div style="display:none;" id="jobinfo">Uploading...</div>
@@ -201,6 +225,14 @@
 			    payload.libraries.push($(this).val());
 			  });
 			}
+			if ( $('.sources:checked').length ) {
+			  payload.sources = [];
+			  $('.sources:checked').each(function() {
+			    payload.sources.push($(this).val());
+			  });
+			}
+			if ( $('.all:checked').length ) payload.all = true;
+			if ( $('.titles:checked').length === 0 ) payload.titles = false;
 			$.ajax({
 				url: api + '/job?apikey='+noddy.apikey,
 				method: 'POST',

@@ -21,6 +21,8 @@ _avail =
     opts.refresh ?= this.queryParams.refresh
     opts.from ?= this.queryParams.from
     opts.plugin ?= this.queryParams.plugin
+    opts.all ?= this.queryParams.all
+    opts.titles ?= this.queryParams.titles
     ident = opts.doi
     ident ?= opts.url
     ident ?= 'pmid' + opts.pmid if opts.pmid
@@ -30,6 +32,7 @@ _avail =
     opts.url = ident
     # should maybe put auth on the ability to pass in library and libraries...
     opts.libraries = opts.libraries.split(',') if opts.libraries
+    opts.sources = opts.sources.split(',') if opts.sources
     if this.user?
       opts.uid = this.userId
       opts.username = this.user.username
@@ -277,7 +280,10 @@ API.add 'service/oab/job',
       for p in processes
         p.plugin = this.request.body.plugin ? 'bulk'
         p.libraries = this.request.body.libraries if this.request.body.libraries?
-      return API.job.create {notify:'API.service.oab.job_complete', user:this.userId, service:'openaccessbutton', function:'API.service.oab.availability', name:(this.request.body.name ? "oab_availability"), processes:processes}
+        p.sources = this.request.body.sources if this.request.body.sources?
+        p.all = this.request.body.all ?= false
+        p.titles = this.request.body.titles ?= true
+      return API.job.create {complete:'API.service.oab.job_complete', user:this.userId, service:'openaccessbutton', function:'API.service.oab.find', name:(this.request.body.name ? "oab_availability"), processes:processes}
 
 API.add 'service/oab/job/generate/:start/:end',
   post:
@@ -288,9 +294,13 @@ API.add 'service/oab/job/generate/:start/:end',
       processes = oab_request.find 'NOT status.exact:received AND createdAt:>' + start + ' AND createdAt:<' + end
       if processes.length
         procs = []
-        procs.push({url:p.url}) for p in processes
+        for p in processes
+          pro = {url:p.url}
+          pro.libraries = this.request.body.libraries if this.request.body.libraries?
+          pro.sources = this.request.body.sources if this.request.body.sources?
+          procs.push(pro)
         name = 'sys_requests_' + this.urlParams.start + '_' + this.urlParams.end
-        jid = API.job.create {notify:'API.service.oab.job_complete', user:this.userId, service:'openaccessbutton', function:'API.service.oab.availability', name:name, processes:procs}
+        jid = API.job.create {complete:'API.service.oab.job_complete', user:this.userId, service:'openaccessbutton', function:'API.service.oab.find', name:name, processes:procs}
         return {job:jid, count:processes.length}
       else
         return {count:0}
@@ -323,7 +333,7 @@ API.add 'service/oab/job/:jid/request',
               rq.url ?= 'https://doi.org/' + r.result.meta.article.doi
             rq.title ?= r.result.meta.article.title
           if rq.url
-            created = API.service.oab.request rq,this.userId
+            created = API.service.oab.request rq, this.userId
             identifiers.push(created) if created
       return identifiers
 
@@ -331,41 +341,40 @@ API.add 'service/oab/job/:jid/results', get: () -> return API.job.results this.u
 API.add 'service/oab/job/:jid/results.json', get: () -> return API.job.results this.urlParams.jid
 API.add 'service/oab/job/:jid/results.csv',
   get: () ->
-    res = API.job.results this.urlParams.jid
-    csv = ''
+    res = API.job.results this.urlParams.jid, true
     inputs = []
-    for ro in res
-      for a in ro.args
-        if a not in ['plugin','libraries','refresh','url','library','discovered','source'] and a not in inputs
-          inputs.push a
-          csv += ',' if csv isnt ''
-          csv += '"' + a + '"'
-    csv += ',' if csv isnt ''
-    csv += '"MATCH","AVAILABLE","SOURCE","REQUEST","TITLE","DOI"'
+    csv = '"MATCH","AVAILABLE","SOURCE","REQUEST","TITLE","DOI"'
     liborder = []
-    if res[0].args.libraries?
-      for l in res[0].args.libraries
-        liborder.push l
-        csv += ',"' + l.toUpperCase() + '"'
+    sources = []
+    if res.length and res[0].args?
+      jargs = JSON.parse res[0].args
+      if jargs.libraries?
+        for l in jargs.libraries
+          liborder.push l
+          csv += ',"' + l.toUpperCase() + '"'
+      if jargs.sources
+        sources = jargs.sources
+        for s in sources
+          csv += ',"' + s.toUpperCase() + '"'
+
     for r in res
-      row = r.result
+      row = if r.result.string then JSON.parse(r.result.string) else r.result['API.service.oab.find']
       csv += '\n"'
-      for i in inputs
-        csv += r.args[i] if r.args[i]?
-        csv += '","'
       csv += if row.match then row.match.replace('TITLE:','').replace(/"/g,'') + '","' else '","'
       av = 'No'
-      for a in row.availability
-        av = row.availability[a].url.replace(/"/g,'') if a.type is 'article'
+      if row.availability?
+        for a in row.availability
+          av = row.availability[a].url.replace(/"/g,'') if a.type is 'article'
       csv += av + '","'
       csv += row.meta.article.source if av isnt 'No' and row.meta?.article?.source
       csv += '","'
       rq = ''
-      for re in row.requests
-        if re.type is 'article'
-          rq = 'https://' + (if API.settings.dev then 'dev.' else '') + 'openaccessbutton.org/request/' + row.requests[re]._id
+      if row.requests
+        for re in row.requests
+          if re.type is 'article'
+            rq = 'https://' + (if API.settings.dev then 'dev.' else '') + 'openaccessbutton.org/request/' + row.requests[re]._id
       csv += rq + '","'
-      csv += row.meta.article.title.replace(/"/g,'').replace(/[^\x00-\x7F]/g, "") if row.meta?.article?.title
+      csv += row.meta.article.title.replace(/"/g,'').replace(/[^\x00-\x7F]/g, "") if row.meta?.article?.title?
       csv += '","'
       csv += row.meta.article.doi if row.meta?.article?.doi
       csv += '"'
@@ -389,6 +398,11 @@ API.add 'service/oab/job/:jid/results.csv',
             csv += 'In library'
           csv += 'Not available' if not js and not rp and not ll
           csv += '"'
+      for src in sources
+        csv += ',"'
+        csv += row.meta.found[src] if row.meta?.found?[src]?
+        csv += '"'
+
     job = job_job.get this.urlParams.jid
     name = if job.name then job.name.split('.')[0].replace(/ /g,'_') + '_results' else 'results'
     this.response.writeHead 200,
@@ -396,11 +410,7 @@ API.add 'service/oab/job/:jid/results.csv',
       'Content-type': 'text/csv; charset=UTF-8'
       'Content-Encoding': 'UTF-8'
     this.response.end csv
-
-
-
-
-
+    this.done()
 
 
 API.add 'service/oab/status', get: () -> return API.service.oab.status()

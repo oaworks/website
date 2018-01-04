@@ -8,7 +8,7 @@ API.service.oab.job_complete = (job) ->
   API.mail.send
     service: 'openaccessbutton'
     template: 'bulk_complete.html'
-    from: API.settings.openaccessbutton.mail.from
+    from: API.settings.service.openaccessbutton.mail.from
     to: job.email
     vars:
       _id: job._id,
@@ -44,8 +44,11 @@ API.service.oab.template = (template,refresh) ->
     for f in fls
       content = HTTP.call('GET',flurl + '/' + f).content
       API.mail.template undefined,{filename:f,service:'openaccessbutton',content:content}
-  if template
-    return if template then API.mail.template(template) else API.mail.template {service:'openaccessbutton'}
+    return API.mail.template {service:'openaccessbutton'}
+  else if template
+    return API.mail.template template
+  else
+    return API.mail.template {service:'openaccessbutton'}
 
 API.service.oab.vars = (vars) ->
   if vars?.user
