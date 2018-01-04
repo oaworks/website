@@ -69,9 +69,10 @@ API.add 'service/oab/request/:rid',
     action: () ->
       if r = oab_request.get this.urlParams.rid
         r.supports = API.service.oab.supports(this.urlParams.rid,this.userId) if this.userId
-        other = oab_request.find({url:r.url})
-        for o in other
-          r.other = o._id if o._id isnt r._id and o.type isnt r.type
+        others = oab_request.search({url:r.url})
+        if others?
+          for o in others.hits.hits
+            r.other = o._source._id if o._source._id isnt r._id and o._source.type isnt r.type
         return {data: r}
       else
         return 404
@@ -159,7 +160,7 @@ API.add 'service/oab/history',
 API.add 'service/oab/users',
   get:
     roleRequired:'openaccessbutton.admin'
-    action: () -> return Users.search this.queryParams, {restrict:[{exists:{field:'roles.openaccessbutton.exact'}}]}
+    action: () -> return Users.search this.queryParams, {restrict:[{exists:{field:'roles.openaccessbutton'}}]}
   post:
     roleRequired:'openaccessbutton.admin'
     action: () -> return Users.search this.bodyParams, {restrict:[{exists:{field:'roles.openaccessbutton'}}]}
@@ -320,18 +321,18 @@ API.add 'service/oab/job/:jid/request',
       results = API.job.results this.urlParams.jid
       identifiers = []
       for r in results
-        if r.result.availability.length is 0 and r.result.requests.length is 0
+        if r.availability.length is 0 and r.requests.length is 0
           rq = {}
-          if r.result.match
-            if r.result.match.indexOf('TITLE:') is 0
-              rq.title = r.result.match.replace('TITLE:','')
-            else if r.result.match.indexOf('CITATION:') isnt 0
-              rq.url = r.result.match
-          if r.result.meta and r.result.meta.article
-            if r.result.meta.article.doi
-              rq.doi = r.result.meta.article.doi
-              rq.url ?= 'https://doi.org/' + r.result.meta.article.doi
-            rq.title ?= r.result.meta.article.title
+          if r.match
+            if r.match.indexOf('TITLE:') is 0
+              rq.title = r.match.replace('TITLE:','')
+            else if r.match.indexOf('CITATION:') isnt 0
+              rq.url = r.match
+          if r.meta and r.meta.article
+            if r.meta.article.doi
+              rq.doi = r.meta.article.doi
+              rq.url ?= 'https://doi.org/' + r.meta.article.doi
+            rq.title ?= r.meta.article.title
           if rq.url
             created = API.service.oab.request rq, this.userId
             identifiers.push(created) if created

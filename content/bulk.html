@@ -65,7 +65,7 @@
           $('#jobinfo').html('');
           var count = 0;
           for ( var r in data ) {
-            if (data[r].result.availability.length === 0 && data[r].result.requests.length === 0 && ( ( data[r].result.match.indexOf('TITLE:') === -1 && data[r].result.match.indexOf('CITATION:') === -1 ) || ( data[r].result.meta && data[r].result.meta.article && data[r].result.meta.article.doi ) ) ) count += 1;
+            if (data[r].availability.length === 0 && data[r].requests.length === 0 && ( ( data[r].match.indexOf('TITLE:') === -1 && data[r].match.indexOf('CITATION:') === -1 ) || ( data[r].meta && data[r].meta.article && data[r].meta.article.doi ) ) ) count += 1;
           }
           var confirmed = confirm('Are you sure you want to try to create ' + count + ' requests from this job? Requests will only be created for records that are unavailable and for which there are not already requests, and where at least a url or doi was provided or found during checking - title alone is not enough. This count estimate is based on how many it seems at least a url or doi is available for, and for which there was not already a request at the time the job was run (if a request has since been created, it should be matched and not duplicated, but will still be counted). The actual created number will be confirmed after you submit.)');
           if (confirmed) {

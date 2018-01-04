@@ -90,8 +90,6 @@ API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=tr
   if not meta.doi and meta.url.indexOf('http') isnt 0 and meta.url.indexOf('10.') isnt 0 and meta.url.toLowerCase().indexOf('pmc') isnt 0 and meta.url.length > 8
     meta = API.service.oab.citation meta
 
-  meta.url = undefined if meta.url.indexOf('http') isnt 0
-
   if (meta.pmid or meta.pmc) and 'eupmc' in sources
     try
       API.log msg: 'Resolve checking with EUPMC for PMC/PMID', level: 'debug'
@@ -106,14 +104,18 @@ API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=tr
         meta.found.eupmc = res.url
         return meta if not all and res.redirect isnt false
 
-  if not meta.doi and meta.url and not meta.pmid and not meta.pmc
+  if not meta.doi and meta.url.indexOf('http') is 0 and not meta.pmid and not meta.pmc
     # no point resolving for URL if we already had these, the splash pages would not contain a DOI if the eupmc API did not have it
     API.log 'Resolving URL for content'
     # this can be SLOW, avoid at all costs - but is better to do this and maybe get a DOI than to search for titles?
     content ?= API.http.phantom meta.url
     # TODO could check content for <meta name="citation_fulltext_html_url" content="" />
     # If it is not the current page, is it worth resolving to it? If it is accessible, can it be taken as the open URL?
-    meta = _.extend(meta,API.service.oab.scrape(meta.url, content))
+    scraped = API.service.oab.scrape(meta.url, content)
+    for ks of scraped
+      meta[ks] = scraped[ks] if not meta[ks]?
+
+  meta.url = undefined if meta.url is meta.original
 
   if meta.doi
     API.log 'Resolving for DOI', doi: meta.doi
@@ -144,7 +146,7 @@ API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=tr
     # run checks for titles that start with 404
     # See https://github.com/OAButton/discussion/issues/931
     # this is the article: http://research.sabanciuniv.edu/34037/
-    meta.title = undefined if meta.title and meta.title.indexOf('404 ') isnt 0
+    meta.title = undefined if meta.title and meta.title.indexOf('404 ') is 0
     if meta.title
       meta.titles = true
       API.log 'Resolving for title', title: meta.title

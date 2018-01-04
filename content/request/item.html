@@ -243,16 +243,19 @@
         window.location = '/account?next=/request/' + rid + encodeURIComponent('?support=true');
       }
     }
-    
+
     var history = function(rid) {
       try {
         $.ajax({
           type:'GET',
-          url:api+'/history/'+rid,
+          url:api+'/history?sort=createdAt:desc&size=1000&q=document:'+rid,
           success: function(data) {
             var h = '';
-            for ( var d in data ) {
-              h += '<p>' + /*data[d].userId + ' at ' +*/ data[d].created_date + '<br>' + JSON.stringify(data[d].modifier) + '</p><hr>';
+            for ( var d in data.hits.hits ) {
+              h += '<p>' + /*data.hits.hits[d]._source.userId + ' at ' +*/ data.hits.hits[d]._source.created_date + ' ' + data.hits.hits[d]._source.action + '<br>';
+JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
+              for ( var a in data.hits.hits[d]._source[data.hits.hits[d]._source.action]) h += a + ': ' + JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action][a]) + '<br>';
+              h += '</p><hr>';
             }
             $('#history').html(h);
           }
