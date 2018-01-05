@@ -54,7 +54,12 @@ API.service.oab.request = (req,uacc,fast) ->
     delete req.dom
   return false if JSON.stringify(req).indexOf('<script') isnt -1
   req.type ?= 'article'
-  if exists = oab_request.find {url:req.url,type:req.type}
+  if req.url? and req.url.indexOf('eu.alma.exlibrisgroup.com') isnt -1
+    req.url += (if req.url.indexOf('?') is -1 then '?' else '&') + 'oabLibris=' + Random.id()
+    if req.title? and texist = oab_request.find {title:req.title,type:req.type}
+      texist.cache = true
+      return texist
+  else if exists = oab_request.find {url:req.url,type:req.type}
     exists.cache = true
     return exists
   return false if not req.test and API.service.oab.blacklist req.url
