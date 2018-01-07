@@ -185,7 +185,7 @@
         $.ajax({
           url: api + '/status',
           success: function(rs) {
-            status = rs.data;
+            status = rs;
             $.ajax({
               url: api + '/requests?&source=%7B%22size%22%3A0%2C%22query%22%3A%7B%22filtered%22%3A%7B%22query%22%3A%7B%22bool%22%3A%7B%22must%22%3A%5B%7B%22query_string%22%3A%7B%22query%22%3A%22story%3A*%22%7D%7D%5D%7D%7D%7D%7D%2C%22aggregations%22%3A%7B%22availabilities%22%3A%7B%22date_histogram%22%3A%7B%22field%22%3A%22createdAt%22%2C%22interval%22%3A%22week%22%7D%7D%7D%2C%22from%22%3A0%7D',
               success: function(d) {

@@ -366,7 +366,7 @@ API.add 'service/oab/job/:jid/results.csv',
       av = 'No'
       if row.availability?
         for a in row.availability
-          av = row.availability[a].url.replace(/"/g,'') if a.type is 'article'
+          av = a.url.replace(/"/g,'') if a.type is 'article'
       csv += av + '","'
       csv += row.meta.article.source if av isnt 'No' and row.meta?.article?.source
       csv += '","'
@@ -381,8 +381,7 @@ API.add 'service/oab/job/:jid/results.csv',
       csv += row.meta.article.doi if row.meta?.article?.doi
       csv += '"'
       if row.libraries
-        for lb in liborder
-          lib = row.libraries[lb]
+        for lib in liborder
           csv += ',"'
           js = false
           if lib?.journal?.library

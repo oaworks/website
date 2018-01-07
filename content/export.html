@@ -129,7 +129,7 @@
     }
     $('.datepicker').bind('change',change_date);
 
-    var what = function(e) {
+    /*var what = function(e) {
       $('.datepicker').val('');
       var w = $(this).val();
       $('optgroup').hide();
@@ -153,7 +153,15 @@
         });
       }
     }
-    $('#what').bind('change',what);
+    $('#what').bind('change',what);*/
+    $('#from').val('01/01/2010');
+    $('#from').datepicker('setStartDate','01/01/2010');
+    $('#to').datepicker('setStartDate','01/01/2010');
+    var max = moment(Date.now()).format('DD/MM/YYYY');
+    $('#to').val(max);
+    $('#from').datepicker('setEndDate',max);
+    $('#to').datepicker('setEndDate',max);
+
 
     var filter = function(e) {
       $('#value').html('<option value="">for value:</option>');
@@ -192,7 +200,7 @@
         if ($('#what').val() === 'account') endpoint = 'users';
         if ($('#what').val() === 'availability') endpoint = 'availabilities';
         if ($('#what').val() === 'support') endpoint = 'supports';
-  
+
         var query = {
           size: size, // perhaps there needs to be a download batch size option, and/or a check on how many records are available to download
           query: {
@@ -230,11 +238,11 @@
         }
         if ($('#what').val() === 'account') query.query.filtered.filter.bool.must.push({query:{query_string:{query:'roles.openaccessbutton:*'}}});
         if ( query.query.filtered.filter.bool.must.length === 0 ) query.query = {"match_all":{}};
-  
+
         var url = api + '/' + endpoint + '?';
         if ($('#what').val() === 'account') url += 'apikey=' + noddy.apikey + '&';
         url += 'source=' + JSON.stringify(query);
-        var curl = noddy.api.replace('/accounts','/convert?from=json&to=csv&subset=hits.hits._source&fields=' + fields[$('#what').val()].join(',') + '&url='+encodeURIComponent(url));
+        var curl = noddy.api + '/convert?from=json&to=csv&subset=hits.hits._source&fields=' + fields[$('#what').val()].join(',') + '&url='+encodeURIComponent(url);
         $(this).attr('href',curl);
       }
     }
