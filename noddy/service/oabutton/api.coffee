@@ -334,6 +334,7 @@ API.add 'service/oab/job/:jid/request',
               rq.url ?= 'https://doi.org/' + r.meta.article.doi
             rq.title ?= r.meta.article.title
           if rq.url
+            rq.story = this.queryParams.story
             created = API.service.oab.request rq, this.userId
             identifiers.push(created) if created
       return identifiers
