@@ -130,31 +130,29 @@
         POST
       </h3>
       <p>
-        Create a new request by POSTing a JSON object to this endpoint - remember content-type:"application/json".
-        The JSON object must contain at least "url", which should provide the URL to create a request for. The
-        "url" parameter can also be a DOI, PMID, PMC ID, title, or citation - NOTE these fields should NOT be
-        provided speciifcally by name; just put the values in the "url" field.
+        Create a new request by POSTing a JSON object to this endpoint.
+        Please remember to include the header: content-type:"application/json"    The JSON object itself must contain at least the "url" parameter - the URL to create a request for. The
+        "url" parameter can also be formatted as a url or alternately as a DOI, PMID, PMC ID, title, or citation.  NOTE that in any case, these values should be put in the "url" parameter, NOT in other parameter names (like doi, citation, etc).
+    
       </p>
       <p style="text-align:left;">
-        We try to disambiguate requests to ensure there are as few duplicates as possible, so for DOI, PMID and PMC ID,
-        these are best provided in a URL-like format - DOI can be provided as https://doi.org/10.1234/567890, PMID
-        as https://www.ncbi.nlm.nih.gov/pubmed/12345678, and PMC ID as https://www.ncbi.nlm.nih.gov/pubmed/1234567.
+        When you provide DOI, PMID and PMC ID values in the "url parameter, please format the value in a URL format.
+        DOI can be provided as https://doi.org/10.1234/567890, PMID
+        as https://www.ncbi.nlm.nih.gov/pubmed/12345678, and PMC ID as https://www.ncbi.nlm.nih.gov/pubmed/1234567.  (This helps us disambiguate requests to ensure there are as few duplicates as possible).
       </p>
       <p>
-        The request "type" should also be provided, and can be "article" or "data". If not provided it defaults to "article".
+        The request "type" parameter should also be provided with a value of "article" or "data". If not provided the type defaults to "article".
       </p>
       <p>
-        Ideally, a "story" should also be provided, explaining why the request is necessary. Also an "email" should
-        be provided which should be the email address of the author to contact about the request (we will try to find
-        an email address if one is not provided).
+        An "email" parameter should
+        be provided having the email address of the author to contact about the request (we will try to find
+        an email address if one is not provided).Ideally, a "story" parameter should also be provided having text explaining why the request is necessary. 
       </p>
       <p>
-        A "title" and "doi" field can also be provided as extra information for the resource.
+        "title" and "doi" parameters can also be provided as additional information about the resource.
       </p>
       <p>
-        NOTE that it is possible to create a request even for something that is available, so before
-        creating a request please use the /availability endpoint to check if the item is already available, and
-        if we already have an open request for it.
+        To avoid creating a request for a resource that is already available, please use the /availability endpoint to determine if the item is available or we already have an open request for it.
       </p>
       <p>
         The response will be a JSON object of the new request, which will include the new request ID in the "_id" parameter.
@@ -173,19 +171,16 @@
         </small>
       </h3>
       <p>
-        This provides an elasticsearch endpoint onto all the availability checks we have
-        performed for URLs previously received to the system. This allows you to search and explore very
-        effectively.
+        This endpoint allows you to flexibly search and explore availability of all URLs previously received.  These are indexed by an elasticsearch so some knowledge of straightforward elasticsearch search semantics is necessary.      </p>
+          <p>
+        A simple search can be created by adding a url parameter called "q" (for query) and provide values you would like to match. For example to find all availability checks made on the sciencedirect
+        website by users of our v1.0.0 plugin with the query <code>?q=*sciencedirect* AND plugin:oabutton_1.0.0</code>
+        Note that in a query, * can be used as a wildcard to match anything (in the example, before and after "sciendedirect").  Also note that AND, OR and other logic can be used to combine search values in a query.
       </p>
-      <p>
+  	  <p>
         To make full use of this endpoint you should read the
         <a href="https://www.elastic.co/guide/en/elasticsearch/reference/1.4/query-dsl.html" target="_blank">elasticsearch query DSL documentation</a>
         (we are currently on ES 1.4, moving soon to 5.x).
-      </p>
-      <p>
-        The simple method is to add a url parameter called "q", with values to match. The  wildcard is *,
-        and logic AND, OR, etc can be used too. For example you can find all availability checks made on the sciencedirect
-        website by users of our v1.0.0 plugin with the query <code>?q=*sciencedirect* AND plugin:oabutton_1.0.0</code>
       </p>
 
       <h2>
@@ -201,7 +196,7 @@
         </small>
       </h3>
       <p>
-        Returns a list of our currently blacklisted URLs - we won't accept availability checks or requests for URLs on this list,
+        Returns a list of our currently blacklisted domains or URLs.  We won't accept availability checks or requests for URLs on this list,
         because we believe the content will not contain anything we would consider to be a research article.
       </p>
 
@@ -218,11 +213,11 @@
         </small>
       </h3>
       <p>
-        Provide a url-encoded URL in a parameter named "url", and this will return the metadata we can find.
+        Returns metadata for a provided URL.  Simple provide a url-encoded URL in a parameter named "url".
       </p>
       <p>
-        See the example for returned metadata structure - note that we wil not necessarily support the same metadata
-        for all scraped URLs, and we may change it over time, so don't assume a stable structure here.
+        Try the example above to see the returned metadata structure.  Note that we will not necessarily support the same metadata
+        for all scraped URLs, and we may change it over time, so don't assume a stable structure.
       </p>
 
       <h2>
@@ -269,8 +264,7 @@
         </small>
       </h3>
       <p>
-        This provides an elasticsearch endpoint onto all the requests we have created so far
-        (works the same as /availabilities, see above).
+        This endpoint allows you to flexibly search and explore all requests we have received.  As with the /availabilities endpoint above, valid elasticsearch queries are accepted (see /availabilities above for more information).
       </p>
 
       <!--
@@ -297,8 +291,7 @@
         </small>
       </h3>
       <p>
-        This provides an elasticsearch endpoint onto all the declarations of support we have received for open requests.
-        (works the same as /availabilities, see above).
+        This endpoint allows you to flexibly search and explore all support declarations we have received for open requests.  As with the /availabilities and /requests endpoints above, valid elasticsearch queries are accepted (see /availabilities above for more information).
       </p>
       <p>
         For example to find every declaration of support for the request with ID RBNfJLPX382TZZtRR: <br>
