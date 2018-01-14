@@ -67,11 +67,6 @@ jQuery(document).ready(function() {
   var afterfailure = function() {
     $('.noddyMessage').html('<p>This link or code expired! They do that after their first use, 30 minutes, or if you get sent another. Refresh the page and reenter your email to try again.</p>');
   }
-  if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
-    $('#bookmarklet').attr('href',$('#bookmarklet').attr('href').replace('YYYY','https://dev.openaccessbutton.org'));
-  } else {
-    $('#bookmarklet').attr('href',$('#bookmarklet').attr('href').replace('YYYY','https://openaccessbutton.org'));
-  }
   // TODO set these for oabutton to have its own oauth accounts:
   // noddy.oauthGoogleClientId = '';
   noddy.oauthFacebookAppId = '114282989239097';
