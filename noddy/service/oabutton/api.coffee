@@ -348,6 +348,7 @@ API.add 'service/oab/job/:jid/results.csv',
     csv = '"MATCH","AVAILABLE","SOURCE","REQUEST","TITLE","DOI"'
     liborder = []
     sources = []
+    extras = []
     if res.length and res[0].args?
       jargs = JSON.parse res[0].args
       if jargs.libraries?
@@ -358,11 +359,24 @@ API.add 'service/oab/job/:jid/results.csv',
         sources = jargs.sources
         for s in sources
           csv += ',"' + s.toUpperCase() + '"'
+      for er in res
+        if er.args?
+          erargs = JSON.parse er.args
+          for k of erargs
+            extras.push(k) if k.toLowerCase() not in ['library','libraries','sources','plugin','all','titles'] and k not in extras
+      if extras.length
+        exhd = ''
+        exhd += '"' + ex + '",' for ex in extras
+        csv = exhd + csv
 
     for r in res
       row = if r.result.string then JSON.parse(r.result.string) else r.result['API.service.oab.find']
-      csv += '\n"'
-      csv += if row.match then row.match.replace('TITLE:','').replace(/"/g,'') + '","' else '","'
+      csv += '\n'
+      if r.args?
+        ea = JSON.parse r.args
+        for extra in extras
+          csv += '"' + (if ea[extra]? then ea[extra] else '') + '",'
+      csv += '"' + (if row.match then row.match.replace('TITLE:','').replace(/"/g,'') + '","' else '","')
       av = 'No'
       if row.availability?
         for a in row.availability
