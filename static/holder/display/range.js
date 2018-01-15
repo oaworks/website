@@ -1,14 +1,13 @@
 
-$.getScript("//static.cottagelabs.com/bootstrap-slider/slider.js");
 $('<link/>', { rel:'stylesheet', type: 'text/css', href: '//static.cottagelabs.com/bootstrap-slider/slider.css' }).appendTo('head');
 
 $.fn.holder.display.range = function(obj) {
   var options = obj.holder.options;
   if (options.paging) return; // do nothing when just paging results
-  
+
   // TODO is it worth trying to auto-guess some range fields? Like on things that look like dates?
   // TODO if range facet results are present, should ranges be extracted from range facet results?
-  
+
   /* options.ranges can take the form of:
   options.ranges = {
     createdAt: {
@@ -42,7 +41,7 @@ $.fn.holder.display.range = function(obj) {
     }
   }
   */
-  
+
   if (options.ranges) {
 
     if ( !$('.'+options.class+'.range').length ) {
@@ -54,7 +53,7 @@ $.fn.holder.display.range = function(obj) {
     }
 
     $('.'+options.class+'.range').html("");
-    
+
     for ( var r in options.ranges ) {
       var step = options.ranges[r].step ? options.ranges[r].step : 1;
       if (options.ranges[r].min === undefined) options.ranges[r].min = 946684800;
@@ -79,22 +78,24 @@ $.fn.holder.display.range = function(obj) {
       ranger += n + ': <span class="' + options.class + ' rangelow ' + r + '">' + low + '</span> to <span class="' + options.class + ' rangehigh ' + r + '">' + high + '</span></p>';
       ranger += '<input key="' + r + '" style="width:100%;" class="' + options.class + ' ranger" type="text"/>';
       $('.'+options.class+'.range').append(ranger);
-      $('.'+options.class+'.ranger').last().slider({ min: options.ranges[r].min, max: options.ranges[r].max, value: vals, step: step, tooltip:'hide' })
-      .on('slide',function(e) {
-        var low = $(this).attr('key') && options.ranges[$(this).attr('key')]  && options.ranges[$(this).attr('key')].date && options.ranges[$(this).attr('key')].date.display ? options.ranges[$(this).attr('key')].date.display(e.value[0]) : e.value[0];
-        $('.'+options.class+'.rangelow.'+r).text(low);
-        var high = $(this).attr('key') && options.ranges[$(this).attr('key')]  && options.ranges[$(this).attr('key')].date && options.ranges[$(this).attr('key')].date.display ? options.ranges[$(this).attr('key')].date.display(e.value[1]) : e.value[1];
-        $('.'+options.class+'.rangehigh.'+r).text(high);
-      })
-      .on('slideStop',function(e) {
-        var low = $(this).attr('key') && options.ranges[$(this).attr('key')]  && options.ranges[$(this).attr('key')].date && options.ranges[$(this).attr('key')].date.submit ? options.ranges[$(this).attr('key')].date.submit(e.value[0]) : e.value[0];
-        $(this).attr('val',low);
-        $(this).attr('range','from');
-        options.add(undefined,$(this));
-        var high = $(this).attr('key') && options.ranges[$(this).attr('key')]  && options.ranges[$(this).attr('key')].date && options.ranges[$(this).attr('key')].date.submit ? options.ranges[$(this).attr('key')].date.submit(e.value[1],true) : e.value[1];
-        $(this).attr('val',high);
-        $(this).attr('range','to');
-        options.add(undefined,$(this));
+      $.getScript("//static.cottagelabs.com/bootstrap-slider/slider.js").done(function() {
+        $('.'+options.class+'.ranger').last().slider({ min: options.ranges[r].min, max: options.ranges[r].max, value: vals, step: step, tooltip:'hide' })
+        .on('slide',function(e) {
+          var low = $(this).attr('key') && options.ranges[$(this).attr('key')]  && options.ranges[$(this).attr('key')].date && options.ranges[$(this).attr('key')].date.display ? options.ranges[$(this).attr('key')].date.display(e.value[0]) : e.value[0];
+          $('.'+options.class+'.rangelow.'+r).text(low);
+          var high = $(this).attr('key') && options.ranges[$(this).attr('key')]  && options.ranges[$(this).attr('key')].date && options.ranges[$(this).attr('key')].date.display ? options.ranges[$(this).attr('key')].date.display(e.value[1]) : e.value[1];
+          $('.'+options.class+'.rangehigh.'+r).text(high);
+        })
+        .on('slideStop',function(e) {
+          var low = $(this).attr('key') && options.ranges[$(this).attr('key')]  && options.ranges[$(this).attr('key')].date && options.ranges[$(this).attr('key')].date.submit ? options.ranges[$(this).attr('key')].date.submit(e.value[0]) : e.value[0];
+          $(this).attr('val',low);
+          $(this).attr('range','from');
+          options.add(undefined,$(this));
+          var high = $(this).attr('key') && options.ranges[$(this).attr('key')]  && options.ranges[$(this).attr('key')].date && options.ranges[$(this).attr('key')].date.submit ? options.ranges[$(this).attr('key')].date.submit(e.value[1],true) : e.value[1];
+          $(this).attr('val',high);
+          $(this).attr('range','to');
+          options.add(undefined,$(this));
+        });
       });
     }
 
@@ -114,7 +115,7 @@ $.fn.holder.display.range = function(obj) {
 
     // so add needs to know how to build a range filter into the query too
   }
-  
+
 }
-  
+
 

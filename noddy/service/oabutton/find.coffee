@@ -20,8 +20,10 @@
 }
 ###
 API.service.oab.find = (opts={url:undefined,type:undefined}) ->
-  opts.refresh ?= 30 # default refresh. If true then we won't even use successful previous lookups, otherwise if number only use failed lookups within refresh days
+  opts.type ?= 'article'
   opts.sources ?= ['oabutton','eupmc','oadoi','share','core','openaire','figshare','doaj']
+  opts.refresh ?= 30 # default refresh. If true then we won't even use successful previous lookups, otherwise if number only use failed lookups within refresh days
+  opts.refresh = 0 if opts.refresh is true
   if typeof opts.refresh isnt 'number'
     try
       n = parseInt opts.refresh
@@ -29,13 +31,15 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
     catch
       opts.refresh = 0
   if opts.url
-    if opts.url.indexOf('10.1') is 0
+    if opts.url.indexOf('10.') is 0
       opts.doi = opts.url
       opts.url = 'https://doi.org/' + opts.url
     else if opts.url.toLowerCase().indexOf('pmc') is 0
-      opts.url = 'http://europepmc.org/articles/PMC' + opts.url.toLowerCase().replace('pmc','')
+      opts.pmcid ?= opts.url.toLowerCase().replace('pmc','')
+      opts.url = 'http://europepmc.org/articles/PMC' + opts.pmcid
     else if opts.url.length < 10 and opts.url.indexOf('.') is -1 and not isNaN(parseInt(opts.url))
-      opts.url = 'https://www.ncbi.nlm.nih.gov/pubmed/' + opts.url
+      opts.pmid ?= opts.url
+      opts.url = 'https://www.ncbi.nlm.nih.gov/pubmed/' + opts.pmid
   if not opts.url
     opts.url = 'CITATION:'+opts.citation if opts.citation
     opts.url = 'TITLE:'+opts.title if opts.title
@@ -52,16 +56,32 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
 
   opts.discovered = {article:false,data:false}
   opts.source = {article:false,data:false}
-  if opts.type is 'article' or not opts.type?
-    if opts.refresh isnt 0 and opts.url and 'oabutton' in opts.sources
-      avail = oab_availability.find {'url':opts.url,'discovered':{exists:{field:'discovered.article'}}}
+  if opts.type is 'article'
+    finder = '('
+    finder += 'url.exact:"' + opts.url + '"' if opts.url?
+    if opts.doi?
+      finder += ' OR ' if finder isnt '('
+      finder += 'doi.exact:"' + opts.doi + '"'
+    if opts.pmcid?
+      finder += ' OR ' if finder isnt '('
+      finder += 'pmcid.exact:"' + opts.pmcid + '"'
+    if opts.pmid?
+      finder += ' OR ' if finder isnt '('
+      finder += 'pmid.exact:"' + opts.pmid + '"'
+    if opts.title?
+      finder += ' OR ' if finder isnt '('
+      finder += 'title:"' + opts.title + '"'
+    finder += ')'
+    console.log finder
+    if opts.refresh isnt 0 and 'oabutton' in opts.sources
+      avail = oab_availability.find finder + ' AND discovered.article:* AND NOT discovered.article:false'
       if avail?.discovered?.article and ret.meta.article.redirect = API.service.oab.redirect(avail.discovered.article) isnt false
         ret.meta.article.url = avail.discovered.article
         ret.meta.article.source = avail.source?.article
         ret.meta.cache = true
         ret.meta.refresh = opts.refresh # if we have a discovered article that is not since blacklisted we always reuse it - this is just for info
     d = new Date()
-    if not ret.meta.article.url and ('oabutton' not in opts.sources or opts.refresh is 0 or not oab_availability.find 'url.exact:"'+opts.url + '" AND createdAt:>' + d.setDate(d.getDate() - opts.refresh) )
+    if not ret.meta.article.url and ('oabutton' not in opts.sources or opts.refresh is 0 or not oab_availability.find finder + ' AND createdAt:>' + d.setDate(d.getDate() - opts.refresh) )
       ret.meta.article = API.service.oab.resolve opts.url, opts.dom, opts.sources, opts.all, opts.titles
       ret.match = 'https://doi.org/' + ret.meta.article.doi if ret.meta.article.doi and ret.match.indexOf('http') isnt 0
     if ret.meta.article.url and ret.meta.article.source and ret.meta.article.redirect isnt false and not ret.meta.article.journal_url
@@ -72,16 +92,21 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
 
   opts.url = 'https://doi.org/' + ret.meta.article.doi if opts.url.indexOf('http') isnt 0 and ret.meta.article.doi
   # so far we are only doing availability checks for articles, so only need to check requests for data types or articles that were not found yet
-  if (opts.type isnt 'article' or 'article' not in already) and requests = oab_request.find {url:opts.url,type:opts.type}
-    for r in requests
-      if r.type not in already
-        rq =
-          type: r.type
-          _id: r._id
-        rq.ucreated = if opts.uid and r.user?.id is opts.uid then true else false
-        rq.usupport = if opts.uid then API.service.oab.supports(r._id, opts.uid)? else false
-        ret.requests.push rq
-        already.push r.type
+  console.log opts.type
+  console.log already
+  console.log opts.type isnt 'article'
+  console.log 'article' not in already
+  cr = oab_request.find finder + ' AND type:' + opts.type
+  console.log cr
+  if (opts.type isnt 'article' or 'article' not in already) and request = oab_request.find finder + ' AND type:' + opts.type
+    console.log request
+    rq =
+      type: request.type
+      _id: request._id
+    rq.ucreated = if opts.uid and request.user?.id is opts.uid then true else false
+    rq.usupport = if opts.uid then API.service.oab.supports(request._id, opts.uid)? else false
+    ret.requests.push rq
+    already.push request.type
 
   delete opts.dom
   oab_availability.insert(opts) if not opts.nosave # save even if was a cache hit, to track usage of the endpoint

@@ -283,8 +283,9 @@ API.add 'service/oab/job',
         p.libraries = this.request.body.libraries if this.request.body.libraries?
         p.sources = this.request.body.sources if this.request.body.sources?
         p.all = this.request.body.all ?= false
+        p.refresh = 0 if this.request.body.refresh
         p.titles = this.request.body.titles ?= true
-      return API.job.create {complete:'API.service.oab.job_complete', user:this.userId, service:'openaccessbutton', function:'API.service.oab.find', name:(this.request.body.name ? "oab_availability"), processes:processes}
+      return API.job.create {refresh:this.request.body.refresh, complete:'API.service.oab.job_complete', user:this.userId, service:'openaccessbutton', function:'API.service.oab.find', name:(this.request.body.name ? "oab_availability"), processes:processes}
 
 API.add 'service/oab/job/generate/:start/:end',
   post:
@@ -363,7 +364,7 @@ API.add 'service/oab/job/:jid/results.csv',
         if er.args?
           erargs = JSON.parse er.args
           for k of erargs
-            extras.push(k) if k.toLowerCase() not in ['library','libraries','sources','plugin','all','titles'] and k not in extras
+            extras.push(k) if k.toLowerCase() not in ['refresh','library','libraries','sources','plugin','all','titles'] and k not in extras
       if extras.length
         exhd = ''
         exhd += '"' + ex + '",' for ex in extras
@@ -388,7 +389,7 @@ API.add 'service/oab/job/:jid/results.csv',
       if row.requests
         for re in row.requests
           if re.type is 'article'
-            rq = 'https://' + (if API.settings.dev then 'dev.' else '') + 'openaccessbutton.org/request/' + row.requests[re]._id
+            rq = 'https://' + (if API.settings.dev then 'dev.' else '') + 'openaccessbutton.org/request/' + re._id
       csv += rq + '","'
       csv += row.meta.article.title.replace(/"/g,'').replace(/[^\x00-\x7F]/g, "") if row.meta?.article?.title?
       csv += '","'

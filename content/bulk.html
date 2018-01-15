@@ -5,6 +5,7 @@
   <div class="row">
     <div class="col-md-8 col-md-offset-2">
       <div>
+      	<h1>Bulk processing</h1>
         <p class="jobupload">Upload a csv file, which must have column names including at least one of "url", "doi", "pmid", "pmcid", "title":</p>
   		  <p>
   		    Include library catalogue checks in the bulk job?<br>
@@ -24,6 +25,11 @@
   		    <input type="checkbox" name="sources" class="sources" value="openaire"> openaire<br>
   		    <input type="checkbox" name="sources" class="sources" value="figshare"> figshare<br>
   		    <input type="checkbox" name="sources" class="sources" value="doaj"> doaj<br>
+  		  </p>
+  		  <p>
+  		  	Don't use cached availability checks (by default we don't run a 
+  		  	new check if there is a previous successful check, or a previous unsuccessful check less than 30 days old) ?<br>
+  		    <input type="checkbox" name="refresh" class="refresh"> yes, do fresh checks
   		  </p>
   		  <p>
   		  	Keep checking more sources even if a result is found in one?<br>
@@ -233,6 +239,7 @@
 			  });
 			}
 			if ( $('.all:checked').length ) payload.all = true;
+			if ( $('.refresh:checked').length ) payload.refresh = true;
 			if ( $('.titles:checked').length === 0 ) payload.titles = false;
 			$.ajax({
 				url: api + '/job?apikey='+noddy.apikey,
