@@ -58,16 +58,16 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
   opts.source = {article:false,data:false}
   if opts.type is 'article'
     finder = '('
-    finder += 'url.exact:"' + opts.url + '"' if opts.url?
+    finder += 'url:"' + opts.url + '"' if opts.url?
     if opts.doi?
       finder += ' OR ' if finder isnt '('
-      finder += 'doi.exact:"' + opts.doi + '"'
+      finder += 'doi:"' + opts.doi + '"'
     if opts.pmcid?
       finder += ' OR ' if finder isnt '('
-      finder += 'pmcid.exact:"' + opts.pmcid + '"'
+      finder += 'pmcid:"' + opts.pmcid + '"'
     if opts.pmid?
       finder += ' OR ' if finder isnt '('
-      finder += 'pmid.exact:"' + opts.pmid + '"'
+      finder += 'pmid:"' + opts.pmid + '"'
     if opts.title?
       finder += ' OR ' if finder isnt '('
       finder += 'title:"' + opts.title + '"'
