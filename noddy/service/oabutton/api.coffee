@@ -401,7 +401,7 @@ API.add 'service/oab/job/:jid/results.csv',
           csv += '"'
       for src in sources
         csv += ',"'
-        csv += row.meta.found[src] if row.meta?.found?[src]?
+        csv += row.meta.article.found[src] if row.meta?.article?.found?[src]?
         csv += '"'
 
     job = job_job.get this.urlParams.jid
