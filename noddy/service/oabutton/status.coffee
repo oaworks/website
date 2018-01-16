@@ -11,5 +11,6 @@ API.service.oab.status = () ->
     received: oab_request.count {status:'received'}
     supports: oab_support.count()
     availabilities: oab_availability.count()
-    users: Users.count {"roles.openaccessbutton":'*'}
+    users: Users.count {exists:{field:"roles.openaccessbutton"}}
+    requested: oab_request.count {exists:{field:'user.id'}}, 'user.id'
     #requested: oab_request.aggregate( [ { $group: { _id: "$user"}  } ] ).length # need an alternative to aggregate
