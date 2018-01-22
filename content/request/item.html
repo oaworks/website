@@ -121,7 +121,7 @@
         success: function(data) {
           $('.saved').show();
           if ($('#askingforstory').length) {
-            setTimeout(function() { window.location = window.location },1500);
+            setTimeout(function() { window.location = window.location.href },1500);
           } else {
             setTimeout(function() {$('.saved').hide()},2000);
           }
