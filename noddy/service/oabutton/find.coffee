@@ -50,6 +50,9 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
     opts.url = 'https://doi.org/' + (if opts.doi.indexOf('doi.org/') isnt -1 then opts.doi.split('doi.org/')[1] else opts.doi) if opts.doi
   return {} if not opts.url?
 
+  # ret.accepts is not currently properly handled - it is leftover from when we merged articles and data, and had an idea to do software and other types too
+  # for now it should stay, so that the plugin can know how to handle them if necessary, but it just stays at accepting articles
+  # unless there is an availability or a request found, in which case it is just set to empty list
   ret = {match:opts.url,availability:[],requests:[],accepts:[{type:'article'}],meta:{article:{},data:{}}}
   ret.library = API.service.oab.library(opts) if opts.library
   ret.libraries = API.service.oab.libraries(opts) if opts.libraries
@@ -88,6 +91,7 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
       opts.source.article = ret.meta.article.source
       opts.discovered.article = if typeof ret.meta.article.redirect is 'string' then ret.meta.article.redirect else ret.meta.article.url
       ret.availability.push {type:'article',url:opts.discovered.article}
+      ret.accepts = [];
       already.push 'article'
 
   opts.url = 'https://doi.org/' + ret.meta.article.doi if opts.url.indexOf('http') isnt 0 and ret.meta.article.doi
@@ -100,6 +104,7 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
     rq.ucreated = if opts.uid and request.user?.id is opts.uid then true else false
     rq.usupport = if opts.uid then API.service.oab.supports(request._id, opts.uid)? else false
     ret.requests.push rq
+    ret.accepts = []
     already.push request.type
 
   delete opts.dom
