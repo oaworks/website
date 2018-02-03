@@ -50,7 +50,7 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
     opts.url = 'https://doi.org/' + (if opts.doi.indexOf('doi.org/') isnt -1 then opts.doi.split('doi.org/')[1] else opts.doi) if opts.doi
   return {} if not opts.url?
 
-  ret = {match:opts.url,availability:[],requests:[],meta:{article:{},data:{}}}
+  ret = {match:opts.url,availability:[],requests:[],accepts:[{type:'article'}],meta:{article:{},data:{}}}
   ret.library = API.service.oab.library(opts) if opts.library
   ret.libraries = API.service.oab.libraries(opts) if opts.libraries
   already = []
