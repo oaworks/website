@@ -1,4 +1,5 @@
 
+
 ###
 {
   availability: [
@@ -72,7 +73,6 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
       finder += ' OR ' if finder isnt '('
       finder += 'title:"' + opts.title + '"'
     finder += ')'
-    console.log finder
     if opts.refresh isnt 0 and 'oabutton' in opts.sources
       avail = oab_availability.find finder + ' AND discovered.article:* AND NOT discovered.article:false'
       if avail?.discovered?.article and ret.meta.article.redirect = API.service.oab.redirect(avail.discovered.article) isnt false
@@ -92,14 +92,8 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
 
   opts.url = 'https://doi.org/' + ret.meta.article.doi if opts.url.indexOf('http') isnt 0 and ret.meta.article.doi
   # so far we are only doing availability checks for articles, so only need to check requests for data types or articles that were not found yet
-  console.log opts.type
-  console.log already
-  console.log opts.type isnt 'article'
-  console.log 'article' not in already
   cr = oab_request.find finder + ' AND type:' + opts.type
-  console.log cr
   if (opts.type isnt 'article' or 'article' not in already) and request = oab_request.find finder + ' AND type:' + opts.type
-    console.log request
     rq =
       type: request.type
       _id: request._id

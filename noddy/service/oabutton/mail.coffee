@@ -1,4 +1,5 @@
 
+
 @oab_dnr = new API.collection {index:"oab",type:"oab_dnr"}
 
 API.service.oab.job_complete = (job) ->

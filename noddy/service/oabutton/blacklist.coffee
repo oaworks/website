@@ -1,4 +1,5 @@
 
+
 # the blacklist is for sites we won't allow finds / requetsts to operate on
 
 API.service.oab.blacklist = (url,stale=360000) ->

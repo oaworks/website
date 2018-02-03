@@ -137,6 +137,7 @@
         var pl = data.facets.plugin.terms[p];
         if (pl.term.indexOf('test') === -1) {
           var at = pl.term.split('_')[0].replace('oabutton','plugin').replace('oab','plugin');
+          if (pl.term.indexOf('firefox') !== -1) at = 'firefox_plugin';
           if (plugins[at] === undefined) plugins[at] = {all:0,week:0}
           plugins[at].all += pl.count;
           alltotal += pl.count;
@@ -145,7 +146,8 @@
       for ( var wp in data.facets.plugin_week.terms ) {
         var pw = data.facets.plugin_week.terms[wp];
         if (pw.term.indexOf('test') === -1) {
-          var wt = pw.term.split('_')[0].replace('oabutton','plugin');
+          var wt = pw.term.split('_')[0].replace('oabutton','plugin').replace('oab','plugin');
+          if (pw.term.indexOf('firefox') !== -1) wt = 'firefox_plugin';
           if (plugins[wt] === undefined) plugins[wt] = {all:0,week:0}
           plugins[wt].week += pw.count;
           weektotal += pw.count;

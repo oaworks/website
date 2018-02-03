@@ -1,6 +1,7 @@
 <script src="/static/openaccessbutton_widget.js"></script>
 <script>
 jQuery(document).ready(function() {
+  console.log(api)
   $('.tryit').bind('click',function(e) {
     e.preventDefault();
     $('#oabutton_url').val($(this).html());
@@ -8,7 +9,7 @@ jQuery(document).ready(function() {
       $('#oabutton_find').trigger('click');
     },500)
   });
-  openaccessbutton_widget({uid:'oab_site'});
+  openaccessbutton_widget({uid:'oab_site',api:api});
 
   noddy.afterLogin = function() {
     $('#promptsignup').hide();

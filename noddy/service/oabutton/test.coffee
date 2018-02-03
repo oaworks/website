@@ -1,4 +1,5 @@
 
+
 import Future from 'fibers/future'
 
 API.add 'service/oab/test',
@@ -57,7 +58,7 @@ API.service.oab.test = (verbose) ->
     () ->
       result.support = API.service.oab.support result.request._id, "I am the test story", "0"
       future = new Future()
-      setTimeout (() -> future.return()), 999
+      Meteor.setTimeout (() -> future.return()), 999
       future.wait()
       result.supports = API.service.oab.supports result.request._id, "0"
       oab_support.remove result.support._id
@@ -74,7 +75,7 @@ API.service.oab.test = (verbose) ->
     () ->
       result.dnr = API.service.oab.dnr 'test@test.com', true
       future = new Future()
-      setTimeout (() -> future.return()), 999
+      Meteor.setTimeout (() -> future.return()), 999
       future.wait()
       result.ondnr = API.service.oab.dnr 'test@test.com'
       oab_dnr.remove {email: 'test@test.com'}
