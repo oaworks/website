@@ -22,5 +22,4 @@
     document.body.appendChild(popup);
     oabutton_ui(undefined,version);
   },1500);
-})
 })();
