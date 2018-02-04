@@ -412,13 +412,12 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
             re += '<p class="saved" style="display:none;">Thanks! Please wait a moment while we reload the page...</p>';
           } else {
             re += '<div class="input-group">\
-              <input type="text" name="email" id="noddyEmail" class="form-control" placeholder="Your email address"> \
+              <input type="text" name="email" id="youremail" class="form-control" placeholder="Your email address"> \
               <div class="input-group-btn">\
                 <a id="gologin" href="/account?next=/request/' + rid + '" class="btn btn-action">Continue</a>\
               </div>\
             </div>\
-            <div class="noddyLogin">\
-            <a id="noddyOauthGoogle" class="btn btn-default" style="font-size:0.8em;" href="#"><img style="height:20px;" src="https://static.cottagelabs.com/google.png"> Sign in with Google</a></div>';
+            <p style="margin-bottom:40px;"><small>Any questions? Drop us <a href = "mailto:hello@openaccessbutton.org?subject=Question%20about%20Open%20Access%20Button%20requests">an email</a> or click help.</small></p>';
           }
         } else {
           re += '<p>We need more details for this request. Can you take a minute to help?</p>';
@@ -447,7 +446,6 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       }
 
       $('#info').append(re);
-      if ( $('#noddyEmail').length ) noddy.init();
 
       var acts = '';
       if (rec.status !== 'help') acts += '<h4>Show your support</h4>';
@@ -483,7 +481,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       if ($('#delete').length) $('#delete').bind('click',deleteitem);
       if ($('#action').length) $('#action').bind('change',action);
       if ($('#gologin').length) $('#gologin').bind('click',function(e) {
-        if ($('#noddyEmail').val()) $(this).attr('href',$(this).attr('href').replace('?','?email='+$('#noddyEmail').val()+'&'));
+        if ($('#youremail').val()) $(this).attr('href',$(this).attr('href').replace('?','?email='+$('#youremail').val()+'&'));
       });
       //if (noddy.hasRole('openaccessbutton.admin') && record.status !== 'received') $('#titlelink').bind('click',scrape);
       if (window.location.href.indexOf('support=') !== -1) {
