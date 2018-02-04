@@ -83,7 +83,6 @@ API.add 'service/oab/request/:rid',
       if r = oab_request.get this.urlParams.rid
         n = {}
         if not r.user? and not r.story? and this.request.body.story
-          r = API.service.oab.own(r._id,this.user)
           n.story = this.request.body.story
           n.user = id: this.user._id, email: this.user.emails[0].address, username: (this.user.profile?.firstname ? this.user.username ? this.user.emails[0].address)
           n.user.firstname = this.user.profile?.firstname
