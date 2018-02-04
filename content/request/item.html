@@ -46,7 +46,6 @@
 
 <script>
   jQuery(document).ready(function() {
-    noddy.init()
     $('#topnav').css('background-color','transparent');
     $('code').html(window.location.href.split('#')[0].split('?')[0]);
 
@@ -413,7 +412,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
             re += '<p class="saved" style="display:none;">Thanks! Please wait a moment while we reload the page...</p>';
           } else {
             re += '<div class="input-group">\
-              <input type="text" name="email" id="youremail" class="form-control" placeholder="Your email address"> \
+              <input type="text" name="email" id="noddyEmail" class="form-control" placeholder="Your email address"> \
               <div class="input-group-btn">\
                 <a id="gologin" href="/account?next=/request/' + rid + '" class="btn btn-action">Continue</a>\
               </div>\
@@ -448,6 +447,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       }
 
       $('#info').append(re);
+      if ( $('#noddyEmail').length ) noddy.init();
 
       var acts = '';
       if (rec.status !== 'help') acts += '<h4>Show your support</h4>';
@@ -483,7 +483,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       if ($('#delete').length) $('#delete').bind('click',deleteitem);
       if ($('#action').length) $('#action').bind('change',action);
       if ($('#gologin').length) $('#gologin').bind('click',function(e) {
-        if ($('#youremail').val()) $(this).attr('href',$(this).attr('href').replace('?','?email='+$('#youremail').val()+'&'));
+        if ($('#noddyEmail').val()) $(this).attr('href',$(this).attr('href').replace('?','?email='+$('#noddyEmail').val()+'&'));
       });
       //if (noddy.hasRole('openaccessbutton.admin') && record.status !== 'received') $('#titlelink').bind('click',scrape);
       if (window.location.href.indexOf('support=') !== -1) {
