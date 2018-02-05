@@ -147,6 +147,11 @@
           $('#url').css('border-color','#f04717').focus();
           return;
         }
+        if (url.toLowerCase().indexOf('sciencedirect') !== -1) {
+          $('#url').val('');
+          $('#url').parent().after('<p>Sorry, Science Direct pages cannot be accessed via our website. Please try our plugin though, it will work for you on Science Direct pages!</p>');
+          return;
+        }
         try {
           if (window.location.search.length === 0 && 'pushState' in window.history) window.history.pushState("", "find", '?url=' + encodeURIComponent(url));
         } catch(err) {}

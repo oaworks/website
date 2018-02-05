@@ -22,6 +22,8 @@
   noddy.service = '{{service}}';
   noddy.debug = {{debug}};
   noddy.api = api.replace('/service/oab','');
+  
+  if (api !== 'https://api.openaccessbutton.org') $('.bookmarklet_link').attr('href',"javascript:document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','https://dev.openaccessbutton.org/static/bookmarklet/includer.js?r='+Math.random());");
 
   jQuery(document).ready(function() {
 
@@ -188,7 +190,7 @@
       </div>
       <div class="modal-body">
         <p>
-          <a href="javascript:document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','https://dev.openaccessbutton.org/static/bookmarklet/includer.js?r='+Math.random());" style="background-color:#ccc;padding:5px;border-radius:3px;">Open Access Button</a>
+          <a class="bookmarklet_link" href="javascript:document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','https://openaccessbutton.org/static/bookmarklet/includer.js?r='+Math.random());" style="background-color:#ccc;padding:5px;border-radius:3px;">Open Access Button</a>
         </p>
         <ol>
         <li> Make sure your bookmarks bar is showing. If not, you can click View, and select "Show Bookmarks Bar."</li>
@@ -214,7 +216,7 @@
       </div>
       <div class="modal-body">
         <p>
-          <a href="javascript:document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','https://dev.openaccessbutton.org/static/bookmarklet/includer.js?r='+Math.random());" style="background-color:#ccc;padding:5px;border-radius:3px;">Open Access Button</a>
+          <a class="bookmarklet_link" href="javascript:document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','https://openaccessbutton.org/static/bookmarklet/includer.js?r='+Math.random());" style="background-color:#ccc;padding:5px;border-radius:3px;">Open Access Button</a>
         </p>
         <p>TODO INSTRUCTIONS FOR BOOKMARKLET INSTALL ON EDGE</p>
       </div>
@@ -234,7 +236,7 @@
       </div>
       <div class="modal-body">
         <p>
-          <a href="javascript:document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','https://dev.openaccessbutton.org/static/bookmarklet/includer.js?r='+Math.random());" style="background-color:#ccc;padding:5px;border-radius:3px;">Open Access Button</a>
+          <a class="bookmarklet_link" href="javascript:document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','https://openaccessbutton.org/static/bookmarklet/includer.js?r='+Math.random());" style="background-color:#ccc;padding:5px;border-radius:3px;">Open Access Button</a>
         </p>
         <p>TODO INSTRUCTIONS FOR BOOKMARKLET INSTALL ON IE</p>
       </div>

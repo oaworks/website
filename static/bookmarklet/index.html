@@ -4,7 +4,8 @@
     <title>OA Bookmarklet test</title>
     <meta charset="UTF-8">
     <script>
-      document.getElementsByTagName('head')[0].appendChild(document.createElement('script')).setAttribute('src','https://dev.openaccessbutton.org/static/bookmarklet/includer.js?r='+Math.random());
+      document.getElementsByTagName('head')[0].appendChild(document.createElement('script')).setAttribute('src','/static/bookmarklet/includer.js?r='+Math.random());
+      if (window.location.href.indexOf('dev.') !== -1) document.getElementsByClassName('.bookmarklet_link')[0].setAttribute('href',"javascript:document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','https://dev.openaccessbutton.org/static/bookmarklet/includer.js?r='+Math.random());");
     </script>
   </head>
   <body>
@@ -15,7 +16,7 @@
     </p>
     
     <p>
-      <a href="javascript:document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','https://dev.openaccessbutton.org/static/bookmarklet/includer.js?r='+Math.random());" style="background-color:#ccc;padding:5px;border-radius:3px;">Open Access Button</a>
+      <a class="bookmarklet_link" href="javascript:document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','https://openaccessbutton.org/static/bookmarklet/includer.js?r='+Math.random());" style="background-color:#ccc;padding:5px;border-radius:3px;">Open Access Button</a>
     </p>
   </body>
 </html>
