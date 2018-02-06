@@ -13,7 +13,7 @@ $.fn.holder.use.oabutton = {
   facets: {
     status: { terms: { field: "status.exact" } },
     user: { terms: { field: "user.profession.exact", size: 100 } },
-    type: { terms: { field: "type.exact" } },
+    //type: { terms: { field: "type.exact" } },
     //plugin: { terms: { field: "plugin.exact", size: 100 } },
     keyword: { terms: { field: "keywords.exact", size: 1000 } },
     journal: { terms: { field: "journal.exact", size: 1000 } }

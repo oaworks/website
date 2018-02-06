@@ -337,7 +337,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       ttl += '</h2>';
       $('#titleheader').html(ttl);
       var ot = rec.type === 'article' ? 'data' : 'article';
-      if (rec.status === 'help' && ( !rec.story || !rec.user ) && ( (rec.type === 'article' && window.location.search.indexOf('data=false') === -1) || rec.type === 'data' ) ) {
+      if (false) { // data disabled for now (rec.status === 'help' && ( !rec.story || !rec.user ) && ( (rec.type === 'article' && window.location.search.indexOf('data=false') === -1) || rec.type === 'data' ) ) {
         if (rec.other) {
           $('#other').html('<p><a style="text-decoration:underline;color:#FFFFFC;" href="/request/' + rec.other + '">I actually wanted the ' + ot + '</a></p>');
         } else {

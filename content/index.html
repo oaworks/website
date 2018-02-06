@@ -228,7 +228,7 @@
                 availability += '<p>Not what you were expecting? <a target="_blank" href ="/feedback#wrong?searched=' + encodeURIComponent(url) + '&given=' + encodeURIComponent(has.article.url) + '">Report an error</a>.</p>';
                 availability += '<p> You can <a href="/request?url=' + encodeURIComponent(data.data.match) + '">request it from the author</a> if it isn\'t available.</p>';
       	      }
-              if (window.location.search.indexOf('data=false') === -1) {
+              if (false) { // data disabled for now (window.location.search.indexOf('data=false') === -1) {
                 availability += '<p style="color:#212f3f;padding-top:50px;">';
                 availability += 'Want the data supporting the article? ';
                 availability += '<a class="btn btn-action" href="/request?type=data&url=' + encodeURIComponent(data.data.match) + '">Request it from the author</a></p>';
