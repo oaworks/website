@@ -358,6 +358,7 @@ noddy.afterLogin = function() {
 noddy.loginSuccess = function(data) {
   if (noddy.debug) console.log('Login successful');
   noddy.user.login = 'success';
+
   var progress = noddy.getCookie('noddyprogress');
   if (progress) {
     clearInterval(progress.interval);
@@ -380,6 +381,14 @@ noddy.loginSuccess = function(data) {
   noddy.apikey = data.apikey;
   noddy.user.account = data.account;
   if (noddy.user.email === undefined) noddy.user.email = noddy.user.account.email;
+
+  //data.cookies = ['http://localhost:3000/api/accounts/cutter?test=1234'];
+  if (data.cookies) {
+    for ( var dc in data.cookies ) {
+      $('body').append('<iframe class="noddy_cookie_cutter" style="display:none;" src="' + data.cookies[dc] + '&apikey=' + noddy.apikey + '"></iframe>');
+    }
+    setTimeout(function() { $('.noddy_cookie_cutter').remove(); },3000);
+  }
 
   var cookie = data.account;
   cookie.timestamp = data.settings.timestamp;

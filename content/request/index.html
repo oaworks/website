@@ -120,7 +120,11 @@ jQuery(document).ready(function() {
         cache: false,
         data: JSON.stringify(dt),
       	success: function(data) {
-          window.location = '/request/' + data.data._id + (window.location.search.indexOf('data=false') === -1 ? '' : '?data=false');
+      	  if (data && data.data && data.data._id) {
+            window.location = '/request/' + data.data._id + (window.location.search.indexOf('data=false') === -1 ? '' : '?data=false');
+      	  } else {
+      	    window.location = '/request';
+      	  }
         },
         error: function(err) {
           window.location = '/request';

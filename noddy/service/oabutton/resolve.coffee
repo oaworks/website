@@ -1,42 +1,43 @@
 
 
 import request from 'request'
+import unidecode from 'unidecode'
 
 API.service.oab.citation = (meta) ->
-  if not meta.title and meta.url
-    meta.url = meta.url.replace('CITATION:','').replace('TITLE:','').trim()
-    if meta.url.indexOf('{') is 0 or meta.url.indexOf('[') is 0 # look for dumped citation styles
+  if meta.title?
+    meta.title = meta.title.replace('CITATION:','').replace('TITLE:','').trim()
+    if meta.title.indexOf('{') is 0 or meta.title.indexOf('[') is 0 # look for dumped citation styles
       try
-        ji = JSON.parse meta.url
+        ji = JSON.parse meta.title
         if ji.title
           meta.title = ji.title
         else
           for i in ji
             meta.title = i.title if i.title and not meta.title
     else
-      meta.url = if meta.url.indexOf('title') isnt -1 then meta.url.split('title')[1].trim() else meta.url.trim()
+      meta.title = if meta.title.indexOf('title') isnt -1 then meta.title.split('title')[1].trim() else meta.title.trim()
       ti
-      if meta.url.indexOf('|') isnt -1
-        ti = meta.url.split('|')[0].trim()
-      else if meta.url.indexOf('}') isnt -1
-        ti = meta.url.split('}')[0].trim()
-      else if meta.url.indexOf('"') isnt -1 || meta.url.indexOf('"') isnt -1
+      if meta.title.indexOf('|') isnt -1
+        ti = meta.title.split('|')[0].trim()
+      else if meta.title.indexOf('}') isnt -1
+        ti = meta.title.split('}')[0].trim()
+      else if meta.title.indexOf('"') isnt -1 || meta.title.indexOf('"') isnt -1
         w
         p = 0
-        if meta.url.indexOf('"') isnt -1
+        if meta.title.indexOf('"') isnt -1
           w = '"'
-          p = meta.url.indexOf('"')
-        w = "'" if meta.url.indexOf("'") isnt -1 and meta.url.indexOf("'") < p
-        parts = meta.url.split w
+          p = meta.title.indexOf('"')
+        w = "'" if meta.title.indexOf("'") isnt -1 and meta.title.indexOf("'") < p
+        parts = meta.title.split w
         for pp in parts
           tp = pp.toLowerCase().replace(/(<([^>]+)>)/g,'').replace(/[^a-z0-9]/g,' ').trim()
           ti = tp if tp.length > 5
       if ti
         meta.title = ti.replace(/(<([^>]+)>)/g,'').trim()
 
-  meta.title = meta.title.replace('CITATION:','').replace('TITLE:','') if meta.title?
   check = API.use.crossref.reverse(meta.title ? meta.url)
-  if check.data and check.data.doi
+  if check.data and check.data.doi and (not meta.title? or meta.title.toLowerCase().replace(' ','').replace(' ','').split(' ')[0] is check.data.title.toLowerCase().replace(' ','').replace(' ','').split(' ')[0])
+    # if we did not know title, or first three words of title match
     meta.doi = check.data.doi
     meta.title = check.data.title
     meta.journal = check.data?['container-title']?[0]
@@ -49,6 +50,8 @@ API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=tr
   # all source get checked by default (but oabutton availability overrides to not botehr with base and dissemin as covered by oadoi)
   # NOTE crossref does also get used to lookup DOIs from title/citation if necessary, but this is not considered a source in this context
   meta = {url:meta} if typeof meta is 'string'
+  meta.url = meta.title if not meta.url? and meta.title?
+  meta.title = meta.url if not meta.title? and meta.url? and meta.url.indexOf('http') is -1 and isNaN(parseInt(meta.url.toLowerCase().replace('pmc','').split()[0]))
   meta.all = if all is false then false else all?
   meta.sources = sources
   meta.found = {}
@@ -114,7 +117,7 @@ API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=tr
     # If it is not the current page, is it worth resolving to it? If it is accessible, can it be taken as the open URL?
     scraped = API.service.oab.scrape(meta.url, content)
     for ks of scraped
-      meta[ks] = scraped[ks] if not meta[ks]?
+      meta[ks] ?= scraped[ks]
 
   meta.url = undefined if meta.url is meta.original
 
@@ -124,7 +127,7 @@ API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=tr
       if src isnt 'oabutton' and (src isnt 'eupmc' or (not meta.pmid and not meta.pmc)) # because we try eupmc directly earlier if these are present, so don't run again
         try
           # will only work for use endpoints that provide a doi method
-          res = if src is 'doaj' then API.use[src].articles.doi(meta.doi) else API.use[src].doi meta.doi
+          res = if src is 'doaj' then API.use[src].articles.doi(meta.doi) else (if src is 'eupmc' then API.use.europepmc.doi(meta.doi) else API.use[src].doi meta.doi)
           meta.checked.identifiers.push src
           if res?.url
             meta.found[src] = res.url
@@ -139,8 +142,8 @@ API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=tr
     if not meta.title and meta.doi
       try
         res = API.use.crossref.works.doi meta.doi
-        if res.data?.DOI is meta.doi and res.data.title
-          meta.title = res.data.title[0].toLowerCase().replace(/(<([^>]+)>)/g,'').replace(/[^a-z0-9 ]/g,' ')
+        if res.DOI is meta.doi and res.title
+          meta.title = res.title[0].toLowerCase().replace(/(<([^>]+)>)/g,'')
 
     # we can get a 404 for an article behind a loginwall if the service does not do splash pages,
     # and then we can accidentally get the article that exists called "404 not found". So we just don't
@@ -149,13 +152,14 @@ API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=tr
     # this is the article: http://research.sabanciuniv.edu/34037/
     meta.title = undefined if meta.title and meta.title.indexOf('404 ') is 0
     if meta.title
+      meta.title = unidecode meta.title
       meta.titles = true
       API.log 'Resolving for title', title: meta.title
       for src in sources
         if src isnt 'oabutton'
           try
             # will only work for use endpoints that provide a title method
-            res = if src is 'doaj' then API.use[src].articles.title(meta.title) else API.use[src].title meta.title
+            res = if src is 'doaj' then API.use[src].articles.title(meta.title) else (if src is 'eupmc' then API.use.europepmc.title(meta.title) else API.use[src].title meta.title)
             meta.checked.titles.push src
             if res?.url
               meta.source = src
