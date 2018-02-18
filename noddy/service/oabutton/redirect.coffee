@@ -18,7 +18,7 @@ API.service.oab.redirect = (url) ->
           source = url
           if listing.fulltext
             # switch the url by comparing the fulltext and splash examples, and converting the url in the same way
-            parts = listing.splash.split(listing.identifier)[0]
+            parts = listing.splash.split listing.identifier
             diff = url.replace parts[0], ''
             diff = diff.replace(parts[1]) if parts.length > 1
             url = listing.fulltext.replace listing.identifier, diff
