@@ -3,7 +3,7 @@
   var api_address = 'https://api.openaccessbutton.org';
   var site_address = 'https://openaccessbutton.org';
 
-  api_address = 'https://noddy.api.cottagelabs.com/service/oab';
+  api_address = 'https://dev.api.cottagelabs.com/service/oab';
   site_address = 'https://dev.openaccessbutton.org'; // COMMENT THESE OUT BEFORE GOING TO LIVE
 
   var url = site_address + '/static/bookmarklet';

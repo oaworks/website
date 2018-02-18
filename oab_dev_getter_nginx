@@ -85,42 +85,42 @@ server {
   }
 
   location ~ /url/(?<url>.+) {
-    proxy_pass http://clapidev/api/academic/redirect?url=$url;
+    proxy_pass http://noddy_dev/api/academic/redirect?url=$url;
     proxy_redirect off;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
   }
   location /doi {
-    proxy_pass http://clapidev/api/academic/redirect/doi;
+    proxy_pass http://noddy_dev/api/academic/redirect/doi;
     proxy_redirect off;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
   }
   location /pmc {
-    proxy_pass http://clapidev/api/academic/redirect/pmc;
+    proxy_pass http://noddy_dev/api/academic/redirect/pmc;
     proxy_redirect off;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
   }
   location /pmid {
-    proxy_pass http://clapidev/api/academic/redirect/pmid;
+    proxy_pass http://noddy_dev/api/academic/redirect/pmid;
     proxy_redirect off;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
   }
   location /title {
-    proxy_pass http://clapidev/api/academic/redirect/title;
+    proxy_pass http://noddy_dev/api/academic/redirect/title;
     proxy_redirect off;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
   }
   location /citation {
-    proxy_pass http://clapidev/api/academic/redirect/citation;
+    proxy_pass http://noddy_dev/api/academic/redirect/citation;
     proxy_redirect off;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
