@@ -18,10 +18,10 @@ API.service.oab.redirect = (url) ->
           source = url
           if listing.fulltext
             # switch the url by comparing the fulltext and splash examples, and converting the url in the same way
-            start = listing.splash.split(listing.identifier)[0]
-            url = url.replace start, listing.fulltext.split(listing.identifier)[0]
-            end = listing.splash.split(listing.identifier)[1]
-            url = url.replace(end, listing.fulltext.split(listing.identifier)[1]) if end
+            parts = listing.splash.split(listing.identifier)[0]
+            diff = url.replace parts[0], ''
+            diff = diff.replace(parts[1]) if parts.length > 1
+            url = listing.fulltext.replace litsing.identifier, diff
           else if listing.element and url.indexOf('.pdf') is -1
             try
               content = API.http.phantom url
