@@ -21,7 +21,7 @@ API.service.oab.redirect = (url) ->
             parts = listing.splash.split(listing.identifier)[0]
             diff = url.replace parts[0], ''
             diff = diff.replace(parts[1]) if parts.length > 1
-            url = listing.fulltext.replace litsing.identifier, diff
+            url = listing.fulltext.replace listing.identifier, diff
           else if listing.element and url.indexOf('.pdf') is -1
             try
               content = API.http.phantom url
