@@ -77,14 +77,14 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
       finder += 'title:"' + opts.title + '"'
     finder += ')'
     if opts.refresh isnt 0 and 'oabutton' in opts.sources
-      avail = oab_availability.find finder + ' AND discovered.article:* AND NOT discovered.article:false'
+      avail = oab_availability.find finder + ' AND discovered.article:* AND NOT discovered.article:false', true
       if avail?.discovered?.article and ret.meta.article.redirect = API.service.oab.redirect(avail.discovered.article) isnt false
         ret.meta.article.url = avail.discovered.article
         ret.meta.article.source = avail.source?.article
         ret.meta.cache = true
         ret.meta.refresh = opts.refresh # if we have a discovered article that is not since blacklisted we always reuse it - this is just for info
     d = new Date()
-    if not ret.meta.article.url and ('oabutton' not in opts.sources or opts.refresh is 0 or not oab_availability.find finder + ' AND createdAt:>' + d.setDate(d.getDate() - opts.refresh) )
+    if not ret.meta.article.url and ('oabutton' not in opts.sources or opts.refresh is 0 or not oab_availability.find finder + ' AND createdAt:>' + d.setDate(d.getDate() - opts.refresh), true )
       ret.meta.article = API.service.oab.resolve opts.url, opts.dom, opts.sources, opts.all, opts.titles
       ret.match = 'https://doi.org/' + ret.meta.article.doi if ret.meta.article.doi and ret.match.indexOf('http') isnt 0
     if ret.meta.article.url and ret.meta.article.source and ret.meta.article.redirect isnt false and not ret.meta.article.journal_url
