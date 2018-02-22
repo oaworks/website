@@ -22,7 +22,7 @@
 ###
 API.service.oab.find = (opts={url:undefined,type:undefined}) ->
   opts.type ?= 'article'
-  opts.sources ?= ['oabutton','eupmc','oadoi','base','share','core','openaire','figshare','doaj']
+  opts.sources ?= ['oabutton','eupmc','oadoi','share','core','base','openaire','figshare','doaj']
   opts.refresh ?= 30 # default refresh. If true then we won't even use successful previous lookups, otherwise if number only use failed lookups within refresh days
   opts.refresh = 0 if opts.refresh is true
   if typeof opts.refresh isnt 'number'
