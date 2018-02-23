@@ -1,5 +1,5 @@
 
-
+import Future from 'fibers/future'
 import request from 'request'
 import unidecode from 'unidecode'
 
@@ -44,7 +44,7 @@ API.service.oab.citation = (meta) ->
 
   return meta
 
-API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=true) ->
+API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=true,parallel=false) ->
   API.log msg: 'Resolving academic content', meta: meta, sources: sources, level: 'debug'
   sources ?= ['oabutton','eupmc','oadoi','base','dissemin','share','core','openaire','figshare','doaj']
   # all source get checked by default (but oabutton availability overrides to not botehr with base and dissemin as covered by oadoi)
@@ -57,6 +57,7 @@ API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=tr
   meta.found = {}
   meta.checked = {identifiers:[],titles:[]}
   meta.original = meta.url
+  meta.parallel = parallel
 
   if not meta.pmid
     lurl = meta.url.toLowerCase()
@@ -122,8 +123,10 @@ API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=tr
   meta.url = undefined if meta.url is meta.original
 
   if meta.doi
+    done = 0
+    suitable = false
     API.log 'Resolving for DOI', doi: meta.doi
-    for src in sources
+    _doi = (src) ->
       if src isnt 'oabutton' and (src isnt 'eupmc' or (not meta.pmid and not meta.pmc)) # because we try eupmc directly earlier if these are present, so don't run again
         try
           # will only work for use endpoints that provide a doi method
@@ -136,7 +139,26 @@ API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=tr
             meta.source = src
             meta.licence ?= res.best_oa_location?.license
             meta.journal = res.journal?.title?.split('(')[0].trim()
-            return meta if not all and res.redirect isnt false
+            suitable = not all and res.redirect isnt false
+
+    for sr in sources
+      if parallel
+        (() ->
+          src = sr
+          Meteor.setTimeout (() ->
+            _doi src
+            done += 1) , 10
+        )()
+      else
+        _doi sr
+        return meta if suitable
+    while done isnt sources.length
+      if suitable
+        return meta
+      else
+        future = new Future();
+        Meteor.setTimeout (() -> future.return()), 500
+        future.wait()
 
   if titles
     if not meta.title and meta.doi
@@ -154,8 +176,10 @@ API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=tr
     if meta.title
       meta.title = unidecode meta.title
       meta.titles = true
+      done = 0
+      suitable = false
       API.log 'Resolving for title', title: meta.title
-      for src in sources
+      _title = (src) ->
         if src isnt 'oabutton'
           try
             # will only work for use endpoints that provide a title method
@@ -165,7 +189,26 @@ API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=tr
               meta.source = src
               meta.url = if res.redirect then res.redirect else res.url
               meta.found[src] = res.url
-              return meta if not all and res.redirect isnt false
+              suitable = not all and res.redirect isnt false
+
+      for sr in sources
+        if parallel
+          (() ->
+            src = sr
+            Meteor.setTimeout (() =>
+              _title src
+              done += 1), 10
+          )()
+        else
+          _title sr
+          return meta if suitable
+      while done isnt sources.length
+        if suitable
+          return meta
+        else
+          future = new Future();
+          Meteor.setTimeout (() -> future.return()), 500
+          future.wait()
 
   if not meta.url and journal and meta.journal and 'doaj' in sources # can check DOAJ for journal
     try
