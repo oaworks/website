@@ -112,13 +112,15 @@ API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=tr
   if not meta.doi and meta.url.indexOf('http') is 0 and not meta.pmid and not meta.pmc
     # no point resolving for URL if we already had these, the splash pages would not contain a DOI if the eupmc API did not have it
     API.log 'Resolving URL for content'
-    # this can be SLOW, avoid at all costs - but is better to do this and maybe get a DOI than to search for titles?
-    content ?= API.http.phantom meta.url
-    # TODO could check content for <meta name="citation_fulltext_html_url" content="" />
-    # If it is not the current page, is it worth resolving to it? If it is accessible, can it be taken as the open URL?
-    scraped = API.service.oab.scrape(meta.url, content)
-    for ks of scraped
-      meta[ks] ?= scraped[ks]
+    try
+      # this can be SLOW, avoid at all costs - but is better to do this and maybe get a DOI than to search for titles?
+      content ?= API.http.phantom meta.url
+      content = '' if typeof content is 'number'
+      # TODO could check content for <meta name="citation_fulltext_html_url" content="" />
+      # If it is not the current page, is it worth resolving to it? If it is accessible, can it be taken as the open URL?
+      scraped = API.service.oab.scrape(meta.url, content)
+      for ks of scraped
+        meta[ks] ?= scraped[ks]
 
   meta.url = undefined if meta.url is meta.original
 

@@ -7,7 +7,9 @@
 
 API.service.oab.scrape = (url,content,doi) ->
   meta = {url:url,doi:doi}
-  try content ?= API.http.phantom url
+  try
+    content ?= API.http.phantom url
+    content = undefined if typeof content is 'number'
 
   if url and not meta.doi # quick check to get a DOI if at the end of a URL, as they often are
     mr = new RegExp(/\/(10\.[^ &#]+\/[^ &#]+)$/)
