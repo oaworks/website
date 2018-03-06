@@ -231,9 +231,7 @@ API.add 'service/oab/dnr',
         r = oab_request.get this.queryParams.request
         d.dnr = 'creator' if r.user.email is this.queryParams.email
         if not d.dnr
-          supports = oab_support.find {rid:this.queryParams.request}
-          for s in supports
-            d.dnr = 'supporter' if s.email is this.queryParams.email
+          d.dnr = 'supporter' if oab_support.find {rid:this.queryParams.request, email:this.queryParams.email}
       if not d.dnr and this.queryParams.validate
         d.validation = API.mail.validate this.queryParams.email, API.settings.service?.openaccessbutton?.mail?.pubkey
         d.dnr = 'invalid' if not d.validation.is_valid

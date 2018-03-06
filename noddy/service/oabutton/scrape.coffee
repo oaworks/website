@@ -54,7 +54,7 @@ API.service.oab.scrape = (url,content,doi) ->
 
   if meta.doi
     try
-      cr = API.use.crossref.works.doi(meta.doi).data
+      cr = API.use.crossref.works.doi(meta.doi)
       meta.title = cr.title[0]
       meta.author ?= cr.author
       meta.journal ?= cr['container-title']?[0]

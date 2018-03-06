@@ -97,6 +97,11 @@ API.service.oab.request = (req,uacc,fast) ->
     req.issn = meta?.issn ? ''
     req.publisher = meta?.publisher ? ''
 
+  if not fast and req.journal and not req.sherpa?
+    try
+      sherpa = API.use.sherpa.romeo.search {jtitle:req.journal}
+      req.sherpa = {color:sherpa.publishers[0].publisher[0].romeocolour[0]}
+
   req.status = if not req.story or not req.title or not req.email or not req.user? then "help" else "moderate"
 
   if req.location?.geo
