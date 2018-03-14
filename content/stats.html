@@ -112,7 +112,7 @@
 
       var found = 0;
       for ( var sc in data.facets.sources.terms) {
-        if ( data.facets.sources.terms[sc].term === 'T') found = data.facets.sources.terms[sc].count;
+        if ( data.facets.sources.terms[sc].term !== 'false') found += data.facets.sources.terms[sc].count;
       }
 
       info += '<h3>Availability</h3>';
@@ -290,8 +290,7 @@
 	email: { terms: { "field": "email.exact", "size": 1 } },
         sources: { terms: { "field": "source.article", "size": 100 } },
         embeds: { terms: { "field": "embedded.exact", "size": 100 } },
-        from: { terms: { "field": "from.exact", "size": 100 } },
-        sources: { terms: { "field": "source.article", "size": 100 } }
+        from: { terms: { "field": "from.exact", "size": 100 } }
       }
     });
 

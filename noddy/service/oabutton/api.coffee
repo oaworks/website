@@ -1,9 +1,9 @@
 
 
 # these are global so can be accessed on other oabutton files
-@oab_support = new API.collection {index:"oab",type:"oab_support"}
-@oab_availability = new API.collection {index:"oab",type:"oab_availability"}
-@oab_request = new API.collection {index:"oab",type:"oab_request",history:true}
+@oab_support = new API.collection {index:"oab",type:"support"}
+@oab_availability = new API.collection {index:"oab",type:"availability"}
+@oab_request = new API.collection {index:"oab",type:"request",history:true}
 
 # the normal declaration of API.service.oab is in admin.coffee, because it gets loaded before this api.coffee file
 

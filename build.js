@@ -40,6 +40,8 @@
 // then be rendered via a call to a URL like /widgets/widget1. The template must include the necessary js code
 // to get the item specified in the URL string from some widgets API, and render it into the page.
 
+var fs = require('fs');
+
 var help = {
   dev: 'true/false* if true bundle values are inserted into head, no retrieval, no bundling',
   bundle: 'true*/false if true new js and css minified bundle files are created from everything listed in bundle.json',
@@ -57,9 +59,9 @@ var args = {
   reload: true
 }
 var vars = {};
-try { vars = require('./settings.json'); } catch (err) {}
+try { vars = JSON.parse(fs.readFileSync('./settings.json').toString()); } catch (err) {} // don't use require, because symlinked build script requires from its own dir, not that of fs, which is local dir where script is called
 try {
-  var loc = require('./local.json');
+  var loc = JSON.parse(fs.readFileSync('./local.json').toString());
   for ( var k in loc ) {
     if ( k === '+bundle' ) {
       if (vars.bundle === undefined) vars.bundle = [];
@@ -71,6 +73,8 @@ try {
     }
   }
 } catch (err) {}
+console.log('Vars');
+console.log(vars);
 var bundle, sass, coffee, jshash, csshash, request;
 try { bundle = vars.bundle; } catch (err) {}
 if (vars && vars.build && vars.build.args) {
@@ -102,9 +106,8 @@ for (var i = 2; i < process.argv.length; i++) {
   }
 }
 
+console.log('Args');
 console.log(args);
-
-var fs = require('fs');
 
 var walk = function(dir, done) {
   var results = [];
@@ -249,6 +252,7 @@ var render = function(err,results) {
 }
 
 // get any remote files
+console.log('Bundle');
 console.log(bundle);
 if (args.bundle && typeof bundle === 'object') {
   var uglyjs, uglycss;
@@ -361,6 +365,7 @@ walk('./content', function(err, results) {
         extrahead = pa[0].replace('<head>', '');
         content = pa[1];
       }
+      if (extrahead.indexOf('<title') !== -1 && headerhead.indexOf('<title') !== -1) headerhead = headerhead.replace(/\<title.*?\<\/title\>/,'');
       extrahead = headerhead + extrahead;
       if (content.indexOf('<body') === -1) content = '<body>\n' + content + '\n</body>';
       if (vars.head !== false && content.indexOf('<head') === -1) {
@@ -371,6 +376,11 @@ walk('./content', function(err, results) {
           content = '<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0"></head>\n\n' + content;
         }
       }
+
+      template = handlebars.compile(content);
+      content = template(vars);
+
+      if (extrahead.indexOf('<title') !== -1 && content.indexOf('<title') !== -1) content = content.replace(/\<title.*?\<\/title\>/gi,'');
       if (extrahead) content = content.replace('</head>', extrahead + '\n</head>');
 
       var open, close;
@@ -379,26 +389,17 @@ walk('./content', function(err, results) {
       if (content.indexOf('<html') === -1) content = open + content;
       if (content.indexOf('</html') === -1) content = content + close;
 
-      template = handlebars.compile(content);
-      content = template(vars);
-
       // insert the calls to the necessary js and css
       if (content.indexOf('<head') === -1) content = content.replace('<body', '\n<head>\n</head>\n\n<body');
       if (csshash) content = content.replace('<head>', '<head>\n<link rel="stylesheet" href="/static/' + csshash + '.min.css">\n');
-      if (jshash) {
-        if (content.indexOf('<script') !== -1) {
-          content = content.replace('<script', '\n<script src="/static/' + jshash + '.min.js"></script>\n<script');
-        } else {
-          content = content.replace('<head>', '<head>\n<script src="/static/' + jshash + '.min.js"></script>\n');
-        }
-      }
+      if (jshash) content = content.replace('<head>', '<head>\n<script src="/static/' + jshash + '.min.js"></script>\n');
       if (args.dev && args.bundle && bundle && typeof bundle === 'object') {
         for (var bn in bundle) {
           var bdr = args.retrieve ? bundle[bn] : (fs.existsSync('./serve/retrieved/' + bundle[bn].split('/').pop()) ? './serve/retrieved/' + bundle[bn].split('/').pop() : bundle[bn]);
           if (bundle[bn].indexOf('.js') !== -1) {
-            content = content.replace('</head>', '<script src="' + bdr + '"></script>\n</head>');
+            content = content.indexOf('<head>') !== -1 ? content.replace('<head>', '<head>\n<script src="' + bdr + '"></script>') : content.replace('</head>', '<script src="' + bdr + '"></script>\n</head>');
           } else {
-            content = content.replace('</head>', '<link rel="stylesheet" href="' + bdr + '">\n</head>');
+            content = content.indexOf('<head>') !== -1 ? content.replace('<head>', '<head>\n<link rel="stylesheet" href="' + bdr + '">') : content.replace('</head>', '<link rel="stylesheet" href="' + bdr + '">\n</head>');
           }
         }
       }
