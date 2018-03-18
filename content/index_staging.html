@@ -1,4 +1,3 @@
-<!-- restored from https://github.com/OAButton/website/commit/47a7cb89804f429b0fd1a68b44df36367d3e34db#diff-9af9d34c3da2d2b1b4b18082adc9121f -->
 
 <!-- Start of openaccessbutton Zendesk Widget script -->
 <script>/*<![CDATA[*/window.zEmbed||function(e,t){var n,o,d,i,s,a=[],r=document.createElement("iframe");window.zEmbed=function(){a.push(arguments)},window.zE=window.zE||window.zEmbed,r.src="javascript:false",r.title="",r.role="presentation",(r.frameElement||r).style.cssText="display: none",d=document.getElementsByTagName("script"),d=d[d.length-1],d.parentNode.insertBefore(r,d),i=r.contentWindow,s=i.document;try{o=s}catch(e){n=document.domain,r.src='javascript:var d=document.open();d.domain="'+n+'";void(0);',o=s}o.open()._l=function(){var o=this.createElement("script");n&&(this.domain=n),o.id="js-iframe-async",o.src=e,this.t=+new Date,this.zendeskHost=t,this.zEQueue=a,this.body.appendChild(o)},o.write('<body onload="document._l();">'),o.close()}("https://assets.zendesk.com/embeddable_framework/main.js","openaccessbutton.zendesk.com");
@@ -17,12 +16,12 @@
             <img src="/static/icon_OAB.png">
           </div>
           <div class="col-md-7">
-            <h1 style=";font-size:3em;margin-top:5px;">Avoid<br>Paywalls,<br> Request<br>Data.</h1>
+            <h1 style=";font-size:3em;margin-top:5px;">Avoid<br>Paywalls,<br> Request<br>Research.</h1>
           </div>
         </div>
         <div class="row">
           <div class="col-md-12">
-            <h3 style="font-size:1.3em;">Free, legal research articles and data delivered instantly or automatically requested from authors.</h3>
+            <h3 style="font-size:1.3em;">Free, legal research articles delivered instantly or automatically requested from authors.</h3>
           </div>
         </div>
         <div class="input-group">
@@ -108,7 +107,9 @@
       $('#getfromaccount').hide();
       $('.chromeinstall').show();
     }
+
     $('#topnav').css('background-color','transparent');
+
     var th;
     $('.show').bind('click',function(e) {
       e.preventDefault();
@@ -122,10 +123,12 @@
         $('#'+$(this).attr('what')).show();
       }
     });
+
     if ( $(window).width() >= 1000 && ( $('#topstrap').offset().top + $('#topstrap').height() + $('#footer').height() < $(window).height() ) ) {
       var height = $(window).height() - $('#footer').height() + 40;
       $('#topstrap').css('height',height+'px');
     }
+
     var example = function(e) {
       if (e) e.preventDefault();
       if (th) $('#topstrap').css('height',th);
@@ -133,7 +136,9 @@
       setTimeout(function() { $('#find').trigger('click'); }, 400);
     }
     $('.example').bind('click',example);
+
     noddy.login();
+
     var availability = function(e) {
       if ($(this).attr('id') === 'find' || e === undefined || e.keyCode === 13) {
         if (e && $(this).attr('id') === 'find') e.preventDefault();
@@ -223,7 +228,7 @@
                 availability += '<p>Not what you were expecting? <a target="_blank" href ="/feedback#wrong?searched=' + encodeURIComponent(url) + '&given=' + encodeURIComponent(has.article.url) + '">Report an error</a>.</p>';
                 availability += '<p> You can <a href="/request?url=' + encodeURIComponent(data.data.match) + '">request it from the author</a> if it isn\'t available.</p>';
       	      }
-              if (window.location.search.indexOf('data=false') === -1) {
+              if (false) { // data disabled for now (window.location.search.indexOf('data=false') === -1) {
                 availability += '<p style="color:#212f3f;padding-top:50px;">';
                 availability += 'Want the data supporting the article? ';
                 availability += '<a class="btn btn-action" href="/request?type=data&url=' + encodeURIComponent(data.data.match) + '">Request it from the author</a></p>';
@@ -320,6 +325,7 @@
     }
     $('#url').bind('keyup',availability);
     $('#find').bind('click',availability);
+
     var id;
     if (window.location.href.indexOf('url=') !== -1) id = decodeURIComponent(window.location.href.split('url=')[1].split('&')[0]);
     if (window.location.href.indexOf('doi=') !== -1) id = decodeURIComponent(window.location.href.split('doi=')[1].split('&')[0]);
@@ -335,5 +341,6 @@
       $('#url').val(id).trigger('keyup');
       availability();
     }
+
   });
 </script>
