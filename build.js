@@ -221,7 +221,7 @@ var render = function(err,results) {
       if (coffee === undefined) coffee = require('coffeescript');
       newcontent = coffee.compile(fs.readFileSync(results[sr]).toString());
     }
-    if (newcontent === undefined) {
+    if (newcontent === undefined && (results[sr].indexOf('.css') !== -1 || results[sr].indexOf('.js') !== -1 || results[sr].indexOf('.html') !== -1 || results[sr].indexOf('.md') !== -1)) {
       try {
         var oldcontent = fs.readFileSync(results[sr]).toString();
         if (oldcontent.indexOf('{{') !== -1 && oldcontent.indexOf('}}') !== -1) newcontent = oldcontent;
@@ -350,6 +350,8 @@ walk('./content', function(err, results) {
         }
       }
 
+      if (fl.indexOf('.md') !== -1 && content.indexOf('<markdown') === -1) content = '<markdown>' + content + '</markdown>';
+
       if (vars.header !== false && content.indexOf('<header') === -1) {
         if (vars.header === undefined && templates.indexOf('header') !== -1) vars.header = 'header';
         if (vars.header) content = '{{> ' + vars.header + ' }}' + '\n\n' + content;
@@ -412,14 +414,9 @@ walk('./content', function(err, results) {
 <![endif]-->\n');
       }
 
-      var marked;
-      if (fl.indexOf('.md') !== -1) {
-        console.log('Rendering markdown for file ' + fl);
-        marked = require('marked');
-        content = marked(content);
-      } else if (content.indexOf('<markdown>') !== -1) {
+      if (content.indexOf('<markdown>') !== -1) {
         console.log('Rendering markdown within file ' + fl);
-        marked = require('marked');
+        var marked = require('marked');
         var nc = '';
         var cp = content.split('<markdown>');
         for (var a in cp) {
@@ -431,6 +428,71 @@ walk('./content', function(err, results) {
           }
         }
         content = nc;
+      }
+
+      content = reader(content);
+
+      // TODO before using these preload and precache options, need to fix the problem of onload firing
+      // before images have actually finished loading. Which is annoying.
+      if (vars.preload && vars.api && content.indexOf('<img') !== -1) {
+        var ic = '';
+        var icc = content.split('<img ');
+        for (var cc in icc) {
+          if (cc === '0') {
+            ic += icc[cc];
+          } else {
+            ic += '<img ';
+            var ics = icc[cc].split('>');
+            var ourl = ics[0].split('src')[1].split('=')[1].split('"')[1];
+            var nurl = '';
+            if (ourl.indexOf(vars.api + '/img') === 0) {
+              if (ourl.indexOf('?') === -1) ourl += '?';
+              nurl = ourl.replace('?','?preload=true&');
+            } else {
+              nurl = vars.api + '/img?preload=true&url=' + encodeURIComponent(ourl);
+            }
+            ic += ics[0].replace('src =','src=').replace('src= ','src=').replace(/src=".*?"/,'src="' + nurl + '"') + (ics[0].indexOf(' class') === -1 ? ' class="img img-thumbnail"' : '') + (ics[0].indexOf(' style') === -1 ? ' style="width:100%;"' : '') + ' onload="noddy_preload(this)">' + ics[1];
+          }
+        }
+        ic = ic.replace('</head>','<script>\
+          noddy_preload = function(tgt) {\
+            var _onload = function() {\
+              if (tgt.getAttribute("src")) {\
+                var ni = tgt.cloneNode(true);\
+                ni.setAttribute("onload","");\
+                ni.setAttribute("src",url);\
+                if (ni.getAttribute("style") === "width:100%;") ni.setAttribute("style","");\
+                tgt.parentNode.replaceChild(ni,tgt);\
+              } else {\
+                tgt.style["background-image"] = "url(" + url + ")";\
+              }\
+            }\
+            var url = tgt.getAttribute("src") ? tgt.getAttribute("src").replace("preload=true","") : window.getComputedStyle(tgt).getPropertyValue("background-image").replace("url(\"","").replace("\")","").replace("preload=true","");\
+            var img = new Image();\
+            img.onload = _onload;\
+            img.src = url;\
+          }</script>\n</head>');
+          ic = ic.replace('</body>','<script>\
+            var bdg = false;\
+            try { bdg = window.getComputedStyle(document.getElementsByTagName("body")[0]).getPropertyValue("background-image").indexOf("preload=true") !== -1; } catch(err) {}\
+            if ( bdg ) noddy_preload(document.getElementsByTagName("body")[0]);\
+            var divs = document.getElementsByTagName("div");\
+            for ( var d= 0; d < divs.length; d++) {\
+              var dg = false;\
+              try { dg = window.getComputedStyle(divs[d]).getPropertyValue("background-image").indexOf("preload=true") !== -1; } catch(err) {}\
+              if ( dg ) noddy_preload(divs[d]);\
+            }</script>\n</body>');
+        content = ic;
+      }
+      if (vars.precache) {
+        content = content.replace('</body>','<script>\
+          document.addEventListener("DOMContentLoaded", function() {\
+            var clist=' + JSON.stringify(vars.precache) + ';\
+            for (var i = 0; i < clist.length; i++) {\
+              var img = new Image();\
+              img.src = clist[i];\
+            }\
+          }, false);</script>');
       }
 
       content = content.replace(/\<coffeescript\>/g, '<script type="text/coffeescript">');
@@ -473,3 +535,116 @@ walk('./content', function(err, results) {
     } catch(err) {}
   }
 });
+
+
+
+var reader = function(content) {
+  // codes to build page layout
+
+  // <L> <M> <R> left, middle, and right columns. A middle on its own will also get a col-md-offset-2
+  // <H> a hero unit / jumbotron element
+  // <W> a well elememt
+  // <F> break container and go full width
+  // <C> go back into container
+  // <E> end whatever we are in (if necessary - starting something else that implies a close will work too)
+  // <1-9> any number between 1 and 12 representing a col-md-X
+  // <S> for generating a splash page, or anything else where want a "page break" - e.g push everything else below screen bottom, and centre the visible content
+  // <X> parallax background effect, over image or colour
+
+  // need to be able to apply writer toc, refs, etc when desired
+  // and maybe use jmpress to scale the entire page content, and build presentation views
+
+  if (content.indexOf('<READER>') !== -1 || content.indexOf('<reader>') !== -1) {
+    content = content.replace('<reader>','<READER>');
+    content = content.replace('</reader>','').replace('</READER>','');
+    var cparts = content.split('<READER>');
+    var pre = cparts[0];
+    var offset = 2;
+    var cr = '<div class="cbg"><div class="container" style="max-width:1000px;"><div class="row"><div class="col-md-12">';
+    content = cr + cparts[1];
+    // if there is not an L, M, R, or numeral before any other content, stick in a <div class="col-md-12">
+
+    var regex = /<[LMRHWFESCX1-9]( [^>]*)?>/i;
+    var cregex = /<[LMR]( [^>]*)?>/i;
+    content = content.replace(/<\/[LMRHWFESCX1-9]>/gi,'');
+    var lm = false;
+    var mn = false;
+    var col = '12';
+    var off = '';
+    do {
+      m = regex.exec(content);
+      if (m) {
+        var rp = '';
+        var mt = m[0].split(' ')[0].replace('<','').replace('>','').toLowerCase();
+        var numeral = false;
+        try { numeral = parseInt(m) } catch(err) {}
+        if (['l','m','r'].indexOf(mt) !== -1 || numeral) {
+          rp += '</div>';
+          if (['h','w'].indexOf(lm) !== -1) rp += '</div>';
+          if (mt === 'l') {
+            try { mn = cregex.exec(content.split(m[0])[1])[0].split(' ')[0].replace('<','').replace('>','').toLowerCase(); } catch(err) { mn = false; }
+          } else {
+            mn = false;
+          }
+          col = numeral ? mt : (mt === 'm' && lm !== 'l' ? '8' : (mt === 'l' && mn !== 'm' ? '6' : (mt === 'r' && lm !== 'm' ? '6' : '4')));
+          off = mt === 'm' && lm !== 'l' ? ' col-md-offset-' + offset : (mt === 'r' && lm !== 'l' && lm !== 'm' ? ' col-md-offset-6' : '');
+          rp += '<div class="col-md-' + col + off + '">';
+          lm = mt;
+        } else if (mt === 'e') {
+          rp += '</div>';
+        } else if (mt === 'h') {
+          rp += '<div class="jumbotron">'
+        } else if (mt === 'w') {
+          rp += '<div class="well">';
+        } else if (mt === 'f') {
+          rp += '</div></div></div></div>';
+        } else if (mt === 'c') {
+          rp += cr;
+        } else if (mt === 's') {
+          //if (['l','m','r'].indexOf(lm) !== -1) rp += '</div>';
+          //rp += '</div></div></div></div>';
+          rp += '<div class="splash"></div>';
+          //rp += cr;
+          //rp += '</div>';
+          //rp += '<div class="col-md-' + lm !== 'l' ? '8' : (mn !== 'm' ? '6' : (lm !== 'm' ? '6' : '4')) + (lm !== 'l' ? ' col-md-offset-2">' : '">');
+        } else if (mt === 'x') {
+          rp += '</div></div></div></div>';
+          rp += '<div class="cbg" ';
+          if (m.length > 1 && m[1]) {
+            if (m[1].indexOf(' bg') !== -1) {
+              rp += 'style="padding-top:30px;padding-bottom:30px;background-image:url(' + m[1].split('bg="')[1].split('"')[0] + ');';
+              if (m[1].indexOf(' fixed') !== -1) rp += 'background-attachment:fixed;';
+              rp += 'background-position:center;background-repeat:no-repeat;background-size:cover;"';
+            } else if (m[1].indexOf(' style') !== -1) {
+              rp += 'style="' + m[1].split('style="')[1].split('"')[0] + '"';
+            }
+          } else {
+            rp += 'style="padding-top:30px;padding-bottom:30px;background-color:#FFFFFC;"';
+          }
+          rp += '>';
+          rp += '<' + cr.split(/><(.+)/)[1];
+          rp += '</div><div class="col-md-' + col + off + '">';
+        }
+        content = content.replace(m[0], rp);
+      }
+    } while (m)
+    var post = '';
+    if (content.indexOf('</body') !== -1) {
+      var pconts = content.split('</body');
+      content = pconts[0];
+      post = '</body' + pconts[1];
+    }
+    content = pre + content + '\n\n</div></div></div></div>\n\n';
+    content += '<script>\njQuery(document).ready(function() {\
+      if ( $(".splash").length ) {\
+        var ht = $(window).height();\
+        var pos = $(".splash").offset().top;\
+        var diff = ht - pos + 50;\
+        $(".splash").css({"margin-bottom":diff+"px"});\
+      }\
+    })\n</script>\n';
+    content += post;
+
+  }
+  return content;
+};

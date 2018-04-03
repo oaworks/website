@@ -136,7 +136,7 @@ jQuery(document).ready(function() {
       if (user) {
         $('#viewrequests').show().bind('click',function(e) {
           e.preventDefault();
-          $('.holder.search').val('user.id:'+user.userId).trigger('change');
+          $('.holder.search').val(user.username ? 'user.username:' + user.username : 'user.id:' + user._id).trigger('change');
         });
         if ( !noddy.hasRole('openaccessbutton.admin') ) {
           $.fn.holder.use.oabutton.defaultfilters = df;

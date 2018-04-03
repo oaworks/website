@@ -92,15 +92,14 @@ nobject.prototype.retrieve = (display,populate,poll) ->
       this.display() if display
       this.populate() if populate
       this.poll() if poll
-      if not _.isEqual(this._object,data)
-        for k in this._keys
-          if latest = dot(data,k) isnt current = dot(this._object,k) and current isnt dot(this._original,k) #this needs to know how to compare lists too
-            # there is a conflict between what was received being different from what is current, and current does not match what it was at start
-            return
-          else
-            # there is a difference but it does not clash with a local change, so just accept it anyway, and update the page
-            # exit or suspend edit mode, inform the user, then rebuild the display
-            this.update(k,latest)
+      for k in this._keys
+        if latest = dot(data,k) isnt current = dot(this._object,k) and current isnt dot(this._original,k) #this needs to know how to compare lists too
+          # there is a conflict between what was received being different from what is current, and current does not match what it was at start
+          return
+        else
+          # there is a difference but it does not clash with a local change, so just accept it anyway, and update the page
+          # exit or suspend edit mode, inform the user, then rebuild the display
+          this.update(k,latest)
     error: (data) ->
       console.log('Nobject retrieve error', data) if this._debug
       $('.nobjectMessage').html('<p>There is currently a problem communicating with the server. Editing is temporarily disabled. Please try again later by refreshing the page.</p>')
@@ -160,7 +159,7 @@ nobject.prototype.display = (obj,keys,element) ->
       # and a way to add things like suggestion dropdowns and calendar displays on certain fields
     $(this._element).html display
     if not this._auto
-      $(this._element).append('<p><a class="nobjectSave btn btn-primary" href="#">Save changes</a></p>')
+      $(this._element).append('<p><a class="nobjectSave btn btn-primary" href="#">Save changes</a> <img class="nobjectSaving" style="display:none;height:25px;" src="//static.cottagelabs.com/spin_grey.svg"></p>')
 
 nobject.prototype._changing
 nobject.prototype.watch = () ->
@@ -200,37 +199,51 @@ nobject.prototype.save = (content,url,apikey) ->
   console.log('Nobject saving (if timeout permits)') if this._debug
   try content.preventDefault()
   if not this._saving
+    $(this._element + ' .nobjectSaving').show()
     this._saving = true
     ths = this
     setTimeout (() ->
       if typeof ths?.validate isnt 'function' or ths.validate()
         clearTimeout ths._pid if ths._pid?
-        chng = JSON.parse(JSON.stringify(ths._changes)) if ths._changes isnt false
+        chng = if ths._changes isnt false then JSON.parse(JSON.stringify(ths._changes)) else false
         ths._changes = {} if ths._changes isnt false
-        $.ajax
-          type: (if ths._overwrite is 'PUT' then 'PUT' else 'POST'),
-          url: url ?= ths?._api + '/' + ths._object._id
-          cache:false
-          processData:false
-          contentType: 'application/json'
-          dataType: 'json'
-          data: JSON.stringify content ?= (if ths._changes isnt false then chng else ths._object)
-          success: (data) ->
-            console.log('Nobject saved', data) if this._debug
-            $(ths._element + ' .has-success').removeClass('has-success')
-            ths._saving = false
-            ths.poll() if ths?._poll
-            # if backend accepts, leave edit mode, confirm to user
-            ths?.success(data) if typeof ths.success is 'function' # is this known here, or does it have to be passed in?
-            ths?.after(data) if typeof ths.after is 'function'
-          error: (data) ->
-            console.log('Nobject save error', data) if this._debug
-            $(ths._element + ' .has-success').removeClass('has-success').addClass('has-error')
-            ths._saving = false
-            ths.poll() if ths?._poll
-            # inform the user of a problem saving changes to the backend, and leave edit mode
-            ths.error(data) if typeof ths?.error is 'function' # run any error function, if defined
-          beforeSend: ((request) -> request.setRequestHeader "X-apikey", apikey) if apikey ?= ths?._apikey
+        if chng isnt false and JSON.stringify(chng) isnt '{}'
+          $.ajax
+            type: (if ths._overwrite is 'PUT' then 'PUT' else 'POST'),
+            url: url ?= ths?._api + '/' + ths._object._id
+            cache:false
+            processData:false
+            contentType: 'application/json'
+            dataType: 'json'
+            data: JSON.stringify if ths._changes isnt false then chng else ths._object
+            success: (data) ->
+              console.log('Nobject saved', data) if this._debug
+              if $(ths._element + ' .nobjectSave').length
+                $(ths._element + ' .nobjectSaving').hide()
+                for ky of chng
+                  $(ths._element + ' [nobject="' + ky + '"]').addClass('has-success')
+                  $(ths._element + ' [nobject="' + ky + '"]').parent().addClass('has-success') if $(ths._element + ' [nobject="' + ky + '"]').parent('.checker').length
+                setTimeout (() -> $('.has-success').removeClass('has-success')), 700
+              else
+                $(ths._element + ' .has-success').removeClass('has-success')
+              ths._saving = false
+              ths.poll() if ths?._poll
+              # if backend accepts, leave edit mode, confirm to user
+              ths?.success(data) if typeof ths.success is 'function' # is this known here, or does it have to be passed in?
+              ths?.after(data) if typeof ths.after is 'function'
+            error: (data) ->
+              console.log('Nobject save error', data) if this._debug
+              $(ths._element + ' .has-success').removeClass('has-success').addClass('has-error')
+              $(this._element + ' .nobjectSaving').hide()
+              ths._saving = false
+              ths.poll() if ths?._poll
+              # inform the user of a problem saving changes to the backend, and leave edit mode
+              ths.error(data) if typeof ths?.error is 'function' # run any error function, if defined
+            beforeSend: ((request) -> request.setRequestHeader "X-apikey", apikey) if apikey ?= ths?._apikey
+        else
+          ths._saving = false
+          ths.poll() if ths?._poll
+          $(ths._element + ' .nobjectSaving').hide()
     ), 900
 
 nobject.prototype.sucess = (data) ->
