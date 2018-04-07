@@ -168,21 +168,19 @@ noddy.failureCallback = function(data,action) {
 
 noddy.form = function(matcher) {
   if (noddy.debug) console.log('Noddy building form');
-  if ( !$(matcher).length ) {
-    var form = '<div class="noddyLogin">';
-    form += '<p><input type="email" class="form-control" id="noddyEmail" placeholder="Enter your email address"></p>';
-    form += '<p><button id="noddyLogin" type="submit" class="btn btn-primary btn-block">Log in</button></p>';
-    form += '<p><a id="noddyOauthGoogle" class="btn btn-default btn-block" href="#">Sign in with Google</a></p>';
-    form += '<a id="noddyOauthFacebook" class="btn btn-default btn-block" href="#">Sign in with Facebook</a></p>';
-    form += '</div>';
-    form += '<div class="noddyToken" style="display:none;">';
-    form += '<p><input type="text" class="form-control" id="noddyToken" placeholder="Enter your token"></p>';
-    form += '<p>A login email has been sent to you. Please click the link in the email, or enter the token above. If you don\'t get the email, check your spam.</p>'
-    form += '</div>';
-    form += '<div class="noddyMessage" style="margin-top:5px;"></div>';
-    form += '<div class="noddyLoading"><img style="height:30px;" src="//static.cottagelabs.com/spin_grey.svg"></div>';
-    $((matcher !== undefined ? matcher : 'body')).html(form);
-  }
+  var form = '<div class="noddyLogin">';
+  form += '<p><input type="email" class="form-control" id="noddyEmail" placeholder="Enter your email address"></p>';
+  form += '<p><button id="noddyLogin" type="submit" class="btn btn-primary btn-block">Log in</button></p>';
+  if (noddy.oauthGoogleClientId) form += '<p><a id="noddyOauthGoogle" class="btn btn-default btn-block" href="#">Sign in with Google</a></p>';
+  if (noddy.oauthFacebookAppId) form += '<p><a id="noddyOauthFacebook" class="btn btn-default btn-block" href="#">Sign in with Facebook</a></p>';
+  form += '</div>';
+  form += '<div class="noddyToken" style="display:none;">';
+  form += '<p><input type="text" class="form-control" id="noddyToken" placeholder="Enter your token"></p>';
+  form += '<p>A login email has been sent to you. Please click the link in the email, or enter the token above. If you don\'t get the email, check your spam.</p>'
+  form += '</div>';
+  form += '<div class="noddyMessage" style="margin-top:5px;"></div>';
+  form += '<div class="noddyLoading" style="text-align:center;display:none;"><img style="height:50px;" src="//static.cottagelabs.com/spin_grey.svg"></div>';
+  $((matcher !== undefined ? matcher : 'body')).html(form);
 }
 
 noddy.retrieve = function(email,callback) {
@@ -382,7 +380,7 @@ noddy.loginSuccess = function(data) {
   noddy.user.account = data.account;
   if (noddy.user.email === undefined) noddy.user.email = noddy.user.account.email;
 
-  //data.cookies = ['http://localhost:3000/api/accounts/cutter?test=1234'];
+  //data.cookies = ['http://localhost:3000/api/accounts/cookie?test=1234'];
   if (data.cookies) {
     for ( var dc in data.cookies ) {
       $('body').append('<iframe class="noddy_cookie_cutter" style="display:none;" src="' + data.cookies[dc] + '&apikey=' + noddy.apikey + '"></iframe>');
@@ -594,6 +592,6 @@ noddy.init = function(opts) {
     console.log("Login initialising");
     if (opts) console.log(opts);
   }
-  if (!$('#noddyEmail').length && typeof noddy.form === 'function') noddy.form();
+  if (!$('#noddyEmail').length && typeof noddy.form === 'function') noddy.form(noddy.element);
   noddy.login();
 }
