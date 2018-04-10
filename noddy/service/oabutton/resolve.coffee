@@ -154,13 +154,14 @@ API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=tr
       else
         _doi sr
         return meta if suitable
-    while done isnt sources.length
-      if suitable
-        return meta
-      else
-        future = new Future();
-        Meteor.setTimeout (() -> future.return()), 500
-        future.wait()
+    if parallel
+      while done isnt sources.length
+        if suitable
+          return meta
+        else
+          future = new Future();
+          Meteor.setTimeout (() -> future.return()), 500
+          future.wait()
 
   if titles
     if not meta.title and meta.doi
@@ -212,9 +213,7 @@ API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=tr
             future = new Future();
             Meteor.setTimeout (() -> future.return()), 500
             future.wait()
-      else
-        return meta # this happens when no suitable result could be found
-        
+
 
   if not meta.url and journal and meta.journal and 'doaj' in sources # can check DOAJ for journal
     try
