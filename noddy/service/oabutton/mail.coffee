@@ -36,15 +36,16 @@ API.service.oab.template = (template,refresh) ->
     ghurl = API.settings.service.openaccessbutton?.templates_url
     m = API.tdm.extract
       url:ghurl
-      matchers:['//OAButton/website/blob/develop/emails/.*?title="(.*?[.].*?)">/gi']
+      matchers:['/href="/OAButton/website/blob/develop/emails/(.*?[.].*?)">/gi']
       start:'<table class="files'
       end:'</table'
     fls = []
     fls.push(fm.result[1]) for fm in m.matches
     flurl = ghurl.replace('github.com','raw.githubusercontent.com').replace('/tree','')
     for f in fls
-      content = HTTP.call('GET',flurl + '/' + f).content
-      API.mail.template undefined,{filename:f,service:'openaccessbutton',content:content}
+      if f isnt 'archive'
+        content = HTTP.call('GET',flurl + '/' + f).content
+        API.mail.template undefined,{filename:f,service:'openaccessbutton',content:content}
     return API.mail.template {service:'openaccessbutton'}
   else if template
     return API.mail.template template
