@@ -21,7 +21,7 @@
   var api = '{{api}}';
   noddy.service = '{{service}}';
   noddy.debug = {{debug}};
-  noddy.api = api.replace('/service/oab','');
+  noddy.api = '{{noddy_api}}';
 
   if (api !== 'https://api.openaccessbutton.org') $('.bookmarklet_link').attr('href',"javascript:document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','https://dev.openaccessbutton.org/static/bookmarklet/includer.js?r='+Math.random());");
 
