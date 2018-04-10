@@ -78,7 +78,7 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
     finder += ')'
     if opts.refresh isnt 0 and 'oabutton' in opts.sources
       avail = oab_availability.find finder + ' AND discovered.article:* AND NOT discovered.article:false', true
-      if avail?.discovered?.article and ret.meta.article.redirect = API.service.oab.redirect(avail.discovered.article) isnt false
+      if avail?.discovered?.article and ret.meta.article.redirect = API.service.oab.redirect(avail.discovered.article)
         ret.meta.article.url = avail.discovered.article
         ret.meta.article.source = avail.source?.article
         ret.meta.cache = true
