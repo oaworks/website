@@ -104,13 +104,7 @@
 
 <script>
   jQuery(document).ready(function() {
-    if (!clogin.loggedin()) window.location = '/account?next=/export';
-
-    var api = 'https://api.openaccessbutton.org';
-    if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
-      api = 'https://dev.api.cottagelabs.com/service/oab';
-      clogin.api = 'https://dev.api.cottagelabs.com/accounts';
-    }
+    if (!noddy.loggedin()) window.location = '/account?next=/export';
 
     $('.datepicker').datepicker({
       format:'dd/mm/yyyy',
@@ -135,7 +129,7 @@
     }
     $('.datepicker').bind('change',change_date);
 
-    var what = function(e) {
+    /*var what = function(e) {
       $('.datepicker').val('');
       var w = $(this).val();
       $('optgroup').hide();
@@ -143,7 +137,7 @@
       if (w) {
         $.ajax({
           type:'GET',
-          url: api+'/minmax/' + w + '/createdAt?apikey='+clogin.apikey,
+          url: api+'/minmax/' + w + '/createdAt?apikey='+noddy.apikey,
           success: function(data) {
             var min = moment(data.min).format('DD/MM/YYYY');
             $('#from').val(min);
@@ -159,7 +153,15 @@
         });
       }
     }
-    $('#what').bind('change',what);
+    $('#what').bind('change',what);*/
+    $('#from').val('01/01/2010');
+    $('#from').datepicker('setStartDate','01/01/2010');
+    $('#to').datepicker('setStartDate','01/01/2010');
+    var max = moment(Date.now()).format('DD/MM/YYYY');
+    $('#to').val(max);
+    $('#from').datepicker('setEndDate',max);
+    $('#to').datepicker('setEndDate',max);
+
 
     var filter = function(e) {
       $('#value').html('<option value="">for value:</option>');
@@ -167,7 +169,7 @@
       var k = $(this).val();
       $.ajax({
         type:'GET',
-        url: api+'/terms/' + w + '/' + k + '.exact?apikey='+clogin.apikey,
+        url: api+'/terms/' + w + '/' + k + '.exact?apikey='+noddy.apikey,
         success: function(data) {
           for ( var k in data ) {
             $('#value').append('<option value="' + data[k].term + '">' + data[k].term + ' (' + data[k].count + ')</option>');
@@ -178,9 +180,9 @@
     $('#filter').bind('change',filter);
 
     var go = function() {
-      if (!clogin.hasRole('openaccessbutton.admin') && $('#what').val() === 'account') window.location = '/';
+      if (!noddy.hasRole('openaccessbutton.admin') && $('#what').val() === 'account') window.location = '/';
       if ( $('#what').val() === 'mail' || $('#what').val() === 'changes' ) {
-        var curl = api + '/export/' + $('#what').val() + '?apikey=' + clogin.apikey;
+        var curl = api + '/export/' + $('#what').val() + '?apikey=' + noddy.apikey;
         if (changed.from) curl += '&from=' + moment(changed.from,'DD/MM/YYYY').valueOf();
         if (changed.to) curl += '&to=' + moment(changed.to,'DD/MM/YYYY').valueOf();
         $(this).attr('href',curl);
@@ -189,16 +191,16 @@
         var fields = {
           account: ['_id','createdAt','emails.0.address','profile.name','profile.firstname','profile.lastname','service.openaccessbutton.profile.affiliation','service.openaccessbutton.profile.profession','roles.openaccessbutton','username'],
           //request: ['_id','created_date','type','count','status','title','url','doi','journal','publisher','email','user.username','story','rating'],
-          request: ['_id','created_date','type','count','status','title','url','doi','journal','publisher','sherpa.color','name','email','user.username','user.email','user.firstname','user.lastname','story','rating','receiver','refused.email','refused.date','received.date','received.from','received.description','received.url','received.admin','received.cron','received.notfromauthor','notes'],
+          request: ['_id','created_date','type','count','status','title','url','doi','journal','publisher','sherpa.color','name','email','user.username','user.email','user.firstname','user.lastname','story','rating','receiver','refused.email','refused.date','received.date','received.from','received.description','received.url','received.admin','received.cron','received.notfromauthor','notes','plugin','from','embedded'],
           support: ['created_date','url','type','story','username','rid'],
-          availability: ['created_date','username','url','discovered.article','discovered.data','plugin','from'],
+          availability: ['created_date','username','url','discovered.article','discovered.data','plugin','from','embedded'],
           dnr: ['email']
         }
         var endpoint = 'requests';
         if ($('#what').val() === 'account') endpoint = 'users';
         if ($('#what').val() === 'availability') endpoint = 'availabilities';
         if ($('#what').val() === 'support') endpoint = 'supports';
-  
+
         var query = {
           size: size, // perhaps there needs to be a download batch size option, and/or a check on how many records are available to download
           query: {
@@ -236,20 +238,20 @@
         }
         if ($('#what').val() === 'account') query.query.filtered.filter.bool.must.push({query:{query_string:{query:'roles.openaccessbutton:*'}}});
         if ( query.query.filtered.filter.bool.must.length === 0 ) query.query = {"match_all":{}};
-  
+
         var url = api + '/' + endpoint + '?';
-        if ($('#what').val() === 'account') url += 'apikey=' + clogin.apikey + '&';
+        if ($('#what').val() === 'account') url += 'apikey=' + noddy.apikey + '&';
         url += 'source=' + JSON.stringify(query);
-        var curl = clogin.api.replace('/accounts','/convert?from=json&to=csv&subset=hits.hits._source&fields=' + fields[$('#what').val()].join(',') + '&url='+encodeURIComponent(url));
+        var curl = noddy.api + '/convert?from=json&to=csv&subset=hits.hits._source&fields=' + fields[$('#what').val()].join(',') + '&url='+encodeURIComponent(url);
         $(this).attr('href',curl);
       }
     }
     $('#go').bind('click',go);
 
-    clogin.afterLogin = function() {
-      if (clogin.hasRole('openaccessbutton.admin')) $('#what').append('<option value="account">Users (the user account details)</option><option value="mail">Mail stats</option><option value="changes">Changes to requests</option><option value="dnr">DNR list of emails we cannot send to</option>');
+    noddy.afterLogin = function() {
+      if (noddy.hasRole('openaccessbutton.admin')) $('#what').append('<option value="account">Users (the user account details)</option><option value="mail">Mail stats</option><option value="changes">Changes to requests</option><option value="dnr">DNR list of emails we cannot send to</option>');
     }
-    clogin.login();
+    noddy.login();
 
 
   });

@@ -1,5 +1,5 @@
 	var job = {
-		api: 'https://api.cottagelabs.com',
+		api: noddy.api,
 		url: '/job', // this should default to /job if this lib is to be generic
 		file: undefined,
 		filename: '',
@@ -106,15 +106,15 @@
 	job.polling = function(data) {
 		$('.jobupload').hide();
 		$('#jobinfo').show();
-		var progress = !data.data || !data.data.progress ? 0 : data.data.progress;
+		var progress = !data.progress ? 0 : data.progress;
 		var pc = (Math.floor(progress * 10))/10;
 		var status = '<p>Job ';
-		status += data.data && data.data.name ? data.data.name : '#' + data.data._id;
+		status += data.name ? data.name : '#' + data._id;
 		status += '</p>';
-		if (data.data && data.data.new === true) status += '<p>Your job is new, and is still being loaded into the system. For large jobs this may take a couple of minutes.</p>';
+		if (data.new === true) status += '<p>Your job is new, and is still being loaded into the system. For large jobs this may take a couple of minutes.</p>';
 		status += '<p>Your job is ' + pc + '% complete.</p>';
-		status += '<p><a id="jobdownload" href="' + job.url + '/' + job.hash + '/results?format=csv&apikey=' + clogin.apikey + '" class="btn btn-default btn-block">Download your results</a></p>';
-		if (data.data.progress !== 100) setTimeout(job.poll,10000);
+		status += '<p><a id="jobdownload" href="' + job.url + '/' + job.hash + '/results?format=csv&apikey=' + noddy.apikey + '" class="btn btn-default btn-block">Download your results</a></p>';
+		if (data.progress !== 100) setTimeout(job.poll,10000);
 		$('#jobinfo').html(status);
 	}
 	
@@ -125,7 +125,7 @@
 		}
 		if ( hash ) {
 			$.ajax({
-				url: job.url + '/' + hash + '/progress?apikey='+clogin.apikey,
+				url: job.url + '/' + hash + '/progress?apikey='+noddy.apikey,
 				method: 'GET',
 				success: job.polling,
 				error: job.error
@@ -136,10 +136,10 @@
   job.success = function(data) {
 		$('.jobupload').hide();
 		try {
-			window.history.pushState("", "poll", '#' + data.data.job);
+			window.history.pushState("", "poll", '#' + data.job._id);
 		} catch (err) {}
-		job.hash = data.data.job;
-		job.poll(data.data.job);
+		job.hash = data.job._id;
+		job.poll(data.job._id);
   }
   
 	job.submit = function(e) {
@@ -151,7 +151,7 @@
 			$('#jobsubmit').attr('value','Submitting...');
 			var payload = {list:job.results,name:job.filename};
 			$.ajax({
-				url: job.url + '?apikey='+clogin.apikey,
+				url: job.url + '?apikey='+noddy.apikey,
 				method: 'POST',
 				data: JSON.stringify(payload),
 				dataType: 'JSON', // TODO sort issue here, the POST invalidates preflight without jsonp but with jsonp we don't get back a jsonp object

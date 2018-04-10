@@ -1,4 +1,6 @@
 
+<script type="text/javascript" src="/static/holder/jquery.holder.js"></script>
+
 <div class="container-fluid" id="availability" style="margin-bottom:200px;">
   <div class="row">
     <div class="col-md-8 col-md-offset-2">
@@ -13,12 +15,6 @@
 <script type="text/javascript" src="//static.cottagelabs.com/d3/d3.v4.min.js"></script>
 <script>
   jQuery(document).ready(function() {
-    var api = 'https://api.openaccessbutton.org';
-    if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
-      //api = 'https://dev.api.cottagelabs.com/service/oab';
-      //clogin.api = 'https://dev.api.cottagelabs.com/accounts';
-    }
-    //clogin.login();
 
   	var fill = d3.scaleOrdinal(d3.schemeCategory10);
     var line = function(data,tgt) {
@@ -27,19 +23,19 @@
         width = +svg.attr("width") - margin.left - margin.right,
         height = +svg.attr("height") - margin.top - margin.bottom,
         g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-  
+
       var x = d3.scaleTime()
         .rangeRound([0, width]);
       var y = d3.scaleLinear()
         .rangeRound([height, 0]);
-  
+
       var line = d3.line()
         .x(function(d) { return x(d.date); })
         .y(function(d) { return y(d.val); });
-  
+
       x.domain(d3.extent(data, function(d) { return d.date; })).range([0, width - margin.left - margin.right]);
       y.domain(d3.extent(data, function(d) { return d.val; })).nice().range([height - margin.top - margin.bottom, 0]);
-  
+
       g.append("g")
         .attr("class", "axis")
         .attr("transform", "translate(0," + y.range()[0] + ")")
@@ -47,14 +43,14 @@
   				.ticks( 10 )
   				.tickSizeOuter(0)
   			);
-  
+
       g.append("g")
         .attr("class", "axis")
         .call(d3.axisLeft(y)
   				.ticks( 10 )
   				.tickSizeOuter(0)
   			);
-  
+
       g.append("path")
         .datum(data)
         .attr("class", "line values")
@@ -62,7 +58,7 @@
   			.style('fill', 'none' )
         .attr("stroke", function(d) { return fill(d.key); })
   			.style('stroke-width', '1.3px' );
-  		
+
       svg.selectAll("dot")
         .data(data)
         .enter().append("circle")
@@ -93,7 +89,7 @@
   	}
 
     var status;
-    
+
     var availability = function(data) {
       var info = '<h2>Stats</h2>\
       <p>\
@@ -101,9 +97,9 @@
         We don\'t track individual users usage, and we allow most features of our service to be used anonymously. \
         So we have more data about overall usage, and a bit about certain types of usage.\
       </p>';
-      
+
       info += '<h3>Requests</h3>';
-      info += '<p>We have ' + status.requests + ' requests, ' + status.article + ' for articles and ' + status.data + ' for data. ';
+      info += '<p>We have ' + status.requests + ' requests. '; //, ' + status.article + ' for articles and ' + status.data + ' for data. ';
       info += status.requests_with_story + ' have stories, ';
       info += status.received + ' have been successful, ' + status.progress + ' are in progress, and ' + status.refused + ' were refused. ';
       info += 'The rest are going through our moderation process. 6184 of these requests in moderation are imports from our old system.</p>';
@@ -113,10 +109,10 @@
       info += '<svg class="rsline"></svg>';
       info += '<p>Requests successful over time, grouped by week:</p>';
       info += '<svg class="rrline"></svg>';
-      
+
       var found = 0;
       for ( var sc in data.facets.sources.terms) {
-        if ( data.facets.sources.terms[sc].term === 'T') found = data.facets.sources.terms[sc].count;
+        if ( data.facets.sources.terms[sc].term !== 'false') found += data.facets.sources.terms[sc].count;
       }
 
       info += '<h3>Availability</h3>';
@@ -133,7 +129,7 @@
       info += '<p>We have ' + status.users + ' users in total, and ' + status.requested + ' have made requests while signed in. ' + status.supports;
       info += ' users have added their support to requests that someone else made. ' + data.aggregations.tm1.tm1v.value + ' users have done an availability ';
       info += ' check whilst signed in during the last month, and ' + data.aggregations.tm3.tm3v.value + ' greater than 1 month but less than 3 months ago.</p>';
-      
+
       var plugins = {api:{all:data.facets.plugin.missing,week:data.facets.plugin_week.missing}};
       var alltotal = 0 + plugins.api.all;
       var weektotal = 0 + plugins.api.week;
@@ -141,6 +137,7 @@
         var pl = data.facets.plugin.terms[p];
         if (pl.term.indexOf('test') === -1) {
           var at = pl.term.split('_')[0].replace('oabutton','plugin').replace('oab','plugin');
+          if (pl.term.indexOf('firefox') !== -1) at = 'firefox_plugin';
           if (plugins[at] === undefined) plugins[at] = {all:0,week:0}
           plugins[at].all += pl.count;
           alltotal += pl.count;
@@ -149,7 +146,8 @@
       for ( var wp in data.facets.plugin_week.terms ) {
         var pw = data.facets.plugin_week.terms[wp];
         if (pw.term.indexOf('test') === -1) {
-          var wt = pw.term.split('_')[0].replace('oabutton','plugin');
+          var wt = pw.term.split('_')[0].replace('oabutton','plugin').replace('oab','plugin');
+          if (pw.term.indexOf('firefox') !== -1) wt = 'firefox_plugin';
           if (plugins[wt] === undefined) plugins[wt] = {all:0,week:0}
           plugins[wt].week += pw.count;
           weektotal += pw.count;
@@ -168,6 +166,18 @@
       info += '<td>' + weektotal + '</td>';
       info += '</tr></tbody></table>';
 
+      if (data.facets.embeds.terms.length) info += '<p>We have embedded availability checks from the following locations:</p>';
+      for ( var e in data.facets.embeds.terms ) {
+        var em = data.facets.embeds.terms[e];
+        info += '<p>' + em.term + ' (' + em.count  + ')</p>';
+      }
+
+      if (data.facets.from.terms.length) info += '<p>We also have availability checks from the following services:</p>';
+      for ( var f in data.facets.from.terms ) {
+        var fr = data.facets.from.terms[f];
+        info += '<p>' + fr.term + ' (' + fr.count  + ')</p>';
+      }
+
       $('#results').html(info);
       lineit(data,"svg.line");
     }
@@ -177,7 +187,7 @@
         $.ajax({
           url: api + '/status',
           success: function(rs) {
-            status = rs.data;
+            status = rs;
             $.ajax({
               url: api + '/requests?&source=%7B%22size%22%3A0%2C%22query%22%3A%7B%22filtered%22%3A%7B%22query%22%3A%7B%22bool%22%3A%7B%22must%22%3A%5B%7B%22query_string%22%3A%7B%22query%22%3A%22story%3A*%22%7D%7D%5D%7D%7D%7D%7D%2C%22aggregations%22%3A%7B%22availabilities%22%3A%7B%22date_histogram%22%3A%7B%22field%22%3A%22createdAt%22%2C%22interval%22%3A%22week%22%7D%7D%7D%2C%22from%22%3A0%7D',
               success: function(d) {
@@ -199,7 +209,7 @@
         availability(data);
       }
     }
-    
+
     var tm1 = new Date();
     var m = tm1.getMonth();
     tm1.setMonth(tm1.getMonth() - 1);
@@ -277,11 +287,13 @@
       facets: {
         plugin: { terms: { "field": "plugin.exact", "size": 100 } },
         plugin_week: { terms: { "field": "plugin.exact", "size": 100 }, "facet_filter" : { "range" : { "createdAt" : { "gt" : tmwk.valueOf() } } } },
-        email: { terms: { "field": "email.exact", "size": 1 } },
-        sources: { terms: { "field": "source.article", "size": 100 } }
+	email: { terms: { "field": "email.exact", "size": 1 } },
+        sources: { terms: { "field": "source.article", "size": 100 } },
+        embeds: { terms: { "field": "embedded.exact", "size": 100 } },
+        from: { terms: { "field": "from.exact", "size": 100 } }
       }
     });
-    
+
   });
 </script>
 

@@ -155,7 +155,6 @@
 
       <div class="admin" style="display:none;color:orange;">
         <a href="#" class="btn btn-warning showupload" style="display:none;">Show upload form</a>
-        <a href="#" class="btn btn-warning redeposit" style="display:none;">Re-deposit</a>
       </div>
 
       <div class="panels" id="hold">
@@ -183,12 +182,6 @@
 
 <script>
   jQuery(document).ready(function() {
-    var api = 'https://lapi.cottagelabs.com/service/oab'; // to ensure this works for now, use only the LOCAL CL api address
-    var uploadapi = 'https://accounts.cottagelabs.com/upload';
-    if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
-      api = 'https://dev.api.cottagelabs.com/service/oab';
-      clogin.api = 'https://dev.api.cottagelabs.com/accounts';
-    }
 
     $('.typearticle').hide();
     $('.typedata').hide();
@@ -236,7 +229,7 @@
       if (clickedadmin) {
         if ( $('#urlnotfromauthor').is(':checked') || $('#filenotfromauthor').is(':checked') ) data.notfromauthor = true;
         data.admin = true;
-        opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", clogin.apikey); };
+        opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", noddy.apikey); };
       }
       if (upload) {
         for ( var d in data ) upload.append(d,data[d]);
@@ -255,49 +248,9 @@
     $('form#fileupload').submit(function(e) {
       if (e) e.preventDefault();
       submit(undefined,new FormData(this));
-      /*$('#loading').show();
-      $('#dirId').attr('value',rid);
-      var formData = new FormData(this);
-      $.ajax({
-        url: uploadapi + '/openaccessbutton/' + rid,
-        type: 'POST',
-        data: formData,
-        async: false,
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: submit,
-        error: function() { clickedadmin = false; $('.panels').hide(); $('#error').show(); }
-      });*/
       return false;
     });
     $('#adminsubmitfile').bind('click',function(e) { clickedadmin = true; });
-
-    var redeposit = function(e) {
-      e.preventDefault();
-      $('#loading').show();
-      $.ajax({
-        url: api + '/redeposit/' + rid,
-        type: 'POST',
-        async: false,
-        beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
-        cache: false,
-        contentType: false,
-        success: function(data) {
-          $('#loading').hide();
-          var u, w;
-          if (data.data.received.zenodo) {
-            w = 'zenodo';
-            u = data.data.received.zenodo;
-          } else {
-            w = 'OSF';
-            u = data.data.received.osf;
-          }
-          $('div.admin').append('<p>Redeposit complete. Content on ' + w + ' at <a target="_blank" href="' + u + '">' + u + '</a>.</p>');
-        },
-        error: function() { $('.panels').hide(); $('#error').show(); }
-      });
-    }
 
     var romeo = function(data,color) {
       if (data !== undefined && color === undefined) {
@@ -338,10 +291,6 @@
         request.received && request.received.validated === false ? $('#validating').show() : $('#validated').show();
         if (request.received && request.received.url) {
           //$('div.admin').append('<p>Submitted URL: <a target="_blank" href="' + request.received.url + '">' + request.received.url + '</a></p>');
-        } else if (request.received) {
-          var where = request.type === 'article' ? 'Re-deposit to zenodo' : 'Re-deposit to OSF';
-          $('.redeposit').html(where).show();
-          $('.redeposit').bind('click',redeposit);
         }
       } else if (window.location.href.indexOf('hold=') !== -1) {
         $('.showupload').show();
@@ -362,7 +311,7 @@
         } else {
           $.ajax({
             type: 'GET',
-            url: 'https://dev.api.cottagelabs.com/use/sherpa/romeo/search?jtitle=' + request.journal,
+            url: api + '/use/sherpa/romeo/search?jtitle=' + request.journal,
             success: romeo
           });
         }
@@ -375,12 +324,12 @@
       error: function() { $('.panels').hide(); $('#missing').show(); }
     });
 
-    clogin.afterLogin = function() {
-      if (clogin.hasRole('openaccessbutton.admin')) {
+    noddy.afterLogin = function() {
+      if (noddy.hasRole('openaccessbutton.admin')) {
         $('.admin').show();
         $('.showupload').bind('click',function(e) { e.preventDefault(); $('.panels').hide(); $('#upload').show(); });
       }
     }
-    clogin.login();
+    noddy.login();
   });
 </script>

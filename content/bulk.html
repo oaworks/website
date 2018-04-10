@@ -5,11 +5,42 @@
   <div class="row">
     <div class="col-md-8 col-md-offset-2">
       <div>
+      	<h1>Bulk processing</h1>
         <p class="jobupload">Upload a csv file, which must have column names including at least one of "url", "doi", "pmid", "pmcid", "title":</p>
   		  <p>
   		    Include library catalogue checks in the bulk job?<br>
   		    <input type="checkbox" name="bulklibraries" class="bulklibraries" value="imperial"> Imperial<br>
   		    <input type="checkbox" name="bulklibraries" class="bulklibraries" value="york"> York<br>
+  		  </p>
+  		  <p>
+					Which sources to check? (default is to keep checking each until a result is found)<br>
+					(Note that if you want to ensure you are checking what the remote sources currently respond with, don't select "oabutton",
+					otherwise if we have an older result you will just get that back - and this will happen by default, so DO explicitly select
+					the sources you want, if what you really want to do is check the status at the sources.)<br>
+  		    <input type="checkbox" name="sources" class="sources" value="oabutton"> oabutton<br>
+  		    <input type="checkbox" name="sources" class="sources" value="eupmc"> eupmc<br>
+  		    <input type="checkbox" name="sources" class="sources" value="oadoi"> oadoi<br>
+  		    <input type="checkbox" name="sources" class="sources" value="share"> share<br>
+  		    <input type="checkbox" name="sources" class="sources" value="core"> core<br>
+  		    <input type="checkbox" name="sources" class="sources" value="base"> base<br>
+  		    <input type="checkbox" name="sources" class="sources" value="openaire"> openaire<br>
+  		    <input type="checkbox" name="sources" class="sources" value="figshare"> figshare<br>
+  		    <input type="checkbox" name="sources" class="sources" value="doaj"> doaj<br>
+  		  </p>
+  		  <p>
+  		  	Don't use cached availability checks (by default we don't run a 
+  		  	new check if there is a previous successful check, or a previous unsuccessful check less than 30 days old) ?<br>
+  		    <input type="checkbox" name="refresh" class="refresh"> yes, do fresh checks
+  		  </p>
+  		  <p>
+  		  	Keep checking more sources even if a result is found in one?<br>
+  		  	(as mentioned above, by default this does not happen - instead we stop as soon as a result is found)<br>
+  		    <input type="checkbox" name="all" class="all"> yes, keep checking all sources (or all the ones selected above)<br>
+  		  </p>
+  		  <p>
+  		  	Check for titles where possible, if search by identifiers does not succeed?<br>
+  		  	(we do this by default)<br>
+  		    <input type="checkbox" name="titles" class="titles" checked="checked"> yes, check titles where possible<br>
   		  </p>
         <form>
           <input type="file" name="jobupload" id="jobupload" class="form-control" style="padding-bottom:30px;margin-bottom:5px;">
@@ -27,14 +58,8 @@
 
 <script>
   jQuery(document).ready(function() {
-    if (!clogin.loggedin()) {
+    if (!noddy.loggedin()) {
       window.location = '/account?next=/bulk';
-    }
-
-    var api = 'https://api.openaccessbutton.org';
-    if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
-      api = 'https://dev.api.cottagelabs.com/service/oab';
-      clogin.api = 'https://dev.api.cottagelabs.com/accounts';
     }
 
     var createrequests = function(e) {
@@ -51,10 +76,11 @@
           }
           var confirmed = confirm('Are you sure you want to try to create ' + count + ' requests from this job? Requests will only be created for records that are unavailable and for which there are not already requests, and where at least a url or doi was provided or found during checking - title alone is not enough. This count estimate is based on how many it seems at least a url or doi is available for, and for which there was not already a request at the time the job was run (if a request has since been created, it should be matched and not duplicated, but will still be counted). The actual created number will be confirmed after you submit.)');
           if (confirmed) {
+			      var story = prompt("Requests need a story, and will be marked as having been requested by you. Please write a story here, it will be used for every request in this set.");
             $('html,body').scrollTop(0);
             $('#jobinfo').html('Creating requests from job ' + uid + '...');
             $.ajax({
-              url: api + '/job/' + uid + '/request?apikey=' + clogin.apikey,
+              url: api + '/job/' + uid + '/request?story=' + story + '&apikey=' + noddy.apikey,
               success: function(res) {
                 $('#jobinfo').html('<p>' + res.length + ' requests created</p>');
                 for ( var rid in res ) $('#jobinfo').append('<p><a target="_blank" href="/request/' + res[rid]._id + '">' + res[rid]._id + '</a></p>');
@@ -64,7 +90,7 @@
         }
       });
     }
-    
+
     var checkprogress = function(e) {
       e.preventDefault();
       var uid = $(this).attr('href');
@@ -78,13 +104,13 @@
   			}
 			});
     }
-    
+
     var removejob = function(e) {
       e.preventDefault();
       var confirmed = confirm('Are you sure you want to delete this job?');
       if (confirmed) {
         var uid = $(this).attr('href');
-        var u = api + '/job/' + uid + '/remove?apikey=' + clogin.apikey;
+        var u = api + '/job/' + uid + '/remove?apikey=' + noddy.apikey;
      		$.ajax({
     			url: u,
     			method: 'GET',
@@ -97,7 +123,7 @@
 
 		var getJobs = function(e) {
 			$.ajax({
-				url: api + '/job?apikey='+clogin.apikey,
+				url: api + '/job?apikey='+noddy.apikey,
 				method: 'GET',
 				contentType: "application/json; charset=utf-8",
 				success: function(data) {
@@ -128,7 +154,7 @@
       var from = $('#batchfrom').val();
       var to = $('#batchto').val();
 			$.ajax({
-				url: api + '/job/generate/' + from + '/' + to + '?apikey='+clogin.apikey,
+				url: api + '/job/generate/' + from + '/' + to + '?apikey='+noddy.apikey,
 				method: 'POST',
 				success: function(data) {
 				  if (data.count) {
@@ -152,6 +178,7 @@
 			var wrapreplace = new RegExp(wrap,"g");
 
 			file = file.replace(/\r\n/g,'\n'); // switch MS line breaks to unix
+			file = file.replace(/\r/g,'\n'); // switch Mac line breaks to unix (could just strip all \r but this stands out better for testing for now)
 			file = file.replace(/\n{2,}/g,'\n'); // get rid of any blank lines
 			file = file.replace(/\n*$/g,''); // remove newlines at end of file
 
@@ -206,8 +233,17 @@
 			    payload.libraries.push($(this).val());
 			  });
 			}
+			if ( $('.sources:checked').length ) {
+			  payload.sources = [];
+			  $('.sources:checked').each(function() {
+			    payload.sources.push($(this).val());
+			  });
+			}
+			if ( $('.all:checked').length ) payload.all = true;
+			if ( $('.refresh:checked').length ) payload.refresh = true;
+			if ( $('.titles:checked').length === 0 ) payload.titles = false;
 			$.ajax({
-				url: api + '/job?apikey='+clogin.apikey,
+				url: api + '/job?apikey='+noddy.apikey,
 				method: 'POST',
 				data: JSON.stringify(payload),
 				dataType: 'JSON', // TODO sort issue here, the POST invalidates preflight without jsonp but with jsonp we don't get back a jsonp object
@@ -238,15 +274,15 @@
 
 		$('input[type=file]').on('change', uploadJob);
 
-    clogin.afterLogin = function() {
-      if (clogin.hasRole('openaccessbutton.admin')) {
+    noddy.afterLogin = function() {
+      if (noddy.hasRole('openaccessbutton.admin')) {
 				getJobs();
         $('#bulk').show();
       } else {
         window.location = '/';
       }
     }
-		clogin.afterFailure = function() { window.location = '/account?next=/bulk'; };
-    clogin.login();
+		noddy.afterFailure = function() { window.location = '/account?next=/bulk'; };
+    noddy.login();
   });
 </script>

@@ -1,0 +1,16 @@
+{
+  "bundle": [
+    "./static/jquery-1.10.2.min.js",
+    "./static/bootstrap.min.js",
+    "./static/moment.min.js",
+    "./static/fingerprint2.min.js",
+    "./static/noddy.js",
+    "./static/nobject.coffee",
+    "./static/bootstrap.min.css",
+    "./static/oabutton.css",
+    "https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"
+  ],
+  "api": "https://api.openaccessbutton.org",
+  "service": "openaccessbutton",
+  "debug": false
+}

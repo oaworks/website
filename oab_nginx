@@ -78,7 +78,7 @@ server {
   }
   
   location /static {
-    try_files $uri /serve/$uri =404;
+    try_files /serve/$uri $uri =404;
     expires 30d;
   }
 
@@ -129,42 +129,42 @@ server {
   }
 
   location ~ /url/(?<url>.+) {
-    proxy_pass http://clapidev/api/academic/redirect?url=$url;
+    proxy_pass http://noddy_dev/api/academic/redirect?url=$url;
     proxy_redirect off;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
   }
   location /doi {
-    proxy_pass http://clapi/api/academic/redirect/doi;
+    proxy_pass http://noddy/api/academic/redirect/doi;
     proxy_redirect off;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
   }
   location /pmc {
-    proxy_pass http://clapi/api/academic/redirect/pmc;
+    proxy_pass http://noddy/api/academic/redirect/pmc;
     proxy_redirect off;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
   }
   location /pmid {
-    proxy_pass http://clapi/api/academic/redirect/pmid;
+    proxy_pass http://noddy/api/academic/redirect/pmid;
     proxy_redirect off;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
   }
   location /title {
-    proxy_pass http://clapi/api/academic/redirect/title;
+    proxy_pass http://noddy/api/academic/redirect/title;
     proxy_redirect off;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
   }
   location /citation {
-    proxy_pass http://clapi/api/academic/redirect/citation;
+    proxy_pass http://noddy/api/academic/redirect/citation;
     proxy_redirect off;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
@@ -188,7 +188,7 @@ server {
     try_files $uri $uri.html /index.html;
   }
   location / {
-    proxy_pass http://clapi/api/academic/redirect;
+    proxy_pass http://noddy/api/academic/redirect;
     proxy_redirect off;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
@@ -206,7 +206,7 @@ server {
     ssl_certificate_key /etc/letsencrypt/live/api.openaccessbutton.org/privkey.pem;
 
     location / {
-        proxy_pass http://clapi/api/service/oab/;
+        proxy_pass http://noddy/api/service/oab/;
         add_header Access-Control-Allow-Methods 'GET, PUT, POST, DELETE, OPTIONS';
         add_header Access-Control-Allow-Headers 'X-apikey,X-id,DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
         proxy_http_version 1.1;

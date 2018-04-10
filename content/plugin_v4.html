@@ -59,11 +59,10 @@ if (mobile) b = '.mob';
 $('.dl').hide();
 $('.dl'+b).show();
 
-if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) clogin.api = 'https://dev.api.cottagelabs.com/accounts';
-clogin.afterLogin = function() {
+noddy.afterLogin = function() {
   $('#promptsignup').hide();
-  $('#cliocode').html($('#cliocode').html().replace('from=clio&','from=clio&uid=' + clogin.user.account._id + '&'));
+  $('#cliocode').html($('#cliocode').html().replace('from=clio&','from=clio&uid=' + noddy.user.account._id + '&'));
 }
-clogin.login();
+noddy.login();
 });
 </script>

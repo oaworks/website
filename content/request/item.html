@@ -49,12 +49,6 @@
     $('#topnav').css('background-color','transparent');
     $('code').html(window.location.href.split('#')[0].split('?')[0]);
 
-    var api = 'https://api.openaccessbutton.org';
-    if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
-      api = 'https://dev.api.cottagelabs.com/service/oab';
-      clogin.api = 'https://dev.api.cottagelabs.com/accounts';
-    }
-
     var rid = window.location.pathname.split('/')[2];
 
     $('#widget').val('<div id="oab_insert"></div><script>var oabe = function() {var x = new XMLHttpRequest(); x.onreadystatechange = function() { if (x.readyState == 4 && x.status == 200) { document.getElementById("oab_insert").innerHTML = JSON.parse(x.responseText).data; } }; x.open("GET", "' + api+'/embed/'+rid + '", true); x.send(); }();<\/script>')
@@ -100,7 +94,7 @@
       if ( $('#title').length && $('#title').val() ) data.title = $('#title').val();
       if ( $('#doi').length && $('#doi').val() ) data.doi = $('#doi').val();
       if ( $('#story').length && $('#story').val() ) data.story = $('#story').val();
-      if (clogin.hasRole('openaccessbutton.admin') && adminsubmitting) {
+      if (noddy.hasRole('openaccessbutton.admin') && adminsubmitting) {
         if ( $('#name').length ) data.name = $('#name').val();
         if ( $('#status').length ) data.status = $('#status').val();
         if ( $('#rating').length ) data.rating = $('#rating').val();
@@ -127,7 +121,7 @@
         success: function(data) {
           $('.saved').show();
           if ($('#askingforstory').length) {
-            setTimeout(function() { window.location = window.location },1500);
+            setTimeout(function() { window.location = window.location.href },1500);
           } else {
             setTimeout(function() {$('.saved').hide()},2000);
           }
@@ -136,7 +130,7 @@
           console.log('Save error');
           console.log(data);
         },
-        beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); }
+        beforeSend: function (request) { request.setRequestHeader("x-apikey", noddy.apikey); }
       }
       opts.data = JSON.stringify(data);
       $.ajax(opts);
@@ -149,27 +143,27 @@
         var email = $(tgt).val();
         var opts = {
           type:'GET',
-          url: api+'/dnr?validate=true&email=' + encodeURIComponent(email) + '&request=' + rid + '&user=' + clogin.user.account._id,
+          url: api+'/dnr?validate=true&email=' + encodeURIComponent(email) + '&request=' + rid + '&user=' + noddy.user.account._id,
           cache:false,
           contentType: 'application/json',
           dataType: 'json',
           success: function(data) {
-            if (data.data.dnr === false) {
+            if (data.dnr === false) {
               submit(e);
             } else {
               var issue = 'Sorry, ' + email + ' ';
-              if (typeof data.data.dnr === 'object') {
-                issue += 'was added to our block list on ' + data.data.dnr.created_date.split(' ')[0].split('-').reverse().join('/') + '. We cannot send requests to this email.';
-              } else if (data.data.dnr === 'creator') {
+              if (typeof data.dnr === 'object') {
+                issue += 'was added to our block list on ' + data.dnr.created_date.split(' ')[0].split('-').reverse().join('/') + '. We cannot send requests to this email.';
+              } else if (data.dnr === 'creator') {
                 issue += 'matches the creator of this request, so this cannot be the author email address we should contact.';
-              } else if (data.data.dnr === 'user') {
+              } else if (data.dnr === 'user') {
                 issue += "is your email address! We need the author's email. Are you the author? If so, please see below.";
-              } else if (data.data.dnr === 'supporter') {
+              } else if (data.dnr === 'supporter') {
                 issue += 'matches the address of someone who already supports this request. They cannot be a suitable author to contact to request access.';
-              } else if (data.data.dnr === 'invalid') {
+              } else if (data.dnr === 'invalid') {
                 issue += 'is not a valid address.';
-                if (data.data.validation.did_you_mean) issue += ' Did you mean ' + data.data.validation.did_you_mean + '?';
-              } else  if (data.data.dnr === true) {
+                if (data.validation.did_you_mean) issue += ' Did you mean ' + data.validation.did_you_mean + '?';
+              } else  if (data.dnr === true) {
                 issue += 'is on the blacklist and cannot be used.';
               }
               $(tgt).val("").attr("placeholder",email + " is an unsuitable author email address - please try another");
@@ -196,7 +190,7 @@
         $.ajax({
           type:'GET',
           url:api+'/request/' + rid + '/admin/' + act,
-          beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
+          beforeSend: function (request) { request.setRequestHeader("x-apikey", noddy.apikey); },
         });
         setTimeout(function() { window.location = window.location.href; }, 4000);
       }
@@ -206,13 +200,13 @@
       $.ajax({
         type:'DELETE',
         url:api+'/request/'+rid,
-        beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
+        beforeSend: function (request) { request.setRequestHeader("x-apikey", noddy.apikey); },
       });
       $('#admin').html('<p>This request has been deleted. You will be redirected to the requests page.</p>');
       setTimeout(function() { window.location = '/request'; }, 2000);
     }
 
-    var scrape = function() {
+    /*var scrape = function() {
       var url = $('#titlelink').attr('href');
       if (url) {
         $.ajax({
@@ -230,11 +224,11 @@
           }
         });
       }
-    }
+    }*/
 
     var addsupport = function(e) {
       if (e) e.preventDefault();
-      if (clogin.loggedin()) {
+      if (noddy.loggedin()) {
         var opts = {
           type:'POST',
           url: api+'/support/'+rid,
@@ -243,22 +237,25 @@
             window.location = window.location.href.split('#')[0].split('?')[0];
           }
         }
-        opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", clogin.apikey); }
+        opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", noddy.apikey); }
         $.ajax(opts);
       } else {
         window.location = '/account?next=/request/' + rid + encodeURIComponent('?support=true');
       }
     }
-    
+
     var history = function(rid) {
       try {
         $.ajax({
           type:'GET',
-          url:api+'/history/'+rid,
+          url:api+'/history?sort=createdAt:desc&size=1000&q=document:'+rid,
           success: function(data) {
             var h = '';
-            for ( var d in data ) {
-              h += '<p>' + /*data[d].userId + ' at ' +*/ data[d].created_date + '<br>' + JSON.stringify(data[d].modifier) + '</p><hr>';
+            for ( var d in data.hits.hits ) {
+              h += '<p>' + /*data.hits.hits[d]._source.userId + ' at ' +*/ data.hits.hits[d]._source.created_date + ' ' + data.hits.hits[d]._source.action + '<br>';
+JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
+              for ( var a in data.hits.hits[d]._source[data.hits.hits[d]._source.action]) h += a + ': ' + JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action][a]) + '<br>';
+              h += '</p><hr>';
             }
             $('#history').html(h);
           }
@@ -340,7 +337,7 @@
       ttl += '</h2>';
       $('#titleheader').html(ttl);
       var ot = rec.type === 'article' ? 'data' : 'article';
-      if (rec.status === 'help' && ( !rec.story || !rec.user )) {
+      if (false) { // data disabled for now (rec.status === 'help' && ( !rec.story || !rec.user ) && ( (rec.type === 'article' && window.location.search.indexOf('data=false') === -1) || rec.type === 'data' ) ) {
         if (rec.other) {
           $('#other').html('<p><a style="text-decoration:underline;color:#FFFFFC;" href="/request/' + rec.other + '">I actually wanted the ' + ot + '</a></p>');
         } else {
@@ -409,7 +406,7 @@
       if ( rec.status !== 'received' && (!rec.title || !rec.email || !rec.story) ) {
         if (rec.user === undefined) {
           re += '<p>We ask the author to make this ' + rec.type + ' available to everyone for free - legally. Start a request and we\'ll take care of the rest!</p>';
-          if (clogin.loggedin()) {
+          if (noddy.loggedin()) {
             re += '<p><textarea style="min-height:100px;" class="form-control" id="story" placeholder="How would getting access to this research help you? This message will be sent to the author, and helps them to understand why the research should be made available."></textarea></p>';
             re += '<p id="askingforstory" style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Submit</a></p>';
             re += '<p class="saved" style="display:none;">Thanks! Please wait a moment while we reload the page...</p>';
@@ -424,7 +421,7 @@
           }
         } else {
           re += '<p>We need more details for this request. Can you take a minute to help?</p>';
-          if (clogin.loggedin()) {
+          if (noddy.loggedin()) {
             if (!rec.title) re += '<p><input class="form-control" type="text" id="title" placeholder="Article title"></p>';
             if (!rec.email) re += '<p><input class="form-control" type="text" id="email" placeholder="Article author email"></p><p class="emailissue" style="display:none;font-size:0.9em;"></p>';
             if (!rec.doi) re += '<p><input class="form-control" type="text" id="doi" placeholder="Article DOI"></p>';
@@ -436,11 +433,11 @@
         }
       }
 
-      if ( rec.status !== 'received' && !(clogin.loggedin() && rec.user && rec.user.id && clogin.user && clogin.user.account && clogin.user.account._id === rec.user.id) ) {
+      if ( rec.status !== 'received' && !(noddy.loggedin() && rec.user && rec.user.id && noddy.user && noddy.user.account && noddy.user.account._id === rec.user.id) ) {
         re += '<p>Are you the author? Please <a style="text-decoration:underline;" href="mailto:requests@openaccessbutton.org?subject=I\'m%20the%20author%20for%20request%20' + rid + '&body=Hi\,%0A%0AI%20the%20author%20of%20this%20paper.%20Please%20tell%20me%20how%20I%20can%20fulfil%20this%20request." target="_blank">contact us</a>!</p>';
       }
 
-      if (clogin.hasRole('openaccessbutton.admin')) {
+      if (noddy.hasRole('openaccessbutton.admin')) {
         re += '<p style="text-align:right;"><a href="#" id="showadmin" style="color:orange;">Admin</a></p>';
         re += '<div id="admin" style="display:none;"><div class="well" style="background-color:orange;">';
         re += admin(rec);
@@ -454,7 +451,7 @@
       if (rec.status !== 'help') acts += '<h4>Show your support</h4>';
       if (rec.count && rec.count > 1) acts += '<p>' + (rec.count) + ' ' + (rec.count === 1 ? 'person supports' : 'people support') + ' this request</p>';
       if (rec.status !== 'received' && rec.story) {
-        if (clogin.loggedin() && rec.user && rec.user.id && clogin.user && clogin.user.account && clogin.user.account._id === rec.user.id) {
+        if (noddy.loggedin() && rec.user && rec.user.id && noddy.user && noddy.user.account && noddy.user.account._id === rec.user.id) {
           acts += '<p>You made this request.</p>';
         } else if (rec.user !== undefined && ( !rec.supports || rec.supports === undefined || rec.supports.length === 0) ) {
           acts += '<p>Add your support to be notified when this ' + rec.type + ' is released.</p>';
@@ -486,15 +483,15 @@
       if ($('#gologin').length) $('#gologin').bind('click',function(e) {
         if ($('#youremail').val()) $(this).attr('href',$(this).attr('href').replace('?','?email='+$('#youremail').val()+'&'));
       });
-      //if (clogin.hasRole('root') && record.status !== 'received') $('#titlelink').bind('click',scrape);
+      //if (noddy.hasRole('openaccessbutton.admin') && record.status !== 'received') $('#titlelink').bind('click',scrape);
       if (window.location.href.indexOf('support=') !== -1) {
-        if (rec.user && rec.user.id && clogin.user && clogin.user.account && clogin.user.account._id !== rec.user.id && ( !rec.supports || rec.supports === undefined || rec.supports.length === 0) ) {
+        if (rec.user && rec.user.id && noddy.user && noddy.user.account && noddy.user.account._id !== rec.user.id && ( !rec.supports || rec.supports === undefined || rec.supports.length === 0) ) {
           addsupport();
-        } else if (!clogin.loggedin()) {
+        } else if (!noddy.loggedin()) {
           addsupport(); // which will redirect to login anyway
         }
       }
-      if (clogin.loggedin() && rec.status !== 'received' && (!rec.title || !rec.email) ) scrape();
+      //if (noddy.loggedin() && rec.status !== 'received' && (!rec.title || !rec.email) ) scrape();
       twatit();
     }
 
@@ -509,18 +506,18 @@
         error: function() { $('#titleheader').html("Sorry, we can't find a request with ID " + rid); }
       });
     }
-    clogin.afterFailure = function() {
-      clogin.removeCookie(clogin.cookie,'.openaccessbutton.org');
-      clogin.apikey = undefined;
-      clogin.user = {logout:'success'};
+    noddy.afterFailure = function() {
+      noddy.removeCookie(noddy.cookie,'.openaccessbutton.org');
+      noddy.apikey = undefined;
+      noddy.user = {logout:'success'};
       runrequest();
     }
-    if (clogin.loggedin()) {
-      clogin.afterLogin = function() {
-        rurl += '?apikey=' + clogin.apikey;
+    if (noddy.loggedin()) {
+      noddy.afterLogin = function() {
+        rurl += '?apikey=' + noddy.apikey;
         runrequest();
       };
-      clogin.login();
+      noddy.login();
     } else {
       runrequest();
     }

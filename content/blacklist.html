@@ -19,14 +19,8 @@
 
 <script>
   jQuery(document).ready(function() {
-    if (!clogin.loggedin()) {
+    if (!noddy.loggedin()) {
       window.location = '/account?next=/blacklist';
-    }
-
-    var api = 'https://api.openaccessbutton.org';
-    if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
-      api = 'https://dev.api.cottagelabs.com/service/oab';
-      clogin.api = 'https://dev.api.cottagelabs.com/accounts';
     }
 
     var remove = function(e) {
@@ -34,7 +28,7 @@
       var uid = $(this).attr('href');
       if (confirm('Are you sure you want to remove ' + uid + ' from the blacklist?')) {
      		$.ajax({
-    			url: api + '/dnr/?email=' + uid + '&apikey=' + clogin.apikey,
+    			url: api + '/dnr/?email=' + uid + '&apikey=' + noddy.apikey,
     			method: 'DELETE',
     			success: function(data) {
     			  $('#email_'+uid.replace('@','_').replace(/\./g,'_')).remove();
@@ -51,7 +45,7 @@
           alert('Email already on blacklist - see below.');
         } else {
        		$.ajax({
-      			url: api + '/dnr/?email=' + uid + '&apikey=' + clogin.apikey,
+      			url: api + '/dnr/?email=' + uid + '&apikey=' + noddy.apikey,
       			method: 'POST',
       			success: function(data) {
       			  $('#emails').prepend('<p id="email_' + uid.replace('@','_').replace(/\./g,'_') + '">' + uid + ' <a class="remove" href="' + uid + '" style="color:red;">x</a></p>');
@@ -66,26 +60,26 @@
     
   	var blacklist = function() {
   		$.ajax({
-  			url: api + '/dnr?apikey='+clogin.apikey,
+  			url: api + '/dnr?apikey='+noddy.apikey,
   			method: 'GET',
   			success: function(data) {
 				  var list = '';
-  				for ( var j in data.data.dnr ) list += '<p id="email_' + data.data.dnr[j].email.replace('@','_').replace(/\./g,'_') + '">' + data.data.dnr[j].email + ' <a class="remove" href="' + data.data.dnr[j].email + '" style="color:red;">x</a></p>';
+  				for ( var j in data ) list += '<p id="email_' + data[j].email.replace('@','_').replace(/\./g,'_') + '">' + data[j].email + ' <a class="remove" href="' + data[j].email + '" style="color:red;">x</a></p>';
 				  $('#emails').html(list);
 				  $('.remove').bind('click',remove);
   			}
   		});
   	}
 
-    clogin.afterLogin = function() {
-      if (clogin.hasRole('openaccessbutton.admin')) {
+    noddy.afterLogin = function() {
+      if (noddy.hasRole('openaccessbutton.admin')) {
         $('#blacklist').show();
         blacklist();
       } else {
         window.location = '/';
       }
     }
-	clogin.afterFailure = function() { window.location = '/account?next=/blacklist'; };
-    clogin.login();
+	noddy.afterFailure = function() { window.location = '/account?next=/blacklist'; };
+    noddy.login();
   });
 </script>

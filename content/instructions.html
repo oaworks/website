@@ -15,17 +15,12 @@
           </p>
 
           <p>
-            The Open Access Button works on <a href = "https://en.wikipedia.org/wiki/Academic_journal" target="_blank">journal articles</a>. You can request the full article from a paywall, and the data from a paywall or full-text page.
+            You can use the Open Access Button on <a href = "https://en.wikipedia.org/wiki/Academic_journal" target="_blank">journal articles</a>. When you use the Button, it'll either take you straight to a free copy of the research article or help you ask the author to share the article or data with you.
+             <!--You can request the full article from a paywall, and the data from a paywall or full-text page.-->
+           </p>
+           <p>
+            Want to test it out? Try clicking the Button on <a href="http://science.sciencemag.org/content/293/5530/629" target="_blank">this article</a>, or pasting this link <code>http://journals.sagepub.com/doi/abs/10.1177/0037549715583150</code> into the <a href="/">homepage</a>.
           </p>
-
-          <p>
-            Want to test it out? Try clicking the Button on <a href="http://science.sciencemag.org/content/293/5530/629" target="_blank">this article</a>, or pasting the link <code>http://science.sciencemag.org/content/293/5530/629</code> into the <a href="/">homepage</a>.
-          </p>
-
-          <p>Need more help? Email us at <a href="mailto:help@openaccessbutton.org">help@openaccessbutton.org</a>
-          </p>
-
-        <p><img src="/static/instructions.gif" style="width: 100%;border:1px solid #212f3f;margin:10px;"></p>
 
       </div>
     </div>
@@ -33,11 +28,6 @@
 
 <script>
   jQuery(document).ready(function() {
-    var api = 'https://api.openaccessbutton.org';
-    if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
-      api = 'https://dev.api.cottagelabs.com/service/oab';
-      clogin.api = 'https://dev.api.cottagelabs.com/accounts';
-    }
     $.ajax({
       url: api + '/blacklist',
       success: function(data) {

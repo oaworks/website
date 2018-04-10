@@ -1,7 +1,22 @@
 
-<script type="text/javascript" src="//static.cottagelabs.com/holdernew/display/facets.js"></script>
+<script type="text/javascript" src="/static/holder/jquery.holder.js"></script>
+<script type="text/javascript" src="/static/holder/display/facets.js"></script>
 
 <div class="container-fluid" id="accounts" style="display:none;">
+  <div class="row" id="sheets" style="display:none;">
+    <p><a target="_blank" href="https://docs.google.com/spreadsheets/d/1AaY7hS0D9jtLgVsGO4cJuLn_-CzNQg0yCreC3PP3UU0/edit#gid=0">
+      (dev) Repository redirects (controls how we redirect certain URLs that we resolve to various repositories / sites)
+    </a></p>
+    <p><a target="_blank" href="https://docs.google.com/spreadsheets/d/1Te9zcQtBLq2Vx81JUE9R42fjptFGXY6jybXBCt85dcs/edit#gid=0">
+      (live) Repository redirects
+    </a></p>
+    <p><a target="_blank" href="https://docs.google.com/spreadsheets/d/1j1eAnBN-5UoAPLFIFlQCXEnOmXG85RhwT1rKUkrPleI/edit#gid=0">
+      URL blacklist (URLs we won't run find on, and won't ever return a redirect to)
+    </a></p>
+    <p><a target="_blank" href="https://docs.google.com/spreadsheets/d/1TOq3nGF-L-OKwkgiojm-gp4W8WVvuUulmMP6kEOhik4/edit#gid=0">
+      SHARE sources (a list of sources that SHARE could say an article is in, that we will accept as meaning the article is open)
+    </a></p>
+  </div>
   <div class="row" id="mailbox" style="display:none;">
     <div class="col-md-12">
       <input type="text" id="from" placeholder="from: defaults to requests@openaccessbutton.org" class="form-control">
@@ -26,8 +41,9 @@
       <a class="btn btn-action btn-block" href="/export">Export Data</a>
       <a class="btn btn-action btn-block" href="/import">Import Data</a>
       <a class="btn btn-action btn-block" href="/stats">See Stats</a>
-      <a class="btn btn-info btn-block" id="showmailbox">Write an email</a>
-      <a class="btn btn-info btn-block" id="refreshtemplates">Refresh templates</a>
+      <a class="btn btn-action btn-block" href="#" id="showsheets">Related sheets</a>
+      <a class="btn btn-info btn-block" href="#" id="showmailbox">Write an email</a>
+      <a class="btn btn-info btn-block" href="#" id="refreshtemplates">Refresh templates</a>
       <div class="holder facets" style="margin-top:10px;"></div>
     </div>
     <div class="col-md-9">
@@ -59,15 +75,9 @@
 
 <script>
   jQuery(document).ready(function() {
-    if (!clogin.loggedin()) {
+    if (!noddy.loggedin()) {
       $('#no').show();
       window.location = '/account?next=/admin';
-    }
-
-    var api = 'https://api.openaccessbutton.org';
-    if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
-      api = 'https://dev.api.cottagelabs.com/service/oab';
-      clogin.api = 'https://dev.api.cottagelabs.com/accounts';
     }
 
     var vars = {};
@@ -77,6 +87,7 @@
     var rid;
     var firstpopulate = true;
 
+    $('#showsheets').bind('click',function(e) { e.preventDefault(); $('#sheets').toggle(); });
     $('#showmailbox').bind('click',function(e) { e.preventDefault(); $('#mailbox').toggle(); });
     
     $('#refreshtemplates').bind('click',function(e) {
@@ -84,13 +95,13 @@
       $('#refreshtemplates').html('<img src="//static.cottagelabs.com/spin_grey.svg" style="height:20px;">').addClass('disabled');
       var opts = {
         type:'GET',
-        beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
+        beforeSend: function (request) { request.setRequestHeader("x-apikey", noddy.apikey); },
         url:api+'/templates?refresh=true',
         success: function(data) {
           $('#template').html('<option val="">Select a template (optional)</option>');
-          for ( var t in data.data ) {
-            templates[data.data[t]._id] = data.data[t];
-            $('#template').append('<option value="' + data.data[t]._id + '">' + data.data[t].filename + '</option>');
+          for ( var t in data ) {
+            templates[data[t]._id] = data[t];
+            $('#template').append('<option value="' + data[t]._id + '">' + data[t].filename + '</option>');
           }
           $('#refreshtemplates').html('Templates refreshed').addClass('disabled');
           setTimeout(function() {$('#refreshtemplates').html('Refresh templates').removeClass('disabled');},5000);
@@ -146,8 +157,8 @@
         contentType: 'application/json',
         dataType: 'json',
         data: JSON.stringify(vars),
-        beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
-        url:api+'/sendmail',
+        beforeSend: function (request) { request.setRequestHeader("x-apikey", noddy.apikey); },
+        url:api+'/mail',
         success: function(data) {
           alert('Your email has been sent');
         }
@@ -174,7 +185,7 @@
         processData:false,
         contentType: 'application/json',
         dataType: 'json',
-        beforeSend: function (request) { request.setRequestHeader("x-apikey", clogin.apikey); },
+        beforeSend: function (request) { request.setRequestHeader("x-apikey", noddy.apikey); },
         url:api+'/substitute',
         success: function(data) {
           if (request) {
@@ -184,39 +195,39 @@
             }
           }
           if (templates[tid].filename.endsWith('.md')) {
-            $('#content').val(data.data.text).show();
-            $('#secondary').val(data.data.html).show();
-            $('#previewhtml').html(data.data.html).show();
+            $('#content').val(data.text).show();
+            $('#secondary').val(data.html).show();
+            $('#previewhtml').html(data.html).show();
           } else if (templates[tid].filename.endsWith('.html')) {
-            var dc = data.data.html ? data.data.html : data.data.content;
+            var dc = data.html ? data.html : data.content;
             $('#content').val(dc).show();
             $('#previewhtml').html(dc).show();
-            if (data.data.text) $('#secondary').val(data.data.html).show();
+            if (data.text) $('#secondary').val(data.html).show();
           } else {
-            var tc = data.data.text ? data.data.text : data.data.content;
+            var tc = data.text ? data.text : data.content;
             $('#content').val(dc).show();
-            if (data.data.html) {
-              $('#secondary').val(data.data.html).show();
-              $('#previewhtml').html(data.data.html).show();
+            if (data.html) {
+              $('#secondary').val(data.html).show();
+              $('#previewhtml').html(data.html).show();
             }
           }
-          if (data.data.html) {
-            $('#html').html(data.data.html).show();
-            $('#previewhtml').html(data.data.html).show();
-          } else if (data.data.text) {
-            $('#text').val(data.data.text).show();
+          if (data.html) {
+            $('#html').html(data.html).show();
+            $('#previewhtml').html(data.html).show();
+          } else if (data.text) {
+            $('#text').val(data.text).show();
           } else {
-            $('#content').val(data.data.content).show();
+            $('#content').val(data.content).show();
           }
-          if (data.data.subject) $('#subject').val(data.data.subject);
+          if (data.subject) $('#subject').val(data.subject);
           var notes = '';
           vars = {};
           var ignore = ['content','text','html','subject'];
-          for ( var k in data.data ) {
-            vars[k] = data.data[k];
+          for ( var k in data ) {
+            vars[k] = data[k];
             if (ignore.indexOf(k) === -1) {
               if (!notes.length) notes += 'This email would be sent with the following additional parameters:<br>';
-              notes += k + ': ' + data.data[k] + '<br>';
+              notes += k + ': ' + data[k] + '<br>';
             }
           }
           if (notes.length) {
@@ -254,9 +265,9 @@
       url:api+'/templates',
       success: function(data) {
         $('#template').html('<option val="">Select a template (optional)</option>');
-        for ( var t in data.data ) {
-          templates[data.data[t]._id] = data.data[t];
-          $('#template').append('<option value="' + data.data[t]._id + '">' + data.data[t].filename + '</option>');
+        for ( var t in data ) {
+          templates[data[t]._id] = data[t];
+          $('#template').append('<option value="' + data[t]._id + '">' + data[t].filename + '</option>');
         }
       }
     });
@@ -308,19 +319,19 @@
     }
     var adminify = function(e) {
       e.preventDefault();
-      clogin.addrole('openaccessbutton.admin',$(this).attr('href'));
+      noddy.addrole('openaccessbutton.admin',$(this).attr('href'));
       $(this).siblings('.unadmin').show();
       $(this).hide();
     }
     var unadmin = function(e) {
       e.preventDefault();
-      clogin.removerole('openaccessbutton.admin',$(this).attr('href'));
+      noddy.removerole('openaccessbutton.admin',$(this).attr('href'));
       $(this).siblings('.adminify').show();
       $(this).hide();
     }
 
-    clogin.afterLogin = function() {
-      if (clogin.hasRole('openaccessbutton.admin')) {
+    noddy.afterLogin = function() {
+      if (noddy.hasRole('openaccessbutton.admin')) {
         $('#no').hide();
         $('#accounts').show();
         var record = function(res) {
@@ -374,9 +385,9 @@
 
         $('#accounts').holder({
           what: "Search accounts",
-          url: api + "/users?apikey="+clogin.apikey,
+          url: api + "/users?apikey="+noddy.apikey,
           datatype: 'JSON',
-          //apikey: clogin.apikey, // to get this working have to stop ES overriding allowed headers
+          //apikey: noddy.apikey, // to get this working have to stop ES overriding allowed headers
           defaultquery: {
             sort: [
               {
@@ -415,7 +426,7 @@
       }
     }
 
-		clogin.afterFailure = function() { window.location = '/account?next=/admin'; };
-    clogin.login();
+		noddy.afterFailure = function() { window.location = '/account?next=/admin'; };
+    noddy.login();
   });
 </script>

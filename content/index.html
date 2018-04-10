@@ -1,3 +1,4 @@
+<!-- restored from https://github.com/OAButton/website/commit/47a7cb89804f429b0fd1a68b44df36367d3e34db#diff-9af9d34c3da2d2b1b4b18082adc9121f -->
 
 <!-- Start of openaccessbutton Zendesk Widget script -->
 <script>/*<![CDATA[*/window.zEmbed||function(e,t){var n,o,d,i,s,a=[],r=document.createElement("iframe");window.zEmbed=function(){a.push(arguments)},window.zE=window.zE||window.zEmbed,r.src="javascript:false",r.title="",r.role="presentation",(r.frameElement||r).style.cssText="display: none",d=document.getElementsByTagName("script"),d=d[d.length-1],d.parentNode.insertBefore(r,d),i=r.contentWindow,s=i.document;try{o=s}catch(e){n=document.domain,r.src='javascript:var d=document.open();d.domain="'+n+'";void(0);',o=s}o.open()._l=function(){var o=this.createElement("script");n&&(this.domain=n),o.id="js-iframe-async",o.src=e,this.t=+new Date,this.zendeskHost=t,this.zEQueue=a,this.body.appendChild(o)},o.write('<body onload="document._l();">'),o.close()}("https://assets.zendesk.com/embeddable_framework/main.js","openaccessbutton.zendesk.com");
@@ -31,18 +32,21 @@
           </div>
         </div>
         <div class="row">
+          <!--
           <div class="col-md-4" style="text-align:center;">
             <a id="getfromaccount" style="text-decoration:underline;" href="/account">Get the extension</a>
             <a style="text-decoration:underline;display:none;" class="chromeinstall" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">Get the extension</a>
           </div>
-          <div class="col-md-4" style="text-align:center;">
-            <a href="#" class="show" what="examples" style="text-decoration:underline;">Examples</a>
+        -->
+          <div class="col-md-6" style="text-align:center;">
+            <a href="#" class="show" what="examples" style="text-decoration:underline;">Try it now</a>
           </div>
-          <div class="col-md-4" style="text-align:center;">
+          <div class="col-md-6" style="text-align:center;">
             <a href="#" class="show" what="howitworks" style="text-decoration:underline;">How it works</a>
           </div>
         </div>
 
+        <div id="getpluginsetc"></div>
       </div>
 
       <div class="col-md-8 col-md-offset-2" id="availability" style="display:none;text-align:center;min-height:400px;">
@@ -104,9 +108,7 @@
       $('#getfromaccount').hide();
       $('.chromeinstall').show();
     }
-      
     $('#topnav').css('background-color','transparent');
-
     var th;
     $('.show').bind('click',function(e) {
       e.preventDefault();
@@ -120,12 +122,10 @@
         $('#'+$(this).attr('what')).show();
       }
     });
-
     if ( $(window).width() >= 1000 && ( $('#topstrap').offset().top + $('#topstrap').height() + $('#footer').height() < $(window).height() ) ) {
       var height = $(window).height() - $('#footer').height() + 40;
       $('#topstrap').css('height',height+'px');
     }
-
     var example = function(e) {
       if (e) e.preventDefault();
       if (th) $('#topstrap').css('height',th);
@@ -133,14 +133,7 @@
       setTimeout(function() { $('#find').trigger('click'); }, 400);
     }
     $('.example').bind('click',example);
-
-    var api = 'https://api.openaccessbutton.org';
-    if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
-      api = 'https://dev.api.cottagelabs.com/service/oab';
-      clogin.api = 'https://dev.api.cottagelabs.com/accounts';
-    }
-    clogin.login();
-
+    noddy.login();
     var availability = function(e) {
       if ($(this).attr('id') === 'find' || e === undefined || e.keyCode === 13) {
         if (e && $(this).attr('id') === 'find') e.preventDefault();
@@ -149,13 +142,20 @@
           $('#url').css('border-color','#f04717').focus();
           return;
         }
+        if (url.toLowerCase().indexOf('sciencedirect') !== -1) {
+          $('#url').val('');
+          $('#url').parent().after('<div class="well" id="sdsorry" style="margin-top:5px;"><p>Sorry, Science Direct pages cannot be accessed via our website. Please try our plugin though, it will work for you on Science Direct pages!</p></div>');
+          setTimeout(function() { $('#sdsorry').remove(); }, 5000);
+          return;
+        }
         try {
-          if ('pushState' in window.history) window.history.pushState("", "find", '?url=' + encodeURIComponent(url));
+          if (window.location.search.length === 0 && 'pushState' in window.history) window.history.pushState("", "find", '?url=' + encodeURIComponent(url));
         } catch(err) {}
         if (url.lastIndexOf('.') === url.length-1) url = url.substring(0,url.length-1);
         $('.intro').hide();
         $('#loading').show();
-        var lurl = api+'/availability?plugin=website&'
+        var lurl = api+'/find?plugin=website&'
+        if (window.location.search.indexOf('refresh=') !== -1) lurl += 'refresh=' + window.location.search.split('refresh=')[1].split('&')[0] + '&';
         if (window.location.search.indexOf('from=') !== -1) lurl += 'from=' + window.location.search.split('from=')[1].split('&')[0] + '&';
         if (window.location.search.indexOf('uid=') !== -1) lurl += 'uid=' + window.location.search.split('uid=')[1].split('&')[0] + '&';
         lurl += 'url='+encodeURIComponent(url)
@@ -195,13 +195,13 @@
                   dataType: 'json',
                   data: JSON.stringify(dr),
                   success: function(resp) {
-                    window.location = '/request/' + resp._id;
+                    window.location = '/request/' + resp.data._id;
                   },
                   error: function() {
                     window.location = '/request?url=' + encodeURIComponent(data.data.match);
                   }
                 }
-                try { if (clogin.apikey) opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", clogin.apikey); } } catch(err) {}
+                try { if (noddy.apikey) opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", noddy.apikey); } } catch(err) {}
                 $.ajax(opts);
               } else {
                 $('#availability').html('<p>Sorry, we couldn\'t find anything for <b>' + data.data.match + '</b>.</p><p>Matching titles and citations can be tricky. Please find a URL, DOI, PMID or PMCID and <a href="/">try again</a>.</p>');
@@ -222,28 +222,31 @@
                 availability += '<p"><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + has.article.url + '</a></p>';
                 availability += '<p>Not what you were expecting? <a target="_blank" href ="/feedback#wrong?searched=' + encodeURIComponent(url) + '&given=' + encodeURIComponent(has.article.url) + '">Report an error</a>.</p>';
                 availability += '<p> You can <a href="/request?url=' + encodeURIComponent(data.data.match) + '">request it from the author</a> if it isn\'t available.</p>';
+      	      }
+              if (window.location.search.indexOf('data=false') === -1) {
+                availability += '<p style="color:#212f3f;padding-top:50px;">';
+                availability += 'Want the data supporting the article? ';
+                availability += '<a class="btn btn-action" href="/request?type=data&url=' + encodeURIComponent(data.data.match) + '">Request it from the author</a></p>';
               }
-              availability += '<p style="color:#212f3f;padding-top:50px;">';
-              availability += 'Want the data supporting the article? ';
-              availability += '<a class="btn btn-action" href="/request?type=data&url=' + encodeURIComponent(data.data.match) + '">Request it from the author</a></p>';
               $('#availability').html(availability);
             } else if (!has.article && has.data) {
               var availability = '<h2 style="color:#212f3f;">This article is not available</h2>';
               availability += '<h3 style="text-align:center;"><a class="btn btn-action" href="/request?url=' + encodeURIComponent(data.data.match) + '">Start a request</a></h3>';
-              availability += '<p style="color:#212f3f;padding-top:50px;">';
-              if (has.data.id) {
-                if (has.data.ucreated) {
-                  availability += 'You already created a request for data for this article <a class="btn btn-action" href="/request/' + has.data.id + '">View the request';
-                } else if (has.data.usupport) {
-                  availability += 'You already support a request for data for this article <a class="btn btn-action" href="/request/' + has.data.id + '">View the request';
-                } else {
+              if (window.location.search.indexOf('data=false') === -1) {
+                availability += '<p style="color:#212f3f;padding-top:50px;">';
+                if (has.data.id) {
+                  if (has.data.ucreated) {
+                    availability += 'You already created a request for data for this article <a class="btn btn-action" href="/request/' + has.data.id + '">View the request';
+                  } else if (has.data.usupport) {
+                    availability += 'You already support a request for data for this article <a class="btn btn-action" href="/request/' + has.data.id + '">View the request';
+                  } else {
+                    availability += 'Someone has requested access to the data. <a class="btn btn-action" href="/request/' + has.data.id + '?support=true">Notify me';
+                  }
+	              } else {
                   availability += 'Someone has requested access to the data. <a class="btn btn-action" href="/request/' + has.data.id + '?support=true">Notify me';
-                }
-              } else {
-                availability += 'However there is data available:</p>';
-                availability += '<p style="text-align:center;"><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.data.url + '">' + has.data.url;
+		            }
+		            availability += '</a></p>';
               }
-              availability += '</a></p>';
               $('#availability').html(availability);
             } else if (has.article && has.data) {
               if (has.article.id && has.data.id) {
@@ -253,7 +256,9 @@
                 if (has.article.url) {
                   availability += 'This article is available!</h2>';
                   availability += '<h><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + has.article.url;
-                }
+                  availability += '<p>Not what you were expecting? <a target="_blank" href ="/feedback#wrong?searched=' + encodeURIComponent(url) + '&given=' + encodeURIComponent(has.article.url) + '">Report an error</a>.</p>';
+                  availability += '<p> You can <a href="/request?url=' + encodeURIComponent(data.data.match) + '">request it from the author</a> if it isn\'t available.</p>';
+		            }
                 if (has.article.id) {
                   if (has.article.ucreated) {
                     availability += 'You already created a request for this article <a class="btn btn-action" href="/request/' + has.article.id + '">View the request';
@@ -263,22 +268,25 @@
                     availability += 'Someone has requested access to the article. <a class="btn btn-action" href="/request/' + has.article.id + '?support=true">Notify me';
                   }
                 }
-                availability += '</a></h3><p style="color:#212f3f;text-align:center;padding-top:50px;">';
-                if (has.data.url) {
-                  availability += 'And there is data available for this article:</p><p style="text-align:center;">';
-                  availability += '<a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.data.url + '">' + has.data.url;
-                }
-                if (has.data.id) {
-                  if (has.data.ucreated) {
-                    availability += 'You already created a request for data for this article <a class="btn btn-action" href="/request/' + has.data.id + '">View the request';
-                  } else if (has.data.usupport) {
-                    availability += 'You already support a request for data for this article <a class="btn btn-action" href="/request/' + has.data.id + '">View the request';
-                  } else {
-                    availability += 'Someone has requested access to the data. <a class="btn btn-action" href="/request/' + has.data.id + '?support=true">Notify me';
+                availability += '</a></h3>';
+                if (window.location.search.indexOf('data=false') === -1) {
+                  availability += '<p style="color:#212f3f;text-align:center;padding-top:50px;">';
+                  if (has.data.url) {
+                    availability += 'And there is data available for this article:</p><p style="text-align:center;">';
+                    availability += '<a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.data.url + '">' + has.data.url;
                   }
-                }
-                availability += '</a></p>';
-                $('#availability').html(availability);
+                  if (has.data.id) {
+                    if (has.data.ucreated) {
+                      availability += 'You already created a request for data for this article <a class="btn btn-action" href="/request/' + has.data.id + '">View the request';
+                    } else if (has.data.usupport) {
+                      availability += 'You already support a request for data for this article <a class="btn btn-action" href="/request/' + has.data.id + '">View the request';
+                    } else {
+                      availability += 'Someone has requested access to the data. <a class="btn btn-action" href="/request/' + has.data.id + '?support=true">Notify me';
+                    }
+                  }
+                  availability += '</a></p>';
+          	  	}
+          	  	$('#availability').html(availability);
               }
             }
           },
@@ -287,15 +295,19 @@
             $('#loading').after('<p>Sorry, something went wrong. <a href = "/feedback#bug">Can you let us know?</a></p>');
           }
         };
-        if (clogin.apikey) {
-          opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", clogin.apikey); };
+        if (noddy.apikey) {
+          opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", noddy.apikey); };
           opts.type = 'POST';
-          opts.url = api+'/availability';
+          opts.url = api+'/find';
           opts.cache = false;
           opts.processData = false;
           opts.contentType = 'application/json';
           opts.dataType = 'json';
-          opts.data = JSON.stringify({url:url,plugin:'website'});
+          var pq = {url:url,plugin:'website'}
+          if (window.location.search.indexOf('refresh=') !== -1) pq.refresh = window.location.search.split('refresh=')[1].split('&')[0];
+          if (window.location.search.indexOf('from=') !== -1) pq.from = window.location.search.split('from=')[1].split('&')[0];
+          if (window.location.search.indexOf('uid=') !== -1) pq.uid = window.location.search.split('uid=')[1].split('&')[0];
+          opts.data = JSON.stringify(pq);
         }
         $.ajax(opts);
       } else {
@@ -308,7 +320,6 @@
     }
     $('#url').bind('keyup',availability);
     $('#find').bind('click',availability);
-
     var id;
     if (window.location.href.indexOf('url=') !== -1) id = decodeURIComponent(window.location.href.split('url=')[1].split('&')[0]);
     if (window.location.href.indexOf('doi=') !== -1) id = decodeURIComponent(window.location.href.split('doi=')[1].split('&')[0]);
@@ -324,6 +335,5 @@
       $('#url').val(id).trigger('keyup');
       availability();
     }
-
   });
 </script>

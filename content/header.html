@@ -1,0 +1,65 @@
+  <div id="topnav" class="navbar navbar-fixed-top">
+    <div class="navbar-header visible-xs" style="padding-top:10px;">
+      <a href="/" class="pull-left" style="color:#212f3f;">Open Access Button</a>
+      <button type="button" class="mobnavtoggle pull-right" style="z-index:1000000;padding-top:0px;border:none;background-color:transparent;">
+        <span class="sr-only">Toggle navigation</span>
+        <i class="fa fa-bars"></i>
+      </button>
+    </div>
+
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav" id="oab_brand">
+        <li><a href="/" style="padding-top:16px;">Open Access Button</a></li>
+      </ul>
+      <ul class="nav navbar-nav pull-right" id="navopts">
+        <li><a href="/libraries" style="padding-top:16px;"><!--<span class="label label-warning" style="padding-top:4px;background-color:#428bca;">New:</span>--> For Libraries</a></li>
+        <li><a href="/request" style="padding-top:16px;">Requests</a></li>
+        <!--<li class="noddin" style="display:none;"><a href="/account" style="padding-top:16px;">Account</a></li>
+        <li class="nottin"><a href="/account" style="padding-top:16px;">Login</a></li>-->
+      </ul>
+    </div>
+
+    <div class="alert alert-info" style="display:none;" id="fromopendatabutton">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <p>The Open Data Button has now merged with the Open Access Button. Your account and request will stay the same, but you'll need to get the new plugin. For more on the changes see our <a href="/blog/new-oab-2016">blog</a>.</p>
+    </div>
+
+    <div class="alert alert-info" style="display:none;" id="fromteambutton">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <p>Thanks for your support! Team Button has now merged with the Open Access Button and our Request system.</p>
+    </div>
+
+
+  </div>
+
+  <div id="mobnav" class="container">
+    <div style="background-color:white;width:100%;height:100%;padding:5px;">
+      <div class="row">
+        <div class="col-md-12">
+          <p style="text-align:right;">
+            <a class="mobnavtoggle" href="#" style="color:#212f3f;margin-right:12px;margin-top:-2px;"><i class="glyphicon glyphicon-remove"></i></a>
+          </p>
+          <h2><a href="/">Home</a></h2>
+          <h2><a href="/request">Requests</a></h2>
+          <h2><a href="/libraries">For Libraries</a></h2>
+          <h2 class="noddin" style="display:none;"><a href="/account">Your Account</a></h2>
+          <h2 class="nottin"><a href="/account" style="padding-top:16px;">Login</a></h2>
+          <h2><a href="/about#landing">About</a></h2>
+        <!--  <h2><a href="/resources">Resources</a></h2> -->
+        <!-- <h2><a href="https://blog.openaccessbutton.org/">Blog</a></h2>-->
+          <h2><a href="/feedback#bug">Bugs</a></h2>
+          <h2><a href="/api">API</a></h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    jQuery(document).ready(function() {
+      var mobnav = function(event) {
+        event.preventDefault();
+        $('#mobnav').toggle();
+      }
+      $('.mobnavtoggle').bind('click',mobnav);
+    });
+  </script>

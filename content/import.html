@@ -7,7 +7,7 @@
       <h2>Import</h2>
       <p>
         You can import a csv file of requests, and it will update the existing requests in the system.
-        <span style="color:red">BEWARE</span> this means you can edit and potentially damage many records. PLEASE export records from the system before you import so we can recover any damage caused. 
+        <span style="color:red">BEWARE</span> this means you can edit and potentially damage many records. PLEASE export records from the system before you import so we can recover any damage caused.
         Every row in the csv must contain values for the fields you want to change in each request - so each
         row needs at least an _id, to identify which request the changes are for. Blank cells will have no effect.
         If you want to remove a particular value from a request and replace it with nothing, enter the value DELETE
@@ -40,13 +40,7 @@
 
 <script>
   jQuery(document).ready(function() {
-    if (!clogin.loggedin()) window.location = '/account?next=/import';
-
-    var api = 'https://api.openaccessbutton.org';
-    if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
-      api = 'https://dev.api.cottagelabs.com/service/oab';
-      clogin.api = 'https://dev.api.cottagelabs.com/accounts';
-    }
+    if (!noddy.loggedin()) window.location = '/account?next=/import';
 
     var acceptedfields = ['_id','created_date','type','count','status','title','url','doi','journal','publisher','sherpa.color','name','email','user.username','user.email','story','rating','receiver','refused.email','refused.date','received.date','received.from','received.description','received.url','received.admin','received.cron','received.notfromauthor','notes'];
     for ( var a in acceptedfields ) {
@@ -122,15 +116,15 @@
         filename = undefined;
       } else {
   			$.ajax({
-  				url: api + '/import?apikey='+clogin.apikey,
+  				url: api + '/import?apikey='+noddy.apikey,
   				method: 'POST',
   				data: JSON.stringify(identifiers),
   				dataType: 'JSON',
   				contentType: "application/json; charset=utf-8",
   				success: function(data) {
-  				  $('#jobinfo').html('<p>Changes saved. ' + data.data.found + ' records found. ' + data.data.updated + ' records updated.</p>');
-  				  if (data.data.missing && data.data.missing.length) {
-  				    $('#jobinfo').append('<p>' + data.data.missing.length  + ' request IDs could not be found:<br>' + JSON.stringify(data.data.missing) + '</p>');
+  				  $('#jobinfo').html('<p>Changes saved. ' + data.found + ' records found. ' + data.updated + ' records updated.</p>');
+  				  if (data.missing && data.missing.length) {
+  				    $('#jobinfo').append('<p>' + data.missing.length  + ' request IDs could not be found:<br>' + JSON.stringify(data.missing) + '</p>');
   				  }
   				},
   				error: function() { $('#jobinfo').html('<p>Sorry, this file could not be uploaded.</p>'); }
@@ -158,14 +152,14 @@
 		}
 		$('input[type=file]').on('change', uploadJob);
 
-    clogin.afterLogin = function() {
-      if (clogin.hasRole('openaccessbutton.admin')) {
+    noddy.afterLogin = function() {
+      if (noddy.hasRole('openaccessbutton.admin')) {
         $('#import').show();
       } else {
         window.location = '/';
       }
     }
-		clogin.afterFailure = function() { window.location = '/account?next=/import'; };
-    clogin.login();
+		noddy.afterFailure = function() { window.location = '/account?next=/import'; };
+    noddy.login();
   });
 </script>

@@ -24,7 +24,7 @@ Your steps should be:
 2. Commit them in `develop`
 3. Pull from `develop` to check in case someone else made changes
 4. If all OK, push to `develop`
-5. View on the test site: [oab.test.cottagelabs.com](http://oab.test.cottagelabs.com/)
+5. View on the test site: [dev.openaccessbutton.org](http://dev.openaccessbutton.org/)
 6. Checkout `master`
 7. Pull from `master`
 8. Merge `develop`
@@ -36,12 +36,12 @@ This is the content of Open Access Button site.
 
 ## Contributing
 
-Our [main repository](https:www.github.org/oabutton/backend) contains far more information on the project, how to contribute etc.
+There are three repositories.  [This one](https://github.com/OAButton/website), an [issues/discussion area](https://github.com/OAButton/discussion), and  [plugin code](https://github.com/OAButton/plugin).
 
 Quick guide:
 
-* If you have an issue (e.g bug, suggestion, question), make it [here](https://github.com/OAButton/backend/issues/new)
-* If you want to contribute code to the plugin do it in this repository. Pull requests are always welcome. Some useful information is below.
+* If you have an issue (e.g bug, suggestion, question), make it [here](https://github.com/OAButton/discussion)
+* If you want to contribute code to the plugin [see this repository](https://github.com/OAButton/plugin). Pull requests are always welcome. Some useful information is below.
 
 # Development Notes
 
@@ -49,23 +49,23 @@ Quick guide:
 
 ### Branches, master vs develop.
 
-This repo will automatically deploy changes committed to the site.
-
-* master is our stable, released code.
 * develop is what we're currently working on now.
+* master is our stable, released code.
 
-Changes should be committed to the develop branch first and viewed on the test site. Once confirmed as being acceptable, they should be committed to the master branch and they will appear on the live site. The email system & data displayed on the site can be used without causing real database changes or emailing authors. 
+These repos will generates our website, in test and production, respectively.  Note that changes (commits) to a repo will automatically be deployed to the live site.
+
+Changes should be committed to the develop branch first and viewed on the test site. The email system & data displayed on the test site can be used without causing real database changes or emailing authors. Once confirmed as being acceptable, they will be committed to the master branch and appear on the live site. 
 
 Actual editing of the files themselves can be done in any text editor or code editing tool, as you prefer.
 
 ### How to edit & release via Github Web UI (good for small changes)
 
-Your steps should be:
+Your steps to update the website should be:
 
-1. Change to the develop branch
-2. Make some changes as you wish
-3. commit them when you're ready
-4. View on the test site: oab.test.cottagelabs.com
+1. Make sure you are working in the develop branch
+2. Make your changes to files in the develop branch
+3. Commit them when you're ready
+4. View on the test site: http://dev.openaccessbutton.org
 
 #### to release
 

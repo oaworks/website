@@ -116,12 +116,6 @@
     	if (e.keyCode === 13) $('#emailredirect').trigger('click');
     });
 
-    var api = 'https://api.openaccessbutton.org';
-    if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
-      api = 'https://dev.api.cottagelabs.com/service/oab';
-      clogin.api = 'https://dev.api.cottagelabs.com/accounts';
-    }
-
     var createrequests = function(e) {
       e.preventDefault();
       $('#jobinfo').html('<p>Checking job status...</p>').show();
@@ -139,7 +133,7 @@
             $('html,body').scrollTop(0);
             $('#jobinfo').html('Creating requests from job ' + uid + '...');
             $.ajax({
-              url: api + '/job/' + uid + '/request?apikey=' + clogin.apikey,
+              url: api + '/job/' + uid + '/request?apikey=' + noddy.apikey,
               success: function(res) {
                 $('#jobinfo').html('<p>' + res.length + ' requests created</p>');
                 for ( var rid in res ) $('#jobinfo').append('<p><a target="_blank" href="/request/' + res[rid]._id + '">' + res[rid]._id + '</a></p>');
@@ -174,6 +168,7 @@
 			var wrapreplace = new RegExp(wrap,"g");
 
 			file = file.replace(/\r\n/g,'\n'); // switch MS line breaks to unix
+			file = file.replace(/\r/g,'\n'); // switch Mac line breaks to unix (could just strip all \r but this stands out better for testing for now)
 			file = file.replace(/\n{2,}/g,'\n'); // get rid of any blank lines
 			file = file.replace(/\n*$/g,''); // remove newlines at end of file
 
@@ -229,7 +224,7 @@
 			  });
 			}
 			$.ajax({
-				url: api + '/job?apikey='+clogin.apikey,
+				url: api + '/job?apikey='+noddy.apikey,
 				method: 'POST',
 				data: JSON.stringify(payload),
 				dataType: 'JSON', // TODO sort issue here, the POST invalidates preflight without jsonp but with jsonp we don't get back a jsonp object
@@ -260,11 +255,11 @@
 
 		$('input[type=file]').on('change', uploadJob);
 
-		clogin.afterLogin = function() {
+		noddy.afterLogin = function() {
     	$('#uploadarea').show();
     	$('#loginRedirect').hide();
 		}
-    clogin.login();
+    noddy.login();
   });
 </script>
 
