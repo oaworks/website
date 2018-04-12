@@ -16,13 +16,13 @@ API.service.oab.citation = (meta) ->
             meta.title = i.title if i.title and not meta.title
     else
       meta.title = if meta.title.indexOf('title') isnt -1 then meta.title.split('title')[1].trim() else meta.title.trim()
-      ti
+      ti = ''
       if meta.title.indexOf('|') isnt -1
         ti = meta.title.split('|')[0].trim()
       else if meta.title.indexOf('}') isnt -1
         ti = meta.title.split('}')[0].trim()
-      else if meta.title.indexOf('"') isnt -1 || meta.title.indexOf('"') isnt -1
-        w
+      else if meta.title.indexOf('"') isnt -1 or meta.title.indexOf("'") isnt -1
+        w = ''
         p = 0
         if meta.title.indexOf('"') isnt -1
           w = '"'
@@ -32,11 +32,11 @@ API.service.oab.citation = (meta) ->
         for pp in parts
           tp = pp.toLowerCase().replace(/(<([^>]+)>)/g,'').replace(/[^a-z0-9]/g,' ').trim()
           ti = tp if tp.length > 5
-      if ti
+      if ti isnt ''
         meta.title = ti.replace(/(<([^>]+)>)/g,'').trim()
 
-  check = API.use.crossref.reverse(meta.title ? meta.url)
-  if check.data and check.data.doi and (not meta.title? or meta.title.toLowerCase().replace(' ','').replace(' ','').split(' ')[0] is check.data.title.toLowerCase().replace(' ','').replace(' ','').split(' ')[0])
+  check = API.use.crossref.reverse meta.title ? meta.url
+  if check.data and check.data.doi and (not meta.title? or meta.title.toLowerCase().replace(/ /g,'').indexOf(check.data.title.toLowerCase().replace(' ','').replace(' ','').replace(' ','').split(' ')[0]) isnt -1)
     # if we did not know title, or first three words of title match
     meta.doi = check.data.doi
     meta.title = check.data.title
