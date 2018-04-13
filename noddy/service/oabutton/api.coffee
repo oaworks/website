@@ -369,7 +369,7 @@ API.add 'service/oab/job/:jid/results.csv',
         csv = exhd + csv
 
     for r in res
-      row = if r.string then JSON.parse(r.string) else r.result['API.service.oab.find']
+      row = if r.string then JSON.parse(r.string) else r._raw_result['API.service.oab.find']
       csv += '\n'
       if r.args?
         ea = JSON.parse r.args
