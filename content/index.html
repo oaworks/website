@@ -13,16 +13,17 @@
           <p>Welcome to our improved site!<br>If you have any feedback or notice an issue, <a href="/feedback#general">let us know</a></p>
         </div>-->
         <div class="row">
-          <div class="col-md-3 col-md-offset-2 hidden-xs hidden-sm">
+          <div class="col-xs-12 visible-xs" style="height:60px;"></div>
+          <div class="col-md-3 col-md-offset-2 col-xs-4">
             <img src="/static/icon_OAB.png">
           </div>
-          <div class="col-md-7">
-            <h1 style=";font-size:3em;margin-top:5px;">Avoid<br>Paywalls,<br> Request<br>Data.</h1>
+          <div class="col-md-7 col-xs-8">
+            <h1 style="font-size:3em;margin-top:5px;">Avoid<br>Paywalls,<br> Request<br>Research.</h1>
           </div>
         </div>
         <div class="row">
           <div class="col-md-12">
-            <h3 style="font-size:1.3em;">Free, legal research articles and data delivered instantly or automatically requested from authors.</h3>
+            <h3 style="font-size:1.3em;">Free, legal research articles delivered instantly or automatically requested from authors.</h3>
           </div>
         </div>
         <div class="input-group">
@@ -223,7 +224,7 @@
                 availability += '<p>Not what you were expecting? <a target="_blank" href ="/feedback#wrong?searched=' + encodeURIComponent(url) + '&given=' + encodeURIComponent(has.article.url) + '">Report an error</a>.</p>';
                 availability += '<p> You can <a href="/request?url=' + encodeURIComponent(data.data.match) + '">request it from the author</a> if it isn\'t available.</p>';
       	      }
-              if (window.location.search.indexOf('data=false') === -1) {
+              if (false) { // data disabled for now (window.location.search.indexOf('data=false') === -1) {
                 availability += '<p style="color:#212f3f;padding-top:50px;">';
                 availability += 'Want the data supporting the article? ';
                 availability += '<a class="btn btn-action" href="/request?type=data&url=' + encodeURIComponent(data.data.match) + '">Request it from the author</a></p>';

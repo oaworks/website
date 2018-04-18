@@ -91,6 +91,12 @@ API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=tr
       meta.url = oabr.received.url ? oabr.received.zenodo ? oabr.received.osf
       meta.found.oabutton = meta.url
       return meta if not all # we can end here, oab already had it
+      
+  scraped = false
+  if meta.url.indexOf('eu.alma.exlibrisgroup.com') isnt -1 and content
+    scraped = API.service.oab.scrape(undefined, content)
+    for ks of scraped
+      meta[ks] ?= scraped[ks]
 
   if not meta.doi and meta.url.indexOf('http') isnt 0 and meta.url.indexOf('10.') isnt 0 and meta.url.toLowerCase().indexOf('pmc') isnt 0 and meta.url.length > 8
     meta = API.service.oab.citation meta
@@ -109,7 +115,7 @@ API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=tr
         meta.found.eupmc = res.url
         return meta if not all and res.redirect isnt false
 
-  if not meta.doi and meta.url.indexOf('http') is 0 and not meta.pmid and not meta.pmc
+  if not meta.doi and meta.url.indexOf('http') is 0 and not meta.pmid and not meta.pmc and not scraped
     # no point resolving for URL if we already had these, the splash pages would not contain a DOI if the eupmc API did not have it
     API.log 'Resolving URL for content'
     try
