@@ -68,6 +68,7 @@ API.service.oab.vars = (vars) ->
     vars.useremail = vars.user.email
   vars.profession ?= 'person'
   vars.fullname ?= 'a user'
+  vars.name ?= 'colleague'
   return vars
 
 API.service.oab.substitute = (content,vars,markdown) ->
