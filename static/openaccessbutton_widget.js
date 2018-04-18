@@ -111,7 +111,7 @@ var openaccessbutton_widget = function(opts) {
               } else if (has.article.usupport) {
                 availability += 'You already support a request for this article <a class="btn btn-action" href="/request/' + has.article.id + '">View the request</a></p>';
               } else {
-                availability += 'Someone has already requested the author share this article<a class="btn btn-action" href="/request/' + has.article.id + '?support=true">Notify me</a></p>';
+                availability += 'Someone has already requested the author freely share this article<a class="btn btn-action" href="/request/' + has.article.id + '?support=true">Notify me</a></p>';
               }
             } else {
               availability += '<p><b>This article is freely available!</b></p>';
@@ -147,7 +147,7 @@ var openaccessbutton_widget = function(opts) {
                 availability += '<h><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + 'Click here to view it';
               }
               if (has.article.id) {
-                availability += 'Someone has already requested the author share this article. <a target="_blank" class="btn btn-action" href="' + site + '/request/' + has.article.id + '?data=false&support=true">Notify me';
+                availability += 'Someone has already requested the author freely share this article. <a target="_blank" class="btn btn-action" href="' + site + '/request/' + has.article.id + '?data=false&support=true">Notify me';
               }
               availability += '</a></b></p>';
               if (opts.data) {
