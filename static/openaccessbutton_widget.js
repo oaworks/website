@@ -144,7 +144,7 @@ var openaccessbutton_widget = function(opts) {
               var availability = '<p><b>';
               if (has.article.url) {
                 availability += 'This article is available!</b></p>';
-                availability += '<h><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + has.article.url;
+                availability += '<h><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + 'Click here to view it';
               }
               if (has.article.id) {
                 availability += 'Someone has already requested the author share this article. <a target="_blank" class="btn btn-action" href="' + site + '/request/' + has.article.id + '?data=false&support=true">Notify me';
