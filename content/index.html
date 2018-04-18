@@ -14,11 +14,12 @@
         </div>-->
         <div class="row">
           <div class="col-xs-12 visible-xs" style="height:60px;"></div>
-          <div class="col-md-3 col-md-offset-2 col-xs-4">
-            <img src="/static/icon_OAB.png">
+          <div class="col-md-3 col-md-offset-2 col-xs-5">
+            <img src="/static/icon_OAB.png" id="mainicon">
           </div>
-          <div class="col-md-7 col-xs-8">
-            <h1 style="font-size:3em;margin-top:5px;">Avoid<br>Paywalls,<br> Request<br>Research.</h1>
+          <div class="col-md-7 col-xs-7">
+            <h1 style="font-size:3em;margin-top:5px;" class="hidden-xs hidden-sm">Avoid<br>Paywalls,<br> Request<br>Research.</h1>
+            <h1 style="font-size:2em;margin-top:5px;" class="visible-xs visible-sm">Avoid<br>Paywalls,<br> Request<br>Research.</h1>
           </div>
         </div>
         <div class="row">
@@ -105,6 +106,7 @@
 
 <script>
   jQuery(document).ready(function() {
+    if ( $(window).width() <= 800 ) $('#mainicon').css({height:'140px','margin-left':'20px'});
     if (navigator.userAgent.match(/chrome/i) && !navigator.userAgent.match(/edge/i)) {
       $('#getfromaccount').hide();
       $('.chromeinstall').show();
