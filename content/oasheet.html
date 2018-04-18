@@ -244,7 +244,7 @@
 		}
 
 		var uploadJob = function(e) {
-			$('#jobinfo').html('Uploading...').show();
+			$('#jobinfo').html('Uploading... this can take a while for big files').show();
 			var f;
 			if( window.FormData === undefined ) {
 				f = (e.files || e.dataTransfer.files);
