@@ -100,7 +100,7 @@ var openaccessbutton_widget = function(opts) {
                 $('#oabutton_availability').html(availability);
               }
             } else {
-              $('#oabutton_availability').html('<p>Sorry, we couldn\'t find anything for <b>' + data.data.match + '</b>.</p><p>Matching titles and citations can be tricky. Please find a URL, DOI, PMID or PMCID and <a href="/">try again</a>.</p>');
+              $('#oabutton_availability').html('<p>Sorry, we couldn\'t find anything for <b>' + data.data.match + '</b>.</p><p>Matching titles and citations can be tricky. Please find a URL, DOI, PMID or PMCID and try again.</p>');
             }
           } else if (has.article && !has.data) {
             var availability = '';
