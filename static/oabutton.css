@@ -23,6 +23,14 @@ html {
 body {
   margin-top:50px;
   background-color:#f8fafd;
+  min-height:800px;
+}
+
+#footer {
+  position: absolute;
+  bottom:-50px;
+  left:0px;
+  right:0px;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -115,7 +123,7 @@ hr{
 
 
 /* CAROUSEL */
-.carousel {
+/*.carousel {
   height: 400px;
   margin-bottom: 60px;
 }
@@ -140,7 +148,7 @@ hr{
 .carousel-indicators li.active{
   background-color:#f04717;
   border-color:transparent;
-}
+}*/
 
 
 /* MAP STUFF */

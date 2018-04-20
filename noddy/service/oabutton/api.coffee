@@ -264,6 +264,91 @@ API.add 'service/oab/bug',
       body: 'Location: ' + (if API.settings.dev then 'https://dev.openaccessbutton.org' else 'https://openaccessbutton.org') + '/bug#defaultthanks'
     }
 
+'''API.add 'service/oab/import',
+  post:
+    roleRequired: 'openaccessbutton.admin', # later could be opened to other oab users, with some sort of quota / limit
+    action: () ->
+      try
+        records = this.request.body
+        resp = {found:0,updated:0,missing:[]}
+        for p in this.request.body
+          if p._id
+            rq = oab_request.get p._id
+            if rq
+              resp.found += 1
+              update = {}
+              for up of p
+                p[up] = undefined if p[up] is 'DELETE'
+                if (not p[up]? or p[up]) and p[up] not in ['createdAt','created_date']
+                  if up.indexOf('refused.') is 0 and ( not rq.refused? or rq.refused[up.split('.')[1]] isnt p[up] )
+                    update.refused = {} if not update.refused?
+                    update.refused[up.split('.')[1]] = p[up]
+                  else if up.indexOf('received.') is 0 and ( not rq.received? or rq.received[up.split('.')[1]] isnt p[up] )
+                    update.received = {} if not update.received?
+                    update.received[up.split('.')[1]] = p[up]
+                  else if up is 'sherpa.color' and ( not rq.sherpa? or rq.sherpa.color isnt p[up] )
+                    update.sherpa = {color:p[up]}
+                  else if rq[up] isnt p[up]
+                    update[up] = p[up]
+              bstr = JSON.stringify update
+              if bstr isnt '{}'
+                update._bulk_import = rq._bulk_import ? {}
+                update._bulk_import[Date.now()] = bstr
+                oab_request.update rq._id, update
+                resp.updated += 1
+            else
+              resp.missing.push p._id
+        return {status:'success', data:resp}
+      catch err
+        return {status:'error'}'''
+
+'''API.add 'service/oab/export/:what',
+  get:
+    # roleRequired: 'openaccessbutton.admin',
+    action: () ->
+      results = []
+      if this.urlParams.what is 'dnr'
+        match = {}
+        match.createdAt = {} if this.queryParams.from or this.queryParams.to
+        match.createdAt.$gt = this.queryParams.from if this.queryParams.from
+        match.createdAt.$lt = this.queryParams.to if this.queryParams.to
+        results = oab_dnr.find match
+      else
+        rt = if this.urlParams.what is 'mail' then '/mail/_search?q=domain.exact:mg.openaccessbutton.org' else '/oab/history/_search?q=*'
+        if this.queryParams.from or this.queryParams.to
+          rt += ' AND createdAt:[' + (this.queryParams.from ? '*') + ' TO ' + (this.queryParams.to ? '*') + ']'
+        rt += '&sort=createdAt:asc&size=100000'
+        ret = API.es.call 'GET', rt
+        fields = if this.urlParams.what is 'changes' then ['_id','createdAt','created_date'] else []
+        for r in ret.hits.hits
+          if this.urlParams.what is 'mail'
+            for f of r._source
+              fields.push(f) if fields.indexOf(f) is -1
+            results.push r._source
+          else
+            m = {
+              _id: r._source._id.split('_')[0],
+              createdAt: r._source.createdAt,
+              created_date: r._source.created_date
+            }
+            for mr of r._source.modifier
+              if mr isnt '$set'
+                fields.push(mr) if fields.indexOf(mr) is -1
+                m[mr] = r._source.modifier[mr]
+            results.push m
+      csv = API.convert.json2csv {fields:fields}, undefined, results
+
+      name = 'export_' + this.urlParams.what
+      this.response.writeHead(200, {
+        'Content-disposition': "attachment; filename="+name+".csv",
+        'Content-type': 'text/csv; charset=UTF-8',
+        'Content-Encoding': 'UTF-8'
+      })
+      this.response.end(csv)
+      # NOTE: this should really return to stop restivus throwing an error, and should really include
+      # the file length in the above head call, but this causes an intermittent write afer end error
+      # which crashes the whole system. So pick the lesser of two fuck ups.'''
+
 API.add 'service/oab/job',
   get:
     action: () ->
@@ -333,7 +418,7 @@ API.add 'service/oab/job/:jid/request',
               rq.url ?= 'https://doi.org/' + r.meta.article.doi
             rq.title ?= r.meta.article.title
           if rq.url
-            rq.story = this.queryParams.story
+            rq.story = this.queryParams.story ? ''
             created = API.service.oab.request rq, this.userId
             identifiers.push(created) if created
       return identifiers
@@ -429,3 +514,47 @@ API.add 'service/oab/job/:jid/results.csv',
 
 API.add 'service/oab/status', get: () -> return API.service.oab.status()
 
+
+API.add 'service/oab/embed/:rid', # is this still needed?
+  get: () ->
+    rid = this.urlParams.rid
+    b = oab_request.get rid
+    if b
+      title = b.title ? b.url
+      template = '<div style="width:800px;padding:0;margin:0;"> \
+  <div style="padding:0;margin:0;float:left;width:150px;height:200px;background-color:white;border:2px solid #398bc5;;"> \
+    <img src="//openaccessbutton.org/static/icon_OAB.png" style="height:100%;width:100%;"> \
+  </div> \
+  <div style="padding:0;margin:0;float:left;width:400px;height:200px;background-color:#398bc5;;"> \
+    <div style="height:166px;"> \
+      <p style="margin:2px;color:white;font-size:30px;text-align:center;"> \
+        <a target="_blank" href="https://openaccessbutton.org/request/' + rid + '" style="color:white;font-family:Sans-Serif;"> \
+          Open Access Button \
+        </a> \
+      </p> \
+      <p style="margin:2px;color:white;font-size:16px;text-align:center;font-family:Sans-Serif;"> \
+        Request for content related to the article <br> \
+        <a target="_blank" id="oab_article" href="https://openaccessbutton.org/request/' + rid + '" style="font-style:italic;color:white;font-family:Sans-Serif;"> \
+        ' + title + '</a> \
+      </p> \
+    </div> \
+    <div style="height:30px;background-color:#f04717;"> \
+      <p style="text-align:center;font-size:16px;margin-right:2px;padding-top:1px;"> \
+        <a target="_blank" style="color:white;font-family:Sans-Serif;" href="https://openaccessbutton.org/request/' + rid + '"> \
+          ADD YOUR SUPPORT \
+        </a> \
+      </p> \
+    </div> \
+  </div> \
+  <div style="padding:0;margin:0;float:left;width:200px;height:200px;background-color:#212f3f;"> \
+    <h1 style="text-align:center;font-size:50px;color:#f04717;font-family:Sans-Serif;" id="oab_counter"> \
+    ' + b.count + '</h1> \
+    <p style="text-align:center;color:white;font-size:14px;font-family:Sans-Serif;"> \
+      people have been unable to access this content, and support this request \
+    </p> \
+  </div> \
+  <div style="width:100%;clear:both;"></div> \
+</div>';
+      return {statusCode: 200, body: {status: 'success', data: template}}
+    else
+      return {statusCode: 404, body: {status: 'error', data:'404 not found'}}

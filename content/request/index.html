@@ -103,7 +103,7 @@ jQuery(document).ready(function() {
     if (window.location.href.indexOf('id=') !== -1) id = decodeURIComponent(window.location.href.split('id=')[1].split('&')[0]);
     if (id) {
       $('#footer').hide();
-      $('.loading').append('<h3 style="text-align:center;">Starting a new request. One moment please</h3>').show();
+      $('.loading').append('<h3 style="text-align:center;">We\'re warming up a request for you, this might take a few seconds</h3>').show();
       var dt = {
         url: id,
         type: window.location.href.indexOf('type=') !== -1 ? window.location.href.split('type=')[1].split('&')[0] : 'article'

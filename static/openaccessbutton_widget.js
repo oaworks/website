@@ -111,7 +111,7 @@ var openaccessbutton_widget = function(opts) {
               } else if (has.article.usupport) {
                 availability += 'You already support a request for this article <a class="btn btn-action" href="/request/' + has.article.id + '">View the request</a></p>';
               } else {
-                availability += 'Someone has requested the author freely share this article<a class="btn btn-action" href="/request/' + has.article.id + '?support=true">Notify me</a></p>';
+                availability += 'This article is not freely available. However someone has already requested the author freely share this article<a class="btn btn-action" href="/request/' + has.article.id + '?support=true">Notify me</a></p>';
               }
             } else {
               availability += '<p><b>This article is freely available!</b></p>';
