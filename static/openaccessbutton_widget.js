@@ -105,7 +105,7 @@ var openaccessbutton_widget = function(opts) {
           } else if (has.article && !has.data) {
             var availability = '';
             if (has.article.id) {
-              availability += '<p style="color:#212f3f;padding-top:50px;">';
+              availability += '<p style="color:#212f3f;padding-top:5px;">';
               if (has.article.ucreated) {
                 availability += 'You already created a request for this article <a class="btn btn-action" href="/request/' + has.article.id + '">View the request</a></p>';
               } else if (has.article.usupport) {
