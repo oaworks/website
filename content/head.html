@@ -83,20 +83,15 @@
       if (!ftsing) {
         ftsing = true;
         setTimeout(function() {
-          var wh = $(window).height();
-          var fh = $('#footer').height();
-          var ft = $('#footer').offset().top;
-          var fm = parseInt($('#footer').css('margin-top').replace('px',''));
-          if ( ft + fh < wh ) {
+          if ( $('body').height() > $(window).height() ) {
             $('#footer').css('position','relative');
-          } else if (wh-ft-fh < 0) {
-            $('#footer').css('position','absolute');
+            if ( $('body').height() > $('#footer').offset().top + $('#footer').height() ) $('#footer').css('margin-top', $('body').height() - $('#footer').offset().top +'px');
           }
           ftsing = false;
         },200);
       }
     }
-    fts();
+    //fts();
     $('body').bind('DOMNodeInserted',fts);
   });
   </script>
