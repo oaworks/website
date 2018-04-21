@@ -26,13 +26,6 @@ body {
   min-height:800px;
 }
 
-#footer {
-  position: absolute;
-  bottom:-50px;
-  left:0px;
-  right:0px;
-}
-
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Montserrat', serif;
 }

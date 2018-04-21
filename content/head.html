@@ -78,21 +78,10 @@
       $('.nottin').hide();
     }
 
-    var ftsing = false;
-    var fts = function () {
-      if (!ftsing) {
-        ftsing = true;
-        setTimeout(function() {
-          if ( $('body').height() > $(window).height() ) {
-            $('#footer').css('position','relative');
-            if ( $('body').height() > $('#footer').offset().top + $('#footer').height() ) $('#footer').css('margin-top', $('body').height() - $('#footer').offset().top +'px');
-          }
-          ftsing = false;
-        },200);
-      }
+    if ( $('body').height() < $(window).height() ) {
+      $('body').css('min-height',$(window).height()+'px');
+      if ( window.location.pathname !== '/' && $('#footer').offset().top + $('#footer').height() < $(window).height() ) $('#footer').css('margin-top',$(window).height()-$('#footer').offset().top+'px');
     }
-    //fts();
-    $('body').bind('DOMNodeInserted',fts);
   });
   </script>
 </head>
