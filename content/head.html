@@ -23,8 +23,6 @@
   noddy.debug = {{debug}};
   noddy.api = '{{noddy_api}}';
 
-  if (api !== 'https://api.openaccessbutton.org') $('.bookmarklet_link').attr('href',"javascript:document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','https://dev.openaccessbutton.org/static/bookmarklet/includer.js?r='+Math.random());");
-
   jQuery(document).ready(function() {
 
     var chromeinstall = function(e) {
@@ -190,7 +188,7 @@
       </div>
       <div class="modal-body">
         <p>
-          <a class="bookmarklet_link" href="javascript:document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','https://openaccessbutton.org/static/bookmarklet/includer.js?r='+Math.random());" style="background-color:#ccc;padding:5px;border-radius:3px;">Open Access Button</a>
+          <a class="bookmarklet_link" href="javascript:document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','{{site_url}}/static/bookmarklet/includer.js?r='+Math.random());" style="background-color:#ccc;padding:5px;border-radius:3px;">Open Access Button</a>
         </p>
         <ol>
         <li> Make sure your bookmarks bar is showing. If not, you can click View, and select "Show Bookmarks Bar."</li>
@@ -216,7 +214,7 @@
       </div>
       <div class="modal-body">
         <p>
-          <a class="bookmarklet_link" href="javascript:document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','https://openaccessbutton.org/static/bookmarklet/includer.js?r='+Math.random());" style="background-color:#ccc;padding:5px;border-radius:3px;">Open Access Button</a>
+          <a class="bookmarklet_link" href="javascript:document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','{{site_url}}/static/bookmarklet/includer.js?r='+Math.random());" style="background-color:#ccc;padding:5px;border-radius:3px;">Open Access Button</a>
         </p>
         <p>TODO INSTRUCTIONS FOR BOOKMARKLET INSTALL ON EDGE</p>
       </div>
@@ -236,7 +234,7 @@
       </div>
       <div class="modal-body">
         <p style="text-align: center;">
-          <a class="bookmarklet_link" href="javascript:document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','https://openaccessbutton.org/static/bookmarklet/includer.js?r='+Math.random());" style="background-color:#ccc;padding:5px;border-radius:3px;">Open Access Button</a>
+          <a class="bookmarklet_link" href="javascript:document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','{{site_url}}/static/bookmarklet/includer.js?r='+Math.random());" style="background-color:#ccc;padding:5px;border-radius:3px;">Open Access Button</a>
         </p>
         <ol>
         <li> Make sure your Favorites bar is showing. If not, you can <a href="https://support.microsoft.com/en-in/instantanswers/cb97447c-a200-476f-a241-cd3958144d02/see-your-favorites-bar">right-click at the top of the browser window</a>, and select "Favorites bar."</li>

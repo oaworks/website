@@ -364,8 +364,9 @@ walk('./content', function(err, results) {
       var extrahead = '';
       if (content.indexOf('<head>') !== -1) {
         var pa = content.split('</head>');
-        extrahead = pa[0].replace('<head>', '');
-        content = pa[1];
+        var pas = pa[0].split('<head>');
+        extrahead = pas.length > 1 ? pas[1] : pas[0];
+        content = (pas.length > 1 ? pas[0] : '') + pa[1];
       }
       if (extrahead.indexOf('<title') !== -1 && headerhead.indexOf('<title') !== -1) headerhead = headerhead.replace(/\<title.*?\<\/title\>/,'');
       extrahead = headerhead + extrahead;
