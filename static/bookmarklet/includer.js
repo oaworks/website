@@ -1,11 +1,7 @@
 (function() {
   var version = '4.2.0';
-  var api_address = 'https://api.openaccessbutton.org';
-  var site_address = 'https://openaccessbutton.org';
-
-  api_address = 'https://dev.api.cottagelabs.com/service/oab';
-  site_address = 'https://dev.openaccessbutton.org'; // COMMENT THESE OUT BEFORE GOING TO LIVE
-
+  var api_address = '{{api}}';
+  var site_address = '{{site_url}}';
   var url = site_address + '/static/bookmarklet';
 
   var fls = ['bookmarklet.css','oab.js'];

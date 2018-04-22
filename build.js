@@ -237,7 +237,7 @@ var render = function(err,results) {
         dc += '/' + dcp[i];
         if (!fs.existsSync(dc)) fs.mkdirSync(dc);
       }
-      if (newcontent.indexOf('{{') !== -1 && newcontent.indexOf('}}') !== -1 && fl.indexOf('.') !== -1 && ['css','html','md','markdown','js','coffee'].indexOf(fl.split('.')[1].toLowerCase()) !== -1) {
+      if (newcontent.indexOf('{{') !== -1 && newcontent.indexOf('}}') !== -1 && fl.indexOf('.') !== -1 && ['css','html','md','markdown','js','coffee'].indexOf(fl.split('.').pop().toLowerCase()) !== -1) {
         try {
           var nc = handlebars.compile(newcontent);
           newcontent = nc(vars);

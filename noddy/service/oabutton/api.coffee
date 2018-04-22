@@ -91,12 +91,14 @@ API.add 'service/oab/request/:rid',
           n.user.profession = this.user.service?.openaccessbutton?.profile?.profession
           n.count = 1 if not r.count? or r.count is 0
         if API.accounts.auth 'openaccessbutton.admin', this.user
-          n.test ?= this.request.body.test
-          n.status ?= this.request.body.status
-          n.rating ?= this.request.body.rating
-          n.name ?= this.request.body.name
-          n.email ?= this.request.body.email
-          n.story ?= this.request.body.story
+          n.test ?= this.request.body.test if this.request.body.test?
+          n.status ?= this.request.body.status if this.request.body.status?
+          n.rating ?= this.request.body.rating if this.request.body.rating?
+          n.name ?= this.request.body.name if this.request.body.name?
+          n.email ?= this.request.body.email if this.request.body.email?
+          n.story ?= this.request.body.story if this.request.body.story?
+          n.journal ?= this.request.body.journal if this.request.body.journal?
+          n.notes = this.request.body.notes if this.request.body.notes?
         n.email = this.request.body.email if this.request.body.email? and ( API.accounts.auth('openaccessbutton.admin',this.user) || not r.status? || r.status is 'help' || r.status is 'moderate' || r.status is 'refused' )
         n.story = this.request.body.story if r.user? and this.userId is r.user.id and this.request.body.story?
         n.url ?= this.request.body.url
@@ -264,7 +266,7 @@ API.add 'service/oab/bug',
       body: 'Location: ' + (if API.settings.dev then 'https://dev.openaccessbutton.org' else 'https://openaccessbutton.org') + '/bug#defaultthanks'
     }
 
-'''API.add 'service/oab/import',
+API.add 'service/oab/import',
   post:
     roleRequired: 'openaccessbutton.admin', # later could be opened to other oab users, with some sort of quota / limit
     action: () ->
@@ -300,9 +302,9 @@ API.add 'service/oab/bug',
               resp.missing.push p._id
         return {status:'success', data:resp}
       catch err
-        return {status:'error'}'''
+        return {status:'error'}
 
-'''API.add 'service/oab/export/:what',
+API.add 'service/oab/export/:what',
   get:
     # roleRequired: 'openaccessbutton.admin',
     action: () ->
@@ -347,7 +349,7 @@ API.add 'service/oab/bug',
       this.response.end(csv)
       # NOTE: this should really return to stop restivus throwing an error, and should really include
       # the file length in the above head call, but this causes an intermittent write afer end error
-      # which crashes the whole system. So pick the lesser of two fuck ups.'''
+      # which crashes the whole system. So pick the lesser of two fuck ups.
 
 API.add 'service/oab/job',
   get:
@@ -368,7 +370,15 @@ API.add 'service/oab/job',
         p.all = this.request.body.all ?= false
         p.refresh = 0 if this.request.body.refresh
         p.titles = this.request.body.titles ?= true
-      return API.job.create {refresh:this.request.body.refresh, complete:'API.service.oab.job_complete', user:this.userId, service:'openaccessbutton', function:'API.service.oab.find', name:(this.request.body.name ? "oab_availability"), processes:processes}
+      loaded = API.job.create {refresh:this.request.body.refresh, complete:'API.service.oab.job_complete', user:this.userId, service:'openaccessbutton', function:'API.service.oab.find', name:(this.request.body.name ? "oab_availability"), processes:processes}
+      API.mail.send {
+        service: 'openaccessbutton',
+        from: 'help@openaccessbutton.org',
+        to: [this.user.emails[0].address],
+        subject: 'Sheet upload confirmation',
+        text: 'Thanks! \n\nYour sheet has been uploaded to Open Access Button. You will hear from us again once processing is complete.\n\nThe Open Access Button Team'
+      }
+      return loaded
 
 API.add 'service/oab/job/generate/:start/:end',
   post:
