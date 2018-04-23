@@ -280,7 +280,7 @@ API.add 'service/oab/import',
               resp.found += 1
               update = {}
               for up of p
-                p[up] = undefined if p[up] is 'DELETE'
+                p[up] = undefined if p[up] is 'DELETE' # this is not used yet
                 if (not p[up]? or p[up]) and p[up] not in ['createdAt','created_date']
                   if up.indexOf('refused.') is 0 and ( not rq.refused? or rq.refused[up.split('.')[1]] isnt p[up] )
                     update.refused = {} if not update.refused?
@@ -306,7 +306,8 @@ API.add 'service/oab/import',
 
 API.add 'service/oab/export/:what',
   get:
-    # roleRequired: 'openaccessbutton.admin',
+    # this is only used for exporting mail and changes so far, from the export page - and needs to be updated to handle new history style
+    roleRequired: 'openaccessbutton.admin',
     action: () ->
       results = []
       if this.urlParams.what is 'dnr'
@@ -347,6 +348,7 @@ API.add 'service/oab/export/:what',
         'Content-Encoding': 'UTF-8'
       })
       this.response.end(csv)
+      this.done() # added this now that underlying lib has been rewritten - should work without crash. Below note left for posterity.
       # NOTE: this should really return to stop restivus throwing an error, and should really include
       # the file length in the above head call, but this causes an intermittent write afer end error
       # which crashes the whole system. So pick the lesser of two fuck ups.
