@@ -73,7 +73,9 @@ API.service.oab.vars = (vars) ->
 
 API.service.oab.substitute = (content,vars,markdown) ->
   vars = API.service.oab.vars vars
-  content = content.replace(/https:\/\/openaccessbutton.org/g,'https://dev.openaccessbutton.org') if API.settings.dev
+  if API.settings.dev
+    content = content.replace(/https:\/\/openaccessbutton.org/g,'https://dev.openaccessbutton.org')
+    content = content.replace(/https:\/\/api.openaccessbutton.org/g,'https://dev.api.cottagelabs.com/service/oab')
   return API.mail.substitute content, vars, markdown
 
 API.service.oab.mail = (opts={}) ->
