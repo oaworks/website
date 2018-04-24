@@ -6,15 +6,15 @@ API.service.oab.job_complete = (job) ->
   if not job.email and job.user
     usr = API.accounts.retrieve job.user
     job.email = usr.emails[0].address
+  tmpl = API.mail.template 'bulk_complete.html'
+  sub = API.service.oab.substitute tmpl.content, {_id: job._id, useremail: job.email, jobname: job.name ? job._id}
   API.mail.send
     service: 'openaccessbutton'
-    template: 'bulk_complete.html'
-    from: API.settings.service.openaccessbutton.mail.from
+    html: sub.content
+    subject: sub.subject
+    from: sub.from ? API.settings.service.openaccessbutton.mail.from
     to: job.email
-    vars:
-      _id: job._id,
-      useremail: job.email
-      jobname: job.name ? job._id
+
 
 API.service.oab.dnr = (email,add,refuse) ->
   return oab_dnr.search('*')?.hits?.hits if not email? and not add?
