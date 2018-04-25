@@ -36,6 +36,7 @@ API.service.oab.citation = (meta) ->
         meta.title = ti.replace(/(<([^>]+)>)/g,'').trim()
 
   check = API.use.crossref.reverse meta.title ? meta.url
+  meta.reversed = true
   if check.data and check.data.doi and (not meta.title? or meta.title.toLowerCase().replace(/ /g,'').indexOf(check.data.title.toLowerCase().replace(' ','').replace(' ','').replace(' ','').split(' ')[0]) isnt -1)
     # if we did not know title, or first three words of title match
     meta.doi = check.data.doi
@@ -91,13 +92,15 @@ API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=tr
       meta.url = oabr.received.url ? oabr.received.zenodo ? oabr.received.osf
       meta.found.oabutton = meta.url
       return meta if not all # we can end here, oab already had it
-      
+
   scraped = false
   if meta.url.indexOf('eu.alma.exlibrisgroup.com') isnt -1 and content
     scraped = API.service.oab.scrape(undefined, content)
+    meta.scraped = true
     for ks of scraped
       meta[ks] ?= scraped[ks]
 
+  titled = meta.title?
   if not meta.doi and meta.url.indexOf('http') isnt 0 and meta.url.indexOf('10.') isnt 0 and meta.url.toLowerCase().indexOf('pmc') isnt 0 and meta.url.length > 8
     meta = API.service.oab.citation meta
 
@@ -125,8 +128,13 @@ API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=tr
       # TODO could check content for <meta name="citation_fulltext_html_url" content="" />
       # If it is not the current page, is it worth resolving to it? If it is accessible, can it be taken as the open URL?
       scraped = API.service.oab.scrape(meta.url, content)
+      meta.scraped = true
       for ks of scraped
         meta[ks] ?= scraped[ks]
+
+  if not meta.doi and (not meta.reversed or (not titled and meta.title))
+    # try reverse lookup again if we got title from scrape but not doi
+    meta = API.service.oab.citation meta
 
   meta.url = undefined if meta.url is meta.original
 

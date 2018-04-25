@@ -99,7 +99,6 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
 
   opts.url = 'https://doi.org/' + ret.meta.article.doi if opts.url.indexOf('http') isnt 0 and ret.meta.article.doi
   # so far we are only doing availability checks for articles, so only need to check requests for data types or articles that were not found yet
-  cr = oab_request.find finder + ' AND type:' + opts.type
   if (opts.type isnt 'article' or 'article' not in already) and request = oab_request.find finder + ' AND type:' + opts.type
     rq =
       type: request.type
