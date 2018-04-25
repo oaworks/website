@@ -372,15 +372,9 @@ API.add 'service/oab/job',
         p.all = this.request.body.all ?= false
         p.refresh = 0 if this.request.body.refresh
         p.titles = this.request.body.titles ?= true
-      loaded = API.job.create {refresh:this.request.body.refresh, complete:'API.service.oab.job_complete', user:this.userId, service:'openaccessbutton', function:'API.service.oab.find', name:(this.request.body.name ? "oab_availability"), processes:processes}
-      API.mail.send {
-        service: 'openaccessbutton',
-        from: 'help@openaccessbutton.org',
-        to: [this.user.emails[0].address],
-        subject: 'Sheet upload confirmation',
-        text: 'Thanks! \n\nYour sheet has been uploaded to Open Access Button. You will hear from us again once processing is complete.\n\nThe Open Access Button Team'
-      }
-      return loaded
+      job = API.job.create {refresh:this.request.body.refresh, complete:'API.service.oab.job_complete', user:this.userId, service:'openaccessbutton', function:'API.service.oab.find', name:(this.request.body.name ? "oab_availability"), processes:processes}
+      API.service.oab.job_started job
+      return job
 
 API.add 'service/oab/job/generate/:start/:end',
   post:

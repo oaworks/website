@@ -2,6 +2,24 @@
 
 @oab_dnr = new API.collection {index:"oab",type:"oab_dnr"}
 
+API.service.oab.job_started = (job) ->
+  tmpl = API.mail.template 'bulk_start.html'
+  if tmpl
+    sub = API.service.oab.substitute tmpl.content, {_id: job._id, useremail: job.email, jobname: job.name ? job._id}
+    API.mail.send
+      service: 'openaccessbutton'
+      html: sub.content
+      subject: sub.subject
+      from: sub.from ? API.settings.service.openaccessbutton.mail.from
+      to: job.email ? API.accounts.retrieve(job.user)?.emails[0].address
+  else
+    API.mail.send
+      service: 'openaccessbutton'
+      from: 'help@openaccessbutton.org'
+      to: job.email ? API.accounts.retrieve(job.user)?.emails[0].address
+      subject: 'Sheet upload confirmation'
+      text: 'Thanks! \n\nYour sheet has been uploaded to Open Access Button. You will hear from us again once processing is complete.\n\nThe Open Access Button Team'
+
 API.service.oab.job_complete = (job) ->
   if not job.email and job.user
     usr = API.accounts.retrieve job.user
