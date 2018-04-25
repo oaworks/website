@@ -91,22 +91,22 @@ API.add 'service/oab/request/:rid',
           n.user.profession = this.user.service?.openaccessbutton?.profile?.profession
           n.count = 1 if not r.count? or r.count is 0
         if API.accounts.auth 'openaccessbutton.admin', this.user
-          n.test ?= this.request.body.test if this.request.body.test?
-          n.status ?= this.request.body.status if this.request.body.status?
-          n.rating ?= this.request.body.rating if this.request.body.rating?
-          n.name ?= this.request.body.name if this.request.body.name?
-          n.email ?= this.request.body.email if this.request.body.email?
-          n.story ?= this.request.body.story if this.request.body.story?
-          n.journal ?= this.request.body.journal if this.request.body.journal?
-          n.notes = this.request.body.notes if this.request.body.notes?
+          n.test ?= this.request.body.test if this.request.body.test? and this.request.body.test isnt r.test
+          n.status ?= this.request.body.status if this.request.body.status? and this.request.body.status isnt r.status
+          n.rating ?= this.request.body.rating if this.request.body.rating? and this.request.body.rating isnt r.rating
+          n.name ?= this.request.body.name if this.request.body.name? and this.request.body.name isnt r.name
+          n.email ?= this.request.body.email if this.request.body.email? and this.request.body.email isnt r.email
+          n.story ?= this.request.body.story if this.request.body.story? and this.request.body.story isnt r.story
+          n.journal ?= this.request.body.journal if this.request.body.journal? and this.request.body.journal isnt r.journal
+          n.notes = this.request.body.notes if this.request.body.notes? and this.request.body.notes isnt r.notes
         n.email = this.request.body.email if this.request.body.email? and ( API.accounts.auth('openaccessbutton.admin',this.user) || not r.status? || r.status is 'help' || r.status is 'moderate' || r.status is 'refused' )
-        n.story = this.request.body.story if r.user? and this.userId is r.user.id and this.request.body.story?
-        n.url ?= this.request.body.url
-        n.title ?= this.request.body.title
-        n.doi ?= this.request.body.doi
+        n.story = this.request.body.story if r.user? and this.userId is r.user.id and this.request.body.story? and this.request.body.story isnt r.story
+        n.url ?= this.request.body.url if this.request.body.url? and this.request.body.url isnt r.url
+        n.title ?= this.request.body.title if this.request.body.title? and this.request.body.title isnt r.title
+        n.doi ?= this.request.body.doi if this.request.body.doi? and this.request.body.doi isnt r.doi
         if not n.status?
           if (not r.title and not n.title) || (not r.email and not n.email) || (not r.story and not n.story)
-            n.status = 'help'
+            n.status = 'help' if r.status isnt 'help'
           else if r.status is 'help' and ( (r.title or n.title) and (r.email or n.email) and (r.story or n.story) )
             n.status = 'moderate'
         oab_request.update(r._id,n) if JSON.stringify(n) isnt '{}'
@@ -304,41 +304,45 @@ API.add 'service/oab/import',
       catch err
         return {status:'error'}
 
+      #match = {must:[{term:{'signature.exact':proc.signature}}], must_not:[{exists:{field:'_raw_result.error'}}]}
+      #try
+      #  if typeof job.refresh is 'number' and job.refresh isnt 0
+      #    d = new Date()
+      #    match.must.push {range:{createdAt:{gt:d.setDate(d.getDate() - job.refresh)}}}
+
 API.add 'service/oab/export/:what',
   get:
     # this is only used for exporting mail and changes so far, from the export page - and needs to be updated to handle new history style
     roleRequired: 'openaccessbutton.admin',
     action: () ->
       results = []
-      if this.urlParams.what is 'dnr'
-        match = {}
-        match.createdAt = {} if this.queryParams.from or this.queryParams.to
-        match.createdAt.$gt = this.queryParams.from if this.queryParams.from
-        match.createdAt.$lt = this.queryParams.to if this.queryParams.to
-        results = oab_dnr.find match
-      else
-        rt = if this.urlParams.what is 'mail' then '/mail/_search?q=domain.exact:mg.openaccessbutton.org' else '/oab/history/_search?q=*'
-        if this.queryParams.from or this.queryParams.to
-          rt += ' AND createdAt:[' + (this.queryParams.from ? '*') + ' TO ' + (this.queryParams.to ? '*') + ']'
-        rt += '&sort=createdAt:asc&size=100000'
-        ret = API.es.call 'GET', rt
-        fields = if this.urlParams.what is 'changes' then ['_id','createdAt','created_date'] else []
-        for r in ret.hits.hits
-          if this.urlParams.what is 'mail'
-            for f of r._source
-              fields.push(f) if fields.indexOf(f) is -1
-            results.push r._source
-          else
-            m = {
-              _id: r._source._id.split('_')[0],
-              createdAt: r._source.createdAt,
-              created_date: r._source.created_date
-            }
-            for mr of r._source.modifier
-              if mr isnt '$set'
-                fields.push(mr) if fields.indexOf(mr) is -1
-                m[mr] = r._source.modifier[mr]
-            results.push m
+      fields = if this.urlParams.what is 'changes' then ['_id','createdAt','created_date','action'] else []
+      match = {}
+      match.range = {createdAt: {}} if this.queryParams.from or this.queryParams.to
+      match.range.createdAt.gte = this.queryParams.from if this.queryParams.from
+      match.range.createdAt.lte = parseInt(this.queryParams.to) + 86400000 if this.queryParams.to
+      if this.urlParams.what is 'dnr' or this.urlParams.what is 'mail'
+        results = if this.urlParams.what is 'dnr' then oab_dnr.fetch(match, true) else mail_progress.fetch match, true
+        for r in results
+          for f of r
+            fields.push(f) if fields.indexOf(f) is -1
+      else if this.urlParams.what is 'changes'
+        res = oab_request.fetch_history match, true
+        for r in res
+          m = {
+            action: r.action,
+            _id: r.document,
+            createdAt: r.createdAt,
+            created_date: r.created_date
+          }
+          if r.action
+            for mr of r[r.action]
+              fields.push(mr) if fields.indexOf(mr) is -1
+              m[mr] = r[r.action][mr]
+          if r.string
+            fields.push('string') if fields.indexOf('string') is -1
+            m.string = r.string
+          results.push m
       csv = API.convert.json2csv {fields:fields}, undefined, results
 
       name = 'export_' + this.urlParams.what
@@ -352,6 +356,19 @@ API.add 'service/oab/export/:what',
       # NOTE: this should really return to stop restivus throwing an error, and should really include
       # the file length in the above head call, but this causes an intermittent write afer end error
       # which crashes the whole system. So pick the lesser of two fuck ups.
+
+# just copying these 3 from old code in case we re-use them later
+#API.add 'service/oab/terms/:type/:key',
+#  get: () ->
+#    return API.es.terms ... # or should be the collection rather than ES
+#
+#API.add 'service/oab/minmax/:type/:key',
+#  get: () ->
+#    return API.es.minmax ... # this does not exist in new ES
+#
+#API.add 'service/oab/keys/:type',
+#  get: () ->
+#    return API.es.keys ... # does not exist in new ES
 
 API.add 'service/oab/job',
   get:

@@ -229,9 +229,8 @@ noddy.tokenProgress = function() {
     var opts = {
       type:'GET',
       url: noddy.api + '/mail/progress?q=Message-Id.exact:"' + progress.mid + '"',
-      success: function(data) {
+      success: function(event) {
         try {
-          var event = data.hits.hits[0]._source.event;
           noddy.user.token = event;
           if (event === 'delivered') $('#noddyToken').attr('placeholder','Delivered to ' + progress.email).css('border-color','orange');
           if (event === 'opened') $('#noddyToken').attr('placeholder','Email opened by ' + progress.email).css('border-color','green');
