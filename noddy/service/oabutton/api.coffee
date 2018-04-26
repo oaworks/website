@@ -91,20 +91,22 @@ API.add 'service/oab/request/:rid',
           n.user.profession = this.user.service?.openaccessbutton?.profile?.profession
           n.count = 1 if not r.count? or r.count is 0
         if API.accounts.auth 'openaccessbutton.admin', this.user
-          n.test ?= this.request.body.test
-          n.status ?= this.request.body.status
-          n.rating ?= this.request.body.rating
-          n.name ?= this.request.body.name
-          n.email ?= this.request.body.email
-          n.story ?= this.request.body.story
+          n.test ?= this.request.body.test if this.request.body.test? and this.request.body.test isnt r.test
+          n.status ?= this.request.body.status if this.request.body.status? and this.request.body.status isnt r.status
+          n.rating ?= this.request.body.rating if this.request.body.rating? and this.request.body.rating isnt r.rating
+          n.name ?= this.request.body.name if this.request.body.name? and this.request.body.name isnt r.name
+          n.email ?= this.request.body.email if this.request.body.email? and this.request.body.email isnt r.email
+          n.story ?= this.request.body.story if this.request.body.story? and this.request.body.story isnt r.story
+          n.journal ?= this.request.body.journal if this.request.body.journal? and this.request.body.journal isnt r.journal
+          n.notes = this.request.body.notes if this.request.body.notes? and this.request.body.notes isnt r.notes
         n.email = this.request.body.email if this.request.body.email? and ( API.accounts.auth('openaccessbutton.admin',this.user) || not r.status? || r.status is 'help' || r.status is 'moderate' || r.status is 'refused' )
-        n.story = this.request.body.story if r.user? and this.userId is r.user.id and this.request.body.story?
-        n.url ?= this.request.body.url
-        n.title ?= this.request.body.title
-        n.doi ?= this.request.body.doi
+        n.story = this.request.body.story if r.user? and this.userId is r.user.id and this.request.body.story? and this.request.body.story isnt r.story
+        n.url ?= this.request.body.url if this.request.body.url? and this.request.body.url isnt r.url
+        n.title ?= this.request.body.title if this.request.body.title? and this.request.body.title isnt r.title
+        n.doi ?= this.request.body.doi if this.request.body.doi? and this.request.body.doi isnt r.doi
         if not n.status?
           if (not r.title and not n.title) || (not r.email and not n.email) || (not r.story and not n.story)
-            n.status = 'help'
+            n.status = 'help' if r.status isnt 'help'
           else if r.status is 'help' and ( (r.title or n.title) and (r.email or n.email) and (r.story or n.story) )
             n.status = 'moderate'
         oab_request.update(r._id,n) if JSON.stringify(n) isnt '{}'
@@ -264,6 +266,110 @@ API.add 'service/oab/bug',
       body: 'Location: ' + (if API.settings.dev then 'https://dev.openaccessbutton.org' else 'https://openaccessbutton.org') + '/bug#defaultthanks'
     }
 
+API.add 'service/oab/import',
+  post:
+    roleRequired: 'openaccessbutton.admin', # later could be opened to other oab users, with some sort of quota / limit
+    action: () ->
+      try
+        records = this.request.body
+        resp = {found:0,updated:0,missing:[]}
+        for p in this.request.body
+          if p._id
+            rq = oab_request.get p._id
+            if rq
+              resp.found += 1
+              update = {}
+              for up of p
+                p[up] = undefined if p[up] is 'DELETE' # this is not used yet
+                if (not p[up]? or p[up]) and p[up] not in ['createdAt','created_date']
+                  if up.indexOf('refused.') is 0 and ( not rq.refused? or rq.refused[up.split('.')[1]] isnt p[up] )
+                    update.refused = {} if not update.refused?
+                    update.refused[up.split('.')[1]] = p[up]
+                  else if up.indexOf('received.') is 0 and ( not rq.received? or rq.received[up.split('.')[1]] isnt p[up] )
+                    update.received = {} if not update.received?
+                    update.received[up.split('.')[1]] = p[up]
+                  else if up is 'sherpa.color' and ( not rq.sherpa? or rq.sherpa.color isnt p[up] )
+                    update.sherpa = {color:p[up]}
+                  else if rq[up] isnt p[up]
+                    update[up] = p[up]
+              bstr = JSON.stringify update
+              if bstr isnt '{}'
+                update._bulk_import = rq._bulk_import ? {}
+                update._bulk_import[Date.now()] = bstr
+                oab_request.update rq._id, update
+                resp.updated += 1
+            else
+              resp.missing.push p._id
+        return {status:'success', data:resp}
+      catch err
+        return {status:'error'}
+
+      #match = {must:[{term:{'signature.exact':proc.signature}}], must_not:[{exists:{field:'_raw_result.error'}}]}
+      #try
+      #  if typeof job.refresh is 'number' and job.refresh isnt 0
+      #    d = new Date()
+      #    match.must.push {range:{createdAt:{gt:d.setDate(d.getDate() - job.refresh)}}}
+
+API.add 'service/oab/export/:what',
+  get:
+    # this is only used for exporting mail and changes so far, from the export page - and needs to be updated to handle new history style
+    roleRequired: 'openaccessbutton.admin',
+    action: () ->
+      results = []
+      fields = if this.urlParams.what is 'changes' then ['_id','createdAt','created_date','action'] else []
+      match = {}
+      match.range = {createdAt: {}} if this.queryParams.from or this.queryParams.to
+      match.range.createdAt.gte = this.queryParams.from if this.queryParams.from
+      match.range.createdAt.lte = parseInt(this.queryParams.to) + 86400000 if this.queryParams.to
+      if this.urlParams.what is 'dnr' or this.urlParams.what is 'mail'
+        results = if this.urlParams.what is 'dnr' then oab_dnr.fetch(match, true) else mail_progress.fetch match, true
+        for r in results
+          for f of r
+            fields.push(f) if fields.indexOf(f) is -1
+      else if this.urlParams.what is 'changes'
+        res = oab_request.fetch_history match, true
+        for r in res
+          m = {
+            action: r.action,
+            _id: r.document,
+            createdAt: r.createdAt,
+            created_date: r.created_date
+          }
+          if r.action
+            for mr of r[r.action]
+              fields.push(mr) if fields.indexOf(mr) is -1
+              m[mr] = r[r.action][mr]
+          if r.string
+            fields.push('string') if fields.indexOf('string') is -1
+            m.string = r.string
+          results.push m
+      csv = API.convert.json2csv {fields:fields}, undefined, results
+
+      name = 'export_' + this.urlParams.what
+      this.response.writeHead(200, {
+        'Content-disposition': "attachment; filename="+name+".csv",
+        'Content-type': 'text/csv; charset=UTF-8',
+        'Content-Encoding': 'UTF-8'
+      })
+      this.response.end(csv)
+      this.done() # added this now that underlying lib has been rewritten - should work without crash. Below note left for posterity.
+      # NOTE: this should really return to stop restivus throwing an error, and should really include
+      # the file length in the above head call, but this causes an intermittent write afer end error
+      # which crashes the whole system. So pick the lesser of two fuck ups.
+
+# just copying these 3 from old code in case we re-use them later
+#API.add 'service/oab/terms/:type/:key',
+#  get: () ->
+#    return API.es.terms ... # or should be the collection rather than ES
+#
+#API.add 'service/oab/minmax/:type/:key',
+#  get: () ->
+#    return API.es.minmax ... # this does not exist in new ES
+#
+#API.add 'service/oab/keys/:type',
+#  get: () ->
+#    return API.es.keys ... # does not exist in new ES
+
 API.add 'service/oab/job',
   get:
     action: () ->
@@ -283,7 +389,9 @@ API.add 'service/oab/job',
         p.all = this.request.body.all ?= false
         p.refresh = 0 if this.request.body.refresh
         p.titles = this.request.body.titles ?= true
-      return API.job.create {refresh:this.request.body.refresh, complete:'API.service.oab.job_complete', user:this.userId, service:'openaccessbutton', function:'API.service.oab.find', name:(this.request.body.name ? "oab_availability"), processes:processes}
+      job = API.job.create {refresh:this.request.body.refresh, complete:'API.service.oab.job_complete', user:this.userId, service:'openaccessbutton', function:'API.service.oab.find', name:(this.request.body.name ? "oab_availability"), processes:processes}
+      API.service.oab.job_started job
+      return job
 
 API.add 'service/oab/job/generate/:start/:end',
   post:
@@ -333,7 +441,7 @@ API.add 'service/oab/job/:jid/request',
               rq.url ?= 'https://doi.org/' + r.meta.article.doi
             rq.title ?= r.meta.article.title
           if rq.url
-            rq.story = this.queryParams.story
+            rq.story = this.queryParams.story ? ''
             created = API.service.oab.request rq, this.userId
             identifiers.push(created) if created
       return identifiers
@@ -429,3 +537,47 @@ API.add 'service/oab/job/:jid/results.csv',
 
 API.add 'service/oab/status', get: () -> return API.service.oab.status()
 
+
+API.add 'service/oab/embed/:rid', # is this still needed?
+  get: () ->
+    rid = this.urlParams.rid
+    b = oab_request.get rid
+    if b
+      title = b.title ? b.url
+      template = '<div style="width:800px;padding:0;margin:0;"> \
+  <div style="padding:0;margin:0;float:left;width:150px;height:200px;background-color:white;border:2px solid #398bc5;;"> \
+    <img src="//openaccessbutton.org/static/icon_OAB.png" style="height:100%;width:100%;"> \
+  </div> \
+  <div style="padding:0;margin:0;float:left;width:400px;height:200px;background-color:#398bc5;;"> \
+    <div style="height:166px;"> \
+      <p style="margin:2px;color:white;font-size:30px;text-align:center;"> \
+        <a target="_blank" href="https://openaccessbutton.org/request/' + rid + '" style="color:white;font-family:Sans-Serif;"> \
+          Open Access Button \
+        </a> \
+      </p> \
+      <p style="margin:2px;color:white;font-size:16px;text-align:center;font-family:Sans-Serif;"> \
+        Request for content related to the article <br> \
+        <a target="_blank" id="oab_article" href="https://openaccessbutton.org/request/' + rid + '" style="font-style:italic;color:white;font-family:Sans-Serif;"> \
+        ' + title + '</a> \
+      </p> \
+    </div> \
+    <div style="height:30px;background-color:#f04717;"> \
+      <p style="text-align:center;font-size:16px;margin-right:2px;padding-top:1px;"> \
+        <a target="_blank" style="color:white;font-family:Sans-Serif;" href="https://openaccessbutton.org/request/' + rid + '"> \
+          ADD YOUR SUPPORT \
+        </a> \
+      </p> \
+    </div> \
+  </div> \
+  <div style="padding:0;margin:0;float:left;width:200px;height:200px;background-color:#212f3f;"> \
+    <h1 style="text-align:center;font-size:50px;color:#f04717;font-family:Sans-Serif;" id="oab_counter"> \
+    ' + b.count + '</h1> \
+    <p style="text-align:center;color:white;font-size:14px;font-family:Sans-Serif;"> \
+      people have been unable to access this content, and support this request \
+    </p> \
+  </div> \
+  <div style="width:100%;clear:both;"></div> \
+</div>';
+      return {statusCode: 200, body: {status: 'success', data: template}}
+    else
+      return {statusCode: 404, body: {status: 'error', data:'404 not found'}}

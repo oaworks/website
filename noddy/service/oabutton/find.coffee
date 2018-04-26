@@ -1,4 +1,5 @@
 
+import { Random } from 'meteor/random'
 
 ###
 {
@@ -78,6 +79,8 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
     finder += ')'
     if opts.refresh isnt 0 and 'oabutton' in opts.sources
       avail = oab_availability.find finder + ' AND discovered.article:* AND NOT discovered.article:false', true
+      if avail?.discovered?.article and avail.url? and avail.url.indexOf('eu.alma.exlibrisgroup.com') isnt -1 and avail.url.indexOf('&oabLibris') is -1
+        avail = undefined
       if avail?.discovered?.article and ret.meta.article.redirect = API.service.oab.redirect(avail.discovered.article)
         ret.meta.article.url = avail.discovered.article
         ret.meta.article.source = avail.source?.article
@@ -96,7 +99,6 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
 
   opts.url = 'https://doi.org/' + ret.meta.article.doi if opts.url.indexOf('http') isnt 0 and ret.meta.article.doi
   # so far we are only doing availability checks for articles, so only need to check requests for data types or articles that were not found yet
-  cr = oab_request.find finder + ' AND type:' + opts.type
   if (opts.type isnt 'article' or 'article' not in already) and request = oab_request.find finder + ' AND type:' + opts.type
     rq =
       type: request.type
@@ -106,6 +108,9 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
     ret.requests.push rq
     ret.accepts = []
     already.push request.type
+
+  if opts.url.indexOf('eu.alma.exlibrisgroup.com') isnt -1 and opts.discovered.article is false
+    opts.url += (if opts.url.indexOf('?') is -1 then '?' else '&') + 'oabLibris=' + Random.id()
 
   delete opts.dom
   oab_availability.insert(opts) if not opts.nosave # save even if was a cache hit, to track usage of the endpoint

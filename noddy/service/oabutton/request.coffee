@@ -57,7 +57,7 @@ API.service.oab.request = (req,uacc,fast) ->
   req.type ?= 'article'
   if req.url? and req.url.indexOf('eu.alma.exlibrisgroup.com') isnt -1
     req.url += (if req.url.indexOf('?') is -1 then '?' else '&') + 'oabLibris=' + Random.id()
-    if req.title? and texist = oab_request.find {title:req.title,type:req.type}
+    if req.title? and typeof req.title is 'string' and req.title.length > 0 and texist = oab_request.find {title:req.title,type:req.type}
       texist.cache = true
       return texist
   else if exists = oab_request.find {url:req.url,type:req.type}

@@ -95,27 +95,27 @@ var openaccessbutton_widget = function(opts) {
                 }
                 $.ajax(ropts);
               } else {
-                var availability = '<p><b>This article is not available for free</b></p>';
+                var availability = '<p><b>This article is not freely available</b></p>';
                 availability += '<p><a target="_blank" href="' + site + '/request?data=false&url=' + encodeURIComponent(data.data.match) + '">Start a request to the author to share it with you</a> or ask the library to get you a copy through an Interlibrary Loan.</p>';
                 $('#oabutton_availability').html(availability);
               }
             } else {
-              $('#oabutton_availability').html('<p>Sorry, we couldn\'t find anything for <b>' + data.data.match + '</b>.</p><p>Matching titles and citations can be tricky. Please find a URL, DOI, PMID or PMCID and <a href="/">try again</a>.</p>');
+              $('#oabutton_availability').html('<p>Sorry, we couldn\'t find the article <b>' + data.data.match + '</b>.</p><p>Matching titles and citations can be tricky. Please find a URL, DOI, PMID or PMCID and try again.</p>');
             }
           } else if (has.article && !has.data) {
             var availability = '';
             if (has.article.id) {
-              availability += '<p style="color:#212f3f;padding-top:50px;">';
+              availability += '<p style="color:#212f3f;padding-top:0px;">';
               if (has.article.ucreated) {
                 availability += 'You already created a request for this article <a class="btn btn-action" href="/request/' + has.article.id + '">View the request</a></p>';
               } else if (has.article.usupport) {
                 availability += 'You already support a request for this article <a class="btn btn-action" href="/request/' + has.article.id + '">View the request</a></p>';
               } else {
-                availability += 'Someone has requested access to the article <a class="btn btn-action" href="/request/' + has.article.id + '?support=true">Notify me</a></p>';
+                availability += '<p><b>This article is not freely available.</b></p>Someone has already requested the author freely share this article<a class="btn btn-action" href="/request/' + has.article.id + '?support=true">Notify me</a></p>';
               }
             } else {
-              availability += '<p><b>This article is available!</b></p>';
-              availability += '<p"><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + has.article.url + '</a></p>';
+              availability += '<p><b>This article is freely available!</b></p>';
+              availability += '<p"><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + 'Click here to view it' + '</a></p>';
             }
             if (opts.data) {
               availability += '<p>';
@@ -124,7 +124,7 @@ var openaccessbutton_widget = function(opts) {
             }
             $('#oabutton_availability').html(availability);
           } else if (!has.article && has.data) {
-            var availability = '<p><b>This article is not available</b></p>';
+            var availability = '<p><b>This article is not freely available</b></p>';
             availability += '<p><a target="_blank" class="btn btn-action" href="' + site + '/request?data=false&url=' + encodeURIComponent(data.data.match) + '">Start a request</a></p>';
             if (opts.data) {
               availability += '<p>';
@@ -144,10 +144,10 @@ var openaccessbutton_widget = function(opts) {
               var availability = '<p><b>';
               if (has.article.url) {
                 availability += 'This article is available!</b></p>';
-                availability += '<h><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + has.article.url;
+                availability += '<h><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + 'Click here to view it';
               }
               if (has.article.id) {
-                availability += 'Someone has requested access to the article. <a target="_blank" class="btn btn-action" href="' + site + '/request/' + has.article.id + '?data=false&support=true">Notify me';
+                availability += 'Someone has already requested the author freely share this article. <a target="_blank" class="btn btn-action" href="' + site + '/request/' + has.article.id + '?data=false&support=true">Notify me';
               }
               availability += '</a></b></p>';
               if (opts.data) {

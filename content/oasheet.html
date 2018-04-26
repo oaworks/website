@@ -5,7 +5,7 @@
 
   <style>
 
-    /* TODO Have this actually center
+    /* TODO Have this actually center in div
     .img{
       display: block;
       margin-left: auto;
@@ -45,7 +45,7 @@
       <div>
 
 <h1 style="text-align:left; font-size:4em;">OAsheet</h1>
-<h3 style="text-align:center;">Give us a list of articles, and we'll tell you which ones are Open Access</h3>
+<h3 style="text-align:center;">Give us a list of articles,<br> and we'll tell you which ones are Open Access</h3>
 
       </div>
 
@@ -239,12 +239,18 @@
 				dataType: 'JSON', // TODO sort issue here, the POST invalidates preflight without jsonp but with jsonp we don't get back a jsonp object
 				contentType: "application/json; charset=utf-8",
         success: function() { $('#jobinfo').html('<p>Upload successful! We will email you the results. This can take up to a few hours, depending on how many articles you have asked for.</p>'); },
-        error: function() { $('#jobinfo').html('<p>Something has gone wrong. Email <a href="mailto:help@openaccessbutton.org?Subject=OAsheet%20Upload%20Error">help@openaccessbutton.org</a> with your file attached and we will figure it out!</p>'); }
+        error: function() {
+          if (payload.length > 500) {
+            $('#jobinfo').html('<p>Sorry, as your sheet is quite large, we can\'t immediately confirm that it has uploaded. However, you should get an email confirming that it has been received. If you don\'t get an email in the next ten minutes, email <a href="mailto:help@openaccessbutton.org?Subject=OAsheet%20Upload%20Error">help@openaccessbutton.org</a> with your file attached and we will figure it out!</p>');
+          } else {
+            $('#jobinfo').html('<p>Something has gone wrong. Email <a href="mailto:help@openaccessbutton.org?Subject=OAsheet%20Upload%20Error">help@openaccessbutton.org</a> with your file attached and we will figure it out!</p>');
+          }
+        }
 			});
 		}
 
 		var uploadJob = function(e) {
-			$('#jobinfo').html('Uploading...').show();
+			$('#jobinfo').html('Uploading... this can take a while for big files').show();
 			var f;
 			if( window.FormData === undefined ) {
 				f = (e.files || e.dataTransfer.files);

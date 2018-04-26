@@ -48,9 +48,10 @@
           Help make more research available to everyone by supporting requests that matter to you.
         </p>
         <p id="requestfilters" style="color:white;text-align:center;">
+          <a href="/about#requests" style="text-decoration:underline;color:white">Learn about requests</a><br>
           <a id="viewrequests" class="noddin" href="/request" style="text-decoration:underline;color:white;display:none;">View your requests</a><br>
           <a id ="help" href="#" style="text-decoration:underline;color:white;">Help with requests</a><br>
-          <a href="/" style="text-decoration:underline;color:white;">Start a new request</a>
+          <a href="/" style="text-decoration:underline;color:white;">Start a request</a>
         </p>
         <div id="rangedisplay" class="holder range" style="display:none;"></div>
       </div>
@@ -103,7 +104,7 @@ jQuery(document).ready(function() {
     if (window.location.href.indexOf('id=') !== -1) id = decodeURIComponent(window.location.href.split('id=')[1].split('&')[0]);
     if (id) {
       $('#footer').hide();
-      $('.loading').append('<h3 style="text-align:center;">Starting a new request. One moment please</h3>').show();
+      $('.loading').append('<h3 style="text-align:center;">We\'re warming up a request for you, this might take a few seconds</h3>').show();
       var dt = {
         url: id,
         type: window.location.href.indexOf('type=') !== -1 ? window.location.href.split('type=')[1].split('&')[0] : 'article'
@@ -136,7 +137,7 @@ jQuery(document).ready(function() {
       if (user) {
         $('#viewrequests').show().bind('click',function(e) {
           e.preventDefault();
-          $('.holder.search').val(user.username ? 'user.username:' + user.username : 'user.id:' + user._id).trigger('change');
+          $('.holder.search').val('user.id.exact:' + user._id).trigger('change');
         });
         if ( !noddy.hasRole('openaccessbutton.admin') ) {
           $.fn.holder.use.oabutton.defaultfilters = df;

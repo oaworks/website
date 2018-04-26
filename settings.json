@@ -10,6 +10,7 @@
     "./static/oabutton.css",
     "https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"
   ],
+  "site_url": "https://openaccessbutton.org",
   "noddy_api": "https://api.cottagelabs.com",
   "api": "https://api.openaccessbutton.org",
   "service": "openaccessbutton",

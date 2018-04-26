@@ -52,17 +52,17 @@
         Include the API key you are provided in either a URL param called "apikey"
         or in a header called "x-apikey".
         So, a curl call to the availability operation below might look like so (if you choose to use headers):
-        curl -H "Content-Type: application/json" -H "x-apikey: yourRegisteredApikey" 'https://api.openaccessbutton.org'
+        curl -H "Content-Type: application/json" -H "x-apikey: yourRegisteredApikey" '{{api}}'
       </p>
 
       <h2>
-        https://api.openaccessbutton.org
+        {{api}}
       </h2>
       <hr>
       <h3>
         GET
         <small style="margin-left:10px;">
-          <a class="api" target="_blank" href="https://api.openaccessbutton.org">
+          <a class="api" target="_blank" href="{{api}}">
             Example
           </a>
         </small>
@@ -88,7 +88,7 @@
       <h3>
         GET
         <small style="margin-left:10px;">
-          <a class="api" target="_blank" href="https://api.openaccessbutton.org/availability?url=http%3A%2F%2Fjournals.plos.org%2Fplosone%2Farticle%3Fid%3Dinfo%253Adoi%2F10.1371%2Fjournal.pone.0163591">
+          <a class="api" target="_blank" href="{{api}}/availability?url=http%3A%2F%2Fjournals.plos.org%2Fplosone%2Farticle%3Fid%3Dinfo%253Adoi%2F10.1371%2Fjournal.pone.0163591">
             Example
           </a>
         </small>
@@ -165,7 +165,7 @@
       <h3>
         GET or POST
         <small style="margin-left:10px;">
-          <a class="api" target="_blank" href="https://api.openaccessbutton.org/availabilities?q=*sciencedirect*%20AND%20plugin:oabutton_1.0.0">
+          <a class="api" target="_blank" href="{{api}}/availabilities?q=*sciencedirect*%20AND%20plugin:oabutton_1.0.0">
             Example
           </a>
         </small>
@@ -190,7 +190,7 @@
       <h3>
         GET
         <small style="margin-left:10px;">
-          <a class="api" href="https://api.openaccessbutton.org/blacklist" target="_blank">
+          <a class="api" href="{{api}}/blacklist" target="_blank">
             Example
           </a>
         </small>
@@ -207,7 +207,7 @@
       <h3>
         GET
         <small style="margin-left:10px;">
-          <a class="api" target="_blank" href="https://api.openaccessbutton.org/scrape?url=http%3A%2F%2Fjournals.plos.org%2Fplosone%2Farticle%3Fid%3Dinfo%253Adoi%2F10.1371%2Fjournal.pone.0163591">
+          <a class="api" target="_blank" href="{{api}}/scrape?url=http%3A%2F%2Fjournals.plos.org%2Fplosone%2Farticle%3Fid%3Dinfo%253Adoi%2F10.1371%2Fjournal.pone.0163591">
             Example
           </a>
         </small>
@@ -227,7 +227,7 @@
       <h3>
         GET
         <small style="margin-left:10px;">
-          <a class="api" target="_blank" href="https://api.openaccessbutton.org/request/RBNfJLPX382TZZtRR">
+          <a class="api" target="_blank" href="{{api}}/request/RBNfJLPX382TZZtRR">
             Example
           </a>
         </small>
@@ -258,7 +258,7 @@
       <h3>
         GET or POST
         <small style="margin-left:10px;">
-          <a class="api" target="_blank" href="https://api.openaccessbutton.org/requests">
+          <a class="api" target="_blank" href="{{api}}/requests">
             Example
           </a>
         </small>
@@ -285,7 +285,7 @@
       <h3>
         GET or POST
         <small style="margin-left:10px;">
-          <a class="api" href="https://api.openaccessbutton.org/supports?q=rid:6GY6Afbg6xnYQGjbt" target="_blank">
+          <a class="api" href="{{api}}/supports?q=rid:6GY6Afbg6xnYQGjbt" target="_blank">
             Example
           </a>
         </small>
@@ -309,9 +309,6 @@
 
 <script>
   jQuery(document).ready(function() {
-    if (window.location.host.indexOf('openaccessbutton.org') === -1 || window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
-      $('.api').each(function() { $(this).attr('href',$(this).attr('href').replace('https://api.openaccessbutton.org',api)); });
-    }
     noddy.afterLogin = function() {
       if (noddy.apikey) {
         $('#apikey').html('Your API key is <code>' + noddy.apikey + '</code>');

@@ -26,7 +26,15 @@ API.service.oab.scrape = (url,content,doi) ->
         meta.doi = cl if cl.indexOf('10.') is 0 and cl.indexOf('/') isnt -1
 
   if not meta.doi and content
-		# TODO add a check for <meta name="citation_doi" content="DOI" />
+    try
+      cl = content.toLowerCase()
+      if cl.indexOf('citation_doi') isnt -1
+        cl = cl.split('citation_doi')[1].split('content')[1]
+        cl = cl.split('"')[1] if cl.indexOf('"') isnt -1
+        cl = cl.split("'")[1] if cl.indexOf("'") isnt -1
+        meta.doi = cl if cl.indexOf('10.') is 0 and cl.indexOf('/') isnt -1
+
+  if not meta.doi and content
     try
       d = API.tdm.extract
         content:content

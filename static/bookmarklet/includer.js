@@ -1,11 +1,7 @@
 (function() {
   var version = '4.2.0';
-  var api_address = 'https://api.openaccessbutton.org';
-  var site_address = 'https://openaccessbutton.org';
-
-  api_address = 'https://dev.api.cottagelabs.com/service/oab';
-  site_address = 'https://dev.openaccessbutton.org'; // COMMENT THESE OUT BEFORE GOING TO LIVE
-
+  var api_address = '{{api}}';
+  var site_address = '{{site_url}}';
   var url = site_address + '/static/bookmarklet';
 
   var fls = ['bookmarklet.css','oab.js'];
@@ -21,6 +17,13 @@
     document.getElementsByTagName('head')[0].appendChild(ms);
   }
   setTimeout(function() {
+    if (site_address.indexOf('https://open') === -1) {
+      var w = document.createElement('div');
+      w.setAttribute('class','reset-this');
+      w.setAttribute('style','position:fixed;top:0;left:0;right:0;min-height:100px;padding:10px;font-size:20px;background-color:#ee927f;color:black;');
+      w.innerHTML = '<p>Warning: You are using the development version of our Open Access Button bookmarklet.<br>Please ensure you get the latest bookmarklet from our website at <br><a target="_blank" href="https://openaccessbutton.org">https://openaccessbutton.org</a> before proceeding. Thank you!</p>';
+      document.body.appendChild(w);
+    }
     var popup = document.createElement('div');
     popup.setAttribute('id','oabutton_popup');
     popup.setAttribute('class','reset-this');

@@ -133,27 +133,27 @@ VERSION 0.3.0
       // export TODO an export function that can open a link to a backend server that will give the current data or selection as json or csv
     };
 
-    defaults.template = '<div class="{{options.class}} sticker"></div>  \
-    <div class="{{options.class}} default sticky" style="z-index:1000000;"> \
+    defaults.template = '<div class="[[options.class]] sticker"></div>  \
+    <div class="[[options.class]] default sticky" style="z-index:1000000;"> \
       <div class="container" style="margin:0px auto 0px auto;padding:0px;"> \
         <div class="row"> \
           <div class="col-md-12"> \
             <div class="panel panel-default holder ui" style="background-color:white;"> \
               <div class="panel-heading" style="background-color:white;padding:0px;"> \
                 <div class="input-group" style="margin-left:-1px;margin-top:-1px;margin-bottom:-6px;margin-right:-2px;"> \
-                  <div class="input-group-btn"><a class="btn btn-default {{options.class}}" do="previous" alt="previous" title="previous" style="font-weight:bold;height:50px;font-size:1.8em;" href="#">&lt;</a></div> \
-                  <input type="text" class="form-control {{options.class}} search suggest" do="add" placeholder="{{options.text}}" style="font-size:1.6em;height:50px;"> \
+                  <div class="input-group-btn"><a class="btn btn-default [[options.class]]" do="previous" alt="previous" title="previous" style="font-weight:bold;height:50px;font-size:1.8em;" href="#">&lt;</a></div> \
+                  <input type="text" class="form-control [[options.class]] search suggest" do="add" placeholder="[[options.text]]" style="font-size:1.6em;height:50px;"> \
                   <div class="input-group-btn"> \
-                    <a href="#" class="btn btn-default {{options.class}} toggle" toggle=".options" alt="show/hide search options" title="show/hide search options" style="font-weight:bold;height:50px;font-size:1.8em;">+</a> \
-                    <a class="btn btn-default {{options.class}}" do="next" alt="next" title="next" style="font-weight:bold;height:50px;font-size:1.8em;" href="#">&gt;</a> \
+                    <a href="#" class="btn btn-default [[options.class]] toggle" toggle=".options" alt="show/hide search options" title="show/hide search options" style="font-weight:bold;height:50px;font-size:1.8em;">+</a> \
+                    <a class="btn btn-default [[options.class]]" do="next" alt="next" title="next" style="font-weight:bold;height:50px;font-size:1.8em;" href="#">&gt;</a> \
                   </div> \
                 </div> \
-                <div class="{{options.class}} searches" style="margin-top:5px;"></div> \
+                <div class="[[options.class]] searches" style="margin-top:5px;"></div> \
               </div> \
-              <div class="panel-body section {{options.class}} options" style="display:none;"> \
-                <div class="{{options.class}} suggest"></div> \
-                <div class="{{options.class}} display filters"></div> \
-                <div class="{{options.class}} display range"></div> \
+              <div class="panel-body section [[options.class]] options" style="display:none;"> \
+                <div class="[[options.class]] suggest"></div> \
+                <div class="[[options.class]] display filters"></div> \
+                <div class="[[options.class]] display range"></div> \
               </div> \
             </div> \
           </div> \
@@ -164,7 +164,7 @@ VERSION 0.3.0
     defaults.ui = function() {
       // if there is no default UI area on the page for this to run against, append a simple default one
       if ( !$('.' + options.class + '.search').length ) {
-        var hb = /\{\{options\.(.+?)\}\}/gi;
+        var hb = /\[\[options\.(.+?)\]\]/gi;
         options.template = options.template.replace(hb, function(match, opt) { return dotindex(options,opt); });
         obj.append(options.template);
         $('.'+options.class+'.search').bind('focus',function() { $('.'+options.class+'.options').show(); });

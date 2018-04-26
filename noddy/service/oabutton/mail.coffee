@@ -2,19 +2,37 @@
 
 @oab_dnr = new API.collection {index:"oab",type:"oab_dnr"}
 
+API.service.oab.job_started = (job) ->
+  tmpl = API.mail.template 'bulk_start.html'
+  if tmpl
+    sub = API.service.oab.substitute tmpl.content, {_id: job._id, useremail: job.email, jobname: job.name ? job._id}
+    API.mail.send
+      service: 'openaccessbutton'
+      html: sub.content
+      subject: sub.subject
+      from: sub.from ? API.settings.service.openaccessbutton.mail.from
+      to: job.email ? API.accounts.retrieve(job.user)?.emails[0].address
+  else
+    API.mail.send
+      service: 'openaccessbutton'
+      from: 'help@openaccessbutton.org'
+      to: job.email ? API.accounts.retrieve(job.user)?.emails[0].address
+      subject: 'Sheet upload confirmation'
+      text: 'Thanks! \n\nYour sheet has been uploaded to Open Access Button. You will hear from us again once processing is complete.\n\nThe Open Access Button Team'
+
 API.service.oab.job_complete = (job) ->
   if not job.email and job.user
     usr = API.accounts.retrieve job.user
     job.email = usr.emails[0].address
+  tmpl = API.mail.template 'bulk_complete.html'
+  sub = API.service.oab.substitute tmpl.content, {_id: job._id, useremail: job.email, jobname: job.name ? job._id}
   API.mail.send
     service: 'openaccessbutton'
-    template: 'bulk_complete.html'
-    from: API.settings.service.openaccessbutton.mail.from
+    html: sub.content
+    subject: sub.subject
+    from: sub.from ? API.settings.service.openaccessbutton.mail.from
     to: job.email
-    vars:
-      _id: job._id,
-      useremail: job.email
-      jobname: job.name ? job._id
+
 
 API.service.oab.dnr = (email,add,refuse) ->
   return oab_dnr.search('*')?.hits?.hits if not email? and not add?
@@ -68,11 +86,14 @@ API.service.oab.vars = (vars) ->
     vars.useremail = vars.user.email
   vars.profession ?= 'person'
   vars.fullname ?= 'a user'
+  vars.name ?= 'colleague'
   return vars
 
 API.service.oab.substitute = (content,vars,markdown) ->
   vars = API.service.oab.vars vars
-  content = content.replace(/https:\/\/openaccessbutton.org/g,'https://dev.openaccessbutton.org') if API.settings.dev
+  if API.settings.dev
+    content = content.replace(/https:\/\/openaccessbutton.org/g,'https://dev.openaccessbutton.org')
+    content = content.replace(/https:\/\/api.openaccessbutton.org/g,'https://dev.api.cottagelabs.com/service/oab')
   return API.mail.substitute content, vars, markdown
 
 API.service.oab.mail = (opts={}) ->

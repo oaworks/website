@@ -23,8 +23,6 @@
   noddy.debug = {{debug}};
   noddy.api = '{{noddy_api}}';
 
-  if (api !== 'https://api.openaccessbutton.org') $('.bookmarklet_link').attr('href',"javascript:document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','https://dev.openaccessbutton.org/static/bookmarklet/includer.js?r='+Math.random());");
-
   jQuery(document).ready(function() {
 
     var chromeinstall = function(e) {
@@ -80,26 +78,10 @@
       $('.nottin').hide();
     }
 
-    var ftsing = false;
-    var fts = function () {
-      if (!ftsing) {
-        ftsing = true;
-        setTimeout(function() {
-          var wh = $(window).height();
-          var fh = $('#footer').height();
-          var ft = $('#footer').offset().top;
-          var fm = parseInt($('#footer').css('margin-top').replace('px',''));
-          if ( ft + fh < wh ) {
-            $('#footer').css('margin-top',fm+(wh-ft-fh)+'px');
-          } else if (wh-ft-fh < 0) {
-            $('#footer').css('margin-top','0px');
-          }
-          ftsing = false;
-        },200);
-      }
+    if ( $('body').height() < $(window).height() ) {
+      $('body').css('min-height',$(window).height()+'px');
+      if ( window.location.pathname !== '/' && $('#footer').offset().top + $('#footer').height() < $(window).height() ) $('#footer').css('margin-top',$(window).height()-$('#footer').offset().top+'px');
     }
-    //fts();
-    $('body').bind('DOMNodeInserted',fts);
   });
   </script>
 </head>
@@ -108,7 +90,7 @@
 
 
 
-
+<!-- unhide when released
 <div class="row" id="install_mobile" style="display:none;">
   <div class="col-md-2 col-md-offset-1">
     <p style="font-size:40px;line-height:10px;color:#398bc5;text-align:center;">
@@ -121,12 +103,12 @@
     <p style="text-align:center; margin-top:5px;">
       Always have the button by your side, no account needed.<br>
       <a style="margin-top:5px;" target="_blank" href="https://m.me/openaccessbutton">
-        Chat with our OABot
+        Chat with OABotton
       </a>
     </p>
   </div>
 </div>
-
+-->
 <div class="row" id="install_chrome" style="display:none;">
   <div class="col-md-2 col-md-offset-1">
     <p style="font-size:40px;line-height:10px;color:#398bc5;text-align:center;">
@@ -190,7 +172,7 @@
       </div>
       <div class="modal-body">
         <p>
-          <a class="bookmarklet_link" href="javascript:document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','https://openaccessbutton.org/static/bookmarklet/includer.js?r='+Math.random());" style="background-color:#ccc;padding:5px;border-radius:3px;">Open Access Button</a>
+          <a class="bookmarklet_link" href="javascript:document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','{{site_url}}/static/bookmarklet/includer.js?r='+Math.random());" style="background-color:#ccc;padding:5px;border-radius:3px;">Open Access Button</a>
         </p>
         <ol>
         <li> Make sure your bookmarks bar is showing. If not, you can click View, and select "Show Bookmarks Bar."</li>
@@ -216,7 +198,7 @@
       </div>
       <div class="modal-body">
         <p>
-          <a class="bookmarklet_link" href="javascript:document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','https://openaccessbutton.org/static/bookmarklet/includer.js?r='+Math.random());" style="background-color:#ccc;padding:5px;border-radius:3px;">Open Access Button</a>
+          <a class="bookmarklet_link" href="javascript:document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','{{site_url}}/static/bookmarklet/includer.js?r='+Math.random());" style="background-color:#ccc;padding:5px;border-radius:3px;">Open Access Button</a>
         </p>
         <p>TODO INSTRUCTIONS FOR BOOKMARKLET INSTALL ON EDGE</p>
       </div>
@@ -236,7 +218,7 @@
       </div>
       <div class="modal-body">
         <p style="text-align: center;">
-          <a class="bookmarklet_link" href="javascript:document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','https://openaccessbutton.org/static/bookmarklet/includer.js?r='+Math.random());" style="background-color:#ccc;padding:5px;border-radius:3px;">Open Access Button</a>
+          <a class="bookmarklet_link" href="javascript:document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','{{site_url}}/static/bookmarklet/includer.js?r='+Math.random());" style="background-color:#ccc;padding:5px;border-radius:3px;">Open Access Button</a>
         </p>
         <ol>
         <li> Make sure your Favorites bar is showing. If not, you can <a href="https://support.microsoft.com/en-in/instantanswers/cb97447c-a200-476f-a241-cd3958144d02/see-your-favorites-bar">right-click at the top of the browser window</a>, and select "Favorites bar."</li>
