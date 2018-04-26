@@ -228,7 +228,7 @@ noddy.tokenProgress = function() {
   if (progress && progress.createdAt > timeout) {
     var opts = {
       type:'GET',
-      url: noddy.api + '/mail/progress?q=Message-Id.exact:"' + progress.mid + '"',
+      url: noddy.api + '/mail/progress/' + progress.mid,
       success: function(event) {
         try {
           noddy.user.token = event;
