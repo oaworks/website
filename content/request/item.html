@@ -503,7 +503,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
         type: 'GET',
         url: rurl,
         success: details,
-        error: function() { $('#titleheader').html("Sorry, we can't find a request with the ID." + rid + ". If you think one should, please report a <a href="/feedback#bug" target="_blank">bug</a>") ; }
+        error: function() { $('#titleheader').html("Sorry, we can't find a request with the ID " + rid + ". If you think one should, please report a <a href="/feedback#bug" target="_blank">bug</a>"); }
       });
     }
     noddy.afterFailure = function() {
