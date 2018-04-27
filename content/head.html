@@ -82,6 +82,15 @@
       $('body').css('min-height',$(window).height()+'px');
       if ( window.location.pathname !== '/' && $('#footer').offset().top + $('#footer').height() < $(window).height() ) $('#footer').css('margin-top',$(window).height()-$('#footer').offset().top+'px');
     }
+
+    var ping = function(e) {
+      try {
+        $.ajax({
+          url: noddy.api + '/ping.png?service=openaccessbutton&action=' + $(this).attr('id')
+        });
+      } catch (err) {}
+    }
+    $('.pinger').bind('click',ping);
   });
   </script>
 </head>
