@@ -1,3 +1,13 @@
+<script>
+jQuery(document).ready(function() {
+  noddy.afterLogin = function() {
+    $('#promptsignup').hide();
+    $('#integrationcode').html($('#integrationcode').html().replace('from=integration&','from=integration&uid=' + noddy.user.account._id + '&'));
+  }
+  noddy.login();
+});
+</script>
+
 <style>
 .btn {
   padding:10px 15px;
@@ -67,13 +77,3 @@
 
   </div>
 </div>
-
-<script>
-jQuery(document).ready(function() {
-  noddy.afterLogin = function() {
-    $('#promptsignup').hide();
-    $('#integrationcode').html($('#integrationcode').html().replace('from=integration&','from=integration&uid=' + noddy.user.account._id + '&'));
-  }
-  noddy.login();
-});
-</script>
