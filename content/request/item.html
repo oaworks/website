@@ -234,7 +234,7 @@
           url: api+'/support/'+rid,
           cache:false,
           success: function(data) {
-            window.location = window.location.href.split('#')[0].split('?')[0];
+            $('#addsupport').hide().after('<p id="confirmadd">Thanks! You will be notified about this request.</p>');
           }
         }
         opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", noddy.apikey); }
