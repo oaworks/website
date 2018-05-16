@@ -1,0 +1,75 @@
+<script>
+jQuery(document).ready(function() {
+  noddy.afterLogin = function() {
+    $('#promptsignup').hide();
+    $('#integrationcode').html($('#integrationcode').html().replace('from=integration&','from=integration&uid=' + noddy.user.account._id + '&'));
+  }
+  noddy.login();
+});
+</script>
+
+<style>
+.btn {
+  padding:10px 15px;
+  font-size:16px;
+  }
+</style>
+
+<div class="container-fluid">
+
+  <div class="row">
+
+    <div class="col-md-8 col-md-offset-2" style="text-align:justify;">
+
+          <h1 style="text-align:left;margin-top:25px;font-size:4em;margin-bottom:0px;">Integrations</h1>
+          <h3 style="margin-bottom:25px;margin-top:5px;"><i>with library systems</i></h3>
+
+      </div>
+<!-- TODO: if you're interested in how to expose articles you DON'T have access to inside your discovery system well (and that aren't already oa), we'd love to hear from you. -->
+<!-- TODO: consider if better ILL in discovery system etc integrations is in scope-->
+    <div class="col-md-8 col-md-offset-2" style="text-align:justify;">
+
+          <p>
+            Want to provide your patrons more access to research? Integrating Open Access (especially self-archived) content into your Library Discovery System, Link resolver, website, or Interlibrary Loan system backend or form can be ways to do it. For Interlibrary Loan, see <a href="/deliveroa" target="_blank">here</a>, for websites go <a href="/embedoa" target="_blank">here</a>, for everything else, read on!
+          </p>
+          <p>
+            Our friends at Unpaywall also maintain a fantastic <a href="https://unpaywall.org/integrations" target="_blank" class="pinger" id="UnpaywallIntegrationsLinkout">integrations page (e.g for SFX and Primo)</a> and they work great if you have DOIs. If you don't, or also want to make requests for content, read on.
+          </p>
+          <ul>
+            <li>
+              Ebsco's Full Text Finder (coming soon) <!-- TODO: reach out re: https://docs.google.com/document/d/1610SXo-IopPbFijYFvr6UFXi164HvdIRKKxgX3rah74/edit (Bea: Fwd: OA button and its friends) -->
+            </li>
+            <li>
+              <a href="https://knowledge.exlibrisgroup.com/360_Services/360_Link/0Product_Documentation/Overview/360_Link_with_IEDL%3A_Open_Access_Lookup_Service_Integration">360 link</a>
+            </li>
+          </ul>
+            <a name="homebrew"></a>
+            <p>
+              Can't see an option for your system? Consider making one, depending on your system you might not even need to know how to code or work with your vendor to get something set-up. Otherwise, <a href="mailto:joe@openaccessbutton.org">reach out</a> and we'd be excited to lend a hand.
+              <!-- TODO: test articles -->
+              <!-- TODO: copy for links / buttons -->
+            </p>
+            <p id="promptsignup">
+              First, please <a href="/account?next=/integrations" class="label label-info">sign up / sign in</a> to see a customized link that helps us get in touch if things go wrong and understand how the service is being used..
+            </p>
+            <p>
+              You can use <pre id="integrationcode">https://openaccessbutton.org/?from=integration&id=</pre> followed by a DOI, URL, Title, Citation, PMID or PMC ID given by your system. For more advanced integrations try <a href="/api">our free, documented api</a>.
+            </p>
+
+          <p style="text-align: center;padding-top:15px;">
+            <a href="mailto:joe@openaccessbutton.org" target="_blank">
+              <button class="btn btn-action" style="width:50%;">
+                Request or tell us about an integration
+              </button>
+            </a>
+              <p style="text-align: center;">
+                <i>
+                  or <a href= "https://docs.google.com/forms/d/e/1FAIpQLSddhWH2_Pg_JQMCtPFqE6acURwSVQIClucOdW3loqKO0gKZxA/viewform?usp=sf_link">get notified</a> when more are added
+                </i>
+              </p>
+          </p>
+
+    </div>
+
+  </div>
+</div>
