@@ -234,7 +234,7 @@
           url: api+'/support/'+rid,
           cache:false,
           success: function(data) {
-            window.location = window.location.href.split('#')[0].split('?')[0];
+            $('#addsupport').hide().after('<p id="confirmadd">Thanks! You will be notified about this request.</p>');
           }
         }
         opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", noddy.apikey); }
@@ -503,7 +503,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
         type: 'GET',
         url: rurl,
         success: details,
-        error: function() { $('#titleheader').html("Sorry, we can't find a request with the ID " + rid + " . If you think one should, please report an <a href="/feedback#bug" target="_blank">issue</a>"); }
+        error: function() { $('#titleheader').html("Sorry, we can't find a request with the ID " + rid + " . If you think one should, please report an <a href=\"/feedback#bug\" target=\"_blank\">issue</a>"); }
       });
     }
     noddy.afterFailure = function() {

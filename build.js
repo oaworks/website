@@ -578,7 +578,7 @@ var reader = function(content) {
         var rp = '';
         var mt = m[0].split(' ')[0].replace('<','').replace('>','').toLowerCase();
         var numeral = false;
-        try { numeral = parseInt(m) } catch(err) {}
+        try { numeral = parseInt(mt) } catch(err) {}
         if (['l','m','r'].indexOf(mt) !== -1 || numeral) {
           rp += '</div>';
           if (['h','w'].indexOf(lm) !== -1) rp += '</div>';
