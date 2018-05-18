@@ -258,14 +258,18 @@
 				f = e.target.files[0];
 			}
 			filename = f.name;
-			var reader = new FileReader();
-			reader.onload = (function(theFile) {
-				return function(e) {
-					file = e.target.result;
-					submitJob();
-				};
-			})(f);
-			reader.readAsBinaryString(f);
+			if (filename.indexOf('.xls') !== -1) {
+  			$('#jobinfo').html('Sorry, we can\'t process excel files. Please open your file in excel and choose the sheet you want, then save it as csv, and upload the csv file. Thanks!');
+			} else {
+  			var reader = new FileReader();
+  			reader.onload = (function(theFile) {
+  				return function(e) {
+  					file = e.target.result;
+  					submitJob();
+  				};
+  			})(f);
+  			reader.readAsBinaryString(f);
+			}
 		}
 
 		$('input[type=file]').on('change', uploadJob);
