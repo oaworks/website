@@ -70,11 +70,11 @@ server {
   rewrite ^/response/.*$ /response/item last;
 
   location / {
-    try_files /serve/$uri.html /serve/$uri/index.html /404.html =404;
+    try_files /serve/$uri.html /serve/$uri/index.html /serve/404.html =404;
   }
 
   location /content {
-    try_files $uri $uri.html $uri.md $uri/index $uri/index.html $uri/index.md /404 =404;
+    try_files $uri $uri.html $uri.md $uri/index $uri/index.html $uri/index.md =404;
   }
   
   location /static {

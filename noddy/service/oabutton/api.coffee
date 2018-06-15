@@ -376,6 +376,8 @@ API.add 'service/oab/job',
       jobs = job_job.search({service:'openaccessbutton'},{size:1000,newest:true}).hits.hits
       for j of jobs
         jobs[j] = jobs[j]._source
+        ju = API.accounts.retrieve jobs[j].user
+        jobs[j].email = ju?.emails[0].address
         jobs[j].processes = if jobs[j].processes? then jobs[j].processes.length else 0
       return jobs
   post:

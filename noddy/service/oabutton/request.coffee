@@ -129,12 +129,12 @@ API.service.oab.support = (rid,story,uacc) ->
     anons = {url:r.url,rid:r._id,type:r.type,username:'anonymous',story:story}
     anons._id = oab_support.insert anons
     return anons
-  else if ((typeof uacc is 'string' and r.user?.id isnt uacc) or r.user?.id isnt uacc?._id ) && not API.service.oab.supports(rid,uacc)?
+  else if ((typeof uacc is 'string' and r.user?.id isnt uacc) or r.user?.id isnt uacc?._id ) and not API.service.oab.supports(rid,uacc)?
     oab_request.update rid, {count:r.count + 1}
-    user = API.accounts.retrieve(uacc) if typeof uacc is 'string'
-    s = {url:r.url,rid:r._id,type:r.type,uid:user._id,username:user.username,email:user.emails[0].address,story:story}
-    s.firstname = user.profile?.firstname
-    s.lastname = user.profile?.lastname
+    uacc = API.accounts.retrieve(uacc) if typeof uacc is 'string'
+    s = {url:r.url,rid:r._id,type:r.type,uid:uacc._id,username:uacc.username,email:uacc.emails[0].address,story:story}
+    s.firstname = uacc.profile?.firstname
+    s.lastname = uacc.profile?.lastname
     s._id = oab_support.insert s
     return s
 

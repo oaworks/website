@@ -46,5 +46,14 @@ API.service.oab.admin = (rid,action) ->
   else if action is 'remove_submitted_url'
     update.status = 'moderate'
     update.received = false
+  else if action is 'request_too_old'
+    API.service.oab.mail({vars:vars,template:{filename:'request_too_old.html'},to:requestors}) if requestors.length
+    update.status = 'closed'
+  else if action is 'article_before_2000'
+    API.service.oab.mail({vars:vars,template:{filename:'article_before_2000.html'},to:requestors}) if requestors.length
+    update.status = 'closed'
+  else if action is 'author_email_not_found'
+    API.service.oab.mail({vars:vars,template:{filename:'author_email_not_found.html'},to:requestors}) if requestors.length
+    update.status = 'closed'
   oab_request.update(rid,update) if JSON.stringify(update) isnt '{}'
 
