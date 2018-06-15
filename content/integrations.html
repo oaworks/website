@@ -1,7 +1,7 @@
 <script>
 jQuery(document).ready(function() {
   noddy.afterLogin = function() {
-    $('#promptsignup').hide();
+    $('.promptsignup').hide();
     $('#integrationcode').html($('#integrationcode').html().replace('from=integration&','from=integration&uid=' + noddy.user.account._id + '&'));
   }
   noddy.login();
@@ -49,7 +49,7 @@ jQuery(document).ready(function() {
               <!-- TODO: test articles -->
               <!-- TODO: copy for links / buttons -->
             </p>
-            <p id="promptsignup">
+            <p class="promptsignup">
               First, please <a href="/account?next=/integrations" class="label label-info">sign up / sign in</a> to see a customized link that helps us get in touch if things go wrong and understand how the service is being used..
             </p>
             <p>
