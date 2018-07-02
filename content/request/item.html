@@ -264,7 +264,9 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
     }
 
     var admin = function(record) {
-      var dets = '<p>Dear admin, please notify when you are moderating in a few clicks at <a href="https://app.timebridge.com/mwm/requests">https://app.timebridge.com/mwm/requests</a></p>';
+      var dets = ''; //'<p>Dear admin, please notify when you are moderating in a few clicks at <a href="https://app.timebridge.com/mwm/requests">https://app.timebridge.com/mwm/requests</a></p>';
+      if (record.year) dets += '<p>Publication year: ' + record.year + '</p>';
+      if (record.sherpa !== undefined && record.sherpa.color !== undefined) dets += '<p>Sherpa color: ' + record.sherpa.color + '</p>';
       dets += '<p>Status: <select id="status" class="form-control" style="width:150px;display:inline;">';
       var statuses = ['help','moderate','progress',/*'hold',*/'refused','received','closed'];
       for ( var s in statuses ) {
@@ -277,7 +279,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       if (record.test === true) dets += ' checked="checked"';
       dets += '>';
       dets += ' &nbsp;&nbsp;Action: <select id="action" class="form-control" style="width:150px;display:inline;">';
-      var actions = ['','send_to_author','story_too_bad','not_a_scholarly_article','dead_author','user_testing','broken_link'];
+      var actions = ['','send_to_author','story_too_bad','not_a_scholarly_article','dead_author','user_testing','broken_link','request_too_old','article_before_2000','author_email_not_found'];
       if (record.received && record.received.url) actions.push('remove_submitted_url');
       for ( var a in actions ) {
         dets += '<option value="' + actions[a] + '">' + actions[a].replace(/_/g,' ') + '</option>';

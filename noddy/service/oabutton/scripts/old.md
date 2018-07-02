@@ -1,522 +1,239 @@
 # A log of everything we did in the old API scripts to update and import old requests
 
+## latest fix
+
+Update from Joe - if there are old requests that have no story, that is OK - import them.
+But if they DO have a story, and ARE rated as bad in the story ratings sheet, don't include them. 
+Don't import duplicate requests for the same URL - so check that.
+If a request does not have a matching user in the current system, still import it by set to anon.
+
+We know there are missing records, which disappeared during a previous update - 
+probably when an update from blocks to requests only allowed to keep requests 
+we could find a matching user for.
+
+But we have an old blog post that links to 10 
+records, all of which should still be relevant, but only 1 of which is in the current 
+system - see the issue:
+
+https://github.com/OAButton/discussion/issues/966
+
+In a backup of 18420 old records we do still have all of these requests, with some 
+user data, in an older format that does have a legacy object but also still has 
+a metadata object, which we no longer use. 17207 have metadata, 15614 have legacy. 
+Some of these records could already still be in the current system though.
+
+Also, there are some duplicates in the backup, in the sense that it was a time when there 
+was possibly more than one request per URL. We would have filtered that down to just 
+the one copy, and counted the others as support counts, but even so, there seems to be 
+some missing from the current live data. So, will have to go through the backup 
+records, import them to live data where suitable, but also check for dups in the 
+live data and in the backup itself, and decide which story to select if there is 
+more than one.
+
+So first, check which ones are not in the current system.
+
+Some of these old records do have location data in them. But keep that if present for now. 
+A later script can be executed to remove all location data from all records, once this issue 
+is fixed.
+
+The keys present in the backup records are:
+[u'username', u'profession', u'user', u'user_email', u'url', u'updatedAt', u'createdAt', u'plugin', u'_id', u'type', u'metadata', 
+u'story', u'request', u'location', u'status', u'receiver', u'email', u'legacy', u'doi', u'title', 
+u'description', u'coords_lng', u'coords_lat', u'test', u'received', u'hold', u'holds', u'count', u'refused']
+But received, hold, holds, count, and refused are not present in any that are not tests, so can ignore those.
+These keys are present in metadata objects: [u'journal', u'identifier', u'author', u'title', u'url', u'email']
+But email is only present once, and is an empty list, so ignore that.
+When journal is present it should be an object with "name". But some of them are invalid. 
+Throw any that start with "by " or that are "info" or that contain \t or \x, and ignore empty ones, 
+and strip whitespace from them all, as some have a lot of leading whitespace. Set suitable 
+journal names into rec.journal.
+If title is present and has length, set it into rec.title.
+If identifier is in metadata, and is a list, and has type:doi, and has id (which it may not) with a value, 
+save it to rec.doi.
+For authors, if existing, should be a list, and if contains anything, should be objects, each with "name". 
+If that is present, check if the name does not have any \x or \u in it. If not, for each one, push the 
+author object up to a rec.author list (which will need created if not existing yet).
+There is only one url in metadata, and it is a test one, so ignore it.
+Description is always empty so delete it.
+
+There are only 9 requests that have the "request" key and are also not either test:true or type:data. 
+None of them have good stories, and can be supposed to be duplicates, so if this key is present, 
+just skip them.
+
+There are only 9801 of these records that have the story key, and only 6541 where story has a length.
+
+Fix the user data into a proper user object - username, profession, user, user_email
+15270 records have a user key. And the amount comes out the same if looking for ones with user_email or username... so only check on the user key
+user can be user ID string, or user email string, or username string, or firstname and lastname string (which may have been username at the time) all of which could be from old systems, even the IDs include old and new ID types
+user can also sometimes be an object, which looks like the correct current user object e.g. {username: 'BROKI', id: FYrNkyKwkgGXHMaJQ, email: 'diegobroki@hotmail.com'}
+but even this should have more info in it if a modern user
+modern user object should now have keys id, username, email, affiliation, profession
+
+Will it be necessary to check if all others are URL duplicates of ones already in the system though?
+
+import fs from 'fs'
+
+updates = []
+recs = JSON.parse(fs.readFileSync('/home/cloo/backups/oabutton_full_old_old_05032018.json'))
+for rec in recs.hits.hits:
+  rec = rec._source
+  rec.type ?= 'article'
+  if rec.type is 'article' and not rec.request? and rec.test isnt true and rec.story and not oab_request.get(rec._id)?
+    continue = true
+    if rec.email? # what to do if we don't have an email? save it anyway? try to scrape it?
+      if rec.email is None
+        delete rec.email
+      else if rec.email.indexOf('cottagelabs.com') is -1 and rec.email.indexOf('joe@') is -1 and rec.email.indexOf('natalianorori') is -1 and rec.email.indexOf('n/a') is -1 and rec.email.indexOf('None') is -1
+        continue = true
+      else
+        continue = false
+    # should we check against the story ratings list?
+    # check by the url to see if there is already a matching record in the system or in these backup records?
+    if continue
+      rec.legacy ?= {}
+      rec.legacy.blog_issue_reload = true
+      if rec.metadata?
+        if rec.metadata.journal?.name?
+          if typeof rec.metadata.journal.name is 'string' and rec.metadata.journal.name.length > 1 and rec.metadata.journal.name.indexOf('\t') is -1 and rec.metadata.journal.name.indexOf('\u') is -1 and rec.metadata.journal.name.indexOf('\x') is -1 and rec.metadata.journal.name.indexOf('by ') isnt 0 and rec.metadata.journal.name.indexOf('info') isnt 0
+            rec.journal ?= rec.metadata.journal.name.trim()
+        if rec.metadata.title? and rec.metadata.title.length > 1
+          rec.title ?= rec.metadata.title
+        if rec.metadata.identifier? and rec.metadata.identifier.length > 0 and rec.metadata.identifier[0].type? and rec.metadata.identifier[0].type.toLowerCase() is 'doi' and rec.metadata.identifier[0].id?
+          rec.doi = rec.metadata.identifier[0].id
+        if rec.metadata.author?
+          for author in rec.metadata.author
+            if author.name? and author.name.indexOf('\x') is -1 and author.name.indexOf('\u') is -1
+              rec.author ?= []
+              rec.author.push author
+        delete rec.metadata
+        delete rec.description if rec.description?
+        if rec.coords_lat
+          rec.location ?= {}
+          rec.location.geo ?= {}
+          rec.location.geo.lat = rec.coords_lat
+          delete rec.coords_lat
+        if rec.coords_lng
+          rec.location ?= {}
+          rec.location.geo ?= {}
+          rec.location.geo.lon = rec.coords_lng
+          delete rec.coords_lng
+        rec.created_date = moment(rec.createdAt, "x").format("YYYY-MM-DD HHmm.ss") if not rec.created_date?
+        if rec.user?
+          if typeof rec.user is 'string'
+            uid = rec.user
+            rec.user = {}
+          else
+            uid = rec.user.id
+          user = API.accounts.retrieve uid
+          if not user?
+            # do we abandon old records with no current user? that is what we did before
+          else
+            rec.user.email ?= user.emails[0].address
+            rec.user.username ?= user.profile?.firstname ? user.username ? user.emails[0].address
+            rec.user.firstname ?= user.profile?.firstname
+            rec.user.lastname ?= user.profile?.lastname
+            rec.user.affiliation ?= user.service?.openaccessbutton?.profile?.affiliation
+            rec.user.profession ?= user.service?.openaccessbutton?.profile?.profession
+        updates.push rec
+
+# oab_request.import(updates) if updates.length > 0
+
+
+
 ## filterold
 
-      var qp = this.queryParams;
-      qp.execute = true;
-      qp.scrape = true;
-      qp.requests = true;
-      qp.users = true;
-      // and pass in qp scrape to run scrape for email, and qp execute to actually save changes
+For every request in oab_request, if no URL or URL on blacklist, just delete the 
+request from the index. Otherwise update rating to be 1 if rating >= 3, else 0.
+If request has user, but no profession, set profession to Other. If it does have 
+profession, update it to start with uppercase and the rest lowercase. if it was 
+academic change it to Researcher. If doctor change to Health professional. If it 
+was not one of ['Student','Health professional','Patient','Researcher','Librarian'] 
+set it to Other. If status is help or moderate and email is invalid, remove the email. 
+If there is no email, scrape the URL and try to find one. 
 
-      var counts = {updated:0,removed:0,requests:0,presentemailremoved:0,scrape:0,newvalidemail:0,users:0,userupdated:0};
-
-      var professions = ['Student','Health professional','Patient','Researcher','Librarian'];
-      if (qp.requests) {
-        oab_request.find().forEach(function(req) {
-          counts.requests += 1;
-          if (!req.url || CLapi.internals.service.oab.blacklist(req.url)) {
-            counts.removed += 1;
-            if (qp.execute) {
-              console.log('removing ' + req._id);
-              oab_request.remove(req._id);
-            }
-          } else {
-            var update = {};
-            if (req.rating) {
-              update.rating = parseInt(req.rating) >= 3 ? 1 : 0;
-            }
-            if (req.user) {
-              if (req.user.profession === undefined) {
-                update['user.profession'] = 'Other';
-              } else if ( professions.indexOf(req.user.profession) === -1 ) {
-                if (req.user.profession) {
-                  update['user.profession'] = req.user.profession[0].toUpperCase() + req.user.profession.substring(1,req.user.profession.length);
-                  if (professions.indexOf(update['user.profession']) === -1) {
-                    if (update['user.profession'].toLowerCase() === 'academic') {
-                      update['user.profession'] = 'Researcher';
-                    } else if (update['user.profession'].toLowerCase() === 'doctor') {
-                      update['user.profession'] = 'Health professional';
-                    } else {
-                      update['user.profession'] = 'Other';
-                    }
-                  }
-                } else {
-                  update['user.profession'] = 'Other';
-                }
-              }
-              if (['help','moderate'].indexOf(req.status) !== -1) {
-                if ( req.email && ( req.email.indexOf('@') === -1 || req.email.indexOf('.') === -1 || CLapi.internals.service.oab.dnr(req.email) ) ) {
-                  counts.presentemailremoved += 1;
-                  req.email = undefined;
-                  update.email = '';
-                }
-                if ( !req.email ) {
-                  counts.scrape += 1;
-                  if (qp.scrape) {
-                    try {
-                      var s = CLapi.internals.service.oab.scrape(req.url);
-                      if ( s.email ) {
-                        counts.newvalidemail += 1;
-                        update.email = s.email;
-                      }
-                    } catch(err) {}
-                  }
-                }
-              }
-            }
-            if (JSON.stringify(update) !== '{}') {
-              if (qp.execute) {
-                console.log('updating ' + req._id);
-                oab_request.update(req._id,{$set:update});
-              }
-              counts.updated += 1;
-            }
-          }
-        });
-      }
-
-      if (qp.users) {
-        Meteor.users.find({"roles.openaccessbutton":{$exists:true}}).forEach(function(u) {
-          counts.users += 1;
-          if (u && u.service && u.service.openaccessbutton && u.service.openaccessbutton.profile) {
-            var uup = {};
-            if (!u.service.openaccessbutton.profile.profession) {
-              uup['service.openaccessbutton.profile.profession'] = 'Other';
-            } else if ( professions.indexOf(u.service.openaccessbutton.profile.profession) === -1 ) {
-              uup['service.openaccessbutton.profile.profession'] = u.service.openaccessbutton.profile.profession[0].toUpperCase() + u.service.openaccessbutton.profile.profession.substring(1,u.service.openaccessbutton.profile.profession.length);
-              if (professions.indexOf(uup['service.openaccessbutton.profile.profession']) === -1) {
-                if (uup['service.openaccessbutton.profile.profession'].toLowerCase() === 'academic') {
-                  uup['service.openaccessbutton.profile.profession'] = 'Researcher';
-                } else if (uup['service.openaccessbutton.profile.profession'].toLowerCase() === 'doctor') {
-                  uup['service.openaccessbutton.profile.profession'] = 'Health professional';
-                } else {
-                  uup['service.openaccessbutton.profile.profession'] = 'Other';
-                }
-              }
-            }
-            if (JSON.stringify(uup) !== '{}') {
-              counts.userupdated += 1;
-              if (qp.execute) {
-                console.log('updating user ' + u._id);
-                Meteor.users.update(u._id,{$set:uup});
-
-
-
+For every user in Meteor.users who has roles.openaccessbutton, if user has 
+service.openaccessbutton.profile, but it does not contain profession, add profession 
+in the same way as above, or if profession exists, modify it as above.
 
 
 
 ## fixblocked
 
-// old records have these keys, need a script to clean them up and check for nonsense content:
-// [u'last_updated', u'author', u'url', u'created_date', u'api_key', u'id', u'doi', u'journal', u'story', u'authoremails', u'title', u'wishlist']
-// [u'last_updated', u'author', u'url', u'created_date', u'api_key', u'id', u'doi', u'journal', u'story', u'authoremails', u'title', u'wishlist', u'emails[2]', u'emails[3]', u'emails[1]', u'emails[0]', u'and
-// roid', u'location', u'metadata', u'email', u'emails[4]', u'emails[6]', u'emails[5]', u'emails[7]']
-// nonsense could be in the url, or in the story, or possibly by author
-// for good ones, author > user, authoremails > email. the rest direct match below, or should be ignored
+Go through all old blocked records from 
+/home/cloo/migrates/oabutton/oab_02022016_2311/blocked.json
 
-var fs = Meteor.npmRequire('fs');
+Create rec.metadata object if not existing. Set type as article. Create legacy 
+as {legacy: true}. If rec.author, if it is string, set rec.user to it, otherwise 
+set rec.metadata.author to it, then delete rec.author. Delete rec.api_key if present. 
+If rec.id, set it into rec.legacy.id then delete it. Same with wishlist. If 
+rec.android, set rec.legacy.plugin as android, then delete. If created_date and/or 
+last_updated, move them into rec.legacy. If rec.location, save it into a user 
+locations object. Move rec.title into rec.metadata, if journal move into rec.metadata 
+as {name: rec.journal}, if doi move it in as [{type:'doi',id:rec.doi}]. Make sure 
+any rec.metadata.journal is an object and not a string. If rec.authoremails move it 
+into rec.email. If it is a string, make it a list. For any rec[emails[0]] up to 7, push 
+them into rec.email if not already in there (see below how this problem arose from an 
+old wrong plugin). Now, move rec.email to rec.legacy.email.
 
-var oabinput = '/home/cloo/migrates/oabutton/oab_02022016_2311/blocked.json';
-var oabjsonout = '/home/cloo/migrates/oabutton/oab_02022016_2311/blocked_fixed.json';
-var oabcsvout = '/home/cloo/migrates/oabutton/oab_02022016_2311/blocked_fixed.csv';
-
-var fixblocked = function() {
-  var recs = JSON.parse(fs.readFileSync(oabinput));
-  var userlocs = {};
-  var recs_keys_fixed = [];
-  for ( var i in recs.hits.hits ) {
-    var rec = recs.hits.hits[i]._source;
-    if (rec.metadata === undefined ) rec.metadata = {};
-    rec.type = 'article';
-    rec.legacy = {legacy:true};
-    if (rec.author) {
-      if (typeof rec.author === 'string') {
-        rec.user = rec.author;
-      } else {
-        rec.metadata.author = rec.author;
-      }
-      delete rec.author;
-    }
-    if (rec.api_key) delete rec.api_key;
-    if (rec.id) {
-      rec.legacy.id = rec.id;
-      delete rec.id;
-    }
-    if (rec.wishlist) {
-      rec.legacy.wishlist = rec.wishlist;
-      delete rec.wishlist;
-    }
-    if (rec.android) {
-      rec.legacy.plugin = 'android';
-      delete rec.android;
-    }
-    if (rec.created_date) {
-      rec.legacy.created_date = rec.created_date;
-      delete rec.created_date;
-    }
-    if (rec.last_updated) {
-      rec.legacy.last_updated = rec.last_updated;
-      delete rec.last_updated;
-    }
-    if (rec.location && userlocs[rec.user] === undefined ) userlocs[rec.user] = rec.location;
-    if (rec.title) {
-      rec.metadata.title = rec.title;
-      delete rec.title;
-    }
-    if (rec.journal) {
-      rec.metadata.journal = {name: rec.journal};
-      delete rec.journal;
-    }
-    if (rec.doi) {
-      rec.metadata.identifier = [{type:'doi',id:rec.doi}];
-      delete rec.doi;
-    }
-    if (rec.metadata && rec.metadata.journal && typeof rec.metadata.journal !== 'object') rec.metadata.journal = {name:rec.metadata.journal};
-    if (rec.authoremails !== undefined) {
-      if (rec.authoremails) rec.email = rec.authoremails;
-      delete rec.authoremails;
-    }
-    if (rec.email !== undefined && typeof rec.email === 'string') rec.email = [rec.email];
-    if (rec.email === undefined) rec.email = [];
-    if (rec['emails[0]']) {
-      if (rec.email.indexOf(rec['emails[0]']) === -1 ) rec.email.push(rec['emails[0]']);
-      delete rec['emails[0]'];
-    }
-    if (rec['emails[1]']) {
-      if (rec.email.indexOf(rec['emails[1]']) === -1 ) rec.email.push(rec['emails[1]']);
-      delete rec['emails[1]'];
-    }
-    if (rec['emails[2]']) {
-      if (rec.email.indexOf(rec['emails[2]']) === -1 ) rec.email.push(rec['emails[2]']);
-      delete rec['emails[2]'];
-    }
-    if (rec['emails[3]']) {
-      if (rec.email.indexOf(rec['emails[3]']) === -1 ) rec.email.push(rec['emails[3]']);
-      delete rec['emails[3]'];
-    }
-    if (rec['emails[4]']) {
-      if (rec.email.indexOf(rec['emails[4]']) === -1 ) rec.email.push(rec['emails[4]']);
-      delete rec['emails[4]'];
-    }
-    if (rec['emails[5]']) {
-      if (rec.email.indexOf(rec['emails[5]']) === -1 ) rec.email.push(rec['emails[5]']);
-      delete rec['emails[5]'];
-    }
-    if (rec['emails[6]']) {
-      if (rec.email.indexOf(rec['emails[6]']) === -1 ) rec.email.push(rec['emails[6]']);
-      delete rec['emails[6]'];
-    }
-    if (rec['emails[7]']) {
-      if (rec.email.indexOf(rec['emails[7]']) === -1 ) rec.email.push(rec['emails[7]']);
-      delete rec['emails[7]'];
-    }
-    if (rec.email) {
-      rec.legacy.email = rec.email;
-      delete rec.email;
-    }
-    recs_keys_fixed.push(rec);
-  }
-
-  var recs_cleaned = [];
-  var tests = 0;
-  var nouser = 0;
-  var foundlocs = 0;
-  for ( var k in recs_keys_fixed ) {
-    var rc = recs_keys_fixed[k];
-    // fixes the location data if it was missing and we had it for this user from another record
-    if (!rc.location && userlocs[rc.user]) {
-      rc.location = userlocs[rc.user];
-      foundlocs += 1;
-    }
-    // then set as test if obviously is one
-    if ( !rc.user ) {
-      rc.test = true;
-      tests += 1;
-    }
-    if ( !rc.url ) {
-      rc.test = true;
-      tests += 1;
-    }
-    if ( !rc.story ) rc.story = '';
-    if (rc.url) {
-      if (rc.url.indexOf('chrome') !== -1 || rc.url.indexOf('openaccessbutton') !== -1 || rc.url.indexOf('about:') !== -1) {
-        rc.test = true;
-        tests += 1;
-      }
-    }
-    if (rc.user && ( rc.user.toLowerCase().indexOf('admin') !== -1 || rc.user.toLowerCase().indexOf('eardley') !== -1 ) ) {
-      rc.test = true;
-      tests += 1;
-    }
-    if (!rc.user) nouser += 1;
-    recs_cleaned.push(rc);
-
-  }
-  console.log('tests ' + tests + ', found locs ' + foundlocs);
-  fs.writeFileSync(oabjsonout,JSON.stringify(recs_cleaned,"","  "));
-  fs.writeFileSync(oabcsvout,'"user","url","story","test"\n');
-  var recordcount = 0;
-  for ( var ln in recs_cleaned ) {
-    recordcount += 1;
-    var tf = recs_cleaned[ln];
-    var url = tf.url ? tf.url.replace('"','') : "";
-    var story = tf.story ? tf.story.replace('"','').replace('\n','') : "";
-    var line = '"' + tf.user + '","' + url + '","' + story + '","';
-    if (tf.test) line += 'true';
-    line += '"\n';
-    fs.appendFileSync(oabcsvout,line);
-  }
-
-  return {records: recordcount, tests: tests, located: foundlocs, nouser: nouser};
-}
-
+Now for all the recs that had any of the fixes done above, go through them all again. If 
+they are missing location, but do have user, and user location is known, put in the user 
+location as rec.location. If record does not have user, or not URL, set test:true. If 
+story does not exist, set as ''. If URL, if contains chrome or openaccessbutton or about: 
+set test:true. If user contains admin or eardley, set test:true. Write all these recs to 
+blocked_fixed.json and .csv.
 
 
 
 ## fixlegacydates
 
-      var counts = {count:0,fixed:0};
-      var moment = Meteor.npmRequire('moment');
-      var requests = oab_request.find().fetch();
-      counts.count = requests.length;
-      for ( var r in requests ) {
-        var fix = {};
-        var res = requests[r];
-        if (res.legacy && res.legacy.created_date) {
-          counts.fixed += 1;
-          res.createdAt = moment(res.legacy.created_date,"YYYY-MM-DD HHmm").valueOf();
-          fix.createdAt = res.createdAt;
-        }
-        fix.created_date = moment(res.createdAt,"x").format("YYYY-MM-DD HHmm");
-        if (res.updatedAt) fix.updated_date = moment(res.updatedAt,"x").format("YYYY-MM-DD HHmm");
-
-        oab_request.update(res._id,{$set:fix});
-
+For every request in oab_request, if it has legacy.created_date, add it as createdAt
+via moment(res.legacy.created_date,"YYYY-MM-DD HHmm").valueOf() to the main record. 
+Then set created_date as moment(res.createdAt,"x").format("YYYY-MM-DD HHmm") and if 
+the record has updatedAt, alter it as moment(res.updatedAt,"x").format("YYYY-MM-DD HHmm"). 
+Then save the record back into oab_request.
 
 
 
 ## importold
 
-var getoldblocked = function() {
-  var recs = Meteor.http.call('GET','http://oabutton.cottagelabs.com/query/blocked/_search?q=*&size=10000').data;
-  //var urlemails = {};
-  var userlocs = {};
-  var recs_keys_fixed = [];
-  for ( var i in recs.hits.hits ) {
-    var rec = recs.hits.hits[i]._source;
-    if (rec.metadata === undefined ) rec.metadata = {};
-    rec.type = 'article';
-    rec.legacy = {legacy:true};
-    if (rec.author) {
-      if (typeof rec.author === 'string') {
-        rec.user = rec.author;
-      } else {
-        rec.metadata.author = [];
-        for ( var a in rec.author ) {
-          rec.metadata.author.push({name:rec.author[a]});
-        }
-      }
-      delete rec.author;
-    }
-    if (rec.api_key) delete rec.api_key;
-    if (rec.id) {
-      rec.legacy.id = rec.id;
-      delete rec.id;
-    }
-    if (rec.wishlist) {
-      rec.legacy.wishlist = rec.wishlist;
-      delete rec.wishlist;
-    }
-    if (rec.android) {
-      rec.legacy.plugin = 'android';
-      delete rec.android;
-    }
-    if (rec.created_date) {
-      rec.legacy.created_date = rec.created_date;
-      delete rec.created_date;
-    }
-    if (rec.last_updated) {
-      rec.legacy.last_updated = rec.last_updated;
-      delete rec.last_updated;
-    }
-    if (rec.location && rec.user && userlocs[rec.user] === undefined ) userlocs[rec.user] = rec.location;
-    if (rec.title) {
-      rec.metadata.title = rec.title;
-      delete rec.title;
-    }
-    if (rec.journal) {
-      rec.metadata.journal = {name: rec.journal};
-      delete rec.journal;
-    }
-    if (rec.doi) {
-      rec.metadata.identifier = [{type:'doi',id:rec.doi}];
-      delete rec.doi;
-    }
-    if (rec.metadata && rec.metadata.journal && typeof rec.metadata.journal !== 'object') rec.metadata.journal = {name:rec.metadata.journal};
-    if (rec.authoremails !== undefined) {
-      if (rec.authoremails) rec.email = rec.authoremails;
-      delete rec.authoremails;
-    }
-    if (rec.email !== undefined && typeof rec.email === 'string') rec.email = [rec.email];
-    if (rec.email === undefined) rec.email = [];
-    if (rec['emails[0]']) { - up to 4
-      if (rec.email.indexOf(rec['emails[0]']) === -1 ) rec.email.push(rec['emails[0]']);
-      delete rec['emails[0]'];
-    }
-    if (rec['emails[5]']) delete rec['emails[5]']; - up to 30
-    if (rec.email) {
-      rec.legacy.email = rec.email;
-      delete rec.email;
-    }
-    //if (rec.url && rec.legacy.email && rec.legacy.email.length > 0) urlemails[rec.url] = rec.legacy.email;
-    if (rec.url) {
-      if (rec.url.indexOf('chrome') === -1 && rec.url.indexOf('openaccessbutton') === -1 && rec.url.indexOf('about:') === -1) {
-        if ( (rec.user && rec.user.toLowerCase().indexOf('admin') === -1 && rec.user.toLowerCase().indexOf('eardley') === -1) || !rec.user ) {
-          recs_keys_fixed.push(rec);
-        }
-      }
-    }
-  }
-  return {total: recs_keys_fixed.length, records: recs_keys_fixed, started: recs.hits.hits.length, locations: userlocs}; //, urlemails: urlemails};
-}
+Go through old blocked (what used to be requests) by querying them from the blocked index.
+In each record add a "legacy" key and give it a content of legacy:true. Add a metadata key if 
+not present, pointing to an empty object. If record has author and author is string, set user 
+to author, else if not string, create rec.metadata.author as a list and for each author push 
+{name:author} into rec.metadata.author. Then delete rec.author. Delete rec.api_key if present.
+If rec.id exists, put it into rec.legacy.id then delete rec.id. Same with wishlist, created_date, 
+last_updated. If rec.android, put it in rec.legacy.plugin and delete. If rec.location and rec.user, 
+make an object of user locations separate to all records, and push rec.location of this user into 
+user locations object, keyed by rec.user (the user id). For rec.title, journal, move to rec.metadata. 
+If rec.metadata.journal is a string change it to {name: rec.metadata.journal}. Move rec.doi into 
+rec.metadata.identifier as {type:'doi',id:rec.doi}. If rec.authoremails, move it to rec.email, and make 
+sure it is a list. If no authoremails, create rec.email as an empty list. Then tidy up any accidentally 
+existing extra emails, which would have looked like keys like rec['emails[0]'] - the index got sent as 
+part of the key name, by an old version of the plugin. So if these existed, they would all get pushed 
+into rec.email then deleted. rec.email then got moved into rec.legacy.email. If rec.url, and if doesn't contain 
+chrome, openaccessbutton, about:, and does have rec.user but does not contain admin or eardley, or does not 
+have rec.user at all, push it into a list of fixed recs.
 
+Then go through really old blocked records, which were extracted from 
+/home/cloo/migrates/oabutton/oabold/oaevent_old_system_blocked.csv. For each, set type as article, create 
+the legacy object with legacy:true, move rec.id if exists into legacy. Create rec.metadata object if not existing.
+Set rec.story to '' if not existing. Move rec.doi to rec.metadata as identifier. Move rec.authoremails to rec.legacy.email. 
+Move rec.user_slug to rec.user. Move rec.accessed to rec.legacy.created_date. If rec.location, change to 
+{location: rec.location, geo: {}}, else set rec.location to {geo:{}}. If rec.coords_lat, push into 
+rec.location.geo.lat. Same with rec.coords_lng, but into rec.location.geo.lon. If found a geo.lon and 
+have rec.user, and that user location is not in the user locations object, store it in there. 
+If rec.description, split it at newline and use the first line as rec.metadata.title. Try splitting 
+second line at , into rec.metadata.author. And next line into rec.metadata.journal. Then 
+delete rec.description. Move rec.user_name into rec.legacy.username. Same with user_profession and user_email.
+If the rec has a url meeting the same standards as above, push it into a list of fixed records.
 
-var getreallyoldblocked = function() {
-  var oabinput = '/home/cloo/migrates/oabutton/oabold/oaevent_old_system_blocked.csv';
-  var fs = Meteor.npmRequire('fs');
-  var inp = fs.readFileSync(oabinput).toString();
-  var recs = CLapi.internals.convert.csv2json(undefined,inp);
-  var userlocs = {};
-  var records = [];
-  for ( var i in recs ) {
-    var rec = recs[i];
-    rec.type = 'article';
-    rec.legacy = {legacy:true};
-    if (rec.id !== undefined) {
-      rec.legacy.id = rec.id;
-      delete rec.id;
-    }
-    if (rec.metadata === undefined) rec.metadata = {};
-    if (rec.story === undefined) rec.story = '';
-    if (rec.doi) {
-      rec.metadata.identifier = [{type:'doi',id:rec.doi}];
-      delete rec.doi;
-    }
-    if (rec.doi) {
-      rec.legacy.email = rec.authoremails;
-      delete rec.authoremails;
-    }
-    if ( rec.user_slug ) {
-      rec.user = rec.user_slug;
-      delete rec.user_slug;
-    }
-    if ( rec.accessed ) {
-      rec.legacy.created_date = rec.accessed;
-      delete rec.accessed;
-    }
-    if (rec.location) {
-      rec.location = {location: rec.location, geo: {}}
-    } else {
-      rec.location = {geo:{}};
-    }
-    if ( rec.coords_lat ) {
-      rec.location.geo.lat = rec.coords_lat;
-      delete rec.coords_lat;
-    }
-    if ( rec.coords_lng ) {
-      rec.location.geo.lon = rec.coords_lng;
-      delete rec.coords_lng;
-    }
-    if (rec.location.geo.lon && rec.user && userlocs[rec.user] === undefined ) userlocs[rec.user] = rec.location;
-    if ( rec.description ) {
-      var parts = rec.description.split('\r\n');
-      rec.metadata.title = parts[0].replace('Title: ','');
-      try {
-        var authors = parts[1].split(',');
-        rec.metadata.author = [];
-        for ( var a in authors ) {
-          rec.metadata.author.push({name: authors[a]});
-        }
-      } catch (err) {}
-      try {rec.metadata.journal = {name: parts[2].replace('Journal: ','')}; } catch (err) {}
-      delete rec.description;
-    }
-    if (rec.user_name) {
-      rec.legacy.username = rec.user_name;
-      delete rec.user_name;
-    }
-    if (rec.user_profession) {
-      rec.legacy.user_profession = rec.user_profession;
-      delete rec.user_profession;
-    }
-    if (rec.user_email) {
-      rec.legacy.user_email = rec.user_email;
-      delete rec.user_email;
-    }
-    if (rec.url) {
-      if (rec.url.indexOf('chrome') === -1 && rec.url.indexOf('openaccessbutton') === -1 && rec.url.indexOf('about:') === -1) {
-        if ( (rec.user && rec.user.toLowerCase().indexOf('admin') === -1 && rec.user.toLowerCase().indexOf('eardley') === -1) || !rec.user ) {
-          records.push(rec);
-        }
-      }
-    }
-  }
-  return {total: records.length, records: records, started: recs.length, locations: userlocs};
-}
-
-var run = function(save) {
-  var chuck = OAB_Blocked.find({"legacy.legacy":true});
-  var woodchuck = 0;
-  chuck.forEach(function(c) {
-    woodchuck += 1;
-    if (save) OAB_Blocked.remove(c._id);
-  });
-  var blocks = [];
-  var locations = {};
-  var old = getoldblocked();
-  //var urlemails = old.urlemails;
-  for ( var i in old.records ) blocks.push(old.records[i]);
-  for ( var l in old.locations ) locations[l] = old.locations[l];
-  var oldold = getreallyoldblocked();
-  for ( var ii in oldold.records ) blocks.push(oldold.records[ii]);
-  for ( var ll in oldold.locations ) {
-    if (locations[ll] === undefined) locations[ll] = oldold.locations[ll];
-  }
-  // call live system db for a list of more location data by user
-  var livelocs = OAB_Blocked.find({}).fetch();
-  for ( var lo in livelocs ) {
-    var bl = livelocs[lo];
-    if (bl.location && bl.username) {
-      var tl = bl.location;
-      if (tl.geo) {
-        if (tl.geo.lat) {
-          if (typeof tl.geo.lat === 'string') tl.geo.lat = parseInt(tl.geo.lat);
-        }
-        if (tl.geo.lon) {
-          if (typeof tl.geo.lon === 'string') tl.geo.lon = parseInt(tl.geo.lon);
-        }
-      }
-      locations[bl.username] = tl;
-    }
-  }
-  var clean = 0;
-  var foundlocs = 0;
-  var newblocks = 0;
-  for ( var b in blocks ) {
-    var block = blocks[b];
-    if ( ( block.location === undefined || block.location.geo === undefined || !block.location.geo.lat ) && locations[block.user] !== undefined) {
-      block.location = locations[block.user];
-      foundlocs += 1;
-    }
-    if (block.location && block.location.geo && (!block.location.geo.lat || !block.location.geo.lon) ) delete block.location;
-    if (save) OAB_Blocked.insert(block);
-  }
-  // call a function to get the old wishlist records - for each try to make it meet current request format
-  // and match with a urlemail and a current user - if possible, save it as a request
-  return {woodchuck:woodchuck, blocks: blocks.length, located: foundlocs, oldstart: old.started, oldtotal: old.total, oldoldstart: oldold.started, oldoldtotal: oldold.total}
-}
-
+Now, searched OAB_Blocked for any legacy.legacy: true records. Remove them all. 
+Then get all the blocks from the above two paras, and the locations, then go through 
+all the block records that were in the system at the time, and if they contained 
+a location for a user in the user locations object, use that latest location from 
+the block records at the time the script was run. For every block record, add a location 
+to it from the users list if it did not already have a location and if we have a location 
+for that user in the users location list. Then save the blocked object back to OAB_Blocked.
 
 
 

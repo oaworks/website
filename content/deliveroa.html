@@ -245,7 +245,7 @@
           </p>
           <img src="/static/success-clio.png" style="width:100%;" class="responsive">
           <ol>
-              <li id="promptsignup">
+              <li class="promptsignup">
                 Please <a href="/account?next=/deliveroa#forclio" class="label label-info">sign up / sign in</a>
                 first so we can customise this link for you and give you better service.
               </li>
@@ -368,7 +368,7 @@ jQuery(document).ready(function() {
   $('.dl').hide();
   $('.dl'+b).show();
   noddy.afterLogin = function() {
-    $('#promptsignup').hide();
+    $('.promptsignup').hide();
     $('#cliocode').html($('#cliocode').html().replace('from=clio&','from=clio&uid=' + noddy.user.account._id + '&'));
   }
   noddy.login();

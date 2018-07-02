@@ -130,7 +130,7 @@
 					var jh = '';
 					for ( var j in data ) {
 						var job = data[j];
-		        jh += '<p class="job' + job._id + '">' + job.created_date + ': ' + job.name + ' (ID #' + job._id + ') ' + job.processes + ' rows. ';
+		        jh += '<p class="job' + job._id + '">' + job.created_date + ': ' + job.name + ' (ID #' + job._id + ' uploaded by ' + job.email + ') ' + job.processes + ' rows. ';
 		        jh += job.done ? '<span style="color:orange;">Complete</span>' : '<a class="checkprogress" href="' + job._id + '">Check progress</a>';
 		        jh += ' - get <a target="_blank" href="' + api + '/job/' + job._id + '/results.json">JSON</a> or <a href="' + api + '/job/' + job._id + '/results.csv">CSV</a> ';
 						jh += '- or <a class="createrequests" href="' + job._id + '">Request</a> ';

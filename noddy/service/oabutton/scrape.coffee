@@ -69,7 +69,24 @@ API.service.oab.scrape = (url,content,doi) ->
       meta.issn ?= cr.ISSN?[0]
       meta.subject ?= cr.subject
       meta.publisher ?= cr.publisher
+      meta.year ?= cr.created?['date-time']?.split('-')[0]
 
+  if not meta.year
+    try
+      k = API.tdm.extract
+        content:content
+        matchers:['/meta[^>;"\']*?name[^>;"\']*?= *?(?:"|\')citation_date(?:"|\')[^>;"\']*?content[^>;"\']*?= *?(?:"|\')(.*?)(?:"|\')/gi']
+        start:'<head'
+        end:'</head'
+      mk = k.matches[0].result[1]
+      mkp = mk.split('-')
+      if mkp.length is 1
+        meta.year = mkp[0]
+      else
+        for my in mkp
+          if my.length > 2
+            meta.year = kk.split(',')
+    
   if not meta.keywords
     try
       k = API.tdm.extract

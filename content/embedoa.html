@@ -12,7 +12,7 @@ jQuery(document).ready(function() {
   openaccessbutton_widget({uid:'oab_site',api:api});
 
   noddy.afterLogin = function() {
-    $('#promptsignup').hide();
+    $('.promptsignup').hide();
     var uid = noddy.user.account._id;
     $('.stickidin').html($('.stickidin').html().replace('openaccessbutton_widget()','openaccessbutton_widget({uid:"' + uid + '"})'));
   }
@@ -143,7 +143,7 @@ p {
           </p>
 
           <ol>
-            <li id="promptsignup">
+            <li class="promptsignup">
               Please <a href="/account?next=/embedoa#libguide" class="label label-info">sign up / sign in</a> so we can customise this link for you and give you better service.
             </li>
             <li>In your Libguide, create a new box if needed. Add a title to your widget (we suggest "Search for Open Access articles").</li>
@@ -178,7 +178,7 @@ p {
             Save time and money, and advance Open Access, by helping patrons search for alternatives to paywalled papers before requesting an ILL.
           </p>
         <ol>
-          <li id="promptsignup">
+          <li class="promptsignup">
             Please <a href="/account?next=/embedoa#interlibraryloan" class="label label-info">sign up / sign in</a> first so we can customise this widget for you and give you better service.
           </li>
           <li>
@@ -219,7 +219,7 @@ p {
                     Help your patrons discover E-Resources from thousands of credible sources, without leaving your website, learning how to use new ones, and being asked to pay.
                   </p>
                 <ol>
-                  <li id="promptsignup">
+                  <li class="promptsignup">
                     Please <a href="/account?next=/embedoa#eresources" class="label label-info">sign up / sign in</a> first so we can customise this widget for you and give you better service.
                   </li>
                   <li>
