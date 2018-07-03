@@ -36,6 +36,7 @@
   </div>
   <div class="row">
     <div class="col-md-3">
+      <a class="btn btn-action btn-block" href="/tricks">Tricks</a>
       <a class="btn btn-action btn-block" href="/blacklist">Manage email blacklist</a>
       <a class="btn btn-action btn-block" href="/bulk">Manage bulk jobs</a>
       <a class="btn btn-action btn-block" href="/export">Export Data</a>
@@ -89,7 +90,7 @@
 
     $('#showsheets').bind('click',function(e) { e.preventDefault(); $('#sheets').toggle(); });
     $('#showmailbox').bind('click',function(e) { e.preventDefault(); $('#mailbox').toggle(); });
-    
+
     $('#refreshtemplates').bind('click',function(e) {
       e.preventDefault();
       $('#refreshtemplates').html('<img src="//static.cottagelabs.com/spin_grey.svg" style="height:20px;">').addClass('disabled');
