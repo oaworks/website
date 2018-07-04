@@ -27,7 +27,7 @@
         </div>
       </div>
 
-      <div class="row" style="display:none;">
+      <div class="row">
         <div class="col-md-6">
           <select id="filter" class="form-control" style="margin-bottom:2px;">
             <option value="">Filter by: (optional)</option>
@@ -75,12 +75,12 @@
 
 
       <div class="row">
-        <!--
         <div class="col-md-6">
+          <!--
           <input type="radio" name="format" value="csv" checked="checked"> CSV &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <input type="radio" name="format" value="json"> JSON
+          -->
         </div>
-        -->
         <div class="col-md-6">
           <!--
           <input type="radio" name="data" value="records" checked="checked"> Records &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -111,7 +111,7 @@
       autoclose:true
     });
 
-    /*var time = function(timestamp) {
+    var time = function(timestamp) {
       var d = new Date(timestamp);
       var year = d.getFullYear();
       var month = d.getMonth() + 1;
@@ -121,7 +121,7 @@
       //var sec = a.getSeconds();
       var time = date + '/' + month + '/' + year; // + ' ' + hour + ':' + min + ':' + sec ;
       return time;
-    }*/
+    }
 
     var changed = {from:undefined,to:undefined};
     var change_date = function(e) {
@@ -129,7 +129,7 @@
     }
     $('.datepicker').bind('change',change_date);
 
-    /*var what = function(e) {
+    var what = function(e) {
       $('.datepicker').val('');
       var w = $(this).val();
       $('optgroup').hide();
@@ -137,7 +137,7 @@
       if (w) {
         $.ajax({
           type:'GET',
-          url: api+'/minmax/' + w + '/createdAt?apikey='+noddy.apikey,
+          url: api+'/range/' + w + '/createdAt?apikey='+noddy.apikey,
           success: function(data) {
             var min = moment(data.min).format('DD/MM/YYYY');
             $('#from').val(min);
@@ -153,7 +153,7 @@
         });
       }
     }
-    $('#what').bind('change',what);*/
+    $('#what').bind('change',what);
     $('#from').val('01/01/2010');
     $('#from').datepicker('setStartDate','01/01/2010');
     $('#to').datepicker('setStartDate','01/01/2010');

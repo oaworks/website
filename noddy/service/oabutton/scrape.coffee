@@ -65,11 +65,11 @@ API.service.oab.scrape = (url,content,doi) ->
       cr = API.use.crossref.works.doi(meta.doi)
       meta.title = cr.title[0]
       meta.author ?= cr.author
-      meta.journal ?= cr['container-title']?[0]
-      meta.issn ?= cr.ISSN?[0]
+      meta.journal ?= cr['container-title'][0] if cr['container-title']?
+      meta.issn ?= cr.ISSN[0] if cr.ISSN?
       meta.subject ?= cr.subject
       meta.publisher ?= cr.publisher
-      meta.year ?= cr.created?['date-time']?.split('-')[0]
+      meta.year ?= cr.created['date-time'].split('-')[0] if cr.created?['date-time']?
 
   if not meta.year
     try
@@ -85,7 +85,7 @@ API.service.oab.scrape = (url,content,doi) ->
       else
         for my in mkp
           if my.length > 2
-            meta.year = kk.split(',')
+            meta.year = my
     
   if not meta.keywords
     try

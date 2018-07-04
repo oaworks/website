@@ -279,7 +279,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       if (record.test === true) dets += ' checked="checked"';
       dets += '>';
       dets += ' &nbsp;&nbsp;Action: <select id="action" class="form-control" style="width:150px;display:inline;">';
-      var actions = ['','send_to_author','story_too_bad','not_a_scholarly_article','dead_author','user_testing','broken_link','request_too_old','article_before_2000','author_email_not_found'];
+      var actions = ['','send_to_author','story_too_bad','not_a_scholarly_article','dead_author','user_testing','broken_link','article_before_2000','author_email_not_found'];
       if (record.received && record.received.url) actions.push('remove_submitted_url');
       for ( var a in actions ) {
         dets += '<option value="' + actions[a] + '">' + actions[a].replace(/_/g,' ') + '</option>';
@@ -293,6 +293,16 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       }
       dets += '<p>Dear moderator, please click "Save changes" immediately after having filled the form and BEFORE clicking "Send to author".</p>';
       dets += '<p><input type="text" id="name" value="' + (record.name ? record.name : '') + '" placeholder="Author Name" class="form-control"></p>';
+      if (!record.name && record.author) {
+        dets += '<p><a href="#" class="btn btn-block btn-action" id="viewpossibleauthors">View possible author names</a></p>';
+        dets += '<div style="display:none;" id="possibleauthors">';
+        for ( var a in record.author ) {
+          if (record.author[a].family) {
+            dets += '<p><a class="selectpossibleauthor" href="#">' + record.author[a].given + ' ' + record.author[a].family + '</a></p>';
+          }
+        }
+        dets += '</div>';
+      }
       if (record.email) dets += '<div class="input-group">';
       dets += '<input type="text" id="admin_email" value="' + (record.email ? record.email : '') + '" placeholder="Author Email" class="form-control">';
       if (record.email) dets += '<div class="input-group-btn"><a id="blacklist" href="#" class="btn btn-action">Blacklist</a></div></div>';
@@ -478,6 +488,10 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       if ($('#showadmin').length) $('#showadmin').bind('click',function(e) { e.preventDefault(); $('#admin').toggle(); });
       if ($('#addsupport').length) $('#addsupport').bind('click',addsupport);
       if ($('#blacklist').length) $('#blacklist').bind('click',blacklist);
+      if ($('#viewpossibleauthors').length) {
+        $('#viewpossibleauthors').bind('click',function(e) { e.preventDefault(); $('#viewpossibleauthors').hide(); $('#possibleauthors').show(); });
+        $('.selectpossibleauthor').bind('click',function(e) { e.preventDefault(); $('#name').val($(this).html()); $('#viewpossibleauthors').show(); $('#possibleauthors').hide(); });
+      }
       if ($('#submitchanges').length) $('#submitchanges').bind('click',adminsubmit);
       if ($('#update').length) $('#update').bind('click',checkemailthensubmit);
       if ($('#delete').length) $('#delete').bind('click',deleteitem);
