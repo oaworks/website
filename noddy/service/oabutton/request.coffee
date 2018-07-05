@@ -64,6 +64,7 @@ API.service.oab.request = (req,uacc,fast) ->
     exists.cache = true
     return exists
   return false if not req.test and API.service.oab.blacklist req.url
+  req.doi = decodeURIComponent(req.doi) if req.doi
   rid = if req._id and oab_request.get(req._id) then req._id else oab_request.insert {url:req.url,type:req.type,_id:req._id}
   user = if uacc then (if typeof uacc is 'string' then API.accounts.retrieve(uacc) else uacc) else undefined
   if not req.user? and user and req.story
@@ -96,19 +97,39 @@ API.service.oab.request = (req,uacc,fast) ->
     req.journal = meta?.journal ? ''
     req.issn = meta?.issn ? ''
     req.publisher = meta?.publisher ? ''
+    req.year = meta?.year
 
-  if not fast and req.journal and not req.sherpa?
+  if fast and req.doi and (not req.journal or not req.year)
+    try
+      cr = API.use.crossref.works.doi req.doi
+      req.title = cr.title[0]
+      req.author ?= cr.author
+      req.journal ?= cr['container-title'][0] if cr['container-title']?
+      req.issn ?= cr.ISSN[0] if cr.ISSN?
+      req.subject ?= cr.subject
+      req.publisher ?= cr.publisher
+      req.year ?= cr.created['date-time'].split('-')[0] if cr.created?['date-time']?
+
+  if req.journal and not req.sherpa? # doing this even on fast cos we may be able to close immediately. If users say too slow now, disable this on fast again
     try
       sherpa = API.use.sherpa.romeo.search {jtitle:req.journal}
       req.sherpa = {color:sherpa.publishers[0].publisher[0].romeocolour[0]}
 
   req.status = if not req.story or not req.title or not req.email or not req.user? then "help" else "moderate"
+  if req.year
+    try
+      req.year = parseInt(req.year) if typeof req.year is 'string'
+      if req.year < 2000
+        req.status = 'closed'
+        req.closed_on_create = true
+  if req.sherpa?.color? and typeof req.sherpa.color is 'string' and req.sherpa.color.toLowerCase() is 'white'
+    req.status = 'closed'
+    req.closed_on_create = true
 
   if req.location?.geo
     req.location.geo.lat = Math.round(req.location.geo.lat*1000)/1000 if req.location.geo.lat
     req.location.geo.lon = Math.round(req.location.geo.lon*1000)/1000 if req.location.geo.lon
 
-  req.doi = decodeURIComponent(req.doi) if req.doi
   req.receiver = Random.id()
   req._id = rid
   oab_request.update rid, req

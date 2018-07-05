@@ -129,6 +129,8 @@ API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=tr
       # If it is not the current page, is it worth resolving to it? If it is accessible, can it be taken as the open URL?
       scraped = API.service.oab.scrape(meta.url, content)
       meta.scraped = true
+      console.log scraped
+      console.log meta
       for ks of scraped
         meta[ks] ?= scraped[ks]
 

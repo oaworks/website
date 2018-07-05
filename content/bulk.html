@@ -91,6 +91,20 @@
       });
     }
 
+    var reload = function(e) {
+      e.preventDefault();
+      var uid = $(this).attr('href');
+      var u = api + '/job/' + uid + '/reload?apikey=' + noddy.apikey;
+		  $('.reload[href="' + uid + '"]').html('Reloading...');
+   		$.ajax({
+  			url: u,
+  			method: 'GET',
+  			success: function(data) {
+  			  $('.reload[href="' + uid + '"]').html('Reloaded');
+  			}
+			});
+    }
+
     var checkprogress = function(e) {
       e.preventDefault();
       var uid = $(this).attr('href');
@@ -100,7 +114,8 @@
   			url: u,
   			method: 'GET',
   			success: function(data) {
-  			  $('.checkprogress[href="' + uid + '"]').html(data.progress.toFixed(2) + '%');
+  			  $('.checkprogress[href="' + uid + '"]').html(data.progress.toFixed(2) + '%' + (data.progress !== 100 ? ' (<a href="' + data._id + '" class="reload">(reload)</a>)' : ''));
+  			  $('.reload').unbind('click').bind('click',reload);
   			}
 			});
     }

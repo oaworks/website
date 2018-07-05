@@ -61,6 +61,8 @@ API.add 'service/oab/request',
     authOptional: true
     action: () ->
       req = this.request.body
+      req.doi ?= this.queryParams.doi if this.queryParams.doi?
+      req.url ?= this.queryParams.url if this.queryParams.url?
       req.test = if this.request.headers.host is 'dev.api.cottagelabs.com' then true else false
       return {data: API.service.oab.request(req,this.user,this.queryParams.fast)}
 
@@ -357,18 +359,9 @@ API.add 'service/oab/export/:what',
       # the file length in the above head call, but this causes an intermittent write afer end error
       # which crashes the whole system. So pick the lesser of two fuck ups.
 
-# just copying these 3 from old code in case we re-use them later
-#API.add 'service/oab/terms/:type/:key',
-#  get: () ->
-#    return API.es.terms ... # or should be the collection rather than ES
-#
-#API.add 'service/oab/minmax/:type/:key',
-#  get: () ->
-#    return API.es.minmax ... # this does not exist in new ES
-#
-#API.add 'service/oab/keys/:type',
-#  get: () ->
-#    return API.es.keys ... # does not exist in new ES
+API.add 'service/oab/terms/:type/:key', get: () -> return API.es.terms 'oab', this.urlParams.type, this.urlParams.key
+API.add 'service/oab/range/:type/:key', get: () -> return API.es.range 'oab', this.urlParams.type, this.urlParams.key
+API.add 'service/oab/keys/:type', get: () -> return API.es.keys 'oab', this.urlParams.type
 
 API.add 'service/oab/job',
   get:
@@ -416,6 +409,12 @@ API.add 'service/oab/job/generate/:start/:end',
         return {count:0}
 
 API.add 'service/oab/job/:jid/progress', get: () -> return API.job.progress this.urlParams.jid
+
+API.add 'service/oab/job/:jid/reload',
+  get:
+    roleRequired: 'openaccessbutton.admin'
+    action: () ->
+      return API.job.reload this.urlParams.jid
 
 API.add 'service/oab/job/:jid/remove',
   get:
