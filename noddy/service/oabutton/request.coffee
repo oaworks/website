@@ -132,6 +132,10 @@ API.service.oab.request = (req,uacc,fast) ->
 
   req.receiver = Random.id()
   req._id = rid
+  if req.title? and typeof req.title is 'string'
+    try req.title = req.title.charAt(0).toUpperCase() + req.title.slice(1)
+  if req.journal? and typeof req.journal is 'string'
+    try req.journal = req.journal.charAt(0).toUpperCase() + req.journal.slice(1)
   oab_request.update rid, req
   if req.story
     API.mail.send {

@@ -8,7 +8,7 @@
 API.service.oab.scrape = (url,content,doi) ->
   meta = {url:url,doi:doi}
   try
-    content ?= API.http.phantom url
+    content ?= API.http.puppeteer url
     content = undefined if typeof content is 'number'
 
   if url and not meta.doi # quick check to get a DOI if at the end of a URL, as they often are
@@ -118,5 +118,10 @@ API.service.oab.scrape = (url,content,doi) ->
     for me in mls
       meta.email.push(me) if mstr.indexOf(me) is -1
       mstr += me
+
+  if meta.title? and typeof meta.title is 'string'
+    try meta.title = meta.title.charAt(0).toUpperCase() + meta.title.slice(1)
+  if meta.journal? and typeof meta.journal is 'string'
+    try meta.journal = meta.journal.charAt(0).toUpperCase() + meta.journal.slice(1)
 
   return meta

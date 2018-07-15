@@ -43,6 +43,7 @@ API.service.oab.admin = (rid,action) ->
     API.service.oab.mail({vars:vars,template:{filename:'initiator_testing.html'},to:usermail}) if usermail
   else if action is 'broken_link' and usermail
     API.service.oab.mail({vars:vars,template:{filename:'initiator_brokenlink.html'},to:usermail})
+    update.status = 'closed'
   else if action is 'remove_submitted_url'
     update.status = 'moderate'
     update.received = false

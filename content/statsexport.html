@@ -1,0 +1,577 @@
+
+
+
+
+<script type="text/javascript" src="//static.cottagelabs.com/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+<link rel="stylesheet" href="//static.cottagelabs.com/bootstrap-datepicker/bootstrap-datepicker3.min.css">
+
+<div class="container-fluid" id="export">
+  <div class="row">
+    <div class="col-md-12">
+      <h1>EXPORT</h1>
+
+      <div class="row">
+        <div class="col-md-12">
+          <select id="what" class="form-control">
+            <option value="">Choose what to export:</option>
+            <option value="request">Requests (the requests users create to get access to articles/data)</option>
+            <option value="availability">Availabilities (every click on the plugin or check via the site records an availability check)</option>
+            <option value="support">Supports (every time a user supports an existing request)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <input type="text" id="from" class="form-control datepicker" placeholder="From (optional)" style="margin-bottom:2px;">
+        </div>
+        <div class="col-md-6">
+          <input type="text" id="to" class="form-control datepicker" placeholder="To (optional)">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <select id="filter" class="form-control" style="margin-bottom:2px;">
+            <option value="">Filter by: (optional)</option>
+            <optgroup class="request">
+              <option>journal</option>
+              <option>publisher</option>
+              <option>status</option>
+              <option value="email">author email</option>
+              <option>keywords</option>
+              <option value="user.username">username</option>
+              <option value="user.email">user email</option>
+              <option>type</option>
+              <option>plugin</option>
+              <option>url</option>
+              <option>doi</option>
+            </optgroup>
+            <optgroup class="availability">
+              <option>url</option>
+              <option>plugin</option>
+              <option>username</option>
+              <option value="email">user email</option>
+              <option value="discovered.article">discovered article</option>
+              <option value="discovered.data">discovered data</option>
+            </optgroup>
+            <optgroup class="support">
+              <option>type</option>
+              <option>url</option>
+              <option>username</option>
+              <option value="email">user email</option>
+              <option value="rid">request ID</option>
+            </optgroup>
+            <optgroup class="account">
+              <option value="service.openaccessbutton.profile.profession">profession</option>
+              <option value="service.openaccessbutton.profile.affiliation">affiliation</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <select id="value" class="form-control">
+            <option value="">for value: (optional)</option>
+          </select>
+        </div>
+      </div>
+
+
+
+      <div class="row">
+        <div class="col-md-6">
+          <!--
+          <input type="radio" name="format" value="csv" checked="checked"> CSV &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <input type="radio" name="format" value="json"> JSON
+          -->
+        </div>
+        <div class="col-md-6">
+          <!--
+          <input type="radio" name="data" value="records" checked="checked"> Records &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <input type="radio" name="data" value="summary"> Summary &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          -->
+          <a class="btn btn-primary btn-block" href="#" id="go" target="_blank">Export</a>
+        </div>
+        <div class="col-md-6">
+          (Note: filtering by dates and by values can cause the resulting export to have no relevant records in it, which will cause an error instead of downloading a CSV file. If this happens, try relaxing your date ranges and/or filters.)
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<script>
+  jQuery(document).ready(function() {
+    if (!noddy.loggedin()) window.location = '/account?next=/export';
+
+    $('.datepicker').datepicker({
+      format:'dd/mm/yyyy',
+      autoclose:true
+    });
+
+    var time = function(timestamp) {
+      var d = new Date(timestamp);
+      var year = d.getFullYear();
+      var month = d.getMonth() + 1;
+      var date = d.getDate();
+      //var hour = a.getHours();
+      //var min = a.getMinutes();
+      //var sec = a.getSeconds();
+      var time = date + '/' + month + '/' + year; // + ' ' + hour + ':' + min + ':' + sec ;
+      return time;
+    }
+
+    var changed = {from:undefined,to:undefined};
+    var change_date = function(e) {
+      changed[$(this).attr('id')] = $(this).val();
+    }
+    $('.datepicker').bind('change',change_date);
+
+    var what = function(e) {
+      $('.datepicker').val('');
+      var w = $(this).val();
+      $('optgroup').hide();
+      $('optgroup.'+w).show();
+      if (w) {
+        $.ajax({
+          type:'GET',
+          url: api+'/range/' + w + '/createdAt?apikey='+noddy.apikey,
+          success: function(data) {
+            var min = moment(data.min).format('DD/MM/YYYY');
+            $('#from').val(min);
+            $('#from').datepicker('setStartDate',min);
+            $('#to').datepicker('setStartDate',min);
+            var max = moment(data.max).format('DD/MM/YYYY');
+            $('#to').val(max);
+            $('#from').datepicker('setEndDate',max);
+            $('#to').datepicker('setEndDate',max);
+            changed.from = undefined; // no need to set a date range unless the user changes the date range, so unset on first load
+            changed.to = undefined;
+          }
+        });
+      }
+    }
+    $('#what').bind('change',what);
+    $('#from').val('01/01/2010');
+    $('#from').datepicker('setStartDate','01/01/2010');
+    $('#to').datepicker('setStartDate','01/01/2010');
+    var max = moment(Date.now()).format('DD/MM/YYYY');
+    $('#to').val(max);
+    $('#from').datepicker('setEndDate',max);
+    $('#to').datepicker('setEndDate',max);
+
+
+    var filter = function(e) {
+      $('#value').html('<option value="">for value:</option>');
+      var w = $('#what').val();
+      var k = $(this).val();
+      $.ajax({
+        type:'GET',
+        url: api+'/terms/' + w + '/' + k + '.exact?apikey='+noddy.apikey,
+        success: function(data) {
+          for ( var k in data ) {
+            $('#value').append('<option value="' + data[k].term + '">' + data[k].term + ' (' + data[k].count + ')</option>');
+          }
+        }
+      });
+    }
+    $('#filter').bind('change',filter);
+
+    var go = function() {
+      if (!noddy.hasRole('openaccessbutton.admin') && $('#what').val() === 'account') window.location = '/';
+      if ( $('#what').val() === 'mail' || $('#what').val() === 'changes' ) {
+        var curl = api + '/export/' + $('#what').val() + '?apikey=' + noddy.apikey;
+        if (changed.from) curl += '&from=' + moment(changed.from,'DD/MM/YYYY').valueOf();
+        if (changed.to) curl += '&to=' + moment(changed.to,'DD/MM/YYYY').valueOf();
+        $(this).attr('href',curl);
+      } else {
+        var size = 100000;
+        var fields = {
+          account: ['_id','createdAt','emails.0.address','profile.name','profile.firstname','profile.lastname','service.openaccessbutton.profile.affiliation','service.openaccessbutton.profile.profession','roles.openaccessbutton','username'],
+          //request: ['_id','created_date','type','count','status','title','url','doi','journal','publisher','email','user.username','story','rating'],
+          request: ['_id','created_date','type','count','status','title','url','doi','journal','publisher','sherpa.color','name','email','user.username','user.email','user.firstname','user.lastname','story','rating','receiver','refused.email','refused.date','received.date','received.from','received.description','received.url','received.admin','received.cron','received.notfromauthor','notes','plugin','from','embedded'],
+          support: ['created_date','url','type','story','username','rid'],
+          availability: ['created_date','username','url','discovered.article','discovered.data','plugin','from','embedded'],
+          dnr: ['email']
+        }
+        var endpoint = 'requests';
+        if ($('#what').val() === 'account') endpoint = 'users';
+        if ($('#what').val() === 'availability') endpoint = 'availabilities';
+        if ($('#what').val() === 'support') endpoint = 'supports';
+
+        var query = {
+          size: size, // perhaps there needs to be a download batch size option, and/or a check on how many records are available to download
+          query: {
+            filtered: {
+              query: {
+                bool: {
+                  must: [
+                    {"match_all":{}}
+                  ]
+                }
+              },
+              filter: {
+                bool: {
+                  must:[]
+                }
+              }
+            }
+          }
+        }
+        if ( $('#value').val() ) {
+          var t = {term:{}};
+          t.term[$('#filter').val()+'.exact'] = $('#value').val();
+          query.query.filtered.filter.bool.must.push(t);
+        }
+        if (changed.from || changed.to) {
+          var rg = {
+            range : {
+              createdAt : {
+              }
+            }
+          }
+          if (changed.from) rg.range.createdAt.gte = moment(changed.from,'DD/MM/YYYY').valueOf();
+          if (changed.to) rg.range.createdAt.lte = moment(changed.to,'DD/MM/YYYY').valueOf();
+          query.query.filtered.filter.bool.must.push(rg);
+        }
+        if ($('#what').val() === 'account') query.query.filtered.filter.bool.must.push({query:{query_string:{query:'roles.openaccessbutton:*'}}});
+        if ( query.query.filtered.filter.bool.must.length === 0 ) query.query = {"match_all":{}};
+
+        var url = api + '/' + endpoint + '?';
+        if ($('#what').val() === 'account') url += 'apikey=' + noddy.apikey + '&';
+        url += 'source=' + JSON.stringify(query);
+        var curl = noddy.api + '/convert?from=json&to=csv&subset=hits.hits._source&fields=' + fields[$('#what').val()].join(',') + '&url='+encodeURIComponent(url);
+        $(this).attr('href',curl);
+      }
+    }
+    $('#go').bind('click',go);
+
+    noddy.afterLogin = function() {
+      if (noddy.hasRole('openaccessbutton.admin')) $('#what').append('<option value="account">Users (the user account details)</option><option value="mail">Mail stats</option><option value="changes">Changes to requests</option><option value="dnr">DNR list of emails we cannot send to</option>');
+    }
+    noddy.login();
+
+
+  });
+</script>
+
+
+
+
+
+
+<!-----------------------------------------------
+ABOVE IS OLD EXPORT
+BELOW IS OLD STATS
+-->
+
+
+
+
+
+<script type="text/javascript" src="/static/holder/jquery.holder.js"></script>
+
+<div class="container-fluid" id="availability" style="margin-bottom:200px;">
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2">
+      <input type="text" class="form-control holder search" style="display:none;">
+      <img class="holder loading" src="/static/spin_orange.svg" style="width:100%;" />
+      <div id="results"></div>
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript" src="//static.cottagelabs.com/d3/d3.v4.min.js"></script>
+<script>
+  jQuery(document).ready(function() {
+
+  	var fill = d3.scaleOrdinal(d3.schemeCategory10);
+    var line = function(data,tgt) {
+      var svg = d3.select(tgt),
+        margin = {top: 10, right: 5, bottom: 10, left: 50},
+        width = +svg.attr("width") - margin.left - margin.right,
+        height = +svg.attr("height") - margin.top - margin.bottom,
+        g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      var x = d3.scaleTime()
+        .rangeRound([0, width]);
+      var y = d3.scaleLinear()
+        .rangeRound([height, 0]);
+
+      var line = d3.line()
+        .x(function(d) { return x(d.date); })
+        .y(function(d) { return y(d.val); });
+
+      x.domain(d3.extent(data, function(d) { return d.date; })).range([0, width - margin.left - margin.right]);
+      y.domain(d3.extent(data, function(d) { return d.val; })).nice().range([height - margin.top - margin.bottom, 0]);
+
+      g.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(0," + y.range()[0] + ")")
+        .call(d3.axisBottom(x)
+  				.ticks( 10 )
+  				.tickSizeOuter(0)
+  			);
+
+      g.append("g")
+        .attr("class", "axis")
+        .call(d3.axisLeft(y)
+  				.ticks( 10 )
+  				.tickSizeOuter(0)
+  			);
+
+      g.append("path")
+        .datum(data)
+        .attr("class", "line values")
+        .attr("d", line)
+  			.style('fill', 'none' )
+        .attr("stroke", function(d) { return fill(d.key); })
+  			.style('stroke-width', '1.3px' );
+
+      svg.selectAll("dot")
+        .data(data)
+        .enter().append("circle")
+        .attr("r", 2.5)
+        .attr("cx", function(d) { return x(d.date) + margin.left; })
+        .attr("cy", function(d) { return y(d.val) + margin.top; })
+  			.attr("class","holder dot")
+        .attr("stroke", function(d) { return fill(d.key); })
+        .attr("fill", function(d) { return fill(d.key); })
+  			.attr("do", "add")
+  			.attr("key","createdAt")
+  			.attr("val",function(d) { return d.date.valueOf(); })
+  			.style('cursor', 'pointer' )
+        .append("title")
+        .text(function(d) { return d.val + " on " + (d.text ? d.text : d.date); });
+  	}
+
+    var lineit = function(data,tgt) {
+    	if ( !$(tgt).attr('height') ) $(tgt).attr('height',200);
+    	if ( !$(tgt).attr('width') ) $(tgt).attr('width',$('#results').width());
+  		var points = [];
+  		var t = tgt === 'svg.rrline' ? data.aggregations.received.buckets : data.aggregations.availabilities.buckets;
+      for ( var d in t ) {
+        var text = moment.unix(t[d].key/1000).format('DD/MM/YYYY');
+        points.push({text:text,date:t[d].key,val:t[d].doc_count});
+      }
+      line(points,tgt);
+  	}
+
+    var status;
+
+    var availability = function(data) {
+      var info = '<h2>Stats</h2>\
+      <p>\
+        We have been recording usage statistics since we switched to our new system, on 24th October 2016. \
+        We don\'t track individual users usage, and we allow most features of our service to be used anonymously. \
+        So we have more data about overall usage, and a bit about certain types of usage.\
+      </p>';
+
+      info += '<h3>Requests</h3>';
+      info += '<p>We have ' + status.requests + ' requests. '; //, ' + status.article + ' for articles and ' + status.data + ' for data. ';
+      info += status.requests_with_story + ' have stories, ';
+      info += status.received + ' have been successful, ' + status.progress + ' are in progress, and ' + status.refused + ' were refused. ';
+      info += 'The rest are going through our moderation process. 6184 of these requests in moderation are imports from our old system.</p>';
+      info += '<p>New requests over time, grouped by week:</p>';
+      info += '<svg class="rline"></svg>';
+      info += '<p>New requests with stories over time, grouped by week:</p>';
+      info += '<svg class="rsline"></svg>';
+      info += '<p>Requests successful over time, grouped by week:</p>';
+      info += '<svg class="rrline"></svg>';
+
+      var found = 0;
+      for ( var sc in data.facets.sources.terms) {
+        if ( data.facets.sources.terms[sc].term !== 'false') found += data.facets.sources.terms[sc].count;
+      }
+
+      info += '<h3>Availability</h3>';
+      info += '<p>We have done ' + data.hits.total + ' availability checks, and we have found ' + found;
+      info += '. That\'s a find success rate of ' + Math.ceil((found/data.hits.total)*100) + '% ';
+      info += '(people tend to search for things that are NOT available so we expect this to be low). ';
+      info += data.facets.email.missing + ' checks were made anonymously, ';
+      info += 'and ' + (data.hits.total - data.facets.email.missing) + ' were made by signed in users. ';
+      info += data.aggregations.emails.value + ' users have used the availability service whilst signed in.</p>';
+      info += '<p>Availability checks over time, grouped by week:</p>';
+      info += '<svg class="line"></svg>';
+
+      info += '<h3>Users</h3>';
+      info += '<p>We have ' + status.users + ' users in total, and ' + status.requested + ' have made requests while signed in. ' + status.supports;
+      info += ' users have added their support to requests that someone else made. ' + data.aggregations.tm1.tm1v.value + ' users have done an availability ';
+      info += ' check whilst signed in during the last month, and ' + data.aggregations.tm3.tm3v.value + ' greater than 1 month but less than 3 months ago.</p>';
+
+      var plugins = {api:{all:data.facets.plugin.missing,week:data.facets.plugin_week.missing}};
+      var alltotal = 0 + plugins.api.all;
+      var weektotal = 0 + plugins.api.week;
+      for ( var p in data.facets.plugin.terms ) {
+        var pl = data.facets.plugin.terms[p];
+        if (pl.term.indexOf('test') === -1) {
+          var at = pl.term.split('_')[0].replace('oabutton','plugin').replace('oab','plugin');
+          if (pl.term.indexOf('firefox') !== -1) at = 'firefox_plugin';
+          if (plugins[at] === undefined) plugins[at] = {all:0,week:0}
+          plugins[at].all += pl.count;
+          alltotal += pl.count;
+        }
+      }
+      for ( var wp in data.facets.plugin_week.terms ) {
+        var pw = data.facets.plugin_week.terms[wp];
+        if (pw.term.indexOf('test') === -1) {
+          var wt = pw.term.split('_')[0].replace('oabutton','plugin').replace('oab','plugin');
+          if (pw.term.indexOf('firefox') !== -1) wt = 'firefox_plugin';
+          if (plugins[wt] === undefined) plugins[wt] = {all:0,week:0}
+          plugins[wt].week += pw.count;
+          weektotal += pw.count;
+        }
+      }
+
+      info += '<p>Users have been using these tools:</p>';
+      info += '<table class="table table-bordered table-striped"><thead><tr><th></th>';
+      for ( var plug in plugins ) info += '<th>' + plug + '</th>';
+      info += '<th>TOTAL</th>';
+      info += '</tr></thead><tbody><tr><td><b>all-time</b></td>';
+      for ( var pla in plugins ) info += '<td>' + plugins[pla].all + '</td>';
+      info += '<td>' + alltotal + '</td>';
+      info += '</tr><tr><td><b>the last week</b></td>';
+      for ( var plw in plugins ) info += '<td>' + plugins[plw].week + '</td>';
+      info += '<td>' + weektotal + '</td>';
+      info += '</tr></tbody></table>';
+
+      if (data.facets.embeds.terms.length) info += '<p>We have embedded availability checks from the following locations:</p>';
+      for ( var e in data.facets.embeds.terms ) {
+        var em = data.facets.embeds.terms[e];
+        info += '<p>' + em.term + ' (' + em.count  + ')</p>';
+      }
+
+      if (data.facets.from.terms.length) info += '<p>We also have availability checks from the following services:</p>';
+      for ( var f in data.facets.from.terms ) {
+        var fr = data.facets.from.terms[f];
+        info += '<p>' + fr.term + ' (' + fr.count  + ')</p>';
+      }
+
+      $('#results').html(info);
+      lineit(data,"svg.line");
+    }
+
+    var getstatus = function(data) {
+      if (status === undefined) {
+        $.ajax({
+          url: api + '/status',
+          success: function(rs) {
+            status = rs;
+            $.ajax({
+              url: api + '/requests?&source=%7B%22size%22%3A0%2C%22query%22%3A%7B%22filtered%22%3A%7B%22query%22%3A%7B%22bool%22%3A%7B%22must%22%3A%5B%7B%22query_string%22%3A%7B%22query%22%3A%22story%3A*%22%7D%7D%5D%7D%7D%7D%7D%2C%22aggregations%22%3A%7B%22availabilities%22%3A%7B%22date_histogram%22%3A%7B%22field%22%3A%22createdAt%22%2C%22interval%22%3A%22week%22%7D%7D%7D%2C%22from%22%3A0%7D',
+              success: function(d) {
+                status.requests_with_story = d.hits.total;
+                availability(data);
+                lineit(d,"svg.rsline");
+                $.ajax({
+                  url: api + '/requests?&source=%7B%22size%22%3A0%2C%22query%22%3A%7B%22filtered%22%3A%7B%22query%22%3A%7B%22bool%22%3A%7B%22must%22%3A%5B%7B%22match_all%22%3A%7B%7D%7D%5D%7D%7D%7D%7D%2C%22aggregations%22%3A%7B%22availabilities%22%3A%7B%22date_histogram%22%3A%7B%22field%22%3A%22createdAt%22%2C%22interval%22%3A%22week%22%7D%7D%2C%22received%22%3A%7B%22date_histogram%22%3A%7B%22field%22%3A%22received.date%22%2C%22interval%22%3A%22week%22%7D%7D%7D%2C%22from%22%3A0%7D',
+                  success: function(dt) {
+                    lineit(dt,"svg.rline");
+                    lineit(dt,"svg.rrline");
+                  }
+                });
+              }
+            });
+          }
+        });
+      } else {
+        availability(data);
+      }
+    }
+
+    var tm1 = new Date();
+    var m = tm1.getMonth();
+    tm1.setMonth(tm1.getMonth() - 1);
+    if (tm1.getMonth() === m) tm1.setDate(0);
+    tm1.setHours(0, 0, 0);
+    tm1.setMilliseconds(0);
+
+    var tm3 = new Date();
+    tm3.setMonth(tm3.getMonth() - 3);
+    if (tm3.getMonth() === m) tm3.setDate(0);
+    tm3.setHours(0, 0, 0);
+    tm3.setMilliseconds(0);
+
+    var tmwk = new Date();
+    tmwk.setDate(tmwk.getDate() - 7);
+    tmwk.setHours(0, 0, 0);
+    tmwk.setMilliseconds(0);
+
+    $('#availability').holder({
+      class: 'holder',
+      url: api + "/availabilities",
+      datatype: 'JSON',
+      defaultquery: {
+        size:0,
+        query: {
+          filtered: {
+            query: {
+              bool: {
+                must: []
+              }
+            },
+            filter: {
+              bool: {
+                must:[]
+              }
+            }
+          }
+        },
+        aggregations: {
+          "availabilities" : {
+            "date_histogram" : {
+              "field" : "createdAt",
+              "interval" : "week"
+            }
+          },
+          "emails" : {
+            "cardinality" : {
+              "field" : "email.exact"
+            }
+          },
+          "tm1" : {
+            "filter": { "range" : { "createdAt" : { "gt" : tm1.valueOf() } } },
+            "aggs": {
+              "tm1v": {
+                "cardinality" : {
+                  "field" : "email.exact"
+                }
+              }
+            }
+          },
+          "tm3" : {
+            "filter": { "range" : { "createdAt" : { "gt" : tm3.valueOf(), "lte": tm1.valueOf() } } },
+            "aggs": {
+              "tm3v": {
+                "cardinality" : {
+                  "field" : "email.exact"
+                }
+              }
+            }
+          }
+        }
+      },
+      pushstate: false,
+      review: getstatus,
+      facets: {
+        plugin: { terms: { "field": "plugin.exact", "size": 100 } },
+        plugin_week: { terms: { "field": "plugin.exact", "size": 100 }, "facet_filter" : { "range" : { "createdAt" : { "gt" : tmwk.valueOf() } } } },
+	email: { terms: { "field": "email.exact", "size": 1 } },
+        sources: { terms: { "field": "source.article", "size": 100 } },
+        embeds: { terms: { "field": "embedded.exact", "size": 100 } },
+        from: { terms: { "field": "from.exact", "size": 100 } }
+      }
+    });
+
+  });
+</script>
+
+
+
+

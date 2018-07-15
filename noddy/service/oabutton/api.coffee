@@ -111,6 +111,10 @@ API.add 'service/oab/request/:rid',
             n.status = 'help' if r.status isnt 'help'
           else if r.status is 'help' and ( (r.title or n.title) and (r.email or n.email) and (r.story or n.story) )
             n.status = 'moderate'
+        if n.title? and typeof n.title is 'string'
+          try n.title = n.title.charAt(0).toUpperCase() + n.title.slice(1)
+        if n.journal? and typeof n.journal is 'string'
+          try n.journal = n.journal.charAt(0).toUpperCase() + n.journal.slice(1)
         oab_request.update(r._id,n) if JSON.stringify(n) isnt '{}'
         return oab_request.get r._id # return how it now looks? or just return success?
       else
