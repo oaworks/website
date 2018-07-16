@@ -99,6 +99,12 @@
 
 </div>
 
+
+<div id="checkprogress" class="focal row" style="display:none;">
+  <p><a class="btn btn-primary" href="{{api}}/job/JOBID/results.csv">Download your results</a></p>
+</div>
+
+
 <p style="text-align:center; padding-top:20px;">
   Looking for a quick way to report on institutional, funder, and government policies?<br> You'll love our friends at <a href="https://lantern.cottagelabs.com/" target="_blank">Lantern</a>.
 </p>
@@ -153,15 +159,21 @@
     }
 
     var checkprogress = function(e) {
-      e.preventDefault();
-      var uid = $(this).attr('href');
+      if (e) e.preventDefault();
+      var uid = window.location.hash.replace('#','');
       var u = api + '/job/' + uid + '/progress';
-		  $('.checkprogress[href="' + uid + '"]').html('Checking...');
+      $('#checkprogress').html($('#checkprogress').html().replace('/JOBID/','/' + uid + '/'));
+		  $('#checkprogress').prepend('<p id="plswait">Checking progress...</p>').show();
    		$.ajax({
   			url: u,
   			method: 'GET',
   			success: function(data) {
-  			  $('.checkprogress[href="' + uid + '"]').html(data.progress.toFixed(2) + '%');
+  			  $('#plswait').remove();
+  			  $('#checkprogress').prepend('<p>Your job ' + (data.name !== undefined && data.name.length > 0 && data.name !== data._id ? data.name + ' ' : '') + 'is ' + data.progress.toFixed(2) + '% complete.' + (data.progress === 100 ? '' : '<br>You can download the results so far, and revisit this page any time to check further progress and download more.') + '</p>').show();
+  			},
+  			error: function(data) {
+  			  $('#plswait').remove();
+  			  $('#checkprogress').prepend('<p>Sorry, that job could not be found.</p>');
   			}
 			});
     }
@@ -275,8 +287,12 @@
 		$('input[type=file]').on('change', uploadJob);
 
 		noddy.afterLogin = function() {
-    	$('#uploadarea').show();
     	$('#loginRedirect').hide();
+    	if (window.location.hash.length > 0) {
+    	  checkprogress();
+    	} else {
+      	$('#uploadarea').show();
+    	}
 		}
     noddy.login();
   });

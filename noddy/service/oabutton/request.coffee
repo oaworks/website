@@ -108,6 +108,7 @@ API.service.oab.request = (req,uacc,fast) ->
       req.issn ?= cr.ISSN[0] if cr.ISSN?
       req.subject ?= cr.subject
       req.publisher ?= cr.publisher
+      req.year = cr.published-print['date-parts'][0][0] if cr.published-print?['date-parts']? and cr.published-print['date-parts'].length > 0 and cr.published-print['date-parts'][0].length > 0
       req.year ?= cr.created['date-time'].split('-')[0] if cr.created?['date-time']?
 
   if req.journal and not req.sherpa? # doing this even on fast cos we may be able to close immediately. If users say too slow now, disable this on fast again
