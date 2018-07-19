@@ -22,7 +22,7 @@ API.add 'service/oab/scripts/blog_issue_rebuild',
       for rec in recs.hits.hits
         rec = rec._source
         rec.type ?= 'article'
-        if rec.type is 'article' and not rec.request? and rec.test isnt true and rec.story and urls.indexOf(rec.url) is -1 and not oab_request.get(rec._id)? and not oab_request.get({url:rec.url})?
+        if rec.type is 'article' and not rec.request? and rec.test isnt true and rec.story and urls.indexOf(rec.url) is -1 and not oab_request.get(rec._id,undefined,false)? and not oab_request.get({url:rec.url},undefined,false)?
           delete rec.email if rec.email is None or rec.email is 'None'
           if not rec.rating?
             if rec.story? and story_ratings[rec.story.toLowerCase()]?
@@ -84,8 +84,8 @@ API.add 'service/oab/scripts/blog_issue_rebuild',
       API.mail.send
         to: 'alert@cottagelabs.com'
         subject: 'Blog issue rebuild complete'
-        text: 'imports: ' + imports.length
-      return {count: imports.length}
+        text: 'updates: ' + updates.length
+      return {count: updates.length}
 
 
 
@@ -94,8 +94,9 @@ API.add 'service/oab/scripts/blog_issue_reload',
     roleRequired: 'root'
     action: () ->
       imports = JSON.parse(fs.readFileSync('/home/cloo/oabutton_blog_issue_imports.json'))
-      #API.es.import 'oab', 'request', imports, undefined, undefined, false
-      #oab_request.import(imports) if imports.length > 0
+      if imports.length > 0
+        console.log imports.length + ' records to import'
+        #oab_request.import(imports,false) 
       API.mail.send
         to: 'alert@cottagelabs.com'
         subject: 'Blog issue reload complete'

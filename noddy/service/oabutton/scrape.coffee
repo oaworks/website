@@ -69,7 +69,7 @@ API.service.oab.scrape = (url,content,doi) ->
       meta.issn ?= cr.ISSN[0] if cr.ISSN?
       meta.subject ?= cr.subject
       meta.publisher ?= cr.publisher
-      meta.year = cr.published-print['date-parts'][0][0] if cr.published-print?['date-parts']? and cr.published-print['date-parts'].length > 0 and cr.published-print['date-parts'][0].length > 0
+      meta.year = cr['published-print']['date-parts'][0][0] if cr['published-print']?['date-parts']? and cr['published-print']['date-parts'].length > 0 and cr['published-print']['date-parts'][0].length > 0
       meta.year ?= cr.created['date-time'].split('-')[0] if cr.created?['date-time']?
 
   if not meta.year

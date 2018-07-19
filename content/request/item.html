@@ -417,7 +417,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       
       if (rec.closed_on_create && rec.createdAt > Date.now()-10000) {
         re += '<p><b>Oh no! We can\'t start a request.</b></p>';
-        re += '<p>The article you need is probably too old to make freely available, we\'re sorry. If you think this is a mistake, let us know. Thanks for using the Open Access Button, try again soon.</p>';
+        re += '<p>The article you need is probably too old to make freely available, we\'re sorry. If you think this is a mistake, <a href="/feedback#general">let us know</a>. Thanks for using the Open Access Button, try again soon.</p>';
       } else if ( rec.status !== 'closed' && rec.status !== 'received' && (!rec.title || !rec.email || !rec.story) ) {
         if (rec.user === undefined) {
           re += '<p>We ask the author to make this ' + rec.type + ' available to everyone for free - legally. Start a request and we\'ll take care of the rest!</p>';
@@ -463,12 +463,12 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       $('#info').append(re);
 
       var acts = '';
-      if (rec.status !== 'help') acts += '<h4>Show your support</h4>';
+      if (rec.status !== 'help' && rec.status !== 'closed') acts += '<h4>Show your support</h4>';
       if (rec.count && rec.count > 1) acts += '<p>' + (rec.count) + ' ' + (rec.count === 1 ? 'person supports' : 'people support') + ' this request</p>';
       if (rec.status !== 'received' && rec.story) {
         if (noddy.loggedin() && rec.user && rec.user.id && noddy.user && noddy.user.account && noddy.user.account._id === rec.user.id) {
           acts += '<p>You made this request.</p>';
-        } else if (rec.user !== undefined && ( !rec.supports || rec.supports === undefined || rec.supports.length === 0) ) {
+        } else if (rec.status !== 'closed' && rec.user !== undefined && ( !rec.supports || rec.supports === undefined || rec.supports.length === 0) ) {
           acts += '<p>Add your support to be notified when this ' + rec.type + ' is released.</p>';
           acts += '<p><a id="addsupport" class="btn btn-action" href="#">Notify me</a></p>';
         } else {
