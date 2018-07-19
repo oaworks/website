@@ -8,20 +8,31 @@ API.add 'service/oab/scripts/blog_issue_rebuild',
       urls = []
       updates = []
       recs = JSON.parse(fs.readFileSync('/home/cloo/backups/oabutton_full_old_old_05032018.json'))
+
+      old_ratings = JSON.parse(fs.readFileSync('/home/cloo/oabutton_ratings.csv'))
+      story_ratings = {}
+      for rate in old_ratings
+        story_ratings[rate.Story.toLowerCase()] = rate
+
+      new_ratings = JSON.parse(fs.readFileSync('/home/cloo/oabutton_ratings_withID_13072018.csv'))
+      ratings = {}
+      for rating in new_ratings
+        ratings[rating._id] = rating
+
       for rec in recs.hits.hits
         rec = rec._source
         rec.type ?= 'article'
-        if rec.type is 'article' and not rec.request? and rec.test isnt true and rec.story and urls.indexOf(rec.url) is -1 and not oab_request.get(rec._id)? and not oab_request.get({url:rec.url})?
-          proceed = true
-          if rec.email? # what to do if we don't have an email? save it anyway? try to scrape it?
-            if rec.email is None
-              delete rec.email
-            else if rec.email.indexOf('cottagelabs.com') is -1 and rec.email.indexOf('joe@') is -1 and rec.email.indexOf('natalianorori') is -1 and rec.email.indexOf('n/a') is -1 and rec.email.indexOf('None') is -1
-              proceed = true
-            else
-              proceed = false
-          # should we check against the story ratings list?
-          if proceed
+        if rec.type is 'article' and not rec.request? and rec.test isnt true and rec.story and urls.indexOf(rec.url) is -1 and not oab_request.get(rec._id,undefined,false)? and not oab_request.get({url:rec.url},undefined,false)?
+          delete rec.email if rec.email is None or rec.email is 'None'
+          if not rec.rating?
+            if rec.story? and story_ratings[rec.story.toLowerCase()]?
+              rec.rating = story_ratings[rec.story.toLowerCase()].Rating
+            if ratings[rec._id]?
+              rec.rating = ratings[rec._id].rating
+          if rec.rating?
+            rec.rating = parseInt(rec.rating) if typeof rec.rating is 'string'
+            rec.rating = if rec.rating >= 3 then 1 else 0
+          if not rec.email? or (rec.email.indexOf('cottagelabs.com') is -1 and rec.email.indexOf('joe@') is -1 and rec.email.indexOf('natalianorori') is -1 and rec.email.indexOf('n/a') is -1)
             urls.push rec.url
             rec.legacy ?= {}
             rec.legacy.blog_issue_reload = true
@@ -69,12 +80,12 @@ API.add 'service/oab/scripts/blog_issue_rebuild',
                   rec.user.profession ?= user.service?.openaccessbutton?.profile?.profession
               updates.push rec
       
-      fs.writeFileSync '/home/cloo/oabutton_blog_issue_imports.json', imports
+      fs.writeFileSync '/home/cloo/oabutton_blog_issue_imports.json', JSON.stringify updates
       API.mail.send
         to: 'alert@cottagelabs.com'
         subject: 'Blog issue rebuild complete'
-        text: 'imports: ' + imports.length
-      return {count: imports.length}
+        text: 'updates: ' + updates.length
+      return {count: updates.length}
 
 
 
@@ -83,8 +94,9 @@ API.add 'service/oab/scripts/blog_issue_reload',
     roleRequired: 'root'
     action: () ->
       imports = JSON.parse(fs.readFileSync('/home/cloo/oabutton_blog_issue_imports.json'))
-      #API.es.import 'oab', 'request', imports, undefined, undefined, false
-      #oab_request.import(imports) if imports.length > 0
+      if imports.length > 0
+        console.log imports.length + ' records to import'
+        #oab_request.import(imports,false) 
       API.mail.send
         to: 'alert@cottagelabs.com'
         subject: 'Blog issue reload complete'

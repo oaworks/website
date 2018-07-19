@@ -108,6 +108,7 @@ API.service.oab.request = (req,uacc,fast) ->
       req.issn ?= cr.ISSN[0] if cr.ISSN?
       req.subject ?= cr.subject
       req.publisher ?= cr.publisher
+      req.year = cr['published-print']['date-parts'][0][0] if cr['published-print']?['date-parts']? and cr['published-print']['date-parts'].length > 0 and cr['published-print']['date-parts'][0].length > 0
       req.year ?= cr.created['date-time'].split('-')[0] if cr.created?['date-time']?
 
   if req.journal and not req.sherpa? # doing this even on fast cos we may be able to close immediately. If users say too slow now, disable this on fast again
@@ -132,6 +133,10 @@ API.service.oab.request = (req,uacc,fast) ->
 
   req.receiver = Random.id()
   req._id = rid
+  if req.title? and typeof req.title is 'string'
+    try req.title = req.title.charAt(0).toUpperCase() + req.title.slice(1)
+  if req.journal? and typeof req.journal is 'string'
+    try req.journal = req.journal.charAt(0).toUpperCase() + req.journal.slice(1)
   oab_request.update rid, req
   if req.story
     API.mail.send {

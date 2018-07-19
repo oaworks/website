@@ -123,7 +123,7 @@ API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=tr
     API.log 'Resolving URL for content'
     try
       # this can be SLOW, avoid at all costs - but is better to do this and maybe get a DOI than to search for titles?
-      content ?= API.http.phantom meta.url
+      content ?= API.http.puppeteer meta.url
       content = '' if typeof content is 'number'
       # TODO could check content for <meta name="citation_fulltext_html_url" content="" />
       # If it is not the current page, is it worth resolving to it? If it is accessible, can it be taken as the open URL?
@@ -243,6 +243,11 @@ API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=tr
             meta.journal_url = true
             meta.found.doaj = meta.url
             break
+
+  if meta.title? and typeof meta.title is 'string'
+    try meta.title = meta.title.charAt(0).toUpperCase() + meta.title.slice(1)
+  if meta.journal? and typeof meta.journal is 'string'
+    try meta.journal = meta.journal.charAt(0).toUpperCase() + meta.journal.slice(1)
 
   return meta
 

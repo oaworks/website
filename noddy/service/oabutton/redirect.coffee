@@ -24,7 +24,7 @@ API.service.oab.redirect = (url) ->
             url = listing.fulltext.replace listing.identifier, diff
           else if listing.element and url.indexOf('.pdf') is -1
             try
-              content = API.http.phantom url
+              content = API.http.puppeteer url
               url = content.toLowerCase().split(listing.element.toLowerCase())[1].split('"')[0].split("'")[0].split('>')[0]
           return false if (not url? or url.length < 6 or url is source) and listing.blacklist is "yes"
           # fulltext or element can possibly give us a url which then redirects to a login wall
