@@ -414,10 +414,10 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
         re += 'who needs it.</p>';
         re += '</div>';
       }
-      
+
       if (rec.closed_on_create && rec.createdAt > Date.now()-10000) {
         re += '<p><b>Oh no! We can\'t start a request.</b></p>';
-        re += '<p>The article you need is probably too old to make freely available, we\'re sorry. If you think this is a mistake, let us know. Thanks for using the Open Access Button, try again soon.</p>';
+        re += '<p>The article you need is probably too old to make freely available, we\'re sorry. If you think this is a mistake, <a href="/feedback#general">let us know</a>. Thanks for using the Open Access Button, try again soon.</p>';
       } else if ( rec.status !== 'closed' && rec.status !== 'received' && (!rec.title || !rec.email || !rec.story) ) {
         if (rec.user === undefined) {
           re += '<p>We ask the author to make this ' + rec.type + ' available to everyone for free - legally. Start a request and we\'ll take care of the rest!</p>';
