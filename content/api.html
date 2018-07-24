@@ -101,6 +101,10 @@
         url, doi, pmc, pmid, title, citation.
       </p>
       <p>
+        A simple way to make a request to the availability API is the following one liner where YOURURL is your "url" paremeter:
+        curl -H "x-apikey: yourRegisteredApikey" -X GET "https://api.openaccessbutton.org/availability?url=YOURURL"
+      </p>
+      <p>
         The response returned lists objects of any "availability" found, with each object declaring "type" (currently either article or data)
         and the "url" where this object is found.
       </p>
