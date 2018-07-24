@@ -364,6 +364,8 @@ API.add 'service/oab/export/:what',
       # which crashes the whole system. So pick the lesser of two fuck ups.
 
 API.add 'service/oab/terms/:type/:key', get: () -> return API.es.terms 'oab', this.urlParams.type, this.urlParams.key
+API.add 'service/oab/min/:type/:key', get: () -> return API.es.min 'oab', this.urlParams.type, this.urlParams.key
+API.add 'service/oab/max/:type/:key', get: () -> return API.es.max 'oab', this.urlParams.type, this.urlParams.key
 API.add 'service/oab/range/:type/:key', get: () -> return API.es.range 'oab', this.urlParams.type, this.urlParams.key
 API.add 'service/oab/keys/:type', get: () -> return API.es.keys 'oab', this.urlParams.type
 
