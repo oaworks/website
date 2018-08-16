@@ -1,7 +1,6 @@
 <script src="/static/openaccessbutton_widget.js"></script>
 <script>
 jQuery(document).ready(function() {
-  console.log(api)
   $('.tryit').bind('click',function(e) {
     e.preventDefault();
     $('#oabutton_url').val($(this).html());
@@ -38,6 +37,7 @@ jQuery(document).ready(function() {
   width:100%;
   padding:10px;
   overflow: hidden;
+  display: none;
 }
 
 .downloadbox {
@@ -46,18 +46,10 @@ jQuery(document).ready(function() {
   border-radius: 5px;
 }
 
-  .ill_system_content div:not(:target) {
-    display: none;
-  }
-
-  .ill_system_content div:target {
-    display: block;
-  }
-
-  /* Make the div big, so we would jump, if the JS was still broken */
-  .ill_system_content div {
-    height: 100%;
-  }
+/* Make the div big, so we would jump, if the JS was still broken */
+.ill_system_content div {
+  height: 100%;
+}
 
 p {
   line-height: 1.5 !important;
@@ -95,47 +87,40 @@ p {
       <!-- TODO: figure out a way to include this too https://library.milligan.edu/ill/journalrequest/   -->
     </p>
 
-
-       <h2>Put on your webpage in a few easy steps</h2>
-        <div id="getit" class="focal">
-        <div>
-             <p style="float: left; margin: 6px 10px;">Get started by choosing your</p>
-        </div>
-           <div class="btn-group" >
-                <button type="button"  class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="border-width:2px; border-radius: 8px;">page type     <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu"  style="width: 100%;" role="menu">
-                 <li><a class="chooseill" href="#libguide">LibGuide</a></li>
-                 <li><a class="chooseill" href="#interlibraryloan">Interlibrary Loan page</a></li>
-                 <li><a class="chooseill" href="#eresources">E-Resources page</a></li>
-            <!--     <li><a class="chooseill" href="#other">General webpage</a></li> -->
-            </ul>
-            </div>
-        </div>
-<!-- inserting the upsell code from deliverOA; let's hope this works!!!!! -->
-
-  <div id="upsell" style="display: none">
-              <p style="padding-top:15px;">
-                You'll also love:
-              </p>
-                  <ul>
-                    <li>
-                      <a href="/deliveroa" target="_blank">DeliverOA</a>: put an Open Access search into your ILL workflow.
-                    </li>
-                    <li>
-                      <a href="/oasheet" target="_blank">OAsheet</a>: upload a spreadsheet of articles, and we'll find Open Access versions. Try uploading old ILLs to see what you could save.
-                    </li>
-                  </ul>
-                </div>
-
-
-
+    <h2>Put on your webpage in a few easy steps</h2>
+    <div id="getit" class="focal">
+      <div>
+        <p style="float: left; margin: 6px 10px;">Get started by choosing your</p>
+      </div>
+      <div class="btn-group" >
+        <button type="button"  class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="border-width:2px; border-radius: 8px;">page type     <span class="caret"></span></button>
+        <ul class="dropdown-menu"  style="width: 100%;" role="menu">
+          <li><a class="chooseill" href="#libguide">LibGuide</a></li>
+          <li><a class="chooseill" href="#interlibraryloan">Interlibrary Loan page</a></li>
+          <li><a class="chooseill" href="#eresources">E-Resources page</a></li>
+          <!--     <li><a class="chooseill" href="#other">General webpage</a></li> -->
+        </ul>
+      </div>
     </div>
-    <div class="col-md-6">
-      <div class="ill_system_content downloadbox">
+
+    <!-- inserting the upsell code from deliverOA; let's hope this works!!!!! -->
+    <div id="upsell" style="display: none">
+      <p style="padding-top:15px;">You'll also love:</p>
+      <ul>
+        <li>
+          <a href="/deliveroa" target="_blank">DeliverOA</a>: put an Open Access search into your ILL workflow.
+        </li>
+        <li>
+          <a href="/oasheet" target="_blank">OAsheet</a>: upload a spreadsheet of articles, and we'll find Open Access versions. Try uploading old ILLs to see what you could save.
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="ill_system_content downloadbox">
 
         <!-- LIBGUIDE PAGE SECTION -->
-
         <div id="libguide" class="innercolumns">
           <h1 style="margin-top:40px">For LibGuides</h1>
            <p>
@@ -322,11 +307,19 @@ link.addEventListener("click", function (event) {
 <script>
 jQuery(document).ready(function() {
 
-  $('.chooseill').bind('click',function() { $('#maininfo').removeClass('col-md-offset-3'); });
-  if (window.location.hash) $('#maininfo').removeClass('col-md-offset-3');
-
-  $('.chooseill').bind('click',function() { $('#getit').removeClass('focal'); });
-  if (window.location.hash) $('#getit').removeClass('focal');
+  if (window.location.hash) {
+    $('#maininfo').removeClass('col-md-offset-3');
+    $('#getit').removeClass('focal');
+    $('#upsell').show();
+    $(window.location.hash).show();
+  }
+  $('.chooseill').bind('click',function() { 
+    $('#maininfo').removeClass('col-md-offset-3');
+    $('#getit').removeClass('focal');
+    $('#upsell').show();
+    $('.innercolumns').hide();
+    $($(this).attr('href')).show();
+  });
 
 });
 </script>
