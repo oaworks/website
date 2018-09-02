@@ -40,11 +40,11 @@
     <h3>
        Wipe 5% off your ILL budget and delivery times, and discover a new way to advocate for Open Access, today. No complex installation, no training required.
     </h3>
-    
+
     <p>
       We make it easy to give your researchers Open Access version of the millions of paywalled articles they need. We find <a href="/about" target="_blank">self-archived Open Access versions of articles</a> and deliver them right inside your ILL workflow.
     </p>
-    
+
     <div id="getit" class="focal">
       <div>
         <p style="float: left; margin: 6px 10px;">Get started by choosing your</p>
@@ -81,34 +81,24 @@
 
         <div id="foralma" class="innercolumns">
           <h1 style="margin-top:40px">For Alma</h1>
-          <!--
+
           <p>
             The Open Access Button extension works on Alma. Simply click it on an ILL request while you process.
-          </p> -->
-
-          <p>
-            The Open Access Button extension will soon work on Alma. You'll be able to click it on an ILL request while you process.
           </p>
-          <p style="text-align: center;">
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLSe6yfkuDb6p4Xe-p00YonH0osovkqaIekvnH77HhcfXtUoB5g/viewform?usp=sf_link" target="_blank">
-              <button class="btn btn-action" style="width:50%;">
-                Join the Waitlist
-              </button>
-            </a>
-          </p>
-
-        <!--
+          <img src="/static/alma_success.gif" width="100%;" class="responsive">
         <ol>
         <li>
            If you haven't already, install the Open Access Button from <a href="/" target="_blank">our homepage</a> - it takes just a second.
         </li>
-                  <li>
-            Click it on request processing pages (like the one in the image below). Check it's working by making a test request for: <blockquote>Effect of Saxagliptin on Renal Outcomes in the SAVOR-TIMI 53 Trial</blockquote>
+            <li>
+              Click it on Resource Sharing Borrowing Request pages.
+            </li>
+            <li>
+              Check it's working by making a test request for: <blockquote>Effect of Saxagliptin on Renal Outcomes in the SAVOR-TIMI 53 Trial</blockquote>
             We should find it. If you have any trouble, <a href="mailto:help@openaccessbutton.org?Subject=Having%20Trouble%20Installing%20DeliverOA%20in%20Alma&body=Please%20send%20us%20the%20URL%20of%20the%20page%20you're%20working%20on,%20or%20a%20screenshot%20of%20what%20you're%20seeing%20and%20a%20copy%20of%20the%20page's%20code%20-%20right-click%20on%20the%20page%20and%20View%20Page%20Source.">get in touch</a>.
           </li>
-          <img src="/static/alma-page.png" width="100%;" class="responsive">
           <li>
-            Consider what email you'll send to your patrons when you find an Open Access copy. Here's what others use:
+            Consider what email you'll send to your patrons when you find an Open Access copy, and set up a template for easy use and monitoring. Here's what others use:
           </li>
           <blockquote id="ill-email">
             <p>
@@ -119,7 +109,7 @@
             </p>
             <p>
               Please review the article and let us know whether or not it is sufficient for your research. For example, it may be a version without graphs or images.<!-- TODO: say how it'll differ -->
-          <!--
+
             </p>
             <p>
               If you still require a version of the article from the original publication, we are happy to request that for you. You do not need to place a second request for the article, just respond to this email.
@@ -129,7 +119,7 @@
             You're done. Let us know what you think!
           </li>
         </ol>
-      -->
+
         </div>
 
 
@@ -345,8 +335,8 @@ jQuery(document).ready(function() {
     $('#upsell').show();
     $(window.location.hash).show();
   }
-  $('.chooseill').bind('click',function() { 
-    $('#maininfo').removeClass('col-md-offset-3'); 
+  $('.chooseill').bind('click',function() {
+    $('#maininfo').removeClass('col-md-offset-3');
     $('#getit').removeClass('focal');
     $('#upsell').show();
     $('.innercolumns').hide();
