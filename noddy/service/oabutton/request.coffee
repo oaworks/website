@@ -114,7 +114,25 @@ API.service.oab.request = (req,uacc,fast) ->
   if req.journal and not req.sherpa? # doing this even on fast cos we may be able to close immediately. If users say too slow now, disable this on fast again
     try
       sherpa = API.use.sherpa.romeo.search {jtitle:req.journal}
-      req.sherpa = {color:sherpa.publishers[0].publisher[0].romeocolour[0]}
+      try req.sherpa = {color: sherpa.publishers[0].publisher[0].romeocolour[0]}
+      try
+        req.sherpa.journal = sherpa.journals[0].journal[0]
+        for k of req.sherpa.journal
+          try
+            if _.isArray(req.sherpa.journal[k]) and req.sherpa.journal[k].length is 1
+              req.sherpa.journal[k] = req.sherpa.journal[k][0]
+      try
+        req.sherpa.publisher = sherpa.publishers[0].publisher[0]
+        for k of req.sherpa.publisher
+          try
+            if _.isArray(req.sherpa.publisher[k]) and req.sherpa.publisher[k].length is 1
+              req.sherpa.publisher[k] = req.sherpa.publisher[k][0]
+
+  if req.story
+    res = oab_request.search 'rating:1 AND story.exact:"' + req.story + '"'
+    if res.hits.total
+      nres = oab_request.search 'rating:0 AND story.exact:"' + req.story + '"'
+      req.rating = 1 if nres.hits.total is 0
 
   req.status = if not req.story or not req.title or not req.email or not req.user? then "help" else "moderate"
   if req.year

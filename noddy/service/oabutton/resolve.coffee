@@ -45,14 +45,14 @@ API.service.oab.citation = (meta) ->
 
   return meta
 
-API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=true,parallel=false) ->
+API.service.oab.resolve = (meta, content, sources, all=false, titles=true, journal=true, bing=true, parallel=API.settings?.service?.openaccessbutton?.resolve?.parallel) ->
   API.log msg: 'Resolving academic content', meta: meta, sources: sources, level: 'debug'
   sources ?= ['oabutton','eupmc','oadoi','base','dissemin','share','core','openaire','figshare','doaj']
   # all source get checked by default (but oabutton availability overrides to not botehr with base and dissemin as covered by oadoi)
   # NOTE crossref does also get used to lookup DOIs from title/citation if necessary, but this is not considered a source in this context
   meta = {url:meta} if typeof meta is 'string'
   meta.url = meta.title if not meta.url? and meta.title?
-  meta.title = meta.url if not meta.title? and meta.url? and meta.url.indexOf('http') is -1 and isNaN(parseInt(meta.url.toLowerCase().replace('pmc','').split()[0]))
+  meta.title = meta.url if not meta.title? and meta.url? and meta.url.toLowerCase().indexOf('pmc') isnt 0 and meta.url.indexOf('http') is -1 and isNaN(parseInt(meta.url.toLowerCase().replace('pmc','').split()[0]))
   meta.all = if all is false then false else all?
   meta.sources = sources
   meta.found = {}
@@ -79,7 +79,7 @@ API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=tr
     meta.url = 'http://europepmc.org/articles/PMC' + meta.pmc.toLowerCase().replace('pmc','') if meta.pmc
 
   if not meta.doi and (meta.url.indexOf('10.') is 0 or meta.url.indexOf('doi.org') isnt -1)
-    meta.doi = '10.' + meta.url.split('10.')[1]
+    meta.doi = if meta.url.indexOf('doi.org') isnt -1 then meta.url.split('doi.org/')[1] else meta.url
     meta.url = 'https://doi.org/' + meta.doi if meta.doi
 
   if 'oabutton' in sources
@@ -94,7 +94,8 @@ API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=tr
       return meta if not all # we can end here, oab already had it
 
   scraped = false
-  if meta.url.indexOf('eu.alma.exlibrisgroup.com') isnt -1 and content
+  # this should not run much because the plugin find call should replace the url with a title
+  if (meta.url.indexOf('eu.alma.exlibrisgroup.com') isnt -1 or meta.url.indexOf('/exlibristest') isnt -1) and content
     scraped = API.service.oab.scrape(undefined, content)
     meta.scraped = true
     for ks of scraped
@@ -103,7 +104,7 @@ API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=tr
   titled = meta.title?
   if not meta.doi and meta.url.indexOf('http') isnt 0 and meta.url.indexOf('10.') isnt 0 and meta.url.toLowerCase().indexOf('pmc') isnt 0 and meta.url.length > 8
     meta = API.service.oab.citation meta
-
+    
   if (meta.pmid or meta.pmc) and 'eupmc' in sources
     try
       API.log msg: 'Resolve checking with EUPMC for PMC/PMID', level: 'debug'
@@ -118,6 +119,38 @@ API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=tr
         meta.found.eupmc = res.url
         return meta if not all and res.redirect isnt false
 
+  if bing and API.settings?.service?.openaccessbutton?.resolve?.bing isnt false and not meta.doi and meta.url.indexOf('http') isnt 0 and meta.url.indexOf('10.') isnt 0 and meta.url.length > 8
+    meta.bing = true
+    try
+      mct = meta.url.toLowerCase().replace(/[^a-z0-9 ]+/g, " ").replace(/\s\s+/g, ' ')
+      mct = mct.replace('pmid','pmid ') if mct.indexOf('pmid') is 0
+      mct = mct.replace('pmc','pmc ') if mct.indexOf('pmc') is 0
+      bing = API.use.microsoft.bing.search mct, true, 2592000000, API.settings.use.microsoft.bing.key # search bing for what we think is a title (caching up to 30 days)
+      bct = bing.data[0].name.toLowerCase().replace('(pdf)','').replace(/[^a-z0-9 ]+/g, " ").replace(/\s\s+/g, ' ')
+      if not API.service.oab.blacklist(bing.data[0].url) and mct.replace(/ /g,'').indexOf(bct.replace(/ /g,'')) is 0 # if the URL is usable and tidy bing title is not a partial match to the start of the provided title, we won't do anything with it
+        bing.data[0].url = bing.data[0].url.replace(/"/g,'')
+        try
+          if bing.data[0].url.toLowerCase().indexOf('.pdf') is -1
+            scraped = API.service.oab.scrape bing.data[0].url
+            meta.scraped = true
+            meta.title ?= scraped.title ? meta.url
+            meta.url = bing.data[0].url
+            meta.doi ?= scraped.doi
+          else if mct.replace(/[^a-z0-9]+/g, "").indexOf(bing.data[0].url.toLowerCase().split('.pdf')[0].split('/').pop().replace(/[^a-z0-9]+/g, "")) is 0
+            meta.title ?= meta.url
+            meta.url = bing.data[0].url
+          else
+            content = API.convert.pdf2txt(bing.data[0].url)
+            content = content.substring(0,1000) if content.length > 1000
+            content = content.toLowerCase().replace(/[^a-z0-9]+/g, "").replace(/\s\s+/g, '')
+            if content.indexOf(mct.replace(/ /g, '')) isnt -1
+              meta.title ?= meta.url
+              meta.url = bing.data[0].url
+        catch
+          # if we cannot scrape it for some reason, but the bing title matched fairly well, we will accept the bing url anyway
+          meta.title ?= meta.url
+          meta.url = bing.data[0].url
+
   if not meta.doi and meta.url.indexOf('http') is 0 and not meta.pmid and not meta.pmc and not scraped
     # no point resolving for URL if we already had these, the splash pages would not contain a DOI if the eupmc API did not have it
     API.log 'Resolving URL for content'
@@ -129,8 +162,6 @@ API.service.oab.resolve = (meta,content,sources,all=false,titles=true,journal=tr
       # If it is not the current page, is it worth resolving to it? If it is accessible, can it be taken as the open URL?
       scraped = API.service.oab.scrape(meta.url, content)
       meta.scraped = true
-      console.log scraped
-      console.log meta
       for ks of scraped
         meta[ks] ?= scraped[ks]
 

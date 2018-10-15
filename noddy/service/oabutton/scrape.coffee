@@ -47,18 +47,18 @@ API.service.oab.scrape = (url,content,doi) ->
   if content and not meta.title
     content = content.toLowerCase()
     if content.indexOf('requestdisplaytitle') isnt -1
-      meta.title = content.split('requestdisplaytitle').pop().split('>')[1].split('<')[0]
+      meta.title = content.split('requestdisplaytitle').pop().split('>')[1].split('<')[0].trim().replace(/"/g,'')
     else if content.indexOf('dc.title') isnt -1
-      meta.title = content.split('dc.title')[1].replace(/'/g,'"').split('content=')[1].split('"')[1].trim()
+      meta.title = content.split('dc.title')[1].replace(/'/g,'"').split('content=')[1].split('"')[1].trim().replace(/"/g,'')
     else if content.indexOf('eprints.title') isnt -1
-      meta.title = content.split('eprints.title')[1].replace(/'/g,'"').split('content=')[1].split('"')[1].trim()
+      meta.title = content.split('eprints.title')[1].replace(/'/g,'"').split('content=')[1].split('"')[1].trim().replace(/"/g,'')
     else if content.indexOf('og:title') isnt -1
       meta.title = content.split('og:title')[1].split('content')[1].split('=')[1].replace('/>','>').split('>')[0].trim().replace(/"/g,'')
       meta.title = meta.title.substring(1,meta.title.length-1) if meta.title.startsWith("'")
     else if content.indexOf('"citation_title" ') isnt -1
-      meta.title = content.split('"citation_title" ')[1].replace(/ = /,'=').split('content="')[1].split('"')[0]
+      meta.title = content.split('"citation_title" ')[1].replace(/ = /,'=').split('content="')[1].split('"')[0].trim().replace(/"/g,'')
     else if content.indexOf('<title') isnt -1
-      meta.title = content.split('<title')[1].split('>')[1].split('</title')[0].trim()
+      meta.title = content.split('<title')[1].split('>')[1].split('</title')[0].trim().replace(/"/g,'')
 
   if meta.doi
     try

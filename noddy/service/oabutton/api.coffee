@@ -1,4 +1,5 @@
 
+import moment from 'moment'
 
 # these are global so can be accessed on other oabutton files
 @oab_support = new API.collection {index:"oab",type:"support"}
@@ -106,6 +107,11 @@ API.add 'service/oab/request/:rid',
         n.url ?= this.request.body.url if this.request.body.url? and this.request.body.url isnt r.url
         n.title ?= this.request.body.title if this.request.body.title? and this.request.body.title isnt r.title
         n.doi ?= this.request.body.doi if this.request.body.doi? and this.request.body.doi isnt r.doi
+        if n.story
+          res = oab_request.search 'rating:1 AND story.exact:"' + n.story + '"'
+          if res.hits.total
+            nres = oab_request.search 'rating:0 AND story.exact:"' + n.story + '"'
+            n.rating = 1 if nres.hits.total is 0
         if not n.status?
           if (not r.title and not n.title) || (not r.email and not n.email) || (not r.story and not n.story)
             n.status = 'help' if r.status isnt 'help'
@@ -284,29 +290,46 @@ API.add 'service/oab/import',
             rq = oab_request.get p._id
             if rq
               resp.found += 1
-              update = {}
+              updates = []
+              update = []
               for up of p
                 p[up] = undefined if p[up] is 'DELETE' # this is not used yet
-                if (not p[up]? or p[up]) and p[up] not in ['createdAt','created_date']
+                if (not p[up]? or p[up]) and p[up] not in ['createdAt','created_date','plugin','from','embedded']
                   if up.indexOf('refused.') is 0 and ( not rq.refused? or rq.refused[up.split('.')[1]] isnt p[up] )
-                    update.refused = {} if not update.refused?
+                    rq.refused ?= {}
+                    rq.refused[up.split('.')[1]] = p[up]
+                    update.refused ?= {}
                     update.refused[up.split('.')[1]] = p[up]
                   else if up.indexOf('received.') is 0 and ( not rq.received? or rq.received[up.split('.')[1]] isnt p[up] )
-                    update.received = {} if not update.received?
-                    update.received[up.split('.')[1]] = p[up]
+                    rq.received ?= {}
+                    rq.received[up.split('.')[1]] = p[up]
+                    update.received = rq.received
+                  else if up.indexOf('followup.') is 0
+                    if up isnt 'followup.date' and p['followup.count'] isnt rq.followup?.count
+                      rq.followup ?= {}
+                      rq.followup.count = p['followup.count']
+                      rq.followup.date ?= []
+                      rq.followup.date.push moment(Date.now(), "x").format "YYYYMMDD"
+                      update.followup = rq.followup
                   else if up is 'sherpa.color' and ( not rq.sherpa? or rq.sherpa.color isnt p[up] )
-                    update.sherpa = {color:p[up]}
+                    rq.sherpa = {color:p[up]}
+                    update.sherpa = rq.sherpa
                   else if rq[up] isnt p[up]
-                    update[up] = p[up]
-              bstr = JSON.stringify update
-              if bstr isnt '{}'
-                update._bulk_import = rq._bulk_import ? {}
-                update._bulk_import[Date.now()] = bstr
-                oab_request.update rq._id, update
-                resp.updated += 1
+                    rq[up] = p[up]
+                    update[up] = rq[up]
+                  try
+                    rq._bulk_import ?= {}
+                    rq._bulk_import[Date.now()] = JSON.stringify update
+                    # TODO should update collection update to take lists of records that it updates in bulk
+                  rq.updatedAt = Date.now()
+                  rq.updated_date = moment(rq.updatedAt, "x").format "YYYY-MM-DD HHmm.ss"
+                  updates.push rq
+                  resp.updated += 1
             else
               resp.missing.push p._id
-        return {status:'success', data:resp}
+        if updates.length
+          resp.imports = oab_request.import(updates)
+        return resp
       catch err
         return {status:'error'}
 
@@ -459,7 +482,9 @@ API.add 'service/oab/job/:jid/results.csv',
   get: () ->
     res = API.job.results this.urlParams.jid, true
     inputs = []
-    csv = '"MATCH","AVAILABLE","SOURCE","REQUEST","TITLE","DOI"'
+    csv = '"MATCH",'
+    csv += '"BING","REVERSED",' if API.settings.dev
+    csv += '"AVAILABLE","SOURCE","REQUEST","TITLE","DOI"'
     liborder = []
     sources = []
     extras = []
@@ -491,6 +516,9 @@ API.add 'service/oab/job/:jid/results.csv',
         for extra in extras
           csv += '"' + (if ea[extra]? then ea[extra] else '') + '",'
       csv += '"' + (if row.match then row.match.replace('TITLE:','').replace(/"/g,'') + '","' else '","')
+      if API.settings.dev
+        csv += (if row.meta?.article?.bing then 'Yes' else 'No') + '","'
+        csv += (if row.meta?.article?.reversed then 'Yes' else 'No') + '","'
       av = 'No'
       if row.availability?
         for a in row.availability

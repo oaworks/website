@@ -112,6 +112,7 @@ jQuery(document).ready(function() {
       if (window.location.href.indexOf('embedded=') !== -1) dt.embedded = window.location.href.split('embedded=')[1].split('&')[0];
       if (window.location.href.indexOf('plugin=') !== -1) dt.plugin = window.location.href.split('plugin=')[1].split('&')[0];
       if (window.location.href.indexOf('from=') !== -1) dt.from = window.location.href.split('from=')[1].split('&')[0];
+      if (window.location.href.indexOf('exlibris=') !== -1) dt.exlibris = true;
       var opts = {
         type: 'POST',
         url: api+'/request',

@@ -23,7 +23,7 @@ import { Random } from 'meteor/random'
 ###
 API.service.oab.find = (opts={url:undefined,type:undefined}) ->
   opts.type ?= 'article'
-  opts.sources ?= ['oabutton','eupmc','oadoi','share','core','base','openaire','figshare','doaj']
+  opts.sources ?= ['oabutton','eupmc','oadoi','share','core','openaire','figshare','doaj']
   opts.refresh ?= 30 # default refresh. If true then we won't even use successful previous lookups, otherwise if number only use failed lookups within refresh days
   opts.refresh = 0 if opts.refresh is true
   if typeof opts.refresh isnt 'number'
@@ -42,6 +42,8 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
     else if opts.url.length < 10 and opts.url.indexOf('.') is -1 and not isNaN(parseInt(opts.url))
       opts.pmid ?= opts.url
       opts.url = 'https://www.ncbi.nlm.nih.gov/pubmed/' + opts.pmid
+    else if not opts.title? and opts.url.indexOf('http') isnt 0 and opts.url.toLowerCase().indexOf('citation:') isnt 0
+      opts.title = opts.url.replace('TITLE:','')
   if not opts.url
     opts.url = 'CITATION:'+opts.citation if opts.citation
     opts.url = 'TITLE:'+opts.title if opts.title
@@ -51,6 +53,8 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
     opts.url = 'https://doi.org/' + (if opts.doi.indexOf('doi.org/') isnt -1 then opts.doi.split('doi.org/')[1] else opts.doi) if opts.doi
   return {} if not opts.url?
 
+  opts.bing ?= opts.plugin in ['widget','oasheet'] or opts.from in ['illiad','clio'] or opts.url.indexOf('alma.exlibrisgroup.com') isnt -1
+
   # ret.accepts is not currently properly handled - it is leftover from when we merged articles and data, and had an idea to do software and other types too
   # for now it should stay, so that the plugin can know how to handle them if necessary, but it just stays at accepting articles
   # unless there is an availability or a request found, in which case it is just set to empty list
@@ -58,6 +62,15 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
   ret.library = API.service.oab.library(opts) if opts.library
   ret.libraries = API.service.oab.libraries(opts) if opts.libraries
   already = []
+
+  if opts.url.indexOf('alma.exlibrisgroup.com') isnt -1 or opts.url.indexOf('/exlibristest') isnt -1
+    # switch exlibris URLs for titles, which the scraper knows how to extract
+    scraped = API.service.oab.scrape(undefined, opts.dom)
+    opts.url = scraped.title # becayse the exlibris url would always be the same, we switch it out
+    opts.title = scraped.title
+    opts.exlibris = true
+    ret.match = scraped.title
+    ret.exlibris = true
 
   opts.discovered = {article:false,data:false}
   opts.source = {article:false,data:false}
@@ -79,25 +92,30 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
     finder += ')'
     if opts.refresh isnt 0 and 'oabutton' in opts.sources
       avail = oab_availability.find finder + ' AND discovered.article:* AND NOT discovered.article:false', true
-      if avail?.discovered?.article and avail.url? and avail.url.indexOf('eu.alma.exlibrisgroup.com') isnt -1 and avail.url.indexOf('&oabLibris') is -1
-        avail = undefined
       if avail?.discovered?.article and ret.meta.article.redirect = API.service.oab.redirect(avail.discovered.article)
         ret.meta.article.url = avail.discovered.article
         ret.meta.article.source = avail.source?.article
         ret.meta.cache = true
+        opts.cache = true
         ret.meta.refresh = opts.refresh # if we have a discovered article that is not since blacklisted we always reuse it - this is just for info
     d = new Date()
     if not ret.meta.article.url and ('oabutton' not in opts.sources or opts.refresh is 0 or not oab_availability.find finder + ' AND createdAt:>' + d.setDate(d.getDate() - opts.refresh), true )
-      ret.meta.article = API.service.oab.resolve opts.url, opts.dom, opts.sources, opts.all, opts.titles
+      opts.resolve = true
+      ret.meta.article = API.service.oab.resolve opts.url, opts.dom, opts.sources, opts.all, opts.titles, opts.journal, opts.bing
       ret.match = 'https://doi.org/' + ret.meta.article.doi if ret.meta.article.doi and ret.match.indexOf('http') isnt 0
     if ret.meta.article.url and ret.meta.article.source and ret.meta.article.redirect isnt false and not ret.meta.article.journal_url
       opts.source.article = ret.meta.article.source
+      opts.title ?= ret.meta.article.title
+      opts.doi ?= ret.meta.article.doi
+      opts.checked = ret.meta.article.checked
       opts.discovered.article = if typeof ret.meta.article.redirect is 'string' then ret.meta.article.redirect else ret.meta.article.url
       ret.availability.push {type:'article',url:opts.discovered.article}
       ret.accepts = []
       already.push 'article'
+    try opts.bing = ret.meta.article.bing
+    try opts.reversed = ret.meta.article.reversed
 
-  opts.url = 'https://doi.org/' + ret.meta.article.doi if opts.url.indexOf('http') isnt 0 and ret.meta.article.doi
+  #opts.url = 'https://doi.org/' + ret.meta.article.doi if opts.url.indexOf('http') isnt 0 and ret.meta.article.doi
   # so far we are only doing availability checks for articles, so only need to check requests for data types or articles that were not found yet
   if (opts.type isnt 'article' or 'article' not in already) and request = oab_request.find finder + ' AND type:' + opts.type
     rq =
@@ -109,10 +127,7 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
     ret.accepts = []
     already.push request.type
 
-  if opts.url.indexOf('eu.alma.exlibrisgroup.com') isnt -1 and opts.discovered.article is false
-    opts.url += (if opts.url.indexOf('?') is -1 then '?' else '&') + 'oabLibris=' + Random.id()
-
-  delete opts.dom
+  delete opts.dom if not API.settings.dev
   oab_availability.insert(opts) if not opts.nosave # save even if was a cache hit, to track usage of the endpoint
   return ret
 

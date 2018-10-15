@@ -130,34 +130,6 @@
     	if (e.keyCode === 13) $('#emailredirect').trigger('click');
     });
 
-    var createrequests = function(e) {
-      e.preventDefault();
-      $('#jobinfo').html('<p>Checking job status...</p>').show();
-      var uid = $(this).attr('href');
-      $.ajax({
-        url: api + '/job/' + uid + '/results',
-        success: function(data) {
-          $('#jobinfo').html('');
-          var count = 0;
-          for ( var r in data ) {
-            if (data[r].availability.length === 0 && data[r].requests.length === 0 && ( ( data[r].match.indexOf('TITLE:') === -1 && data[r].match.indexOf('CITATION:') === -1 ) || ( data[r].meta && data[r].meta.article && data[r].meta.article.doi ) ) ) count += 1;
-          }
-          var confirmed = confirm('Are you sure you want to try to create ' + count + ' requests from this job? Requests will only be created for records that are unavailable and for which there are not already requests, and where at least a url or doi was provided or found during checking - title alone is not enough. This count estimate is based on how many it seems at least a url or doi is available for, and for which there was not already a request at the time the job was run (if a request has since been created, it should be matched and not duplicated, but will still be counted). The actual created number will be confirmed after you submit.)');
-          if (confirmed) {
-            $('html,body').scrollTop(0);
-            $('#jobinfo').html('Creating requests from job ' + uid + '...');
-            $.ajax({
-              url: api + '/job/' + uid + '/request?apikey=' + noddy.apikey,
-              success: function(res) {
-                $('#jobinfo').html('<p>' + res.length + ' requests created</p>');
-                for ( var rid in res ) $('#jobinfo').append('<p><a target="_blank" href="/request/' + res[rid]._id + '">' + res[rid]._id + '</a></p>');
-              }
-            });
-          }
-        }
-      });
-    }
-
     var checkprogress = function(e) {
       if (e) e.preventDefault();
       var uid = window.location.hash.replace('#','');

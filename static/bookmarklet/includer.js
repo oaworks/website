@@ -29,6 +29,6 @@
     popup.setAttribute('class','reset-this');
     popup.innerHTML = '<img id="iconloading" style="width:40px;height:40px;" src="' + url + '/img/spin_orange.svg" /><div id="isopen" style="display:none;"><p>This article is available!</p><p><a id="linkopen" href=""><img style="width:100%;" src="' + url + '/img/open.png" /></a></p></div><div id="isclosed" style="display:none;"><p>This article is not currently available,<br>but you can request it from the author.</p><p><a id="linkclosed" href=""><img style="width:100%;" src="' + url + '/img/closed.png" /></a></p></div><div id="iserror" style="display:none;"><p>Sorry, there was an error. Please click to report it.</p><p><a id="linkerror" href=""><img style="width:100%;" src="' + url + '/img/error.png" /></a></p></div><a href="#" id="iconarticle" style="display:none;padding-left:5px;padding-right:3px;"></a>';
     document.body.appendChild(popup);
-    oabutton_ui(undefined,version,api_address,site_address);
+    oabutton_ui({{debug}},version,api_address,site_address);
   },1500);
 })();
