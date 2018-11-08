@@ -22,6 +22,7 @@ server {
   add_header Cache-Control "public";
   add_header Access-Control-Allow-Origin *;
 
+  rewrite ^/requests /request;
   rewrite ^/request/((?!new).)*$ /request/item last;
   rewrite ^/response/((?!new).)*$ /response/item last;
 

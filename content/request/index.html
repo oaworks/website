@@ -74,18 +74,17 @@ jQuery(document).ready(function() {
     $('.holder.search').val('status:help').trigger('change');
   });
 
+  window.firstandnotadmin = !noddy.hasRole('openaccessbutton.admin');
   var dfd = false;
   var df = [
     {
-      exists: {
-        field: "story"
+      term: {
+        rating: 1
       }
     },
     {
-      query: {
-        query_string: {
-          query: "story:*"
-        }
+      terms: {
+        status: ['help','moderate','progress','hold','received']
       }
     }
   ];
@@ -104,7 +103,7 @@ jQuery(document).ready(function() {
     if (window.location.href.indexOf('id=') !== -1) id = decodeURIComponent(window.location.href.split('id=')[1].split('&')[0]);
     if (id) {
       $('#footer').hide();
-      $('.loading').append('<h3 style="text-align:center;">We\'re warming up a request for you, this might take a few seconds.</h3>').show();
+      $('.loading').append('<h3 style="text-align:center;">Hold on, we\'re getting ready to ask the author to make this available.<br><small>We\'ll need you to tell us why you need the research. Get thinking!</small></h3>').show();
       var dt = {
         url: id,
         type: window.location.href.indexOf('type=') !== -1 ? window.location.href.split('type=')[1].split('&')[0] : 'article'
@@ -144,17 +143,11 @@ jQuery(document).ready(function() {
           $.fn.holder.use.oabutton.defaultfilters = df;
         } else {
           $('#rangedisplay').show();
-          $('#requestfilters').append('<br><br><a id="shstory" href="#" style="text-decoration:underline;color:orange;">Show/hide requests without story</a>');
+          $('#requestfilters').append('<br><br><a id="shstory" href="#" style="text-decoration:underline;color:orange;">Show only requests with story</a>');
           $('#shstory').bind('click',function() {
-            if (dfd === false) {
-              dfd = true;
-              if ($.fn.holder.options.query.query.filtered.filter === undefined) $.fn.holder.options.query.query.filtered.filter = {};
-              if ($.fn.holder.options.query.query.filtered.filter.bool === undefined) $.fn.holder.options.query.query.filtered.filter.bool = {};
-              $.fn.holder.options.query.query.filtered.filter.bool.must = df;
-            } else {
-              dfd = false;
-              $.fn.holder.options.query.query.filtered.filter.bool.must = [];
-            }
+            if ($.fn.holder.options.query.query.filtered.filter === undefined) $.fn.holder.options.query.query.filtered.filter = {};
+            if ($.fn.holder.options.query.query.filtered.filter.bool === undefined) $.fn.holder.options.query.query.filtered.filter.bool = {};
+            $.fn.holder.options.query.query.filtered.filter.bool.must = [{exists: {field: 'story'}}, {query: {query_string: {query: "story:*"}}}];
             $.fn.holder.options.execute();
           });
         }

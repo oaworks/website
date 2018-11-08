@@ -41,7 +41,7 @@
 <script>
   jQuery(document).ready(function() {
     if (!noddy.loggedin()) window.location = '/account?next=/import';
-    var acceptedfields = ['_id','created_date','type','count','status','title','url','doi','journal','publisher','sherpa.color','name','email','user.username','user.email','user.firstname','user.lastname','story','rating','receiver','followup.count','followup.date','refused.email','refused.date','received.date','received.from','received.description','received.url','received.admin','received.cron','received.notfromauthor','notes','plugin','from','embedded'];
+    var acceptedfields = ['_id','created_date','type','count','status','title','url','doi','journal','publisher','sherpa.color','name','names','email','author_affiliation','user.username','user.email','user.firstname','user.lastname','story','rating','receiver','followup.count','followup.date','refused.email','refused.date','received.date','received.from','received.description','received.url','received.admin','received.cron','received.notfromauthor','notes','plugin','from','embedded'];
     for ( var a in acceptedfields ) {
       if (a !== '0') $('#acceptedfields').append(', ');
       $('#acceptedfields').append(acceptedfields[a]);

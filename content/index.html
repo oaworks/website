@@ -141,12 +141,12 @@
           $('#url').css('border-color','#f04717').focus();
           return;
         }
-        /*if (url.toLowerCase().indexOf('sciencedirect') !== -1) {
+        if (url.toLowerCase().indexOf('sciencedirect') !== -1) {
           $('#url').val('');
           $('#url').parent().after('<div class="well" id="sdsorry" style="margin-top:5px;"><p>Sorry, Science Direct pages cannot be accessed via our website. Please try our plugin though, it will work for you on Science Direct pages!</p></div>');
           setTimeout(function() { $('#sdsorry').remove(); }, 5000);
           return;
-        }*/
+        }
         try {
           if (window.location.search.length === 0 && 'pushState' in window.history) window.history.pushState("", "find", '?url=' + encodeURIComponent(url));
         } catch(err) {}

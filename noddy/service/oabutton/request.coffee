@@ -11,7 +11,7 @@ to create a request the url and type are required, What about story?
   email: "email address of person to contact to request",
   count: "the count of how many people support this request",
   createdAt: "date request was created",
-  status: "help OR moderate OR progress OR hold OR refused OR received",
+  status: "help OR moderate OR progress OR hold OR refused OR received OR closed",
   receiver: "unique ID that the receive endpoint will use to accept one-time submission of content",
   title: "article title",
   doi: "article doi",
@@ -55,6 +55,8 @@ API.service.oab.request = (req,uacc,fast) ->
     delete req.dom
   return false if JSON.stringify(req).indexOf('<script') isnt -1
   req.type ?= 'article'
+  req.doi = req.url if not req.doi? and req.url? and req.url.indexOf('10.') isnt -1 and req.url.split('10.')[1].indexOf('/') isnt -1
+  req.doi = '10.' + req.doi.split('10.')[1] if req.doi.indexOf('10.') isnt 0
   if req.url? and req.url.indexOf('eu.alma.exlibrisgroup.com') isnt -1
     req.url += (if req.url.indexOf('?') is -1 then '?' else '&') + 'oabLibris=' + Random.id()
     if req.title? and typeof req.title is 'string' and req.title.length > 0 and texist = oab_request.find {title:req.title,type:req.type}
@@ -89,7 +91,16 @@ API.service.oab.request = (req,uacc,fast) ->
             isauthor = a.family and e.toLowerCase().indexOf(a.family.toLowerCase()) isnt -1
         if isauthor and not API.service.oab.dnr(e) and API.mail.validate(e, API.settings.service?.openaccessbutton?.mail?.pubkey).is_valid
           req.email = e
+          if req.author
+            for author in req.author
+              try
+                if req.email.toLowerCase().indexOf(author.family) isnt -1
+                  req.author_affiliation = author.affiliation[0].name
+                  break
           break
+    else if req.author and not req.author_affiliation
+      try
+        req.author_affiliation = req.author[0].affiliation[0].name # first on the crossref list is the first author so we assume that is the author to contact
     req.keywords ?= meta?.keywords ? []
     req.title ?= meta?.title ? ''
     req.doi ?= meta?.doi ? ''
@@ -98,8 +109,18 @@ API.service.oab.request = (req,uacc,fast) ->
     req.issn = meta?.issn ? ''
     req.publisher = meta?.publisher ? ''
     req.year = meta?.year
+    if not req.email and req.author_affiliation
+      try
+        for author in req.author
+          if author.affiliation[0].name is req.author_affiliation
+            # it would be possible to lookup ORCID here if the author has one in the crossref data, but that would only get us an email for people who make it public
+            # previous analysis showed that this is rare. So not doing it yet
+            email = API.use.hunter.email {company: req.author_affiliation, first_name: author.family, last_name: author.given}, API.settings.service.openaccessbutton.hunter.api_key
+            if email?.email?
+              req.email = email.email
+              break
 
-  if fast and req.doi and (not req.journal or not req.year)
+  if fast and req.doi and (not req.journal or not req.year or not req.title)
     try
       cr = API.use.crossref.works.doi req.doi
       req.title = cr.title[0]
@@ -109,6 +130,7 @@ API.service.oab.request = (req,uacc,fast) ->
       req.subject ?= cr.subject
       req.publisher ?= cr.publisher
       req.year = cr['published-print']['date-parts'][0][0] if cr['published-print']?['date-parts']? and cr['published-print']['date-parts'].length > 0 and cr['published-print']['date-parts'][0].length > 0
+      req.crossref_type = cr.type
       req.year ?= cr.created['date-time'].split('-')[0] if cr.created?['date-time']?
 
   if req.journal and not req.sherpa? # doing this even on fast cos we may be able to close immediately. If users say too slow now, disable this on fast again
@@ -134,16 +156,31 @@ API.service.oab.request = (req,uacc,fast) ->
       nres = oab_request.search 'rating:0 AND story.exact:"' + req.story + '"'
       req.rating = 1 if nres.hits.total is 0
 
-  req.status = if not req.story or not req.title or not req.email or not req.user? then "help" else "moderate"
+  req.status ?= if not req.story or not req.title or not req.email or not req.user? then "help" else "moderate"
   if req.year
     try
       req.year = parseInt(req.year) if typeof req.year is 'string'
       if req.year < 2000
         req.status = 'closed'
         req.closed_on_create = true
+        req.closed_on_create_reason = 'pre2000'
+    try
+      if req.fast and (new Date()).getFullYear() - req.year > 5 # only doing these on fast means only doing them via UI for now
+        req.status = 'closed'
+        req.closed_on_create = true
+        req.closed_on_create_reason = 'gt5'
+  if req.fast and not req.doi?
+    req.status = 'closed'
+    req.closed_on_create = true
+    req.closed_on_create_reason = 'nodoi'
+  if req.fast and req.crossref_type? and ['journal-article', 'proceedings-article', 'dissertation', 'report'].indexOf(req.crossref_type) is -1
+    req.status = 'closed'
+    req.closed_on_create = true
+    req.closed_on_create_reason = 'notarticle'
   if req.sherpa?.color? and typeof req.sherpa.color is 'string' and req.sherpa.color.toLowerCase() is 'white'
     req.status = 'closed'
     req.closed_on_create = true
+    req.closed_on_create_reason = 'sherpawhite'
 
   if req.location?.geo
     req.location.geo.lat = Math.round(req.location.geo.lat*1000)/1000 if req.location.geo.lat
@@ -156,14 +193,23 @@ API.service.oab.request = (req,uacc,fast) ->
   if req.journal? and typeof req.journal is 'string'
     try req.journal = req.journal.charAt(0).toUpperCase() + req.journal.slice(1)
   oab_request.update rid, req
+  if req.fast and req.user?.email?
+    try
+      tmpl = API.mail.template 'initiator_confirmation.html'
+      sub = API.service.oab.substitute tmpl.content, {_id: req._id, url: req.url, title:(req.title ? req.url) }
+      API.mail.send
+        service: 'openaccessbutton',
+        from: sub.from ? API.settings.service.openaccessbutton.mail.from
+        to: req.user.email
+        subject: sub.subject ? 'New request created ' + req._id
+        html: sub.content
   if req.story
-    API.mail.send {
-      service: 'openaccessbutton',
-      from: 'requests@openaccessbutton.org',
-      to: API.settings.service.openaccessbutton.notify.request,
-      subject: 'New request created ' + req._id,
+    API.mail.send
+      service: 'openaccessbutton'
+      from: 'requests@openaccessbutton.org'
+      to: API.settings.service.openaccessbutton.notify.request
+      subject: 'New request created ' + req._id
       text: (if API.settings.dev then 'https://dev.openaccessbutton.org/request/' else 'https://openaccessbutton.org/request/') + req._id
-    }
   return req
 
 API.service.oab.support = (rid,story,uacc) ->
