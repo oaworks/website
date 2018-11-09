@@ -1,0 +1,13 @@
+{{SUBJECT We can't process your request }}
+
+<p>Hi,</p>
+
+<p>We received your request for "<a href="https://openaccessbutton.org/request/{{_id}}">{{title}}</a>". Unfortunately, the story you submitted didn't pass our moderation process and your request hasn't been sent to the author.</p>
+
+<p>Authors are more likely to make their research openly available if stories are appropriate, specific, and focus on why their work is important to you using positive, welcoming language.</p>
+
+<p>Thank you for using the Open Access Button.</p>
+
+<p>Kind regards,</p>
+<p>Natalia</p>
+<p>Open Access Button Request Manager</p>
