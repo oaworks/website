@@ -138,7 +138,7 @@ API.add 'service/oab/request/:rid',
             n.crossref_type = cr.type if not r.crossref_type?
             n.year ?= cr.created['date-time'].split('-')[0] if not r.year? and cr.created?['date-time']?
         r.author_affiliation = n.author_affiliation if n.author_affiliation?
-        if not r.email and r.author and r.author.length and (r.author[0].affiliation? or r.author_affiliation)
+        if (not r.email and not n.email) and r.author and r.author.length and (r.author[0].affiliation? or r.author_affiliation)
           try
             email = API.use.hunter.email {company: (r.author_affiliation ? r.author[0].affiliation[0].name), first_name: r.author[0].family, last_name: r.author[0].given}, API.settings.service.openaccessbutton.hunter.api_key
             if email?.email?

@@ -93,7 +93,6 @@
       var story = $('#story').val().toLowerCase();
       var chars = story.length;
       var words = story.split(' ').length;
-      console.log(chars + ' ' + words);
       var sg = '';
       if (words < 7) {
         $('#story').css('border-color','red');
@@ -173,7 +172,7 @@
         success: function(data) {
           $('.saved').show();
           if ($('#askingforstory').length) {
-            setTimeout(function() { window.location = window.location.href },1500);
+            setTimeout(function() { window.location.href = window.location.href },1500);
           } else {
             setTimeout(function() {$('.saved').hide()},2000);
           }
@@ -245,7 +244,7 @@
           url:api+'/request/' + rid + '/admin/' + act,
           beforeSend: function (request) { request.setRequestHeader("x-apikey", noddy.apikey); },
         });
-        setTimeout(function() { window.location = window.location.href; }, 4000);
+        setTimeout(function() { window.location.href = window.location.href; }, 4000);
       }
     }
 
@@ -256,7 +255,7 @@
         beforeSend: function (request) { request.setRequestHeader("x-apikey", noddy.apikey); },
       });
       $('#admin').html('<p>This request has been deleted. You will be redirected to the requests page.</p>');
-      setTimeout(function() { window.location = '/request'; }, 2000);
+      setTimeout(function() { window.location.href = '/request'; }, 2000);
     }
 
     /*var scrape = function() {
@@ -293,7 +292,7 @@
         opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", noddy.apikey); }
         $.ajax(opts);
       } else {
-        window.location = '/account?oabnxt=/request/' + rid + encodeURIComponent('?support=true');
+        window.location.href = '/account?oabnxt=/request/' + rid + encodeURIComponent('?support=true');
       }
     }
 
@@ -457,7 +456,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       }
 
       var re = '';
-      if (rec.story && rec.rating === 1) {
+      if (rec.story && rec.rating !== 0 && rec.rating !== "0") {
         re += '<div class="well" style="background-color:#FFFFFC;"><p>';
         var frn;
         if (rec.user && rec.user.firstname) {
@@ -497,13 +496,13 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
         } else {
           re += '<p>The article you need is probably too old to make freely available, we\'re sorry. If you think this is a mistake, <a href="/feedback#general">let us know</a>. Thanks for using the Open Access Button, try again soon.</p>';
         }
-      } else if ( rec.status !== 'closed' && rec.status !== 'received' && (!rec.title || !rec.email || !rec.story || rec.rating === 0) ) {
+      } else if ( rec.status !== 'closed' && rec.status !== 'received' && (!rec.title || !rec.email || !rec.story || rec.rating === 0 || rec.rating === "0") ) {
         if (rec.user === undefined) {
           re += '<p>The author can make this ' + rec.type + ' available to everyone for free - legally. All you need to do is ';
           if (!noddy.loggedin()) re += 'login and '; 
           re += 'tell us how reading this research would help you!</p>';
           if (noddy.loggedin()) {
-            re += '<p><textarea style="min-height:100px;" class="form-control" id="story" placeholder="How would getting access to this research help you? We\'ll include your reason in an email to the author."></textarea></p>';
+            re += '<p><textarea style="min-height:100px;box-shadow:none;" class="form-control" id="story" placeholder="How would getting access to this research help you? We\'ll include your reason in an email to the author."></textarea></p>';
             re += '<p id="askingforstory" style="margin-bottom:60px;"><span id="suggestion" style="margin-top:-5px;color:#666;"></span><br><a class="btn btn-action storyupdate" disabled="true" href="#" id="update">Send request</a></p>';
             re += '<p class="saved" style="display:none;">Thanks! Please wait a moment while we reload the page...</p>';
           } else {
@@ -529,7 +528,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       }
 
       if ( rec.status !== 'closed' && rec.status !== 'received' && !(noddy.loggedin() && rec.user && rec.user.id && noddy.user && noddy.user.account && noddy.user.account._id === rec.user.id) ) {
-        re += '<p>Are you the author? Please <a style="text-decoration:underline;" class="pinger" id="shareYourWork" href="/response/' + rec.receiver + '">share your work</a> or <a class="pinger" id="contactToShareWork" style="text-decoration:underline;" href="mailto:requests@openaccessbutton.org?subject=I\'m%20the%20author%20for%20request%20' + rid + '&body=Hi\,%0A%0AI%20the%20author%20of%20this%20paper.%20Please%20tell%20me%20how%20I%20can%20fulfil%20this%20request." target="_blank">contact us</a>!</p>';
+        re += '<p style="margin-top:10px;">Are you the author? Please <a style="text-decoration:underline;" class="pinger" id="shareYourWork" href="/response/' + rec.receiver + '">share your work</a> or <a class="pinger" id="contactToShareWork" style="text-decoration:underline;" href="mailto:requests@openaccessbutton.org?subject=I\'m%20the%20author%20for%20request%20' + rid + '&body=Hi\,%0A%0AI%20the%20author%20of%20this%20paper.%20Please%20tell%20me%20how%20I%20can%20fulfil%20this%20request." target="_blank">contact us</a>!</p>';
       }
 
       if (noddy.hasRole('openaccessbutton.admin')) {
@@ -543,7 +542,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       $('#info').append(re);
 
       var acts = '';
-      if (rec.status !== 'help' && rec.status !== 'received' && rec.status !== 'closed' && rec.status !== 'refused') acts += '<h4>Show your support</h4>';
+      if (rec.status !== undefined && rec.status !== "" && rec.status !== 'help' && rec.status !== 'received' && rec.status !== 'closed' && rec.status !== 'refused') acts += '<h4>Show your support</h4>';
       if (rec.count && rec.count > 1) acts += '<p>' + (rec.count) + ' ' + (rec.count === 1 ? 'person supports' : 'people support') + ' this request</p>';
       if (rec.status !== 'received' && rec.story) {
         if (noddy.loggedin() && rec.user && rec.user.id && noddy.user && noddy.user.account && noddy.user.account._id === rec.user.id) {
@@ -557,7 +556,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       } else if (rec.status === 'received') {
         acts = acts.replace(' supports ',' supported ').replace(' support ',' supported ');
       }
-      if (rec.status !== 'help' && rec.status !== 'received' && rec.status !== 'closed' && rec.status !== 'refused') {
+      if (rec.status !== undefined && rec.status !== "" && rec.status !== 'help' && rec.status !== 'received' && rec.status !== 'closed' && rec.status !== 'refused') {
         // taking embed link out <a href="#" id="showembed" class="btn btn-xs btn-action panels pull-right" style="margin-left:20px;height:28px;font-size:0.9em;">Embed</a>
         acts += '<div class="clearfix" style="margin-top:20px;margin-bottom:40px;" id="sharebuttons"><p>Share this request to help make it successful</p> \
           <div style="display:inline;margin-bottom:-10px;padding-left:20px;" class="pull-right"> \
@@ -574,7 +573,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       if ($('#story').length) $('#story').bind('keyup',suggest);
       $('#showembed').bind('click',function(e) { e.preventDefault(); $('#embed').toggle(); });
       if ($('#showadmin').length) {
-        $('#showadmin').bind('click',function(e) { e.preventDefault(); $('#admin').toggle(); });
+        $('#showadmin').bind('click',function(e) { e.preventDefault(); $('#admin').toggle(); $('#adminframe').toggle(); });
         $('#showadmin').trigger('click');
       }
       if ($('#addsupport').length) $('#addsupport').bind('click',addsupport);

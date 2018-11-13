@@ -56,7 +56,7 @@ API.service.oab.request = (req,uacc,fast) ->
   return false if JSON.stringify(req).indexOf('<script') isnt -1
   req.type ?= 'article'
   req.doi = req.url if not req.doi? and req.url? and req.url.indexOf('10.') isnt -1 and req.url.split('10.')[1].indexOf('/') isnt -1
-  req.doi = '10.' + req.doi.split('10.')[1] if req.doi.indexOf('10.') isnt 0
+  req.doi = '10.' + req.doi.split('10.')[1] if req.doi? and req.doi.indexOf('10.') isnt 0
   if req.url? and req.url.indexOf('eu.alma.exlibrisgroup.com') isnt -1
     req.url += (if req.url.indexOf('?') is -1 then '?' else '&') + 'oabLibris=' + Random.id()
     if req.title? and typeof req.title is 'string' and req.title.length > 0 and texist = oab_request.find {title:req.title,type:req.type}
@@ -137,18 +137,19 @@ API.service.oab.request = (req,uacc,fast) ->
     try
       sherpa = API.use.sherpa.romeo.search {jtitle:req.journal}
       try req.sherpa = {color: sherpa.publishers[0].publisher[0].romeocolour[0]}
-      try
-        req.sherpa.journal = sherpa.journals[0].journal[0]
-        for k of req.sherpa.journal
-          try
-            if _.isArray(req.sherpa.journal[k]) and req.sherpa.journal[k].length is 1
-              req.sherpa.journal[k] = req.sherpa.journal[k][0]
-      try
-        req.sherpa.publisher = sherpa.publishers[0].publisher[0]
-        for k of req.sherpa.publisher
-          try
-            if _.isArray(req.sherpa.publisher[k]) and req.sherpa.publisher[k].length is 1
-              req.sherpa.publisher[k] = req.sherpa.publisher[k][0]
+      # a problem with sherpa postrestrictions data caused saves to fail, which caused further problems. Disabling this for now. Need to wrangle sherpa data into a better shape
+      #try
+      #  req.sherpa.journal = sherpa.journals[0].journal[0]
+      #  for k of req.sherpa.journal
+      #    try
+      #      if _.isArray(req.sherpa.journal[k]) and req.sherpa.journal[k].length is 1
+      #        req.sherpa.journal[k] = req.sherpa.journal[k][0]
+      #try
+      #  req.sherpa.publisher = sherpa.publishers[0].publisher[0]
+      #  for k of req.sherpa.publisher
+      #    try
+      #      if _.isArray(req.sherpa.publisher[k]) and req.sherpa.publisher[k].length is 1
+      #        req.sherpa.publisher[k] = req.sherpa.publisher[k][0]
 
   if req.story
     res = oab_request.search 'rating:1 AND story.exact:"' + req.story + '"'
@@ -165,15 +166,15 @@ API.service.oab.request = (req,uacc,fast) ->
         req.closed_on_create = true
         req.closed_on_create_reason = 'pre2000'
     try
-      if req.fast and (new Date()).getFullYear() - req.year > 5 # only doing these on fast means only doing them via UI for now
+      if fast and (new Date()).getFullYear() - req.year > 5 # only doing these on fast means only doing them via UI for now
         req.status = 'closed'
         req.closed_on_create = true
         req.closed_on_create_reason = 'gt5'
-  if req.fast and not req.doi?
+  if fast and not req.doi?
     req.status = 'closed'
     req.closed_on_create = true
     req.closed_on_create_reason = 'nodoi'
-  if req.fast and req.crossref_type? and ['journal-article', 'proceedings-article', 'dissertation', 'report'].indexOf(req.crossref_type) is -1
+  if fast and req.crossref_type? and ['journal-article', 'proceedings-article', 'dissertation', 'report'].indexOf(req.crossref_type) is -1
     req.status = 'closed'
     req.closed_on_create = true
     req.closed_on_create_reason = 'notarticle'
@@ -193,7 +194,7 @@ API.service.oab.request = (req,uacc,fast) ->
   if req.journal? and typeof req.journal is 'string'
     try req.journal = req.journal.charAt(0).toUpperCase() + req.journal.slice(1)
   oab_request.update rid, req
-  if req.fast and req.user?.email?
+  if fast and req.user?.email?
     try
       tmpl = API.mail.template 'initiator_confirmation.html'
       sub = API.service.oab.substitute tmpl.content, {_id: req._id, url: req.url, title:(req.title ? req.url) }

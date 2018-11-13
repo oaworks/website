@@ -16,17 +16,20 @@ jQuery(document).ready(function() {
     $('#login .well').css('min-height','250px');
   }
   var aftersave = function() {
-    if (nod._object.profile.firstname && ($('.username').html().length === 0 || $('.username').html().indexOf('@') !== -1)) {
-      $('.username').html(nod.profile.firstname);
+    if (nod._object.profile && nod._object.profile.firstname && ($('.username').html().length === 0 || $('.username').html().indexOf('@') !== -1)) {
+      $('.username').html(nod._object.profile.firstname);
     }
-    if (nod._object.profile.firstname && nod._object.profile.lastname && nod._object.service && nod._object.service.openaccessbutton && nod._object.service.openaccessbutton.profile && nod._object.service.openaccessbutton.profile.profession) {
-      $('#setinfo').hide();
-      $('#sayhello').show();
-      if (window.location.href.indexOf('oabnxt=') !== -1) {
-        $('#tonext').attr('href',window.location.href.split('oabnxt=')[1].split('&')[0]);
-        $('#tonextalert').show();
+    setTimeout(function() {
+      if (nod._object.profile && nod._object.profile.firstname && nod._object.profile.lastname && nod._object.service && nod._object.service.openaccessbutton && nod._object.service.openaccessbutton.profile && nod._object.service.openaccessbutton.profile.profession) {
+        $('#setinfo').hide();
+        $('#sayhello').show();
+        if (window.location.href.indexOf('oabnxt=') !== -1) {
+          $('#tonext').attr('href',window.location.href.split('oabnxt=')[1].split('&')[0]);
+          $('#tonextalert').show();
+          window.location.href = window.location.href.split('oabnxt=')[1].split('&')[0];
+        }
       }
-    }
+    }, 1000);
   }
 
   var afterlogin = function() {
@@ -50,7 +53,7 @@ jQuery(document).ready(function() {
       if (window.location.href.indexOf('oabnxt=') !== -1) {
         $('#tonext').attr('href',window.location.href.split('oabnxt=')[1].split('&')[0]);
         $('#tonextalert').show();
-        window.location = window.location.href.split('oabnxt=')[1].split('&')[0];
+        window.location.href = window.location.href.split('oabnxt=')[1].split('&')[0];
       }
     }
   }
