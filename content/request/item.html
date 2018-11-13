@@ -75,18 +75,18 @@
         return t;
       }(document, "script", "twitter-wjs"));
     }
-    
+
 
     var suggestions = {
-      test: 'Are you just trying out the service? A better way to learn is by reading <a href="">this blog</a>.',
-      dear: 'No need to greet the author, we\'ll do that! Just focus on why you need the article.',
-      'hi ': 'No need to greet the author, we\'ll do that! Just focus on why you need the article.',
-      'hello': 'No need to greet the author, we\'ll do that! Just focus on why you need the article.',
-      regards: 'No need to thank the author, we\'ll do that! Just focus on why you need the article.',
-      'thank you': 'No need to thank the author, we\'ll do that! Just focus on why you need the article.',
-      thesis: 'Top tip: Be specific with your request. e.g if you need it for your thesis, what exactly is your thesis about?',
-      research: 'Top tip: Be specific with your request. e.g if you need it for your research, what exactly is your research about?',
-      please: 'No need to ask the author to share, just focus your message on why you need the article. We\'ll send the author a polite request and just need you to tell us why.'
+      test: 'Are you just trying out the service? A better way to learn is by reading <a href="https://blog.openaccessbutton.org/making-more-research-open-access-one-paper-at-a-time-25b95cd36c8f">this blog</a> or <a href ="mailto:joe@openaccessbutton.org">getting in touch</a>.',
+      dear: 'No need to greet the author, we\'ll do that in the email! Focus your message on why you need the article.',
+      hi: 'No need to greet the author, we\'ll do that in the email! Focus your message on why you need the article.',
+      hello: 'No need to greet the author, we\'ll do that in the email! Focus your message on why you need the article.',
+      regards: 'No need to thank the author, we\'ll do that in the email! Focus your message on why you need the article.',
+      thank you: 'No need to thank the author, we\'ll do that in the email! Focus your message on why you need the article.',
+      please: 'You don\'t need to ask the author for the paper, we\'ll ask politely. Focus your message on why you need the article.',
+      thesis: 'Be specific with your reason. e.g if you need it for your thesis, what is your thesis about and why is it important?',
+      research: 'Be specific with your reason. e.g if you need it for your research, what is your research about and why is it important?',
     }
     var suggest = function(e) {
       $('#suggestion').html('');
@@ -98,25 +98,25 @@
       if (words < 7) {
         $('#story').css('border-color','red');
         $('.storyupdate').attr('disabled','true');
-        sg += 'Please write a bit more. ';
+        sg += 'Your reason is too short to send. ';
       } else {
         $('.storyupdate').removeAttr('disabled');
         if (words < 15) {
           $('#story').css('border-color','orange');
-          sg += 'Could be a bit longer... '
+          sg += 'Great! Good stories are normally longer, keep going! '
         } else if (words < 25) {
           $('#story').css('border-color','yellow');
-          sg += 'Sounds good! '
+          sg += 'Sounds good! Strong reasons help authors know why they should share their article with you! '
         } else {
           $('#story').css('border-color','green');
-          sg += 'Really great &#x1F60D; '
+          sg += 'Fantastic &#x1F60D;. '
         }
       }
       if (story.indexOf('@') !== -1 && story.indexOf('.') !== -1) sg += 'Don\'t worry about including your email, we\'ll send you the paper once the author shares it. ';
       if (story.indexOf('@') !== -1 && (story.indexOf('.c') !== -1 || story.indexOf('.o') !== -1 || story.indexOf('www.') !== -1 || story.indexOf('http') !== -1)) sg += 'Looks like you might be including the paper URL. If so, don\'t worry, we\'ll let the author know what you need. Just tell us why the paper is important to you. ';
       if (story.indexOf('10.') !== -1 && story.indexOf('/') !== -1) sg += 'Looks like you might be including the paper DOI. If so, don\'t worry, we\'ll let the author know what you need. Just tell us why the paper is important to you. ';
       if (rec && rec.title && story.indexOf(rec.title.toLowerCase()) !== -1) sg += 'Looks like you might be including the article title. If so, don\'t worry, we\'ll let the author know what you need. Just tell us why the paper is important to you. ';
-      if (story.indexOf('.') === -1 && story.split(' ')[0].length === 7 && !isNaN(parseInt(story.split(' ')[0]))) sg += 'Are you looking to sign in? If so go <a href="/account">here</a>. ';
+      if (story.indexOf('.') === -1 && story.split(' ')[0].length === 7 && !isNaN(parseInt(story.split(' ')[0]))) sg += 'Are you looking to sign in? If so go to the <a href="/account">login page</a>. ';
       for ( var s in suggestions ) {
         if (story.indexOf(s) !== -1) sg += suggestions[s] + ' ';
       }
@@ -239,7 +239,7 @@
       var act = $('#action').val();
       if (act) {
         $('#admin').hide();
-        $('#admin').after('<p style="color:orange;">Executing, please wait a few seconds for page refresh...</p>');
+        $('#admin').after('<p style="color:orange;">Working on it, please wait a few seconds for the page to refresh...</p>');
         $.ajax({
           type:'GET',
           url:api+'/request/' + rid + '/admin/' + act,
@@ -491,16 +491,16 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       if (rec.closed_on_create && rec.createdAt > Date.now()-10000) {
         re += '<p><b>Oh no! We can\'t start a request.</b></p>';
         if (rec.closed_on_create_reason == 'nodoi') {
-          re += '<p>We can\'t find a DOI for the article you need, we\'re sorry. If you think this is a mistake, <a href="/feedback#general">let us know</a>. Thanks for using the Open Access Button, try again soon.</p>';
+          re += '<p>We need a <a href="https://en.wikipedia.org/wiki/Digital_object_identifier">DOI</a> to process this request, but we can\'t find one for the article you need, we\'re sorry. If you think this is a mistake, <a href="/feedback#general">let us know</a>. If you can find one on the page, you can <a href ="/">retry with that</a>.</p>';
         } else if (rec.closed_on_create_reason == 'notarticle') {
-          re += '<p>We can\'t request this because it doesn\'t seem to be a journal article, we\'re sorry. If you think this is a mistake, <a href="/feedback#general">let us know</a>. Thanks for using the Open Access Button, try again soon.</p>';
+          re += '<p>We can\'t request this because it doesn\'t seem to be an academic journal article, we\'re sorry. If you think this is a mistake, <a href="/feedback#general">let us know</a>. Thanks for using the Open Access Button, try again soon.</p>';
         } else {
           re += '<p>The article you need is probably too old to make freely available, we\'re sorry. If you think this is a mistake, <a href="/feedback#general">let us know</a>. Thanks for using the Open Access Button, try again soon.</p>';
         }
       } else if ( rec.status !== 'closed' && rec.status !== 'received' && (!rec.title || !rec.email || !rec.story || rec.rating === 0) ) {
         if (rec.user === undefined) {
           re += '<p>The author can make this ' + rec.type + ' available to everyone for free - legally. All you need to do is ';
-          if (!noddy.loggedin()) re += 'login and '; 
+          if (!noddy.loggedin()) re += 'login and ';
           re += 'tell us how reading this research would help you!</p>';
           if (noddy.loggedin()) {
             re += '<p><textarea style="min-height:100px;" class="form-control" id="story" placeholder="How would getting access to this research help you? We\'ll include your reason in an email to the author."></textarea></p>';
