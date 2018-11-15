@@ -41,7 +41,7 @@
     </div>
   </div>
   <div class="row">
-    <div id="adminframe" class="col-md-12"></div>
+    <div id="adminframe" class="col-md-12" style="outline:1px solid orange;"></div>
   </div>
 </div>
 
@@ -157,7 +157,7 @@
         if ( $('#admin_title').length && $('#admin_title').val() ) data.title = $('#admin_title').val();
         if ( $('#admin_journal').length && $('#admin_journal').val() ) data.journal = $('#admin_journal').val();
         if ( $('#admin_doi').length && $('#admin_doi').val() ) data.doi = $('#admin_doi').val();
-        if ( $('#admin_story').length && $('#admin_story').val() ) data.story = $('#admin_story').val();
+        if ( $('#admin_story').length && ($('#admin_story').val() || $('#admin_story').val() !== rec.story) ) data.story = $('#admin_story').val();
         if ( $('#admin_notes').length && $('#admin_notes').val() ) data.notes = $('#admin_notes').val();
         adminsubmitting = false;
       }
@@ -171,11 +171,7 @@
         dataType: 'json',
         success: function(data) {
           $('.saved').show();
-          if ($('#askingforstory').length) {
-            setTimeout(function() { window.location.href = window.location.href },1500);
-          } else {
-            setTimeout(function() {$('.saved').hide()},2000);
-          }
+          setTimeout(function() {$('.saved').hide(); details(data); }, 1500);
         },
         error: function(data) {
           console.log('Save error');
@@ -238,13 +234,14 @@
       var act = $('#action').val();
       if (act) {
         $('#admin').hide();
-        $('#admin').after('<p style="color:orange;">Working on it, please wait a few seconds for the page to refresh...</p>');
+        $('#adminframe').hide();
+        $('#admin').after('<p style="color:orange;">Working on it, please wait a few seconds for the page to update...</p>');
         $.ajax({
           type:'GET',
           url:api+'/request/' + rid + '/admin/' + act,
           beforeSend: function (request) { request.setRequestHeader("x-apikey", noddy.apikey); },
         });
-        setTimeout(function() { window.location.href = window.location.href; }, 4000);
+        setTimeout(function() { runrequest(); }, 4000);
       }
     }
 
@@ -401,7 +398,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       dets += '</select>';
       dets += '<a class="btn btn-danger pull-right" id="delete" href="#">DELETE</a></p>';
       dets += '<p><input type="submit" id="submitchanges" value="Save changes before sending to author or any other action" class="btn btn-action btn-block"></p>';
-      dets += '<p class="saved" style="display:none;">Changes saved.</p>';
+      dets += '<p class="saved" style="display:none;">Changes saved, refreshing page.</p>';
       dets += '<p style="margin-top:20px;"><a class="btn btn-action" href="/response/' + record.receiver + '">View the response page for this request</a> ';
       dets += '<a class="btn btn-action pull-right" href="/admin?request=' + rid + '">Send email via admin UI about this request</a></p>';
       dets += '<p><textarea id="admin_notes" class="form-control" placeholder="Admin notes" style="min-height:200px;">';
@@ -411,7 +408,9 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
     }
 
     var details = function(data) {
-      rec = data.data;
+      rec = data.data !== undefined ? data.data : data;
+
+      $('#info').html('');
 
       var ttl = '';
       ttl += '<h2 style="color:#f04717;">';
@@ -504,7 +503,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
           if (noddy.loggedin()) {
             re += '<p><textarea style="min-height:100px;box-shadow:none;" class="form-control" id="story" placeholder="How would getting access to this research help you? We\'ll include your reason in an email to the author."></textarea></p>';
             re += '<p id="askingforstory" style="margin-bottom:60px;"><span id="suggestion" style="margin-top:-5px;color:#666;"></span><br><a class="btn btn-action storyupdate" disabled="true" href="#" id="update">Send request</a></p>';
-            re += '<p class="saved" style="display:none;">Thanks! Please wait a moment while we reload the page...</p>';
+            re += '<p class="saved" style="display:none;">Thanks! Please wait a moment while we refresh the page...</p>';
           } else {
             re += '<div class="input-group">\
               <input type="text" name="email" id="youremail" class="form-control" placeholder="Your email address"> \
@@ -520,7 +519,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
             if (!rec.email) re += '<p><input class="form-control" type="text" id="email" placeholder="Article author email"></p><p class="emailissue" style="display:none;font-size:0.9em;"></p>';
             if (!rec.doi) re += '<p><input class="form-control" type="text" id="doi" placeholder="Article DOI"></p>';
             re += '<p style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Save</a></p>';
-            re += '<p class="saved" style="display:none;">Changes saved.</p>';
+            re += '<p class="saved" style="display:none;">Changes saved, refreshing page.</p>';
           } else {
             re += '<p style="margin-bottom:40px;"><a href="/account?oabnxt=/request/' + rid + '" class="btn btn-block btn-action">Login / sign up to continue</a></p>';
           }
@@ -533,7 +532,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
 
       if (noddy.hasRole('openaccessbutton.admin')) {
         re += '<p style="text-align:right;"><a href="#" id="showadmin" style="color:orange;">Admin</a></p>';
-        re += '<div id="admin" style="display:none;"><div class="well" style="background-color:orange;">';
+        re += '<div id="admin"><div class="well" style="background-color:orange;">';
         re += admin(rec);
         re += '</div><div id="history"></div></div>';
         history(rec._id);
@@ -567,14 +566,13 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       $('#actions').html(acts);
 
       if (noddy.hasRole('openaccessbutton.admin') && rec.url && (rec.url.indexOf('http') === 0 || rec.url.indexOf('10.') === 0) && rec.status !== 'received' && rec.status !== 'closed' && rec.status !== 'refused') {
-        $('#adminframe').html('<iframe style="width:100%;height:800px;" src="' + (rec.url.indexOf('10.') === 0 ? 'https://doi.org/' : '') + rec.url + '"></iframe>');
+        $('#adminframe').html('<iframe style="width:100%;height:800px;" src="' + (rec.url.indexOf('10.') === 0 ? 'https://doi.org/' : '') + rec.url.replace('http://','https://') + '"></iframe>');
       }
 
       if ($('#story').length) $('#story').bind('keyup',suggest);
       $('#showembed').bind('click',function(e) { e.preventDefault(); $('#embed').toggle(); });
       if ($('#showadmin').length) {
         $('#showadmin').bind('click',function(e) { e.preventDefault(); $('#admin').toggle(); $('#adminframe').toggle(); });
-        $('#showadmin').trigger('click');
       }
       if ($('#addsupport').length) $('#addsupport').bind('click',addsupport);
       if ($('#blacklist').length) $('#blacklist').bind('click',blacklist);
