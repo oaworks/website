@@ -514,7 +514,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
             </div>';
           }
         } else {
-          if (!rec.email) re += '<p>Can you check <a target="_blank" href="' + rec.url + '">the article</a> for the author\'s email address for an author? It\'ll help us send your message much faster!</p>';
+          if (!rec.email) re += '<p>Can you check <a target="_blank" href="' + rec.url + '">the article</a> for the author\'s email address? It\'ll help us send your message much faster!</p>';
           if (noddy.loggedin()) {
             if (!rec.title) re += '<p><input class="form-control" type="text" id="title" placeholder="Article title"></p>';
             if (!rec.email) re += '<p><input class="form-control" type="text" id="email" placeholder="Article author email"></p><p class="emailissue" style="display:none;font-size:0.9em;"></p>';
