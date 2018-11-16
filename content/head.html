@@ -78,9 +78,13 @@
       $('.nottin').hide();
     }
 
-    if ( $('body').height() < $(window).height() ) {
-      $('body').css('min-height',$(window).height()+'px');
-      if ( window.location.pathname !== '/' && $('#footer').offset().top + $('#footer').height() < $(window).height() ) $('#footer').css('margin-top',$(window).height()-$('#footer').offset().top+'px');
+    $('body').css('min-height',$(window).height()+'px');
+    if ( window.location.pathname !== '/' && window.location.pathname !== '/request' ) {
+      if ( window.location.pathname === '/request' ) {
+        $('#footer').css('margin-top','200px')
+      } else if ( $('#footer').offset().top + $('#footer').height() < $(window).height() ) {
+        $('#footer').css('margin-top',$(window).height()-$('#footer').offset().top+'px');
+      }
     }
 
     var ping = function(e) {

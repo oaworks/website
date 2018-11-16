@@ -41,7 +41,7 @@
     </div>
   </div>
   <div class="row">
-    <div id="adminframe" class="col-md-12" style="outline:1px solid orange;"></div>
+    <div id="adminframe" class="col-md-12" style="display:none;outline:1px solid orange;"></div>
   </div>
 </div>
 
@@ -486,7 +486,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
         re += '</div>';
       }
 
-      if (rec.closed_on_create && rec.createdAt > Date.now()-10000) {
+      if (rec.closed_on_create) {
         re += '<p><b>Oh no! We can\'t start a request.</b></p>';
         if (rec.closed_on_create_reason == 'nodoi') {
           re += '<p>We need a <a href="https://en.wikipedia.org/wiki/Digital_object_identifier">DOI</a> to process this request, but we can\'t find one for the article you need, we\'re sorry. If you think this is a mistake, <a href="/feedback#general">let us know</a>. If you can find one on the page, you can <a href ="/">retry with that</a>.</p>';
@@ -532,7 +532,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
 
       if (noddy.hasRole('openaccessbutton.admin')) {
         re += '<p style="text-align:right;"><a href="#" id="showadmin" style="color:orange;">Admin</a></p>';
-        re += '<div id="admin"><div class="well" style="background-color:orange;">';
+        re += '<div id="admin" style="display:none;"><div class="well" style="background-color:orange;">';
         re += admin(rec);
         re += '</div><div id="history"></div></div>';
         history(rec._id);
@@ -567,6 +567,8 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
 
       if (noddy.hasRole('openaccessbutton.admin') && rec.url && (rec.url.indexOf('http') === 0 || rec.url.indexOf('10.') === 0) && rec.status !== 'received' && rec.status !== 'closed' && rec.status !== 'refused') {
         $('#adminframe').html('<iframe style="width:100%;height:800px;" src="' + (rec.url.indexOf('10.') === 0 ? 'https://doi.org/' : '') + rec.url.replace('http://','https://') + '"></iframe>');
+        $('#admin').show();
+        $('#adminframe').show();
       }
 
       if ($('#story').length) $('#story').bind('keyup',suggest);
