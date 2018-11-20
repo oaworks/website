@@ -141,7 +141,7 @@
   			method: 'GET',
   			success: function(data) {
   			  $('#plswait').remove();
-  			  $('#checkprogress').prepend('<p>Your job ' + (data.name !== undefined && data.name.length > 0 && data.name !== data._id ? data.name + ' ' : '') + 'is ' + data.progress.toFixed(2) + '% complete.' + (data.progress === 100 ? '' : '<br>You can download the results so far, and revisit this page any time to check further progress and download more.') + '</p>').show();
+  			  $('#checkprogress').prepend('<p>Your job ' + (data.name !== undefined && data.name.length > 0 && data.name !== data._id ? data.name + ' ' : '') + 'is ' + data.progress.toFixed(2) + '% complete.' + (data.progress === 100 ? '' : '</p><p>You can download the results so far, and revisit this page any time to check further progress and download more.') + '</p>').show();
   			},
   			error: function(data) {
   			  $('#plswait').remove();
