@@ -77,8 +77,8 @@ $.fn.holder.use.oabutton = {
     re += '<b><a href="/request/' + rec._id + '" style="word-wrap:break-word;overflow-wrap:break-word;">';
     re += rec.title ? rec.title : rec.url;
     re += '</a></b></p>';
-    re += '<p><a href="/request/' + rec._id + '" style="color:' + text + ';">' + status + '</a></p>';
-    if (rec.story && ( parseInt(rec.rating) === 1 || rec.rating === undefined ) ) re += '<p style="padding:10px 0px 10px 30px;"><a style="color:#383838;font-style:italic;font-weight:bold;font-size:1.2em;" href="/request/' + rec._id + '">' + rec.story + '</a></p>';
+    re += '<p style="color:' + text + ';">' + status + '</p>';
+    if (rec.story && ( parseInt(rec.rating) === 1 || rec.rating === undefined ) ) re += '<p style="padding:10px 0px 10px 30px;color:#383838;font-style:italic;font-weight:bold;font-size:1.2em;">' + rec.story + '</p>';
     re += '<p>Requested ';
     var un = rec['user.firstname'] ? rec['user.firstname'] : rec['user.username'];
     if (un && typeof un !== 'string') un = un[0];
@@ -90,12 +90,28 @@ $.fn.holder.use.oabutton = {
       } else {
         re += 'by a ';
       }
-      re += rec['user.profession'];
+      re += rec['user.profession'].toLowerCase();
     } else if (!un) {
       re += 'by an anonymous user ';
     }
     if (rec['user.affiliation'] && rec['user.affiliation'].length > 1) re += ' at ' + rec['user.affiliation'];
-    re += rec.created_date ? ' on ' + rec.created_date.split(' ')[0].split('-').reverse().join('/') : '';
+    if (rec.created_date) {
+      re += ', ';
+      var weeks = moment(Date.now()).diff(moment(rec.created_date.split(' ')[0]),'weeks');
+      if (weeks) {
+        if (weeks > 51) {
+          weeks = Math.floor(weeks/52);
+          re += weeks + ' year' + (weeks === 1 ? '' : 's') + ' ago';
+        } else if (weeks > 3) {
+          weeks = Math.floor(weeks/4);
+          re += weeks + ' month' + (weeks === 1 ? '' : 's') + ' ago';
+        } else {
+          re += weeks + ' week' + (weeks === 1 ? '' : 's') + ' ago';
+        }
+      } else {
+        re += moment(rec.created_date.split(' ')[0]).calendar(null, {sameDay: '[today]', nextDay: '[tomorrow]', nextWeek: '[on] dddd', lastDay: '[yesterday]', lastWeek: '[last] dddd', sameElse: '[on] DD/MM/YYYY'});
+      }
+    }
     re += '</p>';
     if (rec.count && rec.count > 1) re += '<p>' + rec.count + ' people support this request</p>';
     re += '</div>';
@@ -113,6 +129,10 @@ $.fn.holder.use.oabutton = {
     return res;
   },
   review: function(data) {
+    if (window.firstandnotadmin) {
+      window.firstandnotadmin = false;
+      $('[do="remove"]').addClass('triggeronfirstfilter').hide();
+    }
     var options = $(this).holder.options;
     if (data === undefined) data = options.response;
     var fromclass='.from' + options.query.from;
@@ -124,11 +144,20 @@ $.fn.holder.use.oabutton = {
       $('div.' + options.class + '.additional.results').remove();
       $('div.' + options.class + '.results').show().html('');
     }
+    var stories = [];
+    for ( var rc in options.records ) {
+      if (rc.story !== undefined) stories.push(rc.story[0].toLowerCase().replace(/ /g,''));
+    }
     var results = data.hits.hits;
+    var isadmin = false;
+    try { isadmin = noddy.hasRole('openaccessbutton.admin'); } catch(err) {}
     for ( var r in results ) {
       var rec = options.transform(results[r]);
-      options.records.push(rec);
-      $('.' + options.class + '.results'+fromclass).append(options.record(rec,r));
+      if (isadmin || rec.story === undefined || stories.indexOf(rec.story[0].toLowerCase().replace(/ /g,'')) === -1) {
+        if (rec.story !== undefined) stories.push(rec.story[0].toLowerCase().replace(/ /g,''));
+        options.records.push(rec);
+        $('.' + options.class + '.results'+fromclass).append(options.record(rec,r));
+      }
     }
     $('.requestcount').html(options.response.hits.total);
   }

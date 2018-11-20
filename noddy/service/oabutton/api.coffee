@@ -1,4 +1,5 @@
 
+import moment from 'moment'
 
 # these are global so can be accessed on other oabutton files
 @oab_support = new API.collection {index:"oab",type:"support"}
@@ -98,6 +99,7 @@ API.add 'service/oab/request/:rid',
           n.rating ?= this.request.body.rating if this.request.body.rating? and this.request.body.rating isnt r.rating
           n.name ?= this.request.body.name if this.request.body.name? and this.request.body.name isnt r.name
           n.email ?= this.request.body.email if this.request.body.email? and this.request.body.email isnt r.email
+          n.author_affiliation ?= this.request.body.author_affiliation if this.request.body.author_affiliation? and this.request.body.author_affiliation isnt r.author_affiliation
           n.story ?= this.request.body.story if this.request.body.story? and this.request.body.story isnt r.story
           n.journal ?= this.request.body.journal if this.request.body.journal? and this.request.body.journal isnt r.journal
           n.notes = this.request.body.notes if this.request.body.notes? and this.request.body.notes isnt r.notes
@@ -106,6 +108,11 @@ API.add 'service/oab/request/:rid',
         n.url ?= this.request.body.url if this.request.body.url? and this.request.body.url isnt r.url
         n.title ?= this.request.body.title if this.request.body.title? and this.request.body.title isnt r.title
         n.doi ?= this.request.body.doi if this.request.body.doi? and this.request.body.doi isnt r.doi
+        if n.story
+          res = oab_request.search 'rating:1 AND story.exact:"' + n.story + '"'
+          if res.hits.total
+            nres = oab_request.search 'rating:0 AND story.exact:"' + n.story + '"'
+            n.rating = 1 if nres.hits.total is 0
         if not n.status?
           if (not r.title and not n.title) || (not r.email and not n.email) || (not r.story and not n.story)
             n.status = 'help' if r.status isnt 'help'
@@ -115,6 +122,27 @@ API.add 'service/oab/request/:rid',
           try n.title = n.title.charAt(0).toUpperCase() + n.title.slice(1)
         if n.journal? and typeof n.journal is 'string'
           try n.journal = n.journal.charAt(0).toUpperCase() + n.journal.slice(1)
+        if not n.doi? and not r.doi? and r.url? and r.url.indexOf('10.') isnt -1 and r.url.split('10.')[1].indexOf('/') isnt -1
+          n.doi = '10.' + r.url.split('10.')[1]
+          r.doi = n.doi
+        if r.doi and not r.title and not n.title
+          try
+            cr = API.use.crossref.works.doi r.doi
+            n.title = cr.title[0]
+            n.author ?= cr.author if not r.author?
+            n.journal ?= cr['container-title'][0] if cr['container-title']? and not r.journal?
+            n.issn ?= cr.ISSN[0] if cr.ISSN? and not r.issn?
+            n.subject ?= cr.subject if not r.subject?
+            n.publisher ?= cr.publisher if not r.publisher?
+            n.year = cr['published-print']['date-parts'][0][0] if not r.year? and cr['published-print']?['date-parts']? and cr['published-print']['date-parts'].length > 0 and cr['published-print']['date-parts'][0].length > 0
+            n.crossref_type = cr.type if not r.crossref_type?
+            n.year ?= cr.created['date-time'].split('-')[0] if not r.year? and cr.created?['date-time']?
+        r.author_affiliation = n.author_affiliation if n.author_affiliation?
+        if (not r.email and not n.email) and r.author and r.author.length and (r.author[0].affiliation? or r.author_affiliation)
+          try
+            email = API.use.hunter.email {company: (r.author_affiliation ? r.author[0].affiliation[0].name), first_name: r.author[0].family, last_name: r.author[0].given}, API.settings.service.openaccessbutton.hunter.api_key
+            if email?.email?
+              n.email = email.email
         oab_request.update(r._id,n) if JSON.stringify(n) isnt '{}'
         return oab_request.get r._id # return how it now looks? or just return success?
       else
@@ -160,6 +188,8 @@ API.add 'service/oab/availabilities',
 API.add 'service/oab/requests',
   get: () -> return oab_request.search this.queryParams
   post: () -> return oab_request.search this.bodyParams
+
+API.add 'service/oab/requests.csv', { get: (() -> API.convert.json2csv2response(this, oab_request.search(this.queryParams ? this.bodyParams))), post: (() -> API.convert.json2csv2response(this, oab_request.search(this.queryParams ? this.bodyParams))) }
 
 API.add 'service/oab/history',
   get: () -> return oab_request.history this.queryParams
@@ -256,10 +286,14 @@ API.add 'service/oab/dnr',
 
 API.add 'service/oab/bug',
   post: () ->
+    whoto = ['help@openaccessbutton.org']
+    try
+      if this.request.body?.form is 'wrong'
+        whoto.push 'requests@openaccessbutton.org'
     API.mail.send {
       service: 'openaccessbutton',
       from: 'help@openaccessbutton.org',
-      to: ['help@openaccessbutton.org'],
+      to: whoto,
       subject: 'Feedback form submission',
       text: JSON.stringify(this.request.body,undefined,2)
     }
@@ -284,29 +318,46 @@ API.add 'service/oab/import',
             rq = oab_request.get p._id
             if rq
               resp.found += 1
-              update = {}
+              updates = []
+              update = []
               for up of p
                 p[up] = undefined if p[up] is 'DELETE' # this is not used yet
-                if (not p[up]? or p[up]) and p[up] not in ['createdAt','created_date']
+                if (not p[up]? or p[up]) and p[up] not in ['createdAt','created_date','plugin','from','embedded','names']
                   if up.indexOf('refused.') is 0 and ( not rq.refused? or rq.refused[up.split('.')[1]] isnt p[up] )
-                    update.refused = {} if not update.refused?
+                    rq.refused ?= {}
+                    rq.refused[up.split('.')[1]] = p[up]
+                    update.refused ?= {}
                     update.refused[up.split('.')[1]] = p[up]
                   else if up.indexOf('received.') is 0 and ( not rq.received? or rq.received[up.split('.')[1]] isnt p[up] )
-                    update.received = {} if not update.received?
-                    update.received[up.split('.')[1]] = p[up]
+                    rq.received ?= {}
+                    rq.received[up.split('.')[1]] = p[up]
+                    update.received = rq.received
+                  else if up.indexOf('followup.') is 0
+                    if up isnt 'followup.date' and p['followup.count'] isnt rq.followup?.count
+                      rq.followup ?= {}
+                      rq.followup.count = p['followup.count']
+                      rq.followup.date ?= []
+                      rq.followup.date.push moment(Date.now(), "x").format "YYYYMMDD"
+                      update.followup = rq.followup
                   else if up is 'sherpa.color' and ( not rq.sherpa? or rq.sherpa.color isnt p[up] )
-                    update.sherpa = {color:p[up]}
+                    rq.sherpa = {color:p[up]}
+                    update.sherpa = rq.sherpa
                   else if rq[up] isnt p[up]
-                    update[up] = p[up]
-              bstr = JSON.stringify update
-              if bstr isnt '{}'
-                update._bulk_import = rq._bulk_import ? {}
-                update._bulk_import[Date.now()] = bstr
-                oab_request.update rq._id, update
-                resp.updated += 1
+                    rq[up] = p[up]
+                    update[up] = rq[up]
+                  try
+                    rq._bulk_import ?= {}
+                    rq._bulk_import[Date.now()] = JSON.stringify update
+                    # TODO should update collection update to take lists of records that it updates in bulk
+                  rq.updatedAt = Date.now()
+                  rq.updated_date = moment(rq.updatedAt, "x").format "YYYY-MM-DD HHmm.ss"
+                  updates.push rq
+                  resp.updated += 1
             else
               resp.missing.push p._id
-        return {status:'success', data:resp}
+        if updates.length
+          resp.imports = oab_request.import(updates)
+        return resp
       catch err
         return {status:'error'}
 
@@ -318,20 +369,26 @@ API.add 'service/oab/import',
 
 API.add 'service/oab/export/:what',
   get:
-    # this is only used for exporting mail and changes so far, from the export page - and needs to be updated to handle new history style
     roleRequired: 'openaccessbutton.admin',
     action: () ->
       results = []
-      fields = if this.urlParams.what is 'changes' then ['_id','createdAt','created_date','action'] else []
+      fields = if this.urlParams.what is 'changes' then ['_id','createdAt','created_date','action'] else if this.urlParams.what is 'request' then ['_id','created_date','type','count','status','title','url','doi','journal','publisher','sherpa.color','name','names','email','author_affiliation','user.username','user.email','user.firstname','user.lastname','story','rating','receiver','followup.count','followup.date','refused.email','refused.date','received.date','received.from','received.description','received.url','received.admin','received.cron','received.notfromauthor','notes','plugin','from','embedded'] else []
       match = {}
       match.range = {createdAt: {}} if this.queryParams.from or this.queryParams.to
       match.range.createdAt.gte = this.queryParams.from if this.queryParams.from
       match.range.createdAt.lte = parseInt(this.queryParams.to) + 86400000 if this.queryParams.to
-      if this.urlParams.what is 'dnr' or this.urlParams.what is 'mail'
-        results = if this.urlParams.what is 'dnr' then oab_dnr.fetch(match, true) else mail_progress.fetch match, true
-        for r in results
-          for f of r
-            fields.push(f) if fields.indexOf(f) is -1
+      if this.urlParams.what is 'dnr' or this.urlParams.what is 'mail' or this.urlParams.what is 'request'
+        results = if this.urlParams.what is 'dnr' then oab_dnr.fetch(match, true) else if this.urlParams.what is 'request' then oab_request.fetch(match, true) else mail_progress.fetch match, true
+        for r of results
+          if this.urlParams.what isnt 'request'
+            for f of results[r]
+              fields.push(f) if fields.indexOf(f) is -1
+          else
+            results[r].names = []
+            if results[r].author?
+              for a in results[r].author
+                if a.family
+                  results[r].names.push a.given + ' ' + a.family
       else if this.urlParams.what is 'changes'
         res = oab_request.fetch_history match, true
         for r in res
@@ -459,7 +516,9 @@ API.add 'service/oab/job/:jid/results.csv',
   get: () ->
     res = API.job.results this.urlParams.jid, true
     inputs = []
-    csv = '"MATCH","AVAILABLE","SOURCE","REQUEST","TITLE","DOI"'
+    csv = '"MATCH",'
+    csv += '"BING","REVERSED",' if API.settings.dev
+    csv += '"AVAILABLE","SOURCE","REQUEST","TITLE","DOI"'
     liborder = []
     sources = []
     extras = []
@@ -491,6 +550,9 @@ API.add 'service/oab/job/:jid/results.csv',
         for extra in extras
           csv += '"' + (if ea[extra]? then ea[extra] else '') + '",'
       csv += '"' + (if row.match then row.match.replace('TITLE:','').replace(/"/g,'') + '","' else '","')
+      if API.settings.dev
+        csv += (if row.meta?.article?.bing then 'Yes' else 'No') + '","'
+        csv += (if row.meta?.article?.reversed then 'Yes' else 'No') + '","'
       av = 'No'
       if row.availability?
         for a in row.availability

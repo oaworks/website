@@ -4,19 +4,20 @@
 
 API.service.oab.job_started = (job) ->
   tmpl = API.mail.template 'bulk_start.html'
+  eml = job.email ? API.accounts.retrieve(job.user)?.emails[0].address
   if tmpl
-    sub = API.service.oab.substitute tmpl.content, {_id: job._id, useremail: job.email, jobname: job.name ? job._id}
+    sub = API.service.oab.substitute tmpl.content, {_id: job._id, useremail: eml, jobname: job.name ? job._id}
     API.mail.send
       service: 'openaccessbutton'
       html: sub.content
       subject: sub.subject
       from: sub.from ? API.settings.service.openaccessbutton.mail.from
-      to: job.email ? API.accounts.retrieve(job.user)?.emails[0].address
+      to: eml
   else
     API.mail.send
       service: 'openaccessbutton'
       from: 'help@openaccessbutton.org'
-      to: job.email ? API.accounts.retrieve(job.user)?.emails[0].address
+      to: eml
       subject: 'Sheet upload confirmation'
       text: 'Thanks! \n\nYour sheet has been uploaded to Open Access Button. You will hear from us again once processing is complete.\n\nThe Open Access Button Team'
 

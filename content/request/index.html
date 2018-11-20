@@ -16,7 +16,7 @@
 
 <div class="holder loading" style="margin:0px;padding:0px;position:fixed;top:80px;left:0;right:0;bottom:0;display:none;z-index:100;min-height:700px;">
   <div style="margin:60px auto 0px auto;width:400px;">
-    <img src="/static/spin_orange.svg" style="width:100%;padding-left:100px;">
+    <img src="/static/spin_orange.svg" style="width:100%;padding-left:60px;">
   </div>
 </div>
 
@@ -74,18 +74,17 @@ jQuery(document).ready(function() {
     $('.holder.search').val('status:help').trigger('change');
   });
 
+  window.firstandnotadmin = !noddy.hasRole('openaccessbutton.admin');
   var dfd = false;
   var df = [
     {
-      exists: {
-        field: "story"
+      term: {
+        rating: 1
       }
     },
     {
-      query: {
-        query_string: {
-          query: "story:*"
-        }
+      terms: {
+        status: ['help','moderate','progress','hold','received']
       }
     }
   ];
@@ -104,7 +103,7 @@ jQuery(document).ready(function() {
     if (window.location.href.indexOf('id=') !== -1) id = decodeURIComponent(window.location.href.split('id=')[1].split('&')[0]);
     if (id) {
       $('#footer').hide();
-      $('.loading').append('<h3 style="text-align:center;">We\'re warming up a request for you, this might take a few seconds</h3>').show();
+      $('.loading').append('<h3 style="text-align:center;">Hold on, we\'re getting ready to ask the author to make this available.<br><small>We\'ll need you to tell us why you need the research. Get thinking!</small></h3>').show();
       var dt = {
         url: id,
         type: window.location.href.indexOf('type=') !== -1 ? window.location.href.split('type=')[1].split('&')[0] : 'article'
@@ -112,6 +111,7 @@ jQuery(document).ready(function() {
       if (window.location.href.indexOf('embedded=') !== -1) dt.embedded = window.location.href.split('embedded=')[1].split('&')[0];
       if (window.location.href.indexOf('plugin=') !== -1) dt.plugin = window.location.href.split('plugin=')[1].split('&')[0];
       if (window.location.href.indexOf('from=') !== -1) dt.from = window.location.href.split('from=')[1].split('&')[0];
+      if (window.location.href.indexOf('exlibris=') !== -1) dt.exlibris = true;
       var opts = {
         type: 'POST',
         url: api+'/request',
@@ -143,17 +143,11 @@ jQuery(document).ready(function() {
           $.fn.holder.use.oabutton.defaultfilters = df;
         } else {
           $('#rangedisplay').show();
-          $('#requestfilters').append('<br><br><a id="shstory" href="#" style="text-decoration:underline;color:orange;">Show/hide requests without story</a>');
+          $('#requestfilters').append('<br><br><a id="shstory" href="#" style="text-decoration:underline;color:orange;">Show only requests with story</a>');
           $('#shstory').bind('click',function() {
-            if (dfd === false) {
-              dfd = true;
-              if ($.fn.holder.options.query.query.filtered.filter === undefined) $.fn.holder.options.query.query.filtered.filter = {};
-              if ($.fn.holder.options.query.query.filtered.filter.bool === undefined) $.fn.holder.options.query.query.filtered.filter.bool = {};
-              $.fn.holder.options.query.query.filtered.filter.bool.must = df;
-            } else {
-              dfd = false;
-              $.fn.holder.options.query.query.filtered.filter.bool.must = [];
-            }
+            if ($.fn.holder.options.query.query.filtered.filter === undefined) $.fn.holder.options.query.query.filtered.filter = {};
+            if ($.fn.holder.options.query.query.filtered.filter.bool === undefined) $.fn.holder.options.query.query.filtered.filter.bool = {};
+            $.fn.holder.options.query.query.filtered.filter.bool.must = [{exists: {field: 'story'}}, {query: {query_string: {query: "story:*"}}}];
             $.fn.holder.options.execute();
           });
         }

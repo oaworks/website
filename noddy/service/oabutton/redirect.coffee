@@ -14,14 +14,17 @@ API.service.oab.redirect = (url) ->
         # we have an exact alternative for this url
         return listing.redirect
       else if url.indexOf(listing.domain.replace('http://','').replace('https://','').split('/')[0]) isnt -1
+        url = url.replace('http://','https://') if listing.domain.indexOf('https://') is 0
+        listing.domain = listing.domain.replace('http://','https://') if url.indexOf('https://') is 0
         if (listing.fulltext and listing.splash and listing.identifier) or listing.element
           source = url
           if listing.fulltext
             # switch the url by comparing the fulltext and splash examples, and converting the url in the same way
             parts = listing.splash.split listing.identifier
-            diff = url.replace parts[0], ''
-            diff = diff.replace(parts[1]) if parts.length > 1
-            url = listing.fulltext.replace listing.identifier, diff
+            if url.indexOf(parts[0]) is 0 # can only successfully replace if the incoming url starts with the same as the start of the splash url
+              diff = url.replace parts[0], ''
+              diff = diff.replace(parts[1],'') if parts.length > 1
+              url = listing.fulltext.replace listing.identifier, diff
           else if listing.element and url.indexOf('.pdf') is -1
             try
               content = API.http.puppeteer url

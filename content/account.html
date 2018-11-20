@@ -16,17 +16,20 @@ jQuery(document).ready(function() {
     $('#login .well').css('min-height','250px');
   }
   var aftersave = function() {
-    if (nod._object.profile.firstname && ($('.username').html().length === 0 || $('.username').html().indexOf('@') !== -1)) {
-      $('.username').html(nod.profile.firstname);
+    if (nod._object.profile && nod._object.profile.firstname && ($('.username').html().length === 0 || $('.username').html().indexOf('@') !== -1)) {
+      $('.username').html(nod._object.profile.firstname);
     }
-    if (nod._object.profile.firstname && nod._object.profile.lastname && nod._object.service && nod._object.service.openaccessbutton && nod._object.service.openaccessbutton.profile && nod._object.service.openaccessbutton.profile.profession) {
-      $('#setinfo').hide();
-      $('#sayhello').show();
-      if (noddy.next) {
-        $('#tonext').attr('href',noddy.next);
-        $('#tonextalert').show();
+    setTimeout(function() {
+      if (nod._object.profile && nod._object.profile.firstname && nod._object.profile.lastname && nod._object.service && nod._object.service.openaccessbutton && nod._object.service.openaccessbutton.profile && nod._object.service.openaccessbutton.profile.profession) {
+        $('#setinfo').hide();
+        $('#sayhello').show();
+        if (window.location.href.indexOf('oabnxt=') !== -1) {
+          $('#tonext').attr('href',window.location.href.split('oabnxt=')[1].split('&')[0]);
+          $('#tonextalert').show();
+          window.location.href = window.location.href.split('oabnxt=')[1].split('&')[0];
+        }
       }
-    }
+    }, 1000);
   }
 
   var afterlogin = function() {
@@ -47,10 +50,10 @@ jQuery(document).ready(function() {
       $('#setinfo').show();
     } else {
       $('#sayhello').show();
-      if (noddy.next) {
-        $('#tonext').attr('href',noddy.next);
+      if (window.location.href.indexOf('oabnxt=') !== -1) {
+        $('#tonext').attr('href',window.location.href.split('oabnxt=')[1].split('&')[0]);
         $('#tonextalert').show();
-        window.location = noddy.next;
+        window.location.href = window.location.href.split('oabnxt=')[1].split('&')[0];
       }
     }
   }
@@ -62,7 +65,7 @@ jQuery(document).ready(function() {
   noddy.oauthFacebookAppId = '114282989239097';
   noddy.init({afterLogin: afterlogin, afterFailure: afterfailure });
   if (window.location.href.indexOf('email=') !== -1) {
-    $('#noddyEmail').val(window.location.href.split('next=')[0].split('email=')[1].split('&')[0]);
+    $('#noddyEmail').val(window.location.href.split('oabnxt=')[0].split('email=')[1].split('&')[0]);
     setTimeout(function() { $('#noddyLogin').trigger('click'); }, 100);
   }
   var a = window.location.href.indexOf('a=') !== -1 ? window.location.href.split('a=')[1].split('&')[0] : undefined;
@@ -149,7 +152,6 @@ jQuery(document).ready(function() {
           <option value="">Profession (required)</option>
           <option value="Student">Student</option>
           <option value="Health professional">Health professional</option>
-          <option value="Patient">Patient</option>
           <option value="Researcher">Researcher</option>
           <option value="Librarian">Librarian</option>
           <option value="Other">Other</option>

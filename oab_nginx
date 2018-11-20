@@ -66,6 +66,7 @@ server {
   add_header Cache-Control "public";
   add_header Access-Control-Allow-Origin *;
 
+  rewrite ^/requests /request;
   rewrite ^/request/.*$ /request/item last;
   rewrite ^/response/.*$ /response/item last;
 

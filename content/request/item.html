@@ -4,6 +4,24 @@
   /*]]>*/</script>
   <!-- End of openaccessbutton Zendesk Widget script -->
 
+<style>
+  body {
+    margin-top:0px;
+  }
+  .navbar-nav > li > a {
+    color: white;
+  }  
+  .navbar-nav > li > a:hover {
+    color: white;
+    background-color:transparent;
+  }
+  #mobnavheader {
+    color: white !important;
+  }
+  .mobnavtoggle {
+    color: white !important;
+  }
+</style>
 
 <div id="topper" class="strap strap-compact" style="background-color:transparent;background-size:100% 100%;background-repeat:no-repeat;margin-top:-80px;padding-top:100px;padding-bottom:0px;">
   <div class="container-fluid">
@@ -40,6 +58,9 @@
       <div id="actions"></div>
     </div>
   </div>
+  <div class="row">
+    <div id="adminframe" class="col-md-12" style="display:none;outline:1px solid orange;"></div>
+  </div>
 </div>
 
 
@@ -47,8 +68,10 @@
 <script>
   jQuery(document).ready(function() {
     $('#topnav').css('background-color','transparent');
+    $('#topnav').removeClass('navbar-fixed-top');
     $('code').html(window.location.href.split('#')[0].split('?')[0]);
 
+    var rec = undefined;
     var rid = window.location.pathname.split('/')[2];
 
     $('#widget').val('<div id="oab_insert"></div><script>var oabe = function() {var x = new XMLHttpRequest(); x.onreadystatechange = function() { if (x.readyState == 4 && x.status == 200) { document.getElementById("oab_insert").innerHTML = JSON.parse(x.responseText).data; } }; x.open("GET", "' + api+'/embed/'+rid + '", true); x.send(); }();<\/script>')
@@ -70,6 +93,52 @@
 
         return t;
       }(document, "script", "twitter-wjs"));
+    }
+
+    // only use a-z0-9 characters in keys, or whitespace is allowed too but then be sure to enclose the keys in quotes
+    var suggestions = {
+      test: 'Are you just trying out the service? A better way to learn is by reading <a href="https://blog.openaccessbutton.org/making-more-research-open-access-one-paper-at-a-time-25b95cd36c8f">this blog</a> or <a href ="mailto:joe@openaccessbutton.org">getting in touch</a>.',
+      dear: 'No need to greet the author, we\'ll do that in the email! Focus your message on why you need the article.',
+      'hi ': 'No need to greet the author, we\'ll do that in the email! Focus your message on why you need the article.', // NOTE: The whitespace here is used so that "hi" as seen in "PHIL", for example, doesn't flag this. It means that "hi" will be flaged, and "hi," but not PHIL will show this message. The whitespace stands for anything, including a space, that isn't a letter. 
+      hello: 'No need to greet the author, we\'ll do that in the email! Focus your message on why you need the article.',
+      regards: 'No need to thank the author, we\'ll do that in the email! Focus your message on why you need the article.',
+      'thank you': 'No need to thank the author, we\'ll do that in the email! Focus your message on why you need the article.', // NOTE if you use more than just a simple string as an object key, it has to be in quotes
+      please: 'You don\'t need to ask the author for the paper, we\'ll ask politely. Focus your message on why you need the article.',
+      thesis: 'Be specific with your reason. e.g if you need it for your thesis, what is your thesis about and why is it important?',
+      research: 'Be specific with your reason. e.g if you need it for your research, what is your research about and why is it important?',
+    }
+    var suggest = function(e) {
+      $('#suggestion').html('');
+      var story = $('#story').val().toLowerCase();
+      var chars = story.length;
+      var words = story.split(' ').length;
+      var sg = '';
+      if (words < 7) {
+        $('#story').css('border-color','red');
+        $('.storyupdate').attr('disabled','true');
+        sg += 'Your reason is too short to send. ';
+      } else {
+        $('.storyupdate').removeAttr('disabled');
+        if (words < 15) {
+          $('#story').css('border-color','orange');
+          sg += 'Great! Good stories are normally longer, keep going! '
+        } else if (words < 25) {
+          $('#story').css('border-color','yellow');
+          sg += 'Sounds good! Strong reasons help authors know why they should share their article with you! '
+        } else {
+          $('#story').css('border-color','green');
+          sg += 'Fantastic &#x1F60D;. '
+        }
+      }
+      if (story.indexOf('@') !== -1 && story.indexOf('.') !== -1) sg += 'Don\'t worry about including your email, we\'ll send you the paper once the author shares it. ';
+      if (story.indexOf('@') !== -1 && (story.indexOf('.c') !== -1 || story.indexOf('.o') !== -1 || story.indexOf('www.') !== -1 || story.indexOf('http') !== -1)) sg += 'Looks like you might be including the paper URL. If so, don\'t worry, we\'ll let the author know what you need. Just tell us why the paper is important to you. ';
+      if (story.indexOf('10.') !== -1 && story.indexOf('/') !== -1) sg += 'Looks like you might be including the paper DOI. If so, don\'t worry, we\'ll let the author know what you need. Just tell us why the paper is important to you. ';
+      if (rec && rec.title && story.indexOf(rec.title.toLowerCase()) !== -1) sg += 'Looks like you might be including the article title. If so, don\'t worry, we\'ll let the author know what you need. Just tell us why the paper is important to you. ';
+      if (story.indexOf('.') === -1 && story.split(' ')[0].length === 7 && !isNaN(parseInt(story.split(' ')[0]))) sg += 'Are you looking to sign in? If so go to the <a href="/account">login page</a>. ';
+      for ( var s in suggestions ) {
+        if (story.replace(/[^0-9a-z ]/gi, '').indexOf(s.replace(/[^0-9a-z ]/gi, '')) !== -1) sg += suggestions[s] + ' ';
+      }
+      if (sg.length) $('#suggestion').html(sg + '<br>');
     }
 
     var blacklist = function(e) {
@@ -97,6 +166,7 @@
       if (noddy.hasRole('openaccessbutton.admin') && adminsubmitting) {
         if ( $('#name').length ) data.name = $('#name').val();
         if ( $('#status').length ) data.status = $('#status').val();
+        if ( $('#author_affiliation').length ) data.author_affiliation = $('#author_affiliation').val();
         if ( $('#rating').length ) data.rating = $('#rating').val();
         if ( $('#url').length ) data.url = $('#url').val();
         if ( $('#test').length ) {
@@ -106,7 +176,7 @@
         if ( $('#admin_title').length && $('#admin_title').val() ) data.title = $('#admin_title').val();
         if ( $('#admin_journal').length && $('#admin_journal').val() ) data.journal = $('#admin_journal').val();
         if ( $('#admin_doi').length && $('#admin_doi').val() ) data.doi = $('#admin_doi').val();
-        if ( $('#admin_story').length && $('#admin_story').val() ) data.story = $('#admin_story').val();
+        if ( $('#admin_story').length && ($('#admin_story').val() || $('#admin_story').val() !== rec.story) ) data.story = $('#admin_story').val();
         if ( $('#admin_notes').length && $('#admin_notes').val() ) data.notes = $('#admin_notes').val();
         adminsubmitting = false;
       }
@@ -120,11 +190,7 @@
         dataType: 'json',
         success: function(data) {
           $('.saved').show();
-          if ($('#askingforstory').length) {
-            setTimeout(function() { window.location = window.location.href },1500);
-          } else {
-            setTimeout(function() {$('.saved').hide()},2000);
-          }
+          setTimeout(function() {$('.saved').hide(); details(data); }, 1500);
         },
         error: function(data) {
           console.log('Save error');
@@ -137,6 +203,7 @@
     }
     var checkemailthensubmit = function(e) {
       if (e) e.preventDefault();
+      if ($(this).attr('disabled') === 'true') return false;
       $('.emailissue').html("").hide();
       var tgt = adminsubmitting ? '#admin_email' : '#email';
       if ( $(tgt).length && $(tgt).val() && $(tgt).val().length ) {
@@ -186,13 +253,14 @@
       var act = $('#action').val();
       if (act) {
         $('#admin').hide();
-        $('#admin').after('<p style="color:orange;">Executing, please wait a few seconds for page refresh...</p>');
+        $('#adminframe').hide();
+        $('#admin').after('<p style="color:orange;">Working on it, please wait a few seconds for the page to update...</p>');
         $.ajax({
           type:'GET',
           url:api+'/request/' + rid + '/admin/' + act,
           beforeSend: function (request) { request.setRequestHeader("x-apikey", noddy.apikey); },
         });
-        setTimeout(function() { window.location = window.location.href; }, 4000);
+        setTimeout(function() { runrequest(); }, 4000);
       }
     }
 
@@ -203,7 +271,7 @@
         beforeSend: function (request) { request.setRequestHeader("x-apikey", noddy.apikey); },
       });
       $('#admin').html('<p>This request has been deleted. You will be redirected to the requests page.</p>');
-      setTimeout(function() { window.location = '/request'; }, 2000);
+      setTimeout(function() { window.location.href = '/request'; }, 2000);
     }
 
     /*var scrape = function() {
@@ -240,7 +308,7 @@
         opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", noddy.apikey); }
         $.ajax(opts);
       } else {
-        window.location = '/account?next=/request/' + rid + encodeURIComponent('?support=true');
+        window.location.href = '/account?oabnxt=/request/' + rid + encodeURIComponent('?support=true');
       }
     }
 
@@ -266,7 +334,23 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
     var admin = function(record) {
       var dets = ''; //'<p>Dear admin, please notify when you are moderating in a few clicks at <a href="https://app.timebridge.com/mwm/requests">https://app.timebridge.com/mwm/requests</a></p>';
       if (record.year) dets += '<p>Publication year: ' + record.year + '</p>';
-      if (record.sherpa !== undefined && record.sherpa.color !== undefined) dets += '<p>Sherpa color: ' + record.sherpa.color + '</p>';
+      if (record.sherpa !== undefined) {
+        dets += '<p>Sherpa color: ' + (record.sherpa.color === undefined ? 'unknown' : record.sherpa.color) + '</p>';
+        try { dets += '<p><a class="btn btn-block btn-action" target="_blank" href="http://www.sherpa.ac.uk/romeo/search.php?issn=' + record.sherpa.journal.issn + '">View journal on Sherpa Romeo</a></p>'; } catch(err) {}
+        try {
+          dets += '<p>Copyright links:</p>';
+          for (var i in record.sherpa.publisher.copyrightlinks.copyrightlink) {
+            dets += '<p><a class="btn btn-action" target="_blank" href="' + record.sherpa.publisher.copyrightlinks.copyrightlink[i].copyrightlinkurl[0] + '">' + record.sherpa.publisher.copyrightlinks.copyrightlink[i].copyrightlinktext[0] + '</a></p>';
+          }
+        } catch(err) {}
+        try {
+          dets += '<p>Journal conditions:</p>';
+          for (var p in record.sherpa.publisher.conditions.condition) {
+            dets += '<p>' + record.sherpa.publisher.conditions.condition[p] + '</p>';
+          }
+        } catch(err) {}
+
+      }
       dets += '<p>Status: <select id="status" class="form-control" style="width:150px;display:inline;">';
       var statuses = ['help','moderate','progress',/*'hold',*/'refused','received','closed'];
       for ( var s in statuses ) {
@@ -293,6 +377,10 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       }
       dets += '<p>Dear moderator, please click "Save changes" immediately after having filled the form and BEFORE clicking "Send to author".</p>';
       dets += '<p><input type="text" id="name" value="' + (record.name ? record.name : '') + '" placeholder="Author Name" class="form-control"></p>';
+      dets += '<p><input type="text" id="author_affiliation" value="' + (record.author_affiliation ? record.author_affiliation : '') + '" placeholder="Author Affiliation" class="form-control"></p>';
+      if (record.name) {
+        dets += '<p><a target="_blank" href="https://scholar.google.com/citations?view_op=search_authors&hl=en&mauthors=' + record.name.replace(/ /g,'+') + '" class="btn btn-block btn-action">View author Google scholar profile</a></p>';
+      }
       if (!record.name && record.author) {
         dets += '<p><a href="#" class="btn btn-block btn-action" id="viewpossibleauthors">View possible author names</a></p>';
         dets += '<div style="display:none;" id="possibleauthors">';
@@ -329,7 +417,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       dets += '</select>';
       dets += '<a class="btn btn-danger pull-right" id="delete" href="#">DELETE</a></p>';
       dets += '<p><input type="submit" id="submitchanges" value="Save changes before sending to author or any other action" class="btn btn-action btn-block"></p>';
-      dets += '<p class="saved" style="display:none;">Changes saved.</p>';
+      dets += '<p class="saved" style="display:none;">Changes saved, refreshing page.</p>';
       dets += '<p style="margin-top:20px;"><a class="btn btn-action" href="/response/' + record.receiver + '">View the response page for this request</a> ';
       dets += '<a class="btn btn-action pull-right" href="/admin?request=' + rid + '">Send email via admin UI about this request</a></p>';
       dets += '<p><textarea id="admin_notes" class="form-control" placeholder="Admin notes" style="min-height:200px;">';
@@ -339,13 +427,15 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
     }
 
     var details = function(data) {
-      var rec = data.data;
+      rec = data.data !== undefined ? data.data : data;
+
+      $('#info').html('');
 
       var ttl = '';
       ttl += '<h2 style="color:#f04717;">';
-      if (rec.url && rec.url.indexOf('http') === 0) ttl += '<a id="titlelink" target="_blank" href="' + rec.url + '" style="word-wrap:break-word;overflow-wrap:break-word;color:#f04717;">';
+      if (rec.url && (rec.url.indexOf('http') === 0 || rec.url.indexOf('10.') === 0)) ttl += '<a id="titlelink" target="_blank" href="' + (rec.url.indexOf('10.') === 0 ? 'https://doi.org/' : '') + rec.url + '" style="word-wrap:break-word;overflow-wrap:break-word;color:#f04717;">';
       ttl += rec.title ? rec.title : rec.url;
-      if (rec.url && rec.url.indexOf('http') === 0) ttl += '</a>';
+      if (rec.url && (rec.url.indexOf('http') === 0 || rec.url.indexOf('10.') === 0)) ttl += '</a>';
       ttl += '</h2>';
       $('#titleheader').html(ttl);
       var ot = rec.type === 'article' ? 'data' : 'article';
@@ -384,7 +474,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       }
 
       var re = '';
-      if (rec.story ) {
+      if (rec.story && rec.rating !== 0 && rec.rating !== "0") {
         re += '<div class="well" style="background-color:#FFFFFC;"><p>';
         var frn;
         if (rec.user && rec.user.firstname) {
@@ -415,41 +505,48 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
         re += '</div>';
       }
 
-      if (rec.closed_on_create && rec.createdAt > Date.now()-10000) {
+      if (rec.closed_on_create) {
         re += '<p><b>Oh no! We can\'t start a request.</b></p>';
-        re += '<p>The article you need is probably too old to make freely available, we\'re sorry. If you think this is a mistake, <a href="/feedback#general">let us know</a>. Thanks for using the Open Access Button, try again soon.</p>';
-      } else if ( rec.status !== 'closed' && rec.status !== 'received' && (!rec.title || !rec.email || !rec.story) ) {
+        if (rec.closed_on_create_reason == 'nodoi') {
+          re += '<p>We need a <a href="https://en.wikipedia.org/wiki/Digital_object_identifier">DOI</a> to process this request, but we can\'t find one for the article you need, we\'re sorry. If you think this is a mistake, <a href="/feedback#general">let us know</a>. If you can find one on the page, you can <a href ="/">retry with that</a>.</p>';
+        } else if (rec.closed_on_create_reason == 'notarticle') {
+          re += '<p>We can\'t request this because it doesn\'t seem to be an academic journal article, we\'re sorry. If you think this is a mistake, <a href="/feedback#general">let us know</a>. Thanks for using the Open Access Button, try again soon.</p>';
+        } else {
+          re += '<p>The article you need is probably too old to make freely available, we\'re sorry. If you think this is a mistake, <a href="/feedback#general">let us know</a>. Thanks for using the Open Access Button, try again soon.</p>';
+        }
+      } else if ( rec.status !== 'closed' && rec.status !== 'received' && (!rec.title || !rec.email || !rec.story || rec.rating === 0 || rec.rating === "0") ) {
         if (rec.user === undefined) {
-          re += '<p>We ask the author to make this ' + rec.type + ' available to everyone for free - legally. Start a request and we\'ll take care of the rest!</p>';
+          re += '<p>The author can make this ' + rec.type + ' available to everyone for free - legally. All you need to do is ';
+          if (!noddy.loggedin()) re += 'login and ';
+          re += 'tell us how reading this research would help you!</p>';
           if (noddy.loggedin()) {
-            re += '<p><textarea style="min-height:100px;" class="form-control" id="story" placeholder="How would getting access to this research help you? This message will be sent to the author, and helps them to understand why the research should be made available."></textarea></p>';
-            re += '<p id="askingforstory" style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Submit</a></p>';
-            re += '<p class="saved" style="display:none;">Thanks! Please wait a moment while we reload the page...</p>';
+            re += '<p><textarea style="min-height:100px;box-shadow:none;" class="form-control" id="story" placeholder="How would getting access to this research help you? We\'ll include your reason in an email to the author."></textarea></p>';
+            re += '<p id="askingforstory" style="margin-bottom:60px;"><span id="suggestion" style="margin-top:-5px;color:#666;"></span><br><a class="btn btn-action storyupdate" disabled="true" href="#" id="update">Send request</a></p>';
+            re += '<p class="saved" style="display:none;">Thanks! Please wait a moment while we refresh the page...</p>';
           } else {
             re += '<div class="input-group">\
               <input type="text" name="email" id="youremail" class="form-control" placeholder="Your email address"> \
               <div class="input-group-btn">\
-                <a id="gologin" href="/account?next=/request/' + rid + '" class="btn btn-action">Continue</a>\
+                <a id="gologin" href="/account?oabnxt=/request/' + rid + '" class="btn btn-action">Continue</a>\
               </div>\
-            </div>\
-            <p style="margin-bottom:40px;"><small>Any questions? Drop us <a href = "mailto:hello@openaccessbutton.org?subject=Question%20about%20Open%20Access%20Button%20requests">an email</a> or click help.</small></p>';
+            </div>';
           }
         } else {
-          re += '<p>We need more details for this request. Can you take a minute to help?</p>';
+          if (!rec.email) re += '<p>Can you check <a target="_blank" href="' + rec.url + '">the article</a> for the author\'s email address? It\'ll help us send your message much faster!</p>';
           if (noddy.loggedin()) {
             if (!rec.title) re += '<p><input class="form-control" type="text" id="title" placeholder="Article title"></p>';
             if (!rec.email) re += '<p><input class="form-control" type="text" id="email" placeholder="Article author email"></p><p class="emailissue" style="display:none;font-size:0.9em;"></p>';
             if (!rec.doi) re += '<p><input class="form-control" type="text" id="doi" placeholder="Article DOI"></p>';
             re += '<p style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Save</a></p>';
-            re += '<p class="saved" style="display:none;">Changes saved.</p>';
+            re += '<p class="saved" style="display:none;">Changes saved, refreshing page.</p>';
           } else {
-            re += '<p style="margin-bottom:40px;"><a href="/account?next=/request/' + rid + '" class="btn btn-block btn-action">Login / sign up to continue</a></p>';
+            re += '<p style="margin-bottom:40px;"><a href="/account?oabnxt=/request/' + rid + '" class="btn btn-block btn-action">Login / sign up to continue</a></p>';
           }
         }
       }
 
       if ( rec.status !== 'closed' && rec.status !== 'received' && !(noddy.loggedin() && rec.user && rec.user.id && noddy.user && noddy.user.account && noddy.user.account._id === rec.user.id) ) {
-        re += '<p>Are you the author? Please <a style="text-decoration:underline;" href="mailto:requests@openaccessbutton.org?subject=I\'m%20the%20author%20for%20request%20' + rid + '&body=Hi\,%0A%0AI%20the%20author%20of%20this%20paper.%20Please%20tell%20me%20how%20I%20can%20fulfil%20this%20request." target="_blank">contact us</a>!</p>';
+        re += '<p style="margin-top:10px;">Are you the author? Please <a style="text-decoration:underline;" class="pinger" id="shareYourWork" href="/response/' + rec.receiver + '">share your work</a> or <a class="pinger" id="contactToShareWork" style="text-decoration:underline;" href="mailto:requests@openaccessbutton.org?subject=I\'m%20the%20author%20for%20request%20' + rid + '&body=Hi\,%0A%0AI%20the%20author%20of%20this%20paper.%20Please%20tell%20me%20how%20I%20can%20fulfil%20this%20request." target="_blank">contact us</a>!</p>';
       }
 
       if (noddy.hasRole('openaccessbutton.admin')) {
@@ -463,7 +560,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       $('#info').append(re);
 
       var acts = '';
-      if (rec.status !== 'help' && rec.status !== 'closed') acts += '<h4>Show your support</h4>';
+      if (rec.status !== undefined && rec.status !== "" && rec.status !== 'help' && rec.status !== 'received' && rec.status !== 'closed' && rec.status !== 'refused') acts += '<h4>Show your support</h4>';
       if (rec.count && rec.count > 1) acts += '<p>' + (rec.count) + ' ' + (rec.count === 1 ? 'person supports' : 'people support') + ' this request</p>';
       if (rec.status !== 'received' && rec.story) {
         if (noddy.loggedin() && rec.user && rec.user.id && noddy.user && noddy.user.account && noddy.user.account._id === rec.user.id) {
@@ -477,7 +574,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       } else if (rec.status === 'received') {
         acts = acts.replace(' supports ',' supported ').replace(' support ',' supported ');
       }
-      if (rec.status !== 'help' && rec.status !== 'received') {
+      if (rec.status !== undefined && rec.status !== "" && rec.status !== 'help' && rec.status !== 'received' && rec.status !== 'closed' && rec.status !== 'refused') {
         // taking embed link out <a href="#" id="showembed" class="btn btn-xs btn-action panels pull-right" style="margin-left:20px;height:28px;font-size:0.9em;">Embed</a>
         acts += '<div class="clearfix" style="margin-top:20px;margin-bottom:40px;" id="sharebuttons"><p>Share this request to help make it successful</p> \
           <div style="display:inline;margin-bottom:-10px;padding-left:20px;" class="pull-right"> \
@@ -487,8 +584,17 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       }
       $('#actions').html(acts);
 
+      if (noddy.hasRole('openaccessbutton.admin') && rec.url && (rec.url.indexOf('http') === 0 || rec.url.indexOf('10.') === 0) && rec.status !== 'received' && rec.status !== 'closed' && rec.status !== 'refused') {
+        $('#adminframe').html('<iframe style="width:100%;height:800px;" src="' + (rec.url.indexOf('10.') === 0 ? 'https://doi.org/' : '') + rec.url.replace('http://','https://') + '"></iframe>');
+        $('#admin').show();
+        $('#adminframe').show();
+      }
+
+      if ($('#story').length) $('#story').bind('keyup',suggest);
       $('#showembed').bind('click',function(e) { e.preventDefault(); $('#embed').toggle(); });
-      if ($('#showadmin').length) $('#showadmin').bind('click',function(e) { e.preventDefault(); $('#admin').toggle(); });
+      if ($('#showadmin').length) {
+        $('#showadmin').bind('click',function(e) { e.preventDefault(); $('#admin').toggle(); $('#adminframe').toggle(); });
+      }
       if ($('#addsupport').length) $('#addsupport').bind('click',addsupport);
       if ($('#blacklist').length) $('#blacklist').bind('click',blacklist);
       if ($('#viewpossibleauthors').length) {

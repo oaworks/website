@@ -27,8 +27,9 @@ API.service.oab.admin = (rid,action) ->
     else if r.email
       API.service.oab.mail({vars:vars,template:{filename:'author_request_data_v2.html'},to:r.email})
   else if action is 'story_too_bad'
+    update.status = 'help'
     update.rating = 0
-    API.service.oab.mail({vars:vars,template:{filename:'requesters_request_inprogress.html'},to:requestors}) if requestors.length
+    API.service.oab.mail({vars:vars,template:{filename:'initiator_poorstory.html'},to:requestors}) if requestors.length
     API.service.oab.mail({vars:vars,template:{filename:'author_request_article_v2_nostory.html'},to:r.email}) if r.email
   else if action is 'not_a_scholarly_article'
     update.status = 'closed'
