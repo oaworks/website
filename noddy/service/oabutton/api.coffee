@@ -286,10 +286,14 @@ API.add 'service/oab/dnr',
 
 API.add 'service/oab/bug',
   post: () ->
+    whoto = ['help@openaccessbutton.org']
+    try
+      if this.request.body?.form is 'wrong'
+        whoto.push 'requests@openaccessbutton.org'
     API.mail.send {
       service: 'openaccessbutton',
       from: 'help@openaccessbutton.org',
-      to: ['help@openaccessbutton.org'],
+      to: whoto,
       subject: 'Feedback form submission',
       text: JSON.stringify(this.request.body,undefined,2)
     }
