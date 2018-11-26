@@ -50,7 +50,7 @@ API.service.oab.dnr = (email,add,refuse) ->
   return ondnr? or add is true
 
 API.service.oab.template = (template,refresh) ->
-  if refresh or mail_template.count({service:'openaccessbutton'}) is 0
+  if refresh or mail_template.count(undefined,{service:'openaccessbutton'}) is 0
     mail_template.remove {service:'openaccessbutton'}
     ghurl = API.settings.service.openaccessbutton?.templates_url
     m = API.tdm.extract
