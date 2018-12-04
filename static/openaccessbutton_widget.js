@@ -19,11 +19,11 @@ var openaccessbutton_widget = function(opts) {
   if (opts.redirect === undefined) opts.redirect = false;
   if (opts.data === undefined) opts.data = false;
   var api = opts.api ? opts.api : 'https://api.openaccessbutton.org';
+  var site = opts.site ? opts.site : 'https://openaccessbutton.org';
   if (window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
     if (!opts.api) api = 'https://dev.api.cottagelabs.com/service/oab';
     if (!opts.site) site = 'https://dev.openaccessbutton.org';
   }
-  var site = opts.site ? opts.site : 'https://openaccessbutton.org';
   if (opts.element === undefined) opts.element = '#openaccessbutton_widget';
   if (opts.uid === undefined) opts.uid = 'anonymous';
   if ($(opts.element).length === 0) $('body').append('<div id="openaccessbutton_widget"></div>');
@@ -31,7 +31,7 @@ var openaccessbutton_widget = function(opts) {
   var w = '<div class="input-group">\
     <textarea id="oabutton_url" class="form-control" style="min-height:40px;height:40px;font-size:1.1em;" placeholder="Skip the paywall using a URL, DOI, Title, or Citation"></textarea>\
     <div class="input-group-btn">\
-      <a class="btn btn-primary btn-block" href="#" id="oabutton_find" style="min-height:40px;height:40px;font-size:1.1em;padding:7px 10px 5px 10px;"><i class="glyphicon glyphicon-search"></i></a>\
+      <a class="btn btn-primary btn-block" href="#" id="oabutton_find" style="min-height:40px;height:40px;font-size:1.1em;padding:7px 10px 5px 10px;"><img style="height:100%;" src="' + site + '/static/search.png"></img></a>\
     </div>\
   </div>\
   <div id="oabutton_loading" style="display:none;"><p><img style="width:30px;" src="' + site + '/static/spin_orange.svg">   Powered by the <a href="https://openaccessbutton.org" target="_blank">Open Access Button</a></p></div>\
