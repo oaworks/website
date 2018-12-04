@@ -17,10 +17,9 @@ API.service.oab.receive = (rid,files,url,title,description,firstname,lastname,cr
       r.received.url = url
     else
       description ?= "Deposited from Open Access Button"
-      if typeof content isnt 'string'
-        if files? and files.length > 0
-          up.content = files[0].data
-          up.name = files[0].filename
+      if files? and files.length > 0
+        up.content = files[0].data
+        up.name = files[0].filename
       up.publish = API.settings.service.openaccessbutton?.zenodo?.publish
       creators = [{name:''}]
       creators[0].name = lastname if lastname
@@ -33,10 +32,26 @@ API.service.oab.receive = (rid,files,url,title,description,firstname,lastname,cr
               author = a.family
               author += ', ' + a.given if a.given
           creators[0].name ?= author
-      z = API.use.zenodo.deposition.create {title:title,description:description,creators:creators,doi:r.doi}, up, API.settings.service.openaccessbutton?.zenodo?.token
+      # http://developers.zenodo.org/#representation
+      # journal_volume and journal_issue are acceptable too but we don't routinely collect those
+      # access_right can be open embargoed restricted closed
+      # if embargoed can also provide embargo_date
+      # can provide access_conditions which is a string sentence explaining what conditions we will allow access for
+      # license can be a string specifying the license type for open or embargoed content, using opendefinition license tags like cc-by
+      # publication_date can be YYYY-MM-DD but we only keep year, so not much use
+      meta =
+        title:title,
+        description:description,
+        creators:creators,
+        doi:r.doi,
+        keywords:r.keywords,
+        journal_title:r.journal,
+        prereserve_doi:API.settings.service.openaccessbutton?.zenodo?.prereserve_doi and not r.doi?
+      z = API.use.zenodo.deposition.create meta, up, API.settings.service.openaccessbutton?.zenodo?.token
       r.received.zenodo = 'https://zenodo.org/record/' + z.id if z.id
-
-    oab_request.update r._id, {hold:'$DELETE',received:r.received,status:'received'}
+      r.received.zenodo_doi = z.metadata.prereserve_doi.doi if z.metadata?.prereserve_doi?.doi?
+        
+    oab_request.update r._id, {hold:'$DELETE',received:r.received,status:(if up.publish is false then 'moderate' else 'received')}
     API.mail.send
       service: 'openaccessbutton'
       from: 'requests@openaccessbutton.org'

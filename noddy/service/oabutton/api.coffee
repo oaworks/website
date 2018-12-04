@@ -138,13 +138,17 @@ API.add 'service/oab/request/:rid',
             n.crossref_type = cr.type if not r.crossref_type?
             n.year ?= cr.created['date-time'].split('-')[0] if not r.year? and cr.created?['date-time']?
         r.author_affiliation = n.author_affiliation if n.author_affiliation?
+        if n.crossref_type? and ['journal-article', 'proceedings-article'].indexOf(n.crossref_type) is -1
+          n.status = 'closed'
+          n.closed_on_update = true
+          n.closed_on_update_reason = 'notarticle'
         if (not r.email and not n.email) and r.author and r.author.length and (r.author[0].affiliation? or r.author_affiliation)
           try
             email = API.use.hunter.email {company: (r.author_affiliation ? r.author[0].affiliation[0].name), first_name: r.author[0].family, last_name: r.author[0].given}, API.settings.service.openaccessbutton.hunter.api_key
             if email?.email?
               n.email = email.email
         oab_request.update(r._id,n) if JSON.stringify(n) isnt '{}'
-        return oab_request.get r._id # return how it now looks? or just return success?
+        return oab_request.get r._id
       else
         return 404
   delete:

@@ -174,7 +174,7 @@ API.service.oab.request = (req,uacc,fast) ->
     req.status = 'closed'
     req.closed_on_create = true
     req.closed_on_create_reason = 'nodoi'
-  if fast and req.crossref_type? and ['journal-article', 'proceedings-article', 'dissertation', 'report'].indexOf(req.crossref_type) is -1
+  if fast and req.crossref_type? and ['journal-article', 'proceedings-article'].indexOf(req.crossref_type) is -1
     req.status = 'closed'
     req.closed_on_create = true
     req.closed_on_create_reason = 'notarticle'
