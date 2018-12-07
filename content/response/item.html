@@ -46,7 +46,7 @@
               You can legally give us the submitted version of your article!
             </p>
             <p id="sherpa_unknown" style="display:none;text-align:center;">
-              If you're unsure what you can legally send us get in touch with us or your librarian for advice on what you can deposit.
+              If you're unsure what you can legally share, get in touch with us or your librarian for advice on what you can deposit.
             </p>
 
           </div>
@@ -269,7 +269,7 @@
     var details = function(data) {
       request = data;
       var dets = '<div>';
-      dets += '<h1 style="text-align:center;margin-top:25px;margin-bottom:25px;font-size:3em;">You can freely, legally, and quickly share</h1>';
+      dets += '<h1 style="text-align:center;margin-top:25px;margin-bottom:25px;font-size:2.5em;">You can freely, legally, and quickly share</h1>';
       dets += '<h2 style="text-align:center;"><a target="_blank" href="/request/' + request._id + '">';
       dets += request.title ? request.title : (request.url.indexOf('h') !== 0 && request.url.indexOf('1') !== 0 ? request.url : 'Untitled article');
       dets += '</a></h2>';
