@@ -89,14 +89,16 @@
               Need some help organizing your data first? Ask your library if they have a research data management specialist who can help.
             </p>
 
-            <form id="fileupload" enctype="multipart/form-data" method="POST">
-              <input type="file" name="file" id="file" class="form-control">
+            <form id="fileupload" enctype="multipart/form-data" method="POST" style="margin-top:32px;">
+              <input type="file" name="file" id="file" class="form-control" style="margin-bottom:5px;">
               <input type="hidden" name="service" value="openaccessbutton">
               <input type="hidden" name="dirId" id="dirId" value="">
+              <!--
               <input style="margin-top:5px;margin-bottom:5px;" id="title" type="text" class="form-control" placeholder="Enter the title here">
               <input style="margin-top:5px;margin-bottom:5px;" id="firstname" type="text" class="form-control" placeholder="first name">
               <input style="margin-top:5px;margin-bottom:5px;" id="lastname" type="text" class="form-control" placeholder="last name">
               <textarea id="description" class="form-control" style="min-height:150px;margin-top:5px;" placeholder="Please provide an abstract / brief description"></textarea>
+              -->
               <p class="admin" style="display:none;color:orange;"><input type="checkbox" id="filenotfromauthor"> Tick if file not provided by author</p>
               <input type="submit" class="btn btn-warning btn-block admin" style="margin-top:5px;display:none;" id="adminsubmitfile" value="Upload file as Admin">
               <input type="submit" class="btn btn-action btn-block" style="margin-top:5px;" id="submitfile" value="Upload your file">
@@ -212,8 +214,6 @@
       if ($('#title').val()) data.title = $('#title').val();
       if ($('#firstname').val()) data.firstname = $('#firstname').val();
       if ($('#lastname').val()) data.lastname = $('#lastname').val();
-      // TODO really this should have a way to upload files built into it, and grab the #file and put it in the content var
-      // but for now that is handled separately via the file upload route
       var opts = {
         type: 'POST',
         url: api + '/receive/' + rid,
@@ -270,7 +270,7 @@
       var dets = '<div>';
       dets += '<h1 style="text-align:center;margin-top:25px;margin-bottom:25px;font-size:4em;">Request for ' + request.type + '</h1>';
       dets += '<h2 style="text-align:center;"><a target="_blank" href="/request/' + request._id + '">';
-      dets += request.title ? request.title : 'Untitled article';
+      dets += request.title ? request.title : (request.url.indexOf('h') !== 0 && request.url.indexOf('1') !== 0 ? request.url : 'Untitled article');
       dets += '</a></h2>';
       dets += '</div>';
       $('#request').html(dets).show();
@@ -311,7 +311,7 @@
         } else {
           $.ajax({
             type: 'GET',
-            url: api + '/use/sherpa/romeo/search?jtitle=' + request.journal,
+            url: api.replace('/service/oab','') + '/use/sherpa/romeo/search?jtitle=' + request.journal,
             success: romeo
           });
         }

@@ -584,10 +584,12 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       }
       $('#actions').html(acts);
 
-      if (noddy.hasRole('openaccessbutton.admin') && rec.url && (rec.url.indexOf('http') === 0 || rec.url.indexOf('10.') === 0) && rec.status !== 'received' && rec.status !== 'closed' && rec.status !== 'refused') {
-        $('#adminframe').html('<iframe style="width:100%;height:800px;" src="' + (rec.url.indexOf('10.') === 0 ? 'https://doi.org/' : '') + rec.url.replace('http://','https://') + '"></iframe>');
+      if (noddy.hasRole('openaccessbutton.admin')) {
         $('#admin').show();
-        $('#adminframe').show();
+        if (rec.url && (rec.url.indexOf('http') === 0 || rec.url.indexOf('10.') === 0) && rec.status !== 'received' && rec.status !== 'closed' && rec.status !== 'refused') {
+          $('#adminframe').html('<iframe style="width:100%;height:800px;" src="' + (rec.url.indexOf('10.') === 0 ? 'https://doi.org/' : '') + rec.url.replace('http://','https://') + '"></iframe>');
+          $('#adminframe').show();
+        }
       }
 
       if ($('#story').length) $('#story').bind('keyup',suggest);

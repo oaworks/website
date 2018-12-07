@@ -317,46 +317,53 @@ API.add 'service/oab/import',
       try
         records = this.request.body
         resp = {found:0,updated:0,missing:[]}
+        updates = []
         for p in this.request.body
           if p._id
             rq = oab_request.get p._id
             if rq
               resp.found += 1
-              updates = []
-              update = []
+              update = {}
               for up of p
-                p[up] = undefined if p[up] is 'DELETE' # this is not used yet
-                if (not p[up]? or p[up]) and p[up] not in ['createdAt','created_date','plugin','from','embedded','names']
-                  if up.indexOf('refused.') is 0 and ( not rq.refused? or rq.refused[up.split('.')[1]] isnt p[up] )
-                    rq.refused ?= {}
-                    rq.refused[up.split('.')[1]] = p[up]
-                    update.refused ?= {}
-                    update.refused[up.split('.')[1]] = p[up]
+                if (not p[up]? or p[up]) and p[up] not in ['createdAt','created_date','plugin','from','embedded','names','count','receiver']
+                  if up.indexOf('refused.') is 0 and up isnt 'refused.date' and (not rq[up]? or rq[up].length isnt p[up].split(',').length)
+                    rq.refused ?= []
+                    added = false
+                    for eml in p[up].split(',')
+                      eml = eml.trim()
+                      add = true
+                      for ref in rq.refused
+                        add = ref.email isnt eml
+                      if add
+                        added = true
+                        rq.refused.push {email: eml, date: Date.now()}
+                    if added
+                      update.refused = rq.refused
                   else if up.indexOf('received.') is 0 and ( not rq.received? or rq.received[up.split('.')[1]] isnt p[up] )
                     rq.received ?= {}
                     rq.received[up.split('.')[1]] = p[up]
                     update.received = rq.received
-                  else if up.indexOf('followup.') is 0
-                    if up isnt 'followup.date' and p['followup.count'] isnt rq.followup?.count
-                      rq.followup ?= {}
-                      rq.followup.count = p['followup.count']
-                      rq.followup.date ?= []
-                      rq.followup.date.push moment(Date.now(), "x").format "YYYYMMDD"
-                      update.followup = rq.followup
+                  else if up.indexOf('followup.') is 0 and up isnt 'followup.date' and p['followup.count'] isnt rq.followup?.count
+                    rq.followup ?= {}
+                    rq.followup.count = p['followup.count']
+                    rq.followup.date ?= []
+                    rq.followup.date.push moment(Date.now(), "x").format "YYYYMMDD"
+                    update.followup = rq.followup
                   else if up is 'sherpa.color' and ( not rq.sherpa? or rq.sherpa.color isnt p[up] )
-                    rq.sherpa = {color:p[up]}
+                    rq.sherpa ?= {}
+                    rq.sherpa.color = p[up]
                     update.sherpa = rq.sherpa
-                  else if rq[up] isnt p[up]
+                  else if up.indexOf('user.') is -1 and rq[up] isnt p[up]
                     rq[up] = p[up]
                     update[up] = rq[up]
-                  try
-                    rq._bulk_import ?= {}
-                    rq._bulk_import[Date.now()] = JSON.stringify update
-                    # TODO should update collection update to take lists of records that it updates in bulk
-                  rq.updatedAt = Date.now()
-                  rq.updated_date = moment(rq.updatedAt, "x").format "YYYY-MM-DD HHmm.ss"
-                  updates.push rq
-                  resp.updated += 1
+              if not _.isEmpty update
+                try
+                  rq._bulk_import ?= {}
+                  rq._bulk_import[Date.now()] = JSON.stringify update
+                rq.updatedAt = Date.now()
+                rq.updated_date = moment(rq.updatedAt, "x").format "YYYY-MM-DD HHmm.ss"
+                updates.push rq
+                resp.updated += 1
             else
               resp.missing.push p._id
         if updates.length
@@ -364,12 +371,6 @@ API.add 'service/oab/import',
         return resp
       catch err
         return {status:'error'}
-
-      #match = {must:[{term:{'signature.exact':proc.signature}}], must_not:[{exists:{field:'_raw_result.error'}}]}
-      #try
-      #  if typeof job.refresh is 'number' and job.refresh isnt 0
-      #    d = new Date()
-      #    match.must.push {range:{createdAt:{gt:d.setDate(d.getDate() - job.refresh)}}}
 
 API.add 'service/oab/export/:what',
   get:
