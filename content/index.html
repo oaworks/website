@@ -148,7 +148,21 @@
           return;
         }
         try {
-          if (window.location.search.length === 0 && 'pushState' in window.history) window.history.pushState("", "find", '?url=' + encodeURIComponent(url));
+          window.history.pushState("", "find", '?url=' + encodeURIComponent(url));
+          var change = function(state) {
+            if (state === null) {
+              $('#loading').hide();
+              $('#availability').hide();
+              $('#url').val('');
+              $('.intro').show();
+              $('#examples').hide();
+              $('#howitworks').hide();
+            } else {
+            }
+          }
+          $(window).on("popstate", function(e) {
+            change(e.originalEvent.state);
+          });
         } catch(err) {}
         if (url.lastIndexOf('.') === url.length-1) url = url.substring(0,url.length-1);
         $('.intro').hide();
