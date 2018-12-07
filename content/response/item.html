@@ -254,12 +254,12 @@
     $('#adminsubmitfile').bind('click',function(e) { clickedadmin = true; });
 
     var romeo = function(data,color) {
-      if (data !== undefined && color === undefined) {
+      if (data !== undefined && ['green','blue','yellow'].indexOf(color) === -1) {
         try {
-          color = data.data.publishers[0].publisher[0].romeocolour[0];
+          color = data.publishers[0].publisher[0].romeocolour[0];
         } catch(err) {}
       }
-      if (color && ['green','blue','yellow'].indexOf(color)) {
+      if (color && ['green','blue','yellow'].indexOf(color) >= 0) {
         $('#sherpa_'+color).show();
       } else {
         $('#sherpa_unknown').show();
