@@ -25,7 +25,7 @@
       <div id="error" style="display:none;">
           <p>
             Sorry, there has been a submission error. Please <a href="mailto:requests@openaccessbutton.org">get in touch</a>
-            and let us know what you were trying to upload, and the URL of this page.</p>
+            and let us know what you were trying to upload (please attach it), and the URL of this page.</p>
       </div>
 
       <div class="panels" id="upload" style="margin-bottom:100px;">
@@ -37,16 +37,16 @@
             </p>
           -->
             <p id="sherpa_green" style="display:none;text-align:center;">
-              You can legally give us the accepted version of your article!
+              You can legally share the accepted version of your article!
             </p>
             <p id="sherpa_blue" style="display:none;text-align:center;">
-              You can legally give us the accepted version of your article!
+              You can legally share the accepted version of your article!
             </p>
             <p id="sherpa_yellow" style="display:none;text-align:center;">
-              You can legally give us the submitted version of your article!
+              You can legally share the submitted version of your article!
             </p>
             <p id="sherpa_unknown" style="display:none;text-align:center;">
-              If you're unsure what you can legally send us get in touch with us or your librarian for advice on what you can deposit.
+              If you're unsure what you can legally share <a href="mailto:requests@openaccessbutton.org">get in touch with us</a> or your librarian for advice on what you can deposit.
             </p>
 
           </div>
@@ -56,7 +56,7 @@
 
             <h3>Share by URL</h3>
             <p class="typearticle">
-              Is the requested article publicly available online? That’s great! Just give us the URL. We suggest a link to the full text on a repository or your website, preferably a PDF or HTML version. <!--If your article isn't in a repository, please consider uploading it instead.-->
+              If the article is publicly available online, that’s great! Please share a full text link to a repository or your website, preferably a PDF or HTML version. <!--If your article isn't in a repository, please consider uploading it instead.-->
             </p>
 
             <p class="typedata">
@@ -79,7 +79,7 @@
           <div class="col-md-6">
             <h3>Upload a file</h3>
             <p class="typearticle">
-              If you want to upload your article, we’ll send it to <a target="_blank" href="https://zenodo.org" target="_blank">Zenodo</a>. Zenodo will preserve and make it available under a <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC-BY</a> license.
+              We'll then upload your article to <a target="_blank" href="https://zenodo.org" target="_blank">Zenodo</a> who will preserve and make it to everyone under a <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC-BY</a> license.
             </p>
 
             <p class="typedata">
@@ -269,7 +269,7 @@
     var details = function(data) {
       request = data;
       var dets = '<div>';
-      dets += '<h1 style="text-align:center;margin-top:25px;margin-bottom:25px;font-size:3em;">You can freely, legally, and quickly share</h1>';
+      dets += '<h1 style="text-align:center;margin-top:25px;margin-bottom:25px;font-size:2.5em;">You can freely, legally, and quickly share your article:</h1>';
       dets += '<h2 style="text-align:center;"><a target="_blank" href="/request/' + request._id + '">';
       dets += request.title ? request.title : (request.url.indexOf('h') !== 0 && request.url.indexOf('1') !== 0 ? request.url : 'Untitled article');
       dets += '</a></h2>';
