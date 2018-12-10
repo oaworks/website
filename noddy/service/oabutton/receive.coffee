@@ -49,12 +49,12 @@ API.service.oab.receive = (rid,files,url,title,description,firstname,lastname,cr
       r.received.zenodo = 'https://zenodo.org/record/' + z.id if z.id
       r.received.zenodo_doi = z.metadata.prereserve_doi.doi if z.metadata?.prereserve_doi?.doi?
         
-    oab_request.update r._id, {hold:'$DELETE',received:r.received,status:(if up.publish is false then 'moderate' else 'received')}
+    oab_request.update r._id, {hold:'$DELETE',received:r.received,status:(if up.publish is false and not r.received.url? then 'moderate' else 'received')}
     API.mail.send
       service: 'openaccessbutton'
       from: 'requests@openaccessbutton.org'
       to: API.settings.service.openaccessbutton.notify.receive
-      subject: 'Request ' + r._id + ' received' + (if up.publish is false then ' - zenodo publish required' else '')
+      subject: 'Request ' + r._id + ' received' + (if r.received.url? then ' - URL provided' else (if up.publish is false then ' - zenodo publish required' else ' - file published on Zenodo'))
       text: (if API.settings.dev then 'https://dev.openaccessbutton.org/request/' else 'https://openaccessbutton.org/request/') + r._id
     return {data: r}
 

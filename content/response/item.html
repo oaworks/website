@@ -278,7 +278,7 @@
       $('.requestlink').attr('href','/request/'+request._id);
       $('.type' + request.type).show();
       if (request.title) $('#title').val(request.title);
-      if (request.author) {
+      if (request.author && request.email) {
         for ( var a in request.author ) {
           if (request.author[a].family && request.email.toLowerCase().indexOf(request.author[a].family.toLowerCase()) !== -1 ) {
             $('#lastname').val(request.author[a].family);
@@ -316,6 +316,8 @@
             success: romeo
           });
         }
+      } else {
+        $('#sherpa_unknown').show();
       }
     }
     $.ajax({
