@@ -186,14 +186,14 @@ API.add 'service/oab/supports',
   post: () -> return oab_support.search this.bodyParams
 
 API.add 'service/oab/availabilities',
-  get: () -> return oab_availability.search this.queryParams
-  post: () -> return oab_availability.search this.bodyParams
+  csv: true
+  post: 'get'
+  get: () -> return oab_availability.search this.queryParams ? this.bodyParams
 
 API.add 'service/oab/requests',
-  get: () -> return oab_request.search this.queryParams
-  post: () -> return oab_request.search this.bodyParams
-
-API.add 'service/oab/requests.csv', { get: (() -> API.convert.json2csv2response(this, oab_request.search(this.queryParams ? this.bodyParams))), post: (() -> API.convert.json2csv2response(this, oab_request.search(this.queryParams ? this.bodyParams))) }
+  csv: true
+  post: 'get'
+  get: () -> return oab_request.search this.queryParams ? this.bodyParams
 
 API.add 'service/oab/history',
   get: () -> return oab_request.history this.queryParams
@@ -413,17 +413,12 @@ API.add 'service/oab/export/:what',
           results.push m
       csv = API.convert.json2csv {fields:fields}, undefined, results
 
-      name = 'export_' + this.urlParams.what
       this.response.writeHead(200, {
-        'Content-disposition': "attachment; filename="+name+".csv",
+        'Content-disposition': "attachment; filename=export_"+this.urlParams.what+".csv",
         'Content-type': 'text/csv; charset=UTF-8',
         'Content-Encoding': 'UTF-8'
       })
       this.response.end(csv)
-      this.done() # added this now that underlying lib has been rewritten - should work without crash. Below note left for posterity.
-      # NOTE: this should really return to stop restivus throwing an error, and should really include
-      # the file length in the above head call, but this causes an intermittent write afer end error
-      # which crashes the whole system. So pick the lesser of two fuck ups.
 
 API.add 'service/oab/terms/:type/:key', get: () -> return API.es.terms 'oab', this.urlParams.type, this.urlParams.key
 API.add 'service/oab/min/:type/:key', get: () -> return API.es.min 'oab', this.urlParams.type, this.urlParams.key
@@ -606,7 +601,6 @@ API.add 'service/oab/job/:jid/results.csv',
       'Content-type': 'text/csv; charset=UTF-8'
       'Content-Encoding': 'UTF-8'
     this.response.end csv
-    this.done()
 
 
 API.add 'service/oab/status', get: () -> return API.service.oab.status()

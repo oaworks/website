@@ -6,7 +6,9 @@
     <div class="col-md-8 col-md-offset-2">
       <input type="text" class="form-control holder search" style="display:none;">
       <img class="holder loading" src="/static/spin_orange.svg" style="width:100%;" />
-      <div id="results"></div>
+      <div id="results">
+        <p>Stats are only available to administrators. Please try <a href="/account">logging in</a> if you are an admin and the stats do not display here.</p>
+      </div>
     </div>
   </div>
 </div>
@@ -228,71 +230,80 @@
     tmwk.setHours(0, 0, 0);
     tmwk.setMilliseconds(0);
 
-    $('#availability').holder({
-      class: 'holder',
-      url: api + "/availabilities",
-      datatype: 'JSON',
-      defaultquery: {
-        size:0,
-        query: {
-          filtered: {
-            query: {
-              bool: {
-                must: []
+    var dostats = function() {
+      $('#availability').holder({
+        class: 'holder',
+        url: api + "/availabilities",
+        datatype: 'JSON',
+        defaultquery: {
+          size:0,
+          query: {
+            filtered: {
+              query: {
+                bool: {
+                  must: []
+                }
+              },
+              filter: {
+                bool: {
+                  must:[]
+                }
+              }
+            }
+          },
+          aggregations: {
+            "availabilities" : {
+              "date_histogram" : {
+                "field" : "createdAt",
+                "interval" : "week"
               }
             },
-            filter: {
-              bool: {
-                must:[]
+            "emails" : {
+              "cardinality" : {
+                "field" : "email.exact"
+              }
+            },
+            "tm1" : {
+              "filter": { "range" : { "createdAt" : { "gt" : tm1.valueOf() } } },
+              "aggs": {
+                "tm1v": {
+                  "cardinality" : {
+                    "field" : "email.exact"
+                  }
+                }
+              }
+            },
+            "tm3" : {
+              "filter": { "range" : { "createdAt" : { "gt" : tm3.valueOf(), "lte": tm1.valueOf() } } },
+              "aggs": {
+                "tm3v": {
+                  "cardinality" : {
+                    "field" : "email.exact"
+                  }
+                }
               }
             }
           }
         },
-        aggregations: {
-          "availabilities" : {
-            "date_histogram" : {
-              "field" : "createdAt",
-              "interval" : "week"
-            }
-          },
-          "emails" : {
-            "cardinality" : {
-              "field" : "email.exact"
-            }
-          },
-          "tm1" : {
-            "filter": { "range" : { "createdAt" : { "gt" : tm1.valueOf() } } },
-            "aggs": {
-              "tm1v": {
-                "cardinality" : {
-                  "field" : "email.exact"
-                }
-              }
-            }
-          },
-          "tm3" : {
-            "filter": { "range" : { "createdAt" : { "gt" : tm3.valueOf(), "lte": tm1.valueOf() } } },
-            "aggs": {
-              "tm3v": {
-                "cardinality" : {
-                  "field" : "email.exact"
-                }
-              }
-            }
-          }
+        pushstate: false,
+        review: getstatus,
+        facets: {
+          plugin: { terms: { "field": "plugin.exact", "size": 100 } },
+          plugin_week: { terms: { "field": "plugin.exact", "size": 100 }, "facet_filter" : { "range" : { "createdAt" : { "gt" : tmwk.valueOf() } } } },
+  	email: { terms: { "field": "email.exact", "size": 1 } },
+          sources: { terms: { "field": "source.article", "size": 100 } },
+          embeds: { terms: { "field": "embedded.exact", "size": 100 } },
+          from: { terms: { "field": "from.exact", "size": 100 } }
         }
-      },
-      pushstate: false,
-      review: getstatus,
-      facets: {
-        plugin: { terms: { "field": "plugin.exact", "size": 100 } },
-        plugin_week: { terms: { "field": "plugin.exact", "size": 100 }, "facet_filter" : { "range" : { "createdAt" : { "gt" : tmwk.valueOf() } } } },
-	email: { terms: { "field": "email.exact", "size": 1 } },
-        sources: { terms: { "field": "source.article", "size": 100 } },
-        embeds: { terms: { "field": "embedded.exact", "size": 100 } },
-        from: { terms: { "field": "from.exact", "size": 100 } }
+      });
+    }
+
+    noddy.afterLogin = function() {
+      if (noddy.hasRole('openaccessbutton.admin')) {
+        dostats();
       }
-    });
+    }
+    noddy.login();
 
   });
 </script>
