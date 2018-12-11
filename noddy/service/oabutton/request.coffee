@@ -69,7 +69,9 @@ API.service.oab.request = (req,uacc,fast) ->
   req.doi = decodeURIComponent(req.doi) if req.doi
   rid = if req._id and oab_request.get(req._id) then req._id else oab_request.insert {url:req.url,type:req.type,_id:req._id}
   user = if uacc then (if typeof uacc is 'string' then API.accounts.retrieve(uacc) else uacc) else undefined
+  send_confirmation = false
   if not req.user? and user and req.story
+    send_confirmation = true
     un = user.profile?.firstname ? user.username ? user.emails[0].address
     req.user =
       id: user._id
@@ -79,7 +81,7 @@ API.service.oab.request = (req,uacc,fast) ->
       lastname: user.profile?.lastname
       affiliation: user.service?.openaccessbutton?.profile?.affiliation
       profession: user.service?.openaccessbutton?.profile?.profession
-  req.count = if req.story then 1 else 0
+  req.count ?= if req.story then 1 else 0
 
   if not fast and (not req.title or not req.email)
     meta = API.service.oab.scrape req.url, dom, req.doi
@@ -174,7 +176,7 @@ API.service.oab.request = (req,uacc,fast) ->
     req.status = 'closed'
     req.closed_on_create = true
     req.closed_on_create_reason = 'nodoi'
-  if fast and req.crossref_type? and ['journal-article', 'proceedings-article', 'dissertation', 'report'].indexOf(req.crossref_type) is -1
+  if fast and req.crossref_type? and ['journal-article', 'proceedings-article'].indexOf(req.crossref_type) is -1
     req.status = 'closed'
     req.closed_on_create = true
     req.closed_on_create_reason = 'notarticle'
@@ -194,7 +196,7 @@ API.service.oab.request = (req,uacc,fast) ->
   if req.journal? and typeof req.journal is 'string'
     try req.journal = req.journal.charAt(0).toUpperCase() + req.journal.slice(1)
   oab_request.update rid, req
-  if fast and req.user?.email?
+  if (fast and req.user?.email?) or send_confirmation
     try
       tmpl = API.mail.template 'initiator_confirmation.html'
       sub = API.service.oab.substitute tmpl.content, {_id: req._id, url: req.url, title:(req.title ? req.url) }

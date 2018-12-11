@@ -74,7 +74,7 @@ $.fn.holder.use.oabutton = {
     var re = '<div class="well" style="margin:30px auto 0px auto;background-color:' + color + '">';
     re += '<p>';
     if (rec.type && rec.type === 'data') re += 'Data for ';
-    re += '<b><a href="/request/' + rec._id + '" style="word-wrap:break-word;overflow-wrap:break-word;">';
+    re += '<b><a target="_blank" href="/request/' + rec._id + '" style="word-wrap:break-word;overflow-wrap:break-word;">';
     re += rec.title ? rec.title : rec.url;
     re += '</a></b></p>';
     re += '<p style="color:' + text + ';">' + status + '</p>';

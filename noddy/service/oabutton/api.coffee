@@ -138,13 +138,17 @@ API.add 'service/oab/request/:rid',
             n.crossref_type = cr.type if not r.crossref_type?
             n.year ?= cr.created['date-time'].split('-')[0] if not r.year? and cr.created?['date-time']?
         r.author_affiliation = n.author_affiliation if n.author_affiliation?
+        if n.crossref_type? and ['journal-article', 'proceedings-article'].indexOf(n.crossref_type) is -1
+          n.status = 'closed'
+          n.closed_on_update = true
+          n.closed_on_update_reason = 'notarticle'
         if (not r.email and not n.email) and r.author and r.author.length and (r.author[0].affiliation? or r.author_affiliation)
           try
             email = API.use.hunter.email {company: (r.author_affiliation ? r.author[0].affiliation[0].name), first_name: r.author[0].family, last_name: r.author[0].given}, API.settings.service.openaccessbutton.hunter.api_key
             if email?.email?
               n.email = email.email
         oab_request.update(r._id,n) if JSON.stringify(n) isnt '{}'
-        return oab_request.get r._id # return how it now looks? or just return success?
+        return oab_request.get r._id
       else
         return 404
   delete:
@@ -182,14 +186,14 @@ API.add 'service/oab/supports',
   post: () -> return oab_support.search this.bodyParams
 
 API.add 'service/oab/availabilities',
-  get: () -> return oab_availability.search this.queryParams
-  post: () -> return oab_availability.search this.bodyParams
+  csv: true
+  post: 'get'
+  get: () -> return oab_availability.search this.queryParams ? this.bodyParams
 
 API.add 'service/oab/requests',
-  get: () -> return oab_request.search this.queryParams
-  post: () -> return oab_request.search this.bodyParams
-
-API.add 'service/oab/requests.csv', { get: (() -> API.convert.json2csv2response(this, oab_request.search(this.queryParams ? this.bodyParams))), post: (() -> API.convert.json2csv2response(this, oab_request.search(this.queryParams ? this.bodyParams))) }
+  csv: true
+  post: 'get'
+  get: () -> return oab_request.search this.queryParams ? this.bodyParams
 
 API.add 'service/oab/history',
   get: () -> return oab_request.history this.queryParams
@@ -313,46 +317,53 @@ API.add 'service/oab/import',
       try
         records = this.request.body
         resp = {found:0,updated:0,missing:[]}
+        updates = []
         for p in this.request.body
           if p._id
             rq = oab_request.get p._id
             if rq
               resp.found += 1
-              updates = []
-              update = []
+              update = {}
               for up of p
-                p[up] = undefined if p[up] is 'DELETE' # this is not used yet
-                if (not p[up]? or p[up]) and p[up] not in ['createdAt','created_date','plugin','from','embedded','names']
-                  if up.indexOf('refused.') is 0 and ( not rq.refused? or rq.refused[up.split('.')[1]] isnt p[up] )
-                    rq.refused ?= {}
-                    rq.refused[up.split('.')[1]] = p[up]
-                    update.refused ?= {}
-                    update.refused[up.split('.')[1]] = p[up]
+                if (not p[up]? or p[up]) and p[up] not in ['createdAt','created_date','plugin','from','embedded','names','count','receiver']
+                  if up.indexOf('refused.') is 0 and up isnt 'refused.date' and (not rq[up]? or rq[up].length isnt p[up].split(',').length)
+                    rq.refused ?= []
+                    added = false
+                    for eml in p[up].split(',')
+                      eml = eml.trim()
+                      add = true
+                      for ref in rq.refused
+                        add = ref.email isnt eml
+                      if add
+                        added = true
+                        rq.refused.push {email: eml, date: Date.now()}
+                    if added
+                      update.refused = rq.refused
                   else if up.indexOf('received.') is 0 and ( not rq.received? or rq.received[up.split('.')[1]] isnt p[up] )
                     rq.received ?= {}
                     rq.received[up.split('.')[1]] = p[up]
                     update.received = rq.received
-                  else if up.indexOf('followup.') is 0
-                    if up isnt 'followup.date' and p['followup.count'] isnt rq.followup?.count
-                      rq.followup ?= {}
-                      rq.followup.count = p['followup.count']
-                      rq.followup.date ?= []
-                      rq.followup.date.push moment(Date.now(), "x").format "YYYYMMDD"
-                      update.followup = rq.followup
+                  else if up.indexOf('followup.') is 0 and up isnt 'followup.date' and p['followup.count'] isnt rq.followup?.count
+                    rq.followup ?= {}
+                    rq.followup.count = p['followup.count']
+                    rq.followup.date ?= []
+                    rq.followup.date.push moment(Date.now(), "x").format "YYYYMMDD"
+                    update.followup = rq.followup
                   else if up is 'sherpa.color' and ( not rq.sherpa? or rq.sherpa.color isnt p[up] )
-                    rq.sherpa = {color:p[up]}
+                    rq.sherpa ?= {}
+                    rq.sherpa.color = p[up]
                     update.sherpa = rq.sherpa
-                  else if rq[up] isnt p[up]
+                  else if up.indexOf('user.') is -1 and rq[up] isnt p[up]
                     rq[up] = p[up]
                     update[up] = rq[up]
-                  try
-                    rq._bulk_import ?= {}
-                    rq._bulk_import[Date.now()] = JSON.stringify update
-                    # TODO should update collection update to take lists of records that it updates in bulk
-                  rq.updatedAt = Date.now()
-                  rq.updated_date = moment(rq.updatedAt, "x").format "YYYY-MM-DD HHmm.ss"
-                  updates.push rq
-                  resp.updated += 1
+              if not _.isEmpty update
+                try
+                  rq._bulk_import ?= {}
+                  rq._bulk_import[Date.now()] = JSON.stringify update
+                rq.updatedAt = Date.now()
+                rq.updated_date = moment(rq.updatedAt, "x").format "YYYY-MM-DD HHmm.ss"
+                updates.push rq
+                resp.updated += 1
             else
               resp.missing.push p._id
         if updates.length
@@ -360,12 +371,6 @@ API.add 'service/oab/import',
         return resp
       catch err
         return {status:'error'}
-
-      #match = {must:[{term:{'signature.exact':proc.signature}}], must_not:[{exists:{field:'_raw_result.error'}}]}
-      #try
-      #  if typeof job.refresh is 'number' and job.refresh isnt 0
-      #    d = new Date()
-      #    match.must.push {range:{createdAt:{gt:d.setDate(d.getDate() - job.refresh)}}}
 
 API.add 'service/oab/export/:what',
   get:
@@ -408,17 +413,12 @@ API.add 'service/oab/export/:what',
           results.push m
       csv = API.convert.json2csv {fields:fields}, undefined, results
 
-      name = 'export_' + this.urlParams.what
       this.response.writeHead(200, {
-        'Content-disposition': "attachment; filename="+name+".csv",
+        'Content-disposition': "attachment; filename=export_"+this.urlParams.what+".csv",
         'Content-type': 'text/csv; charset=UTF-8',
         'Content-Encoding': 'UTF-8'
       })
       this.response.end(csv)
-      this.done() # added this now that underlying lib has been rewritten - should work without crash. Below note left for posterity.
-      # NOTE: this should really return to stop restivus throwing an error, and should really include
-      # the file length in the above head call, but this causes an intermittent write afer end error
-      # which crashes the whole system. So pick the lesser of two fuck ups.
 
 API.add 'service/oab/terms/:type/:key', get: () -> return API.es.terms 'oab', this.urlParams.type, this.urlParams.key
 API.add 'service/oab/min/:type/:key', get: () -> return API.es.min 'oab', this.urlParams.type, this.urlParams.key
@@ -601,7 +601,6 @@ API.add 'service/oab/job/:jid/results.csv',
       'Content-type': 'text/csv; charset=UTF-8'
       'Content-Encoding': 'UTF-8'
     this.response.end csv
-    this.done()
 
 
 API.add 'service/oab/status', get: () -> return API.service.oab.status()

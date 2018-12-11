@@ -141,12 +141,18 @@ p {
             <p>It should look like this. If it does, hit save!</p>
             <img src="/static/add_widget_embed_code.png" style="width:100%">
 
-            <li>You’re done. Now try it with the examples shown! (You may need to refresh the page.)</li>
+            <li>Now try it with the examples shown! (You may need to refresh the page.)</li>
                    <img src="/static/widget_complete.png" style="width:100%">
 
 <!-- NOTE: it's been suggested we link to our about page here, or some resources for outreach. -->
 
-            <li>Time to tell everyone on campus!</li>
+            <li>
+              <p>If it doesn't work, you may need to install jquery, so try pasting this above the code you already pasted in:</p>
+              <p><pre>&lt;script src="{{site_url}}/static/jquery-1.10.2.min.js"&gt;&lt;/script&gt;</pre></p>
+              <p>If the syling doesn't look right you can try using the css framework we use by pasting this in too:</p>
+              <p><pre>&lt;link rel="stylesheet" href="{{site_url}}/static/bootstrap.min.css"&gt;</pre></p>
+            </li>
+            <li>You're done. Time to tell everyone on campus!</li>
           </ol>
 
          <p class="alert alert-info">
@@ -181,7 +187,7 @@ p {
             Make sure you put it <i>above</i> the code you put in before. If you can now see a box on the page, but it doesn't look right, add this:
           </li>
           <pre>
-&lt;link rel="stylesheet" href="{{site_url}}/static/bootstrap-3.0.3/css/bootstrap.min.css"&gt;</pre>
+&lt;link rel="stylesheet" href="{{site_url}}/static/bootstrap.min.css"&gt;</pre>
           <li>
             You should now be good to go! You can control where the search widget gets displayed by moving:
           </li>
@@ -222,7 +228,7 @@ p {
                     If you can now see something on the page, but it doesn't look right, add this:
                   </li>
                   <pre>
-&lt;link rel="stylesheet" href="{{site_url}}/static/bootstrap-3.0.3/css/bootstrap.min.css"&gt;</pre>
+&lt;link rel="stylesheet" href="{{site_url}}/static/bootstrap.min.css"&gt;</pre>
                   <li>
                     You should now be good to go! You can control where the search widget gets displayed by moving:
                   </li>
@@ -244,7 +250,7 @@ p {
           <ol><li>(optional) Include the following in the header of the page:</li>
           <pre class="stickidin">
     &lt;script src="https://static.cottagelabs.com/jquery-1.10.2.min.js"&gt;&lt;/script&gt;
-    &lt;link rel="stylesheet" href="https://static.cottagelabs.com/bootstrap-3.0.3/css/bootstrap.min.css"&gt;
+    &lt;link rel="stylesheet" href="{{site_url}}/static/bootstrap.min.css"&gt;
     &lt;script src="{{site_url}}/static/openaccessbutton_widget.js"&gt;&lt;/script&gt;
     &lt;script&gt;jQuery(document).ready(function() { openaccessbutton_widget(); });&lt;/script&gt;
           </pre>

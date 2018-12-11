@@ -455,7 +455,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
           surl = rec.received.url;
         } else if (rec.received.zenodo) {
           suc += 'in Zenodo at:<br>';
-          surl = rec.received.zenodo.split('/files/')[0];
+          surl = rec.received.zenodo_doi ? 'https://doi.org/' + rec.received.zenodo_doi : rec.received.zenodo.split('/files/')[0];
         } else if (rec.received.osf) {
           suc += 'in the OSF at:<br>';
           surl = rec.received.osf;
@@ -505,11 +505,11 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
         re += '</div>';
       }
 
-      if (rec.closed_on_create) {
-        re += '<p><b>Oh no! We can\'t start a request.</b></p>';
-        if (rec.closed_on_create_reason == 'nodoi') {
+      if (rec.closed_on_create || rec.closed_on_update) {
+        re += '<p><b>Oh no! We can\'t ' + (rec.closed_on_create ? 'start ' : 'progress ') + 'this request.</b></p>';
+        if (rec.closed_on_create_reason == 'nodoi' || rec.closed_on_update_reason == 'nodoi') {
           re += '<p>We need a <a href="https://en.wikipedia.org/wiki/Digital_object_identifier">DOI</a> to process this request, but we can\'t find one for the article you need, we\'re sorry. If you think this is a mistake, <a href="/feedback#general">let us know</a>. If you can find one on the page, you can <a href ="/">retry with that</a>.</p>';
-        } else if (rec.closed_on_create_reason == 'notarticle') {
+        } else if (rec.closed_on_create_reason == 'notarticle' || rec.closed_on_update_reason == 'notarticle') {
           re += '<p>We can\'t request this because it doesn\'t seem to be an academic journal article, we\'re sorry. If you think this is a mistake, <a href="/feedback#general">let us know</a>. Thanks for using the Open Access Button, try again soon.</p>';
         } else {
           re += '<p>The article you need is probably too old to make freely available, we\'re sorry. If you think this is a mistake, <a href="/feedback#general">let us know</a>. Thanks for using the Open Access Button, try again soon.</p>';
@@ -584,10 +584,12 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       }
       $('#actions').html(acts);
 
-      if (noddy.hasRole('openaccessbutton.admin') && rec.url && (rec.url.indexOf('http') === 0 || rec.url.indexOf('10.') === 0) && rec.status !== 'received' && rec.status !== 'closed' && rec.status !== 'refused') {
-        $('#adminframe').html('<iframe style="width:100%;height:800px;" src="' + (rec.url.indexOf('10.') === 0 ? 'https://doi.org/' : '') + rec.url.replace('http://','https://') + '"></iframe>');
+      if (noddy.hasRole('openaccessbutton.admin')) {
         $('#admin').show();
-        $('#adminframe').show();
+        if (rec.url && (rec.url.indexOf('http') === 0 || rec.url.indexOf('10.') === 0) && rec.status !== 'received' && rec.status !== 'closed' && rec.status !== 'refused') {
+          $('#adminframe').html('<iframe style="width:100%;height:800px;" src="' + (rec.url.indexOf('10.') === 0 ? 'https://doi.org/' : '') + rec.url.replace('http://','https://') + '"></iframe>');
+          $('#adminframe').show();
+        }
       }
 
       if ($('#story').length) $('#story').bind('keyup',suggest);
