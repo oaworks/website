@@ -174,7 +174,7 @@
         url: api+'/terms/' + w + '/' + k + '.exact?apikey='+noddy.apikey,
         success: function(data) {
           for ( var k in data ) {
-            $('#value').append('<option value="' + data[k].term + '">' + data[k].term + ' (' + data[k].count + ')</option>');
+            $('#value').append('<option value="' + (typeof data[k] === 'string' ? data[k] : data[k].term) + '">' + (typeof k === 'string' ? data[k] : data[k].term + ' (' + data[k].count + ')') + '</option>');
           }
         }
       });
@@ -189,9 +189,9 @@
         if (changed.to) curl += '&to=' + moment(changed.to,'DD/MM/YYYY').valueOf();
         $(this).attr('href',curl);
       } else {
-        var size = 100000;
+        var size = 200000;
         var fields = {
-          account: ['_id','createdAt','emails.0.address','profile.name','profile.firstname','profile.lastname','service.openaccessbutton.profile.affiliation','service.openaccessbutton.profile.profession','roles.openaccessbutton','username'],
+          account: ['_id','createdAt','email','profile.name','profile.firstname','profile.lastname','service.openaccessbutton.profile.affiliation','service.openaccessbutton.profile.profession','roles.openaccessbutton','username'],
           //request: ['_id','created_date','type','count','status','title','url','doi','journal','publisher','email','user.username','story','rating'],
           //request: ['_id','created_date','type','count','status','title','url','doi','journal','publisher','sherpa.color','name','email','user.username','user.email','user.firstname','user.lastname','story','rating','receiver','followup.count','followup.date','refused.email','refused.date','received.date','received.from','received.description','received.url','received.admin','received.cron','received.notfromauthor','notes','plugin','from','embedded'],
           support: ['created_date','url','type','story','username','rid'],

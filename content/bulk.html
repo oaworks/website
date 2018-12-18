@@ -42,6 +42,11 @@
   		  	(we do this by default)<br>
   		    <input type="checkbox" name="titles" class="titles" checked="checked"> yes, check titles where possible<br>
   		  </p>
+  		  <p>
+  		    Use Bing to learn more about a lookup where possible, if no other identifiers are provided/found? 
+  		    (this is not done by default because it incurs a cost, although it is done for any lookups that come via our widget, oasheet, illiad, clio, or alma)<br>
+  		    <input type="checkbox" name="bing" class="bing"> yes, check bing<br>
+  		  </p>
         <form>
           <input type="file" name="jobupload" id="jobupload" class="form-control" style="padding-bottom:30px;margin-bottom:5px;">
   				<div style="display:none;" id="jobinfo">Uploading...</div>
@@ -257,6 +262,7 @@
 			if ( $('.all:checked').length ) payload.all = true;
 			if ( $('.refresh:checked').length ) payload.refresh = true;
 			if ( $('.titles:checked').length === 0 ) payload.titles = false;
+			if ( $('.bing:checked').length ) payload.bing = true;
 			$.ajax({
 				url: api + '/job?apikey='+noddy.apikey,
 				method: 'POST',

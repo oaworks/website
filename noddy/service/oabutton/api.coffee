@@ -148,6 +148,16 @@ API.add 'service/oab/request/:rid',
             if email?.email?
               n.email = email.email
         oab_request.update(r._id,n) if JSON.stringify(n) isnt '{}'
+        if (r.user?.email? or n.user?.email?) and (not r.user or (not r.story? and n.story))
+          try
+            tmpl = API.mail.template 'initiator_confirmation.html'
+            sub = API.service.oab.substitute tmpl.content, {_id: r._id, url: (r.url ? n.url), title:(r.title ? n.title ? r.url) }
+            API.mail.send
+              service: 'openaccessbutton',
+              from: sub.from ? API.settings.service.openaccessbutton.mail.from
+              to: n.user?.email ? r.user.email
+              subject: sub.subject ? 'New request created ' + r._id
+              html: sub.content
         return oab_request.get r._id
       else
         return 404
@@ -202,10 +212,22 @@ API.add 'service/oab/history',
 API.add 'service/oab/users',
   get:
     roleRequired:'openaccessbutton.admin'
-    action: () -> return Users.search this.queryParams, {restrict:[{exists:{field:'roles.openaccessbutton'}}]}
+    action: () -> 
+      res = Users.search this.queryParams, {restrict:[{exists:{field:'roles.openaccessbutton'}}]}
+      try
+        for r in res.hits.hits
+          if not r._source.email?
+            r._source.email = r._source.emails[0].address
+      return res
   post:
     roleRequired:'openaccessbutton.admin'
-    action: () -> return Users.search this.bodyParams, {restrict:[{exists:{field:'roles.openaccessbutton'}}]}
+    action: () -> 
+      res = Users.search this.bodyParams, {restrict:[{exists:{field:'roles.openaccessbutton'}}]}
+      try
+        for r in res.hits.hits
+          if not res.hits.hits[r]._source.email?
+            res.hits.hits[r]._source.email = res.hits.hits[r]._source.emails[0].address
+      return res
 
 API.add 'service/oab/scrape',
   get:
@@ -377,13 +399,20 @@ API.add 'service/oab/export/:what',
     roleRequired: 'openaccessbutton.admin',
     action: () ->
       results = []
-      fields = if this.urlParams.what is 'changes' then ['_id','createdAt','created_date','action'] else if this.urlParams.what is 'request' then ['_id','created_date','type','count','status','title','url','doi','journal','publisher','sherpa.color','name','names','email','author_affiliation','user.username','user.email','user.firstname','user.lastname','story','rating','receiver','followup.count','followup.date','refused.email','refused.date','received.date','received.from','received.description','received.url','received.admin','received.cron','received.notfromauthor','notes','plugin','from','embedded'] else []
+      fields = []
+      if this.urlParams.what is 'changes'
+        fields = ['_id','createdAt','created_date','action']
+      else if this.urlParams.what is 'request'
+        fields = ['_id','created_date','type','count','status','title','url','doi','journal','publisher','sherpa.color','name','names','email','author_affiliation','user.username','user.email','user.firstname','user.lastname','story','rating','receiver','followup.count','followup.date','refused.email','refused.date','received.date','received.from','received.description','received.url','received.admin','received.cron','received.notfromauthor','notes','plugin','from','embedded']
+      else if this.urlParams.what is 'account'
+        fields = ['_id','createdAt','emails.0.address','profile.name','profile.firstname','profile.lastname','service.openaccessbutton.profile.affiliation','service.openaccessbutton.profile.profession','roles.openaccessbutton','username']
       match = {}
       match.range = {createdAt: {}} if this.queryParams.from or this.queryParams.to
       match.range.createdAt.gte = this.queryParams.from if this.queryParams.from
       match.range.createdAt.lte = parseInt(this.queryParams.to) + 86400000 if this.queryParams.to
+      # ADD A MATCH TO ADD THE OAB ROLE FILTER IF WHAT IS ACCOUNT
       if this.urlParams.what is 'dnr' or this.urlParams.what is 'mail' or this.urlParams.what is 'request'
-        results = if this.urlParams.what is 'dnr' then oab_dnr.fetch(match, true) else if this.urlParams.what is 'request' then oab_request.fetch(match, true) else mail_progress.fetch match, true
+        results = if this.urlParams.what is 'dnr' then oab_dnr.fetch(match, true) else if this.urlParams.what is 'request' then oab_request.fetch(match, true) else if this.urlParams.what is 'account' then Users.fetch(match,true) else mail_progress.fetch match, true
         for r of results
           if this.urlParams.what isnt 'request'
             for f of results[r]
@@ -420,11 +449,21 @@ API.add 'service/oab/export/:what',
       })
       this.response.end(csv)
 
-API.add 'service/oab/terms/:type/:key', get: () -> return API.es.terms 'oab', this.urlParams.type, this.urlParams.key
+API.add 'service/oab/terms/:type/:key', 
+  get: () -> 
+    if this.urlParams.type is 'account'
+      return Users.terms this.urlParams.key, 'roles.openaccessbutton:*'
+    else
+      return API.es.terms 'oab', this.urlParams.type, this.urlParams.key
 API.add 'service/oab/min/:type/:key', get: () -> return API.es.min 'oab', this.urlParams.type, this.urlParams.key
 API.add 'service/oab/max/:type/:key', get: () -> return API.es.max 'oab', this.urlParams.type, this.urlParams.key
-API.add 'service/oab/range/:type/:key', get: () -> return API.es.range 'oab', this.urlParams.type, this.urlParams.key
 API.add 'service/oab/keys/:type', get: () -> return API.es.keys 'oab', this.urlParams.type
+API.add 'service/oab/range/:type/:key', 
+  get: () ->
+    if this.urlParams.type is 'account'
+      return Users.range this.urlParams.key, 'roles.openaccessbutton:*'
+    else
+      return API.es.range 'oab', this.urlParams.type, this.urlParams.key
 
 API.add 'service/oab/job',
   get:
@@ -447,6 +486,7 @@ API.add 'service/oab/job',
         p.all = this.request.body.all ?= false
         p.refresh = 0 if this.request.body.refresh
         p.titles = this.request.body.titles ?= true
+        p.bing = this.request.body.bing if this.request.body.bing?
       job = API.job.create {refresh:this.request.body.refresh, complete:'API.service.oab.job_complete', user:this.userId, service:'openaccessbutton', function:'API.service.oab.find', name:(this.request.body.name ? "oab_availability"), processes:processes}
       API.service.oab.job_started job
       return job
