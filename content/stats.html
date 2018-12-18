@@ -203,6 +203,30 @@
                   success: function(dt) {
                     lineit(dt,"svg.rline");
                     lineit(dt,"svg.rrline");
+                    $.ajax({
+                      url: noddy.api + '/pings?q=service:openaccessbutton&sort=createdAt:asc&size=100000',
+                      success: function(dp) {
+                        var pinginfo = '<h3>Resources</h3><p>Here are the Pings we have gotten from various resources on the site. This will be updated to show more data at some point...</p>';
+                        var actions = {}
+                        for ( var h in dp.hits.hits) {
+                          var hr = dp.hits.hits[h]._source;
+                          if (actions[hr.action] !== undefined) {
+                            actions[hr.action] += 1;
+                          } else {
+                            actions[hr.action] = 1;
+                          }
+                        }
+                        var sorts = [];
+                        for (var v in actions) {
+                          sorts.push([v, actions[v]]);
+                        }
+                        sorts.sort(function(a, b) { return a[1] - b[1]; });
+                        for (var s in sorts) {
+                          pinginfo += '<p>' + sorts[s][0] + ': ' + sorts[s][1] + '</p>'
+                        }
+                        $('#results').append(pinginfo);
+                      }
+                    });
                   }
                 });
               }
