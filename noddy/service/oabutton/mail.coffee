@@ -72,6 +72,7 @@ API.service.oab.template = (template,refresh) ->
     return API.mail.template {service:'openaccessbutton'}
 
 API.service.oab.vars = (vars) ->
+  vars = JSON.parse JSON.stringify vars # need this in case a request is passed in as vars and later edited
   if vars?.user
     u = API.accounts.retrieve vars.user.id
     if u

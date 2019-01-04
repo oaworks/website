@@ -348,33 +348,37 @@ API.add 'service/oab/import',
               update = {}
               for up of p
                 if (not p[up]? or p[up]) and p[up] not in ['createdAt','created_date','plugin','from','embedded','names','count','receiver']
-                  if up.indexOf('refused.') is 0 and up isnt 'refused.date' and (not rq[up]? or rq[up].length isnt p[up].split(',').length)
-                    rq.refused ?= []
-                    added = false
-                    for eml in p[up].split(',')
-                      eml = eml.trim()
-                      add = true
-                      for ref in rq.refused
-                        add = ref.email isnt eml
-                      if add
-                        added = true
-                        rq.refused.push {email: eml, date: Date.now()}
-                    if added
-                      update.refused = rq.refused
-                  else if up.indexOf('received.') is 0 and ( not rq.received? or rq.received[up.split('.')[1]] isnt p[up] )
-                    rq.received ?= {}
-                    rq.received[up.split('.')[1]] = p[up]
-                    update.received = rq.received
-                  else if up.indexOf('followup.') is 0 and up isnt 'followup.date' and p['followup.count'] isnt rq.followup?.count
-                    rq.followup ?= {}
-                    rq.followup.count = p['followup.count']
-                    rq.followup.date ?= []
-                    rq.followup.date.push moment(Date.now(), "x").format "YYYYMMDD"
-                    update.followup = rq.followup
-                  else if up is 'sherpa.color' and ( not rq.sherpa? or rq.sherpa.color isnt p[up] )
-                    rq.sherpa ?= {}
-                    rq.sherpa.color = p[up]
-                    update.sherpa = rq.sherpa
+                  if up.indexOf('refused.') is 0
+                    if up isnt 'refused.date' and (not rq[up]? or rq[up].length isnt p[up].split(',').length)
+                      rq.refused ?= []
+                      added = false
+                      for eml in p[up].split(',')
+                        eml = eml.trim()
+                        add = true
+                        for ref in rq.refused
+                          add = ref.email isnt eml
+                        if add
+                          added = true
+                          rq.refused.push {email: eml, date: Date.now()}
+                      if added
+                        update.refused = rq.refused
+                  else if up.indexOf('received.') is 0
+                    if not rq.received? or rq.received[up.split('.')[1]] isnt p[up]
+                      rq.received ?= {}
+                      rq.received[up.split('.')[1]] = p[up]
+                      update.received = rq.received
+                  else if up.indexOf('followup.') is 0
+                    if up isnt 'followup.date' and p['followup.count'] isnt rq.followup?.count
+                      rq.followup ?= {}
+                      rq.followup.count = p['followup.count']
+                      rq.followup.date ?= []
+                      rq.followup.date.push moment(Date.now(), "x").format "YYYYMMDD"
+                      update.followup = rq.followup
+                  else if up is 'sherpa.color'
+                    if not rq.sherpa? or rq.sherpa.color isnt p[up]
+                      rq.sherpa ?= {}
+                      rq.sherpa.color = p[up]
+                      update.sherpa = rq.sherpa
                   else if up.indexOf('user.') is -1 and rq[up] isnt p[up]
                     rq[up] = p[up]
                     update[up] = rq[up]
@@ -386,6 +390,19 @@ API.add 'service/oab/import',
                 rq.updated_date = moment(rq.updatedAt, "x").format "YYYY-MM-DD HHmm.ss"
                 updates.push rq
                 resp.updated += 1
+                if this.queryParams.notify_users
+                  try
+                    emails = []
+                    if rq.user?
+                      if rq.user.email?
+                        emails.push rq.user.email
+                      else if rq.user.id?
+                        try
+                          u = API.accounts.retrieve rq.user.id
+                          emails.push u.emails[0].address
+                    try
+                      oab_support.each {rid:rq._id}, (s) -> emails.push(s.email) if s.email and s.email not in emails
+                    API.service.oab.mail({vars:API.service.oab.vars(rq), template:{filename:'requesters_request_inprogress.html'}, to:emails}) if emails.length
             else
               resp.missing.push p._id
         if updates.length
