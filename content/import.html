@@ -29,7 +29,8 @@
         you just created. From that csv you can then generate your import csv to import here.
       </p>
       <form>
-        <input type="file" name="jobupload" id="jobupload" class="form-control" style="padding-bottom:30px;margin-bottom:5px;">
+        <br><br><input type="checkbox" id="notify"> If this import is all requests where the request creator and request supporters should be notified that the request has been sent to the author, then tick here if you want notification emails to be sent (this does not include emails to the author)
+        <br><br><input type="file" name="jobupload" id="jobupload" class="form-control" style="padding-bottom:30px;margin-bottom:5px;">
 				<div style="display:none;" id="jobinfo">Uploading...</div>
       </form>
     </div>
@@ -115,7 +116,7 @@
         filename = undefined;
       } else {
   			$.ajax({
-  				url: api + '/import?apikey='+noddy.apikey,
+  				url: api + '/import?apikey='+noddy.apikey + ($('#notify').is(':checked') ? '&notify_users=true' : ''),
   				method: 'POST',
   				data: JSON.stringify(identifiers),
   				dataType: 'JSON',
