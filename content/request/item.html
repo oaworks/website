@@ -460,9 +460,13 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
           suc += 'in the OSF at:<br>';
           surl = rec.received.osf;
         }
-        if (surl.indexOf('http') !== 0) surl = 'http://' + surl;
-        suc += '<a target="_blank" href="' + surl + '" style="word-wrap:break-word;overflow-wrap:break-word;">' + surl + '</a></h3>';
-        suc += '<p style="text-align:center;"><small>Not what you expected? <a href="/feedback#wrong?searched=' + rec._id + '&given=' + surl + '">Report an issue</a>.</small></p>';
+        if (surl) {
+          if (surl.indexOf('http') !== 0) surl = 'http://' + surl;
+          suc += '<a target="_blank" href="' + surl + '" style="word-wrap:break-word;overflow-wrap:break-word;">' + surl + '</a></h3>';
+          suc += '<p style="text-align:center;"><small>Not what you expected? <a href="/feedback#wrong?searched=' + rec._id + '&given=' + surl + '">Report an issue</a>.</small></p>';
+        } else {
+          suc += '</h3>';
+        }
         suc += '</div>';
         $('#success').html(suc);
         $('#topper').css('background-image','url(/static/header_unlocked.jpg');
