@@ -363,7 +363,7 @@ noddy.tonext = function() {
       $('.noddyMessage').html('<div class="alert alert-info"><p>Thank you for logging in. You will be redirected back to <a href="' + noddy.next + '">' + noddy.next + '</a></p></div>');
       $('.noddyLoading').show();
       noddy.removeCookie('noddynext');
-      window.location = noddy.next;
+      setTimeout(function() { window.location = noddy.next; }, 1500);
     } else {
       $('.noddyLoading').hide();
       $('.noddyLogin').hide();
