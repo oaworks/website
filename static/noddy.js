@@ -217,7 +217,7 @@ noddy.tokenSuccess = function(data) {
   if (data && data.responseText) data = data.responseText;
   noddy.progress_interval = setInterval(noddy.tokenProgress,3000);
   if (data && data.mid && data.mid !== true) {
-    noddy.setCookie('noddyprogress',{interval:noddy.progress_interval,mid:data.mid,email:noddy.user.email,createdAt:(new Date()).valueOf()});
+    noddy.setCookie('noddyprogress',{interval:noddy.progress_interval,mid:data.mid,email:noddy.user.email,createdAt:Date.now()});
   } else {
     noddy.tokenProgress();
   }
@@ -390,9 +390,6 @@ noddy.loginSuccess = function(data) {
     clearInterval(noddy.progress_interval);
   }
   var nextcookie = noddy.getCookie('noddynext');
-  var timeout = Date.now() - 180000;
-  if (progress && progress.createdAt > timeout) {
-
   if (nextcookie) {
     if (!nextcookie.createdAt || (nextcookie.createdAt + 300000) < Date.now()  ) {
       // next cookies are only really useful while someone is proceeding though a login to get back to another page
@@ -514,7 +511,7 @@ noddy.login = function(e) {
     }
     if (!noddy.next && window.location.href.indexOf('next=') !== -1) noddy.next = decodeURIComponent(window.location.href.split('next=')[1].split('&')[0]);
     if (!noddy.next && noddy.getCookie('noddynext')) noddy.next = noddy.getCookie('noddynext');
-    if (noddy.next && !noddy.getCookie('noddynext')) noddy.setCookie('noddynext', {next:noddy.next,createdAt:(new Date()).valueOf()}, {expires:1});
+    if (noddy.next && !noddy.getCookie('noddynext')) noddy.setCookie('noddynext', {next:noddy.next,createdAt:Date.now()}, {expires:1});
 
     var opts = {
       type:'POST',
