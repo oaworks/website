@@ -101,6 +101,7 @@ noddy.cookie = 'noddy'; // the name we use for our login cookie
 noddy.days = 180;
 noddy.next = undefined; //  place to go after login (can be read from url vars too, and from old cookie)
 noddy.apikey = undefined; // this could be set manually but should not be. If cookies are restricted to httponly the backend will return a key that can be used
+noddy.required = undefined; // this could be a list of field lookups that are required for a user account to be really ready, so in the event of a redirect to account that causes a sign up and then pushes a user back to a page, they will not be sent back until the required fields have values
 
 noddy.oauthRedirectUri = undefined; // this can be set, but if not, current page will be used (whatever is used has to be authorised as a redirect URI with the oauth provider)
 noddy.oauthGoogleClientId = '360291218230-r9lteuqaah0veseihnk7nc6obialug84.apps.googleusercontent.com';
@@ -348,6 +349,31 @@ noddy.oauthLogin = function() {
   $.ajax(opts);
 }
 
+noddy.tonext = function() {
+  if (noddy.next) {
+    var gonext = true;
+    if (noddy.required) { // also need a check to see if a page url param or a cookie value has been set to specifically ignore mandatories, as sometimes pages may want to allow logins and nexts without completing the mandatories, and maybe also should depend on if a login or account creation?
+      for (var fid in noddy.required) {
+        if ( !$(noddy.required[fid]).val()  ) gonext = false;
+      }
+    }
+    if (noddy.debug) console.log('Noddy next checking if all details necessary to proceed are present, result is ' + (!noddy.required ? 'nothing required' : gonext));
+    if (gonext) {
+      // display a msg saying redirecting back to page
+      $('.noddyMessage').html('<div class="alert alert-info"><p>Thank you for logging in. You will be redirected back to <a href="' + noddy.next + '">' + noddy.next + '</a></p></div>');
+      $('.noddyLoading').show();
+      noddy.removeCookie('noddynext');
+      window.location = noddy.next;
+    } else {
+      $('.noddyLoading').hide();
+      $('.noddyLogin').hide();
+      $('.noddyToken').hide();
+      $('.nottin').hide();
+      $('.noddin').show();
+      $('.noddyMessage').html('<div class="alert alert-info"><p>Please provide the information below, then you will be redirected back to <a href="' + noddy.next + '">' + noddy.next + '</a></p></div>');
+    }
+  }
+}
 noddy.afterLogin = function() {
   // something the user of this lib can configure to do things after the loginCallback runs
   // or they could just overwrite the loginCallback for complete control
@@ -364,9 +390,18 @@ noddy.loginSuccess = function(data) {
     clearInterval(noddy.progress_interval);
   }
   var nextcookie = noddy.getCookie('noddynext');
+  var timeout = Date.now() - 180000;
+  if (progress && progress.createdAt > timeout) {
+
   if (nextcookie) {
-    noddy.next = nextcookie.next;
-    noddy.removeCookie('noddynext');
+    if (!nextcookie.createdAt || (nextcookie.createdAt + 300000) < Date.now()  ) {
+      // next cookies are only really useful while someone is proceeding though a login to get back to another page
+      // so if someone comes to a login page more than 5 minutes after being in the previous page workflow, assume they got busy doing something else
+      if (noddy.debug) console.log('Removing stale next cookie');
+      noddy.removeCookie('noddynext');
+    } else {
+      noddy.next = nextcookie.next;
+    }
   } else {
     $('.noddyLoading').hide();
     $('.noddyLogin').hide();
@@ -397,27 +432,18 @@ noddy.loginSuccess = function(data) {
         noddy.user.fingerprint = result;
         cookie.fingerprint = result;
         noddy.setCookie(noddy.cookie, cookie, data.settings);
-        if (noddy.next) {
-          window.location = noddy.next;
-        } else if (typeof noddy.afterLogin === 'function') {
-          noddy.afterLogin();
-        }
+        if (noddy.next) noddy.tonext();
+        if (typeof noddy.afterLogin === 'function') noddy.afterLogin();
       });
     } catch(err) {
       noddy.setCookie(noddy.cookie, cookie, data.settings);
-      if (noddy.next) {
-        window.location = noddy.next;
-      } else if (typeof noddy.afterLogin === 'function') {
-        noddy.afterLogin();
-      }
+      if (noddy.next) noddy.tonext();
+      if (typeof noddy.afterLogin === 'function') noddy.afterLogin();
     }
   } else {
     noddy.setCookie(noddy.cookie, cookie, data.settings);
-    if (noddy.next) {
-      window.location = noddy.next;
-    } else if (typeof noddy.afterLogin === 'function') {
-      noddy.afterLogin();
-    }
+    if (noddy.next) noddy.tonext();
+    if (typeof noddy.afterLogin === 'function') noddy.afterLogin();
   }
 }
 noddy.nologin = function() {
@@ -488,7 +514,7 @@ noddy.login = function(e) {
     }
     if (!noddy.next && window.location.href.indexOf('next=') !== -1) noddy.next = decodeURIComponent(window.location.href.split('next=')[1].split('&')[0]);
     if (!noddy.next && noddy.getCookie('noddynext')) noddy.next = noddy.getCookie('noddynext');
-    if (noddy.next && !noddy.getCookie('noddynext')) noddy.setCookie('noddynext', {next:noddy.next}, {expires:1});
+    if (noddy.next && !noddy.getCookie('noddynext')) noddy.setCookie('noddynext', {next:noddy.next,createdAt:(new Date()).valueOf()}, {expires:1});
 
     var opts = {
       type:'POST',
