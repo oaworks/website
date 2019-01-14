@@ -25,6 +25,7 @@ server {
   rewrite ^/requests /request;
   rewrite ^/request/((?!new).)*$ /request/item last;
   rewrite ^/response/((?!new).)*$ /response/item last;
+  rewrite ^/dnr/((?!new).)*$ /dnr/item last;
 
   location / {
     try_files /serve/$uri.html /serve/$uri/index.html /serve/404.html =404;

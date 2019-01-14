@@ -23,11 +23,7 @@ jQuery(document).ready(function() {
       if (nod._object.profile && nod._object.profile.firstname && nod._object.profile.lastname && nod._object.service && nod._object.service.openaccessbutton && nod._object.service.openaccessbutton.profile && nod._object.service.openaccessbutton.profile.profession) {
         $('#setinfo').hide();
         $('#sayhello').show();
-        if (window.location.href.indexOf('oabnxt=') !== -1) {
-          $('#tonext').attr('href',window.location.href.split('oabnxt=')[1].split('&')[0]);
-          $('#tonextalert').show();
-          window.location.href = window.location.href.split('oabnxt=')[1].split('&')[0];
-        }
+        if (noddy.next) noddy.tonext();
       }
     }, 1000);
   }
@@ -50,20 +46,20 @@ jQuery(document).ready(function() {
       $('#setinfo').show();
     } else {
       $('#sayhello').show();
-      if (window.location.href.indexOf('oabnxt=') !== -1) {
-        $('#tonext').attr('href',window.location.href.split('oabnxt=')[1].split('&')[0]);
-        $('#tonextalert').show();
-        window.location.href = window.location.href.split('oabnxt=')[1].split('&')[0];
-      }
+      if (noddy.next) noddy.tonext();
     }
   }
+  var afterlogout = function() {
+    nod = undefined;
+  }
   var afterfailure = function() {
-    $('.noddyMessage').html('<p>This link or code expired! They do that after their first use, 30 minutes, or if you get sent another. Refresh the page and reenter your email to try again.</p>');
+    $('.noddyMessage').html('<div class="alert alert-info"><p>This link or code expired! They do that after their first use, 30 minutes, or if you get sent another. Refresh the page and reenter your email to try again.</p></div>');
   }
   // TODO set these for oabutton to have its own oauth accounts:
   // noddy.oauthGoogleClientId = '';
   noddy.oauthFacebookAppId = '114282989239097';
-  noddy.init({afterLogin: afterlogin, afterFailure: afterfailure });
+  noddy.required = ['#firstname','#lastname','#profession'];
+  noddy.init({afterLogin: afterlogin, afterLogout: afterlogout, afterFailure: afterfailure });
   if (window.location.href.indexOf('email=') !== -1) {
     $('#noddyEmail').val(window.location.href.split('oabnxt=')[0].split('email=')[1].split('&')[0]);
     setTimeout(function() { $('#noddyLogin').trigger('click'); }, 100);
@@ -110,7 +106,7 @@ jQuery(document).ready(function() {
             <a href="mailto:help@openaccessbutton.org?subject=issues signing in">help@openaccessbutton.org</a>.
           </p>
         </div>
-        <div class="noddyMessages" style="margin-top:5px;"></div>
+        <div class="noddyMessage" style="margin-top:5px;"></div>
         <div class="noddyLoading" style="display:none;"><img style="height:30px;" src="/static/spin_orange.svg"></div>
       </div>
 
@@ -121,17 +117,10 @@ jQuery(document).ready(function() {
 
 
 <div class="container-fluid noddin" id="userinfo" style="display:none;">
-  <div id="tonextalert" class="row" style="display:none;">
-    <div class="col-md-8 col-md-offset-2">
-      <div class="alert alert-info">
-        <h4><a id="tonext" href="">Click here to return to the page you were viewing.</a></h4>
-      </div>
-    </div>
-  </div>
-
   <div class="row">
     <div class="col-md-8 col-md-offset-2">
       <h2 id="sayhello" style="display:none;">Hello <span class="username"></span></h2>
+      <div class="noddyMessage"></div>
       <p id="apikey" style="display:none;"></p>
 
       <h3>Your details</h3>
@@ -142,13 +131,13 @@ jQuery(document).ready(function() {
       <div id="account">
         <div class="row">
           <div class="col-md-6">
-            <input style="margin-top:7px;" type="text" nobject="profile.firstname" name="first name" class="form-control nobject" placeholder="First name (required)">
+            <input style="margin-top:7px;" id="firstname" type="text" nobject="profile.firstname" name="first name" class="form-control nobject" placeholder="First name (required)">
           </div>
           <div class="col-md-6">
-            <input style="margin-top:7px;" type="text" nobject="profile.lastname" name="last name" class="form-control nobject" placeholder="Family name (required)">
+            <input style="margin-top:7px;" id="lastname" type="text" nobject="profile.lastname" name="last name" class="form-control nobject" placeholder="Family name (required)">
           </div>
         </div>
-        <select nobject="service.openaccessbutton.profile.profession" name="profession" class="form-control nobject" style="margin-top:-12px;margin-bottom:8px;">
+        <select id="profession" nobject="service.openaccessbutton.profile.profession" name="profession" class="form-control nobject" style="margin-top:-12px;margin-bottom:8px;">
           <option value="">Profession (required)</option>
           <option value="Student">Student</option>
           <option value="Health professional">Health professional</option>

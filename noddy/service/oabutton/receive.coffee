@@ -23,7 +23,8 @@ API.service.oab.receive = (rid,files,url,title,description,firstname,lastname,cr
       creators = [{name:''}]
       creators[0].name = lastname if lastname
       creators[0].name += ', ' + firstname if firstname
-      if creators[0].name = '' and r.author
+      creators[0].name = r.name if creators[0].name is '' and r.name
+      if creators[0].name is '' and r.author
         try
           for a in r.author
             if a.family and ( creators[0].name = '' or r.email.toLowerCase().indexOf(a.family.toLowerCase()) isnt -1 )

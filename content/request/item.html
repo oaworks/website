@@ -308,7 +308,7 @@
         opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", noddy.apikey); }
         $.ajax(opts);
       } else {
-        window.location.href = '/account?oabnxt=/request/' + rid + encodeURIComponent('?support=true');
+        window.location.href = '/account?next=/request/' + rid + encodeURIComponent('?support=true');
       }
     }
 
@@ -531,7 +531,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
             re += '<div class="input-group">\
               <input type="text" name="email" id="youremail" class="form-control" placeholder="Your email address"> \
               <div class="input-group-btn">\
-                <a id="gologin" href="/account?oabnxt=/request/' + rid + '" class="btn btn-action">Continue</a>\
+                <a id="gologin" href="/account?next=/request/' + rid + '" class="btn btn-action">Continue</a>\
               </div>\
             </div>';
           }
@@ -544,7 +544,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
             re += '<p style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Save</a></p>';
             re += '<p class="saved" style="display:none;">Changes saved, refreshing page.</p>';
           } else {
-            re += '<p style="margin-bottom:40px;"><a href="/account?oabnxt=/request/' + rid + '" class="btn btn-block btn-action">Login / sign up to continue</a></p>';
+            re += '<p style="margin-bottom:40px;"><a href="/account?next=/request/' + rid + '" class="btn btn-block btn-action">Login / sign up to continue</a></p>';
           }
         }
       }

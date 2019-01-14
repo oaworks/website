@@ -69,6 +69,7 @@ server {
   rewrite ^/requests /request;
   rewrite ^/request/.*$ /request/item last;
   rewrite ^/response/.*$ /response/item last;
+  rewrite ^/dnr/.*$ /dnr/item last;
 
   location / {
     try_files /serve/$uri.html /serve/$uri/index.html /serve/404.html =404;
