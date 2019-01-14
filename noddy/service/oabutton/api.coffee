@@ -420,7 +420,7 @@ API.add 'service/oab/export/:what',
       if this.urlParams.what is 'changes'
         fields = ['_id','createdAt','created_date','action']
       else if this.urlParams.what is 'request'
-        fields = ['_id','created_date','type','count','status','title','url','doi','journal','publisher','sherpa.color','name','names','email','author_affiliation','user.username','user.email','user.firstname','user.lastname','story','rating','receiver','followup.count','followup.date','refused.email','refused.date','received.date','received.from','received.description','received.url','received.admin','received.cron','received.notfromauthor','notes','plugin','from','embedded']
+        fields = ['_id','created_date','type','count','status','title','url','doi','journal','publisher','sherpa.color','name','names','email','author_affiliation','user.username','user.email','user.firstname','user.lastname','user.profession','story','rating','receiver','followup.count','followup.date','refused.email','refused.date','received.date','received.from','received.description','received.url','received.admin','received.cron','received.notfromauthor','notes','plugin','from','embedded']
       else if this.urlParams.what is 'account'
         fields = ['_id','createdAt','emails.0.address','profile.name','profile.firstname','profile.lastname','service.openaccessbutton.profile.affiliation','service.openaccessbutton.profile.profession','roles.openaccessbutton','username']
       match = {}
