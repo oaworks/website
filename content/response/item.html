@@ -79,7 +79,7 @@
           <div class="col-md-6">
             <h3>Upload a file</h3>
             <p class="typearticle">
-              We'll then upload your article to <a target="_blank" href="https://zenodo.org" target="_blank">Zenodo</a> who will preserve and make it to everyone under a <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC-BY</a> license.
+              We'll then upload your article to <a target="_blank" href="https://zenodo.org" target="_blank">Zenodo</a> who will preserve and make it available to everyone under a <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC-BY</a> license.
             </p>
 
             <p class="typedata">
@@ -196,7 +196,7 @@
 
     var submit = function(e,upload) {
       try { if (e) e.preventDefault(); } catch(err) {}
-      var warns = ['researchgate.com','academia.edu','readcube.com'];
+      var warns = ['researchgate.','academia.edu','readcube.'];
       if (firstsubmit) {
         firstsubmit = false;
         for ( var w in warns ) {

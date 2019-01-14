@@ -223,7 +223,7 @@ noddy.tokenSuccess = function(data) {
   }
 }
 noddy.tokenProgress = function() {
-  if (noddy.getCookie(noddy.cookie)) window.location = window.location.href;
+  if (noddy.getCookie(noddy.cookie) && noddy.user.login !== 'success') window.location = window.location.href; // refreshes a page sitting waiting if login is completed on another page such as by clicking the login link on a login email opening another page where login completes
   var progress = noddy.getCookie('noddyprogress');
   var timeout = (new Date()).valueOf() - 180000;
   if (progress && progress.createdAt > timeout) {

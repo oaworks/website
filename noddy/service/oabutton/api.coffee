@@ -471,7 +471,7 @@ API.add 'service/oab/terms/:type/:key',
     if this.urlParams.type is 'account'
       return Users.terms this.urlParams.key, 'roles.openaccessbutton:*'
     else
-      return API.es.terms 'oab', this.urlParams.type, this.urlParams.key
+      return API.es.terms 'oab', this.urlParams.type, this.urlParams.key, undefined, undefined, false
 API.add 'service/oab/min/:type/:key', get: () -> return API.es.min 'oab', this.urlParams.type, this.urlParams.key
 API.add 'service/oab/max/:type/:key', get: () -> return API.es.max 'oab', this.urlParams.type, this.urlParams.key
 API.add 'service/oab/keys/:type', get: () -> return API.es.keys 'oab', this.urlParams.type

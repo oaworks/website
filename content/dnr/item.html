@@ -10,7 +10,7 @@
         Would you mind taking a minute to answer a couple of questions about why you don't want us to contact you?
       </p>
       <p>
-        <a id="bug" href="">Please click here to answer our quick survey</a>
+        <a id="feedback" href="">Please click here to answer our quick survey</a>
       </p>
     </div>
   </div>
@@ -23,17 +23,13 @@
 
     var email = window.location.pathname.split('/')[2];
     $('#email').html(email);
-    $('#bug').attr('href','/bug#dnr?email='+email);
+    $('#feedback').attr('href','/feedback#dnr?email='+email);
 
     var submit = function() {
-      if ($('#url').val()) data.url = $('#url').val();
-      if ($('#description').val()) data.description = $('#description').val();
-      if ($('#title').val()) data.title = $('#title').val();
       $.ajax({
         type: 'POST',
         url: api + '/dnr?email=' + email,
-        cache: false,
-        processData: false
+        cache: false
       });
     }
     submit();
