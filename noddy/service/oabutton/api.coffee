@@ -302,7 +302,7 @@ API.add 'service/oab/dnr',
       return d
   post: () ->
     e = this.queryParams.email ? this.request.body.email
-    refuse = if this.queryParams.refuse in ['false',false] then false else true
+    refuse = if not this.queryParams.refuse? or this.queryParams.refuse in ['false',false] then false else true
     return if e then API.service.oab.dnr(e,true,refuse) else 400
   delete:
     authRequired: 'openaccessbutton.admin'
