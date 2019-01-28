@@ -54,5 +54,12 @@ API.service.oab.admin = (rid,action) ->
   else if action is 'author_email_not_found'
     API.service.oab.mail({vars:vars,template:{filename:'author_email_not_found.html'},to:requestors}) if requestors.length
     update.status = 'closed'
+  else if action is 'link_by_author'
+    API.service.oab.mail({vars:vars,template:{filename:'authors_thanks_article.html'},to:r.email}) if r.email
+    API.service.oab.mail({vars:vars,template:{filename:'requestors_request_success_article.html'},to:requestors}) if requestors.length
+    update.status = 'received'
+  else if action is 'link_by_admin'
+    API.service.oab.mail({vars:vars,template:{filename:'requestors_request_success_article.html'},to:requestors}) if requestors.length
+    update.status = 'received'
   oab_request.update(rid,update) if JSON.stringify(update) isnt '{}'
 
