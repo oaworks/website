@@ -485,28 +485,33 @@ API.add 'service/oab/range/:type/:key',
 API.add 'service/oab/job',
   get:
     action: () ->
-      jobs = job_job.search({service:'openaccessbutton'},{size:1000,newest:true}).hits.hits
+      jobs = job_job.search({service:'openaccessbutton'},{_source:{exclude:['processes']},size:1000,newest:true}).hits.hits
       for j of jobs
         jobs[j] = jobs[j]._source
         ju = API.accounts.retrieve jobs[j].user
         jobs[j].email = ju?.emails[0].address
-        jobs[j].processes = if jobs[j].processes? then jobs[j].processes.length else 0
+        jobs[j].processes = jobs[j].count
       return jobs
   post:
     roleRequired: 'openaccessbutton.user'
     action: () ->
-      processes = this.request.body.processes ? this.request.body
-      for p in processes
-        p.plugin = this.request.body.plugin ? 'bulk'
-        p.libraries = this.request.body.libraries if this.request.body.libraries?
-        p.sources = this.request.body.sources if this.request.body.sources?
-        p.all = this.request.body.all ?= false
-        p.refresh = 0 if this.request.body.refresh
-        p.titles = this.request.body.titles ?= true
-        p.bing = this.request.body.bing if this.request.body.bing?
-      job = API.job.create {refresh:this.request.body.refresh, complete:'API.service.oab.job_complete', user:this.userId, service:'openaccessbutton', function:'API.service.oab.find', name:(this.request.body.name ? "oab_availability"), processes:processes}
-      API.service.oab.job_started job
-      return job
+      maxallowedlength = 15000
+      checklength = this.request.body.processes?.length ? this.request.body.length
+      if checklength > maxallowedlength
+        return 413
+      else
+        processes = this.request.body.processes ? this.request.body
+        for p in processes
+          p.plugin = this.request.body.plugin ? 'bulk'
+          p.libraries = this.request.body.libraries if this.request.body.libraries?
+          p.sources = this.request.body.sources if this.request.body.sources?
+          p.all = this.request.body.all ?= false
+          p.refresh = 0 if this.request.body.refresh
+          p.titles = this.request.body.titles ?= true
+          p.bing = this.request.body.bing if this.request.body.bing?
+        job = API.job.create {refresh:this.request.body.refresh, complete:'API.service.oab.job_complete', user:this.userId, service:'openaccessbutton', function:'API.service.oab.find', name:(this.request.body.name ? "oab_availability"), processes:processes}
+        API.service.oab.job_started job
+        return job
 
 API.add 'service/oab/job/generate/:start/:end',
   post:

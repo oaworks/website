@@ -363,7 +363,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       if (record.test === true) dets += ' checked="checked"';
       dets += '>';
       dets += ' &nbsp;&nbsp;Action: <select id="action" class="form-control" style="width:150px;display:inline;">';
-      var actions = ['','send_to_author','story_too_bad','not_a_scholarly_article','dead_author','user_testing','broken_link','article_before_2000','author_email_not_found'];
+      var actions = ['','send_to_author','story_too_bad','not_a_scholarly_article','dead_author','user_testing','broken_link','article_before_2000','author_email_not_found','link_by_author','link_by_admin'];
       if (record.received && record.received.url) actions.push('remove_submitted_url');
       for ( var a in actions ) {
         dets += '<option value="' + actions[a] + '">' + actions[a].replace(/_/g,' ') + '</option>';
