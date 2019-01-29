@@ -339,7 +339,7 @@
     if (window.location.href.indexOf('citation=') !== -1) id = decodeURIComponent(window.location.href.split('citation=')[1].split('&')[0]);
     if (window.location.href.indexOf('identifier=') !== -1) id = decodeURIComponent(window.location.href.split('identifier=')[1].split('&')[0]);
     if (window.location.href.indexOf('ident=') !== -1) id = decodeURIComponent(window.location.href.split('ident=')[1].split('&')[0]);
-    if (window.location.href.replace('uid=','').indexOf('id=') !== -1) id = decodeURIComponent(window.location.href.split('id=')[1].split('&')[0]);
+    if (window.location.href.replace('uid=','').indexOf('id=') !== -1) id = decodeURIComponent(window.location.href.replace('uid=','').split('id=')[1].split('&')[0]);
     if (id) {
       $('#url').val(id).trigger('keyup');
       availability();
