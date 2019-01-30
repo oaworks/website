@@ -271,7 +271,10 @@ API.add 'service/oab/receive/:rid/:holdrefuse',
   get: () ->
     if r = oab_request.find {receiver:this.urlParams.rid}
       if this.urlParams.holdrefuse is 'refuse'
-        API.service.oab.refuse r._id, this.queryParams.reason
+        if this.queryParams.email is r.email
+          API.service.oab.refuse r._id, this.queryParams.reason
+        else
+          return 401
       else
         if isNaN(parseInt(this.urlParams.holdrefuse))
           return 400
@@ -426,7 +429,8 @@ API.add 'service/oab/export/:what',
       match = {}
       match.range = {createdAt: {}} if this.queryParams.from or this.queryParams.to
       match.range.createdAt.gte = this.queryParams.from if this.queryParams.from
-      match.range.createdAt.lte = parseInt(this.queryParams.to) + 86400000 if this.queryParams.to
+      match.range.createdAt.lte = parseInt(this.queryParams.to) + 86400000 if this.queryParams.to #make searches for a day include that day
+      match.range.createdAt.lte += 86400000 if match.range.createdAt.lte? and match.range.createdAt.lte > Date.now() # make searches for today definitely cover all of today
       # ADD A MATCH TO ADD THE OAB ROLE FILTER IF WHAT IS ACCOUNT
       if this.urlParams.what is 'dnr' or this.urlParams.what is 'mail' or this.urlParams.what is 'request'
         results = if this.urlParams.what is 'dnr' then oab_dnr.fetch(match, true) else if this.urlParams.what is 'request' then oab_request.fetch(match, true) else if this.urlParams.what is 'account' then Users.fetch(match,true) else mail_progress.fetch match, true

@@ -106,13 +106,13 @@
             </form>
           </div>
           <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12" id="refusepls" style="display:none;">
           <h3>Can't share?</h3>
           <p class="typearticle">
-            If you are the author and you can't share your article, or don't want to, you can <a href="?refuse=true">click here</a> and we'll let the requestor know.
+            If you are the author and you can't share your article, or don't want to, you can <a href="#" id="showrefuse">click here</a> and we'll let the requestor know.
           </p>
           <p class="typedata">
-            If you can't share your data, or don't want to, you can simply <a href="?refuse=true">click here</a> and we'll let the requestor know.
+            If you can't share your data, or don't want to, you can simply <a href="#" id="showrefuse">click here</a> and we'll let the requestor know.
           </p>
         </div>
               </div>
@@ -167,11 +167,25 @@
           </p>
       </div>
 
-      <div class="panels" id="refuse">
-          <h3>Thank you for your response</h3>
+      <div class="panels" id="confirmrefuse">
           <p>
-            We are sorry that you are unable to provide the content. We will let requestors know it cannot be made available, and display that publically on the request page.
+            We are sorry that you are unable to provide the content. We will let requestors know it cannot be made available, and display that on the request page.
           </p>
+          <p>Please complete your email address below to allow us to confirm that you cannot provide the content:</p>
+          
+          <div class="input-group">
+            <input type="text" id="confirmemail" class="form-control" ></input>
+            <div class="input-group-btn">
+              <a class="btn btn-action btn-block" style="padding-left:3px;padding-right:3px;" href="#" id="dorefuse">Confirm</a>
+            </div>
+          </div>
+          
+          <p id="noconfirm" style="display:none;">Sorry, that email does not match. Please try again, or try our <a href="/feedback#noshare?confirmed=false">feedback</a> page if you continue to have difficulties.</p>
+      </div>
+
+      <div class="panels" id="refused">
+        <p>Thanks for letting us know you can't provide this content.</p>
+        <p>It would be great if you could give us some more <a id="refusefeedback" href="/feedback#noshare">feedback</a> about why you could not share the content.</p>
       </div>
 
     </div>
@@ -184,6 +198,21 @@
 
 
 <script>
+  $.fn.setCursorPosition = function(pos) {
+    this.each(function(index, elem) {
+      if (elem.setSelectionRange) {
+        elem.setSelectionRange(pos, pos);
+      } else if (elem.createTextRange) {
+        var range = elem.createTextRange();
+        range.collapse(true);
+        range.moveEnd('character', pos);
+        range.moveStart('character', pos);
+        range.select();
+      }
+    });
+    return this;
+  };
+
   jQuery(document).ready(function() {
 
     $('.typearticle').hide();
@@ -194,6 +223,33 @@
     var clickedadmin = false;
     var firstsubmit = true;
 
+    var showrefuse = function(e) {
+      e.preventDefault();
+      $('.panels').hide();
+      $('#confirmrefuse').show();
+      $('#confirmemail').focus().val('@' + request.email.split('@')[1]).setCursorPosition(0);
+    }
+    $('#showrefuse').bind('click',showrefuse);
+    var dorefuse = function(e) {
+      e.preventDefault();
+      if ($('#confirmemail').val() === request.email) {
+        $.ajax({
+          type: 'GET',
+          url: api + '/receive/' + rid + '/refuse?email=' + encodeURIComponent(request.email),
+          success: function() {
+            $('.panels').hide();
+            $('#refused').show();
+            $('#refusefeedback').attr('href','/feedback#noshare?request=' + rid);
+            //window.location = '/feedback#noshare?request=' + rid;
+          }
+        });
+      } else {
+        $('#noconfirm').show();
+        $('#confirmemail').focus().val('@' + request.email.split('@')[1]).setCursorPosition(0);
+      }
+    }
+    $('#dorefuse').bind('click',dorefuse);
+    
     var submit = function(e,upload) {
       try { if (e) e.preventDefault(); } catch(err) {}
       var warns = ['researchgate.','academia.edu','readcube.'];
@@ -286,6 +342,7 @@
           }
         }
       }
+      if (request.email) $('#refusepls').show();
 
       if (request.status === 'received') {
         $('.showupload').show();
@@ -300,9 +357,7 @@
         $('#holdlength').html(hold);
         $('#hold').show();
       } else if (window.location.href.indexOf('refuse=') !== -1) {
-        $('.showupload').show();
-        $.ajax({type: 'GET',url: api + '/receive/' + rid + '/refuse'});
-        $('#refuse').show();
+        $('#confirmrefuse').show();
       } else {
         $('#upload').show();
       }
