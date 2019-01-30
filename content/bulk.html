@@ -63,6 +63,7 @@
 
 <script>
   jQuery(document).ready(function() {
+
     if (!noddy.loggedin()) {
       window.location = '/account?next=/bulk';
     }
@@ -85,7 +86,7 @@
             $('html,body').scrollTop(0);
             $('#jobinfo').html('Creating requests from job ' + uid + '...');
             $.ajax({
-              url: api + '/job/' + uid + '/request?story=' + story + '&apikey=' + noddy.apikey,
+              url: api + '/job/' + uid + '/request?story=' + encodeURIComponent(story) + '&apikey=' + noddy.apikey,
               success: function(res) {
                 $('#jobinfo').html('<p>' + res.length + ' requests created</p>');
                 for ( var rid in res ) $('#jobinfo').append('<p><a target="_blank" href="/request/' + res[rid]._id + '">' + res[rid]._id + '</a></p>');
