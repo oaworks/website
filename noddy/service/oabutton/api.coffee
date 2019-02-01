@@ -383,9 +383,10 @@ API.add 'service/oab/import',
                       rq.sherpa.color = p[up]
                       update.sherpa = rq.sherpa
                   else if up.indexOf('user.') is 0
-                    rq.user ?= {}
-                    rq.user[up.split('.')[1]] = p[up]
-                    update.user = rq.user
+                    if not rq.user? or rq.user[up.split('.')[1]] isnt p[up]
+                      rq.user ?= {}
+                      rq.user[up.split('.')[1]] = p[up]
+                      update.user = rq.user
                   else if rq[up] isnt p[up]
                     rq[up] = p[up]
                     update[up] = rq[up]
