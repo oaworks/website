@@ -37,7 +37,6 @@ API.service.oab.receive = (rid,files,url,title,description,firstname,lastname,cr
       # if embargoed can also provide embargo_date
       # can provide access_conditions which is a string sentence explaining what conditions we will allow access for
       # license can be a string specifying the license type for open or embargoed content, using opendefinition license tags like cc-by
-      # publication_date can be YYYY-MM-DD but we only keep year, so not much use
       meta =
         title: title ? (if r.title then r.title else (if r.url.indexOf('h') isnt 0 and r.url.indexOf('1') isnt 0 then r.url else 'Unknown')),
         description: description ? "Deposited from Open Access Button",
@@ -47,6 +46,7 @@ API.service.oab.receive = (rid,files,url,title,description,firstname,lastname,cr
         version: 'AAM',
         journal_title: r.journal,
         prereserve_doi: API.settings.service.openaccessbutton?.zenodo?.prereserve_doi and not r.doi?
+      try meta['publication_date'] = r.published if r.published? and typeof r.published is 'string' and r.length is 10
       z = API.use.zenodo.deposition.create meta, up, API.settings.service.openaccessbutton?.zenodo?.token
       r.received.zenodo = 'https://zenodo.org/record/' + z.id if z.id
       r.received.zenodo_doi = z.metadata.prereserve_doi.doi if z.metadata?.prereserve_doi?.doi?

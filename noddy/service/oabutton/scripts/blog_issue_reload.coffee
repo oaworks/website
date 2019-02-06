@@ -13,13 +13,13 @@ import Future from 'fibers/future'
       recs = JSON.parse(fs.readFileSync('/home/cloo/backups/oabutton_full_old_old_05032018.json'))
       console.log recs.hits.hits.length
 
-      old_ratings = API.convert.csv2json(undefined,fs.readFileSync('/home/cloo/oabutton_ratings.csv').toString())
+      old_ratings = API.convert.csv2json(fs.readFileSync('/home/cloo/oabutton_ratings.csv').toString())
       story_ratings = {}
       for rate in old_ratings
         if rate.Story? and typeof rate.Story is 'string'
           story_ratings[rate.Story.toLowerCase()] = rate
 
-      new_ratings = API.convert.csv2json(undefined,fs.readFileSync('/home/cloo/oabutton_ratings_withID_13072018.csv').toString())
+      new_ratings = API.convert.csv2json(fs.readFileSync('/home/cloo/oabutton_ratings_withID_13072018.csv').toString())
       console.log new_ratings[0]
       ratings = {}
       for rating in new_ratings
