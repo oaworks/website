@@ -71,6 +71,7 @@ API.service.oab.scrape = (url,content,doi) ->
       meta.publisher ?= cr.publisher
       meta.year = cr['published-print']['date-parts'][0][0] if cr['published-print']?['date-parts']? and cr['published-print']['date-parts'].length > 0 and cr['published-print']['date-parts'][0].length > 0
       meta.year ?= cr.created['date-time'].split('-')[0] if cr.created?['date-time']?
+      try meta.published ?= if cr['published-online']?['date-parts']? then cr['published-online']['date-parts'][0].join('-') else if cr['published-print']?['date-parts']? then cr['published-print']['date-parts'][0].join('-') else cr.created['date-parts'][0].join('-')
 
   if not meta.year
     try
