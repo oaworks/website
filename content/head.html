@@ -25,15 +25,6 @@
 
   jQuery(document).ready(function() {
 
-    var chromeinstall = function(e) {
-      if( window.outerHeight == screen.height) {
-        console.log("chrome is in fullscreen view. Quitting inline install.");
-      } else {
-        e.preventDefault();
-        chrome.webstore.install(undefined, function() { window.location = window.location.href }, function(err) { console.log('install error'); console.log(err); });
-      }
-    }
-
     window.mobileCheck = function() {
       // checks if browser is a mobile or tablet browser
       var check = false;
@@ -48,7 +39,6 @@
         $('#getpluginsetc').append($('#install_mobile').clone(true).show());
       } else if ((test === undefined && navigator.userAgent.match(/chrome/i) && !navigator.userAgent.match(/edge/i)) || test === 'chrome') {
         $('#getpluginsetc').append($('#install_chrome').clone(true).show());
-        $('.chromeinstall').on('click',chromeinstall);
       } else if ((test === undefined && navigator.userAgent.match(/firefox/i)) || test === 'firefox') {
         $('#getpluginsetc').append($('#install_firefox').clone(true).show());
       } else {

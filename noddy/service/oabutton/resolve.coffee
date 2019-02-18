@@ -119,37 +119,42 @@ API.service.oab.resolve = (meta, content, sources, all=false, titles=true, journ
         meta.found.eupmc = res.url
         return meta if not all and res.redirect isnt false
 
-  if bing and API.settings?.service?.openaccessbutton?.resolve?.bing isnt false and not meta.doi and meta.url.indexOf('http') isnt 0 and meta.url.indexOf('10.') isnt 0 and meta.url.length > 8
-    meta.bing = true
-    try
-      mct = meta.url.toLowerCase().replace(/[^a-z0-9 ]+/g, " ").replace(/\s\s+/g, ' ')
-      mct = mct.replace('pmid','pmid ') if mct.indexOf('pmid') is 0
-      mct = mct.replace('pmc','pmc ') if mct.indexOf('pmc') is 0
-      bing = API.use.microsoft.bing.search mct, true, 2592000000, API.settings.use.microsoft.bing.key # search bing for what we think is a title (caching up to 30 days)
-      bct = bing.data[0].name.toLowerCase().replace('(pdf)','').replace(/[^a-z0-9 ]+/g, " ").replace(/\s\s+/g, ' ')
-      if not API.service.oab.blacklist(bing.data[0].url) and mct.replace(/ /g,'').indexOf(bct.replace(/ /g,'')) is 0 # if the URL is usable and tidy bing title is not a partial match to the start of the provided title, we won't do anything with it
-        bing.data[0].url = bing.data[0].url.replace(/"/g,'')
-        try
-          if bing.data[0].url.toLowerCase().indexOf('.pdf') is -1
-            scraped = API.service.oab.scrape bing.data[0].url
-            meta.scraped = true
-            meta.title ?= scraped.title ? meta.url
-            meta.url = bing.data[0].url
-            meta.doi ?= scraped.doi
-          else if mct.replace(/[^a-z0-9]+/g, "").indexOf(bing.data[0].url.toLowerCase().split('.pdf')[0].split('/').pop().replace(/[^a-z0-9]+/g, "")) is 0
-            meta.title ?= meta.url
-            meta.url = bing.data[0].url
-          else
-            content = API.convert.pdf2txt(bing.data[0].url)
-            content = content.substring(0,1000) if content.length > 1000
-            content = content.toLowerCase().replace(/[^a-z0-9]+/g, "").replace(/\s\s+/g, '')
-            if content.indexOf(mct.replace(/ /g, '')) isnt -1
+  API.settings.service.openaccessbutton.resolve.bing = {max:1000,cap:'30days'} if API.settings?.service?.openaccessbutton?.resolve?.bing is true
+  if bing and API.settings?.service?.openaccessbutton?.resolve?.bing isnt false and API.settings?.service?.openaccessbutton?.resolve?.bing?.use isnt false and not meta.doi and meta.url.indexOf('http') isnt 0 and meta.url.indexOf('10.') isnt 0 and meta.url.length > 8
+    cap = if API.settings?.service?.openaccessbutton?.resolve?.bing?.cap? then API.job.cap(API.settings.service.openaccessbutton?.resolve?.bing?.max ? 1000, API.settings.service.openaccessbutton?.resolve?.bing?.cap ? '30days','oabutton_bing') else undefined
+    if cap?.capped
+      meta.capped = true
+    else
+      meta.bing = true
+      try
+        mct = meta.url.toLowerCase().replace(/[^a-z0-9 ]+/g, " ").replace(/\s\s+/g, ' ')
+        mct = mct.replace('pmid','pmid ') if mct.indexOf('pmid') is 0
+        mct = mct.replace('pmc','pmc ') if mct.indexOf('pmc') is 0
+        bing = API.use.microsoft.bing.search mct, true, 2592000000, API.settings.use.microsoft.bing.key # search bing for what we think is a title (caching up to 30 days)
+        bct = bing.data[0].name.toLowerCase().replace('(pdf)','').replace(/[^a-z0-9 ]+/g, " ").replace(/\s\s+/g, ' ')
+        if not API.service.oab.blacklist(bing.data[0].url) and mct.replace(/ /g,'').indexOf(bct.replace(/ /g,'')) is 0 # if the URL is usable and tidy bing title is not a partial match to the start of the provided title, we won't do anything with it
+          bing.data[0].url = bing.data[0].url.replace(/"/g,'')
+          try
+            if bing.data[0].url.toLowerCase().indexOf('.pdf') is -1
+              scraped = API.service.oab.scrape bing.data[0].url
+              meta.scraped = true
+              meta.title ?= scraped.title ? meta.url
+              meta.url = bing.data[0].url
+              meta.doi ?= scraped.doi
+            else if mct.replace(/[^a-z0-9]+/g, "").indexOf(bing.data[0].url.toLowerCase().split('.pdf')[0].split('/').pop().replace(/[^a-z0-9]+/g, "")) is 0
               meta.title ?= meta.url
               meta.url = bing.data[0].url
-        catch
-          # if we cannot scrape it for some reason, but the bing title matched fairly well, we will accept the bing url anyway
-          meta.title ?= meta.url
-          meta.url = bing.data[0].url
+            else
+              content = API.convert.pdf2txt(bing.data[0].url)
+              content = content.substring(0,1000) if content.length > 1000
+              content = content.toLowerCase().replace(/[^a-z0-9]+/g, "").replace(/\s\s+/g, '')
+              if content.indexOf(mct.replace(/ /g, '')) isnt -1
+                meta.title ?= meta.url
+                meta.url = bing.data[0].url
+          catch
+            # if we cannot scrape it for some reason, but the bing title matched fairly well, we will accept the bing url anyway
+            meta.title ?= meta.url
+            meta.url = bing.data[0].url
 
   if not meta.doi and meta.url.indexOf('http') is 0 and not meta.pmid and not meta.pmc and not scraped
     # no point resolving for URL if we already had these, the splash pages would not contain a DOI if the eupmc API did not have it

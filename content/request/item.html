@@ -339,14 +339,14 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
         try { dets += '<p><a class="btn btn-block btn-action" target="_blank" href="http://www.sherpa.ac.uk/romeo/search.php?issn=' + record.sherpa.journal.issn + '">View journal on Sherpa Romeo</a></p>'; } catch(err) {}
         try {
           dets += '<p>Copyright links:</p>';
-          for (var i in record.sherpa.publisher.copyrightlinks.copyrightlink) {
-            dets += '<p><a class="btn btn-action" target="_blank" href="' + record.sherpa.publisher.copyrightlinks.copyrightlink[i].copyrightlinkurl[0] + '">' + record.sherpa.publisher.copyrightlinks.copyrightlink[i].copyrightlinktext[0] + '</a></p>';
+          for (var i in record.sherpa.publisher.copyright) {
+            dets += '<p><a class="btn btn-action" target="_blank" href="' + record.sherpa.publisher.copyright[i].url + '">' + record.sherpa.publisher.copyright[i].text + '</a></p>';
           }
         } catch(err) {}
         try {
           dets += '<p>Journal conditions:</p>';
-          for (var p in record.sherpa.publisher.conditions.condition) {
-            dets += '<p>' + record.sherpa.publisher.conditions.condition[p] + '</p>';
+          for (var p in record.sherpa.publisher.conditions) {
+            dets += '<p>' + record.sherpa.publisher.conditions[p] + '</p>';
           }
         } catch(err) {}
 
