@@ -139,7 +139,7 @@ API.add 'service/oab/request/:rid',
             n.year ?= cr.created['date-time'].split('-')[0] if not r.year? and cr.created?['date-time']?
             try n.published ?= if cr['published-online']?['date-parts']? then cr['published-online']['date-parts'][0].join('-') else if cr['published-print']?['date-parts']? then cr['published-print']['date-parts'][0].join('-') else cr.created['date-parts'][0].join('-')
         r.author_affiliation = n.author_affiliation if n.author_affiliation?
-        if n.crossref_type? and ['journal-article', 'proceedings-article'].indexOf(n.crossref_type) is -1
+        if n.crossref_type isnt 'journal-article'
           n.status = 'closed'
           n.closed_on_update = true
           n.closed_on_update_reason = 'notarticle'
@@ -192,23 +192,13 @@ API.add 'service/oab/supports/:rid',
     action: () ->
       return API.service.oab.supports this.urlParams.rid, this.user
 
-API.add 'service/oab/supports',
-  get: () -> return oab_support.search this.queryParams
-  post: () -> return oab_support.search this.bodyParams
+API.add 'service/oab/supports', () -> return oab_support.search this.bodyParams
 
-API.add 'service/oab/availabilities',
-  csv: true
-  post: 'get'
-  get: () -> return oab_availability.search this.queryParams ? this.bodyParams
+API.add 'service/oab/availabilities', () -> return oab_availability.search this
 
-API.add 'service/oab/requests',
-  csv: true
-  post: 'get'
-  get: () -> return oab_request.search this.queryParams ? this.bodyParams
+API.add 'service/oab/requests', () -> return oab_request.search this
 
-API.add 'service/oab/history',
-  get: () -> return oab_request.history this.queryParams
-  post: () -> return oab_request.history this.bodyParams
+API.add 'service/oab/history', () -> return oab_request.history this.bodyParams
 
 API.add 'service/oab/users',
   get:

@@ -1,13 +1,20 @@
 
 <script type="text/javascript" src="/static/holder/jquery.holder.js"></script>
 
-<div class="container-fluid" id="availability" style="margin-bottom:200px;">
+<div class="container-fluid">
   <div class="row">
     <div class="col-md-8 col-md-offset-2">
+      <img class="holder loading" src="/static/spin_orange.svg" style="width:100%;display:none;" />
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid" id="availability" style="margin-bottom:200px;max-width:1200px;width:100%;">
+  <div class="row">
+    <div class="col-md-12">
       <input type="text" class="form-control holder search" style="display:none;">
-      <img class="holder loading" src="/static/spin_orange.svg" style="width:100%;" />
       <div id="results">
-        <p>Stats are only available to administrators. Please try <a href="/account">logging in</a> if you are an admin and the stats do not display.</p>
+        <p style="text-align:center;">Stats are only available to administrators. Please try <a href="/account">logging in</a> if you are an admin and the stats do not display.</p>
       </div>
     </div>
   </div>
@@ -91,9 +98,11 @@
   	}
 
     var status;
+    var tool;
 
     var availability = function(data) {
-      var info = '<h2>Stats</h2>\
+      var info = '<h2>Stats' + (tool ? ' for ' + tool : '') + '</h2>\
+      <p>Filter: <a class="filter" href="/stats#illiad">illiad</a> | <a class="filter" href="/stats#clio">clio</a> | <a class="filter" href="/stats#embedoa">embedoa</a> | <a class="filter" href="/stats#all">all</a> </p>\
       <p>\
         We have been recording usage statistics since we switched to our new system, on 24th October 2016. \
         We don\'t track individual users usage, and we allow most features of our service to be used anonymously. \
@@ -101,15 +110,21 @@
       </p>';
 
       info += '<h3>Requests</h3>';
-      info += '<p>We have ' + status.requests + ' requests. '; //, ' + status.article + ' for articles and ' + status.data + ' for data. ';
-      info += status.requests_with_story + ' have stories, ';
-      info += status.received + ' have been successful, ' + status.progress + ' are in progress, and ' + status.refused + ' were refused. ';
-      info += 'The rest are going through our moderation process. 6184 of these requests in moderation are imports from our old system.</p>';
-      info += '<p>New requests over time, grouped by week:</p>';
+      if (tool === undefined || tool === 'all') {
+        info += '<p>We have ' + status.requests + ' requests. '; //, ' + status.article + ' for articles and ' + status.data + ' for data. ';
+        info += status.requests_with_story + ' have stories, ';
+        info += status.received + ' have been successful, ' + status.progress + ' are in progress, and ' + status.refused + ' were refused. ';
+        info += 'The rest are going through our moderation process. 6184 of these requests in moderation are imports from our old system.</p>';
+      } else {
+        info += '<p>We have ' + status.requests_with_story + ' requests with story from ' + tool + '.</p>'
+      }
+      info += '<p>Total requests with stories over time, grouped by week:</p>';
+      info += '<svg class="tline"></svg>';
+      info += '<p>New requests over the last two years, grouped by week:</p>';
       info += '<svg class="rline"></svg>';
-      info += '<p>New requests with stories over time, grouped by week:</p>';
+      info += '<p>New requests with stories over the last two years, grouped by week:</p>';
       info += '<svg class="rsline"></svg>';
-      info += '<p>Requests successful over time, grouped by week:</p>';
+      info += '<p>Successful requests over the last two years, grouped by week:</p>';
       info += '<svg class="rrline"></svg>';
 
       var found = 0;
@@ -118,7 +133,7 @@
       }
 
       info += '<h3>Availability</h3>';
-      info += '<p>We have done ' + data.hits.total + ' availability checks, and we have found ' + found;
+      info += '<p>We have done ' + data.hits.total + ' availability checks' + (tool !== undefined && tool !== 'all' ? ' for ' + tool : '') + ', and we have found ' + found;
       info += '. That\'s a find success rate of ' + Math.ceil((found/data.hits.total)*100) + '% ';
       info += '(people tend to search for things that are NOT available so we expect this to be low). ';
       info += data.facets.email.missing + ' checks were made anonymously, ';
@@ -127,114 +142,211 @@
       info += '<p>Availability checks over time, grouped by week:</p>';
       info += '<svg class="line"></svg>';
 
-      info += '<h3>Insitutional Interest</h3>';
-      info += '<iframe width="95%" height="371" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vS3WaJOIBtTGFg81W9VKEdr78Tt-5sA_pZ-WogwB-SFBG721MjUszxRmT5rcfQog3DIk0R7-8ME-hi1/pubchart?oid=823347277&amp;format=interactive"></iframe>';
-      info += '<h3>Users</h3>';
-      info += '<p>We have ' + status.users + ' users in total, and ' + status.requested + ' have made requests while signed in. ' + status.supports;
-      info += ' users have added their support to requests that someone else made. ' + data.aggregations.tm1.tm1v.value + ' users have done an availability ';
-      info += ' check whilst signed in during the last month, and ' + data.aggregations.tm3.tm3v.value + ' greater than 1 month but less than 3 months ago.</p>';
+      if (tool === undefined || tool === 'all') {
+        info += '<h3>Institutional Interest</h3>';
+        info += '<iframe width="100%" height="371" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vS3WaJOIBtTGFg81W9VKEdr78Tt-5sA_pZ-WogwB-SFBG721MjUszxRmT5rcfQog3DIk0R7-8ME-hi1/pubchart?oid=823347277&amp;format=interactive"></iframe>';
+      }
+      
+      if (tool === undefined || tool === 'all') {
+        info += '<h3>Users</h3>';
+        info += '<p>We have ' + status.users + ' users in total, and ' + status.requested + ' have made requests while signed in. ' + status.supports;
+        info += ' users have added their support to requests that someone else made. ' + data.aggregations.tm1.tm1v.value + ' users have done an availability ';
+        info += ' check whilst signed in during the last month, and ' + data.aggregations.tm3.tm3v.value + ' greater than 1 month but less than 3 months ago.</p>';
+      } else {
+        info += '<h3>Users of ' + tool + '</h3>';
+      }
 
-      var plugins = {api:{all:data.facets.plugin.missing,week:data.facets.plugin_week.missing}};
+      var plugins = {api:{all:data.facets.plugin.missing,week:data.facets.plugin_week.missing,month:data.facets.plugin_month.missing,threemonth:data.facets.plugin_3month.missing,june18:data.facets.plugin_june18.missing}};
       var alltotal = 0 + plugins.api.all;
       var weektotal = 0 + plugins.api.week;
-      for ( var p in data.facets.plugin.terms ) {
-        var pl = data.facets.plugin.terms[p];
-        if (pl.term.indexOf('test') === -1) {
-          var at = pl.term.split('_')[0].replace('oabutton','plugin').replace('oab','plugin');
-          if (pl.term.indexOf('firefox') !== -1) at = 'firefox_plugin';
-          if (plugins[at] === undefined) plugins[at] = {all:0,week:0}
-          plugins[at].all += pl.count;
-          alltotal += pl.count;
+      var monthtotal = 0 + plugins.api.month;
+      var threemonthtotal = 0 + plugins.api.threemonth;
+      var june18total = 0 + plugins.api.june18
+      if (tool !== undefined && tool !== 'all') {
+        plugins = {}
+      }
+      if (tool === undefined || tool === 'embedoa') {
+        for ( var p in data.facets.plugin.terms ) {
+          var pl = data.facets.plugin.terms[p];
+          if (pl.term.indexOf('test') === -1) {
+            var at = pl.term.split('_')[0].replace('oabutton','plugin').replace('oab','plugin');
+            if (pl.term.indexOf('firefox') !== -1) at = 'firefox_plugin';
+            if (plugins[at] === undefined) plugins[at] = {all:0,week:0,month:0,threemonth:0,june18:0}
+            plugins[at].all += pl.count;
+            alltotal += pl.count;
+          }
+        }
+        for ( var wp in data.facets.plugin_week.terms ) {
+          var pw = data.facets.plugin_week.terms[wp];
+          if (pw.term.indexOf('test') === -1) {
+            var wt = pw.term.split('_')[0].replace('oabutton','plugin').replace('oab','plugin');
+            if (pw.term.indexOf('firefox') !== -1) wt = 'firefox_plugin';
+            if (plugins[wt] === undefined) plugins[wt] = {all:0,week:0,month:0,threemonth:0,june18:0}
+            plugins[wt].week += pw.count;
+            weektotal += pw.count;
+          }
+        }
+        for ( var wp in data.facets.plugin_month.terms ) {
+          var pw = data.facets.plugin_month.terms[wp];
+          if (pw.term.indexOf('test') === -1) {
+            var wt = pw.term.split('_')[0].replace('oabutton','plugin').replace('oab','plugin');
+            if (pw.term.indexOf('firefox') !== -1) wt = 'firefox_plugin';
+            if (plugins[wt] === undefined) plugins[wt] = {all:0,week:0,month:0,threemonth:0,june18:0}
+            plugins[wt].month += pw.count;
+            monthtotal += pw.count;
+          }
+        }
+        for ( var wp in data.facets.plugin_3month.terms ) {
+          var pw = data.facets.plugin_3month.terms[wp];
+          if (pw.term.indexOf('test') === -1) {
+            var wt = pw.term.split('_')[0].replace('oabutton','plugin').replace('oab','plugin');
+            if (pw.term.indexOf('firefox') !== -1) wt = 'firefox_plugin';
+            if (plugins[wt] === undefined) plugins[wt] = {all:0,week:0,month:0,threemonth:0,june18:0}
+            plugins[wt].threemonth += pw.count;
+            threemonthtotal += pw.count;
+          }
+        }
+        for ( var wp in data.facets.plugin_june18.terms ) {
+          var pw = data.facets.plugin_june18.terms[wp];
+          if (pw.term.indexOf('test') === -1) {
+            var wt = pw.term.split('_')[0].replace('oabutton','plugin').replace('oab','plugin');
+            if (pw.term.indexOf('firefox') !== -1) wt = 'firefox_plugin';
+            if (plugins[wt] === undefined) plugins[wt] = {all:0,week:0,month:0,threemonth:0,june18:0}
+            plugins[wt].june18 += pw.count;
+            june18total += pw.count;
+          }
         }
       }
-      for ( var wp in data.facets.plugin_week.terms ) {
-        var pw = data.facets.plugin_week.terms[wp];
-        if (pw.term.indexOf('test') === -1) {
-          var wt = pw.term.split('_')[0].replace('oabutton','plugin').replace('oab','plugin');
-          if (pw.term.indexOf('firefox') !== -1) wt = 'firefox_plugin';
-          if (plugins[wt] === undefined) plugins[wt] = {all:0,week:0}
-          plugins[wt].week += pw.count;
-          weektotal += pw.count;
-        }
+      
+      if (tool === undefined || tool === 'all') {
+        info += '<p>Users have been using these tools:</p>';
       }
-
-      info += '<p>Users have been using these tools:</p>';
-      info += '<table class="table table-bordered table-striped"><thead><tr><th></th>';
-      for ( var plug in plugins ) info += '<th>' + plug + '</th>';
-      info += '<th>TOTAL</th>';
+      
+      info += '<table class="table table-bordered table-striped" style="background-color:white;"><thead><tr><th></th>';
+      for ( var plug in plugins ) info += '<th>' + (plug === 'widget' ? 'embedoa<br>(widget)' : plug) + '</th>';
+      if (tool === undefined || tool === 'all') {
+        info += '<th>illiad</th><th>clio</th><th>integration</th>'
+        info += '<th>TOTAL</th>';
+      } else if (tool !== 'embedoa') {
+        info += '<th>' + tool + '</th>';
+      }
       info += '</tr></thead><tbody><tr><td><b>all-time</b></td>';
       for ( var pla in plugins ) info += '<td>' + plugins[pla].all + '</td>';
-      info += '<td>' + alltotal + '</td>';
+      if (tool === undefined || tool === 'all') {
+        info += '<td>ILLIADALLCOUNT</td><td>CLIOALLCOUNT</td><td>INTEGRATIONALLCOUNT</td>';
+        info += '<td>' + alltotal + '</td>';
+      } else if (tool !== 'embedoa') {
+        info += '<td>' + tool.toUpperCase() + 'ALLCOUNT</td>';
+      }
       info += '</tr><tr><td><b>the last week</b></td>';
       for ( var plw in plugins ) info += '<td>' + plugins[plw].week + '</td>';
-      info += '<td>' + weektotal + '</td>';
+      if (tool === undefined || tool === 'all') {
+        info += '<td>ILLIADWEEKCOUNT</td><td>CLIOWEEKCOUNT</td><td>INTEGRATIONWEEKCOUNT</td>';
+        info += '<td>' + weektotal + '</td>';
+      } else if (tool !== 'embedoa') {
+        info += '<td>' + tool.toUpperCase() + 'WEEKCOUNT</td>';
+      }
+      info += '</tr><tr><td><b>the last month</b></td>';
+      for ( var plm in plugins ) info += '<td>' + plugins[plm].month + '</td>';
+      if (tool === undefined || tool === 'all') {
+        info += '<td>ILLIADMONTHCOUNT</td><td>CLIOMONTHCOUNT</td><td>INTEGRATIONMONTHCOUNT</td>';
+        info += '<td>' + monthtotal + '</td>';
+      } else if (tool !== 'embedoa') {
+        info += '<td>' + tool.toUpperCase() + 'MONTHCOUNT</td>';
+      }
+      info += '</tr><tr><td><b>the last 3 months</b></td>';
+      for ( var pl3m in plugins ) info += '<td>' + plugins[pl3m].threemonth + '</td>';
+      if (tool === undefined || tool === 'all') {
+        info += '<td>ILLIAD3MONTHCOUNT</td><td>CLIO3MONTHCOUNT</td><td>INTEGRATION3MONTHCOUNT</td>';
+        info += '<td>' + threemonthtotal + '</td>';
+      } else if (tool !== 'embedoa') {
+        info += '<td>' + tool.toUpperCase() + '3MONTHCOUNT</td>';
+      }
+      info += '</tr><tr><td><b>since June 2018</b></td>';
+      for ( var plj18 in plugins ) info += '<td>' + plugins[plj18].june18 + '</td>';
+      if (tool === undefined || tool === 'all') {
+        info += '<td>ILLIADJUNE18COUNT</td><td>CLIOJUNE18COUNT</td><td>INTEGRATIONJUNE18COUNT</td>';
+        info += '<td>' + june18total + '</td>';
+      } else if (tool !== 'embedoa') {
+        info += '<td>' + tool.toUpperCase() + 'JUNE18COUNT</td>';
+      }
       info += '</tr></tbody></table>';
 
-      if (data.facets.embeds.terms.length) info += '<p>We have embedded availability checks from the following locations:</p>';
-      for ( var e in data.facets.embeds.terms ) {
-        var em = data.facets.embeds.terms[e];
-        info += '<p>' + em.term + ' (' + em.count  + ')</p>';
+      if (tool === undefined || tool === 'all') {
+        if (data.facets.embeds.terms.length) info += '<h4>We have embedded availability checks from the following locations:</h4>';
+        for ( var e in data.facets.embeds.terms ) {
+          var em = data.facets.embeds.terms[e];
+          info += '<p>' + em.term + ' (' + em.count  + ')</p>';
+        }
       }
 
-      if (data.facets.from.terms.length) info += '<p>We also have availability checks from the following services:</p>';
+      if (data.facets.from.terms.length && (tool === undefined || tool === 'all')) info += '<h4><br>We also have availability checks from the following services (and from some user IDs):</h4>';
       for ( var f in data.facets.from.terms ) {
         var fr = data.facets.from.terms[f];
-        info += '<p>' + fr.term + ' (' + fr.count  + ')</p>';
+        if (tool === undefined || tool === 'all') info += '<p>' + fr.term + ' (' + fr.count  + ')</p>';
+        if (fr.term === 'illiad') info = info.replace('ILLIADALLCOUNT',fr.count)
+        if (fr.term === 'clio') info = info.replace('CLIOALLCOUNT',fr.count)
+        if (fr.term === 'integration') info = info.replace('INTEGRATIONALLCOUNT',fr.count)
       }
+      info = info.replace('ILLIADALLCOUNT',0)
+      info = info.replace('CLIOALLCOUNT',0)
+      info = info.replace('INTEGRATIONALLCOUNT',0)
+
+      for ( var fw in data.facets.from_week.terms ) {
+        var fm = data.facets.from_week.terms[fw];
+        if (fm.term === 'illiad') info = info.replace('ILLIADWEEKCOUNT',fm.count)
+        if (fm.term === 'clio') info = info.replace('CLIOWEEKCOUNT',fm.count)
+        if (fm.term === 'integration') info = info.replace('INTEGRATIONWEEKCOUNT',fm.count)
+      }
+      info = info.replace('ILLIADWEEKCOUNT',0)
+      info = info.replace('CLIOWEEKCOUNT',0)
+      info = info.replace('INTEGRATIONWEEKCOUNT',0)
+
+      for ( var fom in data.facets.from_month.terms ) {
+        var fm = data.facets.from_month.terms[fom];
+        if (fm.term === 'illiad') info = info.replace('ILLIADMONTHCOUNT',fm.count)
+        if (fm.term === 'clio') info = info.replace('CLIOMONTHCOUNT',fm.count)
+        if (fm.term === 'integration') info = info.replace('INTEGRATIONMONTHCOUNT',fm.count)
+      }
+      info = info.replace('ILLIADMONTHCOUNT',0)
+      info = info.replace('CLIOMONTHCOUNT',0)
+      info = info.replace('INTEGRATIONMONTHCOUNT',0)
+
+      for ( var f3m in data.facets.from_3month.terms ) {
+        var fm = data.facets.from_3month.terms[f3m];
+        if (fm.term === 'illiad') info = info.replace('ILLIAD3MONTHCOUNT',fm.count)
+        if (fm.term === 'clio') info = info.replace('CLIO3MONTHCOUNT',fm.count)
+        if (fm.term === 'integration') info = info.replace('INTEGRATION3MONTHCOUNT',fm.count)
+      }
+      info = info.replace('ILLIAD3MONTHCOUNT',0)
+      info = info.replace('CLIO3MONTHCOUNT',0)
+      info = info.replace('INTEGRATION3MONTHCOUNT',0)
+
+      for ( var fj18 in data.facets.from_june18.terms ) {
+        var fm = data.facets.from_3month.terms[fj18];
+        if (fm.term === 'illiad') info = info.replace('ILLIADJUNE18COUNT',fm.count)
+        if (fm.term === 'clio') info = info.replace('CLIOJUNE18COUNT',fm.count)
+        if (fm.term === 'integration') info = info.replace('INTEGRATIONJUNE18COUNT',fm.count)
+      }
+      info = info.replace('ILLIADJUNE18COUNT',0)
+      info = info.replace('CLIOJUNE18COUNT',0)
+      info = info.replace('INTEGRATIONJUNE18COUNT',0)
 
       $('#results').html(info);
+      $('.filter').bind('click',function(e) { e.preventDefault(); window.location = $(this).attr('href'); window.location.reload(); });
       lineit(data,"svg.line");
     }
 
-    var getstatus = function(data) {
-      if (status === undefined) {
-        $.ajax({
-          url: api + '/status',
-          success: function(rs) {
-            status = rs;
-            $.ajax({
-              url: api + '/requests?&source=%7B%22size%22%3A0%2C%22query%22%3A%7B%22filtered%22%3A%7B%22query%22%3A%7B%22bool%22%3A%7B%22must%22%3A%5B%7B%22query_string%22%3A%7B%22query%22%3A%22story%3A*%22%7D%7D%5D%7D%7D%7D%7D%2C%22aggregations%22%3A%7B%22availabilities%22%3A%7B%22date_histogram%22%3A%7B%22field%22%3A%22createdAt%22%2C%22interval%22%3A%22week%22%7D%7D%7D%2C%22from%22%3A0%7D',
-              success: function(d) {
-                status.requests_with_story = d.hits.total;
-                availability(data);
-                lineit(d,"svg.rsline");
-                $.ajax({
-                  url: api + '/requests?&source=%7B%22size%22%3A0%2C%22query%22%3A%7B%22filtered%22%3A%7B%22query%22%3A%7B%22bool%22%3A%7B%22must%22%3A%5B%7B%22match_all%22%3A%7B%7D%7D%5D%7D%7D%7D%7D%2C%22aggregations%22%3A%7B%22availabilities%22%3A%7B%22date_histogram%22%3A%7B%22field%22%3A%22createdAt%22%2C%22interval%22%3A%22week%22%7D%7D%2C%22received%22%3A%7B%22date_histogram%22%3A%7B%22field%22%3A%22received.date%22%2C%22interval%22%3A%22week%22%7D%7D%7D%2C%22from%22%3A0%7D',
-                  success: function(dt) {
-                    lineit(dt,"svg.rline");
-                    lineit(dt,"svg.rrline");
-                    $.ajax({
-                      url: noddy.api + '/pings?q=service:openaccessbutton&sort=createdAt:asc&size=100000',
-                      success: function(dp) {
-                        var pinginfo = '<h3>Resources</h3><p>Here are the Pings we have gotten from various resources on the site. This will be updated to show more data at some point...</p>';
-                        var actions = {}
-                        for ( var h in dp.hits.hits) {
-                          var hr = dp.hits.hits[h]._source;
-                          if (actions[hr.action] !== undefined) {
-                            actions[hr.action] += 1;
-                          } else {
-                            actions[hr.action] = 1;
-                          }
-                        }
-                        var sorts = [];
-                        for (var v in actions) {
-                          sorts.push([v, actions[v]]);
-                        }
-                        sorts.sort(function(a, b) { return a[1] - b[1]; });
-                        for (var s in sorts) {
-                          pinginfo += '<p>' + sorts[s][0] + ': ' + sorts[s][1] + '</p>'
-                        }
-                        $('#results').append(pinginfo);
-                      }
-                    });
-                  }
-                });
-              }
-            });
-          }
-        });
-      } else {
-        availability(data);
+    var must = [];
+    if (window.location.hash) {
+      tool = window.location.hash.replace('#','');
+      must = [];
+      if (tool === 'illiad') {
+        must.push({term:{from:'illiad'}});
+      } else if (tool === 'clio') {
+        must.push({term:{from:'clio'}});
+      } else if (tool === 'embedoa') {
+        must.push({term:{plugin:'widget'}});
       }
     }
 
@@ -255,8 +367,141 @@
     tmwk.setDate(tmwk.getDate() - 7);
     tmwk.setHours(0, 0, 0);
     tmwk.setMilliseconds(0);
+    
+    var tmj18 = 1527811200000;
+
+    var qry = {"size": 0, "query": {"filtered": {"query": {"bool": {"must": must}}}}};
+    var getstatus = function(data) {
+      if (status === undefined) {
+        // get the status, and also the first requests query, because it updates status
+        $.ajax({
+          url: api + '/status',
+          success: function(rs) {
+            status = rs;
+            // get total requests with stories
+            qry.query.filtered.query.bool.must.push({"query_string": {"query": "story:*"}});
+            $.ajax({
+              //url: api + '/requests?&source=%7B%22size%22%3A0%2C%22query%22%3A%7B%22filtered%22%3A%7B%22query%22%3A%7B%22bool%22%3A%7B%22must%22%3A%5B%7B%22query_string%22%3A%7B%22query%22%3A%22story%3A*%22%7D%7D%5D%7D%7D%7D%7D%2C%22from%22%3A0%7D',
+              url: api + '/requests',
+              method: 'POST',
+              data: qry,
+              success: function(d) {
+                status.requests_with_story = d.hits.total;
+                availability(data);
+
+                // get / calculate total new requests with stories over time, grouped by week
+                qry.aggregations = {"availabilities": {"date_histogram": {"field": "createdAt","interval": "week"}}}
+                $.ajax({
+                  //url: api + '/requests?&source=%7B%22size%22%3A0%2C%22query%22%3A%7B%22filtered%22%3A%7B%22query%22%3A%7B%22bool%22%3A%7B%22must%22%3A%5B%7B%22query_string%22%3A%7B%22query%22%3A%22story%3A*%22%7D%7D%5D%7D%7D%7D%7D%2C%22aggregations%22%3A%7B%22availabilities%22%3A%7B%22date_histogram%22%3A%7B%22field%22%3A%22createdAt%22%2C%22interval%22%3A%22week%22%7D%7D%7D%2C%22from%22%3A0%7D',
+                  url: api + '/requests',
+                  method: 'POST',
+                  data: qry,
+                  success: function(d) {
+                		var total = 0;
+                    for ( var r in d.aggregations.availabilities.buckets ) {
+                      total += d.aggregations.availabilities.buckets[r].doc_count;
+                      d.aggregations.availabilities.buckets[r].doc_count = total;
+                    }
+                    lineit(d,"svg.tline");
+                  }
+                });
+
+                // get new requests with stories over the last 2 years, grouped by week
+                var twoyearsago = Date.now() - (31536000000*2);
+                var lq = qry.query.filtered.query.bool.must.pop();
+                lq['query_string'].query += ' AND createdAt:>' + twoyearsago;
+                qry.query.filtered.query.bool.must.push(lq);
+                $.ajax({
+                  //url: api + '/requests?&source=%7B%22size%22%3A0%2C%22query%22%3A%7B%22filtered%22%3A%7B%22query%22%3A%7B%22bool%22%3A%7B%22must%22%3A%5B%7B%22query_string%22%3A%7B%22query%22%3A%22story%3A* AND createdAt:>' + twoyearsago + '%22%7D%7D%5D%7D%7D%7D%7D%2C%22aggregations%22%3A%7B%22availabilities%22%3A%7B%22date_histogram%22%3A%7B%22field%22%3A%22createdAt%22%2C%22interval%22%3A%22week%22%7D%7D%7D%2C%22from%22%3A0%7D',
+                  url: api + '/requests',
+                  method: 'POST',
+                  data: qry,
+                  success: function(d) {
+                    lineit(d,"svg.rsline");
+                  }
+                });
+                    
+                // get new requests over last 2 years, and successful requests over last 2 years, grouped by week
+                var elq = qry.query.filtered.query.bool.must.pop();
+                elq['query_string'].query = 'createdAt:>' + twoyearsago;
+                qry.query.filtered.query.bool.must.push(elq);
+                qry.aggregations.received = {"date_histogram": {"field": "received.date","interval": "week"}}
+                $.ajax({
+                  //url: api + '/requests?&source=%7B%22size%22%3A0%2C%22query%22%3A%7B%22filtered%22%3A%7B%22query%22%3A%7B%22bool%22%3A%7B%22must%22%3A%5B%7B%22query_string%22%3A%7B%22query%22%3A%22createdAt:>' + twoyearsago + '%22%7D%7D%5D%7D%7D%7D%7D%2C%22aggregations%22%3A%7B%22availabilities%22%3A%7B%22date_histogram%22%3A%7B%22field%22%3A%22createdAt%22%2C%22interval%22%3A%22week%22%7D%7D%2C%22received%22%3A%7B%22date_histogram%22%3A%7B%22field%22%3A%22received.date%22%2C%22interval%22%3A%22week%22%7D%7D%7D%2C%22from%22%3A0%7D',
+                  url: api + '/requests',
+                  method: 'POST',
+                  data: qry,
+                  success: function(dt) {
+                    lineit(dt,"svg.rline");
+                    lineit(dt,"svg.rrline");
+                  }
+                });
+
+                // get pings data
+                if (tool === undefined || tool === 'all') {
+                  $.ajax({
+                    url: noddy.api + '/pings?q=service:openaccessbutton&sort=createdAt:asc&size=100000',
+                    success: function(dp) {
+                      var order = ['alltime','week','month','threemonth','june18'];
+                      var pinginfo = '<h3>Resource pings</h3>';
+                      pinginfo += '<table class="table table-bordered table-striped" style="background-color:white;"><thead>';
+                      pinginfo += '<tr><th></th><th>all-time</th><th>last week</th><th>last month</th><th>last 3 months</th><th>since June 2018</th></tr>';
+                      pinginfo += '</thead><tbody>';
+                      
+                      var actions = {alltime:{},week:{},month:{},threemonth:{},june18:{}}
+                      for ( var h in dp.hits.hits) {
+                        var hr = dp.hits.hits[h]._source;
+                        if (hr.action !== 'undefined') {
+                          if (actions.alltime[hr.action] === undefined) actions.alltime[hr.action] = 0
+                          actions.alltime[hr.action] += 1;
+                          if (hr.createdAt > tmwk.valueOf()) {
+                            if (actions.week[hr.action] === undefined) actions.week[hr.action] = 0
+                            actions.week[hr.action] += 1;
+                          }
+                          if (hr.createdAt > tm1.valueOf()) {
+                            if (actions.month[hr.action] === undefined) actions.month[hr.action] = 0
+                            actions.month[hr.action] += 1;
+                          }
+                          if (hr.createdAt > tm3.valueOf()) {
+                            if (actions.threemonth[hr.action] === undefined) actions.threemonth[hr.action] = 0
+                            actions.threemonth[hr.action] += 1;
+                          }
+                          if (hr.createdAt > tmj18) {
+                            if (actions.june18[hr.action] === undefined) actions.june18[hr.action] = 0
+                            actions.june18[hr.action] += 1;
+                          }
+                        }
+                      }
+
+                      var sorts = [];
+                      for ( var kv in actions.alltime ) sorts.push([kv, actions.alltime[kv]]);
+                      sorts.sort(function(a, b) { return a[1] - b[1]; });
+                      for (var s in sorts) {
+                        pinginfo += '<tr>';
+                        pinginfo += '<td>' + sorts[s][0] + '</td>';
+                        pinginfo += '<td>' + sorts[s][1] + '</td>';
+                        pinginfo += '<td>' + (actions.week[sorts[s][0]] ? actions.week[sorts[s][0]] : 0) + '</td>';
+                        pinginfo += '<td>' + (actions.month[sorts[s][0]] ? actions.month[sorts[s][0]] : 0) + '</td>';
+                        pinginfo += '<td>' + (actions.threemonth[sorts[s][0]] ? actions.threemonth[sorts[s][0]] : 0) + '</td>';
+                        pinginfo += '<td>' + (actions.june18[sorts[s][0]] ? actions.june18[sorts[s][0]] : 0) + '</td>';
+                        pinginfo += '</tr>';
+                      }
+                      pinginfo += '</tbody></table>';
+                      $('#results').append(pinginfo);
+                    }
+                  });
+                }
+              }
+            });
+          }
+        });
+      } else {
+        availability(data);
+      }
+    }
 
     var dostats = function() {
+      $('.holder.loading').show();
       $('#availability').holder({
         class: 'holder',
         url: api + "/availabilities",
@@ -267,7 +512,7 @@
             filtered: {
               query: {
                 bool: {
-                  must: []
+                  must: must
                 }
               },
               filter: {
@@ -314,12 +559,19 @@
         pushstate: false,
         review: getstatus,
         facets: {
-          plugin: { terms: { "field": "plugin.exact", "size": 100 } },
-          plugin_week: { terms: { "field": "plugin.exact", "size": 100 }, "facet_filter" : { "range" : { "createdAt" : { "gt" : tmwk.valueOf() } } } },
-  	email: { terms: { "field": "email.exact", "size": 1 } },
-          sources: { terms: { "field": "source.article", "size": 100 } },
-          embeds: { terms: { "field": "embedded.exact", "size": 100 } },
-          from: { terms: { "field": "from.exact", "size": 100 } }
+          plugin: { terms: { "field": "plugin.exact", "size": 500 } },
+          plugin_week: { terms: { "field": "plugin.exact", "size": 500 }, "facet_filter" : { "range" : { "createdAt" : { "gt" : tmwk.valueOf() } } } },
+          plugin_month: { terms: { "field": "plugin.exact", "size": 500 }, "facet_filter" : { "range" : { "createdAt" : { "gt" : tm1.valueOf() } } } },
+          plugin_3month: { terms: { "field": "plugin.exact", "size": 500 }, "facet_filter" : { "range" : { "createdAt" : { "gt" : tm3.valueOf() } } } },
+          plugin_june18: { terms: { "field": "plugin.exact", "size": 500 }, "facet_filter" : { "range" : { "createdAt" : { "gt" : 1527811200000 } } } },
+        	email: { terms: { "field": "email.exact", "size": 1 } },
+          sources: { terms: { "field": "source.article", "size": 500 } },
+          embeds: { terms: { "field": "embedded.exact", "size": 500 } },
+          from: { terms: { "field": "from.exact", "size": 500 } },
+          from_week: { terms: { "field": "from.exact", "size": 500 }, "facet_filter" : { "range" : { "createdAt" : { "gt" : tmwk.valueOf() } } } },
+          from_month: { terms: { "field": "from.exact", "size": 500 }, "facet_filter" : { "range" : { "createdAt" : { "gt" : tm1.valueOf() } } } },
+          from_3month: { terms: { "field": "from.exact", "size": 500 }, "facet_filter" : { "range" : { "createdAt" : { "gt" : tm3.valueOf() } } } },
+          from_june18: { terms: { "field": "from.exact", "size": 500 }, "facet_filter" : { "range" : { "createdAt" : { "gt" : tmj18 } } } }
         }
       });
     }

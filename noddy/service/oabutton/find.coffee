@@ -113,6 +113,7 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
       ret.accepts = []
       already.push 'article'
     try opts.bing = ret.meta.article.bing
+    try opts.capped = ret.meta.article.capped
     try opts.reversed = ret.meta.article.reversed
 
   #opts.url = 'https://doi.org/' + ret.meta.article.doi if opts.url.indexOf('http') isnt 0 and ret.meta.article.doi
