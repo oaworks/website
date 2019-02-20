@@ -16,6 +16,7 @@
 
 var openaccessbutton_widget = function(opts) {
   if (opts === undefined) opts = {};
+  if (opts.placeholder === undefined) opts.placeholder = 'Skip the paywall using a URL, DOI, Title, or Citation';
   if (opts.redirect === undefined) opts.redirect = false;
   if (opts.data === undefined) opts.data = false;
   var api = opts.api ? opts.api : 'https://api.openaccessbutton.org';
@@ -28,14 +29,63 @@ var openaccessbutton_widget = function(opts) {
   if (opts.uid === undefined) opts.uid = 'anonymous';
   if ($(opts.element).length === 0) $('body').append('<div id="openaccessbutton_widget"></div>');
 
-  var w = '<div class="input-group">\
-    <textarea id="oabutton_url" class="form-control" style="min-height:40px;height:40px;font-size:1.1em;" placeholder="Skip the paywall using a URL, DOI, Title, or Citation"></textarea>\
-    <div class="input-group-btn">\
-      <a class="btn btn-primary btn-block" href="#" id="oabutton_find" style="min-height:40px;height:40px;font-size:1.1em;padding:7px 10px 5px 10px;"><img style="height:90%;" src="' + site + '/static/search.png"></img></a>\
-    </div>\
-  </div>\
-  <div id="oabutton_loading" style="display:none;"><p><img style="width:30px;" src="' + site + '/static/spin_orange.svg">   Powered by the <a href="https://openaccessbutton.org" target="_blank">Open Access Button</a></p></div>\
-  <div id="oabutton_availability"></div>';
+  var w = '<div id="oabutton_inputs">\
+  <input id="oabutton_url" placeholder="' + opts.placeholder + '"></input>\
+  <a href="#" id="oabutton_find"><img style="height:90%;" src="' + site + '/static/search.png"></img></a>\
+</div>\
+<div id="oabutton_loading" style="display:none;"><p><img style="width:30px;" src="' + site + '/static/spin_orange.svg">   Powered by the <a href="https://openaccessbutton.org" target="_blank">Open Access Button</a></p></div>\
+<div id="oabutton_availability"></div>';
+
+  var ws = '#oabutton_inputs {\
+  position: relative;\
+  display: table;\
+  width:100%;\
+  border-collapse: separate;\
+}\
+#oabutton_url {\
+  display: table-cell;\
+  width: 100%;\
+  height: 34px;\
+  padding: 6px 12px;\
+  font-size: 16px;\
+  line-height: 1.428571429;\
+  color: #555555;\
+  vertical-align: middle;\
+  background-color: #ffffff;\
+  background-image: none;\
+  border: 1px solid #cccccc;\
+  border-radius: 4px 0px 0px 4px;\
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);\
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);\
+  -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;\
+          transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;\
+}\
+#oabutton_find {\
+  display: table-cell;\
+  height:34px;\
+  width:40px;\
+  padding: 6px 3px;\
+  margin-bottom: 0;\
+  font-size: 14px;\
+  font-weight: normal;\
+  line-height: 1.428571429;\
+  text-align: center;\
+  white-space: nowrap;\
+  vertical-align: middle;\
+  cursor: pointer;\
+  background-image: none;\
+  border: 1px solid transparent;\
+  border-radius: 0px 4px 4px 0px;\
+  -webkit-user-select: none;\
+     -moz-user-select: none;\
+      -ms-user-select: none;\
+       -o-user-select: none;\
+          user-select: none;\
+  color: #ffffff;\
+  background-color: #428bca;\
+  border-color: #357ebd;\
+}';
+  if (opts.css !== false) w = '<style>' + (typeof opts.css === 'string' ? opts.css : ws) + '</style>' + w;
   $(opts.element).html(w);
 
   var availability = function(e) {
