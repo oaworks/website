@@ -2,8 +2,6 @@
 
 # ill development is on hold - keep this as is for now
 
-oab_ill = new API.collection {index:"oab",type:"oab_ill"}
-
 API.service.oab.library = (opts) ->
   library = {institution:opts.library,primo:{}}
   meta = {}
@@ -65,11 +63,32 @@ API.service.oab.ill = (opts) ->
     }
     API.service.oab.mail({template:{filename:'imperial_confirmation_example.txt'},to:opts.id})
     HTTP.call('POST','https://www.imperial.ac.uk/library/dynamic/oabutton/oabutton3.php',{data:opts})
+    return oab_ill.insert opts
 
-  # TODO as we add more libraries add their forwarding endpoints here
-  illid = oab_ill.insert opts
-  return illid
-
+  else if opts.from?
+    user = API.accounts.retrieve opts.from
+    if user?
+      vars = {}
+      vars.name = user.profile?.firstname ? 'librarian'
+      vars.details = '' # this should build an html chunk that lists all the necessary values... for now just dump them all in
+      for o of opts
+        vars[o] = opts[o]
+        vars.details += '<p>' + o + ': ' + opts[o] + '</p>'
+      vars.illid = oab_ill.insert opts
+      API.service.oab.mail({vars: vars, template: {filename:'instantill_create.html'}, to: user.emails[0].address, from: "InstantILL@openaccessbutton.org", subject: "ILL request " + vars.illid})
+      API.mail.send {
+        service: 'openaccessbutton',
+        from: 'instantill@openaccessbutton.org',
+        to: ['mark@cottagelabs.com','joe@righttoresearch.org'],
+        subject: 'ILL CREATED',
+        text: JSON.stringify(vars,undefined,2)
+      }
+      return vars.illid
+    else
+      return 401
+  else
+    return 404
+    
 API.service.oab.ill_progress = () ->
   # TODO need a function that can lookup ILL progress from the library systems some how
   return

@@ -1,0 +1,123 @@
+<script src="/static/instantill.js"></script>
+<script>
+jQuery(document).ready(function() {
+  $('.tryit').bind('click',function(e) {
+    e.preventDefault();
+    $('#oabutton_url').val($(this).html());
+    setTimeout(function() {
+      $('#oabutton_find').trigger('click');
+    },500)
+  });
+
+  noddy.afterLogin = function() {
+    $('.promptsignup').hide();
+    $('.installit').show();
+    var uid = noddy.user.account._id;
+    $('.stickidin').html($('.stickidin').html().replace('instantill()','instantill({uid:"' + uid + '"})'));
+    $('#onlyyou').html($('#onlyyou').html().replace('but only you ','but only you (' + noddy.user.account.profile.firstname + ') '));
+    instantill({uid:uid, api:api});
+  }
+  noddy.nologin = function() {
+    instantill({uid:'oab_site', api:api});
+  }
+  noddy.login();
+});
+</script>
+
+<!-- Start of openaccessbutton Zendesk Widget script -->
+<script>/*<![CDATA[*/window.zEmbed||function(e,t){var n,o,d,i,s,a=[],r=document.createElement("iframe");window.zEmbed=function(){a.push(arguments)},window.zE=window.zE||window.zEmbed,r.src="javascript:false",r.title="",r.role="presentation",(r.frameElement||r).style.cssText="display: none",d=document.getElementsByTagName("script"),d=d[d.length-1],d.parentNode.insertBefore(r,d),i=r.contentWindow,s=i.document;try{o=s}catch(e){n=document.domain,r.src='javascript:var d=document.open();d.domain="'+n+'";void(0);',o=s}o.open()._l=function(){var o=this.createElement("script");n&&(this.domain=n),o.id="js-iframe-async",o.src=e,this.t=+new Date,this.zendeskHost=t,this.zEQueue=a,this.body.appendChild(o)},o.write('<body onload="document._l();">'),o.close()}("https://assets.zendesk.com/embeddable_framework/main.js","openaccessbutton.zendesk.com");
+/*]]>*/</script>
+<!-- End of openaccessbutton Zendesk Widget script -->
+
+<style>
+</style>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6">
+      <h1 style="font-size:2em;">InstantILL: Form filled, document delivered Instant<b>ILL</b>y</h1>
+      <p>
+        We've heard from patrons and librarians that they want ILL to be faster, friendlier, cheaper and to advance Open Access. In response, we’re planning a next generation ILL form, codenamed InstantILL, that can:
+      </p>
+      <ul>
+        <li>
+          Instantly fill forms, cutting your fields down to just one
+        </li>
+        <li>
+          Instantly deliver content from subscriptions and with Open Access
+        </li>
+        <li>
+          Instantly submit requests, with correct metadata, to your existing ILL system
+        </li>
+        <li>
+          Instantly lighten the load on staff by pre-checking requests against your subscriptions and for Open Access availability
+        </li>
+        <li>
+          Instantly start testing and delivering content without lengthy set-up processes
+        </li>
+        <li>
+          Instantly power a fairer, more open publishing system and cheaper ILL system by working with authors to share their research for free
+        </li>
+      </ul>
+      <p>
+        Expect many of InstantILL's features to be provided as free, Open Source, hosted software provided by a library-aligned non-profit. To sustain the work we'll build additional layers of optional paid for features.
+      </p>
+      <p>
+        We need support from libraries to advance this effort, in big and small ways, through helping us build and fund this effort, or sharing your ideas, requirements, and if you'd use it. As we co-design this infrastructure with libraries, learning and building as we go, details may change and initial versions not deliver on all of the above.
+      </p>
+    </div>
+
+    <div class="col-md-6">
+      <div id="tryit">
+        <h2>Try it now</h2>
+    
+        <div id="instantill"></div>
+    
+        <p style="margin-top:10px;">Test it with:
+          <ul>
+            <li>a DOI: <a class="tryit" href="#">10.1145/2908080.2908114</a></li>
+            <li>a title: <a class="tryit" href="#">Ribulose bisphosphate carboxylase: a two-layered, square-shaped molecule of symmetry 422</a></li>
+          </ul>
+        </p>
+      </div>
+
+      <h2>Install your own</h2>
+
+      <p class="promptsignup">Please <a href="/account?next=/instantill2" class="label label-info">sign up / sign in</a> so we can customise an InstantILL widget for you.</p>
+
+      <div class="installit" style="display:none;">
+        <ol>
+          <li id="onlyyou">InstantILL can be installed on your website for general use, but only you will be able to configure it.</li>
+          <li>To get started, include the following in the source code (HTML) of your page:</li>
+          <pre class="stickidin">
+&lt;script src="{{site_url}}/static/instantill.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){instantill();});&lt;/script&gt;
+&lt;div id="instantill"&gt;&lt;/div&gt;
+</pre>
+    
+          <li>If it looks like the version on this page, you're done! If it doesn't show up, that's okay, you probably need to include the following code:</li>
+          <pre>
+&lt;script src="{{site_url}}/static/jquery-1.10.2.min.js"&gt;&lt;/script&gt;</pre>
+          <li>Make sure you put it <i>above</i> the code you put in before. If you can now see a box on the page, but it doesn't look right, add this:</li>
+          <pre>
+&lt;link rel="stylesheet" href="{{site_url}}/static/bootstrap.min.css"&gt;</pre>
+          <li>You should now be good to go! You can control where the search widget gets displayed by moving:</li>
+          <pre>
+&lt;div id="instantill"&gt;&lt;/div&gt;</pre>
+        </ol>
+    
+        <p>If anything is wrong, <a href="mailto:help@openaccessbutton.org?Subject=Trouble%20setting%20up%20InstantILL&body=Please%20send%20us%20the%20URL%20of%20the%20page%20you're%20working%20on,%20or%20a%20screenshot%20of%20what%20you're%20seeing%20and%20a%20copy%20of%20the%20page's%20code%20-%20right-click%20on%20the%20page%20and%20View%20Page%20Source.">get in touch</a>.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- Code to pull in alpha release banner -->
+<script src="https://www.w3schools.com/lib/w3.js"></script>
+<div w3-include-html="/static/alpha.html"></div>
+
+<script>
+w3.includeHTML();
+</script>
