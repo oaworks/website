@@ -5,6 +5,7 @@ import moment from 'moment'
 @oab_support = new API.collection {index:"oab",type:"support"}
 @oab_availability = new API.collection {index:"oab",type:"availability"}
 @oab_request = new API.collection {index:"oab",type:"request",history:true}
+@oab_ill = new API.collection {index:"oab",type:"ill"}
 
 # the normal declaration of API.service.oab is in admin.coffee, because it gets loaded before this api.coffee file
 
@@ -47,11 +48,20 @@ API.add 'service/oab/resolve',
   get: () ->
     return API.service.oab.resolve this.queryParams,undefined,this.queryParams.sources?.split(','),this.queryParams.all,this.queryParams.titles,this.queryParams.journal
 
+API.add 'service/oab/ill',
+  post: () ->
+    opts = this.request.body;
+    for o of this.queryParams
+      opts[o] = this.queryParams[o]
+    return API.service.oab.ill opts
+
 API.add 'service/oab/ill/:library',
   post: () ->
     opts = this.request.body;
-    opts.library = this.urlParams.library;
+    opts.library = this.urlParams.library
     return API.service.oab.ill opts
+
+API.add 'service/oab/ills', () -> return oab_ill.search this
 
 API.add 'service/oab/request',
   get:
