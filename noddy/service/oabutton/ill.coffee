@@ -74,11 +74,11 @@ API.service.oab.ill = (opts) ->
       for o of opts
         vars[o] = opts[o]
         vars.details += '<p>' + o + ': ' + opts[o] + '</p>'
-      API.service.oab.mail({vars: vars, template: {filename:'instantill_create.html'}, to: user.emails[0].address})
       vars.illid = oab_ill.insert opts
+      API.service.oab.mail({vars: vars, template: {filename:'instantill_create.html'}, to: user.emails[0].address, from: "InstantILL@openaccessbutton.org", subject: "ILL request " + vars.illid})
       API.mail.send {
         service: 'openaccessbutton',
-        from: 'requests@openaccessbutton.org',
+        from: 'instantill@openaccessbutton.org',
         to: ['mark@cottagelabs.com','joe@righttoresearch.org'],
         subject: 'ILL CREATED',
         text: JSON.stringify(vars,undefined,2)

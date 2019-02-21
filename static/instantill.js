@@ -178,10 +178,10 @@ var instantill = function(opts) {
           }
           match = data.data.match;
           if (data.data.match && data.data.match.indexOf('http') !== 0 && data.data.meta && data.data.meta.article && data.data.meta.article.doi) data.data.match = 'https://doi.org/' + data.data.meta.article.doi;
-          if (window.location.href.indexOf('openaccessbutton.org') !== -1 && window.location.href.indexOf('test=true') !== -1 && window.location.href.indexOf('ill=true') !== -1) {
+          if (window.location.href.indexOf('test=true') !== -1 && window.location.href.indexOf('ill=true') !== -1) {
             var availability = '<p><b>This article is not freely available (TEST)</b></p>';
-            availability += '<p><a target="_blank" href="' + site + '/request?data=false&plugin=instantill&from=' + opts.uid + '&url=' + encodeURIComponent(data.data.match) + '">Start a request to the author to share it with you</a>';
-            availability += ' or <a class="ill" href="' + site + '/ill?from=' + opts.uid + '&plugin=instantill&data=false&url=' + encodeURIComponent(data.data.match) + '">ask the library to get you a copy through an Interlibrary Loan</a>.</p>';
+            //availability += '<p><a target="_blank" href="' + site + '/request?data=false&plugin=instantill&from=' + opts.uid + '&url=' + encodeURIComponent(data.data.match) + '">Start a request to the author to share it with you</a>';
+            availability += '<p><a class="ill" href="' + site + '/ill?from=' + opts.uid + '&plugin=instantill&data=false&url=' + encodeURIComponent(data.data.match) + '">Ask the library to get you a copy through an Interlibrary Loan</a>.</p>';
             $('#oabutton_availability').html(availability);
           } else if (JSON.stringify(has) === '{}') {
             if (data.data.match.indexOf('http') === 0) {
@@ -208,13 +208,13 @@ var instantill = function(opts) {
                 $.ajax(ropts);
               } else {
                 var availability = '<p><b>This article is not freely available</b></p>';
-                availability += '<p><a target="_blank" href="' + site + '/request?data=false&plugin=instantill&from=' + opts.uid + '&url=' + encodeURIComponent(data.data.match) + '">Start a request to the author to share it with you</a>';
-                availability += ' or <a class="ill" href="' + site + '/ill?from=' + opts.uid + '&plugin=instantill&data=false&url=' + encodeURIComponent(data.data.match) + '">ask the library to get you a copy through an Interlibrary Loan</a>.</p>';
+                //availability += '<p><a target="_blank" href="' + site + '/request?data=false&plugin=instantill&from=' + opts.uid + '&url=' + encodeURIComponent(data.data.match) + '">Start a request to the author to share it with you</a>';
+                availability += '<p><a class="ill" href="' + site + '/ill?from=' + opts.uid + '&plugin=instantill&data=false&url=' + encodeURIComponent(data.data.match) + '">Ask the library to get you a copy through an Interlibrary Loan</a>.</p>';
                 $('#oabutton_availability').html(availability);
               }
             } else {
-              var availability = '<p>Sorry, we couldn\'t find the article <b>' + data.data.match + '</b>.</p><p>Matching titles and citations can be tricky. Please find a URL, DOI, PMID or PMCID and try again.';
-              availability += ' or <a class="ill" href="' + site + '/ill?from=' + opts.uid + '&plugin=instantill&data=false&url=' + encodeURIComponent(data.data.match) + '">ask the library to get you a copy through an Interlibrary Loan</a>.</p>';
+              var availability = '<p>Sorry, we couldn\'t find the article <b>' + data.data.match + '</b>.</p><p>Matching titles and citations can be tricky. Please find a DOI, PMID or PMCID and try again.';
+              availability += '<p>Or <a class="ill" href="' + site + '/ill?from=' + opts.uid + '&plugin=instantill&data=false&url=' + encodeURIComponent(data.data.match) + '">ask the library to get you a copy through an Interlibrary Loan</a>.</p>';
               $('#oabutton_availability').html(availability);
             }
           } else if (has.article && !has.data) {
@@ -240,8 +240,8 @@ var instantill = function(opts) {
             $('#oabutton_availability').html(availability);
           } else if (!has.article && has.data) {
             var availability = '<p><b>This article is not freely available</b></p>';
-            availability += '<p><a target="_blank" class="btn btn-action" href="' + site + '/request?data=false&url=' + encodeURIComponent(data.data.match) + '">Start a request</a>';
-            availability += ' or <a class="ill" href="' + site + '/ill?from=' + opts.uid + '&plugin=instantill&data=false&url=' + encodeURIComponent(data.data.match) + '">ask the library to get you a copy through an Interlibrary Loan</a>.</p>';
+            //availability += '<p><a target="_blank" class="btn btn-action" href="' + site + '/request?data=false&url=' + encodeURIComponent(data.data.match) + '">Start a request</a>';
+            availability += '<p><a class="ill" href="' + site + '/ill?from=' + opts.uid + '&plugin=instantill&data=false&url=' + encodeURIComponent(data.data.match) + '">Ask the library to get you a copy through an Interlibrary Loan</a>.</p>';
             if (opts.data) {
               availability += '<p>';
               if (has.data.id) {
@@ -263,8 +263,8 @@ var instantill = function(opts) {
                 availability += '<p><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + 'Click here to view it</a></p>';
               }
               if (has.article.id) {
-                availability += '<p><b>Someone has already requested the author freely share this article. <a target="_blank" class="btn btn-action" href="' + site + '/request/' + has.article.id + '?data=false&support=true">Notify me</a></b>';
-                availability += ' or <a class="ill" href="' + site + '/ill?from=' + opts.uid + '&plugin=instantill&data=false&url=' + encodeURIComponent(data.data.match) + '">ask the library to get you a copy through an Interlibrary Loan</a>.</p>';
+                //availability += '<p><b>Someone has already requested the author freely share this article. <a target="_blank" class="btn btn-action" href="' + site + '/request/' + has.article.id + '?data=false&support=true">Notify me</a></b>';
+                availability += '<p><a class="ill" href="' + site + '/ill?from=' + opts.uid + '&plugin=instantill&data=false&url=' + encodeURIComponent(data.data.match) + '">Ask the library to get you a copy through an Interlibrary Loan</a>.</p>';
               }
               if (opts.data) {
                 availability += '<p>';
