@@ -111,6 +111,7 @@ var instantill = function(opts) {
   if (opts.css !== false) w = '<style>' + (typeof opts.css === 'string' ? opts.css : ws) + '</style>' + w;
   $(opts.element).html(w);
   
+  var match = undefined;
   var ill = function(e) {
     try { e.preventDefault(); } catch (err) {}
     if ( $('#oabutton_email').length ) {
@@ -122,7 +123,7 @@ var instantill = function(opts) {
         processData: false,
         contentType: 'application/json',
         dataType: 'json',
-        data: JSON.stringify({url:decodeURIComponent($(this).attr('href').split('url=')[1]), from:opts.uid, plugin:'instantill', embedded:window.location.href }),
+        data: JSON.stringify({url:match, email:$('#oabutton_email').val(), from:opts.uid, plugin:'instantill', embedded:window.location.href }),
         success: function(data) {
           $('#oabutton_loading').hide();
           $('#oabutton_availability').html('<p>Thanks, your ILL request has been sent to your library. You will hear back from them soon.</p>');
@@ -138,7 +139,7 @@ var instantill = function(opts) {
       }
       $.ajax(illopts);
     } else {
-      $('#oabutton_availability').html('<p>Please type your email address so we can create an ILL for you - your library will get back to you via the address you provide.<br><input type="text" id="oabutton_email" placeholder="Email address"></p>');
+      $('#oabutton_availability').html('<p>Please type your email address then press enter, so we can create an ILL for you - your library will get back to you via the address you provide.<br><input type="text" id="oabutton_email" placeholder="Email address"></p>');
       $('#oabutton_email').bind('keyup', function(e) { if (e.keyCode === 13) ill() });
     }
   }
@@ -175,6 +176,7 @@ var instantill = function(opts) {
               if (!has[data.data.requests[r].type]) has[data.data.requests[r].type] = {id:data.data.requests[r]._id,ucreated:data.data.requests[r].ucreated,usupport:data.data.requests[r].usupport};
             }
           }
+          match = data.data.match;
           if (data.data.match && data.data.match.indexOf('http') !== 0 && data.data.meta && data.data.meta.article && data.data.meta.article.doi) data.data.match = 'https://doi.org/' + data.data.meta.article.doi;
           if (window.location.href.indexOf('openaccessbutton.org') !== -1 && window.location.href.indexOf('test=true') !== -1 && window.location.href.indexOf('ill=true') !== -1) {
             var availability = '<p><b>This article is not freely available (TEST)</b></p>';
