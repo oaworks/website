@@ -13,7 +13,7 @@ API.service.oab.redirect = (url) ->
       if listing.redirect and url.replace('http://','').replace('https://','').split('#')[0] is listing.redirect.replace('http://','').replace('https://','').split('#')[0]
         # we have an exact alternative for this url
         return listing.redirect
-      else if url.indexOf(listing.domain.replace('http://','').replace('https://','').split('/')[0]) isnt -1
+      else if typeof url is 'string' and url.indexOf(listing.domain.replace('http://','').replace('https://','').split('/')[0]) isnt -1
         url = url.replace('http://','https://') if listing.domain.indexOf('https://') is 0
         listing.domain = listing.domain.replace('http://','https://') if url.indexOf('https://') is 0
         if (listing.fulltext and listing.splash and listing.identifier) or listing.element
@@ -33,7 +33,8 @@ API.service.oab.redirect = (url) ->
           # fulltext or element can possibly give us a url which then redirects to a login wall
           # so we have to check the given url against the whole sheet listing again for the login wall
           # so this allows the rest of the listing to be checked before returning - MAKE SURE loginwall fragments are at the end of the sheet
-          url = API.http.resolve url # resolve it again to make sure whatever we have now is accessible
+          resv = API.http.resolve url # resolve it again to make sure whatever we have now is accessible
+          url = resv if typeof resv is 'string'
         else if listing.loginwall and url.indexOf(listing.loginwall.replace('http://','').replace('https://','')) isnt -1
           # this url is on the login wall of the repo in question, so it is no use
           return false
