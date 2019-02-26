@@ -284,9 +284,9 @@
       for ( var f in data.facets.from.terms ) {
         var fr = data.facets.from.terms[f];
         if (tool === undefined || tool === 'all') info += '<p>' + fr.term + ' (' + fr.count  + ')</p>';
-        if (fr.term === 'illiad') info = info.replace('ILLIADALLCOUNT',fr.count)
-        if (fr.term === 'clio') info = info.replace('CLIOALLCOUNT',fr.count)
-        if (fr.term === 'integration') info = info.replace('INTEGRATIONALLCOUNT',fr.count)
+        if (fr !== undefined && fr.term === 'illiad') info = info.replace('ILLIADALLCOUNT',fr.count)
+        if (fr !== undefined && fr.term === 'clio') info = info.replace('CLIOALLCOUNT',fr.count)
+        if (fr !== undefined && fr.term === 'integration') info = info.replace('INTEGRATIONALLCOUNT',fr.count)
       }
       info = info.replace('ILLIADALLCOUNT',0)
       info = info.replace('CLIOALLCOUNT',0)
@@ -294,9 +294,9 @@
 
       for ( var fw in data.facets.from_week.terms ) {
         var fm = data.facets.from_week.terms[fw];
-        if (fm.term === 'illiad') info = info.replace('ILLIADWEEKCOUNT',fm.count)
-        if (fm.term === 'clio') info = info.replace('CLIOWEEKCOUNT',fm.count)
-        if (fm.term === 'integration') info = info.replace('INTEGRATIONWEEKCOUNT',fm.count)
+        if (fm !== undefined && fm.term === 'illiad') info = info.replace('ILLIADWEEKCOUNT',fm.count)
+        if (fm !== undefined && fm.term === 'clio') info = info.replace('CLIOWEEKCOUNT',fm.count)
+        if (fm !== undefined && fm.term === 'integration') info = info.replace('INTEGRATIONWEEKCOUNT',fm.count)
       }
       info = info.replace('ILLIADWEEKCOUNT',0)
       info = info.replace('CLIOWEEKCOUNT',0)
@@ -304,9 +304,9 @@
 
       for ( var fom in data.facets.from_month.terms ) {
         var fm = data.facets.from_month.terms[fom];
-        if (fm.term === 'illiad') info = info.replace('ILLIADMONTHCOUNT',fm.count)
-        if (fm.term === 'clio') info = info.replace('CLIOMONTHCOUNT',fm.count)
-        if (fm.term === 'integration') info = info.replace('INTEGRATIONMONTHCOUNT',fm.count)
+        if (fm !== undefined && fm.term === 'illiad') info = info.replace('ILLIADMONTHCOUNT',fm.count)
+        if (fm !== undefined && fm.term === 'clio') info = info.replace('CLIOMONTHCOUNT',fm.count)
+        if (fm !== undefined && fm.term === 'integration') info = info.replace('INTEGRATIONMONTHCOUNT',fm.count)
       }
       info = info.replace('ILLIADMONTHCOUNT',0)
       info = info.replace('CLIOMONTHCOUNT',0)
@@ -314,9 +314,9 @@
 
       for ( var f3m in data.facets.from_3month.terms ) {
         var fm = data.facets.from_3month.terms[f3m];
-        if (fm.term === 'illiad') info = info.replace('ILLIAD3MONTHCOUNT',fm.count)
-        if (fm.term === 'clio') info = info.replace('CLIO3MONTHCOUNT',fm.count)
-        if (fm.term === 'integration') info = info.replace('INTEGRATION3MONTHCOUNT',fm.count)
+        if (fm !== undefined && fm.term === 'illiad') info = info.replace('ILLIAD3MONTHCOUNT',fm.count)
+        if (fm !== undefined && fm.term === 'clio') info = info.replace('CLIO3MONTHCOUNT',fm.count)
+        if (fm !== undefined && fm.term === 'integration') info = info.replace('INTEGRATION3MONTHCOUNT',fm.count)
       }
       info = info.replace('ILLIAD3MONTHCOUNT',0)
       info = info.replace('CLIO3MONTHCOUNT',0)
@@ -324,9 +324,9 @@
 
       for ( var fj18 in data.facets.from_june18.terms ) {
         var fm = data.facets.from_3month.terms[fj18];
-        if (fm.term === 'illiad') info = info.replace('ILLIADJUNE18COUNT',fm.count)
-        if (fm.term === 'clio') info = info.replace('CLIOJUNE18COUNT',fm.count)
-        if (fm.term === 'integration') info = info.replace('INTEGRATIONJUNE18COUNT',fm.count)
+        if (fm !== undefined && fm.term === 'illiad') info = info.replace('ILLIADJUNE18COUNT',fm.count)
+        if (fm !== undefined && fm.term === 'clio') info = info.replace('CLIOJUNE18COUNT',fm.count)
+        if (fm !== undefined && fm.term === 'integration') info = info.replace('INTEGRATIONJUNE18COUNT',fm.count)
       }
       info = info.replace('ILLIADJUNE18COUNT',0)
       info = info.replace('CLIOJUNE18COUNT',0)
