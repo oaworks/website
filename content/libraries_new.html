@@ -31,6 +31,7 @@ button{
   	width: 100%;
   	padding:20px 0;
   	display: flex;
+  	flex-direction: row;
   }
 
   .tool-image{
@@ -40,7 +41,7 @@ button{
 
   .tool-description{
   	padding:1rem 4rem;
-  	width: 50%
+  	width: 50%;
   }
 
   .library-center-content{
@@ -52,6 +53,22 @@ button{
   .call-to-action{
   	text-align: center;
   }
+
+@media only screen and (max-width: 768px){
+	.library-tool{
+		flex-direction: column;
+	}
+
+	.tool-description{
+		width: 100%;
+		box-sizing: border-box;
+	}
+
+	.tool-image{
+		max-width: 100%;
+	}
+
+}
 
 </style>
 
@@ -82,7 +99,6 @@ button{
 		    <img src="https://www.w3schools.com/css/img_forest.jpg"/>
 		</a>
 	</div>
-
 	<div class="tool-description">
 		<h1> DeliverOA </h1>
 		<p>
