@@ -437,8 +437,8 @@
                   }
                 });
 
-                // get pings data
                 if (tool === undefined || tool === 'all') {
+                  // get pings data
                   $.ajax({
                     url: noddy.api + '/pings?q=service:openaccessbutton&sort=createdAt:asc&size=100000',
                     success: function(dp) {
@@ -488,6 +488,58 @@
                       }
                       pinginfo += '</tbody></table>';
                       $('#results').append(pinginfo);
+                    }
+                  });
+                  
+                  // get instantill data
+                  var m = [{term: {plugin: 'instantill'}}];
+                  var q = {"size": 0, "query": {"filtered": {"query": {"bool": {"must": m}}}}};
+                  q.aggregations = {"users": {"terms": {"field": "from", "size": 10000}}};
+                  q.aggregations.users.aggs = {"firsts": {"terms": {"field":"created_date", "size": 1, "order": {"_term": "asc"}}}};
+                  q.aggregations.users.aggs.oa = {"filter": {"bool": {"must_not": [{"term": {"discovered.article": false}}]}}, "aggs": {"from": {"terms": {"field": "from"}}}};
+                  $.ajax({
+                    url: api + '/availabilities',
+                    method: 'POST',
+                    data: q,
+                    success: function(iia) {
+                      var oq = {"size": 0, "query": {"filtered": {"query": {"query_string": {"query": "*"}}}}};
+                      oq.aggregations = {"users": {"terms": {"field": "from", "size": 10000}}};
+                      $.ajax({
+                        url: api + '/ills',
+                        method: 'POST',
+                        data: oq,
+                        success: function(iii) {
+                          console.log(iia);
+                          console.log(iii);
+                          var ills = {}
+                          for ( var i in iii.aggregations.users.buckets ) {
+                            var ii = iii.aggregations.users.buckets[i];
+                            ills[ii.key] = ii.doc_count;
+                          }
+                          var illinfo = '<h3>InstantILL usage</h3>';
+                          illinfo += '<table class="table table-bordered table-striped" style="background-color:white;"><thead>';
+                          illinfo += '<tr><th>User ID</th><th>First use</th><th>Total checks</th><th>OA provided</th><th>Subs provided</th><th>Wrong hits</th><th>ILLs submitted</th></tr>';
+                          illinfo += '</thead><tbody>';
+                          for (var a in iia.aggregations.users.buckets) {
+                            var bk = iia.aggregations.users.buckets[a];
+                            illinfo += '<tr>';
+                            illinfo += '<td>' + bk.key + '</td>';
+                            illinfo += '<td>';
+                            try { illinfo += bk.firsts.buckets[0].key_as_string.split(' ')[0].split('-').reverse().join('/'); } catch(err) {}
+                            illinfo += '</td>';
+                            illinfo += '<td>' + bk.doc_count + '</td>';
+                            illinfo += '<td>';
+                            try { illinfo += bk.oa.doc_count; } catch(err) {}
+                            illinfo += '</td>';
+                            illinfo += '<td>TODO</td>';
+                            illinfo += '<td>TODO</td>';
+                            illinfo += '<td>' + (ills[bk.key] ? ills[bk.key] : 0) + '</td>';
+                            illinfo += '</tr>';
+                          }
+                          illinfo += '</tbody></table>';
+                          $('#results').append(illinfo);
+                        }
+                      });
                     }
                   });
                 }
