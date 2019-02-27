@@ -144,9 +144,9 @@
 
       if (tool === undefined || tool === 'all') {
         info += '<h3>Institutional Interest</h3>';
-        info += '<iframe width="100%" height="371" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vS3WaJOIBtTGFg81W9VKEdr78Tt-5sA_pZ-WogwB-SFBG721MjUszxRmT5rcfQog3DIk0R7-8ME-hi1/pubchart?oid=823347277&amp;format=interactive"></iframe>';
+        info += '<iframe width="100%" height="600" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vS3WaJOIBtTGFg81W9VKEdr78Tt-5sA_pZ-WogwB-SFBG721MjUszxRmT5rcfQog3DIk0R7-8ME-hi1/pubchart?oid=823347277&amp;format=interactive"></iframe>';
       }
-      
+
       if (tool === undefined || tool === 'all') {
         info += '<h3>Users</h3>';
         info += '<p>We have ' + status.users + ' users in total, and ' + status.requested + ' have made requests while signed in. ' + status.supports;
@@ -217,11 +217,11 @@
           }
         }
       }
-      
+
       if (tool === undefined || tool === 'all') {
         info += '<p>Users have been using these tools:</p>';
       }
-      
+
       info += '<table class="table table-bordered table-striped" style="background-color:white;"><thead><tr><th></th>';
       for ( var plug in plugins ) info += '<th>' + (plug === 'widget' ? 'embedoa<br>(widget)' : plug) + '</th>';
       if (tool === undefined || tool === 'all') {
@@ -367,7 +367,7 @@
     tmwk.setDate(tmwk.getDate() - 7);
     tmwk.setHours(0, 0, 0);
     tmwk.setMilliseconds(0);
-    
+
     var tmj18 = 1527811200000;
 
     var qry = {"size": 0, "query": {"filtered": {"query": {"bool": {"must": must}}}}};
@@ -420,7 +420,7 @@
                     lineit(d,"svg.rsline");
                   }
                 });
-                    
+
                 // get new requests over last 2 years, and successful requests over last 2 years, grouped by week
                 var elq = qry.query.filtered.query.bool.must.pop();
                 elq['query_string'].query = 'createdAt:>' + twoyearsago;
@@ -447,7 +447,7 @@
                       pinginfo += '<table class="table table-bordered table-striped" style="background-color:white;"><thead>';
                       pinginfo += '<tr><th></th><th>all-time</th><th>last week</th><th>last month</th><th>last 3 months</th><th>since June 2018</th></tr>';
                       pinginfo += '</thead><tbody>';
-                      
+
                       var actions = {alltime:{},week:{},month:{},threemonth:{},june18:{}}
                       for ( var h in dp.hits.hits) {
                         var hr = dp.hits.hits[h]._source;
@@ -490,7 +490,7 @@
                       $('#results').append(pinginfo);
                     }
                   });
-                  
+
                   // get instantill data
                   var m = [{term: {plugin: 'instantill'}}];
                   var q = {"size": 0, "query": {"filtered": {"query": {"bool": {"must": m}}}}};
