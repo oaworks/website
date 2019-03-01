@@ -202,13 +202,13 @@ API.add 'service/oab/supports/:rid',
     action: () ->
       return API.service.oab.supports this.urlParams.rid, this.user
 
-API.add 'service/oab/supports', () -> return oab_support.search this.bodyParams
+API.add 'service/oab/supports', () -> return oab_support.search this
 
 API.add 'service/oab/availabilities', () -> return oab_availability.search this
 
 API.add 'service/oab/requests', () -> return oab_request.search this
 
-API.add 'service/oab/history', () -> return oab_request.history this.bodyParams
+API.add 'service/oab/history', () -> return oab_request.history this
 
 API.add 'service/oab/users',
   get:
