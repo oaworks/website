@@ -149,7 +149,7 @@ API.add 'service/oab/request/:rid',
             n.year ?= cr.created['date-time'].split('-')[0] if not r.year? and cr.created?['date-time']?
             try n.published ?= if cr['published-online']?['date-parts']? then cr['published-online']['date-parts'][0].join('-') else if cr['published-print']?['date-parts']? then cr['published-print']['date-parts'][0].join('-') else cr.created['date-parts'][0].join('-')
         r.author_affiliation = n.author_affiliation if n.author_affiliation?
-        if n.crossref_type isnt 'journal-article'
+        if n.crossref_type? and n.crossref_type isnt 'journal-article'
           n.status = 'closed'
           n.closed_on_update = true
           n.closed_on_update_reason = 'notarticle'

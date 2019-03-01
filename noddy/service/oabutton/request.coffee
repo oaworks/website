@@ -162,7 +162,7 @@ API.service.oab.request = (req,uacc,fast) ->
     req.status = 'closed'
     req.closed_on_create = true
     req.closed_on_create_reason = 'nodoi'
-  if fast and req.crossref_type isnt 'journal-article'
+  if fast and req.crossref_type? and req.crossref_type isnt 'journal-article'
     req.status = 'closed'
     req.closed_on_create = true
     req.closed_on_create_reason = 'notarticle'
