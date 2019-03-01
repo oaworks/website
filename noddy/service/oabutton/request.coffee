@@ -158,15 +158,15 @@ API.service.oab.request = (req,uacc,fast) ->
         req.status = 'closed'
         req.closed_on_create = true
         req.closed_on_create_reason = 'gt5'
-  if fast and not req.doi?
+  if fast and not req.doi? and status isnt 'closed'
     req.status = 'closed'
     req.closed_on_create = true
     req.closed_on_create_reason = 'nodoi'
-  if fast and req.crossref_type? and req.crossref_type isnt 'journal-article'
+  if fast and req.crossref_type? and req.crossref_type isnt 'journal-article' and status isnt 'closed'
     req.status = 'closed'
     req.closed_on_create = true
     req.closed_on_create_reason = 'notarticle'
-  if req.sherpa?.color? and typeof req.sherpa.color is 'string' and req.sherpa.color.toLowerCase() is 'white'
+  if req.sherpa?.color? and typeof req.sherpa.color is 'string' and req.sherpa.color.toLowerCase() is 'white' and status isnt 'closed'
     req.status = 'closed'
     req.closed_on_create = true
     req.closed_on_create_reason = 'sherpawhite'
