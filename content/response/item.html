@@ -200,23 +200,20 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="preprintLabel">Pre-print or submitted version</h4>
+        <h2 class="modal-title" id="preprintLabel">Finding the pre-print / submitted version</h2>
       </div>
       <div class="modal-body">
-        <p>Also known as: Author's manuscript, original manuscript, first draft.</p>
+        <p><i>Also known as: Author's manuscript, original manuscript, first draft.</i></p>
         <p>This is the draft of the manuscript before formal peer-review, or the first version sent to the journal for consideration.</p>
-        <p>It looks like an essay with no journal branding, it is commonly a .DOCX or other text format.</p>
-        <img src="/static/RightandWrong.png" style="width:80%;padding-left:5%;padding-right:5%;" class="responsive">
-        <p>Here's how you find it:</p>
+        <p>It looks like an essay with no journal branding, it is commonly a .DOCX file.</p>
+        <img src="/static/RightandWrong.png" style="width:100%;" class="responsive">
+        <h3>To find it</h3>
         <ul>
           <li>Search your email, hard-drive and cloud storage</li>
           <li>Ask your co-authors if they have a copy</li>
           <li>Aetrieve a copy from the journal's submission system</li>
           <li>Contact the journal by email and ask for a copy of the accepted version</li>
         </ul>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-action btn-block" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -227,14 +224,14 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="acceptedLabel">Post-print or accepted version</h4>
+        <h2 class="modal-title" id="acceptedLabel">Finding the post-print / accepted version</h2>
       </div>
       <div class="modal-body">
-        <p>Also known as: AAM, accepted manuscript author accepted manuscript, accepted author manuscript.</p>
+        <p><i>Also known as: AAM, accepted manuscript author accepted manuscript, accepted author manuscript.</i></p>
         <p>This is the final version of the manuscript after formal peer-review but before being type-set by the publisher. It contains all revisions made during the peer-review process.</p>
-        <p>It looks like an essay with no journal branding, usually double-spaced, might have corrections on the sides. it is commonly a .DOCX or other text format</p>
-        <img src="/static/RightandWrong.png" style="width:80%;padding-left:5%;padding-right:5%;" class="responsive">
-        <p>Here's how you find it:</p>
+        <p>It looks like an essay with no journal branding, usually double-spaced, might have corrections on the sides. It is commonly a .DOCX file</p>
+        <img src="/static/RightandWrong.png" style="width:100%" class="responsive">
+        <h3>To find it</h3>
         <ul>
           <li>Search your email, hard-drive and cloud storage</li>
           <li>Ask your co-authors if they have a copy</li>
@@ -242,9 +239,6 @@
           <li>Contact the journal by email and ask for a copy of the accepted version</li>
         </ul>
         </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-action btn-block" data-dismiss="modal">Close</button>
-      </div>
     </div>
   </div>
 </div>
@@ -383,7 +377,7 @@
       dets += '<h2 style="text-align:center;"><a target="_blank" href="/request/' + request._id + '">';
       dets += request.title ? request.title : (request.url.indexOf('h') !== 0 && request.url.indexOf('1') !== 0 ? request.url : 'Untitled article');
       dets += '</a></h2>';
-      dets += '<h2 style="text-align:center;margin-bottom:25px;font-size:2.5em;">Can be freely, legally, and quickly shared:</h2>';
+      dets += '<h2 style="text-align:center;margin-bottom:25px;">Can be freely, legally, and quickly shared</h2>';
       dets += '</div>';
       $('#request').html(dets).show();
       $('.requestlink').attr('href','/request/'+request._id);
