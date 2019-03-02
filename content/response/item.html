@@ -380,10 +380,10 @@
     var details = function(data) {
       request = data;
       var dets = '<div>';
-      dets += '<h1 style="text-align:center;margin-top:25px;margin-bottom:25px;font-size:2.5em;">You can freely, legally, and quickly share your article:</h1>';
       dets += '<h2 style="text-align:center;"><a target="_blank" href="/request/' + request._id + '">';
       dets += request.title ? request.title : (request.url.indexOf('h') !== 0 && request.url.indexOf('1') !== 0 ? request.url : 'Untitled article');
       dets += '</a></h2>';
+      dets += '<h1 style="text-align:center;margin-top:25px;margin-bottom:25px;font-size:2.5em;">Can be freely, legally, and quickly shared:</h1>';
       dets += '</div>';
       $('#request').html(dets).show();
       $('.requestlink').attr('href','/request/'+request._id);
