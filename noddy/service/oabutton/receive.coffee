@@ -20,17 +20,16 @@ API.service.oab.receive = (rid,files,url,title,description,firstname,lastname,cr
         up.content = files[0].data
         up.name = files[0].filename
       up.publish = API.settings.service.openaccessbutton?.zenodo?.publish
-      creators = [{name:''}]
+      creators = [{name:(if lastname or firstname then '' else 'Unknown')}]
       creators[0].name = lastname if lastname
-      creators[0].name += ', ' + firstname if firstname
-      creators[0].name = r.name if creators[0].name is '' and r.name
-      if creators[0].name is '' and r.author
+      creators[0].name += (if lastname then ', ' else '') + firstname if firstname
+      creators[0].name = r.name if creators[0].name is 'Unknown' and r.name
+      if creators[0].name is 'Unknown' and r.author
         try
           for a in r.author
-            if a.family and ( creators[0].name = '' or r.email.toLowerCase().indexOf(a.family.toLowerCase()) isnt -1 )
+            if a.family and ( creators[0].name is 'Unknown' or r.email.toLowerCase().indexOf(a.family.toLowerCase()) isnt -1 )
               creators[0].name = a.family
-              creators[0].name += ', ' + a.given if a.given
-      creators[0].name ?= 'Unknown'
+              creators[0].name += (if a.family then ', ' else '') + a.given if a.given
       # http://developers.zenodo.org/#representation
       # journal_volume and journal_issue are acceptable too but we don't routinely collect those
       # access_right can be open embargoed restricted closed
