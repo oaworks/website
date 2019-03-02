@@ -37,10 +37,10 @@
             </p>
           -->
             <p id="sherpa_green" style="display:none;text-align:center;">
-              You can legally share the accepted version of your article!
+              You can legally share the accepted version of your article! <a data-toggle="modal" data-target="#accepted" title="accepted">Learn More</a>
             </p>
             <p id="sherpa_blue" style="display:none;text-align:center;">
-              You can legally share the accepted version of your article!
+              You can legally share the accepted version of your article! <a data-toggle="modal" data-target="#submitted" title="submitted">Learn More</a>
             </p>
             <p id="sherpa_yellow" style="display:none;text-align:center;">
               You can legally share the submitted version of your article!
@@ -172,14 +172,14 @@
             We are sorry that you are unable to provide the content. We will let requestors know it cannot be made available, and display that on the request page.
           </p>
           <p>Please complete your email address below to allow us to confirm that you cannot provide the content:</p>
-          
+
           <div class="input-group">
             <input type="text" id="confirmemail" class="form-control" ></input>
             <div class="input-group-btn">
               <a class="btn btn-action btn-block" style="padding-left:3px;padding-right:3px;" href="#" id="dorefuse">Confirm</a>
             </div>
           </div>
-          
+
           <p id="noconfirm" style="display:none;">Sorry, that email does not match. Please try again, or try our <a href="/feedback#noshare?confirmed=false">feedback</a> page if you continue to have difficulties.</p>
       </div>
 
@@ -193,8 +193,55 @@
 </div>
 
 
+<!-- Instructions for finding stuff -->
 
+<div class="modal fade" id="submitted" tabindex="-1" role="dialog" aria-labelledby="submittedLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="submittedLabel">Some text.</h4>
+      </div>
+      <div class="modal-body">
+        <ol>
+        <li> Make sure your bookmarks bar is showing. If not, you can click View, and select "Show Bookmarks Bar."</li>
+        <li> Drag the Button to your bookmarks bar.</li>
+        <img src = "/static/safari_install.gif" style = "width: 100%;border:1px solid #212f3f;margin:10px;" >
+        <li> If there is a pop-up, click yes.</li>
+        <li> You're done! The Button is ready to click when you next need it.</li>
+        </ol>
+            </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
+<div class="modal fade" id="accepted" tabindex="-1" role="dialog" aria-labelledby="acceptedLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="submittedLabel">Some text.</h4>
+      </div>
+      <div class="modal-body">
+        <ol>
+        <li> Make sure your bookmarks bar is showing. If not, you can click View, and select "Show Bookmarks Bar."</li>
+        <li> Drag the Button to your bookmarks bar.</li>
+        <img src = "/static/safari_install.gif" style = "width: 100%;border:1px solid #212f3f;margin:10px;" >
+        <li> If there is a pop-up, click yes.</li>
+        <li> You're done! The Button is ready to click when you next need it.</li>
+        </ol>
+            </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- End of instructions -->
 
 
 <script>
@@ -249,7 +296,7 @@
       }
     }
     $('#dorefuse').bind('click',dorefuse);
-    
+
     var submit = function(e,upload) {
       try { if (e) e.preventDefault(); } catch(err) {}
       var warns = ['researchgate.','academia.edu','readcube.'];
