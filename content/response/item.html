@@ -9,6 +9,7 @@
     margin:20px 0px 20px 0px;
     min-height:300px;
   }
+
 </style>
 
 <div class="container-fluid">
@@ -24,7 +25,7 @@
 
       <div id="error" style="display:none;">
           <p>
-            Sorry, there has been a submission error. Please <a href="mailto:requests@openaccessbutton.org">get in touch</a>
+            Sorry, there has been a submission error. Please <a href="mailto:requests@openaccessbutton.org?subject=Submission%20error&body=Dear%20Natalia%2C%20%0A%0AThere%20has%20been%20a%20submission%20error%20when%20I%20tried%20to%20upload%20my%20article%20to%3A%20%3C%3Ccopy%20and%20paste%20the%20link%20to%20the%20page%3E%3E%0A%0AThe%20article%20I%20was%20trying%20to%20upload%20is%20attached.">get in touch</a>
             and let us know what you were trying to upload (please attach it), and the URL of this page.</p>
       </div>
 
@@ -46,7 +47,7 @@
               You can legally share the submitted version of your article! <a data-toggle="modal" data-target="#preprint" title="preprint">Here is what that is, and how to find it.</a>
             </p>
             <p id="sherpa_unknown" style="display:none;text-align:center;">
-              If you're unsure what you can legally share <a href="mailto:requests@openaccessbutton.org">get in touch with us</a> or your librarian for advice on what you can deposit.
+              If you're unsure what you can legally share <a href="mailto:requests@openaccessbutton.org?subject=What%20version%20of%20my%20article%20can%20I%20share%3F&body=Dear%20Natalia%2C%20%0A%0AI'd%20like%20to%20know%20what%20version%20of%20my%20article%20I%20can%20share,%20can%20you%20please%20help?%20The%20link%20to%20my%20deposit%20page%20is%20here%3A%20%3C%3Ccopy%20link%20of%20the%20page%20you're%20on%3E%3E">get in touch with us</a> or your librarian for advice on what you can deposit.
             </p>
 
           </div>
@@ -105,18 +106,16 @@
               <input type="submit" class="btn btn-action btn-block" style="margin-top:5px;" id="submitfile" value="Upload your file">
             </form>
           </div>
-          <div class="row">
         <div class="col-md-12" id="refusepls" style="display:none;">
-          <h3>Can't share?</h3>
-          <p class="typearticle">
-            If you are the author and you can't share your article, or don't want to, you can <a href="#" id="showrefuse">click here</a> and we'll let the requestor know.
-          </p>
-          <p class="typedata">
-            If you can't share your data, or don't want to, you can simply <a href="#" id="showrefuse">click here</a> and we'll let the requestor know.
-          </p>
+            <h3>Can't share?</h3>
+            <p class="typearticle">
+              If you are the author and you can't share your article, or don't want to, you can <a href="#" id="showrefuse">click here</a> and we'll let the requestor know.
+            </p>
+            <p class="typedata">
+              If you can't share your data, or don't want to, you can simply <a href="#" id="showrefuse">click here</a> and we'll let the requestor know.
+            </p>
         </div>
-              </div>
-        </div>
+      </div>
 
       </div>
 
@@ -143,9 +142,9 @@
       </div>
 
       <div class="panels" id="validating">
-          <h3>This content has already been received</h3>
+          <h3>This content has been made freely available!</h3>
           <p>
-            It is awaiting validation from the requestor. Please view the original request (above) for further information.
+            Please view the request (above) for a link to the article.
           </p>
       </div>
 
