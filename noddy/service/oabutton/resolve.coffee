@@ -41,7 +41,10 @@ API.service.oab.citation = (meta) ->
     # if we did not know title, or first three words of title match
     meta.doi = check.data.doi
     meta.title = check.data.title
-    meta.journal = check.data?['container-title']?[0]
+    if check.original?.message?
+      cr = API.service.oab.crossref check.original.message
+      for c of cr
+        meta[c] ?= cr[c]
 
   return meta
 
@@ -111,10 +114,13 @@ API.service.oab.resolve = (meta, content, sources, all=false, titles=true, journ
       res = if meta.pmc then API.use.europepmc.pmc(meta.pmc) else API.use.europepmc.pmid(meta.pmid)
       meta.checked.identifiers.push 'eupmc'
       meta.title ?= res?.title
-      meta.journal = res?.journal?.title?.split('(')[0].trim()
+      meta.journal = res.journalInfo.journal.title.split('(')[0].trim() if res?.journalInfo?.journal?.title?
+      meta.issn = res.journalInfo.journal.issn if res?.journalInfo?.journal?.issn?
       meta.doi ?= res?.doi
       if res?.url
         meta.source ?= 'eupmc'
+        meta.pmid ?= res.pmid
+        meta.pmc ?= res.id if res.id isnt res.pmid
         meta.url = if res.redirect then res.redirect else res.url
         meta.found.eupmc = res.url
         return meta if not all and res.redirect isnt false
@@ -191,8 +197,11 @@ API.service.oab.resolve = (meta, content, sources, all=false, titles=true, journ
             meta.url = if res.redirect then res.redirect else res.url
             meta.title ?= res.title ? res.dctitle ? res.bibjson?.title ? res.metadata?['oaf:result']?.title?.$
             meta.source = src
+            meta.pmid ?= res.pmid
+            meta.pmc ?= res.id if src is 'eupmc'
             meta.licence ?= res.best_oa_location?.license
-            meta.journal = res.journal?.title?.split('(')[0].trim()
+            meta.journal = if res.journalInfo?.journal?.title? then res.journalInfo.journal.title.split('(')[0].trim() else if res.journal?.title? then res.journal.title.split('(')[0].trim() else undefined
+            meta.issn = if res.journalInfo?.journal?.issn? then res.journalInfo.journal.issn else if res.journal?.issn? then res.journal.issn else undefined
             suitable = not all and res.redirect isnt false
 
     for sr in sources
@@ -218,9 +227,9 @@ API.service.oab.resolve = (meta, content, sources, all=false, titles=true, journ
   if titles
     if not meta.title and meta.doi
       try
-        res = API.use.crossref.works.doi meta.doi
-        if res.DOI is meta.doi and res.title
-          meta.title = res.title[0].toLowerCase().replace(/(<([^>]+)>)/g,'')
+        cr = API.service.oab.crossref meta.doi
+        for c of cr
+          meta[c] ?= cr[c]
 
     # we can get a 404 for an article behind a loginwall if the service does not do splash pages,
     # and then we can accidentally get the article that exists called "404 not found". So we just don't
@@ -229,6 +238,7 @@ API.service.oab.resolve = (meta, content, sources, all=false, titles=true, journ
     # this is the article: http://research.sabanciuniv.edu/34037/
     meta.title = undefined if meta.title and meta.title.indexOf('404 ') is 0
     if meta.title
+      try meta.title = meta.title.toLowerCase().replace(/(<([^>]+)>)/g,'')
       meta.title = unidecode meta.title
       meta.titles = true
       done = 0
@@ -243,6 +253,10 @@ API.service.oab.resolve = (meta, content, sources, all=false, titles=true, journ
             if res?.url
               meta.source = src
               meta.url = if res.redirect then res.redirect else res.url
+              meta.journal = if res.journalInfo?.journal?.title? then res.journalInfo.journal.title.split('(')[0].trim() else if res.journal?.title? then res.journal.title.split('(')[0].trim() else undefined
+              meta.issn = if res.journalInfo?.journal?.issn? then res.journalInfo.journal.issn else if res.journal?.issn? then res.journal.issn else undefined
+              meta.pmid ?= res.pmid
+              meta.pmc ?= res.id if src is 'eupmc'
               meta.found[src] = res.url
               suitable = not all and res.redirect isnt false
 
@@ -267,9 +281,9 @@ API.service.oab.resolve = (meta, content, sources, all=false, titles=true, journ
             future.wait()
 
 
-  if not meta.url and journal and meta.journal and 'doaj' in sources # can check DOAJ for journal
+  if not meta.url and journal and (meta.journal or meta.issn) and 'doaj' in sources # can check DOAJ for journal
     try
-      res = API.use.doaj.journals.search 'bibjson.journal.title:"'+meta.journal+'"'
+      res = API.use.doaj.journals.search(if meta.issn then 'issn:"'+meta.issn+'"' else 'bibjson.journal.title:"'+meta.journal+'"')
       meta.checked.titles.push 'doaj'
       if res?.results?.length > 0
         for ju in res.results[0].bibjson.link

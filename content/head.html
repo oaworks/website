@@ -72,6 +72,8 @@
     if ( window.location.pathname !== '/' && window.location.pathname !== '/request' ) {
       if ( window.location.pathname === '/request' ) {
         $('#footer').css('margin-top','200px')
+      } else if ( window.location.pathname.indexOf('/response') !== -1 ) {
+        $('#footer').css({'position':'fixed','bottom':0, 'left': 0, 'right': 0});
       } else if ( $('#footer').offset().top + $('#footer').height() < $(window).height() ) {
         $('#footer').css('margin-top',$(window).height()-$('#footer').offset().top+'px');
       }

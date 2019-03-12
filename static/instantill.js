@@ -35,8 +35,8 @@ var instantill = function(opts) {
   if ($(opts.element).length === 0) $('body').append('<div id="instantill"></div>');
   
   var w = '<div id="oabutton_inputs">\
-  <input id="oabutton_url" placeholder="' + opts.placeholder + '"></input>\
-  <a href="#" id="oabutton_find"><img style="height:90%;" src="' + site + '/static/search.png"></img></a>\
+  <input id="oabutton_url" placeholder="' + opts.placeholder + '" aria-label="' + opts.placeholder + '"></input>\
+  <a href="#" id="oabutton_find" aria-label="Search"><img style="height:90%;" src="' + site + '/static/search.png"></img></a>\
 </div>\
 <div id="oabutton_loading" style="display:none;"><p><img style="width:30px;" src="' + site + '/static/spin_orange.svg">   Powered by the <a href="https://openaccessbutton.org" target="_blank">Open Access Button</a></p></div>\
 <div id="oabutton_availability"></div>';
@@ -135,7 +135,7 @@ var instantill = function(opts) {
   if (opts.css !== false) w = '<style>' + (typeof opts.css === 'string' ? opts.css : ws) + '</style>' + w;
   $(opts.element).html(w);
   
-  var match = undefined;
+  var availability_response = undefined;
   var ill = function(e) {
     try { e.preventDefault(); } catch (err) {}
     if ( $('#oabutton_email').length ) {
@@ -147,7 +147,7 @@ var instantill = function(opts) {
         processData: false,
         contentType: 'application/json',
         dataType: 'json',
-        data: JSON.stringify({url:match, email:$('#oabutton_email').val(), from:opts.uid, plugin:'instantill', embedded:window.location.href }),
+        data: JSON.stringify({url:availability_response.data.match, email:$('#oabutton_email').val(), from:opts.uid, plugin:'instantill', embedded:window.location.href, metadata: availability_response.data.meta.article }),
         success: function(data) {
           $('#oabutton_loading').hide();
           $('#oabutton_availability').html('<p>Thanks, your ILL request has been sent to your library. You will hear back from them soon.</p>');
@@ -200,7 +200,7 @@ var instantill = function(opts) {
               if (!has[data.data.requests[r].type]) has[data.data.requests[r].type] = {id:data.data.requests[r]._id,ucreated:data.data.requests[r].ucreated,usupport:data.data.requests[r].usupport};
             }
           }
-          match = data.data.match;
+          availability_response = data;
           if (data.data.match && data.data.match.indexOf('http') !== 0 && data.data.meta && data.data.meta.article && data.data.meta.article.doi) data.data.match = 'https://doi.org/' + data.data.meta.article.doi;
           if (window.location.href.indexOf('test=true') !== -1 && window.location.href.indexOf('ill=true') !== -1) {
             var availability = '<p><b>This article is not freely available (TEST)</b></p>';

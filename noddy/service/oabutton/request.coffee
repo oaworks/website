@@ -124,20 +124,12 @@ API.service.oab.request = (req,uacc,fast) ->
 
   if fast and req.doi and (not req.journal or not req.year or not req.title)
     try
-      cr = API.use.crossref.works.doi req.doi
-      req.title = cr.title[0]
-      req.author ?= cr.author
-      req.journal ?= cr['container-title'][0] if cr['container-title']?
-      req.issn ?= cr.ISSN[0] if cr.ISSN?
-      req.subject ?= cr.subject
-      req.publisher ?= cr.publisher
-      req.year = cr['published-print']['date-parts'][0][0] if cr['published-print']?['date-parts']? and cr['published-print']['date-parts'].length > 0 and cr['published-print']['date-parts'][0].length > 0
-      req.crossref_type = cr.type
-      req.year ?= cr.created['date-time'].split('-')[0] if cr.created?['date-time']?
-      try req.published ?= if cr['published-online']?['date-parts']? then cr['published-online']['date-parts'][0].join('-') else if cr['published-print']?['date-parts']? then cr['published-print']['date-parts'][0].join('-') else cr.created['date-parts'][0].join('-')
+      cr = API.service.oab.crossref req.doi
+      for c of cr
+        req[c] ?= cr[c]
 
-  if req.journal and not req.sherpa? # doing this even on fast cos we may be able to close immediately. If users say too slow now, disable this on fast again
-    try req.sherpa = API.use.sherpa.romeo.find {title:req.journal}
+  if (req.journal or req.issn) and not req.sherpa? # doing this even on fast cos we may be able to close immediately. If users say too slow now, disable this on fast again
+    try req.sherpa = API.use.sherpa.romeo.find(if req.issn then {issn:req.issn} else {title:req.journal})
 
   if req.story
     res = oab_request.search 'rating:1 AND story.exact:"' + req.story + '"'
@@ -158,15 +150,15 @@ API.service.oab.request = (req,uacc,fast) ->
         req.status = 'closed'
         req.closed_on_create = true
         req.closed_on_create_reason = 'gt5'
-  if fast and not req.doi? and status isnt 'closed'
+  if fast and not req.doi? and req.status isnt 'closed'
     req.status = 'closed'
     req.closed_on_create = true
     req.closed_on_create_reason = 'nodoi'
-  if fast and req.crossref_type? and req.crossref_type isnt 'journal-article' and status isnt 'closed'
+  if fast and req.crossref_type? and req.crossref_type isnt 'journal-article' and req.status isnt 'closed'
     req.status = 'closed'
     req.closed_on_create = true
     req.closed_on_create_reason = 'notarticle'
-  if req.sherpa?.color? and typeof req.sherpa.color is 'string' and req.sherpa.color.toLowerCase() is 'white' and status isnt 'closed'
+  if req.sherpa?.color? and typeof req.sherpa.color is 'string' and req.sherpa.color.toLowerCase() is 'white' and req.status isnt 'closed'
     req.status = 'closed'
     req.closed_on_create = true
     req.closed_on_create_reason = 'sherpawhite'

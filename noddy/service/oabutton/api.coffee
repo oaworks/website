@@ -32,6 +32,8 @@ _avail =
     ident ?= 'pmc' + opts.pmc.toLowerCase().replace('pmc','') if opts.pmc
     ident ?= 'TITLE:' + opts.title if opts.title
     ident ?= 'CITATION:' + opts.citation if opts.citation
+    ident ?= opts.q if opts.q
+    ident ?= opts.id if opts.id
     opts.url = ident
     # should maybe put auth on the ability to pass in library and libraries...
     opts.libraries = opts.libraries.split(',') if opts.libraries
@@ -48,18 +50,27 @@ API.add 'service/oab/resolve',
   get: () ->
     return API.service.oab.resolve this.queryParams,undefined,this.queryParams.sources?.split(','),this.queryParams.all,this.queryParams.titles,this.queryParams.journal
 
-API.add 'service/oab/ill',
+API.add 'service/oab/metadata',
+  get: () ->
+    return API.service.oab.ill.metadata this.queryParams
   post: () ->
-    opts = this.request.body;
+    opts = this.request.body ? {}
     for o of this.queryParams
       opts[o] = this.queryParams[o]
-    return API.service.oab.ill opts
+    return API.service.oab.ill.metadata opts
+
+API.add 'service/oab/ill',
+  post: () ->
+    opts = this.request.body ? {}
+    for o of this.queryParams
+      opts[o] = this.queryParams[o]
+    return API.service.oab.ill.start opts
 
 API.add 'service/oab/ill/:library',
   post: () ->
-    opts = this.request.body;
-    opts.library = this.urlParams.library
-    return API.service.oab.ill opts
+    opts = this.request.body
+    opts.library = this.urlParams.library ? {}
+    return API.service.oab.ill.start opts
 
 API.add 'service/oab/ills', () -> return oab_ill.search this
 
@@ -137,17 +148,9 @@ API.add 'service/oab/request/:rid',
           r.doi = n.doi
         if r.doi and not r.title and not n.title
           try
-            cr = API.use.crossref.works.doi r.doi
-            n.title = cr.title[0]
-            n.author ?= cr.author if not r.author?
-            n.journal ?= cr['container-title'][0] if cr['container-title']? and not r.journal?
-            n.issn ?= cr.ISSN[0] if cr.ISSN? and not r.issn?
-            n.subject ?= cr.subject if not r.subject?
-            n.publisher ?= cr.publisher if not r.publisher?
-            n.year = cr['published-print']['date-parts'][0][0] if not r.year? and cr['published-print']?['date-parts']? and cr['published-print']['date-parts'].length > 0 and cr['published-print']['date-parts'][0].length > 0
-            n.crossref_type = cr.type if not r.crossref_type?
-            n.year ?= cr.created['date-time'].split('-')[0] if not r.year? and cr.created?['date-time']?
-            try n.published ?= if cr['published-online']?['date-parts']? then cr['published-online']['date-parts'][0].join('-') else if cr['published-print']?['date-parts']? then cr['published-print']['date-parts'][0].join('-') else cr.created['date-parts'][0].join('-')
+            cr = API.service.oab.crossref r.doi
+            for c of cr
+              n[c] ?= cr[c] if not r[c]?
         r.author_affiliation = n.author_affiliation if n.author_affiliation?
         if n.crossref_type? and n.crossref_type isnt 'journal-article'
           n.status = 'closed'
@@ -429,7 +432,7 @@ API.add 'service/oab/export/:what',
       if this.urlParams.what is 'changes'
         fields = ['_id','createdAt','created_date','action']
       else if this.urlParams.what is 'request'
-        fields = ['_id','created_date','type','count','status','title','url','doi','journal','publisher','published','sherpa.color','name','names','email','author_affiliation','user.username','user.email','user.firstname','user.lastname','user.profession','user.affiliation','story','rating','receiver','followup.count','followup.date','refused.email','refused.date','received.date','received.from','received.description','received.url','received.admin','received.cron','received.notfromauthor','notes','plugin','from','embedded']
+        fields = ['_id','created_date','type','count','status','title','url','doi','journal','issn','publisher','published','sherpa.color','name','names','email','author_affiliation','user.username','user.email','user.firstname','user.lastname','user.profession','user.affiliation','story','rating','receiver','followup.count','followup.date','refused.email','refused.date','received.date','received.from','received.description','received.url','received.admin','received.cron','received.notfromauthor','notes','plugin','from','embedded']
       else if this.urlParams.what is 'account'
         fields = ['_id','createdAt','emails.0.address','profile.name','profile.firstname','profile.lastname','service.openaccessbutton.profile.affiliation','service.openaccessbutton.profile.profession','roles.openaccessbutton','username']
       match = {}
