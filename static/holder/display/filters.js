@@ -43,7 +43,7 @@ $.fn.holder.display.filters = function(obj) {
       if ( options.filters[ff].length ) {
         var disp = '<div class="col-md-' + colw + '"><select style="margin-bottom:3px;" class="form-control holder" do="add" key="';
         disp += options.filters[ff][0].field;
-        disp += '"><option value="">filter by ' + ff + '</option>';
+        disp += '" aria-label="filter by ' + ff + '"><option value="">filter by ' + ff + '</option>';
         for ( var fv in options.filters[ff] ) {
           disp += '<option value="' + options.filters[ff][fv].key + '">' + options.filters[ff][fv].key + ' (' + options.filters[ff][fv].value + ')</option>';
         }

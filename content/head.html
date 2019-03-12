@@ -72,6 +72,8 @@
     if ( window.location.pathname !== '/' && window.location.pathname !== '/request' ) {
       if ( window.location.pathname === '/request' ) {
         $('#footer').css('margin-top','200px')
+      } else if ( window.location.pathname.indexOf('/response') !== -1 ) {
+        $('#footer').css({'position':'fixed','bottom':0, 'left': 0, 'right': 0});
       } else if ( $('#footer').offset().top + $('#footer').height() < $(window).height() ) {
         $('#footer').css('margin-top',$(window).height()-$('#footer').offset().top+'px');
       }
@@ -111,7 +113,7 @@
   <div class="col-md-2 col-md-offset-1">
     <p style="font-size:40px;line-height:10px;color:#398bc5;text-align:center;">
       <a style="margin-top:5px;" class="chromeinstall" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">
-        <i class="glyphicon glyphicon-download"></i>
+        <i class="glyphicon glyphicon-download" role=”none”></i>
       </a>
     </p>
   </div>
@@ -129,7 +131,7 @@
   <div class="col-md-2 col-md-offset-1">
     <p style="font-size:40px;line-height:10px;color:#398bc5;text-align:center;">
       <a style="margin-top:5px;" target="_blank" href="https://addons.mozilla.org/en-US/firefox/addon/openaccessbutton/">
-        <i class="glyphicon glyphicon-download"></i>
+        <i class="glyphicon glyphicon-download" role=”none”></i>
       </a>
     </p>
   </div>
@@ -147,7 +149,7 @@
   <div class="col-md-2 col-md-offset-1">
     <p style="font-size:40px;line-height:10px;color:#398bc5;text-align:center;">
       <a class="bookmarklet_install_target" data-toggle="modal" data-target="#alpha" style="margin-top:5px;" href="#">
-        <i class="glyphicon glyphicon-download"></i>
+        <i class="glyphicon glyphicon-download" role=”none”></i>
       </a>
     </p>
   </div>

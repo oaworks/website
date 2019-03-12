@@ -5,6 +5,72 @@
 # http://journals.plos.org/plosone/article?id=info%3Adoi%2F10.1371%2Fjournal.pone.0159909 (open, on PLOS, findable by BASE)
 # http://www.tandfonline.com/doi/abs/10.1080/09505431.2014.928678 (closed, not findable by CORE or BASE)
 
+API.service.oab.crossref = (cr) ->
+  # takes a crossref record and converts it into the metadata that OAB wants from it
+  res = {}
+  try
+    cr = API.use.crossref.works.doi(cr) if typeof cr is 'string'
+    try res.title = cr.title[0]
+    try res.doi = cr.DOI ? cr.doi # just in case
+    try res.crossref_type = cr.type
+    try res.author = cr.author
+    try res.journal = cr['container-title'][0]
+    try res.issue = cr.issue
+    try meta.volume = cr.volume
+    try meta.page = cr.page.toString()
+    try res.issn = cr.ISSN[0]
+    try res.subject = cr.subject # not sure if this is present in crossref... check anyway
+    try res.publisher = cr.publisher
+    try res.year = cr['published-print']['date-parts'][0][0]
+    try res.year ?= cr.created['date-time'].split('-')[0]
+    try res.published = if cr['published-online']?['date-parts'] and cr['published-online']['date-parts'][0].length is 3 then cr['published-online']['date-parts'][0].join('-') else if cr['published-print']?['date-parts'] and cr['published-print']?['date-parts'][0].length is 3 then cr['published-print']['date-parts'][0].join('-') else undefined
+  return res
+
+API.service.oab.europepmc = (cr) ->
+  # takes a europepmc record and converts it into the metadata that OAB wants from it
+  res = {}
+  try
+    if typeof cr is 'string'
+      if cr.indexOf('/') isnt -1
+        rs = API.use.europepmc.doi cr
+      else
+        rs = API.use.europepmc.pmc cr
+      if rs?
+        rs.pmcid ?= cr
+        cr = rs
+      else
+        rp = API.use.europepmc.pmid cr
+        if rp?
+          cr = rp
+        else
+          cr = API.use.europepmc.title cr
+    try res.pmcid = cr.pmcid if cr.pmcid
+    try res.title = cr.title
+    try res.doi = cr.doi
+    try res.pmid = cr.pmid
+    # can set the pmc ID from anywhere?
+    try
+      res.author = cr.authorList.author
+      for a in res.author
+        a.given = a.firstName
+        a.family = a.lastName
+        a.affiliation = [{name: a.affiliation}] if a.affiliation
+    try res.journal = cr.journalInfo.journal.title
+    try res.issue = cr.journalInfo.issue
+    try res.volume = cr.journalInfo.volume
+    try res.page = cr.pageInfo.toString()
+    try res.issn = cr.journalInfo.journal.issn
+    try res.subject = cr.subject # not sure if epmc has subject
+    #try res.publisher = cr.publisher #epmc does not appear to have publisher
+    try res.year = cr.journalInfo.yearOfPublication
+    try res.year ?= cr.journalInfo.printPublicationDate.split('-')[0]
+    try 
+      res.published = if cr.journalInfo.printPublicationDate.indexOf('-') isnt -1 then cr.journalInfo.printPublicationDate else if cr.electronicPublicationDate then cr.electronicPublicationDate else undefined
+      try
+        if res.published.split('-').length isnt 3
+          delete res.published
+  return res
+  
 API.service.oab.scrape = (url,content,doi) ->
   meta = {url:url,doi:doi}
   try
@@ -62,16 +128,9 @@ API.service.oab.scrape = (url,content,doi) ->
 
   if meta.doi
     try
-      cr = API.use.crossref.works.doi(meta.doi)
-      meta.title = cr.title[0]
-      meta.author ?= cr.author
-      meta.journal ?= cr['container-title'][0] if cr['container-title']?
-      meta.issn ?= cr.ISSN[0] if cr.ISSN?
-      meta.subject ?= cr.subject
-      meta.publisher ?= cr.publisher
-      meta.year = cr['published-print']['date-parts'][0][0] if cr['published-print']?['date-parts']? and cr['published-print']['date-parts'].length > 0 and cr['published-print']['date-parts'][0].length > 0
-      meta.year ?= cr.created['date-time'].split('-')[0] if cr.created?['date-time']?
-      try meta.published ?= if cr['published-online']?['date-parts']? then cr['published-online']['date-parts'][0].join('-') else if cr['published-print']?['date-parts']? then cr['published-print']['date-parts'][0].join('-') else cr.created['date-parts'][0].join('-')
+      cr = API.service.oab.crossref meta.doi
+      for c of cr
+        meta[c] ?= cr[c]
 
   if not meta.year
     try

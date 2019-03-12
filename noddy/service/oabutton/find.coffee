@@ -32,6 +32,8 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
       opts.refresh = if isNaN(n) then 0 else n
     catch
       opts.refresh = 0
+  opts.url ?= opts.q if opts.q
+  opts.url ?= opts.id if opts.id
   if opts.url
     if opts.url.indexOf('10.') is 0
       opts.doi = opts.url
@@ -103,6 +105,10 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
       opts.resolve = true
       ret.meta.article = API.service.oab.resolve opts.url, opts.dom, opts.sources, opts.all, opts.titles, opts.journal, opts.bing
       ret.match = 'https://doi.org/' + ret.meta.article.doi if ret.meta.article.doi and ret.match.indexOf('http') isnt 0
+    try opts.bing = ret.meta.article.bing
+    try opts.capped = ret.meta.article.capped
+    try opts.reversed = ret.meta.article.reversed
+    try opts.scraped = ret.meta.article.scraped
     if ret.meta.article.url and ret.meta.article.source and ret.meta.article.redirect isnt false and not ret.meta.article.journal_url
       opts.source.article = ret.meta.article.source
       opts.title ?= ret.meta.article.title
@@ -112,9 +118,10 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
       ret.availability.push {type:'article',url:opts.discovered.article}
       ret.accepts = []
       already.push 'article'
-    try opts.bing = ret.meta.article.bing
-    try opts.capped = ret.meta.article.capped
-    try opts.reversed = ret.meta.article.reversed
+    if opts.plugin is 'instantill'
+      meta = API.service.oab.ill.metadata ret.meta.article,  opts
+      for m of meta
+        ret.meta.article[m] ?= meta[m]
 
   #opts.url = 'https://doi.org/' + ret.meta.article.doi if opts.url.indexOf('http') isnt 0 and ret.meta.article.doi
   # so far we are only doing availability checks for articles, so only need to check requests for data types or articles that were not found yet
