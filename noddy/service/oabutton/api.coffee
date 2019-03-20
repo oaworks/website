@@ -66,6 +66,27 @@ API.add 'service/oab/ill',
       opts[o] = this.queryParams[o]
     return API.service.oab.ill.start opts
 
+API.add 'service/oab/ill/config',
+  get: 
+    authRequired: 'openaccessbutton.user'
+    action: () ->
+      try
+        return this.user.service.openaccessbutton.ill.config
+      catch
+        return 404
+  post: 
+    authRequired: 'openaccessbutton.user'
+    action: () ->
+      opts = this.request.body ? {}
+      for o of this.queryParams
+        opts[o] = this.queryParams[o]
+      if opts.uid and API.accounts.auth 'root', this.user
+        user = Users.get opts.uid
+        delete opts.uid
+      else
+        user = this.user
+      return API.service.oab.ill.config user, opts
+
 API.add 'service/oab/ill/:library',
   post: () ->
     opts = this.request.body
