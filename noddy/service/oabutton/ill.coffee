@@ -114,6 +114,85 @@ API.service.oab.ill.start = (opts={}) ->
   else
     return 404
 
+API.service.oab.ill.config = (user, config) ->
+  # need to set a config on live for the IUPUI user ajrfnwswdr4my8kgd
+  # the URL params they need are like
+  # https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=30&sid=OABILL&genre=InstantILL&aulast=Sapon-Shevin&aufirst=Mara&issn=10478248&title=Journal+of+Educational+Foundations&atitle=Cooperative+Learning%3A+Liberatory+Praxis+or+Hamburger+Helper&volume=5&part=&issue=3&spage=5&epage=&date=1991-07-01&pmid
+  # and their openurl config https://docs.google.com/spreadsheets/d/1wGQp7MofLh40JJK32Rp9di7pEkbwOpQ0ioigbqsufU0/edit#gid=806496802
+  # tested it and set values as below defaults, but also noted that it has year and month boxes, but these do not correspond to year and month params, or date params
+  if config?
+    update = {}
+    for k in ['ill_redirect_base_url','ill_redirect_params','method','title','doi','pmid','pmcid','author','journal','issn','volume','issue','page','published','year']
+      update[k] = config[k] if config[k]?
+    if not user.service.openaccessbutton.ill?
+      Users.update user._id, {'service.openaccessbutton.ill': {config: update}}
+    else
+      Users.update user._id, {'service.openaccessbutton.ill.config': update}
+    return true
+  else
+    try
+      user = Users.get(user) if typeof user is 'string'
+      return user.service.openaccessbutton.ill.config ? {}
+    catch
+      return {}
+
+API.service.oab.ill.redirect = (uid, meta={}) ->
+  config = API.service.oab.ill.config uid
+  config ?= {}
+  # add iupui / openURL defaults to config
+  defaults =
+    title: 'atitle' # this is what iupui needs (title is also acceptable, but would clash with using title for journal title, which we set below, as iupui do that
+    doi: 'rft_id' # don't know yet what this should be
+    #pmid: 'pmid' # same as iupui ill url format
+    pmcid: 'pmcid' # don't know yet what this should be
+    #aufirst: 'aufirst' # this is what iupui needs
+    #aulast: 'aulast' # this is what iupui needs
+    author: 'aulast' # author should actually be au, but aulast works even if contains the whole author, using aufirst just concatenates
+    journal: 'title' # this is what iupui needs
+    #issn: 'issn' # same as iupui ill url format
+    #volume: 'volume' # same as iupui ill url format
+    #issue: 'issue' # same as iupui ill url format
+    #spage: 'spage' # this is what iupui needs
+    #epage: 'epage' # this is what iupui needs
+    page: 'pages' # iupui uses the spage and epage for start and end pages, but pages is allowed in openurl, check if this will work for iupui
+    published: 'date' # this is what iupui needs, but in format 1991-07-01 - date format may be a problem
+    year: 'rft.year' # this is what IUPUI uses
+    # IUPUI also has a month field, but there is nothing to match to that
+  for d of defaults
+    config[d] = defaults[d] if not config[d]
+  if not config?.ill_redirect_base_url?
+    return ''
+  else
+    url = config.ill_redirect_base_url
+    url += if url.indexOf('?') is -1 then '?' else '&'
+    url += config.ill_redirect_params.replace('?','') + '&' if config.ill_redirect_params
+    for k of meta
+      v = false
+      if k is 'author'
+        # need to check if config has aufirst and aulast or something similar, then need to use those instead, 
+        # if we have author name parts
+        try
+          if typeof meta.author is 'string'
+            v = meta.author
+          else if _.isArray meta.author
+            v = ''
+            for author in meta.author
+              v += ', ' if v.length
+              if typeof author is 'string'
+                v += author
+              else if author.family
+                v += author.family + if author.given then ', ' + author.given else ''
+          else
+            if meta.author.family
+              v = meta.author.family + if meta.author.given then ', ' + meta.author.given else ''
+            else
+              v = JSON.stringify meta.author
+      else if k not in ['started','ended','took']
+        v = meta[k]
+      if v
+        url += (if config[k] then config[k] else k) + '=' + v + '&'
+    return url
+  
 API.service.oab.ill.metadata = (metadata={}, opts={}) ->
   metadata.started ?= Date.now()
   # metadata is whatever we already happened to find when doing availability or other checks

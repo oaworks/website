@@ -122,6 +122,10 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
       meta = API.service.oab.ill.metadata ret.meta.article,  opts
       for m of meta
         ret.meta.article[m] ?= meta[m]
+      try
+        if opts.from?
+          ret.ill ?= {}
+          ret.ill.redirect = API.service.oab.ill.redirect opts.from, meta
 
   #opts.url = 'https://doi.org/' + ret.meta.article.doi if opts.url.indexOf('http') isnt 0 and ret.meta.article.doi
   # so far we are only doing availability checks for articles, so only need to check requests for data types or articles that were not found yet

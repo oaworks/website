@@ -206,6 +206,7 @@ var instantill = function(opts) {
             var availability = '<p><b>This article is not freely available (TEST)</b></p>';
             //availability += '<p><a target="_blank" href="' + site + '/request?data=false&plugin=instantill&from=' + opts.uid + '&url=' + encodeURIComponent(data.data.match) + '">Start a request to the author to share it with you</a>';
             availability += '<p><a class="ill" href="' + site + '/ill?from=' + opts.uid + '&plugin=instantill&data=false&url=' + encodeURIComponent(data.data.match) + '">Submit ILL</a></p>';
+            if (data.data.ill !== undefined && data.data.ill.redirect) availability += '<p><a target="_blank" href="' + data.data.ill.redirect + '">' + data.data.ill.redirect + '</a></p>';
             $('#oabutton_availability').html(availability);
           } else if (JSON.stringify(has) === '{}') {
             if (data.data.match.indexOf('http') === 0) {
@@ -234,11 +235,13 @@ var instantill = function(opts) {
                 var availability = '<p><b>This article is not freely available</b></p>';
                 //availability += '<p><a target="_blank" href="' + site + '/request?data=false&plugin=instantill&from=' + opts.uid + '&url=' + encodeURIComponent(data.data.match) + '">Start a request to the author to share it with you</a>';
                 availability += '<p><a class="ill" href="' + site + '/ill?from=' + opts.uid + '&plugin=instantill&data=false&url=' + encodeURIComponent(data.data.match) + '">Submit ILL</a></p>';
+                if (data.data.ill !== undefined && data.data.ill.redirect) availability += '<p><a target="_blank" href="' + data.data.ill.redirect + '">' + data.data.ill.redirect + '</a></p>';
                 $('#oabutton_availability').html(availability);
               }
             } else {
               var availability = '<p>Sorry, we couldn\'t find the article <b>' + data.data.match + '</b>.</p><p>Matching titles and citations can be tricky. Please find a DOI, PMID or PMCID and try again.';
               availability += '<p>Or <a class="ill" href="' + site + '/ill?from=' + opts.uid + '&plugin=instantill&data=false&url=' + encodeURIComponent(data.data.match) + '">submit ILL</a></p>';
+              if (data.data.ill !== undefined && data.data.ill.redirect) availability += '<p><a target="_blank" href="' + data.data.ill.redirect + '">' + data.data.ill.redirect + '</a></p>';
               $('#oabutton_availability').html(availability);
             }
           } else if (has.article && !has.data) {
@@ -266,6 +269,7 @@ var instantill = function(opts) {
             var availability = '<p><b>This article is not freely available</b></p>';
             //availability += '<p><a target="_blank" class="btn btn-action" href="' + site + '/request?data=false&url=' + encodeURIComponent(data.data.match) + '">Start a request</a>';
             availability += '<p><a class="ill" href="' + site + '/ill?from=' + opts.uid + '&plugin=instantill&data=false&url=' + encodeURIComponent(data.data.match) + '">Submit ILL</a></p>';
+            if (data.data.ill !== undefined && data.data.ill.redirect) availability += '<p><a target="_blank" href="' + data.data.ill.redirect + '">' + data.data.ill.redirect + '</a></p>';
             if (opts.data) {
               availability += '<p>';
               if (has.data.id) {
@@ -289,6 +293,7 @@ var instantill = function(opts) {
               if (has.article.id) {
                 //availability += '<p><b>Someone has already requested the author freely share this article. <a target="_blank" class="btn btn-action" href="' + site + '/request/' + has.article.id + '?data=false&support=true">Notify me</a></b>';
                 availability += '<p><a class="ill" href="' + site + '/ill?from=' + opts.uid + '&plugin=instantill&data=false&url=' + encodeURIComponent(data.data.match) + '">Submit ILL</a></p>';
+                if (data.data.ill !== undefined && data.data.ill.redirect) availability += '<p><a target="_blank" href="' + data.data.ill.redirect + '">' + data.data.ill.redirect + '</a></p>';
               }
               if (opts.data) {
                 availability += '<p>';
