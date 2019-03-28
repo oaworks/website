@@ -130,7 +130,7 @@ var instantill_run = function(opts) {
   var attempts = 0;
   
   var getmore = function() {
-    var info = '<div style="border:1px solid #ccc;padding:2px 2px 0px 2px;margin-bottom:20px;">';
+    var info = '<div>';
     info += '<p>Can you please tell us the article details?</p>';
     info += '<p>Article title (required)<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_title" type="text"></p>';
     info += '<p>Author(s) (required)<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_authors" type="text"></p>';
@@ -219,14 +219,14 @@ var instantill_run = function(opts) {
     info += '<p><a id="oabutton_getmore" href="#">This is not the article I searched.</a></p>';
     if (avail.data.subscription && avail.data.subscription.url) {
       // if there is a subscribed version available show a link to it
-      info += '<div style="border:1px solid #ccc;padding:2px 2px 0px 2px;margin-bottom:20px;">';
+      info += '<div>';
       info += '<p>We have an online copy instantly available</p>';
       info += '<p><a href="' + avail.data.subscription.url  + '">Open article</a></p>';
       info += '</div>';
     } else {
       if (avail.data.availability && avail.data.availability.length && avail.data.availability[0].url) {
         // else if there is an oa article show a link to it
-        info += '<div style="border:1px solid #ccc;padding:2px 2px 0px 2px;margin-bottom:20px;">';
+        info += '<div>';
         info += '<p>There is a free, instantly accessible copy online</p>';
         info += '<p>It may not be the final published version and may lack graphs or figures making it unsuitable for citations.</p>';
         info += '<p><a target="_blank" href="' + avail.data.availability[0].url  + '">Open article in a new tab</a></p>';
@@ -241,7 +241,7 @@ var instantill_run = function(opts) {
         }
       }
       if (avail.data.ill && opts.ill !== false) {
-        info += '<div style="border:1px solid #ccc;padding:2px 2px 0px 2px;margin-bottom:20px;">';
+        info += '<div>';
         info += '<p>Ask the library to digitally send you the published full-text</p>';
         info += '<p>It is free and we\'ll email a link within 24 hours.</p>';
         if (avail.data.ill.redirect && opts.redirect !== false) {
