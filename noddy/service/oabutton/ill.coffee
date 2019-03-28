@@ -79,7 +79,7 @@ API.service.oab.ill.start = (opts={}) ->
     if user?
       vars = {}
       vars.name = user.profile?.firstname ? 'librarian'
-      vars.details = '' # this should build an html chunk that lists all the necessary values... for now just dump them all in
+      vars.details = ''
       for o of opts
         if o is 'metadata'
           for m of opts[o]
@@ -101,13 +101,20 @@ API.service.oab.ill.start = (opts={}) ->
           vars.details += '<p>' + o + ':<br>' + opts[o] + '</p>'
       vars.illid = oab_ill.insert opts
       API.service.oab.mail({vars: vars, template: {filename:'instantill_create.html'}, to: user.emails[0].address, from: "InstantILL@openaccessbutton.org", subject: "ILL request " + vars.illid})
+      
+      # send msg to mark and joe for testing (can be removed later)
+      txt = vars.details
+      delete vars.details
+      txt += '<br><br>' + JSON.stringify(vars,undefined,2)
       API.mail.send {
         service: 'openaccessbutton',
         from: 'instantill@openaccessbutton.org',
         to: ['mark@cottagelabs.com','joe@righttoresearch.org'],
         subject: 'ILL CREATED',
-        text: JSON.stringify(vars,undefined,2)
+        html: txt,
+        text: txt
       }
+      
       return vars.illid
     else
       return 401
@@ -122,7 +129,7 @@ API.service.oab.ill.config = (user, config) ->
   # tested it and set values as below defaults, but also noted that it has year and month boxes, but these do not correspond to year and month params, or date params
   if config?
     update = {}
-    for k in ['ill_redirect_base_url','ill_redirect_params','method','title','doi','pmid','pmcid','author','journal','issn','volume','issue','page','published','year']
+    for k in ['ill_redirect_base_url','ill_redirect_params','method','title','doi','pmid','pmcid','author','journal','issn','volume','issue','page','published','year','terms']
       update[k] = config[k] if config[k]?
     if not user.service.openaccessbutton.ill?
       Users.update user._id, {'service.openaccessbutton.ill': {config: update}}
@@ -187,11 +194,15 @@ API.service.oab.ill.redirect = (uid, meta={}) ->
               v = meta.author.family + if meta.author.given then ', ' + meta.author.given else ''
             else
               v = JSON.stringify meta.author
-      else if k not in ['started','ended','took']
+      else if k not in ['started','ended','took','terms']
         v = meta[k]
       if v
         url += (if config[k] then config[k] else k) + '=' + v + '&'
     return url
+    
+API.service.oab.ill.terms = (uid) ->
+  config = API.service.oab.ill.config uid
+  return config.terms
   
 API.service.oab.ill.metadata = (metadata={}, opts={}) ->
   metadata.started ?= Date.now()

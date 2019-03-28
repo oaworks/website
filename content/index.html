@@ -143,6 +143,12 @@
           setTimeout(function() { $('#sdsorry').remove(); }, 5000);
           return;
         }
+        if (url.toLowerCase().indexOf('http') === -1 && url.indexOf('10.') === -1 && url.indexOf('/') === -1 && isNaN(parseInt(url.toLowerCase().replace('pmc',''))) && url.length < 10 ) {
+          $('#url').val('');
+          $('#url').parent().after('<div class="well" id="shortsorry" style="margin-top:5px;"><p>Sorry, we can\'t match titles/citations that are too short. Please provide a longer title or citation, or a suitable URL or identifier.</p></div>');
+          setTimeout(function() { $('#shortsorry').remove(); }, 5000);
+          return;
+        }
         try {
           window.history.pushState("", "find", '?url=' + encodeURIComponent(url));
           var change = function(state) {
