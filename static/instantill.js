@@ -1,28 +1,15 @@
 
-// This will become InstantILL, so far is just a copy of openaccessbutton_widget with names changed
-// This must do the usual search but then if nothing is found, must offer option to forward the user 
-// to "create an ILL" by forwarding them to a page on a library CMS that expects openURL formatted values 
-// to be passed to it, and must also (alternatively?) be able to email the ILL to some user at the uni
-
 // to use InstantILL, just include this js file, and then call instantill() in a script on the page
-// If jquery is not already used on the site, jquery is required too.
+// If jquery is not already used on the site, jquery is retrieved too.
 // bootstrap can optionally be used to apply styling
-// this can be done like so:
-// <script src="https://openaccessbutton.org/static/jquery-1.10.2.min.js"></script>
-// <link rel="stylesheet" href="https://openaccessbutton.org/static/bootstrap.min.css">
 // <script src="https://openaccessbutton.org/static/instantill.js"></script>
 // <script>jQuery(document).ready(function() { instantill(); });</script>
 
-// a comment to fix merge oddities
-// need an input field called oabutton_url
-// and an oabutton_find button to trigger it (although triggers on enter too)
-// and oabutton_availability div required for inserting results
-// and optional oabutton_loading
+var _oab_opts = {};
 
-var instantill = function(opts) {
-  if (opts === undefined) opts = {};
-  if (opts.placeholder === undefined) opts.placeholder = 'Skip the paywall using a URL, DOI, Title, or Citation';
-  if (opts.redirect === undefined) opts.redirect = false;
+var instantill_run = function(opts) {
+  if (opts === undefined) opts = _oab_opts;
+  if (opts.placeholder === undefined) opts.placeholder = 'e.g. Lessons in data entry from digital native populations';
   if (opts.data === undefined) opts.data = false;
   var api = opts.api ? opts.api : 'https://api.openaccessbutton.org';
   var site = opts.site ? opts.site : 'https://openaccessbutton.org';
@@ -33,13 +20,18 @@ var instantill = function(opts) {
   if (opts.element === undefined) opts.element = '#instantill';
   if (opts.uid === undefined) opts.uid = 'anonymous';
   if ($(opts.element).length === 0) $('body').append('<div id="instantill"></div>');
-  
-  var w = '<div id="oabutton_inputs">\
-  <input id="oabutton_url" placeholder="' + opts.placeholder + '" aria-label="' + opts.placeholder + '"></input>\
-  <a href="#" id="oabutton_find" aria-label="Search"><img style="height:90%;" src="' + site + '/static/search.png"></img></a>\
+
+  var w = '<h3 id="oabutton_request">Request a paper</h3><div id="oabutton_error"></div><div id="oabutton_inputs">\
+  <p>If you need a paper or book you can request it from any library in the world through Interlibrary loan. \
+  Start by entering a full article title, citation, DOI or URL:</p>\
+  <p><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_input" placeholder="' + opts.placeholder + '" aria-label="' + opts.placeholder + '"></input></p>\
+  <p><a ' + (opts.bootstrap !== false ? 'class="btn btn-primary" ' : '') + 'href="#" id="oabutton_find" aria-label="Search">Find paper</a></p>\
+  <p>Need a <a href="#">book</a>, or <a href="#">something else</a>?</p>\
 </div>\
-<div id="oabutton_loading" style="display:none;"><p><img style="width:30px;" src="' + site + '/static/spin_orange.svg">   Powered by the <a href="https://openaccessbutton.org" target="_blank">Open Access Button</a></p></div>\
+<div id="oabutton_loading" style="display:none;"><p id="oabutton_searching">Searching</p></div>\
 <div id="oabutton_availability"></div>';
+
+// <img style="width:30px;" src="' + site + '/static/spin_orange.svg">   Powered by the <a href="https://openaccessbutton.org" target="_blank">Open Access Button</a>
 
   var ws = '#oabutton_inputs {\
   position: relative;\
@@ -47,27 +39,9 @@ var instantill = function(opts) {
   width:100%;\
   border-collapse: separate;\
 }\
-#oabutton_url {\
-  display: table-cell;\
-  width: 100%;\
-  height: 34px;\
-  padding: 6px 12px;\
-  font-size: 16px;\
-  line-height: 1.428571429;\
-  color: #555555;\
-  vertical-align: middle;\
-  background-color: #ffffff;\
-  background-image: none;\
-  border: 1px solid #cccccc;\
-  border-radius: 4px 0px 0px 4px;\
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);\
-          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);\
-  -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;\
-          transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;\
-}\
-#oabutton_email {\
-  display: inline-block;\
-  width: 100%;\
+.oabutton_form {\
+  /*display: inline-block;\
+  width: 100%;*/\
   height: 34px;\
   padding: 6px 12px;\
   font-size: 16px;\
@@ -84,9 +58,9 @@ var instantill = function(opts) {
           transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;\
 }\
 #oabutton_find {\
-  display: table-cell;\
+  /*display: table-cell;\
+  width:40px;*/\
   height:34px;\
-  width:40px;\
   padding: 6px 3px;\
   margin-bottom: 0;\
   font-size: 14px;\
@@ -108,8 +82,8 @@ var instantill = function(opts) {
   background-color: #428bca;\
   border-color: #357ebd;\
 }\
-.ill {\
-  display: inline-block;\
+.oabutton_ill {\
+  /*display: inline-block;*/\
   height:34px;\
   padding: 6px 3px;\
   margin-bottom: 0;\
@@ -132,14 +106,64 @@ var instantill = function(opts) {
   background-color: #428bca;\
   border-color: #357ebd;\
 }';
-  if (opts.css !== false) w = '<style>' + (typeof opts.css === 'string' ? opts.css : ws) + '</style>' + w;
+
+  if (opts.bootstrap !== false) {
+    var bs = document.createElement("link");
+    bs.setAttribute("rel", "stylesheet");
+    bs.setAttribute("type", "text/css");
+    bs.setAttribute("href", opts.site + '/static/bootstrap.min.css');
+    document.getElementsByTagName("head")[0].appendChild(bs);
+  } else if (opts.css !== false) {
+    w = '<style>' + (typeof opts.css === 'string' ? opts.css : ws) + '</style>' + w;
+  }
   $(opts.element).html(w);
+
+  var searchfor = undefined;
+  var avail = undefined;
+  var attempts = 0;
   
-  var availability_response = undefined;
+  var getmore = function() {
+    var info = '<div style="border:1px solid #ccc;padding:2px 2px 0px 2px;margin-bottom:20px;">';
+    info += '<p>Can you please tell us the article details?</p>';
+    info += '<p>Article title (required)<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_title" type="text"></p>';
+    info += '<p>Author(s) (required)<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_authors" type="text"></p>';
+    info += '<p>Journal title (required)<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_journal" type="text"></p>';
+    info += '<p>Year of publication (required)<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_year" type="text"></p>';
+    info += '<p>DOI or URL<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_doi" type="text"></p>';
+    info += '<p><a href="#"' + (opts.bootstrap !== false ? ' class="btn btn-primary"' : '') + ' id="oabutton_find">Continue</a></p>';
+    info += '</div>';
+    $('#oabutton_availability').html(info);
+    $('#oabutton_find').bind('click',availability);
+  }
+  
+  var cite = function(meta) {
+    var c = '';
+    if (meta.title) c += '<h3>' + meta.title + '</h3>';
+    if (meta.year || meta.journal || meta.volume || meta.issue) c += '<p><b>';
+    if (meta.year) c += '' + meta.year + ', ';
+    if (meta.journal) c+= meta.journal;
+    if (meta.volume) c += ', vol. ' + meta.volume;
+    if (meta.issue) c += ', issue ' + meta.issue;
+    if (meta.year || meta.journal || meta.volume || meta.issue) c += '</b></p>';
+    return c;
+  }
+  
   var ill = function(e) {
-    try { e.preventDefault(); } catch (err) {}
-    if ( $('#oabutton_email').length ) {
+    if ($(this).hasClass('oabutton_ill_email')) {
+      try { e.preventDefault(); } catch (err) {}
+      if ($('#oabutton_read_terms').length && !$('#oabutton_read_terms').is(':checked')) {
+        $('#oabutton_error').html('<p>Please agree to the terms first.</p>').show();
+        setTimeout(function() { $('#oabutton_error').html(''); }, 5000);
+        return;
+      }
+      $('#oabutton_availability').hide();
       $('#oabutton_loading').show();
+      var data = {url:avail.data.match, email:$('#oabutton_email').val(), from:opts.uid, plugin:'instantill', embedded:window.location.href, metadata: avail.data.meta.article }
+      if (avail.data.ill.redirect.indexOf('notes') === -1 && (avail.data.subscription || avail.data.availability)) {
+        data.notes = '';
+        if (avail.data.subscription) data.notes += 'Subscription check done, found ' + (avail.data.subscription.url ? avail.data.subscription.url : 'nothing') + '. ';
+        if (avail.data.availability) data.notes += 'OA availability check done, found ' + (avail.data.availability.length && avail.data.availability[0].url ? avail.data.availability[0].url : 'nothing') + '. ';
+      }
       var illopts = {
         type:'POST',
         url:api+'/ill',
@@ -147,37 +171,140 @@ var instantill = function(opts) {
         processData: false,
         contentType: 'application/json',
         dataType: 'json',
-        data: JSON.stringify({url:availability_response.data.match, email:$('#oabutton_email').val(), from:opts.uid, plugin:'instantill', embedded:window.location.href, metadata: availability_response.data.meta.article }),
+        data: JSON.stringify(data),
         success: function(data) {
           $('#oabutton_loading').hide();
-          $('#oabutton_availability').html('<p>Thanks, your ILL request has been sent to your library. You will hear back from them soon.</p>');
+          $('#oabutton_availability').html('<h3>Submission confirmed</h3><p>Go you, you\'ve submittted the ILL. The confirmation code is: ' + data + '. Save this for your records. You won\'t get an email.</p>').show();
         },
         error: function(data) {
           $('#oabutton_loading').hide();
           if (window.location.href.indexOf('openaccessbutton.org') !== -1) {
-            $('#oabutton_availability').html('<p>Sorry, we were not able to create an example ILL request for you - try logging in first.</p>');
+            $('#oabutton_error').html('<p>Sorry, we were not able to create an example ILL request for you - try logging in first.</p>').show();
           } else {
-            $('#oabutton_availability').html('<p>Sorry, we were not able to create an ILL request for you. Please try contacting your library directly.</p>');
+            $('#oabutton_loading').hide();
+            $('#oabutton_error').html('<p>Sorry, we were not able to create an ILL request for you. Please try contacting your library directly.</p>').show();
           }
         }
       }
       $.ajax(illopts);
     } else {
-      $('#oabutton_availability').html('<p>Please type your email address then press enter, so we can create an ILL for you - your library will get back to you via the address you provide.<br><input type="text" id="oabutton_email" placeholder="Email address"></p>');
-      $('#oabutton_email').bind('keyup', function(e) { if (e.keyCode === 13) ill() });
+      // do nothing if not the ILL email link, that way the user just gets taken to the openurl redirect page
+      // later if we need that to trigger anything else first, add it here then follow the link
     }
   }
-  
+
+  var inform = function() {
+    var info = '';
+    if (avail.data.meta && avail.data.meta.article) {
+      var cit = cite(avail.data.meta.article);
+      if (!cit.length) {
+        if (attempts === 0) {
+          attempts = 1;
+          getmore();
+        } else {
+          if (searchfor) info = '<p>' + searchfor + '</p>';
+          info += '<p>Unknown article</p>';
+        }
+      } else {
+        info += cit;
+      }
+    }
+    info += '<p><a id="oabutton_getmore" href="#">This is not the article I searched.</a></p>';
+    if (avail.data.subscription && avail.data.subscription.url) {
+      // if there is a subscribed version available show a link to it
+      info += '<div style="border:1px solid #ccc;padding:2px 2px 0px 2px;margin-bottom:20px;">';
+      info += '<p>We have an online copy instantly available</p>';
+      info += '<p><a href="' + avail.data.subscription.url  + '">Open article</a></p>';
+      info += '</div>';
+    } else {
+      if (avail.data.availability && avail.data.availability.length && avail.data.availability[0].url) {
+        // else if there is an oa article show a link to it
+        info += '<div style="border:1px solid #ccc;padding:2px 2px 0px 2px;margin-bottom:20px;">';
+        info += '<p>There is a free, instantly accessible copy online</p>';
+        info += '<p>It may not be the final published version and may lack graphs or figures making it unsuitable for citations.</p>';
+        info += '<p><a target="_blank" href="' + avail.data.availability[0].url  + '">Open article in a new tab</a></p>';
+        info += '</div>';
+        if (opts.requests !== false) {
+          if (avail.data.requests) {
+            // show the request (not yet part of instantill)
+          } else {
+            // offer to create a request (not yet part of instantill)
+            //info += '<p><a target="_blank" href="' + site + '/request?data=false&plugin=instantill&from=' + opts.uid + '&url=' + encodeURIComponent(data.data.match) + '">Start a request to the author to share it with you</a>';
+          } 
+        }
+      }
+      if (avail.data.ill && opts.ill !== false) {
+        info += '<div style="border:1px solid #ccc;padding:2px 2px 0px 2px;margin-bottom:20px;">';
+        info += '<p>Ask the library to digitally send you the published full-text</p>';
+        info += '<p>It is free and we\'ll email a link within 24 hours.</p>';
+        if (avail.data.ill.redirect && opts.redirect !== false) {
+          if (avail.data.ill.redirect.indexOf('notes') === -1) {
+            avail.data.ill.redirect += '&notes=';
+            if (avail.data.subscription) avail.data.ill.redirect += 'Subscription check done, found ' + (avail.data.subscription.url ? avail.data.subscription.url : 'nothing') + '. ';
+            if (avail.data.availability) avail.data.ill.redirect += 'OA availability check done, found ' + (avail.data.availability.length && avail.data.availability[0].url ? avail.data.availability[0].url : 'nothing') + '. ';
+          }
+          info += '<p><a class="oabutton_ill' + (opts.bootstrap !== false ? ' btn btn-primary" ' : '') + '" href="' + avail.data.ill.redirect + '">Complete request</a></p>';
+        } else {
+          if (avail.data.ill.terms) info += '<p id="oabutton_terms_note"><input type="checkbox" id="oabutton_read_terms"> I have read the <a target="_blank" href="' + avail.data.ill.terms + '">terms and conditions</a></p>';
+          info += '<p><input placeholder="Your university email address" id="oabutton_email" type="text" class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '"></p>';
+          info += '<p><a class="oabutton_ill oabutton_ill_email' + (opts.bootstrap !== false ? ' btn btn-primary" ' : '') + '" href="' + api + '/ill?from=' + opts.uid + '&plugin=instantill&data=false&url=' + encodeURIComponent(data.data.match) + '">Complete request</a></p>';
+        }
+        info += '</div>';
+      }
+    }
+    $('#oabutton_loading').hide();
+    $('#oabutton_inputs').hide();
+    $('#oabutton_availability').html(info).show();
+    if ($('#oabutton_getmore').length) $('#oabutton_getmore').bind('click',getmore);
+    if ($('.oabutton_ill').length) $('.oabutton_ill').bind('click',ill);
+    if ($('#oabutton_email').length) $('#oabutton_email').bind('keyup', function(e) { if (e.keyCode === 13) ill() });
+  }
+
   var availability = function(e) {
     if ($(this).attr('id') === 'oabutton_find' || e === undefined || e.keyCode === 13) {
+      $('#oabutton_error').hide();
+      $('#oabutton_inputs').hide();
       if (e && $(this).attr('id') === 'oabutton_find') e.preventDefault();
-      var url = $('#oabutton_url').val().trim();
-      if (!url.length) {
-        $('#oabutton_url').css('border-color','#f04717').focus();
-        return;
+      var input = $('#oabutton_input').val().trim();
+      $('#oabutton_input').val('');
+      $('#oabutton_availability').html('<h3>' + input + '</h3>');
+      searchfor = input;
+      if (input.lastIndexOf('.') === input.length-1) input = input.substring(0,input.length-1);
+      var data = {};
+      if ($('#oabutton_title') && $('#oabutton_title').val()) data.title = $('#oabutton_title').val();
+      if ($('#oabutton_author') && $('#oabutton_author').val()) data.author = $('#oabutton_author').val();
+      if ($('#oabutton_journal') && $('#oabutton_journal').val()) data.journal = $('#oabutton_journal').val();
+      if ($('#oabutton_year') && $('#oabutton_year').val()) data.year = $('#oabutton_year').val();
+      if ($('#oabutton_doi') && $('#oabutton_doi').val()) data.doi = $('#oabutton_doi').val();
+      if (data.doi && data.doi.indexOf('10.') === -1 && (data.doi.indexOf('/') === -1 || data.doi.indexOf('http') === 0)) {
+        data.url = data.doi;
+        delete data.doi;
       }
-      if (url.lastIndexOf('.') === url.length-1) url = url.substring(0,url.length-1);
-      $('#oabutton_loading').show();
+      if (JSON.stringify(data) === '{}') {
+        if (!input.length) {
+          $('#oabutton_input').css('border-color','#f04717').focus();
+          return;
+        } else {
+          data.url = input;
+          $('#oabutton_loading').show();
+          if ($('#oabutton_searching').length) {
+            setInterval(function() {
+              var srch = $('#oabutton_searching').html();
+              var dots = srch.split('.');
+              if (dots.length >= 5) {
+                srch = srch.replace(/\./g,'').trim();
+              } else {
+                srch += ' .';
+              }
+              $('#oabutton_searching').html(srch);
+            }, 800);
+          }
+        }
+      }
+      data.from = opts.uid;
+      data.plugin = 'instantill';
+      data.embedded = window.location.href;
+
       var avopts = {
         type:'POST',
         url:api+'/availability',
@@ -185,140 +312,36 @@ var instantill = function(opts) {
         processData: false,
         contentType: 'application/json',
         dataType: 'json',
-        data: JSON.stringify({url:url,from:opts.uid,plugin:'instantill',embedded:window.location.href}),
+        data: JSON.stringify(data),
         success: function(data) {
-          $('#oabutton_loading').hide();
-          $('#oabutton_availability').show();
-          var has = {};
-          if (data.data.availability.length > 0) {
-            for ( var a in data.data.availability ) {
-              has[data.data.availability[a].type] = {url:data.data.availability[a].url};
-            }
-          }
-          if (data.data.requests.length > 0) {
-            for ( var r in data.data.requests ) {
-              if (!has[data.data.requests[r].type]) has[data.data.requests[r].type] = {id:data.data.requests[r]._id,ucreated:data.data.requests[r].ucreated,usupport:data.data.requests[r].usupport};
-            }
-          }
-          availability_response = data;
-          if (data.data.match && data.data.match.indexOf('http') !== 0 && data.data.meta && data.data.meta.article && data.data.meta.article.doi) data.data.match = 'https://doi.org/' + data.data.meta.article.doi;
-          if (window.location.href.indexOf('test=true') !== -1 && window.location.href.indexOf('ill=true') !== -1) {
-            var availability = '<p><b>This article is not freely available (TEST)</b></p>';
-            //availability += '<p><a target="_blank" href="' + site + '/request?data=false&plugin=instantill&from=' + opts.uid + '&url=' + encodeURIComponent(data.data.match) + '">Start a request to the author to share it with you</a>';
-            availability += '<p><a class="ill" href="' + site + '/ill?from=' + opts.uid + '&plugin=instantill&data=false&url=' + encodeURIComponent(data.data.match) + '">Submit ILL</a></p>';
-            if (data.data.ill !== undefined && data.data.ill.redirect) availability += '<p><a target="_blank" href="' + data.data.ill.redirect + '">' + data.data.ill.redirect + '</a></p>';
-            $('#oabutton_availability').html(availability);
-          } else if (JSON.stringify(has) === '{}') {
-            if (data.data.match.indexOf('http') === 0) {
-              if (opts.redirect) {
-                var dr = {};
-                try { dr.title = data.data.meta.article.title; } catch(err) {}
-                try { dr.doi = data.data.meta.article.doi; } catch(err) {}
-                try { dr.url = data.data.match; } catch(err) {}
-                var ropts = {
-                  type:'POST',
-                  url: api+'/request?fast=true',
-                  cache:false,
-                  processData:false,
-                  contentType: 'application/json',
-                  dataType: 'json',
-                  data: JSON.stringify(dr),
-                  success: function(resp) {
-                    window.location = site + '/request/' + resp._id;
-                  },
-                  error: function() {
-                    window.location = site + '/request?url=' + encodeURIComponent(data.data.match);
-                  }
-                }
-                $.ajax(ropts);
-              } else {
-                var availability = '<p><b>This article is not freely available</b></p>';
-                //availability += '<p><a target="_blank" href="' + site + '/request?data=false&plugin=instantill&from=' + opts.uid + '&url=' + encodeURIComponent(data.data.match) + '">Start a request to the author to share it with you</a>';
-                availability += '<p><a class="ill" href="' + site + '/ill?from=' + opts.uid + '&plugin=instantill&data=false&url=' + encodeURIComponent(data.data.match) + '">Submit ILL</a></p>';
-                if (data.data.ill !== undefined && data.data.ill.redirect) availability += '<p><a target="_blank" href="' + data.data.ill.redirect + '">' + data.data.ill.redirect + '</a></p>';
-                $('#oabutton_availability').html(availability);
-              }
-            } else {
-              var availability = '<p>Sorry, we couldn\'t find the article <b>' + data.data.match + '</b>.</p><p>Matching titles and citations can be tricky. Please find a DOI, PMID or PMCID and try again.';
-              availability += '<p>Or <a class="ill" href="' + site + '/ill?from=' + opts.uid + '&plugin=instantill&data=false&url=' + encodeURIComponent(data.data.match) + '">submit ILL</a></p>';
-              if (data.data.ill !== undefined && data.data.ill.redirect) availability += '<p><a target="_blank" href="' + data.data.ill.redirect + '">' + data.data.ill.redirect + '</a></p>';
-              $('#oabutton_availability').html(availability);
-            }
-          } else if (has.article && !has.data) {
-            var availability = '';
-            if (has.article.id) {
-              availability += '<p style="color:#212f3f;padding-top:0px;">';
-              if (has.article.ucreated) {
-                availability += 'You already created a request for this article <a class="btn btn-action" href="/request/' + has.article.id + '">View the request</a></p>';
-              } else if (has.article.usupport) {
-                availability += 'You already support a request for this article <a class="btn btn-action" href="/request/' + has.article.id + '">View the request</a></p>';
-              } else {
-                availability += '<p><b>This article is not freely available.</b></p>Someone has already requested the author freely share this article<a class="btn btn-action" href="/request/' + has.article.id + '?support=true">Notify me</a></p>';
-              }
-            } else {
-              availability += '<p><b>This article is freely available!</b></p>';
-              availability += '<p"><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + 'Click here to view it' + '</a></p>';
-            }
-            if (opts.data) {
-              availability += '<p>';
-              availability += 'Want the data supporting the article? ';
-              availability += '<a target="_blank" class="btn btn-action" href="' + site + '/request?type=data&url=' + encodeURIComponent(data.data.match) + '">Request it from the author</a></p>';
-            }
-            $('#oabutton_availability').html(availability);
-          } else if (!has.article && has.data) {
-            var availability = '<p><b>This article is not freely available</b></p>';
-            //availability += '<p><a target="_blank" class="btn btn-action" href="' + site + '/request?data=false&url=' + encodeURIComponent(data.data.match) + '">Start a request</a>';
-            availability += '<p><a class="ill" href="' + site + '/ill?from=' + opts.uid + '&plugin=instantill&data=false&url=' + encodeURIComponent(data.data.match) + '">Submit ILL</a></p>';
-            if (data.data.ill !== undefined && data.data.ill.redirect) availability += '<p><a target="_blank" href="' + data.data.ill.redirect + '">' + data.data.ill.redirect + '</a></p>';
-            if (opts.data) {
-              availability += '<p>';
-              if (has.data.id) {
-                  availability += 'Someone has requested access to the data. <a target="_blank" class="btn btn-action" href="' + site + '/request/' + has.data.id + '?support=true">Notify me';
-              } else {
-                availability += 'However there is data available:</p>';
-                availability += '<p"><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.data.url + '">' + has.data.url;
-              }
-              availability += '</a></p>';
-            }
-            $('#oabutton_availability').html(availability);
-          } else if (has.article && has.data) {
-            if (has.article.id && has.data.id && opts.redirect) {
-              window.location = site + '/request/' + has.article.id + '?data=false';
-            } else {
-              var availability = '';
-              if (has.article.url) {
-                availability += '<p><b>This article is available!</b></p>';
-                availability += '<p><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + 'Click here to view it</a></p>';
-              }
-              if (has.article.id) {
-                //availability += '<p><b>Someone has already requested the author freely share this article. <a target="_blank" class="btn btn-action" href="' + site + '/request/' + has.article.id + '?data=false&support=true">Notify me</a></b>';
-                availability += '<p><a class="ill" href="' + site + '/ill?from=' + opts.uid + '&plugin=instantill&data=false&url=' + encodeURIComponent(data.data.match) + '">Submit ILL</a></p>';
-                if (data.data.ill !== undefined && data.data.ill.redirect) availability += '<p><a target="_blank" href="' + data.data.ill.redirect + '">' + data.data.ill.redirect + '</a></p>';
-              }
-              if (opts.data) {
-                availability += '<p>';
-                if (has.data.url) {
-                  availability += 'And there is data available for this article:</p><p>';
-                  availability += '<a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.data.url + '">' + has.data.url;
-                }
-                if (has.data.id) {
-                  availability += 'Someone has requested access to the data. <a target="_blank" class="btn btn-action" href="' + site + '/request/' + has.data.id + '?support=true">Notify me';
-                }
-                availability += '</a></p>';
-              }
-              $('#oabutton_availability').html(availability);
-            }
-          }
-          if ($('.ill').length) $('.ill').bind('click',ill);
+          avail = data;
+          inform();
         },
         error: function() {
           $('#oabutton_loading').hide();
-          $('#oabutton_loading').after('<p>Sorry, something went wrong. <a target="_blank" href="' + site + '/feedback#bug">Can you let us know?</a></p>');
+          $('#oabutton_error').show().html('<p>Enter a full article title, citation, or link. Go to library search if you\'re unsure what you\'re looking for.</p>');
+          $('#oabutton_inputs').show()
         }
       };
       $.ajax(avopts);
     }
   }
-  $('#oabutton_url').bind('keyup',availability);
+  $('#oabutton_input').bind('keyup',availability);
   $('#oabutton_find').bind('click',availability);
+}
+
+var instantill = function(opts) {
+  _oab_opts = opts;
+  if (typeof jQuery=='undefined') {
+    var site = opts.site ? opts.site : 'https://openaccessbutton.org';
+    if (window.location.host.indexOf('dev.openaccessbutton.org') !== -1 && !opts.site) site = 'https://dev.openaccessbutton.org';
+    var headTag = document.getElementsByTagName("head")[0];
+    var jqTag = document.createElement('script');
+    jqTag.type = 'text/javascript';
+    jqTag.src = site + '/static/jquery-1.10.2.min.js';
+    jqTag.onload = instantill_run;
+    headTag.appendChild(jqTag);
+  } else {
+     instantill_run(opts);
+  }  
 }

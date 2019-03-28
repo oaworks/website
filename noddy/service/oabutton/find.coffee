@@ -54,6 +54,7 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
     opts.url = 'http://europepmc.org/articles/PMC' + opts.pmcid.toLowerCase().replace('pmc','') if opts.pmcid
     opts.url = 'https://doi.org/' + (if opts.doi.indexOf('doi.org/') isnt -1 then opts.doi.split('doi.org/')[1] else opts.doi) if opts.doi
   return {} if not opts.url?
+  return {} if opts.short isnt true and opts.url.toLowerCase().indexOf('http') is -1 and opts.url.indexOf('10.') is -1 and opts.url.indexOf('/') is -1 and isNaN(parseInt(opts.url.toLowerCase().replace('pmc',''))) and opts.url.length < 10
 
   opts.bing ?= opts.plugin in ['widget','oasheet'] or opts.from in ['illiad','clio'] or opts.url.indexOf('alma.exlibrisgroup.com') isnt -1
 
@@ -126,6 +127,8 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
         if opts.from?
           ret.ill ?= {}
           ret.ill.redirect = API.service.oab.ill.redirect opts.from, meta
+          ret.ill.terms = API.service.oab.ill.terms opts.from
+        # TODO add subscription check here and put results in ret.subscription, with ret.subscription.url where one is available, as instantill checks for this
 
   #opts.url = 'https://doi.org/' + ret.meta.article.doi if opts.url.indexOf('http') isnt 0 and ret.meta.article.doi
   # so far we are only doing availability checks for articles, so only need to check requests for data types or articles that were not found yet
