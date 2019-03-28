@@ -9,6 +9,7 @@ var _oab_opts = {};
 
 var instantill_run = function(opts) {
   if (opts === undefined) opts = _oab_opts;
+  if (opts.bootstrap === undefined && opts.css === undefined) opts.bootstrap = 'btn btn-primary btn-iu';
   if (opts.placeholder === undefined) opts.placeholder = 'e.g. Lessons in data entry from digital native populations';
   if (opts.data === undefined) opts.data = false;
   var api = opts.api ? opts.api : 'https://api.openaccessbutton.org';
@@ -25,7 +26,7 @@ var instantill_run = function(opts) {
   <p>If you need a paper or book you can request it from any library in the world through Interlibrary loan. \
   Start by entering a full article title, citation, DOI or URL:</p>\
   <p><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_input" placeholder="' + opts.placeholder + '" aria-label="' + opts.placeholder + '"></input></p>\
-  <p><a ' + (opts.bootstrap !== false ? 'class="btn btn-primary" ' : '') + 'href="#" id="oabutton_find" aria-label="Search">Find paper</a></p>\
+  <p><a class="' + (opts.bootstrap !== false ? (typeof opts.bootstrap === 'string' ? opts.bootstrap : 'btn btn-primary') : '') + '" href="#" id="oabutton_find" aria-label="Search">Find paper</a></p>\
   <p>Need a <a href="#">book</a>, or <a href="#">something else</a>?</p>\
 </div>\
 <div id="oabutton_loading" style="display:none;"><p id="oabutton_searching">Searching</p></div>\
@@ -108,11 +109,17 @@ var instantill_run = function(opts) {
 }';
 
   if (opts.bootstrap !== false) {
-    var bs = document.createElement("link");
-    bs.setAttribute("rel", "stylesheet");
-    bs.setAttribute("type", "text/css");
-    bs.setAttribute("href", opts.site + '/static/bootstrap.min.css');
-    document.getElementsByTagName("head")[0].appendChild(bs);
+    var bs = true;
+    $('body').append('<div class="btn" id="oabutton_bootstrap_test" style="display:none;"></div>');
+    if ( $('#oabutton_bootstrap_test').css('height') !== '0px' ) bs = false;
+    $('#oabutton_bootstrap_test').remove();
+    if (bs) {
+      var bs = document.createElement("link");
+      bs.setAttribute("rel", "stylesheet");
+      bs.setAttribute("type", "text/css");
+      bs.setAttribute("href", site + '/static/bootstrap.min.css');
+      document.getElementsByTagName("head")[0].appendChild(bs);
+    }
   } else if (opts.css !== false) {
     w = '<style>' + (typeof opts.css === 'string' ? opts.css : ws) + '</style>' + w;
   }
@@ -130,7 +137,7 @@ var instantill_run = function(opts) {
     info += '<p>Journal title (required)<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_journal" type="text"></p>';
     info += '<p>Year of publication (required)<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_year" type="text"></p>';
     info += '<p>DOI or URL<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_doi" type="text"></p>';
-    info += '<p><a href="#"' + (opts.bootstrap !== false ? ' class="btn btn-primary"' : '') + ' id="oabutton_find">Continue</a></p>';
+    info += '<p><a href="#" class="' + (opts.bootstrap !== false ? (typeof opts.bootstrap === 'string' ? opts.bootstrap : 'btn btn-primary') : '') + '" id="oabutton_find">Continue</a></p>';
     info += '</div>';
     $('#oabutton_availability').html(info);
     $('#oabutton_find').bind('click',availability);
@@ -243,11 +250,11 @@ var instantill_run = function(opts) {
             if (avail.data.subscription) avail.data.ill.redirect += 'Subscription check done, found ' + (avail.data.subscription.url ? avail.data.subscription.url : 'nothing') + '. ';
             if (avail.data.availability) avail.data.ill.redirect += 'OA availability check done, found ' + (avail.data.availability.length && avail.data.availability[0].url ? avail.data.availability[0].url : 'nothing') + '. ';
           }
-          info += '<p><a class="oabutton_ill' + (opts.bootstrap !== false ? ' btn btn-primary" ' : '') + '" href="' + avail.data.ill.redirect + '">Complete request</a></p>';
+          info += '<p><a class="oabutton_ill ' + (opts.bootstrap !== false ? (typeof opts.bootstrap === 'string' ? opts.bootstrap : 'btn btn-primary') : '') + '" href="' + avail.data.ill.redirect + '">Complete request</a></p>';
         } else {
           if (avail.data.ill.terms) info += '<p id="oabutton_terms_note"><input type="checkbox" id="oabutton_read_terms"> I have read the <a target="_blank" href="' + avail.data.ill.terms + '">terms and conditions</a></p>';
           info += '<p><input placeholder="Your university email address" id="oabutton_email" type="text" class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '"></p>';
-          info += '<p><a class="oabutton_ill oabutton_ill_email' + (opts.bootstrap !== false ? ' btn btn-primary" ' : '') + '" href="' + api + '/ill?from=' + opts.uid + '&plugin=instantill&data=false&url=' + encodeURIComponent(data.data.match) + '">Complete request</a></p>';
+          info += '<p><a class="oabutton_ill oabutton_ill_email ' + (opts.bootstrap !== false ? (typeof opts.bootstrap === 'string' ? opts.bootstrap : 'btn btn-primary') : '') + '" href="' + api + '/ill?from=' + opts.uid + '&plugin=instantill&data=false&url=' + encodeURIComponent(data.data.match) + '">Complete request</a></p>';
         }
         info += '</div>';
       }
