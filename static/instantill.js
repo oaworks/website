@@ -129,7 +129,8 @@ var instantill_run = function(opts) {
   var avail = undefined;
   var attempts = 0;
   
-  var getmore = function() {
+  var getmore = function(e) {
+    try { e.preventDefault(); } catch(err) {}
     var info = '<div>';
     info += '<p>Can you please tell us the article details?</p>';
     info += '<p>Article title (required)<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_title" type="text"></p>';
@@ -145,6 +146,14 @@ var instantill_run = function(opts) {
   
   var cite = function(meta) {
     var c = '';
+    
+    // if we got nothing back but what we put in, then we have not found anything suitable :(
+    try { delete meta.started; delete meta.ended; delete meta.took; } catch(err) {}
+    var keys = 0
+    for ( var k in meta ) keys += 1;
+    console.log(keys.length)
+    if (keys.length === 0 || (keys.length === 1 && meta.title && meta.title.toLowerCase() === searchfor.toLowerCase())) return c;
+    
     if (meta.title) c += '<h3>' + meta.title + '</h3>';
     if (meta.year || meta.journal || meta.volume || meta.issue) c += '<p><b>';
     if (meta.year) c += '' + meta.year + ', ';
@@ -204,6 +213,7 @@ var instantill_run = function(opts) {
     var info = '';
     if (avail.data.meta && avail.data.meta.article) {
       var cit = cite(avail.data.meta.article);
+      console.log(cit.length)
       if (!cit.length) {
         if (attempts === 0) {
           attempts = 1;
@@ -273,7 +283,7 @@ var instantill_run = function(opts) {
       if (e && $(this).attr('id') === 'oabutton_find') e.preventDefault();
       var input = $('#oabutton_input').val().trim();
       $('#oabutton_input').val('');
-      $('#oabutton_availability').html('<h3>' + input + '</h3>');
+      $('#oabutton_availability').html('<h3 id="oabutton_inputted">' + input + '</h3>');
       searchfor = input;
       if (input.lastIndexOf('.') === input.length-1) input = input.substring(0,input.length-1);
       var data = {};
