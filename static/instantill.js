@@ -254,7 +254,7 @@ var instantill_run = function(opts) {
         } else {
           if (avail.data.ill.terms) info += '<p id="oabutton_terms_note"><input type="checkbox" id="oabutton_read_terms"> I have read the <a target="_blank" href="' + avail.data.ill.terms + '">terms and conditions</a></p>';
           info += '<p><input placeholder="Your university email address" id="oabutton_email" type="text" class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '"></p>';
-          info += '<p><a class="oabutton_ill oabutton_ill_email ' + (opts.bootstrap !== false ? (typeof opts.bootstrap === 'string' ? opts.bootstrap : 'btn btn-primary') : '') + '" href="' + api + '/ill?from=' + opts.uid + '&plugin=instantill&data=false&url=' + encodeURIComponent(data.data.match) + '">Complete request</a></p>';
+          info += '<p><a class="oabutton_ill oabutton_ill_email ' + (opts.bootstrap !== false ? (typeof opts.bootstrap === 'string' ? opts.bootstrap : 'btn btn-primary') : '') + '" href="' + api + '/ill?from=' + opts.uid + '&plugin=instantill&data=false&url=' + encodeURIComponent(avail.data.match) + '">Complete request</a></p>';
         }
         info += '</div>';
       }
@@ -270,7 +270,6 @@ var instantill_run = function(opts) {
   var availability = function(e) {
     if ($(this).attr('id') === 'oabutton_find' || e === undefined || e.keyCode === 13) {
       $('#oabutton_error').hide();
-      $('#oabutton_inputs').hide();
       if (e && $(this).attr('id') === 'oabutton_find') e.preventDefault();
       var input = $('#oabutton_input').val().trim();
       $('#oabutton_input').val('');
@@ -293,6 +292,7 @@ var instantill_run = function(opts) {
           return;
         } else {
           data.url = input;
+          $('#oabutton_inputs').hide();
           $('#oabutton_loading').show();
           if ($('#oabutton_searching').length) {
             setInterval(function() {
