@@ -98,9 +98,10 @@ API.service.oab.ill.start = (opts={}) ->
               vars.details += '<p>' + m + ':<br>' + opts[o][m] + '</p>'
         else if opts[o]
           vars[o] = opts[o]
-          vars.details += '<p>' + o + ':<br>' + opts[o] + '</p>'
+          #vars.details += '<p>' + o + ':<br>' + opts[o] + '</p>'
+      vars.details += '<p>Open access button ILL ID:<br>' + vars.illid + '</p>';
       vars.illid = oab_ill.insert opts
-      API.service.oab.mail({vars: vars, template: {filename:'instantill_create.html'}, to: user.emails[0].address, from: "InstantILL@openaccessbutton.org", subject: "ILL request " + vars.illid})
+      API.service.oab.mail({vars: vars, template: {filename:'instantill_create.html'}, to: (user.service?.openaccessbutton?.ill?.config?.email ? user.emails[0].address), from: "InstantILL <InstantILL@openaccessbutton.org>", subject: "ILL request " + vars.illid})
       
       # send msg to mark and joe for testing (can be removed later)
       txt = vars.details
@@ -108,7 +109,7 @@ API.service.oab.ill.start = (opts={}) ->
       txt += '<br><br>' + JSON.stringify(vars,undefined,2)
       API.mail.send {
         service: 'openaccessbutton',
-        from: 'instantill@openaccessbutton.org',
+        from: 'InstantILL <InstantILL@openaccessbutton.org>',
         to: ['mark@cottagelabs.com','joe@righttoresearch.org'],
         subject: 'ILL CREATED',
         html: txt,
@@ -129,7 +130,7 @@ API.service.oab.ill.config = (user, config) ->
   # tested it and set values as below defaults, but also noted that it has year and month boxes, but these do not correspond to year and month params, or date params
   if config?
     update = {}
-    for k in ['ill_redirect_base_url','ill_redirect_params','method','title','doi','pmid','pmcid','author','journal','issn','volume','issue','page','published','year','terms']
+    for k in ['ill_redirect_base_url','ill_redirect_params','method','title','doi','pmid','pmcid','author','journal','issn','volume','issue','page','published','year','terms','book','other','cost','time','email']
       update[k] = config[k] if config[k]?
     if not user.service.openaccessbutton.ill?
       Users.update user._id, {'service.openaccessbutton.ill': {config: update}}
@@ -167,7 +168,7 @@ API.service.oab.ill.redirect = (uid, meta={}) ->
     # IUPUI also has a month field, but there is nothing to match to that
   for d of defaults
     config[d] = defaults[d] if not config[d]
-  if not config?.ill_redirect_base_url?
+  if not config?.ill_redirect_base_url
     return ''
   else
     url = config.ill_redirect_base_url
@@ -194,7 +195,7 @@ API.service.oab.ill.redirect = (uid, meta={}) ->
               v = meta.author.family + if meta.author.given then ', ' + meta.author.given else ''
             else
               v = JSON.stringify meta.author
-      else if k not in ['started','ended','took','terms']
+      else if k not in ['started','ended','took','terms','book','other','cost','time','email']
         v = meta[k]
       if v
         url += (if config[k] then config[k] else k) + '=' + v + '&'

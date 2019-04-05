@@ -37,8 +37,8 @@ API.service.oab.citation = (meta) ->
 
   check = API.use.crossref.reverse meta.title ? meta.url
   meta.reversed = true
-  if check.data and check.data.doi and (not meta.title? or meta.title.toLowerCase().replace(/ /g,'').indexOf(check.data.title.toLowerCase().replace(' ','').replace(' ','').replace(' ','').split(' ')[0]) isnt -1)
-    # if we did not know title, or first three words of title match
+  if check.data and check.data.doi and (not meta.title? or (check.data.title.length <= meta.title.length*1.2 and meta.title.toLowerCase().replace(/ /g,'').indexOf(check.data.title.toLowerCase().replace(' ','').replace(' ','').replace(' ','').split(' ')[0]) isnt -1))
+    # if we did not know title, or found title length is within 20% and first three words of title match
     meta.doi = check.data.doi
     meta.title = check.data.title
     if check.original?.message?
