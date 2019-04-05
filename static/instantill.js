@@ -14,6 +14,7 @@ var _oab_config = {};
 
 var instantill_config = function() {
   var opts = _oab_opts;
+  var api = opts.api ? opts.api : 'https://api.openaccessbutton.org';
   if (opts.uid) {
     $.ajax({
       type:'GET',
