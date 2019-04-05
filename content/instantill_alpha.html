@@ -15,7 +15,7 @@ jQuery(document).ready(function() {
     $('.setting').each(function(i, obj) {
       if ( $(this).val() !== undefined ) {
         data[$(this).attr('id')] = $(this).val();
-        if (['ill_redirect_base_url','terms','book','other'].indexOf($(this).attr('id')) !== -1 && data[$(this).attr('id')].indexOf('http') !== 0) {
+        if (['ill_redirect_base_url','terms','book','other'].indexOf($(this).attr('id')) !== -1 && data[$(this).attr('id')] !== '' && data[$(this).attr('id')].indexOf('http') !== 0) {
           data[$(this).attr('id')] = 'http://' + data[$(this).attr('id')];
           $(this).val(data[$(this).attr('id')]);
         }

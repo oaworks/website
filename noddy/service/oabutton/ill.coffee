@@ -57,7 +57,8 @@ API.service.oab.ill.start = (opts={}) ->
   opts.metadata ?= {}
   meta = API.service.oab.ill.metadata opts.metadata, opts
   for m of meta
-    opts.metadata[m] ?= meta[m]
+    if m not in ['started','ended','took']
+      opts.metadata[m] ?= meta[m]
     
   if opts.library is 'imperial'
     # TODO for now we are just going to send an email when a user creates an ILL
@@ -83,25 +84,27 @@ API.service.oab.ill.start = (opts={}) ->
       for o of opts
         if o is 'metadata'
           for m of opts[o]
-            vars[m] = opts[o][m]
-            if m is 'author'
-              authors = '<p>Authors:<br>'
-              first = true
-              for a in opts[o][m]
-                if first
-                  first = false
-                else
-                  authors += ', '
-                authors += a.family + ' ' + a.given
-              vars.details += authors + '</p>'
-            else if opts[o][m]
-              vars.details += '<p>' + m + ':<br>' + opts[o][m] + '</p>'
+            if opts[o][m]
+              vars[m] = opts[o][m]
+              if m is 'author'
+                authors = '<p>Authors:<br>'
+                first = true
+                for a in opts[o][m]
+                  if first
+                    first = false
+                  else
+                    authors += ', '
+                  authors += a.family + ' ' + a.given
+                vars.details += authors + '</p>'
+              else
+                vars.details += '<p>' + m + ':<br>' + opts[o][m] + '</p>'
         else if opts[o]
           vars[o] = opts[o]
           #vars.details += '<p>' + o + ':<br>' + opts[o] + '</p>'
-      vars.details += '<p>Open access button ILL ID:<br>' + vars.illid + '</p>';
       vars.illid = oab_ill.insert opts
-      API.service.oab.mail({vars: vars, template: {filename:'instantill_create.html'}, to: (user.service?.openaccessbutton?.ill?.config?.email ? user.emails[0].address), from: "InstantILL <InstantILL@openaccessbutton.org>", subject: "ILL request " + vars.illid})
+      vars.details += '<p>Open access button ILL ID:<br>' + vars.illid + '</p>';
+      eml = if user.service?.openaccessbutton?.ill?.config?.email and user.service?.openaccessbutton?.ill?.config?.email.length then user.service?.openaccessbutton?.ill?.config?.email else if user.email then user.email else user.emails[0].address
+      API.service.oab.mail({vars: vars, template: {filename:'instantill_create.html'}, to: eml, from: "InstantILL <InstantILL@openaccessbutton.org>", subject: "ILL request " + vars.illid})
       
       # send msg to mark and joe for testing (can be removed later)
       txt = vars.details

@@ -59,6 +59,14 @@ API.add 'service/oab/metadata',
       opts[o] = this.queryParams[o]
     return API.service.oab.ill.metadata opts
 
+API.add 'service/oab/ill/validate',
+  post: () ->
+    if not this.queryParams.uid or not this.queryParams.email or not API.accounts.retrieve this.queryParams.uid
+      return undefined
+    else
+      v = API.mail.validate(this.queryParams.email, API.settings.service.openaccessbutton.mail.pubkey)
+      return if v.is_valid then true else if v.did_you_mean then v.did_you_mean else false
+
 API.add 'service/oab/ill',
   post: () ->
     opts = this.request.body ? {}

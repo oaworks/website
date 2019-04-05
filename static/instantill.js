@@ -198,6 +198,43 @@ var instantill_run = function() {
     return c;
   }
   
+  var _submit_ill = function() {
+    $('#oabutton_availability').hide();
+    $('#oabutton_searching').html('Submitting');
+    $('#oabutton_loading').show();
+    var data = {url:avail.data.match, email:$('#oabutton_email').val(), from:opts.uid, plugin:'instantill', embedded:window.location.href, metadata: avail.data.meta.article }
+    if (avail.data.ill.redirect.indexOf('notes') === -1 && (avail.data.subscription || avail.data.availability)) {
+      data.notes = '';
+      if (avail.data.subscription) data.notes += 'Subscription check done, found ' + (avail.data.subscription.url ? avail.data.subscription.url : 'nothing') + '. ';
+      if (avail.data.availability) data.notes += 'OA availability check done, found ' + (avail.data.availability.length && avail.data.availability[0].url ? avail.data.availability[0].url : 'nothing') + '. ';
+    }
+    var illopts = {
+      type:'POST',
+      url:api+'/ill',
+      cache: false,
+      processData: false,
+      contentType: 'application/json',
+      dataType: 'json',
+      data: JSON.stringify(data),
+      success: function(data) {
+        $('#oabutton_loading').hide();
+        $('#oabutton_searching').html('Searching');
+        var email = $('#oabutton_email').val();
+        $('#oabutton_availability').html('<h3>Submission confirmed</h3><p>Go you, you\'ve submittted the ILL. The confirmation code is: ' + data + ' and you\'ll be emailed at ' + email + ' with the paper. Save this for your records. You won\'t get an email.</p>').show();
+      },
+      error: function(data) {
+        $('#oabutton_loading').hide();
+        $('#oabutton_searching').html('Searching');
+        if (window.location.href.indexOf('openaccessbutton.org') !== -1) {
+          $('#oabutton_error').html('<p>Sorry, we were not able to create an example ILL request for you - try logging in first.</p>').show();
+        } else {
+          $('#oabutton_loading').hide();
+          $('#oabutton_error').html('<p>Sorry, we were not able to create an ILL request for you. Please try contacting your library directly.</p>').show();
+        }
+      }
+    }
+    $.ajax(illopts);
+  }
   var ill = function(e) {
     if ($(this).hasClass('oabutton_ill_email')) {
       try { e.preventDefault(); } catch (err) {}
@@ -207,41 +244,27 @@ var instantill_run = function() {
         return;
       }
       if (!$('#oabutton_email').val().length) {
+        $('#oabutton_error').html('<p>Please provide your email address.</p>').show();
+        setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
         $('#oabutton_email').css('border-color','#f04717').focus();
         return;
-      }
-      $('#oabutton_availability').hide();
-      $('#oabutton_loading').show();
-      var data = {url:avail.data.match, email:$('#oabutton_email').val(), from:opts.uid, plugin:'instantill', embedded:window.location.href, metadata: avail.data.meta.article }
-      if (avail.data.ill.redirect.indexOf('notes') === -1 && (avail.data.subscription || avail.data.availability)) {
-        data.notes = '';
-        if (avail.data.subscription) data.notes += 'Subscription check done, found ' + (avail.data.subscription.url ? avail.data.subscription.url : 'nothing') + '. ';
-        if (avail.data.availability) data.notes += 'OA availability check done, found ' + (avail.data.availability.length && avail.data.availability[0].url ? avail.data.availability[0].url : 'nothing') + '. ';
-      }
-      var illopts = {
-        type:'POST',
-        url:api+'/ill',
-        cache: false,
-        processData: false,
-        contentType: 'application/json',
-        dataType: 'json',
-        data: JSON.stringify(data),
-        success: function(data) {
-          $('#oabutton_loading').hide();
-          var email = $('#oabutton_email').val();
-          $('#oabutton_availability').html('<h3>Submission confirmed</h3><p>Go you, you\'ve submittted the ILL. The confirmation code is: ' + data + ' and you\'ll be emailed at ' + email + ' with the paper. Save this for your records. You won\'t get an email.</p>').show();
-        },
-        error: function(data) {
-          $('#oabutton_loading').hide();
-          if (window.location.href.indexOf('openaccessbutton.org') !== -1) {
-            $('#oabutton_error').html('<p>Sorry, we were not able to create an example ILL request for you - try logging in first.</p>').show();
-          } else {
-            $('#oabutton_loading').hide();
-            $('#oabutton_error').html('<p>Sorry, we were not able to create an ILL request for you. Please try contacting your library directly.</p>').show();
+      } else {
+        $.ajax({
+          url: api + '/ill/validate?uid=' + opts.uid + '&email=' + $('#oabutton_email').val(),
+          type: 'POST',
+          success: function(data) {
+            if (data === true) {
+              _submit_ill();
+            } else {
+              $('#oabutton_error').html('<p>Sorry, we could not validate the email address you provided. ' + (data !== false ? 'Did you mean ' + data + '? ' : '') + 'Please check and try again.</p>').show();
+              setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
+            }
+          },
+          error: function(data) {
+            _submit_ill();
           }
-        }
+        });
       }
-      $.ajax(illopts);
     } else {
       // do nothing if not the ILL email link, that way the user just gets taken to the openurl redirect page
       // later if we need that to trigger anything else first, add it here then follow the link
