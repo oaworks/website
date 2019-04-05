@@ -219,7 +219,7 @@ var instantill_run = function() {
         $('#oabutton_loading').hide();
         $('#oabutton_searching').html('Searching');
         var email = $('#oabutton_email').val();
-        $('#oabutton_availability').html('<h3>Submission confirmed</h3><p>Go you, you\'ve submittted the ILL. The confirmation code is: ' + data + ' and you\'ll be emailed at ' + email + ' with the paper. Save this for your records. You won\'t get an email.</p>').show();
+        $('#oabutton_availability').html('<h3>Thanks! Your request has been received</h3><p>Your confirmation code is: ' + data + ', this will not be emailed to you. The paper will be sent to ' + email + ' as soon as possible.</p>').show();
       },
       error: function(data) {
         $('#oabutton_loading').hide();
