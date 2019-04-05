@@ -167,7 +167,7 @@ var instantill_run = function() {
     var info = '<div>';
     info += '<p>Sorry that didn\'t work! Can you please tell us the article details?</p>';
     info += '<p>Article title (required)<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_title" type="text"></p>';
-    info += '<p>Author(s) (required)<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_author" type="text"></p>';
+    info += '<p>Author(s)<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_author" type="text"></p>';
     info += '<p>Journal title (required)<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_journal" type="text"></p>';
     info += '<p>Year of publication (required)<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_year" type="text"></p>';
     info += '<p>Article DOI or URL<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_doi" type="text"></p>';
@@ -295,7 +295,7 @@ var instantill_run = function() {
       needmore = false;
       // if there is a subscribed version available show a link to it
       info += '<div>';
-      info += '<p>We have an online copy instantly available</p>';
+      info += '<h3>We have an online copy instantly available</h3>';
       info += '<p><a href="' + avail.data.subscription.url  + '"><b>Open article</b></a></p>';
       info += '</div>';
     } else {
@@ -303,7 +303,7 @@ var instantill_run = function() {
         needmore = false;
         // else if there is an oa article show a link to it
         info += '<div>';
-        info += '<p><br>There is a free, instantly accessible copy online</p>';
+        info += '<h3><br>There is a free, instantly accessible copy online</h3>';
         info += '<p>It may not be the final published version and may lack graphs or figures making it unsuitable for citations.</p>';
         info += '<p><a target="_blank" href="' + avail.data.availability[0].url  + '"><b>Open article in a new tab</b></a></p>';
         info += '</div>';
@@ -319,7 +319,7 @@ var instantill_run = function() {
       if (avail.data.ill && opts.ill !== false) {
         needmore = false;
         info += '<div>';
-        info += '<p><br>Ask the library to digitally send you the published full-text</p>';
+        info += '<h3><br>Ask the library to digitally send you the published full-text</h3>';
         info += '<p>It ' + (config.cost ? 'costs ' + config.cost : 'is free') + ' and we\'ll email a link within ' + (config.time ? config.time : '24 hours') + '.<br></p>';
         if (avail.data.ill.redirect && opts.redirect !== false) {
           if (avail.data.ill.redirect.indexOf('notes') === -1) {
@@ -367,7 +367,7 @@ var instantill_run = function() {
           setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
           return;
         }
-        if (!data.title || !data.author || !data.journal || !data.year) {
+        if (!data.title || !data.journal || !data.year) {
           $('#oabutton_error').html('<p>Please complete all required fields</p>').show();
           setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
           return;
