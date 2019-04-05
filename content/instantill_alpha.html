@@ -15,6 +15,10 @@ jQuery(document).ready(function() {
     $('.setting').each(function(i, obj) {
       if ( $(this).val() !== undefined ) {
         data[$(this).attr('id')] = $(this).val();
+        if (['ill_redirect_base_url','terms','book','other'].indexOf($(this).attr('id')) !== -1 && data[$(this).attr('id')].indexOf('http') !== 0) {
+          data[$(this).attr('id')] = 'http://' + data[$(this).attr('id')];
+          $(this).val(data[$(this).attr('id')]);
+        }
       }
     });
 
@@ -47,6 +51,9 @@ jQuery(document).ready(function() {
     $('#onlyyou').html($('#onlyyou').html().replace('but only you ','but only you (' + noddy.user.account.profile.firstname + ') '));
     instantill({uid:uid, api:api});
     try {
+      $('#email').attr('placeholder','default ' + (noddy.user.account.email ? noddy.user.account.email : noddy.user.account.emails[0].address));
+    } catch(err) {}
+    try {
       for (var k in noddy.user.account.service.openaccessbutton.ill.config) {
         $('#'+k).val(noddy.user.account.service.openaccessbutton.ill.config[k]);
       }
@@ -64,10 +71,10 @@ jQuery(document).ready(function() {
 </script>
 
 <style>
-  /*#instantill {
-    border:1px solid #ccc;
-    padding:2px;
-  }*/
+  #instantill {
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+  }
 </style>
 
 <div class="container-fluid">
@@ -148,32 +155,45 @@ jQuery(document).ready(function() {
           <input id="ill_redirect_base_url" type="text" class="form-control setting" placeholder="URL (required)"><br>
           Add any additional params your base URL needs, such as a=b&c=d<br>
           <input id="ill_redirect_params" type="text" class="form-control setting" placeholder="Add any additional params your base URL needs"><br>
-          <!--<input id="method" type="text" class="form-control setting" placeholder="Method (default GET)"><br>-->
+          <!--<input id="method" type="text" class="form-control setting" placeholder="default GET"><br>-->
           Title<br>
-          <input id="title" type="text" class="form-control setting" placeholder="Title (default atitle)"><br>
+          <input id="title" type="text" class="form-control setting" placeholder="default atitle"><br>
           Journal title<br>
-          <input id="journal" type="text" class="form-control setting" placeholder="Journal title (default title)"><br>
+          <input id="journal" type="text" class="form-control setting" placeholder="default title"><br>
           DOI<br>
-          <input id="doi" type="text" class="form-control setting" placeholder="DOI (default rft_id)"><br>
+          <input id="doi" type="text" class="form-control setting" placeholder="default rft_id"><br>
           Author<br>
-          <input id="author" type="text" class="form-control setting" placeholder="Author (default au)"><br>
+          <input id="author" type="text" class="form-control setting" placeholder="default au"><br>
           ISSN<br>
-          <input id="issn" type="text" class="form-control setting" placeholder="ISSN (default issn)"><br>
+          <input id="issn" type="text" class="form-control setting" placeholder="default issn"><br>
           Volume<br>
-          <input id="volume" type="text" class="form-control setting" placeholder="Volume (default volume)"><br>
+          <input id="volume" type="text" class="form-control setting" placeholder="default volume"><br>
           Issue<br>
-          <input id="issue" type="text" class="form-control setting" placeholder="Issue (default issue)"><br>
+          <input id="issue" type="text" class="form-control setting" placeholder="default issue"><br>
           Page<br>
-          <input id="page" type="text" class="form-control setting" placeholder="Page (default pages)"><br>
+          <input id="page" type="text" class="form-control setting" placeholder="default pages"><br>
           Published<br>
-          <input id="published" type="text" class="form-control setting" placeholder="Published (default date)"><br>
+          <input id="published" type="text" class="form-control setting" placeholder="default date"><br>
           PMID<br>
-          <input id="pmid" type="text" class="form-control setting" placeholder="PMID (default pmid)"><br>
-          <!--<input id="pmcid" type="text" class="form-control setting" placeholder="PMCID (default pmcid)"><br>-->
+          <input id="pmid" type="text" class="form-control setting" placeholder="default pmid"><br>
+          <!--<input id="pmcid" type="text" class="form-control setting" placeholder="default pmcid"><br>-->
           Year
-          <input id="year" type="text" class="form-control setting" placeholder="Year (default rft.year)">
+          <input id="year" type="text" class="form-control setting" placeholder="default rft.year"><br>
+
+          What do your article ILLs cost, please include your currency symbol? e.g $4
+          <input id="cost" type="text" class="form-control setting" placeholder="default free"><br>
+          How long do your ILLs take to process on average? e.g 24 hours
+          <input id="time" type="text" class="form-control setting" placeholder="default 24 hours"><br>
+
+          What email address do you want ILLs forwarded to? (optional for email alternative)
+          <input id="email" type="text" class="form-control setting" placeholder="default is your OAB account email address"><br>
           Terms and conditions URL (optional for email alternative)
-          <input id="terms" type="text" class="form-control setting" placeholder="Terms URL (no default)">
+          <input id="terms" type="text" class="form-control setting" placeholder=""><br>
+
+          Book request URL (optional for if the user wants a book)
+          <input id="book" type="text" class="form-control setting" placeholder=""><br>
+          Other request URL (optional for if the user wants something other than article or book)
+          <input id="other" type="text" class="form-control setting" placeholder=""><br>
         </p>
         
         <p><a id="save" class="btn btn-primary btn-block" href="#">Save your settings</a></p>

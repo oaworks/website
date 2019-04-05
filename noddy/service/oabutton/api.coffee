@@ -68,12 +68,10 @@ API.add 'service/oab/ill',
 
 API.add 'service/oab/ill/config',
   get: 
-    authRequired: 'openaccessbutton.user'
     action: () ->
       try
-        return this.user.service.openaccessbutton.ill.config
-      catch
-        return 404
+        return API.service.oab.ill.config this.queryParams.uid
+      return 404
   post: 
     authRequired: 'openaccessbutton.user'
     action: () ->
