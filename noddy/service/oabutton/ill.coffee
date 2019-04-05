@@ -57,8 +57,7 @@ API.service.oab.ill.start = (opts={}) ->
   opts.metadata ?= {}
   meta = API.service.oab.ill.metadata opts.metadata, opts
   for m of meta
-    if m not in ['started','ended','took']
-      opts.metadata[m] ?= meta[m]
+    opts.metadata[m] ?= meta[m]
     
   if opts.library is 'imperial'
     # TODO for now we are just going to send an email when a user creates an ILL
@@ -96,7 +95,7 @@ API.service.oab.ill.start = (opts={}) ->
                     authors += ', '
                   authors += a.family + ' ' + a.given
                 vars.details += authors + '</p>'
-              else
+              else if ['started','ended','took'].indexOf(m) is -1
                 vars.details += '<p>' + m + ':<br>' + opts[o][m] + '</p>'
         else if opts[o]
           vars[o] = opts[o]

@@ -182,7 +182,6 @@ var instantill_run = function() {
     try { delete meta.started; delete meta.ended; delete meta.took; } catch(err) {}
     var keys = 0
     for ( var k in meta ) keys += 1;
-    console.log(keys.length)
     if (keys.length === 0 || (keys.length === 1 && meta.title && meta.title.toLowerCase() === searchfor.toLowerCase())) return c;
     
     if (meta.title) c += '<h2>' + meta.title + '</h2>';
@@ -227,9 +226,11 @@ var instantill_run = function() {
         $('#oabutton_searching').html('Searching');
         if (window.location.href.indexOf('openaccessbutton.org') !== -1) {
           $('#oabutton_error').html('<p>Sorry, we were not able to create an example ILL request for you - try logging in first.</p>').show();
+          setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
         } else {
           $('#oabutton_loading').hide();
           $('#oabutton_error').html('<p>Sorry, we were not able to create an ILL request for you. Please try contacting your library directly.</p>').show();
+          setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
         }
       }
     }
@@ -275,7 +276,6 @@ var instantill_run = function() {
     var info = '';
     if (avail.data.meta && avail.data.meta.article) {
       var cit = cite(avail.data.meta.article);
-      console.log(cit.length)
       if (cit.length < 1) {
         if (attempts === 0) {
           attempts = 1;
@@ -363,10 +363,12 @@ var instantill_run = function() {
         if ($('#oabutton_doi').length && $('#oabutton_doi').val()) data.doi = $('#oabutton_doi').val();
         if (data.year && data.year.length !== 4) {
           $('#oabutton_error').html('<p>Please provide a 4 digit year</p>').show();
+          setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
           return;
         }
         if (!data.title || !data.author || !data.journal || !data.year) {
           $('#oabutton_error').html('<p>Please complete all required fields</p>').show();
+          setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
           return;
         }
       }
@@ -417,6 +419,7 @@ var instantill_run = function() {
         error: function() {
           $('#oabutton_loading').hide();
           $('#oabutton_error').show().html('<p>Enter a full article title, citation, or link. Go to library search if you\'re unsure what you\'re looking for.</p>');
+          setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
           $('#oabutton_inputs').show()
         }
       };
