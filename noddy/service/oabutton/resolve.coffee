@@ -37,7 +37,7 @@ API.service.oab.citation = (meta) ->
 
   check = API.use.crossref.reverse meta.title ? meta.url
   meta.reversed = true
-  if check.data and check.data.doi and (not meta.title? or (check.data.title.length <= meta.title.length*1.2 and meta.title.toLowerCase().replace(/ /g,'').indexOf(check.data.title.toLowerCase().replace(' ','').replace(' ','').replace(' ','').split(' ')[0]) isnt -1))
+  if check.data and check.data.doi and (not meta.title? or (check.data.title.length <= meta.title.length*1.2 and check.data.title.length >= meta.title.length*.8 and meta.title.toLowerCase().replace(/ /g,'').indexOf(check.data.title.toLowerCase().replace(' ','').replace(' ','').replace(' ','').split(' ')[0]) isnt -1))
     # if we did not know title, or found title length is within 20% and first three words of title match
     meta.doi = check.data.doi
     meta.title = check.data.title
@@ -250,15 +250,18 @@ API.service.oab.resolve = (meta, content, sources, all=false, titles=true, journ
             # will only work for use endpoints that provide a title method
             res = if src is 'doaj' then API.use[src].articles.title(meta.title) else (if src is 'eupmc' then API.use.europepmc.title(meta.title) else API.use[src].title meta.title)
             meta.checked.titles.push src
-            if res?.url
-              meta.source = src
-              meta.url = if res.redirect then res.redirect else res.url
-              meta.journal = if res.journalInfo?.journal?.title? then res.journalInfo.journal.title.split('(')[0].trim() else if res.journal?.title? then res.journal.title.split('(')[0].trim() else undefined
-              meta.issn = if res.journalInfo?.journal?.issn? then res.journalInfo.journal.issn else if res.journal?.issn? then res.journal.issn else undefined
-              meta.pmid ?= res.pmid
-              meta.pmc ?= res.id if src is 'eupmc'
-              meta.found[src] = res.url
-              suitable = not all and res.redirect isnt false
+            if res?.url 
+              foundtitle = res.title ? res.bibjson.title ? '' #check all the places title could be in the services used
+              if foundtitle and foundtitle.length <= meta.title.length*1.2 and foundtitle.length >= meta.title.length*.8 and meta.title.toLowerCase().replace(/ /g,'').indexOf(foundtitle.toLowerCase().replace(' ','').replace(' ','').replace(' ','').split(' ')[0]) isnt -1
+                meta.title = foundtitle
+                meta.source = src
+                meta.url = if res.redirect then res.redirect else res.url
+                meta.journal = if res.journalInfo?.journal?.title? then res.journalInfo.journal.title.split('(')[0].trim() else if res.journal?.title? then res.journal.title.split('(')[0].trim() else undefined
+                meta.issn = if res.journalInfo?.journal?.issn? then res.journalInfo.journal.issn else if res.journal?.issn? then res.journal.issn else undefined
+                meta.pmid ?= res.pmid
+                meta.pmc ?= res.id if src is 'eupmc'
+                meta.found[src] = res.url
+                suitable = not all and res.redirect isnt false
 
       for sr in sources
         if parallel
@@ -294,9 +297,9 @@ API.service.oab.resolve = (meta, content, sources, all=false, titles=true, journ
             meta.found.doaj = meta.url
             break
 
-  if meta.title? and typeof meta.title is 'string'
+  if meta.title? and typeof meta.title is 'string' and meta.title.charAt(0).toUpperCase() isnt meta.title.charAt(0)
     try meta.title = meta.title.charAt(0).toUpperCase() + meta.title.slice(1)
-  if meta.journal? and typeof meta.journal is 'string'
+  if meta.journal? and typeof meta.journal is 'string' and meta.journal.charAt(0).toUpperCase() isnt meta.journal.charAt(0)
     try meta.journal = meta.journal.charAt(0).toUpperCase() + meta.journal.slice(1)
 
   return meta
