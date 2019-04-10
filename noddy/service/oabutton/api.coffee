@@ -50,7 +50,29 @@ API.add 'service/oab/resolve',
   get: () ->
     return API.service.oab.resolve this.queryParams,undefined,this.queryParams.sources?.split(','),this.queryParams.all,this.queryParams.titles,this.queryParams.journal
 
+API.add 'service/oab/ill',
+  get: () ->
+    return {data: 'ILL service'}
+  post:
+    authOptional: true
+    action: () ->
+      opts = this.request.body ? {}
+      for o of this.queryParams
+        opts[o] = this.queryParams[o]
+      if this.user
+        opts.from = this.user._id
+        opts.api = true
+      return API.service.oab.ill.start opts
+
 API.add 'service/oab/metadata',
+  get: () ->
+    return API.service.oab.ill.metadata this.queryParams
+  post: () ->
+    opts = this.request.body ? {}
+    for o of this.queryParams
+      opts[o] = this.queryParams[o]
+    return API.service.oab.ill.metadata opts
+API.add 'service/oab/ill/metadata',
   get: () ->
     return API.service.oab.ill.metadata this.queryParams
   post: () ->
@@ -66,13 +88,6 @@ API.add 'service/oab/ill/validate',
     else
       v = API.mail.validate(this.queryParams.email, API.settings.service.openaccessbutton.mail.pubkey)
       return if v.is_valid then true else if v.did_you_mean then v.did_you_mean else false
-
-API.add 'service/oab/ill',
-  post: () ->
-    opts = this.request.body ? {}
-    for o of this.queryParams
-      opts[o] = this.queryParams[o]
-    return API.service.oab.ill.start opts
 
 API.add 'service/oab/ill/config',
   get: 
