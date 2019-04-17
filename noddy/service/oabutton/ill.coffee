@@ -63,15 +63,16 @@ API.service.oab.ill.start = (opts={}) ->
     # TODO for now we are just going to send an email when a user creates an ILL
     # until we have a script endpoint at the library to hit
     # library POST URL: https://www.imperial.ac.uk/library/dynamic/oabutton/oabutton3.php
-    API.mail.send {
-      service: 'openaccessbutton',
-      from: 'requests@openaccessbutton.org',
-      to: ['mark@cottagelabs.com','joe@righttoresearch.org','s.barron@imperial.ac.uk'],
-      subject: 'EXAMPLE ILL TRIGGER',
-      text: JSON.stringify(opts,undefined,2)
-    }
-    API.service.oab.mail({template:{filename:'imperial_confirmation_example.txt'},to:opts.id})
-    HTTP.call('POST','https://www.imperial.ac.uk/library/dynamic/oabutton/oabutton3.php',{data:opts})
+    if not opts.forwarded
+      API.mail.send {
+        service: 'openaccessbutton',
+        from: 'requests@openaccessbutton.org',
+        to: ['mark@cottagelabs.com','joe@righttoresearch.org','s.barron@imperial.ac.uk'],
+        subject: 'EXAMPLE ILL TRIGGER',
+        text: JSON.stringify(opts,undefined,2)
+      }
+      API.service.oab.mail({template:{filename:'imperial_confirmation_example.txt'},to:opts.id})
+      HTTP.call('POST','https://www.imperial.ac.uk/library/dynamic/oabutton/oabutton3.php',{data:opts})
     return oab_ill.insert opts
 
   else if opts.from?
@@ -103,7 +104,9 @@ API.service.oab.ill.start = (opts={}) ->
       vars.illid = oab_ill.insert opts
       vars.details += '<p>Open access button ILL ID:<br>' + vars.illid + '</p>';
       eml = if user.service?.openaccessbutton?.ill?.config?.email and user.service?.openaccessbutton?.ill?.config?.email.length then user.service?.openaccessbutton?.ill?.config?.email else if user.email then user.email else user.emails[0].address
-      API.service.oab.mail({vars: vars, template: {filename:'instantill_create.html'}, to: eml, from: "InstantILL <InstantILL@openaccessbutton.org>", subject: "ILL request " + vars.illid})
+
+      if not opts.forwarded
+        API.service.oab.mail({vars: vars, template: {filename:'instantill_create.html'}, to: eml, from: "InstantILL <InstantILL@openaccessbutton.org>", subject: "ILL request " + vars.illid})
       
       # send msg to mark and joe for testing (can be removed later)
       txt = vars.details
@@ -146,7 +149,7 @@ API.service.oab.ill.config = (user, config) ->
     catch
       return {}
 
-API.service.oab.ill.redirect = (uid, meta={}) ->
+API.service.oab.ill.openurl = (uid, meta={}) ->
   config = API.service.oab.ill.config uid
   config ?= {}
   # add iupui / openURL defaults to config

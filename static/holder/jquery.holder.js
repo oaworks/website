@@ -474,7 +474,7 @@ VERSION 0.3.0
         // TODO could simplify current query if suggesting on facets, drop out ones that are not needed and set result size to zero
         // or maybe suggest should just issue its own ajax...
       }
-      if ( options.type !== 'POST' ) {
+      if ( options.type.toLowerCase() !== 'post' ) {
         options.url = options.url.split('source=')[0];
         if ( options.url.indexOf('?') === -1 ) options.url += '?';
         var last = options.url.substring(options.url.length-1,1);
@@ -524,17 +524,20 @@ VERSION 0.3.0
           var opts = {
             type: options.type,
             cache: false,
-            //contentType: "application/json; charset=utf-8",
             dataType: options.datatype,
             success: options.success,
             error: options.error
           };
           var qr = options.qry(); // prepare the query, which sets the URL if necessary
+          if (opts.type.toLowerCase() !== 'get') {
+            if (opts.contentType === undefined) opts.contentType = options.contentType ? options.contentType : 'application/json; charset=utf-8';
+            if (opts.processData === undefined) opts.processData = options.processData !== undefined ? options.processData : false;
+            if (opts.data === undefined) opts.data = JSON.stringify(qr);
+          }
           opts.url = options.url; // set the URL, which now has the query as a param, if necessary
           if (options.username && options.password) opts.headers = { "Authorization": "Basic " + btoa(options.username + ":" + options.password) };
           if (options.apikey) opts.url += opts.url.indexOf('?') === -1 ? '?apikey=' + options.apikey : '&apikey=' + options.apikey;
           if (options['x-apikey']) opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", options['x-apikey']); };
-          // TODO: if options.type is POST, add the qr as data to the ajax opts
           $.ajax(opts);
           options.executing = false;
         },300);

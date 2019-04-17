@@ -1,7 +1,7 @@
 
 
-API.service = {} if not API.service?
-API.service.oab = {}
+API.service ?= {}
+API.service.oab ?= {}
 
 API.service.oab.admin = (rid,action) ->
   r = oab_request.get rid
