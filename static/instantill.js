@@ -5,8 +5,8 @@
 // <script src="https://openaccessbutton.org/static/instantill.js"></script>
 // <script>jQuery(document).ready(function() { instantill(); });</script>
 
-// new features will be added to this script and a variable will be used to control which users 
-// see newly developed features. These will be alpha, beta, etc, in a var called version. Running 
+// new features will be added to this script and a variable will be used to control which users
+// see newly developed features. These will be alpha, beta, etc, in a var called version. Running
 // this script without that var will result in the latest features being used.
 
 var _oab_opts = {};
@@ -162,13 +162,13 @@ var instantill_run = function() {
   var avail = undefined;
   var attempts = 0;
   var clickwrong = false;
-  
+
   var fail = function(info) {
     if (info === undefined) info = '<h3>Unknown article</h3><p>Sorry, we cannot find this article or sufficient metadata to be able to find it. Please try contacting your library directly.</p>';
     $('#oabutton_loading').hide();
     $('#oabutton_inputs').hide();
     $('#oabutton_availability').html(info).show();
-    setTimeout(function() { 
+    setTimeout(function() {
       matched = false;
       avail = undefined;
       attempts = 0;
@@ -209,7 +209,7 @@ var instantill_run = function() {
     } else {
       attempts += 1;
       var info = '<div>';
-      info += '<p>Sorry we didn\'t find a match! Can you please provide or amend the article details?</p>';
+      info += '<p>Sorry we didn\'t find that article! Can you please provide or amend the article details?</p>';
       info += '<p>Article title (required)<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_title" type="text"></p>';
       info += '<p>Author(s)<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_author" type="text"></p>';
       info += '<p>Journal title (required)<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_journal" type="text"></p>';
@@ -245,7 +245,7 @@ var instantill_run = function() {
       } catch(err) {}
     }
   }
-  
+
   var cite = function(meta) {
     var c = '';
     // if we got nothing back but what we put in, then we have not found anything suitable :(
@@ -263,7 +263,7 @@ var instantill_run = function() {
     }
     return c;
   }
-  
+
   var _submit_ill = function() {
     $('#oabutton_availability').hide();
     $('#oabutton_searching').html('Submitting');
@@ -357,7 +357,7 @@ var instantill_run = function() {
       _submit_ill();
     }
   }
-  
+
   var inform = function() {
     $('#oabutton_error').html('').hide();
     var info = '';
@@ -404,7 +404,7 @@ var instantill_run = function() {
           } else {
             // offer to create a request (not yet part of instantill)
             //info += '<p><a target="_blank" href="' + site + '/request?data=false&plugin=instantill&from=' + opts.uid + '&url=' + encodeURIComponent(data.data.match) + '"><b>Start a request to the author to share it with you</b></a>';
-          } 
+          }
         }
       }
       if (avail.data.ill && opts.ill !== false) {
@@ -543,5 +543,5 @@ var instantill = function(opts) {
     headTag.appendChild(jqTag);
   } else {
      instantill_config();
-  }  
+  }
 }
