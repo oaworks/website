@@ -139,6 +139,26 @@
         are the same as those that you can edit on the InstantILL management page at <a href="/instantill_alpha">/instantill_alpha</a>
       </p>
 
+      <h2>
+        /openurl
+      </h2>
+      <hr>
+      <!--
+      <h3>
+        GET
+      </h3>
+      <p></p>
+      -->
+      <h3>
+        POST
+      </h3>
+      <p><b>Authorisation required</b></p>
+      <p>
+        POST a JSON object with article metadata as keys, or in URL parameters. If you have configured your account with a redirect base URL, 
+        you will get back a result string that is the openURL link to your ILL form, configured with whatever keys you have set in your 
+        configuration. The default metadata keys that we accept are title, journal, doi, author, issn, volume, issue, pages, year, notes.
+      </p>
+
 <!--
       <h2>
         /ills

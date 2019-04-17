@@ -158,43 +158,109 @@ var instantill_run = function() {
   }
   $(opts.element).html(w);
 
-  var searchfor = undefined;
+  var matched = false;
   var avail = undefined;
   var attempts = 0;
+  var clickwrong = false;
   
+  var fail = function(info) {
+    if (info === undefined) info = '<h3>Unknown article</h3><p>Sorry, we cannot find this article or sufficient metadata to be able to find it. Please try contacting your library directly.</p>';
+    $('#oabutton_loading').hide();
+    $('#oabutton_inputs').hide();
+    $('#oabutton_availability').html(info).show();
+    setTimeout(function() { 
+      matched = false;
+      avail = undefined;
+      attempts = 0;
+      clickwrong = false;
+      $('#oabutton_availability').html('').hide();
+      $('#oabutton_input').val('');
+      $('#oabutton_inputs').show();
+    }, 8000);
+  }
+
+  var openurl = function() {
+    $.ajax({
+      type:'POST',
+      url:api+'/ill/openurl?uid='+opts.uid,
+      cache: false,
+      processData: false,
+      contentType: 'application/json',
+      dataType: 'json',
+      data: JSON.stringify(avail.data.meta.article),
+      success: function(res) {
+        window.location = res;
+      },
+      error: function(data) {
+        try {
+          window.location = avail.data.ill.openurl;
+        } catch(err) {
+          $('#oabutton_error').html('<p>Sorry, we were not able to create an ILL request for you. Please try contacting your library directly.</p>').show();
+          fail('');
+        }
+      }
+    });
+  }
+
   var getmore = function(e) {
     try { e.preventDefault(); } catch(err) {}
-    var info = '<div>';
-    info += '<p>Sorry that didn\'t work! Can you please tell us the article details?</p>';
-    info += '<p>Article title (required)<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_title" type="text"></p>';
-    info += '<p>Author(s)<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_author" type="text"></p>';
-    info += '<p>Journal title (required)<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_journal" type="text"></p>';
-    info += '<p>Year of publication (required)<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_year" type="text"></p>';
-    info += '<p>Article DOI or URL<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_doi" type="text"></p>';
-    info += '<p><a href="#" class="' + (opts.bootstrap !== false ? (typeof opts.bootstrap === 'string' ? opts.bootstrap : 'btn btn-primary') : '') + '" id="oabutton_find">Continue</a></p>';
-    info += '</div>';
-    $('#oabutton_availability').html(info);
+    if (attempts > 2) {
+      fail();
+    } else {
+      attempts += 1;
+      var info = '<div>';
+      info += '<p>Sorry we didn\'t find a match! Can you please provide or amend the article details?</p>';
+      info += '<p>Article title (required)<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_title" type="text"></p>';
+      info += '<p>Author(s)<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_author" type="text"></p>';
+      info += '<p>Journal title (required)<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_journal" type="text"></p>';
+      info += '<p>Year of publication (required)<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_year" type="text"></p>';
+      info += '<p>Article DOI or URL<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_doi" type="text"></p>';
+      info += '<p><a href="#" class="' + (opts.bootstrap !== false ? (typeof opts.bootstrap === 'string' ? opts.bootstrap : 'btn btn-primary') : '') + '" id="oabutton_find">Continue</a></p>';
+      info += '</div>';
+      $('#oabutton_availability').html(info);
+      try {
+        for ( var m in avail.data.meta.article ) {
+          try {
+            if ( $('#oabutton_'+m).length ) {
+              var mv = avail.data.meta.article[m];
+              if (m === 'journal' && mv.indexOf('(') !== -1) mv = mv.split('(')[0].trim();
+              if (m === 'author' && typeof mv !== 'string') {
+                var smv = '';
+                for ( var a in mv ) {
+                  if (mv[a].fullName) {
+                    if (smv !== '') smv += ', ';
+                    smv += mv[a].fullName;
+                  } else if (mv[a].family) {
+                    if (smv !== '') smv += ', ';
+                    smv += mv[a].family;
+                    if (mv[a].given) smv += ' ' + mv[a].given;
+                  }
+                }
+                mv = smv;
+              }
+              $('#oabutton_'+m).val(mv);
+            }
+          } catch(err) {}
+        }
+      } catch(err) {}
+    }
   }
   
   var cite = function(meta) {
     var c = '';
-    
     // if we got nothing back but what we put in, then we have not found anything suitable :(
-    try { delete meta.started; delete meta.ended; delete meta.took; } catch(err) {}
-    var keys = 0
-    for ( var k in meta ) keys += 1;
-    if (keys.length === 0 || (keys.length === 1 && meta.title && meta.title.toLowerCase() === searchfor.toLowerCase())) return c;
-    
-    if (meta.title) c += '<h2>' + meta.title + '</h2>';
-    if (meta.year || meta.journal || meta.volume || meta.issue) c += '<p><b style="color:#666;">';
-    if (meta.year) c += '' + meta.year + (meta.journal || meta.volume || meta.issue ? ', ' : '');
-    if (meta.journal) {
-      c+= meta.journal;
-    } else {
-      if (meta.volume) c += 'vol. ' + meta.volume;
-      if (meta.issue) c += (meta.volume ? ', ' : '') + 'issue ' + meta.issue;
+    if (meta.year || meta.journal || meta.volume || meta.issue) {
+      if (meta.title) c += '<h2>' + meta.title + '</h2>';
+      c += '<p><b style="color:#666;">';
+      if (meta.year) c += '' + meta.year + (meta.journal || meta.volume || meta.issue ? ', ' : '');
+      if (meta.journal) {
+        c+= meta.journal;
+      } else {
+        if (meta.volume) c += 'vol. ' + meta.volume;
+        if (meta.issue) c += (meta.volume ? ', ' : '') + 'issue ' + meta.issue;
+      }
+      c += '</b></p>';
     }
-    if (meta.year || meta.journal || meta.volume || meta.issue) c += '</b></p>';
     return c;
   }
   
@@ -202,42 +268,62 @@ var instantill_run = function() {
     $('#oabutton_availability').hide();
     $('#oabutton_searching').html('Submitting');
     $('#oabutton_loading').show();
-    var data = {url:avail.data.match, email:$('#oabutton_email').val(), from:opts.uid, plugin:'instantill', embedded:window.location.href, metadata: avail.data.meta.article }
-    if (avail.data.ill.redirect.indexOf('notes') === -1 && (avail.data.subscription || avail.data.availability)) {
-      data.notes = '';
-      if (avail.data.subscription) data.notes += 'Subscription check done, found ' + (avail.data.subscription.url ? avail.data.subscription.url : 'nothing') + '. ';
-      if (avail.data.availability) data.notes += 'OA availability check done, found ' + (avail.data.availability.length && avail.data.availability[0].url ? avail.data.availability[0].url : 'nothing') + '. ';
-    }
-    var illopts = {
-      type:'POST',
-      url:api+'/ill',
-      cache: false,
-      processData: false,
-      contentType: 'application/json',
-      dataType: 'json',
-      data: JSON.stringify(data),
-      success: function(data) {
-        $('#oabutton_loading').hide();
-        $('#oabutton_searching').html('Searching');
-        var email = $('#oabutton_email').val();
-        $('#oabutton_availability').html('<h3>Thanks! Your request has been received</h3><p>Your confirmation code is: ' + data + ', this will not be emailed to you. The paper will be sent to ' + email + ' as soon as possible.</p>').show();
-      },
-      error: function(data) {
-        $('#oabutton_loading').hide();
-        $('#oabutton_searching').html('Searching');
-        if (window.location.href.indexOf('openaccessbutton.org') !== -1) {
-          $('#oabutton_error').html('<p>Sorry, we were not able to create an example ILL request for you - try logging in first.</p>').show();
-          setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
-        } else {
-          $('#oabutton_loading').hide();
-          $('#oabutton_error').html('<p>Sorry, we were not able to create an ILL request for you. Please try contacting your library directly.</p>').show();
-          setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
+    var eml = typeof matched === 'string' ? matched : $('#oabutton_email').val();
+    var data = {url:avail.data.match, email:eml, from:opts.uid, plugin:'instantill', embedded:window.location.href, metadata: avail.data.meta.article }
+    if (!data.metadata.title || !data.metadata.journal || !data.metadata.year) {
+      matched = data.email;
+      if (!matched) matched = true;
+      getmore();
+    } else {
+      if (avail.data.ill && avail.data.ill.openurl && avail.data.ill.openurl.indexOf('notes') === -1 && (avail.data.subscription || avail.data.availability)) {
+        data.notes = '';
+        if (avail.data.subscription) data.notes += 'Subscription check done, found ' + (avail.data.subscription.url ? avail.data.subscription.url : 'nothing') + '. ';
+        if (avail.data.availability) data.notes += 'OA availability check done, found ' + (avail.data.availability.length && avail.data.availability[0].url ? avail.data.availability[0].url : 'nothing') + '. ';
+      }
+      if (avail.data.ill.openurl && opts.openurl !== false && !data.email) data.forwarded = true;
+      var illopts = {
+        type:'POST',
+        url:api+'/ill',
+        cache: false,
+        processData: false,
+        contentType: 'application/json',
+        dataType: 'json',
+        data: JSON.stringify(data),
+        success: function(res) {
+          if (avail.data.ill.openurl && opts.openurl !== false && !data.email) {
+            if (matched) {
+              openurl();
+            } else {
+              window.location = avail.data.ill.openurl;
+            }
+          } else {
+            $('#oabutton_loading').hide();
+            $('#oabutton_searching').html('Searching');
+            var eml = typeof matched === 'string' ? matched : $('#oabutton_email').val();
+            $('#oabutton_availability').html('<h3>Thanks! Your request has been received</h3><p>Your confirmation code is: ' + res + ', this will not be emailed to you. The paper will be sent to ' + eml + ' as soon as possible.</p>').show();
+          }
+        },
+        error: function(data) {
+          if (avail.data.ill.openurl && opts.openurl !== false && !data.email) {
+            if (matched) {
+              openurl();
+            } else {
+              window.location = avail.data.ill.openurl;
+            }
+          } else {
+            $('#oabutton_loading').hide();
+            $('#oabutton_searching').html('Searching');
+            $('#oabutton_loading').hide();
+            $('#oabutton_error').html('<p>Sorry, we were not able to create an ILL request for you. Please try contacting your library directly.</p>').show();
+            setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
+          }
         }
       }
+      $.ajax(illopts);
     }
-    $.ajax(illopts);
   }
   var ill = function(e) {
+    e.preventDefault();
     if ($(this).hasClass('oabutton_ill_email')) {
       try { e.preventDefault(); } catch (err) {}
       if ($('#oabutton_read_terms').length && !$('#oabutton_read_terms').is(':checked')) {
@@ -268,12 +354,12 @@ var instantill_run = function() {
         });
       }
     } else {
-      // do nothing if not the ILL email link, that way the user just gets taken to the openurl redirect page
-      // later if we need that to trigger anything else first, add it here then follow the link
+      _submit_ill();
     }
   }
-
+  
   var inform = function() {
+    $('#oabutton_error').html('').hide();
     var info = '';
     if (avail.data.meta && avail.data.meta.article) {
       var cit = cite(avail.data.meta.article);
@@ -281,9 +367,14 @@ var instantill_run = function() {
         if (attempts === 0) {
           attempts = 1;
           getmore();
+        } else if ((avail.data.subscription && avail.data.subscription.url) || (avail.data.availability && avail.data.availability.length && avail.data.availability[0].url)) {
+          if (avail.data.meta.article.title) {
+            info += '<h2>' + avail.data.meta.article.title + '</h2>';
+          } else {
+            info += '<h2>Unknown article</h2>';
+          }
         } else {
-          if (searchfor) info = '<p>' + searchfor + '</p>';
-          info += '<p>Unknown article</p>';
+          fail();
         }
       } else {
         info += cit;
@@ -319,15 +410,15 @@ var instantill_run = function() {
       if (avail.data.ill && opts.ill !== false) {
         needmore = false;
         info += '<div>';
-        info += '<h3><br>Ask the library to digitally send you the published full-text</h3>';
-        info += '<p>It ' + (config.cost ? 'costs ' + config.cost : 'is free') + ' and we\'ll email a link within ' + (config.time ? config.time : '24 hours') + '.<br></p>';
-        if (avail.data.ill.redirect && opts.redirect !== false) {
-          if (avail.data.ill.redirect.indexOf('notes') === -1) {
-            avail.data.ill.redirect += '&notes=';
-            if (avail.data.subscription) avail.data.ill.redirect += 'Subscription check done, found ' + (avail.data.subscription.url ? avail.data.subscription.url : 'nothing') + '. ';
-            if (avail.data.availability) avail.data.ill.redirect += 'OA availability check done, found ' + (avail.data.availability.length && avail.data.availability[0].url ? avail.data.availability[0].url : 'nothing') + '. ';
+        info += '<h3><br>Ask the library to digitally send you the published full-text via Interlibrary Loan</h3>';
+        info += '<p>It ' + (config.cost ? 'costs ' + config.cost : 'is free to you,') + ' and we\'ll usually email the link within ' + (config.time ? config.time : '24 hours') + '.<br></p>';
+        if (avail.data.ill.openurl && opts.openurl !== false) {
+          if (avail.data.ill.openurl.indexOf('notes') === -1) {
+            avail.data.ill.openurl += '&notes=';
+            if (avail.data.subscription) avail.data.ill.openurl += 'Subscription check done, found ' + (avail.data.subscription.url ? avail.data.subscription.url : 'nothing') + '. ';
+            if (avail.data.availability) avail.data.ill.openurl += 'OA availability check done, found ' + (avail.data.availability.length && avail.data.availability[0].url ? avail.data.availability[0].url : 'nothing') + '. ';
           }
-          info += '<p><a class="oabutton_ill ' + (opts.bootstrap !== false ? (typeof opts.bootstrap === 'string' ? opts.bootstrap : 'btn btn-primary') : '') + '" href="' + avail.data.ill.redirect + '">Complete request</a></p>';
+          info += '<p><a class="oabutton_ill oabutton_ill_openurl ' + (opts.bootstrap !== false ? (typeof opts.bootstrap === 'string' ? opts.bootstrap : 'btn btn-primary') : '') + '" href="' + avail.data.ill.openurl + '">Complete request</a></p>';
         } else {
           if (avail.data.ill.terms) info += '<p id="oabutton_terms_note"><input type="checkbox" id="oabutton_read_terms"> I have read the <a target="_blank" href="' + avail.data.ill.terms + '"><b>terms and conditions</b></a></p>';
           info += '<p><input placeholder="Your university email address" id="oabutton_email" type="text" class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '"></p>';
@@ -342,7 +433,7 @@ var instantill_run = function() {
     if ($('.oabutton_ill').length) $('.oabutton_ill').bind('click',ill);
     if ($('#oabutton_email').length) $('#oabutton_email').bind('keyup', function(e) { if (e.keyCode === 13) ill() });
     if ($('#oabutton_getmore').length) {
-      $('#oabutton_getmore').bind('click',getmore);
+      $('#oabutton_getmore').bind('click',function(e) { e.preventDefault(); clickwrong = true; getmore(); });
       if (needmore || cit.length === 0) getmore();
     }
   }
@@ -353,7 +444,6 @@ var instantill_run = function() {
       if (e && $(this).attr('id') === 'oabutton_find') e.preventDefault();
       var input = $('#oabutton_input').val().trim();
       $('#oabutton_input').val('');
-      searchfor = input;
       if (input.lastIndexOf('.') === input.length-1) input = input.substring(0,input.length-1);
       var data = {};
       if ($('#oabutton_title').length) {
@@ -373,33 +463,42 @@ var instantill_run = function() {
           return;
         }
       }
-      if (!input || !input.length) input = data.title;
+      if (matched) {
+        for ( var d in data ) {
+          if (data[d] && (avail.data.meta.article[d] === undefined || avail.data.meta.article[d] ==='')) avail.data.meta.article[d] = data[d]
+        }
+        _submit_ill();
+        return;
+      }
+      if (clickwrong) {
+        data.wrong = true;
+        clickwrong = false;
+      }
       if (data.doi && data.doi.indexOf('10.') === -1 && (data.doi.indexOf('/') === -1 || data.doi.indexOf('http') === 0)) {
         data.url = data.doi;
         delete data.doi;
       }
-      if (JSON.stringify(data) === '{}') {
-        if (input === undefined || !input.length || (input.toLowerCase().indexOf('http') === -1 && input.indexOf('10.') === -1 && input.indexOf('/') === -1 && isNaN(parseInt(input.toLowerCase().replace('pmc',''))) && (input.length < 35 || input.split(' ').length < 3) ) ) {
-          $('#oabutton_error').html('<p>Sorry, we can\'t match titles/citations that are too short. Please provide a longer title or citation, or a suitable URL or identifier.</p>').show();
-          setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
-          return;
-        } else {
-          if (!data.url) data.url = input;
-          $('#oabutton_inputs').hide();
-          $('#oabutton_loading').show();
-          if ($('#oabutton_searching').length) {
-            setInterval(function() {
-              var srch = $('#oabutton_searching').html();
-              var dots = srch.split('.');
-              if (dots.length >= 5) {
-                srch = srch.replace(/\./g,'').trim();
-              } else {
-                srch += ' .';
-              }
-              $('#oabutton_searching').html(srch);
-            }, 800);
+      if (!input || !input.length) input = data.title;
+      if (input === undefined || !input.length || (input.toLowerCase().indexOf('http') === -1 && input.indexOf('10.') === -1 && input.indexOf('/') === -1 && isNaN(parseInt(input.toLowerCase().replace('pmc',''))) && (input.length < 35 || input.split(' ').length < 3) ) ) {
+        $('#oabutton_error').html('<p>Sorry, we can\'t match titles/citations that are too short. Please provide a longer title or citation, or a suitable URL or identifier.</p>').show();
+        setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
+        return;
+      }
+      if (!data.url) data.url = input;
+      $('#oabutton_inputs').hide();
+      $('#oabutton_availability').hide();
+      $('#oabutton_loading').show();
+      if ($('#oabutton_searching').length) {
+        setInterval(function() {
+          var srch = $('#oabutton_searching').html();
+          var dots = srch.split('.');
+          if (dots.length >= 4) {
+            srch = srch.replace(/\./g,'').trim();
+          } else {
+            srch += ' .';
           }
-        }
+          $('#oabutton_searching').html(srch);
+        }, 800);
       }
       data.from = opts.uid;
       data.plugin = 'instantill';
@@ -433,7 +532,7 @@ var instantill_run = function() {
 
 var instantill = function(opts) {
   _oab_opts = opts;
-  if (typeof jQuery=='undefined') {
+  if ($ === undefined) {
     var site = opts.site ? opts.site : 'https://openaccessbutton.org';
     if (window.location.host.indexOf('dev.openaccessbutton.org') !== -1 && !opts.site) site = 'https://dev.openaccessbutton.org';
     var headTag = document.getElementsByTagName("head")[0];

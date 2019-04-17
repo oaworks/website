@@ -126,7 +126,7 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
       try
         if opts.from?
           ret.ill ?= {}
-          ret.ill.redirect = API.service.oab.ill.redirect opts.from, meta
+          ret.ill.openurl = API.service.oab.ill.openurl opts.from, meta
           ret.ill.terms = API.service.oab.ill.terms opts.from
         # TODO add subscription check here and put results in ret.subscription, with ret.subscription.url where one is available, as instantill checks for this
 

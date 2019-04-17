@@ -81,6 +81,20 @@ API.add 'service/oab/ill/metadata',
       opts[o] = this.queryParams[o]
     return API.service.oab.ill.metadata opts
 
+API.add 'service/oab/ill/openurl',
+  get: () ->
+    return 'Will eventually redirect after reading openurl params passed here, somehow. For now a POST of metadata here by a user with an open ulr registered will build their openurl'
+  post:
+    authOptional: true
+    action: () ->
+      opts = this.request.body ? {}
+      for o of this.queryParams
+        opts[o] = this.queryParams[o]
+      if not opts.uid and not this.user?
+        return 404
+      else
+        return API.service.oab.ill.openurl opts.uid ? this.user._id, opts
+
 API.add 'service/oab/ill/validate',
   post: () ->
     if not this.queryParams.uid or not this.queryParams.email or not API.accounts.retrieve this.queryParams.uid
