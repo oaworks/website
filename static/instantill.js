@@ -11,6 +11,7 @@
 
 var _oab_opts = {};
 var _oab_config = {};
+var _lib_contact = undefined;
 
 var instantill_config = function() {
   var opts = _oab_opts;
@@ -34,6 +35,8 @@ var instantill_config = function() {
 
 var instantill_run = function() {
   var config = _oab_config;
+  var cml = config.problem_email ? config.problem_email : (config.email ? config.email : (config.adminemail ? config.adminemail : undefined));
+  _lib_contact = 'Please try ' + (cml ? '<a href="mailto:' + cml + '">contacting your library</a>' : 'contacting your library') + ' directly';
   var opts = _oab_opts;
   if (opts.bootstrap === undefined && opts.css === undefined) opts.bootstrap = 'btn btn-primary btn-iu';
   if (opts.placeholder === undefined) opts.placeholder = 'e.g. Lessons in data entry from digital native populations';
@@ -51,7 +54,7 @@ var instantill_run = function() {
   var w = '<h2 id="oabutton_request" style="display:none;">Request a paper</h2><div id="oabutton_inputs">\
   <p><br>If you need a paper or book you can request it from any library in the world through Interlibrary loan. \
   Start by entering a full article title, citation, DOI or URL:</p>\
-  <p><br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_input" placeholder="' + opts.placeholder + '" aria-label="' + opts.placeholder + '"></input></p>\
+  <p><br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_input" placeholder="' + opts.placeholder + '" aria-label="' + opts.placeholder + '" style="box-shadow:none;"></input></p>\
   <p><a class="' + (opts.bootstrap !== false ? (typeof opts.bootstrap === 'string' ? opts.bootstrap : 'btn btn-primary') : '') + '" href="#" id="oabutton_find" aria-label="Search">Find paper</a></p>';
   if (config.book || config.other) {
     w += '<p>Need ';
@@ -164,7 +167,7 @@ var instantill_run = function() {
   var clickwrong = false;
 
   var fail = function(info) {
-    if (info === undefined) info = '<h3>Unknown article</h3><p>Sorry, we cannot find this article or sufficient metadata. Please try contacting your library directly.</p>';
+    if (info === undefined) info = '<h3>Unknown article</h3><p>Sorry, we cannot find this article or sufficient metadata. ' + _lib_contact + '</p>';
     $('#oabutton_loading').hide();
     $('#oabutton_inputs').hide();
     $('#oabutton_availability').html(info).show();
@@ -195,7 +198,7 @@ var instantill_run = function() {
         try {
           window.location = avail.data.ill.openurl;
         } catch(err) {
-          $('#oabutton_error').html('<p>Sorry, we could\'nt create a Interlibrary Loan request for you. Please try contacting your library directly.</p>').show();
+          $('#oabutton_error').html('<p>Sorry, we could\'nt create a Interlibrary Loan request for you. ' + _lib_contact + '</p>').show();
           fail('');
         }
       }
@@ -275,9 +278,9 @@ var instantill_run = function() {
       if (!matched) matched = true;
       getmore();
     } else {
-      if (avail.data.ill && avail.data.ill.openurl && avail.data.ill.openurl.indexOf('notes') === -1 && (avail.data.subscription || avail.data.availability)) {
+      if (avail.data.ill && avail.data.ill.openurl && avail.data.ill.openurl.indexOf('notes') === -1 && (avail.data.ill.subscription || avail.data.availability)) {
         data.notes = '';
-        if (avail.data.subscription) data.notes += 'Subscription check done, found ' + (avail.data.subscription.url ? avail.data.subscription.url : 'nothing') + '. ';
+        if (avail.data.ill.subscription) data.notes += 'Subscription check done, found ' + (avail.data.ill.subscription.url ? avail.data.ill.subscription.url : 'nothing') + '. ';
         if (avail.data.availability) data.notes += 'OA availability check done, found ' + (avail.data.availability.length && avail.data.availability[0].url ? avail.data.availability[0].url : 'nothing') + '. ';
       }
       if (avail.data.ill.openurl && opts.openurl !== false && !data.email) data.forwarded = true;
@@ -314,7 +317,7 @@ var instantill_run = function() {
             $('#oabutton_loading').hide();
             $('#oabutton_searching').html('Searching');
             $('#oabutton_loading').hide();
-            $('#oabutton_error').html('<p>Sorry, we were not able to create an ILL request for you. Please try contacting your library directly.</p>').show();
+            $('#oabutton_error').html('<p>Sorry, we were not able to create an ILL request for you. ' + _lib_contact + '</p>').show();
             setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
           }
         }
@@ -367,7 +370,7 @@ var instantill_run = function() {
         if (attempts === 0) {
           attempts = 1;
           getmore();
-        } else if ((avail.data.subscription && avail.data.subscription.url) || (avail.data.availability && avail.data.availability.length && avail.data.availability[0].url)) {
+        } else if ((avail.data.ill.subscription && avail.data.ill.subscription.url) || (avail.data.availability && avail.data.availability.length && avail.data.availability[0].url)) {
           if (avail.data.meta.article.title) {
             info += '<h2>' + avail.data.meta.article.title + '</h2>';
           } else {
@@ -382,12 +385,12 @@ var instantill_run = function() {
     }
     info += '<p><a id="oabutton_getmore" href="#"><b>This is not the article I searched.</b></a></p>';
     var needmore = true;
-    if (avail.data.subscription && avail.data.subscription.url) {
+    if (avail.data.ill.subscription && avail.data.ill.subscription.url) {
       needmore = false;
       // if there is a subscribed version available show a link to it
       info += '<div>';
       info += '<h3>We have an online copy instantly available</h3>';
-      info += '<p><a href="' + avail.data.subscription.url  + '"><b>Open article in a new tab</b></a></p>';
+      info += '<p><a target="_blank" href="' + avail.data.ill.subscription.url  + '"><b>Open article in a new tab</b></a></p>';
       info += '</div>';
     } else {
       if (avail.data.availability && avail.data.availability.length && avail.data.availability[0].url) {
@@ -415,7 +418,7 @@ var instantill_run = function() {
         if (avail.data.ill.openurl && opts.openurl !== false) {
           if (avail.data.ill.openurl.indexOf('notes') === -1) {
             avail.data.ill.openurl += '&notes=';
-            if (avail.data.subscription) avail.data.ill.openurl += 'Subscription check done, found ' + (avail.data.subscription.url ? avail.data.subscription.url : 'nothing') + '. ';
+            if (avail.data.ill.subscription) avail.data.ill.openurl += 'Subscription check done, found ' + (avail.data.ill.subscription.url ? avail.data.ill.subscription.url : 'nothing') + '. ';
             if (avail.data.availability) avail.data.ill.openurl += 'OA availability check done, found ' + (avail.data.availability.length && avail.data.availability[0].url ? avail.data.availability[0].url : 'nothing') + '. ';
           }
           info += '<p><a class="oabutton_ill oabutton_ill_openurl ' + (opts.bootstrap !== false ? (typeof opts.bootstrap === 'string' ? opts.bootstrap : 'btn btn-primary') : '') + '" href="' + avail.data.ill.openurl + '">Complete request</a></p>';
@@ -479,7 +482,7 @@ var instantill_run = function() {
         delete data.doi;
       }
       if (!input || !input.length) input = data.title;
-      if (input === undefined || !input.length || (input.toLowerCase().indexOf('http') === -1 && input.indexOf('10.') === -1 && input.indexOf('/') === -1 && isNaN(parseInt(input.toLowerCase().replace('pmc',''))) && (input.length < 35 || input.split(' ').length < 3) ) ) {
+      if (input === undefined || !input.length || (input.toLowerCase().indexOf('http') === -1 && input.indexOf('10.') === -1 && input.indexOf('/') === -1 && isNaN(parseInt(input.toLowerCase().replace('pmc',''))) && (input.length < 30 || input.split(' ').length < 3) ) ) {
         $('#oabutton_error').html('<p>Sorry, we can\'t use partial titles/citations. Please provide the full title or citation, or a suitable URL or identifier.</p>').show();
         setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
         return;
