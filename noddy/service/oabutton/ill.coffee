@@ -1,6 +1,7 @@
 
+#import puppeteer from 'puppeteer'
+import crypto from 'crypto'
 
-# ill development is on hold - keep this as is for now
 
 API.service.oab.library = (opts) ->
   library = {institution:opts.library,primo:{}}
@@ -51,13 +52,148 @@ API.service.oab.libraries = (opts) ->
 
 API.service.oab.ill = {}
 
+API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
+  sig = uid + JSON.stringify(meta) + all
+  sig = crypto.createHash('md5').update(sig, 'utf8').digest('base64')
+  res = API.http.cache(sig, 'oab_ill_subs', undefined, refresh) if refresh isnt false
+  if not res?
+    res = {findings:{}, uid: uid}
+    user = API.accounts.retrieve uid
+    if user?.service?.openaccessbutton?.ill?.config?.subscription?
+      config = user.service.openaccessbutton.ill.config
+      # need to get their subscriptions link from their config - and need to know how to build the query string for it
+      openurl = API.service.oab.ill.openurl uid, meta, true
+      openurl = openurl.replace(config.ill_redirect_params.replace('?',''),'') if config.ill_redirect_params
+      openurl = openurl.split('?')[1] if openurl.indexOf('?') isnt -1
+      config.subscription = config.subscription.split(',') if typeof config.subscription is 'string'
+      for sub in config.subscription
+        sub = sub.trim()
+        if sub
+          url = sub + (if sub.indexOf('?') is -1 then '?' else '&') + openurl
+          url = url.split('snc.idm.oclc.org/login?url=')[1] if url.indexOf('snc.idm.oclc.org/login?url=') isnt -1
+          url = url.replace('cache=true','')
+          # need to use the proxy as some subscriptions endpoints need a registered IP address, and ours is registered for some of them already
+          # but having a problem passing proxy details through, so ignore for now
+          # BUT AGAIN eds definitely does NOT work without puppeteer so going to have to use that again for now and figure out the proxy problem later
+          #pg = API.http.puppeteer url #, undefined, API.settings.proxy
+          # then get that link
+          # then in that link find various content, depending on what kind of service it is
+          
+          # try doing without puppeteer and see how that goes
+          API.log 'Using OAB subscription check for ' + url
+          pg = ''
+          spg = ''
+          try
+            #pg = HTTP.call('GET', url, {timeout:15000, npmRequestOptions:{proxy:API.settings.proxy}}).content
+            pg = API.http.puppeteer url #, undefined, API.settings.proxy
+            spg = pg.toLowerCase().split('<body')[1].split('</body')[0]
+          #res.u ?= []
+          #res.u.push url
+          #res.pg = pg
+
+          # sfx 
+          # with access:
+          # https://cricksfx.hosted.exlibrisgroup.com/crick?sid=Elsevier:Scopus&_service_type=getFullTxt&issn=00225193&isbn=&volume=467&issue=&spage=7&epage=14&pages=7-14&artnum=&date=2019&id=doi:10.1016%2fj.jtbi.2019.01.031&title=Journal+of+Theoretical+Biology&atitle=Potential+relations+between+post-spliced+introns+and+mature+mRNAs+in+the+Caenorhabditis+elegans+genome&aufirst=S.&auinit=S.&auinit1=S&aulast=Bo
+          # which will contain a link like:
+          # <A title="Navigate to target in new window" HREF="javascript:openSFXMenuLink(this, 'basic1', undefined, '_blank');">Go to Journal website at</A>
+          # but the content can be different on different sfx language pages, so need to find this link via the tag attributes, then trigger it, then get the page it opens
+          # can test this with 10.1016/j.jtbi.2019.01.031 on instantill page
+          if url.indexOf('sfx.') isnt -1 and spg.indexOf('<a title="navigate to target in new window') isnt -1 and spg.split('<a title="navigate to target in new window')[1].split('">')[0].indexOf('basic1') isnt -1
+            # tried to get the next link after the click through, but was not worth putting more time into it. For now, seems like this will have to do
+            res.url = url
+            res.findings.sfx = res.url
+            if not all and res.url?
+              res.found = 'sfx'
+              API.http.cache(sig, 'oab_ill_subs', res) if refresh isnt false
+              return res
+  
+          # eds
+          # note eds does need a login, but IP address range is supposed to get round that
+          # our IP is supposed to be registered with the library as being one of their internal ones so should not need login
+          # however a curl from our IP to it still does not seem to work - will try with puppeteer to see if it is blocking in other ways
+          # not sure why the links here are via an oclc login - tested, and we will use without it
+          # with access:
+          # https://snc.idm.oclc.org/login?url=http://resolver.ebscohost.com/openurl?sid=google&auinit=RE&aulast=Marx&atitle=Platelet-rich+plasma:+growth+factor+enhancement+for+bone+grafts&id=doi:10.1016/S1079-2104(98)90029-4&title=Oral+Surgery,+Oral+Medicine,+Oral+Pathology,+Oral+Radiology,+and+Endodontology&volume=85&issue=6&date=1998&spage=638&issn=1079-2104
+          # can be tested on instantill page with 10.1016/S1079-2104(98)90029-4
+          # without:
+          # https://snc.idm.oclc.org/login?url=http://resolver.ebscohost.com/openurl?sid=google&auinit=MP&aulast=Newton&atitle=Librarian+roles+in+institutional+repository+data+set+collecting:+outcomes+of+a+research+library+task+force&id=doi:10.1080/01462679.2011.530546
+          else if url.indexOf('ebscohost.') isnt -1 and spg.indexOf('view this ') isnt -1 and pg.indexOf('<a data-auto="menu-link" href="') isnt -1
+            res.url = url.replace('://','______').split('/')[0].replace('______','://') + pg.split('<a data-auto="menu-link" href="')[1].split('" title="')[0]
+            res.findings.eds = res.url
+            if not all and res.url?
+              res.found = 'eds'
+              API.http.cache(sig, 'oab_ill_subs', res) if refresh isnt false
+              return res
+          
+          # serials solutions
+          # the HTML source code for the No Results page includes a span element with the class SS_NoResults. This class is only found on the No Results page (confirmed by serialssolutions)
+          # does not appear to need proxy or password
+          # with:
+          # https://rx8kl6yf4x.search.serialssolutions.com/?genre=article&issn=14085348&title=Annales%3A%20Series%20Historia%20et%20Sociologia&volume=28&issue=1&date=20180101&atitle=HOW%20TO%20UNDERSTAND%20THE%20WAR%20IN%20SYRIA.&spage=13&PAGES=13-28&AUTHOR=%C5%A0TERBENC%2C%20Primo%C5%BE&&aufirst=&aulast=&sid=EBSCO:aph&pid=
+          # can test this on instantill page with How to understand the war in Syria - Annales Series Historia et Sociologia 2018
+          # but the with link has a suppressed link that has to be clicked to get the actual page with the content on it
+          # <a href="?ShowSupressedLinks=yes&SS_LibHash=RX8KL6YF4X&url_ver=Z39.88-2004&rfr_id=info:sid/sersol:RefinerQuery&rft_val_fmt=info:ofi/fmt:kev:mtx:journal&SS_ReferentFormat=JournalFormat&SS_formatselector=radio&rft.genre=article&SS_genreselector=1&rft.aulast=%C5%A0TERBENC&rft.aufirst=Primo%C5%BE&rft.date=2018-01-01&rft.issue=1&rft.volume=28&rft.atitle=HOW+TO+UNDERSTAND+THE+WAR+IN+SYRIA.&rft.spage=13&rft.title=Annales%3A+Series+Historia+et+Sociologia&rft.issn=1408-5348&SS_issnh=1408-5348&rft.isbn=&SS_isbnh=&rft.au=%C5%A0TERBENC%2C+Primo%C5%BE&rft.pub=Zgodovinsko+dru%C5%A1tvo+za+ju%C5%BEno+Primorsko&paramdict=en-US&SS_PostParamDict=disableOneClick">Click here</a>
+          # which is the only link with the showsuppressedlinks param and the clickhere content
+          # then the page with the content link is like:
+          # https://rx8kl6yf4x.search.serialssolutions.com/?ShowSupressedLinks=yes&SS_LibHash=RX8KL6YF4X&url_ver=Z39.88-2004&rfr_id=info:sid/sersol:RefinerQuery&rft_val_fmt=info:ofi/fmt:kev:mtx:journal&SS_ReferentFormat=JournalFormat&SS_formatselector=radio&rft.genre=article&SS_genreselector=1&rft.aulast=%C5%A0TERBENC&rft.aufirst=Primo%C5%BE&rft.date=2018-01-01&rft.issue=1&rft.volume=28&rft.atitle=HOW+TO+UNDERSTAND+THE+WAR+IN+SYRIA.&rft.spage=13&rft.title=Annales%3A+Series+Historia+et+Sociologia&rft.issn=1408-5348&SS_issnh=1408-5348&rft.isbn=&SS_isbnh=&rft.au=%C5%A0TERBENC%2C+Primo%C5%BE&rft.pub=Zgodovinsko+dru%C5%A1tvo+za+ju%C5%BEno+Primorsko&paramdict=en-US&SS_PostParamDict=disableOneClick
+          # and the content is found in a link like this:
+          # <div id="ArticleCL" class="cl">
+          #   <a target="_blank" href="./log?L=RX8KL6YF4X&amp;D=EAP&amp;J=TC0000940997&amp;P=Link&amp;PT=EZProxy&amp;A=HOW+TO+UNDERSTAND+THE+WAR+IN+SYRIA.&amp;H=c7306f7121&amp;U=http%3A%2F%2Fwww.ulib.iupui.edu%2Fcgi-bin%2Fproxy.pl%3Furl%3Dhttp%3A%2F%2Fopenurl.ebscohost.com%2Flinksvc%2Flinking.aspx%3Fgenre%3Darticle%26issn%3D1408-5348%26title%3DAnnales%2BSeries%2Bhistoria%2Bet%2Bsociologia%26date%3D2018%26volume%3D28%26issue%3D1%26spage%3D13%26atitle%3DHOW%2BTO%2BUNDERSTAND%2BTHE%2BWAR%2BIN%2BSYRIA.%26aulast%3D%25C5%25A0TERBENC%26aufirst%3DPrimo%C5%BE">Article</a>
+          # </div>
+          # without:
+          # https://rx8kl6yf4x.search.serialssolutions.com/directLink?&atitle=Writing+at+the+Speed+of+Sound%3A+Music+Stenography+and+Recording+beyond+the+Phonograph&author=Pierce%2C+J+Mackenzie&issn=01482076&title=Nineteenth+Century+Music&volume=41&issue=2&date=2017-10-01&spage=121&id=doi:&sid=ProQ_ss&genre=article
+          else if url.indexOf('serialssolutions.') isnt -1 and spg.indexOf('ss_noresults') is -1
+            try
+              surl = url.split('?')[0] + '?ShowSupressedLinks' + pg.split('?ShowSupressedLinks')[1].split('">')[0]
+              #npg = API.http.puppeteer surl #, undefined, API.settings.proxy
+              API.log 'Using OAB subscription unsuppress for ' + surl
+              npg = HTTP.call('GET', surl, {timeout: 15000, npmRequestOptions:{proxy:API.settings.proxy}}).content
+              if npg.indexOf('ArticleCL') isnt -1 and npg.split('DatabaseCL')[0].indexOf('href="./log') isnt -1
+                res.url = surl.split('?')[0] + npg.split('ArticleCL')[1].split('DatabaseCL')[0].split('href="')[1].split('">')[0]
+                res.findings.serials = res.url
+                if not all and res.url?
+                  res.found = 'serials'
+                  API.http.cache(sig, 'oab_ill_subs', res) if refresh isnt false
+                  return res
+
+    API.http.cache(sig, 'oab_ill_subs', res) if refresh isnt false and not _.isEmpty res.findings
+    
+  # return cached or empty result if nothing else found
+  return res
+
+'''_testsfx = () ->
+  url = 'https://cricksfx.hosted.exlibrisgroup.com/crick?sid=Elsevier:Scopus&_service_type=getFullTxt&issn=00225193&isbn=&volume=467&issue=&spage=7&epage=14&pages=7-14&artnum=&date=2019&id=doi:10.1016%2fj.jtbi.2019.01.031&title=Journal+of+Theoretical+Biology&atitle=Potential+relations+between+post-spliced+introns+and+mature+mRNAs+in+the+Caenorhabditis+elegans+genome&aufirst=S.&auinit=S.&auinit1=S&aulast=Bo'
+  args = ['--no-sandbox', '--disable-setuid-sandbox']
+  browser = await puppeteer.launch({args:args, ignoreHTTPSErrors:true, dumpio:false, timeout:12000, executablePath: '/usr/bin/google-chrome'})
+  page = await browser.newPage()
+  await page.goto(url, {timeout:12000})
+  #content = await page.evaluate(() => new XMLSerializer().serializeToString(document.doctype) + '\n' + document.documentElement.outerHTML)
+  #console.log content
+  await page.setRequestInterception true
+  page.on "request", (request) ->
+    console.log request.url()
+    request.continue()
+  await page.$eval('[href="javascript:openSFXMenuLink(this, \'basic1\', undefined, \'_blank\');"]', (el) -> 
+    console.log el
+    el.click()
+    console.log 'in eval'
+    #await page.waitForNavigation()
+    #console.log page.url()
+  )
+  #await page.click('a[href="javascript:openSFXMenuLink(this, \'basic1\', undefined, \'_blank\');"]')
+  console.log 'after eval'
+  await page.waitForNavigation()
+  console.log page.url()
+  await browser.close()
+#_testsfx()'''
+
 API.service.oab.ill.start = (opts={}) ->
   # opts should include a key called metadata at this point containing all metadata known about the object
   # but if not, and if needed for the below stages, it is looked up again using the ill.metadata function below
   opts.metadata ?= {}
   meta = API.service.oab.ill.metadata opts.metadata, opts
   for m of meta
-    opts.metadata[m] ?= meta[m]
+    opts.metadata[m] ?= meta[m] if m isnt 'cache'
     
   if opts.library is 'imperial'
     # TODO for now we are just going to send an email when a user creates an ILL
@@ -135,7 +271,7 @@ API.service.oab.ill.config = (user, config) ->
   # tested it and set values as below defaults, but also noted that it has year and month boxes, but these do not correspond to year and month params, or date params
   if config?
     update = {}
-    for k in ['ill_redirect_base_url','ill_redirect_params','method','title','doi','pmid','pmcid','author','journal','issn','volume','issue','page','published','year','terms','book','other','cost','time','email']
+    for k in ['ill_redirect_base_url','ill_redirect_params','method','title','doi','pmid','pmcid','author','journal','issn','volume','issue','page','published','year','terms','book','other','cost','time','email','problem_email','subscription']
       update[k] = config[k] if config[k]?
     if not user.service.openaccessbutton.ill?
       Users.update user._id, {'service.openaccessbutton.ill': {config: update}}
@@ -145,13 +281,16 @@ API.service.oab.ill.config = (user, config) ->
   else
     try
       user = Users.get(user) if typeof user is 'string'
-      return user.service.openaccessbutton.ill.config ? {}
+      rs = user.service.openaccessbutton.ill.config ? {}
+      try rs.adminemail = if user.email then user.email else user.emails[0].address
+      return rs
     catch
       return {}
 
-API.service.oab.ill.openurl = (uid, meta={}) ->
+API.service.oab.ill.openurl = (uid, meta={}, withoutbase=false) ->
   config = API.service.oab.ill.config uid
   config ?= {}
+  return '' if withoutbase isnt true and not config.ill_redirect_base_url
   # add iupui / openURL defaults to config
   defaults =
     title: 'atitle' # this is what iupui needs (title is also acceptable, but would clash with using title for journal title, which we set below, as iupui do that
@@ -173,44 +312,42 @@ API.service.oab.ill.openurl = (uid, meta={}) ->
     # IUPUI also has a month field, but there is nothing to match to that
   for d of defaults
     config[d] = defaults[d] if not config[d]
-  if not config?.ill_redirect_base_url
-    return ''
-  else
-    url = config.ill_redirect_base_url
-    url += if url.indexOf('?') is -1 then '?' else '&'
-    url += config.ill_redirect_params.replace('?','') + '&' if config.ill_redirect_params
-    for k of meta
-      v = false
-      if k is 'author'
-        # need to check if config has aufirst and aulast or something similar, then need to use those instead, 
-        # if we have author name parts
-        try
-          if typeof meta.author is 'string'
-            v = meta.author
-          else if _.isArray meta.author
-            v = ''
-            for author in meta.author
-              v += ', ' if v.length
-              if typeof author is 'string'
-                v += author
-              else if author.family
-                v += author.family + if author.given then ', ' + author.given else ''
+
+  url = if config.ill_redirect_base_url then config.ill_redirect_base_url else ''
+  url += if url.indexOf('?') is -1 then '?' else '&'
+  url += config.ill_redirect_params.replace('?','') + '&' if config.ill_redirect_params
+  for k of meta
+    v = false
+    if k is 'author'
+      # need to check if config has aufirst and aulast or something similar, then need to use those instead, 
+      # if we have author name parts
+      try
+        if typeof meta.author is 'string'
+          v = meta.author
+        else if _.isArray meta.author
+          v = ''
+          for author in meta.author
+            v += ', ' if v.length
+            if typeof author is 'string'
+              v += author
+            else if author.family
+              v += author.family + if author.given then ', ' + author.given else ''
+        else
+          if meta.author.family
+            v = meta.author.family + if meta.author.given then ', ' + meta.author.given else ''
           else
-            if meta.author.family
-              v = meta.author.family + if meta.author.given then ', ' + meta.author.given else ''
-            else
-              v = JSON.stringify meta.author
-      else if k not in ['started','ended','took','terms','book','other','cost','time','email']
-        v = meta[k]
-      if v
-        url += (if config[k] then config[k] else k) + '=' + v + '&'
-    return url
+            v = JSON.stringify meta.author
+    else if k not in ['started','ended','took','terms','book','other','cost','time','email','redirect','url','source']
+      v = meta[k]
+    if v
+      url += (if config[k] then config[k] else k) + '=' + v + '&'
+  return url
     
 API.service.oab.ill.terms = (uid) ->
   config = API.service.oab.ill.config uid
   return config.terms
-  
-API.service.oab.ill.metadata = (metadata={}, opts={}) ->
+
+API.service.oab.ill.metadata = (metadata={}, opts={}, refresh=false) ->
   metadata.started ?= Date.now()
   # metadata is whatever we already happened to find when doing availability or other checks
   # opts is whatever was passed to the "find" check such as the plugin type (only instantill in this case), use ID, embedded location, etc
@@ -230,7 +367,7 @@ API.service.oab.ill.metadata = (metadata={}, opts={}) ->
   metadata.title ?= opts.title if opts.title
   metadata.title ?= opts.citation if opts.citation
   metadata.pmid ?= opts.pmid if opts.pmid
-  metadata.pmid ?= opts.pmcid if opts.pmcid
+  metadata.pmcid ?= opts.pmcid if opts.pmcid
   if metadata.q
     metadata.url ?= metadata.q
     delete metadata.q
@@ -255,6 +392,27 @@ API.service.oab.ill.metadata = (metadata={}, opts={}) ->
     delete metadata.url if metadata.url.indexOf('http') isnt 0 or metadata.url.indexOf('.') is -1
   delete metadata.doi if metadata.doi and metadata.doi.indexOf('10.') isnt 0
 
+  if (metadata.doi or metadata.title) and refresh isnt 0 and refresh isnt true
+    try
+      finder = if metadata.doi? then 'doi.exact:"' + metadata.doi + '"' else ''
+      if metadata.title?
+        finder += ' OR ' if finder isnt ''
+        finder += 'title.exact:"' + metadata.title + '"'
+      finder = '(' + finder + ')' if finder.indexOf(' OR ') isnt -1 and refresh isnt false
+      if refresh isnt false
+        d = new Date()
+        finder += ' AND createdAt:>' + d.setDate(d.getDate() - refresh)
+      cached = oab_metadata.find finder, true
+      if cached
+        delete cached.createdAt
+        delete cached.created_date
+        delete cached._id
+        cached.started = metadata.started
+        cached.ended ?= Date.now()
+        cached.took ?= cached.ended - cached.started
+        cached.cache = true
+        return cached
+    
   if not _got() and not metadata.doi and not opts.scraped and metadata.url
     s = API.service.oab.scrape metadata.url
     try
@@ -316,7 +474,11 @@ API.service.oab.ill.metadata = (metadata={}, opts={}) ->
       delete metadata[k]
   metadata.ended ?= Date.now()
   metadata.took ?= metadata.ended - metadata.started
+  # should this save even when we do not get results, or should we always be trying again, or within some certain timeframe?
+  oab_metadata.insert(metadata) if metadata.title and (metadata.doi or metadata.journal or metadata.issn)
   return metadata
+
+  want = ['title','doi','pmid','pmcid','author','journal','issn','volume','issue','page','published','year']
   
 API.service.oab.ill.progress = () ->
   # TODO need a function that can lookup ILL progress from the library systems some how

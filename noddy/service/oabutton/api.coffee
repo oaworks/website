@@ -6,6 +6,7 @@ import moment from 'moment'
 @oab_availability = new API.collection {index:"oab",type:"availability"}
 @oab_request = new API.collection {index:"oab",type:"request",history:true}
 @oab_ill = new API.collection {index:"oab",type:"ill"}
+@oab_metadata = new API.collection {index:"oab",type:"metadata"}
 
 # the normal declaration of API.service.oab is in admin.coffee, because it gets loaded before this api.coffee file
 
@@ -64,14 +65,23 @@ API.add 'service/oab/ill',
         opts.api = true
       return API.service.oab.ill.start opts
 
-API.add 'service/oab/metadata',
-  get: () ->
-    return API.service.oab.ill.metadata this.queryParams
-  post: () ->
-    opts = this.request.body ? {}
-    for o of this.queryParams
-      opts[o] = this.queryParams[o]
-    return API.service.oab.ill.metadata opts
+API.add 'service/oab/ill/subscription',
+  get:
+    authOptional: true
+    action: () ->
+      if this.user
+        uid = this.user._id
+      else
+        try
+          uid = this.queryParams.uid
+          delete this.queryParams.uid
+      if not uid? or _.isEmpty this.queryParams
+        return {}
+      else
+        res = {metadata: API.service.oab.ill.metadata this.queryParams}
+        res.subscription = API.service.oab.ill.subscription uid, res.metadata
+        return res
+
 API.add 'service/oab/ill/metadata',
   get: () ->
     return API.service.oab.ill.metadata this.queryParams
@@ -129,6 +139,8 @@ API.add 'service/oab/ill/:library',
     return API.service.oab.ill.start opts
 
 API.add 'service/oab/ills', () -> return oab_ill.search this
+
+API.add 'service/oab/metadata', () -> return oab_metadata.search this
 
 API.add 'service/oab/request',
   get:

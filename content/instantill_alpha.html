@@ -30,7 +30,7 @@ jQuery(document).ready(function() {
       contentType: 'application/json',
       dataType: 'json',
       success: function(data) {
-        $('#save').hide().after('<span id="saved">Changes saved!</span>');
+        $('#save').hide().after('<span id="saved">Changes saved! Refresh the page to reload the demo above and see it with changes applied.</span>');
         setTimeout(function() { $('#saved').hide(); $('#save').show(); }, 5000);
       },
       error: function(data) {
@@ -194,6 +194,9 @@ jQuery(document).ready(function() {
 
           What email address do you want ILLs forwarded to? (optional for email alternative)
           <input id="email" type="text" class="form-control setting" placeholder="default is your OAB account email address"><br>
+          What email address do you want users referred to? (optional for if there is a problem)
+          <input id="problem_email" type="text" class="form-control setting" placeholder="no default, the user will be told to contact their library"><br>
+
           Terms and conditions URL (optional for email alternative)
           <input id="terms" type="text" class="form-control setting" placeholder=""><br>
 
@@ -201,6 +204,21 @@ jQuery(document).ready(function() {
           <input id="book" type="text" class="form-control setting" placeholder=""><br>
           Other request URL (optional for if the user wants something other than article or book)
           <input id="other" type="text" class="form-control setting" placeholder=""><br>
+          
+          Do you have a subscription lookup URL where you send requests to find out if you have access to content? 
+          For example an SFX, EDS, or serialssolutions URL? If so, enter it below. Note we also need any required URL parameters 
+          to be added here, but not article metadata parameters. If you have more than one subscription 
+          service to check, enter additional URLs separated by a comma.
+          <input id="subscription" type="text" class="form-control setting" placeholder=""><br>
+          An example SFX URL:<br>
+          https://cricksfx.hosted.exlibrisgroup.com/crick?sid=Elsevier:Scopus&_service_type=getFullTxt
+          <br>An example EDS URL:<br>
+          http://resolver.ebscohost.com/openurl
+          <br>An example serialssolutions URL:<br>
+          https://rx8kl6yf4x.search.serialssolutions.com?sid=EBSCO:aph
+          <br><br>Please note, it is also possible that for us to use these URLs our server IP address will have to be whitelisted with your library. 
+          If this is the case, as we know it often is for EDS for example, please contact us to discuss further. Also, if you have a subscription service 
+          that we have not shown an example for here, let us know and we will add it for you.
         </p>
         
         <p><a id="save" class="btn btn-primary btn-block" href="#">Save your settings</a></p>
