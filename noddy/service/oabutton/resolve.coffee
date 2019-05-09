@@ -4,6 +4,7 @@ import request from 'request'
 import unidecode from 'unidecode'
 
 API.service.oab.citation = (meta) ->
+  meta = _.clone meta
   if meta.title?
     meta.title = meta.title.replace('CITATION:','').replace('TITLE:','').trim()
     if meta.title.indexOf('{') is 0 or meta.title.indexOf('[') is 0 # look for dumped citation styles
