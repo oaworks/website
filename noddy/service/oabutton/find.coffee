@@ -125,7 +125,7 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
         ret.meta.article[m] ?= meta[m]
       # for instantill user-defined values override any that we do find ourselves
       for o of opts
-        ret.meta.article[o] = opts[o] if o in ['title','journal','year','doi'] # but don't include authors as that comes back more complex?
+        ret.meta.article[o] = opts[o] if o in ['title','journal','year','doi'] and opts[o] # but don't include authors as that comes back more complex?
       try
         if opts.from?
           ret.ill ?= {}

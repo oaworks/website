@@ -138,7 +138,7 @@ API.add 'service/oab/ill/:library',
     opts.library = this.urlParams.library ? {}
     return API.service.oab.ill.start opts
 
-API.add 'service/oab/ills', () -> return oab_ill.search this
+API.add 'service/oab/ills', 'openaccessbutton.admin', () -> return oab_ill.search this
 
 API.add 'service/oab/metadata', () -> return oab_metadata.search this
 

@@ -271,7 +271,7 @@ API.service.oab.ill.config = (user, config) ->
   # tested it and set values as below defaults, but also noted that it has year and month boxes, but these do not correspond to year and month params, or date params
   if config?
     update = {}
-    for k in ['ill_redirect_base_url','ill_redirect_params','method','title','doi','pmid','pmcid','author','journal','issn','volume','issue','page','published','year','terms','book','other','cost','time','email','problem_email','subscription']
+    for k in ['ill_redirect_base_url','ill_redirect_params','method','sid','title','doi','pmid','pmcid','author','journal','issn','volume','issue','page','published','year','terms','book','other','cost','time','email','problem_email','subscription']
       update[k] = config[k] if config[k]?
     if not user.service.openaccessbutton.ill?
       Users.update user._id, {'service.openaccessbutton.ill': {config: update}}
@@ -293,6 +293,7 @@ API.service.oab.ill.openurl = (uid, meta={}, withoutbase=false) ->
   return '' if withoutbase isnt true and not config.ill_redirect_base_url
   # add iupui / openURL defaults to config
   defaults =
+    sid: 'sid'
     title: 'atitle' # this is what iupui needs (title is also acceptable, but would clash with using title for journal title, which we set below, as iupui do that
     doi: 'rft_id' # don't know yet what this should be
     #pmid: 'pmid' # same as iupui ill url format
@@ -316,6 +317,7 @@ API.service.oab.ill.openurl = (uid, meta={}, withoutbase=false) ->
   url = if config.ill_redirect_base_url then config.ill_redirect_base_url else ''
   url += if url.indexOf('?') is -1 then '?' else '&'
   url += config.ill_redirect_params.replace('?','') + '&' if config.ill_redirect_params
+  url += config.sid + '=InstantILL&'
   for k of meta
     v = false
     if k is 'author'
@@ -354,6 +356,10 @@ API.service.oab.ill.metadata = (metadata={}, opts={}, refresh=false) ->
   # build a more complete picture of item metadata for ILLs, from any sources possible
   # we want as many of DOI, title, pmid, pmcid, journal, issn, author(s), publication date (full, not just year, where possible), volume, issue, page
   # need to look them up here and possibly also try to add them in with earlier find stages, anywhere that they may already be present in something we looked up anyway
+
+  # metadata may also contain options passed from query params, particularly refresh
+  refresh = true if metadata.cache is 'false' or metadata.cache is false
+  refresh = metadata.refresh if metadata.refresh?
 
   want = ['title','doi','pmid','pmcid','author','journal','issn','volume','issue','page','published','year']
   _got = () ->
@@ -398,12 +404,12 @@ API.service.oab.ill.metadata = (metadata={}, opts={}, refresh=false) ->
       if metadata.title?
         finder += ' OR ' if finder isnt ''
         finder += 'title.exact:"' + metadata.title + '"'
-      finder = '(' + finder + ')' if finder.indexOf(' OR ') isnt -1 and refresh isnt false
       if refresh isnt false
+        finder = '(' + finder + ')' if finder.indexOf(' OR ') isnt -1
         d = new Date()
         finder += ' AND createdAt:>' + d.setDate(d.getDate() - refresh)
       cached = oab_metadata.find finder, true
-      if cached
+      if cached and cached.doi and cached.title
         delete cached.createdAt
         delete cached.created_date
         delete cached._id
@@ -478,8 +484,6 @@ API.service.oab.ill.metadata = (metadata={}, opts={}, refresh=false) ->
   oab_metadata.insert(metadata) if metadata.title and (metadata.doi or metadata.journal or metadata.issn)
   return metadata
 
-  want = ['title','doi','pmid','pmcid','author','journal','issn','volume','issue','page','published','year']
-  
 API.service.oab.ill.progress = () ->
   # TODO need a function that can lookup ILL progress from the library systems some how
   return
