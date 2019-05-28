@@ -57,7 +57,7 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
   sig = crypto.createHash('md5').update(sig, 'utf8').digest('base64')
   res = API.http.cache(sig, 'oab_ill_subs', undefined, refresh) if refresh isnt false
   if not res?
-    res = {findings:{}, uid: uid}
+    res = {findings:{}, uid: uid, error:[]}
     user = API.accounts.retrieve uid
     if user?.service?.openaccessbutton?.ill?.config?.subscription?
       config = user.service.openaccessbutton.ill.config
@@ -83,10 +83,13 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
           API.log 'Using OAB subscription check for ' + url
           pg = ''
           spg = ''
+          error = false
           try
             #pg = HTTP.call('GET', url, {timeout:15000, npmRequestOptions:{proxy:API.settings.proxy}}).content
             pg = API.http.puppeteer url #, undefined, API.settings.proxy
             spg = pg.toLowerCase().split('<body')[1].split('</body')[0]
+          catch
+            error = true
           #res.u ?= []
           #res.u.push url
           #res.pg = pg
@@ -98,14 +101,16 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
           # <A title="Navigate to target in new window" HREF="javascript:openSFXMenuLink(this, 'basic1', undefined, '_blank');">Go to Journal website at</A>
           # but the content can be different on different sfx language pages, so need to find this link via the tag attributes, then trigger it, then get the page it opens
           # can test this with 10.1016/j.jtbi.2019.01.031 on instantill page
-          if url.indexOf('sfx.') isnt -1 and spg.indexOf('<a title="navigate to target in new window') isnt -1 and spg.split('<a title="navigate to target in new window')[1].split('">')[0].indexOf('basic1') isnt -1
-            # tried to get the next link after the click through, but was not worth putting more time into it. For now, seems like this will have to do
-            res.url = url
-            res.findings.sfx = res.url
-            if not all and res.url?
-              res.found = 'sfx'
-              API.http.cache(sig, 'oab_ill_subs', res) if refresh isnt false
-              return res
+          if url.indexOf('sfx.') isnt -1
+            res.error.push 'SFX' if error
+            if spg.indexOf('<a title="navigate to target in new window') isnt -1 and spg.split('<a title="navigate to target in new window')[1].split('">')[0].indexOf('basic1') isnt -1
+              # tried to get the next link after the click through, but was not worth putting more time into it. For now, seems like this will have to do
+              res.url = url
+              res.findings.sfx = res.url
+              if not all and res.url?
+                res.found = 'sfx'
+                API.http.cache(sig, 'oab_ill_subs', res) if refresh isnt false
+                return res
   
           # eds
           # note eds does need a login, but IP address range is supposed to get round that
@@ -117,13 +122,15 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
           # can be tested on instantill page with 10.1016/S1079-2104(98)90029-4
           # without:
           # https://snc.idm.oclc.org/login?url=http://resolver.ebscohost.com/openurl?sid=google&auinit=MP&aulast=Newton&atitle=Librarian+roles+in+institutional+repository+data+set+collecting:+outcomes+of+a+research+library+task+force&id=doi:10.1080/01462679.2011.530546
-          else if url.indexOf('ebscohost.') isnt -1 and spg.indexOf('view this ') isnt -1 and pg.indexOf('<a data-auto="menu-link" href="') isnt -1
-            res.url = url.replace('://','______').split('/')[0].replace('______','://') + pg.split('<a data-auto="menu-link" href="')[1].split('" title="')[0]
-            res.findings.eds = res.url
-            if not all and res.url?
-              res.found = 'eds'
-              API.http.cache(sig, 'oab_ill_subs', res) if refresh isnt false
-              return res
+          else if url.indexOf('ebscohost.') isnt -1
+            res.error.push 'Ebsco' if error
+            if spg.indexOf('view this ') isnt -1 and pg.indexOf('<a data-auto="menu-link" href="') isnt -1
+              res.url = url.replace('://','______').split('/')[0].replace('______','://') + pg.split('<a data-auto="menu-link" href="')[1].split('" title="')[0]
+              res.findings.eds = res.url
+              if not all and res.url?
+                res.found = 'eds'
+                API.http.cache(sig, 'oab_ill_subs', res) if refresh isnt false
+                return res
           
           # serials solutions
           # the HTML source code for the No Results page includes a span element with the class SS_NoResults. This class is only found on the No Results page (confirmed by serialssolutions)
@@ -142,19 +149,23 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
           # </div>
           # without:
           # https://rx8kl6yf4x.search.serialssolutions.com/directLink?&atitle=Writing+at+the+Speed+of+Sound%3A+Music+Stenography+and+Recording+beyond+the+Phonograph&author=Pierce%2C+J+Mackenzie&issn=01482076&title=Nineteenth+Century+Music&volume=41&issue=2&date=2017-10-01&spage=121&id=doi:&sid=ProQ_ss&genre=article
-          else if url.indexOf('serialssolutions.') isnt -1 and spg.indexOf('ss_noresults') is -1
-            try
-              surl = url.split('?')[0] + '?ShowSupressedLinks' + pg.split('?ShowSupressedLinks')[1].split('">')[0]
-              #npg = API.http.puppeteer surl #, undefined, API.settings.proxy
-              API.log 'Using OAB subscription unsuppress for ' + surl
-              npg = HTTP.call('GET', surl, {timeout: 15000, npmRequestOptions:{proxy:API.settings.proxy}}).content
-              if npg.indexOf('ArticleCL') isnt -1 and npg.split('DatabaseCL')[0].indexOf('href="./log') isnt -1
-                res.url = surl.split('?')[0] + npg.split('ArticleCL')[1].split('DatabaseCL')[0].split('href="')[1].split('">')[0]
-                res.findings.serials = res.url
-                if not all and res.url?
-                  res.found = 'serials'
-                  API.http.cache(sig, 'oab_ill_subs', res) if refresh isnt false
-                  return res
+          else if url.indexOf('serialssolutions.') isnt -1
+            res.error.push 'SerialsSolutions' if error
+            if spg.indexOf('ss_noresults') is -1
+              try
+                surl = url.split('?')[0] + '?ShowSupressedLinks' + pg.split('?ShowSupressedLinks')[1].split('">')[0]
+                #npg = API.http.puppeteer surl #, undefined, API.settings.proxy
+                API.log 'Using OAB subscription unsuppress for ' + surl
+                npg = HTTP.call('GET', surl, {timeout: 15000, npmRequestOptions:{proxy:API.settings.proxy}}).content
+                if npg.indexOf('ArticleCL') isnt -1 and npg.split('DatabaseCL')[0].indexOf('href="./log') isnt -1
+                  res.url = surl.split('?')[0] + npg.split('ArticleCL')[1].split('DatabaseCL')[0].split('href="')[1].split('">')[0]
+                  res.findings.serials = res.url
+                  if not all and res.url?
+                    res.found = 'serials'
+                    API.http.cache(sig, 'oab_ill_subs', res) if refresh isnt false
+                    return res
+              catch
+                res.error.push 'SerialsSolutions' if error
 
     API.http.cache(sig, 'oab_ill_subs', res) if refresh isnt false and not _.isEmpty res.findings
     
@@ -217,30 +228,44 @@ API.service.oab.ill.start = (opts={}) ->
       vars = {}
       vars.name = user.profile?.firstname ? 'librarian'
       vars.details = ''
+      ordered = ['title','author','volume','issue','date','pages']
       for o of opts
         if o is 'metadata'
           for m of opts[o]
-            if opts[o][m]
-              vars[m] = opts[o][m]
-              if m is 'author'
-                authors = '<p>Authors:<br>'
-                first = true
-                for a in opts[o][m]
-                  if first
-                    first = false
-                  else
-                    authors += ', '
-                  authors += a.family + ' ' + a.given
-                vars.details += authors + '</p>'
-              else if ['started','ended','took'].indexOf(m) is -1
-                vars.details += '<p>' + m + ':<br>' + opts[o][m] + '</p>'
-        else if opts[o]
-          vars[o] = opts[o]
-          #vars.details += '<p>' + o + ':<br>' + opts[o] + '</p>'
+            opts[m] = opts[o][m]
+            ordered.push(m) if m not in ordered
+          delete opts.metadata
+        else
+          ordered.push(o) if o not in ordered
+      for r in ordered
+        if opts[r]
+          vars[r] = opts[r]
+          if r is 'author'
+            authors = '<p>Authors:<br>'
+            first = true
+            for a in opts[r]
+              if first
+                first = false
+              else
+                authors += ', '
+              authors += a.family + ' ' + a.given
+            vars.details += authors + '</p>'
+          else if ['started','ended','took'].indexOf(r) is -1
+            vars.details += '<p>' + r + ':<br>' + opts[r] + '</p>'
+        #vars.details += '<p>' + o + ':<br>' + opts[o] + '</p>'
       vars.illid = oab_ill.insert opts
       vars.details += '<p>Open access button ILL ID:<br>' + vars.illid + '</p>';
       eml = if user.service?.openaccessbutton?.ill?.config?.email and user.service?.openaccessbutton?.ill?.config?.email.length then user.service?.openaccessbutton?.ill?.config?.email else if user.email then user.email else user.emails[0].address
 
+      # such as https://ambslibrary.share.worldcat.org/wms/cmnd/nd/discover/items/search?ai0id=level3&ai0type=scope&offset=1&pageSize=10&si0in=in%3A&si0qs=0021-9231&si1in=au%3A&si1op=AND&si2in=kw%3A&si2op=AND&sortDirection=descending&sortKey=librarycount&applicationId=nd&requestType=search&searchType=advancedsearch&eventSource=df-advancedsearch
+      # could be provided as: (unless other params are mandatory) 
+      # https://ambslibrary.share.worldcat.org/wms/cmnd/nd/discover/items/search?si0qs=0021-9231
+      if user.service?.openaccessbutton?.ill?.config?.search and (opts.issn or opts.journal)
+        su = user.service.openaccessbutton.ill.config.search
+        #su += if su.indexOf('?') is -1 then '?' else '&' # as we don't know the param for different systems it will have to be provided ending in param=
+        su += if opts.issn then opts.issn else opts.journal
+        vars.details+= '<p>Search URL:<br><a href="' + su + '">' + su + '</a></p>'
+        
       if not opts.forwarded
         API.service.oab.mail({vars: vars, template: {filename:'instantill_create.html'}, to: eml, from: "InstantILL <InstantILL@openaccessbutton.org>", subject: "ILL request " + vars.illid})
       
@@ -271,7 +296,7 @@ API.service.oab.ill.config = (user, config) ->
   # tested it and set values as below defaults, but also noted that it has year and month boxes, but these do not correspond to year and month params, or date params
   if config?
     update = {}
-    for k in ['ill_redirect_base_url','ill_redirect_params','method','sid','title','doi','pmid','pmcid','author','journal','issn','volume','issue','page','published','year','terms','book','other','cost','time','email','problem_email','subscription']
+    for k in ['ill_redirect_base_url','ill_redirect_params','method','sid','title','doi','pmid','pmcid','author','journal','issn','volume','issue','page','published','year','terms','book','other','cost','time','email','problem_email','subscription','search']
       update[k] = config[k] if config[k]?
     if not user.service.openaccessbutton.ill?
       Users.update user._id, {'service.openaccessbutton.ill': {config: update}}
@@ -478,6 +503,11 @@ API.service.oab.ill.metadata = (metadata={}, opts={}, refresh=false) ->
   for k of metadata
     if k not in want and k not in ['pmid','pmcid'] and k not in ['started','ended','took']
       delete metadata[k]
+
+  # user-defined values override any that we do find ourselves
+  for o of opts
+    metadata = opts[o] if o in ['title','journal','year','doi'] and opts[o] # but don't include authors as that comes back more complex
+
   metadata.ended ?= Date.now()
   metadata.took ?= metadata.ended - metadata.started
   # should this save even when we do not get results, or should we always be trying again, or within some certain timeframe?

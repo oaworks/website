@@ -52,7 +52,7 @@ var instantill_run = function() {
   if ($(opts.element).length === 0) $('body').append('<div id="instantill"></div>');
 
   var w = '<h2 id="oabutton_request" style="display:none;">Request a paper</h2><div id="oabutton_inputs">\
-  <p><br>If you need a paper or book you can request it from any library in the world through Interlibrary loan. \
+  <p>If you need a paper or book you can request it from any library in the world through Interlibrary loan. \
   Start by entering a full article title, citation, DOI or URL:</p>\
   <p><br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_input" placeholder="' + opts.placeholder + '" aria-label="' + opts.placeholder + '" style="box-shadow:none;"></input></p>\
   <p><a class="oabutton_find ' + (opts.bootstrap !== false ? (typeof opts.bootstrap === 'string' ? opts.bootstrap : 'btn btn-primary') : '') + '" href="#" id="oabutton_find" aria-label="Search" style="min-width:150px;">Find paper</a></p>';
@@ -209,7 +209,7 @@ var instantill_run = function() {
         try {
           window.location = avail.data.ill.openurl;
         } catch(err) {
-          $('#oabutton_error').html('<p>Sorry, we could\'nt create a Interlibrary Loan request for you. ' + _lib_contact + '</p>').show();
+          $('#oabutton_error').html('<p>Sorry, we could\'nt create an Interlibrary Loan request for you. ' + _lib_contact + '</p>').show();
           sorryping('InstantILL_openurl_couldnt_create_ill');
           fail('');
         }
@@ -378,6 +378,10 @@ var instantill_run = function() {
     $('#oabutton_inputs').hide();
     $('#oabutton_error').html('').hide();
     var info = '';
+    if (avail.data.ill && avail.data.ill.error && avail.data.ill.error.length) {
+      $('#oabutton_error').html('<p>Please note, we encountered errors querying the following subscription services: ' + avail.data.ill.error.join(', ') + '</p>').show();
+      setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
+    }
     if (avail.data.meta && avail.data.meta.article) {
       var cit = cite(avail.data.meta.article);
       if (cit.length < 1) {
@@ -545,7 +549,7 @@ var instantill_run = function() {
           _doing_availability = false;
           $('#oabutton_input').val('');
           $('.oabutton_find').html('Find paper');
-          $('#oabutton_error').show().html('<p>Enter a full article title, citation, or link. Go to library search if you\'re unsure what you\'re looking for.</p>');
+          $('#oabutton_error').show().html('<p>Oh dear, the service is down! We\'re aware, and working to fix the problem. ' + _lib_contact + '</p>');
           setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
         }
       };

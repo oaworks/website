@@ -142,6 +142,16 @@ API.add 'service/oab/ills', 'openaccessbutton.admin', () -> return oab_ill.searc
 
 API.add 'service/oab/metadata', () -> return oab_metadata.search this
 
+API.add 'service/oab/stats', get: () -> return {} # plaeholder for possible later stats stuff, for now just to allow getting the emails
+API.add 'service/oab/stats/emails', 
+  post: 
+    roleRequired:'openaccessbutton.admin'
+    action: () -> 
+      res = {}
+      for uid in this.request.body
+        try res[uid] = API.accounts.retrieve(uid).emails[0].address
+      return res
+
 API.add 'service/oab/request',
   get:
     roleRequired:'openaccessbutton.user'

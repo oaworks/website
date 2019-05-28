@@ -150,7 +150,7 @@
           return;
         }
         try {
-          window.history.pushState("", "find", '?url=' + encodeURIComponent(url));
+          window.history.pushState("", "find", window.location.search);
           var change = function(state) {
             if (state === null) {
               $('#loading').hide();
