@@ -123,9 +123,6 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
       meta = API.service.oab.ill.metadata ret.meta.article,  opts
       for m of meta
         ret.meta.article[m] ?= meta[m]
-      # for instantill user-defined values override any that we do find ourselves
-      for o of opts
-        ret.meta.article[o] = opts[o] if o in ['title','journal','year','doi'] and opts[o] # but don't include authors as that comes back more complex?
       try
         if opts.from?
           ret.ill ?= {}
@@ -135,7 +132,7 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
         if opts.from?
           ret.ill ?= {}
           ret.ill.subscription = API.service.oab.ill.subscription opts.from, ret.meta.article
-      try opts.subscription = ret.subscription
+      try opts.ill = {subscription: {url: ret.ill.subscription.url}} # so that availabilities have ill info for stats...
 
   #opts.url = 'https://doi.org/' + ret.meta.article.doi if opts.url.indexOf('http') isnt 0 and ret.meta.article.doi
   # so far we are only doing availability checks for articles, so only need to check requests for data types or articles that were not found yet

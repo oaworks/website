@@ -24,6 +24,23 @@
 <script type="text/javascript" src="//static.cottagelabs.com/d3/d3.v4.min.js"></script>
 <script>
   jQuery(document).ready(function() {
+    
+    var _ids = [];
+    var getemails = function() {
+      $.ajax({
+        url: api + '/stats/emails',
+        type: 'POST',
+        processData: false,
+        cache: false,
+        contentType: "application/json; charset=utf-8",
+        dataType: 'JSON',
+        data: JSON.stringify(_ids),
+        success: function(rs) {
+          for (var id in rs) $('#id_'+id).html(id + ' ' + rs[id])
+        },
+        beforeSend: function (request) { request.setRequestHeader("X-apikey", noddy.apikey); }        
+      });
+    }
 
   	var fill = d3.scaleOrdinal(d3.schemeCategory10);
     var line = function(data,tgt) {
@@ -218,6 +235,9 @@
         if ( data.facets.sources.terms[sc].term !== 'false') found += data.facets.sources.terms[sc].count;
       }
 
+      info += '<iframe width="1200" height="600" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vShmAixPfqHwrhuAjQZQAJxHiY4uR_CCn_fygDbk66iMLLlQtgnZmylcGaj7bkkQDUp4ug3bukecZhZ/pubchart?oid=1196007224&amp;format=interactive"></iframe>';
+      info += '<iframe width="1200" height="600" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vShmAixPfqHwrhuAjQZQAJxHiY4uR_CCn_fygDbk66iMLLlQtgnZmylcGaj7bkkQDUp4ug3bukecZhZ/pubchart?oid=1181193312&amp;format=interactive"></iframe>'
+
       info += '<h3>Availability</h3>';
       info += '<p>We have done ' + data.hits.total + ' availability checks' + (tool !== undefined && tool !== 'all' ? ' for ' + tool : '') + ', and we have found ' + found;
       info += '. That\'s a find success rate of ' + Math.ceil((found/data.hits.total)*100) + '% ';
@@ -366,13 +386,20 @@
         }
       }
 
-      if (data.facets.from.terms.length && (tool === undefined || tool === 'all')) info += '<h4><br>We also have availability checks from the following services (and from some user IDs):</h4>';
-      for ( var f in data.facets.from.terms ) {
-        var fr = data.facets.from.terms[f];
-        if (tool === undefined || tool === 'all') info += '<p>' + fr.term + ' (' + fr.count  + ')</p>';
-        if (fr !== undefined && fr.term === 'illiad') info = info.replace('ILLIADALLCOUNT',fr.count)
-        if (fr !== undefined && fr.term === 'clio') info = info.replace('CLIOALLCOUNT',fr.count)
-        if (fr !== undefined && fr.term === 'integration') info = info.replace('INTEGRATIONALLCOUNT',fr.count)
+      if (data.aggregations.users.buckets && (tool === undefined || tool === 'all')) {
+        info += '<h4><br>We also have availability checks from the following services (and from some user IDs):</h4>';
+        info += '<p><a id="emails" href="#">Get user email addresses</a></p>';
+        _ids = [];
+      }
+      for ( var f in data.aggregations.users.buckets ) {
+        var fr = data.aggregations.users.buckets[f];
+        if (tool === undefined || tool === 'all') {
+          info += '<p><span id="id_' + fr.key + '">' + fr.key + '</span> ' + fr.firsts.buckets[0].key_as_string.split(' ')[0] + ' (' + fr.doc_count  + ')</p>';
+          _ids.push(fr.key);
+        }
+        if (fr !== undefined && fr.key === 'illiad') info = info.replace('ILLIADALLCOUNT',fr.doc_count)
+        if (fr !== undefined && fr.key === 'clio') info = info.replace('CLIOALLCOUNT',fr.doc_count)
+        if (fr !== undefined && fr.key === 'integration') info = info.replace('INTEGRATIONALLCOUNT',fr.doc_count)
       }
       info = info.replace('ILLIADALLCOUNT',0)
       info = info.replace('CLIOALLCOUNT',0)
@@ -409,7 +436,7 @@
       info = info.replace('INTEGRATION3MONTHCOUNT',0)
 
       for ( var fj18 in data.facets.from_june18.terms ) {
-        var fm = data.facets.from_3month.terms[fj18];
+        var fm = data.facets.from_june18.terms[fj18];
         if (fm !== undefined && fm.term === 'illiad') info = info.replace('ILLIADJUNE18COUNT',fm.count)
         if (fm !== undefined && fm.term === 'clio') info = info.replace('CLIOJUNE18COUNT',fm.count)
         if (fm !== undefined && fm.term === 'integration') info = info.replace('INTEGRATIONJUNE18COUNT',fm.count)
@@ -419,6 +446,7 @@
       info = info.replace('INTEGRATIONJUNE18COUNT',0)
 
       $('#results').html(info);
+      if ( $('#emails').length ) $('#emails').bind('click',function(e) { e.preventDefault(); getemails(); });
       $('.filter').bind('click',function(e) { e.preventDefault(); window.location = $(this).attr('href'); window.location.reload(); });
       lineit(data,"svg.line");
     }
@@ -635,6 +663,7 @@
                   q.aggregations = {"users": {"terms": {"field": "from", "size": 10000}}};
                   q.aggregations.users.aggs = {"firsts": {"terms": {"field":"created_date", "size": 1, "order": {"_term": "asc"}}}};
                   q.aggregations.users.aggs.oa = {"filter": {"bool": {"must_not": [{"term": {"discovered.article": false}}]}}, "aggs": {"from": {"terms": {"field": "from"}}}};
+                  q.aggregations.users.aggs.subs = {"filter": {"query": {"query_string": {"query": "ill.subscription.url:*"}}}, "aggs": {"from": {"terms": {"field": "from"}}}};
                   q.aggregations.users.aggs.wrong = {"filter": {"term": {"wrong": true}}, "aggs": {"from": {"terms": {"field": "from"}}}};
                   q.aggregations.users.aggs.embeds = {"terms": {"field": "embedded.exact", "size": 100}};
                   $.ajax({
@@ -646,7 +675,7 @@
                       oq.aggregations = {"users": {"terms": {"field": "from", "size": 10000}}};
                       oq.aggregations.issn = {"filter": {"query": {"query_string": {"query": "metadata.title:* AND metadata.journal:* AND metadata.year:* AND metadata.issn:*"}}}, "aggs": {"users": {"terms": {"field": "from", "size": 10000}}}};
                       oq.aggregations.forwarded = {"filter": {"term": {"forwarded": true}}, "aggs": {"users": {"terms": {"field": "from", "size": 10000}}}};
-                      $.ajax({
+                      var illopts = {
                         url: api + '/ills',
                         type: 'POST',
                         processData: false,
@@ -689,7 +718,9 @@
                             illinfo += '<td>';
                             try { illinfo += bk.oa.doc_count; } catch(err) {}
                             illinfo += '</td>';
-                            illinfo += '<td>TODO</td>';
+                            illinfo += '<td>';
+                            try { illinfo += bk.subs.doc_count; } catch(err) {}
+                            illinfo += '</td>';
                             illinfo += '<td>';
                             try { illinfo += bk.wrong.doc_count; } catch(err) {}
                             illinfo += '</td>';
@@ -711,7 +742,9 @@
                           illinfo += '</tbody></table>';
                           $('#results').append(illinfo);
                         }
-                      });
+                      }
+                      if (noddy.apikey) illopts.beforeSend = function (request) { request.setRequestHeader("X-apikey", noddy.apikey); }
+                      $.ajax(illopts);
                     }
                   });
                 }
@@ -747,6 +780,10 @@
             }
           },
           aggregations: {
+            "users": {
+              "terms": {"field": "from", "size": 10000},
+              "aggs": {"firsts": {"terms": {"field":"created_date", "size": 1, "order": {"_term": "asc"}}}}
+            },
             "availabilities" : {
               "date_histogram" : {
                 "field" : "createdAt",
@@ -791,7 +828,6 @@
         	email: { terms: { "field": "email.exact", "size": 1 } },
           sources: { terms: { "field": "source.article", "size": 500 } },
           embeds: { terms: { "field": "embedded.exact", "size": 500 } },
-          from: { terms: { "field": "from.exact", "size": 500 } },
           from_week: { terms: { "field": "from.exact", "size": 500 }, "facet_filter" : { "range" : { "createdAt" : { "gt" : tmwk.valueOf() } } } },
           from_month: { terms: { "field": "from.exact", "size": 500 }, "facet_filter" : { "range" : { "createdAt" : { "gt" : tm1.valueOf() } } } },
           from_3month: { terms: { "field": "from.exact", "size": 500 }, "facet_filter" : { "range" : { "createdAt" : { "gt" : tm3.valueOf() } } } },
