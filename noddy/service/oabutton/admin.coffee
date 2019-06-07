@@ -14,7 +14,14 @@ API.service.oab.admin = (rid,action) ->
   requestors = []
   requestors.push(usermail) if usermail
   oab_support.each {rid:rid}, (s) -> requestors.push(s.email) if s.email and s.email not in requestors
-  if action is 'send_to_author'
+  if action is 'reject_upload'
+    update.status = 'moderate'
+    API.service.oab.mail({vars:vars,template:{filename:'author_thanks_article_rejection.html'},to:r.email})
+  else if action is 'successful_upload'
+    update.status = 'received'
+    API.service.oab.mail({vars:vars,template:{filename:'requesters_request_success.html'},to:requestors}) if requestors.length
+    API.service.oab.mail({vars:vars,template:{filename:'author_thanks_article.html'},to:r.email})
+  else if action is 'send_to_author'
     update.status = 'progress'
     update.rating = 1 if r.story
     API.service.oab.mail({vars:vars,template:{filename:'requesters_request_inprogress.html'},to:requestors}) if requestors.length

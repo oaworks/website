@@ -53,9 +53,10 @@ API.service.oab.libraries = (opts) ->
 API.service.oab.ill = {}
 
 API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
+  do_serialssolutions_xml = true
   sig = uid + JSON.stringify(meta) + all
   sig = crypto.createHash('md5').update(sig, 'utf8').digest('base64')
-  res = API.http.cache(sig, 'oab_ill_subs', undefined, refresh) if refresh isnt false
+  res = API.http.cache(sig, 'oab_ill_subs', undefined, refresh) if refresh
   if not res?
     res = {findings:{}, uid: uid, error:[]}
     user = API.accounts.retrieve uid
@@ -69,6 +70,11 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
       for sub in config.subscription
         sub = sub.trim()
         if sub
+          if sub.indexOf('serialssolutions') isnt -1 and sub.indexOf('.xml.') is -1 and do_serialssolutions_xml is true
+            tid = sub.split('.search')[0]
+            tid = tid.split('//')[1] if tid.indexOf('//') isnt -1
+            bs = if sub.indexOf('://') isnt -1 then sub.split('://')[0] else 'http'
+            sub = bs + '://' + tid + '.openurl.xml.serialssolutions.com/openurlxml?version=1.0&genre=article&'
           url = sub + (if sub.indexOf('?') is -1 then '?' else '&') + openurl
           url = url.split('snc.idm.oclc.org/login?url=')[1] if url.indexOf('snc.idm.oclc.org/login?url=') isnt -1
           url = url.replace('cache=true','')
@@ -86,8 +92,8 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
           error = false
           try
             #pg = HTTP.call('GET', url, {timeout:15000, npmRequestOptions:{proxy:API.settings.proxy}}).content
-            pg = API.http.puppeteer url #, undefined, API.settings.proxy
-            spg = pg.toLowerCase().split('<body')[1].split('</body')[0]
+            pg = if url.indexOf('.xml.serialssolutions') isnt -1 then HTTP.get(url).content else API.http.puppeteer url #, undefined, API.settings.proxy
+            spg = if pg.indexOf('<body') isnt -1 then pg.toLowerCase().split('<body')[1].split('</body')[0] else pg
           catch
             error = true
           #res.u ?= []
@@ -109,7 +115,7 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
               res.findings.sfx = res.url
               if not all and res.url?
                 res.found = 'sfx'
-                API.http.cache(sig, 'oab_ill_subs', res) if refresh isnt false
+                API.http.cache(sig, 'oab_ill_subs', res)
                 return res
   
           # eds
@@ -129,7 +135,7 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
               res.findings.eds = res.url
               if not all and res.url?
                 res.found = 'eds'
-                API.http.cache(sig, 'oab_ill_subs', res) if refresh isnt false
+                API.http.cache(sig, 'oab_ill_subs', res)
                 return res
           
           # serials solutions
@@ -149,25 +155,39 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
           # </div>
           # without:
           # https://rx8kl6yf4x.search.serialssolutions.com/directLink?&atitle=Writing+at+the+Speed+of+Sound%3A+Music+Stenography+and+Recording+beyond+the+Phonograph&author=Pierce%2C+J+Mackenzie&issn=01482076&title=Nineteenth+Century+Music&volume=41&issue=2&date=2017-10-01&spage=121&id=doi:&sid=ProQ_ss&genre=article
+          
+          # we also have an xml alternative for serials solutions
+          # see https://journal.code4lib.org/articles/108
           else if url.indexOf('serialssolutions.') isnt -1
             res.error.push 'SerialsSolutions' if error
-            if spg.indexOf('ss_noresults') is -1
-              try
-                surl = url.split('?')[0] + '?ShowSupressedLinks' + pg.split('?ShowSupressedLinks')[1].split('">')[0]
-                #npg = API.http.puppeteer surl #, undefined, API.settings.proxy
-                API.log 'Using OAB subscription unsuppress for ' + surl
-                npg = HTTP.call('GET', surl, {timeout: 15000, npmRequestOptions:{proxy:API.settings.proxy}}).content
-                if npg.indexOf('ArticleCL') isnt -1 and npg.split('DatabaseCL')[0].indexOf('href="./log') isnt -1
-                  res.url = surl.split('?')[0] + npg.split('ArticleCL')[1].split('DatabaseCL')[0].split('href="')[1].split('">')[0]
+            if do_serialssolutions_xml is true
+              if spg.indexOf('<ssopenurl:url type="article">') isnt -1
+                fnd = spg.split('<ssopenurl:url type="article">')[1].split('</ssopenurl:url>')[0].trim() # this gets us something that has an empty accountid param - do we need that for it to work?
+                if fnd.length
+                  res.url = fnd
                   res.findings.serials = res.url
                   if not all and res.url?
                     res.found = 'serials'
-                    API.http.cache(sig, 'oab_ill_subs', res) if refresh isnt false
+                    API.http.cache(sig, 'oab_ill_subs', res)
                     return res
-              catch
-                res.error.push 'SerialsSolutions' if error
+            else
+              if spg.indexOf('ss_noresults') is -1
+                try
+                  surl = url.split('?')[0] + '?ShowSupressedLinks' + pg.split('?ShowSupressedLinks')[1].split('">')[0]
+                  #npg = API.http.puppeteer surl #, undefined, API.settings.proxy
+                  API.log 'Using OAB subscription unsuppress for ' + surl
+                  npg = HTTP.call('GET', surl, {timeout: 15000, npmRequestOptions:{proxy:API.settings.proxy}}).content
+                  if npg.indexOf('ArticleCL') isnt -1 and npg.split('DatabaseCL')[0].indexOf('href="./log') isnt -1
+                    res.url = surl.split('?')[0] + npg.split('ArticleCL')[1].split('DatabaseCL')[0].split('href="')[1].split('">')[0]
+                    res.findings.serials = res.url
+                    if not all and res.url?
+                      res.found = 'serials'
+                      API.http.cache(sig, 'oab_ill_subs', res)
+                      return res
+                catch
+                  res.error.push 'SerialsSolutions' if error
 
-    API.http.cache(sig, 'oab_ill_subs', res) if refresh isnt false and not _.isEmpty res.findings
+    API.http.cache(sig, 'oab_ill_subs', res) if not _.isEmpty res.findings
     
   # return cached or empty result if nothing else found
   return res
@@ -312,6 +332,14 @@ API.service.oab.ill.config = (user, config) ->
     catch
       return {}
 
+API.service.oab.ill.resolver = (user, resolve, config) ->
+  # should configure and return link resolver settings for the given user
+  # should be like the users config but can have different params set for it
+  # and has to default to the ill one anyway
+  # and has to apply per resolver url that the user gives us
+  # this shouldn't actually be a user setting - it should be settings for a given link resolver address
+  return false
+  
 API.service.oab.ill.openurl = (uid, meta={}, withoutbase=false) ->
   config = API.service.oab.ill.config uid
   config ?= {}
@@ -506,7 +534,7 @@ API.service.oab.ill.metadata = (metadata={}, opts={}, refresh=false) ->
 
   # user-defined values override any that we do find ourselves
   for o of opts
-    metadata = opts[o] if o in ['title','journal','year','doi'] and opts[o] # but don't include authors as that comes back more complex
+    metadata[o] = opts[o] if o in ['title','journal','year','doi'] and opts[o] # but don't include authors as that comes back more complex
 
   metadata.ended ?= Date.now()
   metadata.took ?= metadata.ended - metadata.started

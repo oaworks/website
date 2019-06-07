@@ -164,6 +164,18 @@ var instantill_run = function() {
   var avail = undefined;
   var attempts = 0;
   var clickwrong = false;
+  var gotmore = false;
+  
+  var restart = function() {
+    matched = false;
+    avail = undefined;
+    attempts = 0;
+    clickwrong = false;
+    gotmore = false;
+    $('#oabutton_availability').html('').hide();
+    $('#oabutton_input').val('');
+    $('#oabutton_inputs').show();
+  }
 
   var sorryping = function(what) {
     try {
@@ -182,15 +194,7 @@ var instantill_run = function() {
     $('.oabutton_find').html('Find paper');
     $('#oabutton_inputs').hide();
     $('#oabutton_availability').html(info).show();
-    setTimeout(function() {
-      matched = false;
-      avail = undefined;
-      attempts = 0;
-      clickwrong = false;
-      $('#oabutton_availability').html('').hide();
-      $('#oabutton_input').val('');
-      $('#oabutton_inputs').show();
-    }, 8000);
+    setTimeout(restart, 6000);
   }
 
   var openurl = function() {
@@ -231,8 +235,10 @@ var instantill_run = function() {
       info += '<p>Year of publication (required)<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_year" type="text"></p>';
       info += '<p>Article DOI or URL<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_doi" type="text"></p>';
       info += '<p><a href="#" class="oabutton_find ' + (opts.bootstrap !== false ? (typeof opts.bootstrap === 'string' ? opts.bootstrap : 'btn btn-primary') : '') + '" id="oabutton_find" style="min-width:150px;">Continue</a></p>';
+      info += '<p><a href="#" class="restart" style="font-weight:bold;">Try again</a></p>';
       info += '</div>';
       $('#oabutton_availability').html(info);
+      gotmore = true;
       try {
         for ( var m in avail.data.meta.article ) {
           try {
@@ -314,7 +320,7 @@ var instantill_run = function() {
             $('.oabutton_find').html('Find paper');
             $('.oabutton_ill').html('Complete request');
             var eml = typeof matched === 'string' ? matched : $('#oabutton_email').val();
-            $('#oabutton_availability').html('<h3>Thanks! Your request has been received</h3><p>Your confirmation code is: ' + res + ', this will not be emailed to you. The paper will be sent to ' + eml + ' as soon as possible.</p>').show();
+            $('#oabutton_availability').html('<h3>Thanks! Your request has been received</h3><p>Your confirmation code is: ' + res + ', this will not be emailed to you. The paper will be sent to ' + eml + ' as soon as possible.</p><p><a href="#" class="restart" style="font-weight:bold;">Try again</a></p>').show();
           }
         },
         error: function(data) {
@@ -327,7 +333,7 @@ var instantill_run = function() {
           } else {
             $('.oabutton_find').html('Find paper');
             $('.oabutton_ill').html('Complete request');
-            $('#oabutton_error').html('<p>Sorry, we were not able to create an ILL request for you. ' + _lib_contact + '</p>').show();
+            $('#oabutton_error').html('<p>Sorry, we were not able to create an ILL request for you. ' + _lib_contact + '</p><p><a href="#" class="restart" style="font-weight:bold;">Try again</a></p>').show();
             sorryping('InstantILL_couldnt_submit_ill');
             setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
           }
@@ -394,7 +400,7 @@ var instantill_run = function() {
           } else {
             info += '<h2>Unknown article</h2>';
           }
-        } else {
+        } else if (!gotmore) {
           fail();
         }
       } else {
@@ -505,6 +511,7 @@ var instantill_run = function() {
       if (input === undefined || !input.length || (input.toLowerCase().indexOf('http') === -1 && input.indexOf('10.') === -1 && input.indexOf('/') === -1 && isNaN(parseInt(input.toLowerCase().replace('pmc',''))) && (input.length < 30 || input.replace(/\+/g,' ').split(' ').length < 3) ) ) {
         $('#oabutton_error').html('<p>Sorry, we can\'t use partial titles/citations. Please provide the full title or citation, or a suitable URL or identifier.</p>').show();
         setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
+        _doing_availability = false;
         return;
       }
       if (!data.url) data.url = input;
@@ -558,6 +565,7 @@ var instantill_run = function() {
   }
   $('#oabutton_input').bind('keyup',availability);
   $('body').on('click','.oabutton_find',availability);
+  $('body').on('click','.restart',restart);
 }
 
 var instantill = function(opts) {

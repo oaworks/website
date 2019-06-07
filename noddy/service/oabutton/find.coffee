@@ -131,7 +131,7 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
       try
         if opts.from?
           ret.ill ?= {}
-          ret.ill.subscription = API.service.oab.ill.subscription opts.from, ret.meta.article
+          ret.ill.subscription = API.service.oab.ill.subscription opts.from, ret.meta.article, opts.all, opts.refresh
       try opts.ill = {subscription: {url: ret.ill.subscription.url}} # so that availabilities have ill info for stats...
 
   #opts.url = 'https://doi.org/' + ret.meta.article.doi if opts.url.indexOf('http') isnt 0 and ret.meta.article.doi
