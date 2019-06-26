@@ -56,9 +56,10 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
   do_serialssolutions_xml = true
   sig = uid + JSON.stringify(meta) + all
   sig = crypto.createHash('md5').update(sig, 'utf8').digest('base64')
-  res = API.http.cache(sig, 'oab_ill_subs', undefined, refresh) if refresh
+  res = API.http.cache(sig, 'oab_ill_subs', undefined, refresh) if refresh and refresh isnt true and refresh isnt 0
   if not res?
-    res = {findings:{}, uid: uid, error:[]}
+    res = {findings:{}, uid: uid, lookups:[], error:[]}
+    res.contents = []
     user = API.accounts.retrieve uid
     if user?.service?.openaccessbutton?.ill?.config?.subscription?
       config = user.service.openaccessbutton.ill.config
@@ -92,8 +93,11 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
           error = false
           try
             #pg = HTTP.call('GET', url, {timeout:15000, npmRequestOptions:{proxy:API.settings.proxy}}).content
-            pg = if url.indexOf('.xml.serialssolutions') isnt -1 then HTTP.get(url).content else API.http.puppeteer url #, undefined, API.settings.proxy
+            pg = if url.indexOf('.xml.serialssolutions') isnt -1 then HTTP.call('GET',url).content else API.http.puppeteer url #, undefined, API.settings.proxy
             spg = if pg.indexOf('<body') isnt -1 then pg.toLowerCase().split('<body')[1].split('</body')[0] else pg
+            console.log spg
+            res.contents.push spg
+            res.lookups.push url
           catch
             error = true
           #res.u ?= []
@@ -170,6 +174,13 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
                     res.found = 'serials'
                     API.http.cache(sig, 'oab_ill_subs', res)
                     return res
+              else if spg.indexOf('<ssopenurl:result format="journal">') isnt -1
+                # we assume if there is a journal result but not a URL that it means the institution has a journal subscription but we don't have a link
+                res.journal = true
+                if not all
+                  res.found = 'serials'
+                  API.http.cache(sig, 'oab_ill_subs', res)
+                  return res
             else
               if spg.indexOf('ss_noresults') is -1
                 try
@@ -316,7 +327,7 @@ API.service.oab.ill.config = (user, config) ->
   # tested it and set values as below defaults, but also noted that it has year and month boxes, but these do not correspond to year and month params, or date params
   if config?
     update = {}
-    for k in ['ill_redirect_base_url','ill_redirect_params','method','sid','title','doi','pmid','pmcid','author','journal','issn','volume','issue','page','published','year','terms','book','other','cost','time','email','problem_email','subscription','search']
+    for k in ['ill_institution','ill_redirect_base_url','ill_redirect_params','method','sid','title','doi','pmid','pmcid','author','journal','issn','volume','issue','page','published','year','terms','book','other','cost','time','email','problem_email','subscription','search']
       update[k] = config[k] if config[k]?
     if not user.service.openaccessbutton.ill?
       Users.update user._id, {'service.openaccessbutton.ill': {config: update}}
@@ -368,35 +379,45 @@ API.service.oab.ill.openurl = (uid, meta={}, withoutbase=false) ->
     config[d] = defaults[d] if not config[d]
 
   url = if config.ill_redirect_base_url then config.ill_redirect_base_url else ''
-  url += if url.indexOf('?') is -1 then '?' else '&'
-  url += config.ill_redirect_params.replace('?','') + '&' if config.ill_redirect_params
-  url += config.sid + '=InstantILL&'
-  for k of meta
-    v = false
-    if k is 'author'
-      # need to check if config has aufirst and aulast or something similar, then need to use those instead, 
-      # if we have author name parts
-      try
-        if typeof meta.author is 'string'
-          v = meta.author
-        else if _.isArray meta.author
-          v = ''
-          for author in meta.author
-            v += ', ' if v.length
-            if typeof author is 'string'
-              v += author
-            else if author.family
-              v += author.family + if author.given then ', ' + author.given else ''
-        else
-          if meta.author.family
-            v = meta.author.family + if meta.author.given then ', ' + meta.author.given else ''
+  
+  if url.indexOf('/wms/') isnt -1
+    if meta.issn? or meta.journal?
+      if url.indexOf('?') is -1
+        url += '?ai0id=level3&ai0type=scope&offset=1&pageSize=10&si0in=in:&si1in=au:&si1op=AND&si2in=kw:&si2op=AND&sortDirection=descending&sortKey=librarycount&applicationId=nd&requestType=search&searchType=advancedsearch&eventSource=df-advancedsearch&'
+      url += 'si0qs=' + meta.issn ? meta.journal
+      return url
+    else
+      return ''
+  else
+    url += if url.indexOf('?') is -1 then '?' else '&'
+    url += config.ill_redirect_params.replace('?','') + '&' if config.ill_redirect_params
+    url += config.sid + '=InstantILL&'
+    for k of meta
+      v = false
+      if k is 'author'
+        # need to check if config has aufirst and aulast or something similar, then need to use those instead, 
+        # if we have author name parts
+        try
+          if typeof meta.author is 'string'
+            v = meta.author
+          else if _.isArray meta.author
+            v = ''
+            for author in meta.author
+              v += ', ' if v.length
+              if typeof author is 'string'
+                v += author
+              else if author.family
+                v += author.family + if author.given then ', ' + author.given else ''
           else
-            v = JSON.stringify meta.author
-    else if k not in ['started','ended','took','terms','book','other','cost','time','email','redirect','url','source']
-      v = meta[k]
-    if v
-      url += (if config[k] then config[k] else k) + '=' + v + '&'
-  return url
+            if meta.author.family
+              v = meta.author.family + if meta.author.given then ', ' + meta.author.given else ''
+            else
+              v = JSON.stringify meta.author
+      else if k not in ['started','ended','took','terms','book','other','cost','time','email','redirect','url','source']
+        v = meta[k]
+      if v
+        url += (if config[k] then config[k] else k) + '=' + v + '&'
+    return url
     
 API.service.oab.ill.terms = (uid) ->
   config = API.service.oab.ill.config uid
@@ -457,7 +478,7 @@ API.service.oab.ill.metadata = (metadata={}, opts={}, refresh=false) ->
       if metadata.title?
         finder += ' OR ' if finder isnt ''
         finder += 'title.exact:"' + metadata.title + '"'
-      if refresh isnt false
+      if refresh isnt false and typeof refresh is 'number'
         finder = '(' + finder + ')' if finder.indexOf(' OR ') isnt -1
         d = new Date()
         finder += ' AND createdAt:>' + d.setDate(d.getDate() - refresh)

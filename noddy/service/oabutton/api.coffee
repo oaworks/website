@@ -510,7 +510,7 @@ API.add 'service/oab/export/:what',
       if this.urlParams.what is 'changes'
         fields = ['_id','createdAt','created_date','action']
       else if this.urlParams.what is 'request'
-        fields = ['_id','created_date','type','count','status','title','url','doi','journal','issn','publisher','published','sherpa.color','name','names','email','author_affiliation','user.username','user.email','user.firstname','user.lastname','user.profession','user.affiliation','story','rating','receiver','followup.count','followup.date','refused.email','refused.date','received.date','received.from','received.description','received.url','received.admin','received.cron','received.notfromauthor','notes','plugin','from','embedded']
+        fields = ['_id','created_date','type','count','status','title','url','doi','journal','issn','publisher','published','sherpa.color','name','names','email','author_affiliation','user.username','user.email','user.firstname','user.lastname','user.profession','user.affiliation','story','rating','receiver','followup.count','followup.date','refused.email','refused.date','received.date','received.from','received.description','received.url','received.admin','received.cron','received.notfromauthor','notes','plugin','from','embedded','access_right','embargo_date','access_conditions','license']
       else if this.urlParams.what is 'account'
         fields = ['_id','createdAt','emails.0.address','profile.name','profile.firstname','profile.lastname','service.openaccessbutton.profile.affiliation','service.openaccessbutton.profile.profession','roles.openaccessbutton','username']
       match = {}
@@ -518,6 +518,17 @@ API.add 'service/oab/export/:what',
       match.range.createdAt.gte = this.queryParams.from if this.queryParams.from
       match.range.createdAt.lte = parseInt(this.queryParams.to) + 86400000 if this.queryParams.to #make searches for a day include that day
       match.range.createdAt.lte += 86400000 if match.range?.createdAt?.lte? and match.range.createdAt.lte > Date.now() # make searches for today definitely cover all of today
+      if this.queryParams.filter and this.queryParams.value
+        qps = this.queryParams.value.split(',')
+        if qps.length > 1
+          match.should = []
+          for val in qps
+            mt = {term: {}}
+            mt.term[this.queryParams.filter] = val
+            match.should.push mt
+        else
+          match.term = {}
+          match.term[this.queryParams.filter] = this.queryParams.value
       # ADD A MATCH TO ADD THE OAB ROLE FILTER IF WHAT IS ACCOUNT
       if this.urlParams.what is 'dnr' or this.urlParams.what is 'mail' or this.urlParams.what is 'request'
         results = if this.urlParams.what is 'dnr' then oab_dnr.fetch(match, true) else if this.urlParams.what is 'request' then oab_request.fetch(match, true) else if this.urlParams.what is 'account' then Users.fetch(match,true) else mail_progress.fetch match, true

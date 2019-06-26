@@ -67,7 +67,7 @@
           </select>
         </div>
         <div class="col-md-6">
-          <select id="value" class="form-control">
+          <select multiple id="value" class="form-control">
             <option value="">for value: (optional)</option>
           </select>
         </div>
@@ -182,12 +182,14 @@
     }
     $('#filter').bind('change',filter);
 
-    var go = function() {
+    var go = function(e) {
       if (!noddy.hasRole('openaccessbutton.admin') && $('#what').val() === 'account') window.location = '/';
       if ( $('#what').val() === 'mail' || $('#what').val() === 'changes' || $('#what').val() === 'request' ) {
         var curl = api + '/export/' + $('#what').val() + '?apikey=' + noddy.apikey;
         if (changed.from) curl += '&from=' + moment(changed.from,'DD/MM/YYYY').valueOf();
         if (changed.to) curl += '&to=' + moment(changed.to,'DD/MM/YYYY').valueOf();
+        if ( $('#filter').val()) curl += '&filter=' + $('#filter').val();
+        if ( $('#value').val()) curl += '&value=' + $('#value').val().join(',');
         $(this).attr('href',curl);
       } else {
         var size = 200000;
@@ -222,9 +224,18 @@
           }
         }
         if ( $('#value').val() ) {
-          var t = {term:{}};
-          t.term[$('#filter').val()+'.exact'] = $('#value').val();
-          query.query.filtered.filter.bool.must.push(t);
+          if ( $('#value').val() ) {
+            query.query.filtered.filter.bool.should = [];
+            for ( var tv of $('#value').val()) {
+              var s = {term:{}};
+              s.term[$('#filter').val()+'.exact'] = $('#value').val()[tv];
+              query.query.filtered.filter.bool.should.push(s);
+            }
+          } else {
+            var t = {term:{}};
+            t.term[$('#filter').val()+'.exact'] = $('#value').val();
+            query.query.filtered.filter.bool.must.push(t);
+          }
         }
         if (changed.from || changed.to) {
           var rg = {

@@ -5,25 +5,38 @@ API.add 'service/oab/scripts/test_instantill',
   get: 
     roleRequired: 'root'
     action: () ->
+      results = {journal: {had: 0, found: 0}, found: 0, journals: 0, data: []}
       outfile = '/home/cloo/static/test_isntantill_results.csv'
-      fs.writeFileSync outfile, 'search,match,title,doi,journal,issn,open,subscription,url'
+      fs.writeFileSync outfile, 'from,search,match,title,doi,journal,issn,open,subscription,url,journal\n'
       
+      counter = 0
       for t in titles
-        res = API.service.oab.find {title: t, plugin: 'instantill', from: this.queryParams.from ? this.user._id}
-        if res.data
-          fs.writeFileSync outfile, '"' + t + '","' + res.data.match + '"'
-          fs.writeFileSync outfile, ',"' + (res.data.meta?.article?.title ? '') + '","' + (res.data.meta?.article?.doi ? '') + '","' + (res.data.meta?.article?.journal ? '') + '","' + (res.data.meta?.article?.issn ? '') + '"'
-          fs.writeFileSync oufile, ',"' + (if res.data.availability? and res.data.availability.length and res.data.availability[0].url? then res.data.availability[0].url else '') + '"'
-          fs.writeFileSync outfile, ',"' + (res.data.ill?.subscription.found ? '') + '","' + (res.data.ill?.subscription?.url ? '') + '"'
-        else
-          fs.writeFileSync outfile, '"' + t + '"'
-        fs.writeFileSync outfile, '\n'
+        qry = {title: t, plugin: 'instantill', refresh: true, from: this.queryParams.from ? this.user._id}
+        if this.queryParams.journals
+          try qry.journal = journals[counter]
+        res = API.service.oab.find qry
+        results.data.push res
+        console.log res
+        fs.appendFileSync outfile, '"' + (this.queryParams.from ? this.user._id) + '"'
+        fs.appendFileSync outfile, ',"' + t + '","' + res.match + '"'
+        fs.appendFileSync outfile, ',"' + (res.meta?.article?.title ? '') + '","' + (res.meta?.article?.doi ? '') + '","' + (res.meta?.article?.journal ? '') + '","' + (res.meta?.article?.issn ? '') + '"'
+        fs.appendFileSync outfile, ',"' + (if res.availability? and res.availability.length and res.availability[0].url? then res.availability[0].url else '') + '"'
+        fs.appendFileSync outfile, ',"' + (res.ill?.subscription?.found ? '') + '","' + (res.ill?.subscription?.url ? '') + '"'
+        fs.appendFileSync outfile, ',"' + (res.ill?.subscription?.journal ? '') + '"'
+        fs.appendFileSync outfile, '\n'
+        if qry.journal
+          results.journal.had += 1
+        else if res.meta?.article?.journal
+          results.journal.found += 1
+        results.found += 1 if res.ill?.subscription?.found
+        results.journals += 1 if res.ill?.subscription?.journal
+        counter += 1
         
       API.mail.send
         to: 'alert@cottagelabs.com'
         subject: 'InstantILL test complete'
-        text: 'https://static.cottagelabs.com/test_isntantill_results.csv'
-      return titles.length
+        text: 'https://static.cottagelabs.com/test_isntantill_results.csv\n\nfound ' + results.found + ' of which ' + results.journals + ' are journals without link\n\n' + results.journal.had + ' had journal and ' + results.journal.found + ' found journal\n\n' + JSON.stringify results.data
+      return results
 
 
 
@@ -130,3 +143,110 @@ titles = [
   'A Comparison of Clinical and Diagnostic Interview Schedule Diagnoses Physician Reexamination of Lay-Interviewed Cases in the General Population',
   'Effects of a program to prevent social isolation on loneliness, depression, and subjective well-being of older adults: A randomized trial among older migrants in Japan'
 ]
+
+
+journals = [
+  '',
+  'ABA child law practice.',
+  'ABA child law practice.',
+  'Academic medicine',
+  'Academy of Management Journal',
+  'Academy of Management journal',
+  'Academy of Management proceedings.',
+  'Academy of Management proceedings.',
+  'Accounting, organizations and society',
+  'Accounting, organizations and society',
+  'Acta Anaesthesiologica Scandinavica',
+  'Acta clinica Croatica (Tisak)',
+  'Acta medica Indonesiana.',
+  'Acta neuropathologica.',
+  'Acta of bioengineering and biomechanics',
+  'Acta pædiatrica (Oslo)',
+  'Acta pædiatrica (Oslo)',
+  'Acta pædiatrica.',
+  'Acta paulista de enfermagem',
+  'Action research.',
+  'Activitas Nervosa Superior Rediviva',
+  'Adaptation to Global Change in Farmer-Managed Irrigation Systems of the Gandaki Basin in Nepal',
+  'Adavnce Materials',
+  'Addictive behaviors',
+  'Administration and policy in mental health and mental health services research',
+  'Administrative theory & praxis : a journal of dialogue in public administration theory.',
+  'Administrative theory & praxis : a journal of dialogue in public administration theory.',
+  'Advanced emergency nursing journal',
+  'Advanced Materials',
+  'Advances in archaeological method and theory.',
+  'Advances in atmospheric sciences',
+  'Affect and emotion in human-computer interaction : from theory to applications',
+  'Africa',
+  'After-School Crime or After-School Programs: Tuning in to the Prime Time for Violent Juvenile Crime and Implications for National Policy. A Report to the United States Attorney General.',
+  'Age and ageing',
+  'Ageing and society',
+  'Aggression and violent behavior.',
+  'Aggression and violent behavior.',
+  'Alcohol.',
+  'Alcohol.',
+  'Alcohol.',
+  'Alcoholism: clinical and experimental research.',
+  'Alexandria.',
+  'Alteration of tektite to form weathering products',
+  'Alternative therapies in health and medicine.',
+  'American Anthropologist',
+  'American Behavioral Scientist',
+  'American educational research journal',
+  'American Educational Research Journal',
+  'American family physician.',
+  'American Generosity: Who Gives & Why',
+  'American Journal of Community Psychology',
+  'American Journal of Community Psychology',
+  'American journal of community psychology',
+  'American journal of epidemiology.',
+  'American Journal of Evaluation',
+  'American journal of medical genetics. Part B, Neuropsychiatric genetics',
+  'American journal of obstetrics and gynecology',
+  'American journal of obstetrics and gynecology',
+  'American journal of obstetrics and gynecology.',
+  'American journal of obstetrics and gynecology.',
+  'American Journal of Orthopsychiatry',
+  'American journal of physical medicine & rehabilitation',
+  'American journal of preventive medicine',
+  'American journal of preventive medicine',
+  'American journal of preventive medicine.',
+  'American Journal of Psychiatry',
+  'American journal of public health (1971)',
+  'American journal of sexuality education',
+  'Amino acids',
+  'Amino acids.',
+  'Anales de psicología : revista de la Facultad de Filosofía y Ciencias de la Educación, Sección de Psicología, Universidad de Murcia',
+  'Analytical and Bioanalytical Chemistry',
+  'Analytical Chemistry',
+  'Anatomical sciences education',
+  'Angewandte Chemie International Edition in English',
+  'Annals of Emergency Medicine: An International Journal',
+  'Annals of Epidemiology',
+  'Annals of epidemiology',
+  'Annals of Geophysics',
+  'Annals of Indian Academy of Neurology AIAN.',
+  'Annals of Internal Medicine',
+  'Annals of internal medicine.',
+  'Annual review of cybertherapy and telemedicine',
+  'Annual review of cybertherapy and telemedicine',
+  'Annual review of entomology.',
+  'Annual review of entomology.',
+  'ANNUAL REVIEW OF INFORMATION SCIENCE AND TECHNOLOGY',
+  'Annual review of neuroscience.',
+  'Annual review of psychology',
+  'Annual review of sociology.',
+  'ANS. Advances in Nursing Science',
+  'Antarctic Journal of the United States',
+  'Apples (Jyväskylä, Finland)',
+  'Applied cognitive psychology',
+  'Applied Linguistics',
+  'Applied Optics',
+  'Arch Gen Psychiatry',
+  'Archives of general psychiatry',
+  'Archives of gerontology and geriatrics.'
+]
+
+
+
