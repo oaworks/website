@@ -297,7 +297,7 @@ var instantill_run = function() {
     } else {
       if (avail.data.ill && avail.data.ill.openurl && avail.data.ill.openurl.indexOf('notes') === -1 && (avail.data.ill.subscription || avail.data.availability)) {
         data.notes = '';
-        if (avail.data.ill.subscription) data.notes += 'Subscription check done, found ' + (avail.data.ill.subscription.url ? avail.data.ill.subscription.url : 'nothing') + '. ';
+        if (avail.data.ill.subscription) data.notes += 'Subscription check done, found ' + (avail.data.ill.subscription.url ? avail.data.ill.subscription.url : (avail.data.ill.subscription.journal ? 'journal' : 'nothing')) + '. ';
         if (avail.data.availability) data.notes += 'OA availability check done, found ' + (avail.data.availability.length && avail.data.availability[0].url ? avail.data.availability[0].url : 'nothing') + '. ';
       }
       if (avail.data.ill.openurl && opts.openurl !== false && !data.email) data.forwarded = true;
@@ -394,7 +394,7 @@ var instantill_run = function() {
         if (attempts === 0) {
           attempts = 1;
           getmore();
-        } else if ((avail.data.ill.subscription && avail.data.ill.subscription.url) || (avail.data.availability && avail.data.availability.length && avail.data.availability[0].url)) {
+        } else if ((avail.data.ill.subscription && (avail.data.ill.subscription.journal || avail.data.ill.subscription.url)) || (avail.data.availability && avail.data.availability.length && avail.data.availability[0].url)) {
           if (avail.data.meta.article.title) {
             info += '<h2>' + avail.data.meta.article.title + '</h2>';
           } else {
@@ -409,12 +409,16 @@ var instantill_run = function() {
     }
     info += '<p><a id="oabutton_getmore" href="#"><b>This is not the article I searched.</b></a></p>';
     var needmore = true;
-    if (avail.data.ill.subscription && avail.data.ill.subscription.url) {
+    if (avail.data.ill.subscription && (avail.data.ill.subscription.journal || avail.data.ill.subscription.url)) {
       needmore = false;
       // if there is a subscribed version available show a link to it
       info += '<div>';
       info += '<h3>We have an online copy instantly available</h3>';
-      info += '<p><a target="_blank" href="' + avail.data.ill.subscription.url  + '"><b>Open article in a new tab</b></a></p>';
+      if (avail.data.ill.subscription.url) {
+        info += '<p><a target="_blank" href="' + avail.data.ill.subscription.url  + '"><b>Open article in a new tab</b></a></p>';
+      } else {
+        info += '<p>You should be able to access it on the publisher\'s website.</p>';
+      }
       info += '</div>';
     } else {
       if (avail.data.availability && avail.data.availability.length && avail.data.availability[0].url) {
@@ -434,25 +438,25 @@ var instantill_run = function() {
           }
         }
       }
-      if (avail.data.ill && opts.ill !== false) {
-        needmore = false;
-        info += '<div>';
-        info += '<h3><br>Ask the library to digitally send you the published full-text via Interlibrary Loan</h3>';
-        info += '<p>It ' + (config.cost ? 'costs ' + config.cost : 'is free to you,') + ' and we\'ll usually email the link within ' + (config.time ? config.time : '24 hours') + '.<br></p>';
-        if (avail.data.ill.openurl && opts.openurl !== false) {
-          if (avail.data.ill.openurl.indexOf('notes') === -1) {
-            avail.data.ill.openurl += '&notes=';
-            if (avail.data.ill.subscription) avail.data.ill.openurl += 'Subscription check done, found ' + (avail.data.ill.subscription.url ? avail.data.ill.subscription.url : 'nothing') + '. ';
-            if (avail.data.availability) avail.data.ill.openurl += 'OA availability check done, found ' + (avail.data.availability.length && avail.data.availability[0].url ? avail.data.availability[0].url : 'nothing') + '. ';
-          }
-          info += '<p><a class="oabutton_ill oabutton_ill_openurl ' + (opts.bootstrap !== false ? (typeof opts.bootstrap === 'string' ? opts.bootstrap : 'btn btn-primary') : '') + '" href="' + avail.data.ill.openurl + '" style="min-width:150px;">Complete request</a></p>';
-        } else {
-          if (avail.data.ill.terms) info += '<p id="oabutton_terms_note"><input type="checkbox" id="oabutton_read_terms"> I have read the <a target="_blank" href="' + avail.data.ill.terms + '"><b>terms and conditions</b></a></p>';
-          info += '<p><input placeholder="Your university email address" id="oabutton_email" type="text" class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '"></p>';
-          info += '<p><a class="oabutton_ill oabutton_ill_email ' + (opts.bootstrap !== false ? (typeof opts.bootstrap === 'string' ? opts.bootstrap : 'btn btn-primary') : '') + '" href="' + api + '/ill?from=' + opts.uid + '&plugin=instantill&data=false&url=' + encodeURIComponent(avail.data.match) + '" style="min-width:150px;">Complete request</a></p>';
+    }
+    if (avail.data.ill && opts.ill !== false) {
+      needmore = false;
+      info += '<div>';
+      info += '<h3><br>Ask the library to digitally send you the published full-text via Interlibrary Loan</h3>';
+      info += '<p>It ' + (config.cost ? 'costs ' + config.cost : 'is free to you,') + ' and we\'ll usually email the link within ' + (config.time ? config.time : '24 hours') + '.<br></p>';
+      if (avail.data.ill.openurl && opts.openurl !== false) {
+        if (avail.data.ill.openurl.indexOf('notes') === -1) {
+          avail.data.ill.openurl += '&notes=';
+          if (avail.data.ill.subscription) avail.data.ill.openurl += 'Subscription check done, found ' + (avail.data.ill.subscription.url ? avail.data.ill.subscription.url : (avail.data.ill.subscription.journal ? 'journal' : 'nothing')) + '. ';
+          if (avail.data.availability) avail.data.ill.openurl += 'OA availability check done, found ' + (avail.data.availability.length && avail.data.availability[0].url ? avail.data.availability[0].url : 'nothing') + '. ';
         }
-        info += '</div>';
+        info += '<p><a class="oabutton_ill oabutton_ill_openurl ' + (opts.bootstrap !== false ? (typeof opts.bootstrap === 'string' ? opts.bootstrap : 'btn btn-primary') : '') + '" href="' + avail.data.ill.openurl + '" style="min-width:150px;">Complete request</a></p>';
+      } else {
+        if (avail.data.ill.terms) info += '<p id="oabutton_terms_note"><input type="checkbox" id="oabutton_read_terms"> I have read the <a target="_blank" href="' + avail.data.ill.terms + '"><b>terms and conditions</b></a></p>';
+        info += '<p><input placeholder="Your university email address" id="oabutton_email" type="text" class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '"></p>';
+        info += '<p><a class="oabutton_ill oabutton_ill_email ' + (opts.bootstrap !== false ? (typeof opts.bootstrap === 'string' ? opts.bootstrap : 'btn btn-primary') : '') + '" href="' + api + '/ill?from=' + opts.uid + '&plugin=instantill&data=false&url=' + encodeURIComponent(avail.data.match) + '" style="min-width:150px;">Complete request</a></p>';
       }
+      info += '</div>';
     }
     $('.oabutton_find').html('Find paper');
     $('#oabutton_inputs').hide();

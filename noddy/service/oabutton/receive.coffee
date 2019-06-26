@@ -3,13 +3,19 @@
 
 API.service.oab.receive = (rid,files,url,title,description,firstname,lastname,cron,admin) ->
   r = oab_request.find {receiver:rid}
+  description ?= r.description if typeof r.description is 'string'
+  description ?= r.received.description if r.received? and typeof r.received.description is 'string'
   if not r
     return 404
   else if r.received and not admin
     return 400
   else
     today = new Date().getTime()
-    r.received = {date:today,from:r.email,description:description,validated:false}
+    r.received ?= {}
+    r.received.date ?= today
+    r.received.from ?= r.email
+    r.received.description ?= description
+    r.received.validated ?= false
     r.received.admin = admin
     r.received.cron = cron
     up = {}
@@ -20,16 +26,23 @@ API.service.oab.receive = (rid,files,url,title,description,firstname,lastname,cr
         up.content = files[0].data
         up.name = files[0].filename
       up.publish = API.settings.service.openaccessbutton?.zenodo?.publish
-      creators = [{name:(if lastname or firstname then '' else 'Unknown')}]
-      creators[0].name = lastname if lastname
-      creators[0].name += (if lastname then ', ' else '') + firstname if firstname
-      creators[0].name = r.name if creators[0].name is 'Unknown' and r.name
-      if creators[0].name is 'Unknown' and r.author
+      creators = []
+      if r.names
         try
-          for a in r.author
-            if a.family and ( creators[0].name is 'Unknown' or r.email.toLowerCase().indexOf(a.family.toLowerCase()) isnt -1 )
-              creators[0].name = a.family
-              creators[0].name += (if a.family then ', ' else '') + a.given if a.given
+          r.names = r.names.split(',') if typeof r.names is 'string'
+          for n in r.names
+            creators.push {name: n}
+      if creators.length is 0
+        creators = [{name:(if lastname or firstname then '' else 'Unknown')}]
+        creators[0].name = lastname if lastname
+        creators[0].name += (if lastname then ', ' else '') + firstname if firstname
+        creators[0].name = r.name if creators[0].name is 'Unknown' and r.name
+        if creators[0].name is 'Unknown' and r.author
+          try
+            for a in r.author
+              if a.family and ( creators[0].name is 'Unknown' or r.email.toLowerCase().indexOf(a.family.toLowerCase()) isnt -1 )
+                creators[0].name = a.family
+                creators[0].name += (if a.family then ', ' else '') + a.given if a.given
       # http://developers.zenodo.org/#representation
       # journal_volume and journal_issue are acceptable too but we don't routinely collect those
       # access_right can be open embargoed restricted closed
@@ -45,6 +58,10 @@ API.service.oab.receive = (rid,files,url,title,description,firstname,lastname,cr
         version: 'AAM',
         journal_title: r.journal,
         prereserve_doi: API.settings.service.openaccessbutton?.zenodo?.prereserve_doi and not r.doi?
+      try meta['access_right'] = r['access_right'] if typeof r['access_right'] is 'string' and r['access_right'] in ['open','embargoed','restricted','closed']
+      try meta['embargo_date'] = r['embargo_date'] if r['embargo_date']? and meta['access_right'] is 'embargoed'
+      try meta['access_conditions'] = r['access_conditions'] if typeof r['access_conditions'] is 'string'
+      try meta.license = r.license if typeof r.license is 'string'
       try meta['publication_date'] = r.published if r.published? and typeof r.published is 'string' and r.length is 10
       z = API.use.zenodo.deposition.create meta, up, API.settings.service.openaccessbutton?.zenodo?.token
       r.received.zenodo = 'https://zenodo.org/record/' + z.id if z.id

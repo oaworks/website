@@ -423,6 +423,10 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       dets += '<p><textarea id="admin_notes" class="form-control" placeholder="Admin notes" style="min-height:200px;">';
       if (record.notes) dets += record.notes;
       dets += '</textarea></p>';
+      if (record.access_right) dets += '<p>Access right:' + record.access_right + '</p>';
+      if (record.embargo_date) dets += '<p>Embargo date:' + record.embargo_date + '</p>';
+      if (record.access_conditions) dets += '<p>Access conditions:' + record.access_conditions + '</p>';
+      if (record.license) dets += '<p>License:' + record.license + '</p>';
       return dets;
     }
 
