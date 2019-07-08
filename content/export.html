@@ -65,6 +65,7 @@
               <option value="service.openaccessbutton.profile.affiliation">affiliation</option>
             </optgroup>
           </select>
+          <div id="storycheck" style="display:none;"><input type="checkbox" id="stories"> Only requests with stories</div>
         </div>
         <div class="col-md-6">
           <select multiple id="value" class="form-control">
@@ -131,17 +132,21 @@
     $('.datepicker').bind('change',change_date);
 
     var what = function(e) {
+      $('#storycheck').hide();
       $('.datepicker').val('');
       var w = $(this).val();
       $('optgroup').hide();
       $('optgroup.'+w).show();
+      if (w === 'request') $('#storycheck').show();
       if (w) {
         $.ajax({
           type:'GET',
           url: api+'/range/' + w + '/createdAt?apikey='+noddy.apikey,
           success: function(data) {
             var min = moment(data.min).format('DD/MM/YYYY');
-            $('#from').val(min);
+            //change min to be a week behind now - this is also set below as the default from date if none is selected
+            var cmin = moment(Date.now()-604800000).format('DD/MM/YYYY');
+            $('#from').val(cmin);
             $('#from').datepicker('setStartDate',min);
             $('#to').datepicker('setStartDate',min);
             var max = moment(data.max).format('DD/MM/YYYY');
@@ -156,7 +161,7 @@
       }
     }
     $('#what').bind('change',what);
-    $('#from').val('01/01/2010');
+    $('#from').val('01/07/2019');
     $('#from').datepicker('setStartDate','01/01/2010');
     $('#to').datepicker('setStartDate','01/01/2010');
     var max = moment(Date.now()).format('DD/MM/YYYY');
@@ -186,10 +191,15 @@
       if (!noddy.hasRole('openaccessbutton.admin') && $('#what').val() === 'account') window.location = '/';
       if ( $('#what').val() === 'mail' || $('#what').val() === 'changes' || $('#what').val() === 'request' ) {
         var curl = api + '/export/' + $('#what').val() + '?apikey=' + noddy.apikey;
-        if (changed.from) curl += '&from=' + moment(changed.from,'DD/MM/YYYY').valueOf();
+        if (changed.from) {
+          curl += '&from=' + moment(changed.from,'DD/MM/YYYY').valueOf();
+        } else {
+          curl += '&from=' + (Date.now()-604800000);
+        }
         if (changed.to) curl += '&to=' + moment(changed.to,'DD/MM/YYYY').valueOf();
         if ( $('#filter').val()) curl += '&filter=' + $('#filter').val();
         if ( $('#value').val()) curl += '&value=' + $('#value').val().join(',');
+        if ( $('#stories').is(':checked')) curl += '&stories=true';
         $(this).attr('href',curl);
       } else {
         var size = 200000;
@@ -247,8 +257,17 @@
           if (changed.from) rg.range.createdAt.gte = moment(changed.from,'DD/MM/YYYY').valueOf();
           if (changed.to) rg.range.createdAt.lte = moment(changed.to,'DD/MM/YYYY').valueOf();
           query.query.filtered.filter.bool.must.push(rg);
+        } else {
+          query.query.filtered.filter.bool.must.push({
+            range : {
+              createdAt : {
+                gte: Date.now()-604800000
+              }
+            }
+          });
         }
         if ($('#what').val() === 'account') query.query.filtered.filter.bool.must.push({query:{query_string:{query:'roles.openaccessbutton:*'}}});
+        if ($('#what').val() === 'request' && $('#stories').is(':checked')) query.query.filtered.filter.bool.must.push({query:{query_string:{query:'story:*'}}});
         if ( query.query.filtered.filter.bool.must.length === 0 ) query.query = {"match_all":{}};
 
         var url = api + '/' + endpoint + '?';

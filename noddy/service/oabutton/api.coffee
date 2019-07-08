@@ -529,6 +529,9 @@ API.add 'service/oab/export/:what',
         else
           match.term = {}
           match.term[this.queryParams.filter] = this.queryParams.value
+      if this.queryParams.stories
+          match.must = [{query: {query_string: {query: 'story:*'}}}]
+
       # ADD A MATCH TO ADD THE OAB ROLE FILTER IF WHAT IS ACCOUNT
       if this.urlParams.what is 'dnr' or this.urlParams.what is 'mail' or this.urlParams.what is 'request'
         results = if this.urlParams.what is 'dnr' then oab_dnr.fetch(match, true) else if this.urlParams.what is 'request' then oab_request.fetch(match, true) else if this.urlParams.what is 'account' then Users.fetch(match,true) else mail_progress.fetch match, true
