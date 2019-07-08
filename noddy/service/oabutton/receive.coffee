@@ -7,7 +7,7 @@ API.service.oab.receive = (rid,files,url,title,description,firstname,lastname,cr
   description ?= r.received.description if r.received? and typeof r.received.description is 'string'
   if not r
     return 404
-  else if r.received and not admin
+  else if (r.received?.url or r.received?.zenodo) and not admin
     return 400
   else
     today = new Date().getTime()
@@ -29,7 +29,7 @@ API.service.oab.receive = (rid,files,url,title,description,firstname,lastname,cr
       creators = []
       if r.names
         try
-          r.names = r.names.split(',') if typeof r.names is 'string'
+          r.names = r.names.replace(/\[/g,'').replace(/\]/g,'').split(',') if typeof r.names is 'string'
           for n in r.names
             creators.push {name: n}
       if creators.length is 0

@@ -13,7 +13,9 @@ jQuery(document).ready(function() {
     if (e) e.preventDefault();
     var data = {};
     $('.setting').each(function(i, obj) {
-      if ( $(this).val() !== undefined ) {
+      if ( $(this).is(':checkbox') ) {
+        data[$(this).attr('id')] = $(this).is(':checked');
+      } else if ( $(this).val() !== undefined ) {
         data[$(this).attr('id')] = $(this).val();
         if (['ill_redirect_base_url','terms','book','other'].indexOf($(this).attr('id')) !== -1 && data[$(this).attr('id')] !== '' && data[$(this).attr('id')].indexOf('http') !== 0) {
           data[$(this).attr('id')] = 'http://' + data[$(this).attr('id')];
@@ -30,12 +32,12 @@ jQuery(document).ready(function() {
       contentType: 'application/json',
       dataType: 'json',
       success: function(data) {
-        $('#save').hide().after('<span id="saved">Changes saved! Refresh the page to reload the demo above and see it with changes applied.</span>');
-        setTimeout(function() { $('#saved').hide(); $('#save').show(); }, 5000);
+        $('.save').hide().after('<span class="saved">Changes saved! Refresh the page to reload the demo above and see it with changes applied.</span>');
+        setTimeout(function() { $('.saved').hide(); $('.save').show(); }, 5000);
       },
       error: function(data) {
         $('#save').hide().after('<span id="saved">Sorry, changes could not be saved.</span>');
-        setTimeout(function() { $('#saved').hide(); $('#save').show(); }, 5000);
+        setTimeout(function() { $('.saved').hide(); $('#save').show(); }, 5000);
       },
       beforeSend: function (request) { request.setRequestHeader("x-apikey", noddy.apikey); }
     }
@@ -47,7 +49,7 @@ jQuery(document).ready(function() {
     $('.promptsignup').hide();
     $('.installit').show();
     var uid = noddy.user.account._id;
-    $('.stickidin').html($('.stickidin').html().replace('instantill()','instantill({uid:"' + uid + '"})'));
+    $('.stickidin').html($('.stickidin').html().replace('instantill()','instantill({uid:"' + uid + '",api:"' + api + '"})'));
     $('#onlyyou').html($('#onlyyou').html().replace('but only you ','but only you (' + noddy.user.account.profile.firstname + ') '));
     instantill({uid:uid, api:api});
     try {
@@ -55,10 +57,31 @@ jQuery(document).ready(function() {
     } catch(err) {}
     try {
       for (var k in noddy.user.account.service.openaccessbutton.ill.config) {
-        $('#'+k).val(noddy.user.account.service.openaccessbutton.ill.config[k]);
+        if (typeof noddy.user.account.service.openaccessbutton.ill.config[k] === 'boolean') {
+          if (noddy.user.account.service.openaccessbutton.ill.config[k] === true) $('#'+k).prop('checked',true);
+        } else {
+          $('#'+k).val(noddy.user.account.service.openaccessbutton.ill.config[k]);
+        }
       }
     } catch(err) {}
-    $('#save').bind('click',save);
+    $('.save').bind('click',save);
+    try {
+      var q = {"size": 0, "query": {"filtered": {"query": {"bool": {"must": [{"term": {"plugin": "instantill"}},{"term": {"from": noddy.user.account._id}}]}}}}};
+      q.aggregations = {"embeds": {"terms": {"field": "embedded.exact"}}};
+      $.ajax({
+        url: api + '/availabilities',
+        type: 'POST',
+        data: q,
+        success: function(iia) {
+          try {
+            var eurl = iia.aggregations.embeds.buckets[0].key.split('?')[0].split('#')[0];
+            var ex = 'For example using the following URL parameter on one of your current embed URLs would automatically trigger an instantill search:<br>';
+            ex += eurl + '?doi=10.1145/2908080.2908114';
+            $('#embeddedexample').html(ex).show();
+          } catch(err) {}
+        }
+      });
+    } catch(err) {}
     if (noddy.hasRole('root')) {
       $('#ill_config').prepend('<input style="border-color:red;" id="uid" type="text" class="form-control setting" placeholder="UID (ADMIN setting override)"><br>')
     }
@@ -227,7 +250,7 @@ jQuery(document).ready(function() {
           <br>An example EDS URL:<br>
           http://resolver.ebscohost.com/openurl
           <br>An example serialssolutions URL:<br>
-          https://rx8kl6yf4x.search.serialssolutions.com?sid=EBSCO:aph
+          http://rx8kl6yf4x.search.serialssolutions.com
           <br><br>Please note, it is also possible that for us to use these URLs our server IP address will have to be whitelisted with your library.
           If this is the case, as we know it often is for EDS for example, please contact us to discuss further. Also, if you have a subscription service
           that we have not shown an example for here, let us know and we will add it for you.
@@ -239,14 +262,37 @@ jQuery(document).ready(function() {
           
         </p>
 
-        <p><a id="save" class="btn btn-primary btn-block" href="#">Save your settings</a></p>
+        <p><a class="btn btn-primary btn-block save" href="#">Save your settings</a></p>
 
         <p>If anything is wrong, <a href="mailto:help@openaccessbutton.org?Subject=Trouble%20setting%20up%20InstantILL&body=Please%20send%20us%20the%20URL%20of%20the%20page%20you're%20working%20on,%20or%20a%20screenshot%20of%20what%20you're%20seeing%20and%20a%20copy%20of%20the%20page's%20code%20-%20right-click%20on%20the%20page%20and%20View%20Page%20Source.">get in touch</a>.</p>
       </div>
       
       <div class="col-md-6">
         <h2>Configure your openurl link resolver <small>(optional)</small></h2>
-        <p>TODO options to go here soon...</p>
+        <p>
+          If you embed instantill on a web page on your site, you can have it automatically run whenever certain URL parameters 
+          are present in the web page address. By default this will happen if any of 
+          'id','doi','title','url','atitle','rft_id','journal','issn','year','author' are supplied. You can configure these options below.
+        </p>
+        <p id="embeddedexample" style="display:none;"></p>
+        <p>
+          <input id="autorun" type="checkbox" class="setting">
+          Do not automatically run instantill when identifiable URL parameters are present on the page it is embedded on (this is on by default)
+        </p>
+        <p>
+          Which parameters should trigger instantill automatically. The defaults listed above will be used if this box is left empty. 
+          Enter any that you want to use, separated by a comma. If you want to use a custom parameter to pass to one of our defaults listed above, 
+          provide your parameter name followed by an "=" and the default name you want it to match. For example if you wanted to use our default "doi" 
+          and "title" but with your own custom journal parameter, you could specify this as doi,title,mycustomparam=journal.
+        </p>
+        <p>
+          <input id="autorunparams" type="text" class="form-control setting" placeholder="defaults as above"><br>
+        </p>
+        <p>
+          <input id="intropara" type="checkbox" class="setting">
+          Do not show the introductory paragraph before the instantill search box (this is on by default)
+        </p>
+        <p><a class="btn btn-primary btn-block save" href="#">Save your settings</a></p>
       </div>
     </div>
   </div>

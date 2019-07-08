@@ -11,6 +11,8 @@
 
 var _oab_opts = {};
 var _oab_config = {};
+var _ops = ['id','doi','title','url','atitle','rft_id','journal','issn','year','author'];
+var _parameta = {};
 var _lib_contact = undefined;
 
 var instantill_config = function() {
@@ -51,10 +53,12 @@ var instantill_run = function() {
   if (opts.uid === undefined) opts.uid = 'anonymous';
   if ($(opts.element).length === 0) $('body').append('<div id="instantill"></div>');
 
-  var w = '<h2 id="oabutton_request" style="display:none;">Request a paper</h2><div id="oabutton_inputs">\
-  <p>If you need a paper or book you can request it from any library in the world through Interlibrary loan. \
-  Start by entering a full article title, citation, DOI or URL:</p>\
-  <p><br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_input" placeholder="' + opts.placeholder + '" aria-label="' + opts.placeholder + '" style="box-shadow:none;"></input></p>\
+  var w = '<h2 id="oabutton_request" style="display:none;">Request a paper</h2><div id="oabutton_inputs">';
+  if (_oab_config.intropara !== true) {
+    w += '<p>If you need a paper or book you can request it from any library in the world through Interlibrary loan. \
+    Start by entering a full article title, citation, DOI or URL:<br></p>';
+  }
+  w += '<p><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_input" placeholder="' + opts.placeholder + '" aria-label="' + opts.placeholder + '" style="box-shadow:none;"></input></p>\
   <p><a class="oabutton_find ' + (opts.bootstrap !== false ? (typeof opts.bootstrap === 'string' ? opts.bootstrap : 'btn btn-primary') : '') + '" href="#" id="oabutton_find" aria-label="Search" style="min-width:150px;">Find paper</a></p>';
   if (config.book || config.other) {
     w += '<p>Need ';
@@ -496,6 +500,16 @@ var instantill_run = function() {
           return;
         }
       }
+      if (JSON.stringify(_parameta) !== '{}') {
+        for ( var p in _parameta) {
+          if (!data.title && ['title','atitle'].indexOf(p) !== -1) data.title = _parameta[p];
+          if (!data.author && ['author'].indexOf(p) !== -1) data.author = _parameta[p];
+          if (!data.journal && ['journal','title'].indexOf(p) !== -1) data.journal = _parameta[p];
+          if (!data.year && ['year'].indexOf(p) !== -1) data.year = _parameta[p];
+          if (!data.doi && ['doi','rft_id'].indexOf(p) !== -1) data.doi = _parameta[p];
+          if (!data.issn && ['issn'].indexOf(p) !== -1) data.issn = _parameta[p]; // we don't actually usually pass issn, but grab it anyway
+        }
+      }
       if (matched) {
         for ( var d in data ) {
           if (data[d] && (avail.data.meta.article[d] === undefined || avail.data.meta.article[d] ==='')) avail.data.meta.article[d] = data[d]
@@ -570,6 +584,34 @@ var instantill_run = function() {
   $('#oabutton_input').bind('keyup',availability);
   $('body').on('click','.oabutton_find',availability);
   $('body').on('click','.restart',restart);
+  
+  // could get custom _ops from the user config
+  if (_oab_config.autorun !== true) {
+    var searchfor = undefined;
+    try {
+      var cp = _oab_config.autorunparams.replace(/"/g,'').replace(/'/g,'').split(',');
+      for ( var o in cp) {
+        var eq = undefined;
+        var op = cp[o].trim();
+        if (op.indexOf('=') !== -1) {
+          eq = op.split('=')[1];
+          op = op.split('=')[0];
+        }
+        if (window.location.search.indexOf(op+'=') !== -1) _parameta[eq !== undefined ? eq : op] = window.location.search.split(op+'=')[1].split('&')[0];
+        if (searchfor === undefined) searchfor = _parameta[eq !== undefined ? eq : op];
+      }
+    } catch(err) {
+      for ( var o in _ops) {
+        var op = _ops[o];
+        if (window.location.search.indexOf(op+'=') !== -1) _parameta[op] = window.location.search.split(op+'=')[1].split('&')[0];
+        if (searchfor === undefined) searchfor = _parameta[op];
+      }
+    }
+    if (searchfor) {
+      $('#oabutton_input').val(searchfor);
+      $('.oabutton_find').trigger('click');
+    }
+  }
 }
 
 var instantill = function(opts) {
