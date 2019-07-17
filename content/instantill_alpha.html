@@ -172,7 +172,7 @@ jQuery(document).ready(function() {
 
       </div>
 
-      <div class="row installit" style="display:none;">
+      <div class="installit" style="display:none;">
 
         <h2>Configure how you receive ILLs <small>(optional)</small></h2>
 
@@ -237,6 +237,13 @@ jQuery(document).ready(function() {
           Other request URL (optional for if the user wants something other than article or book)
           <input id="other" type="text" class="form-control setting" placeholder=""><br>
 
+          Do you have a journal search URL you would like included in any emails we send to you for your convenience? NOTE it has to end with the parameter in which
+          we should place the search terms, which will be the ISSN if we have it, or else the journal title.
+          <input id="search" type="text" class="form-control setting" placeholder=""><br>
+          An example for the WMS system would be:<br>https://ambslibrary.share.worldcat.org/wms/cmnd/nd/discover/items/search?si0qs=
+
+          <h2>Configure your subscription lookup<small>(optional)</small></h2>
+
           Do you have a subscription lookup URL where you send requests to find out if you have access to content?
           For example an SFX, EDS, or serialssolutions URL? If so, enter it below. Note we also need any required URL parameters
           to be added here, but not article metadata parameters. If you have more than one subscription
@@ -252,10 +259,6 @@ jQuery(document).ready(function() {
           If this is the case, as we know it often is for EDS for example, please contact us to discuss further. Also, if you have a subscription service
           that we have not shown an example for here, let us know and we will add it for you.
           <br><br>
-          Do you have a journal search URL you would like included in any emails we send to you for your convenience? NOTE it has to end with the parameter in which
-          we should place the search terms, which will be the ISSN if we have it, or else the journal title.
-          <input id="search" type="text" class="form-control setting" placeholder=""><br>
-          An example for the WMS system would be:<br>https://ambslibrary.share.worldcat.org/wms/cmnd/nd/discover/items/search?si0qs=
 
         </p>
 
