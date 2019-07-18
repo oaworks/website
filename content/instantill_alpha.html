@@ -149,7 +149,7 @@ jQuery(document).ready(function() {
         </p>
       </div>
 
-      <h2>Install your own</h2>
+      <h2>1. Install your own</h2>
 
       <p class="promptsignup">Please <a href="/account?next=/instantill_alpha" class="label label-info">sign up / sign in</a> so we can customise an InstantILL widget for you.</p>
 
@@ -171,13 +171,10 @@ jQuery(document).ready(function() {
 &lt;div id="instantill"&gt;&lt;/div&gt;</pre>
 
       </div>
-    </div>
-  </div>
-  
-  <div class="row installit">
-    <div class="col-md-6">
-    
-        <h2>Configure how you receive ILLs <small>(optional)</small></h2>
+
+      <div class="installit" style="display:none;">
+
+        <h2>2. Configure how you receive ILLs <small>(optional)</small></h2>
 
         <p>We can forward OpenURL requests (or any request) to your email address or to a URL of your choice, to trigger your ILL workflow.
         Just set your base URL, any necessary URL params that must always be present, <!--, request method,-->
@@ -189,7 +186,7 @@ jQuery(document).ready(function() {
         <p id="ill_config">
           Name of your institution<br>
           <input id="ill_institution" type="text" class="form-control setting" placeholder="Institution name"><br>
-          
+
           ILL base URL (required)<br>
           <input id="ill_redirect_base_url" type="text" class="form-control setting" placeholder="URL (required)"><br>
           Add any additional params your base URL needs, such as a=b&c=d<br>
@@ -236,15 +233,20 @@ jQuery(document).ready(function() {
           <input id="terms" type="text" class="form-control setting" placeholder=""><br>
 
           Book request URL (optional for if the user wants a book)
-          <input id="book" type="text" class="form-control setting" placeholder=""><br>
+          <input id="book" type="text" class="form-control setting" placeholder="e.g https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=21"><br>
           Other request URL (optional for if the user wants something other than article or book)
-          <input id="other" type="text" class="form-control setting" placeholder=""><br>
+          <input id="other" type="text" class="form-control setting" placeholder="e.g https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=10"><br>
+
+          Insert your WMS URL. We can then give you direct links inside email notifications into WMS to aid loan processing.
+          <input id="search" type="text" class="form-control setting" placeholder="e.g  https://ambslibrary.share.worldcat.org/wms/cmnd/nd/discover/items/search"><br>
+
+          <h2>3. Configure your subscription lookup<small>(optional)</small></h2>
 
           Do you have a subscription lookup URL where you send requests to find out if you have access to content?
           For example an SFX, EDS, or serialssolutions URL? If so, enter it below. Note we also need any required URL parameters
           to be added here, but not article metadata parameters. If you have more than one subscription
           service to check, enter additional URLs separated by a comma.
-          <input id="subscription" type="text" class="form-control setting" placeholder=""><br>
+          <input id="subscription" type="text" class="form-control setting" placeholder="e.g http://rx8kl6yf4x.search.serialssolutions.com"><br>
           An example SFX URL:<br>
           https://cricksfx.hosted.exlibrisgroup.com/crick?sid=Elsevier:Scopus&_service_type=getFullTxt
           <br>An example EDS URL:<br>
@@ -255,23 +257,17 @@ jQuery(document).ready(function() {
           If this is the case, as we know it often is for EDS for example, please contact us to discuss further. Also, if you have a subscription service
           that we have not shown an example for here, let us know and we will add it for you.
           <br><br>
-          Do you have a journal search URL you would like included in any emails we send to you for your convenience? NOTE it has to end with the parameter in which 
-          we should place the search terms, which will be the ISSN if we have it, or else the journal title.
-          <input id="search" type="text" class="form-control setting" placeholder=""><br>
-          An example for the WMS system would be:<br>https://ambslibrary.share.worldcat.org/wms/cmnd/nd/discover/items/search?si0qs=
-          
+
         </p>
 
         <p><a class="btn btn-primary btn-block save" href="#">Save your settings</a></p>
 
         <p>If anything is wrong, <a href="mailto:help@openaccessbutton.org?Subject=Trouble%20setting%20up%20InstantILL&body=Please%20send%20us%20the%20URL%20of%20the%20page%20you're%20working%20on,%20or%20a%20screenshot%20of%20what%20you're%20seeing%20and%20a%20copy%20of%20the%20page's%20code%20-%20right-click%20on%20the%20page%20and%20View%20Page%20Source.">get in touch</a>.</p>
-      </div>
-      
-      <div class="col-md-6">
-        <h2>Configure your openurl link resolver <small>(optional)</small></h2>
+
+        <h2>4. Configure your openurl link resolver <small>(optional)</small></h2>
         <p>
-          If you embed instantill on a web page on your site, you can have it automatically run whenever certain URL parameters 
-          are present in the web page address. By default this will happen if any of 
+          If you embed instantill on a web page on your site, you can have it automatically run whenever certain URL parameters
+          are present in the web page address. By default this will happen if any of
           'doi','title','url','atitle','rft_id','journal','issn','year','author' are supplied. You can configure these options below.
         </p>
         <p id="embeddedexample" style="display:none;"></p>
@@ -280,9 +276,9 @@ jQuery(document).ready(function() {
           Do not automatically run instantill when identifiable URL parameters are present on the page it is embedded on (this is on by default)
         </p>
         <p>
-          Which parameters should trigger instantill automatically. The defaults listed above will be used if this box is left empty. 
-          Enter any that you want to use, separated by a comma. If you want to use a custom parameter to pass to one of our defaults listed above, 
-          provide your parameter name followed by an "=" and the default name you want it to match. For example if you wanted to use our default "doi" 
+          Which parameters should trigger instantill automatically. The defaults listed above will be used if this box is left empty.
+          Enter any that you want to use, separated by a comma. If you want to use a custom parameter to pass to one of our defaults listed above,
+          provide your parameter name followed by an "=" and the default name you want it to match. For example if you wanted to use our default "doi"
           and "title" but with your own custom journal parameter, you could specify this as doi,title,mycustomparam=journal.
         </p>
         <p>
@@ -294,7 +290,12 @@ jQuery(document).ready(function() {
         </p>
         <p><a class="btn btn-primary btn-block save" href="#">Save your settings</a></p>
       </div>
+
     </div>
+  </div>
+
+
+
   </div>
 </div>
 
