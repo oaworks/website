@@ -11,7 +11,7 @@
 
 var _oab_opts = {};
 var _oab_config = {};
-var _ops = ['id','doi','title','url','atitle','rft_id','journal','issn','year','author'];
+var _ops = ['doi','title','url','atitle','rft_id','journal','issn','year','author'];
 var _parameta = {};
 var _lib_contact = undefined;
 
@@ -170,7 +170,7 @@ var instantill_run = function() {
   var clickwrong = false;
   var gotmore = false;
   
-  var restart = function() {
+  _instantill_restart = function() {
     matched = false;
     avail = undefined;
     attempts = 0;
@@ -198,7 +198,7 @@ var instantill_run = function() {
     $('.oabutton_find').html('Find paper');
     $('#oabutton_inputs').hide();
     $('#oabutton_availability').html(info).show();
-    setTimeout(restart, 6000);
+    setTimeout(_instantill_restart, 6000);
   }
 
   var openurl = function() {
@@ -583,7 +583,7 @@ var instantill_run = function() {
   }
   $('#oabutton_input').bind('keyup',availability);
   $('body').on('click','.oabutton_find',availability);
-  $('body').on('click','.restart',restart);
+  $('body').on('click','.restart',_instantill_restart);
   
   // could get custom _ops from the user config
   if (_oab_config.autorun !== true) {
@@ -597,13 +597,13 @@ var instantill_run = function() {
           eq = op.split('=')[1];
           op = op.split('=')[0];
         }
-        if (window.location.search.indexOf(op+'=') !== -1) _parameta[eq !== undefined ? eq : op] = window.location.search.split(op+'=')[1].split('&')[0];
+        if (window.location.search.replace('?','&').indexOf('&'+op+'=') !== -1) _parameta[eq !== undefined ? eq : op] = decodeURIComponent(window.location.search.replace('?','&').split('&'+op+'=')[1].split('&')[0].replace(/\+/g,' '));
         if (searchfor === undefined) searchfor = _parameta[eq !== undefined ? eq : op];
       }
     } catch(err) {
       for ( var o in _ops) {
         var op = _ops[o];
-        if (window.location.search.indexOf(op+'=') !== -1) _parameta[op] = window.location.search.split(op+'=')[1].split('&')[0];
+        if (window.location.search.replace('?','&').indexOf('&'+op+'=') !== -1) _parameta[op] = decodeURIComponent(window.location.search.replace('?','&').split('&'+op+'=')[1].split('&')[0].replace(/\+/g,' '));
         if (searchfor === undefined) searchfor = _parameta[op];
       }
     }
