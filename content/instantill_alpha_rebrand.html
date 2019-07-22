@@ -98,7 +98,7 @@ Put a div with ID "instantill" in the place where you want the instantill demo t
 The page tries to execute a login on page load.
 If it succeeds it will try to replace the content of any element on the page with the "yourid" class with the user ID.
 It will also try to replace "but only you" in the content of any element with the "onlyyou" class with "but only you (USERNAME)".
-It will then go through any ILL config present for the logged in user, and for every value, it will look for an element on the page with the matching ID, 
+It will then go through any ILL config present for the logged in user, and for every value, it will look for an element on the page with the matching ID,
 and it will place the value of that config item as the value of the element (note as described below for saving, such elements should also have the "setting" class).
 (if it is a boolean value the element should be a checkbox, and it will be checked or not depending on boolean value).
 
@@ -112,7 +112,7 @@ The "view" class button goes to the next "section" div by default. If you also g
 If the "view" button has an href that is longer than 1 then the href value is assumed to be the ID of the div to show, or a classname for a set of things to show.
 Any execution of a "view" button first hides all "section" divs then shows the previous or next or defined things.
 
-Any button with the "tryit" class will trigger the instantill box with a trial value. The value should be specified on the button 
+Any button with the "tryit" class will trigger the instantill box with a trial value. The value should be specified on the button
 in an attr called "val" or else the html content of the button will be used as the value.
 -->
 
@@ -124,7 +124,7 @@ jQuery(document).ready(function() {
     $('#oabutton_input').val($(this).hasAttr('val') ? $(this).attr('val') : $(this).html());
     setTimeout(function() { $('#oabutton_find').trigger('click'); },500);
   });
-  
+
   var view = function(e) {
     if (e) e.preventDefault();
     $('.section').hide();
@@ -151,7 +151,7 @@ jQuery(document).ready(function() {
   $('body').on('click','.view',view);
   $(window).on('popstate', view);
   view();
-  
+
   var preview = function(e,val) {
     try { e.preventDefault(); } catch (err) {}
     if (val === undefined) {
@@ -258,14 +258,4 @@ jQuery(document).ready(function() {
   }
   noddy.login();
 });
-</script>
-
-
-
-<!-- Code to pull in alpha release banner -->
-<script src="https://www.w3schools.com/lib/w3.js"></script>
-<div w3-include-html="/static/alpha.html"></div>
-
-<script>
-w3.includeHTML();
 </script>
