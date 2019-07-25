@@ -150,6 +150,7 @@ var bigdeal_build = function() {
 
     $.fn.holder.display.sort.fields = ['institution.exact','publisher.exact','collection.exact','fte','carnegiebasicclassification.exact','years.exact','value'];
     $.fn.holder.display.sort.default = {'value': 'desc'};
+    $.fn.holder.display.range.url = 'https://openaccessbutton.org/static/bigdeal/'
 
     $('#holder').holder({
       completes: completes,
