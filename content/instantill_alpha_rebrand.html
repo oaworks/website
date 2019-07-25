@@ -18,8 +18,10 @@
         <p><a class="btn btn-rebrand btn-half view" href="#">Next</a></p>
       </div>
 
-      <div class="col-md-4" style="background-color:#edf8ed;color:#46b633;min-height:800px;margin-bottom:10px;">
+      <div class="col-md-4 green" style="min-height:800px;margin-bottom:10px;">
+        <h1><span class="glyphicon glyphicon-arrow-left"></span> I am right hand header</h1>
         <p>I am right hand area</p>
+        <p><a class="rebrand view" href="#"><span class="glyphicon glyphicon-arrow-right"></span> Next</a></p>
       </div>
     </div>
   </div>
@@ -36,6 +38,7 @@
 
       <div class="col-md-4" style="background-color:#edf8ed;color:#46b633;min-height:800px;margin-bottom:10px;">
         <p>I am right hand area</p>
+        <p><input type="text" class="form-control green" value="hello I am a form input"></p>
       </div>
     </div>
   </div>
@@ -75,7 +78,7 @@
   <div id="workflowintegration" class="section">
     <div class="row" style="padding-top:0px;padding-bottom:0px;">
       <div class="col-md-8" style="padding:0px 80px 0px 80px;">
-        <p>I am website embed section</p>
+        <p>I am wokflow integration section</p>
         <p>
           <a class="btn btn-rebrand btn-half view previous" href="#">Previous</a>
         </p>
@@ -98,7 +101,7 @@ Put a div with ID "instantill" in the place where you want the instantill demo t
 The page tries to execute a login on page load.
 If it succeeds it will try to replace the content of any element on the page with the "yourid" class with the user ID.
 It will also try to replace "but only you" in the content of any element with the "onlyyou" class with "but only you (USERNAME)".
-It will then go through any ILL config present for the logged in user, and for every value, it will look for an element on the page with the matching ID, 
+It will then go through any ILL config present for the logged in user, and for every value, it will look for an element on the page with the matching ID,
 and it will place the value of that config item as the value of the element (note as described below for saving, such elements should also have the "setting" class).
 (if it is a boolean value the element should be a checkbox, and it will be checked or not depending on boolean value).
 
@@ -112,7 +115,7 @@ The "view" class button goes to the next "section" div by default. If you also g
 If the "view" button has an href that is longer than 1 then the href value is assumed to be the ID of the div to show, or a classname for a set of things to show.
 Any execution of a "view" button first hides all "section" divs then shows the previous or next or defined things.
 
-Any button with the "tryit" class will trigger the instantill box with a trial value. The value should be specified on the button 
+Any button with the "tryit" class will trigger the instantill box with a trial value. The value should be specified on the button
 in an attr called "val" or else the html content of the button will be used as the value.
 -->
 
@@ -124,34 +127,34 @@ jQuery(document).ready(function() {
     $('#oabutton_input').val($(this).hasAttr('val') ? $(this).attr('val') : $(this).html());
     setTimeout(function() { $('#oabutton_find').trigger('click'); },500);
   });
-  
+
   var view = function(e) {
     if (e) e.preventDefault();
-    $('.section').hide();
     var which = undefined;
     if ($(this).attr('href') === undefined) {
+      $('.section').hide();
       if (window.location.hash) {
         $(window.location.hash).show();
       } else {
         $('.section').first().show();
       }
     } else if ($(this).attr('href').length > 1) {
+      $('.section').hide();
       which = $(this).attr('href');
       if (which.indexOf('.') !== 0 && which.indexOf('#') !== 0) which = '#' + which;
       $(which).show();
-    } else if ($(this).hasClass('previous')) {
-      which = '#' + $(this).parents('.section').prev().attr('id');
-      $(this).parents('.section').prev().show();
     } else {
-      which = '#' + $(this).parents('.section').next().attr('id');
-      $(this).parents('.section').next().show();
+      var movefrom = '#' + $('.section:visible').first().attr('id');
+      $('.section').hide();
+      $(this).hasClass('previous') ? $(movefrom).prev().show() : $(movefrom).next().show();
+      which = '#' + $('.section:visible').first().attr('id');
     }
 		if (which && 'pushState' in window.history) window.history.pushState("", which, which);
   }
   $('body').on('click','.view',view);
   $(window).on('popstate', view);
   view();
-  
+
   var preview = function(e,val) {
     try { e.preventDefault(); } catch (err) {}
     if (val === undefined) {
@@ -258,14 +261,4 @@ jQuery(document).ready(function() {
   }
   noddy.login();
 });
-</script>
-
-
-
-<!-- Code to pull in alpha release banner -->
-<script src="https://www.w3schools.com/lib/w3.js"></script>
-<div w3-include-html="/static/alpha.html"></div>
-
-<script>
-w3.includeHTML();
 </script>
