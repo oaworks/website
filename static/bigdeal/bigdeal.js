@@ -11,7 +11,7 @@ var _bigdeal_template = '\
           <!--<div class="input-group-btn"><a class="btn btn-default holder" do="previous" alt="previous" title="previous" style="font-weight:bold;height:50px;font-size:1.8em;" href="#">&lt;</a></div>-->\
           <input type="text" class="form-control holder search suggest" do="add" placeholder="Search" style="font-size:1.6em;height:50px;border-bottom:1px solid #D82D34;">\
           <div class="input-group-btn">\
-            <a class="btn btn-primary holder" do="execute" alt="search" title="search" style="font-weight:bold;height:50px;background-color:#D82D34;padding-top:5px;padding-left:10px;padding-right:10px;" href="#"><img src="{{static}}/search_hi_white_cropped.png" style="height:32px;padding-top:8px;"></img></a>\
+            <a class="btn btn-primary holder" do="execute" alt="search" title="search" style="font-weight:bold;height:50px;background-color:#D82D34;padding-top:5px;padding-left:10px;padding-right:10px;" href="#"><img src="XXXstaticXXX/search_hi_white_cropped.png" style="height:32px;padding-top:8px;"></img></a>\
             <!--<a class="btn btn-default holder" do="next" alt="next" title="next" style="font-weight:bold;height:50px;font-size:1.8em;" href="#">&gt;</a>-->\
           </div>\
         </div>\
@@ -30,13 +30,13 @@ var _bigdeal_template = '\
   </div>\
   <table class="table table-bordered table-striped tabular pages">\
     <thead>\
-      <th style="width:20%;background-color:#eee;font-weight:bold;"><a alt="click to sort" title="click to sort" href="institution.exact" class="sorters">Institution <img style="height:10px;" src="{{static}}/up_grey_cropped.png"></a></th>\
-      <th style="background-color:#eee;font-weight:bold;"><a alt="click to sort" title="click to sort" href="publisher.exact" class="sorters">Publisher <img style="height:10px;" src="{{static}}/up_grey_cropped.png"></a></th>\
-      <th style="width:14%;background-color:#eee;font-weight:bold;"><a alt="click to sort" title="click to sort" href="collection.exact" class="sorters">Collection <img style="height:10px;" src="{{static}}/up_grey_cropped.png"></a></th>\
-      <th style="background-color:#eee;font-weight:bold;"><a alt="click to sort" title="click to sort" href="fte" class="sorters">FTE <img style="height:10px;" src="{{static}}/up_grey_cropped.png"></a></th>\
-      <th style="width:14%;background-color:#eee;font-weight:bold;"><a alt="click to sort" title="click to sort" href="carnegiebasicclassification.exact" class="sorters">Carnegie <img style="height:10px;" src="{{static}}/up_grey_cropped.png"></a></th>\
-      <th style="background-color:#eee;font-weight:bold;"><a alt="click to sort" title="click to sort" href="years.exact" class="sorters">Year <img style="height:10px;" src="{{static}}/up_grey_cropped.png"></a></th>\
-      <th style="width:14%;background-color:#eee;font-weight:bold;"><a alt="click to sort" title="click to sort" href="value" class="sorters">USD Value <img style="height:10px;" src="{{static}}/down_red_cropped.png"></a></th>\
+      <th style="width:20%;background-color:#eee;font-weight:bold;"><a alt="click to sort" title="click to sort" href="institution.exact" class="sorters">Institution <img style="height:10px;" src="XXXstaticXXX/up_grey_cropped.png"></a></th>\
+      <th style="background-color:#eee;font-weight:bold;"><a alt="click to sort" title="click to sort" href="publisher.exact" class="sorters">Publisher <img style="height:10px;" src="XXXstaticXXX/up_grey_cropped.png"></a></th>\
+      <th style="width:14%;background-color:#eee;font-weight:bold;"><a alt="click to sort" title="click to sort" href="collection.exact" class="sorters">Collection <img style="height:10px;" src="XXXstaticXXX/up_grey_cropped.png"></a></th>\
+      <th style="background-color:#eee;font-weight:bold;"><a alt="click to sort" title="click to sort" href="fte" class="sorters">FTE <img style="height:10px;" src="XXXstaticXXX/up_grey_cropped.png"></a></th>\
+      <th style="width:14%;background-color:#eee;font-weight:bold;"><a alt="click to sort" title="click to sort" href="carnegiebasicclassification.exact" class="sorters">Carnegie <img style="height:10px;" src="XXXstaticXXX/up_grey_cropped.png"></a></th>\
+      <th style="background-color:#eee;font-weight:bold;"><a alt="click to sort" title="click to sort" href="years.exact" class="sorters">Year <img style="height:10px;" src="XXXstaticXXX/up_grey_cropped.png"></a></th>\
+      <th style="width:14%;background-color:#eee;font-weight:bold;"><a alt="click to sort" title="click to sort" href="value" class="sorters">USD Value <img style="height:10px;" src="XXXstaticXXX/down_red_cropped.png"></a></th>\
     </thead>\
     <tbody class="holder results"></tbody>\
   </table>\
@@ -216,7 +216,7 @@ var bigdeal_setup = function(opts) {
   if (opts.static === undefined) opts.static = 'https://openaccessbutton.org/static/bigdeal';
   if (opts.target === undefined) opts.target = '#bigdeal';
   if (opts.template === undefined) opts.template = _bigdeal_template;
-  opts.template = opts.template.replace(/\{\{static\}\}/g,opts.static.replace('https:','').replace('http:',''));
+  opts.template = opts.template.replace(/XXXSTATICXXX/g,opts.static.replace('https:','').replace('http:',''));
   _bigdeal_opts = opts;
 
   if ($ === undefined) {
