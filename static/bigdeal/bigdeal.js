@@ -216,7 +216,7 @@ var bigdeal_setup = function(opts) {
   if (opts.static === undefined) opts.static = 'https://openaccessbutton.org/static/bigdeal';
   if (opts.target === undefined) opts.target = '#bigdeal';
   if (opts.template === undefined) opts.template = _bigdeal_template;
-  opts.template = opts.template.replace(/XXXSTATICXXX/g,opts.static.replace('https:','').replace('http:',''));
+  opts.template = opts.template.replace(/XXXstaticXXX/g,opts.static.replace('https:','').replace('http:',''));
   _bigdeal_opts = opts;
 
   if ($ === undefined) {
