@@ -588,7 +588,7 @@ var instantill_run = function() {
   // could get custom _ops from the user config
   if (_oab_config.autorun !== true) {
     var searchfor = undefined;
-    try {
+    if (_oab_config.autorunparams) {
       var cp = _oab_config.autorunparams.replace(/"/g,'').replace(/'/g,'').split(',');
       for ( var o in cp) {
         var eq = undefined;
@@ -600,7 +600,7 @@ var instantill_run = function() {
         if (window.location.search.replace('?','&').indexOf('&'+op+'=') !== -1) _parameta[eq !== undefined ? eq : op] = decodeURIComponent(window.location.search.replace('?','&').split('&'+op+'=')[1].split('&')[0].replace(/\+/g,' '));
         if (searchfor === undefined) searchfor = _parameta[eq !== undefined ? eq : op];
       }
-    } catch(err) {
+    } else {
       for ( var o in _ops) {
         var op = _ops[o];
         if (window.location.search.replace('?','&').indexOf('&'+op+'=') !== -1) _parameta[op] = decodeURIComponent(window.location.search.replace('?','&').split('&'+op+'=')[1].split('&')[0].replace(/\+/g,' '));

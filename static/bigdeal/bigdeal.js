@@ -1,4 +1,4 @@
-_range_url = 'https://openaccessbutton.org/static/bigdeal/';
+_retrieve_url = 'https://openaccessbutton.org/static/bigdeal/';
 
 var _bigdeal_opts = undefined;
 
