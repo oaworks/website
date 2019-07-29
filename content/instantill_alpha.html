@@ -49,7 +49,10 @@ jQuery(document).ready(function() {
     $('.promptsignup').hide();
     $('.installit').show();
     var uid = noddy.user.account._id;
-    $('.stickidin').html($('.stickidin').html().replace('instantill()','instantill({uid:"' + uid + '",api:"' + api + '"})'));
+    var repstr = 'instantill({uid:"' + uid + '"';
+    if (api.indexOf('dev.') !== -1) repstr += ',api:"' + api + '"';
+    repstr += '})';
+    $('.stickidin').html($('.stickidin').html().replace('instantill()',repstr));
     $('#onlyyou').html($('#onlyyou').html().replace('but only you ','but only you (' + noddy.user.account.profile.firstname + ') '));
     instantill({uid:uid, api:api});
     try {

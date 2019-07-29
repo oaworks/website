@@ -34,6 +34,14 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
       opts.refresh = 0
   opts.url ?= opts.q if opts.q
   opts.url ?= opts.id if opts.id
+
+  opts.doi = opts.doi.replace('doi:','').replace('DOI:','') if opts.doi?
+  opts.id = opts.id.replace('doi:','').replace('DOI:','') if opts.id? and opts.id.toLowerCase().indexOf('doi:') is 0
+  opts.url = opts.url.replace('doi:','').replace('DOI:','') if opts.url? and opts.url.toLowerCase().indexOf('doi:') is 0
+  opts.pmid = opts.pmid.replace('pmid:','').replace('PMID:','') if opts.pmid? and opts.pmid.toLowerCase().indexOf('pmid:') is 0
+  opts.pmcid = opts.pmcid.replace('pmcid:','').replace('PMCID:','') if opts.pmcid? and opts.pmcid.toLowerCase().indexOf('pmcid:') is 0
+  opts.pmcid = opts.pmcid.replace('pubmedid:','').replace('PUBMEDID:','') if opts.pmcid? and opts.pmcid.toLowerCase().indexOf('pubmedid:') is 0
+
   if opts.url
     if opts.url.indexOf('10.') is 0
       opts.doi = opts.url
