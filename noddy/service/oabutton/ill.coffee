@@ -309,9 +309,13 @@ API.service.oab.ill.start = (opts={}) ->
       # could be provided as: (unless other params are mandatory) 
       # https://ambslibrary.share.worldcat.org/wms/cmnd/nd/discover/items/search?si0qs=0021-9231
       if user.service?.openaccessbutton?.ill?.config?.search and (opts.issn or opts.journal)
-        su = user.service.openaccessbutton.ill.config.search
-        #su += if su.indexOf('?') is -1 then '?' else '&' # as we don't know the param for different systems it will have to be provided ending in param=
-        su += if opts.issn then opts.issn else opts.journal
+          su = user.service.openaccessbutton.ill.config.search.split('?')[0] + '?ai0id=level3&ai0type=scope&offset=1&pageSize=10&si0in='
+          su += if opts.issn? then 'in%3A' else 'ti%3A'
+          su += '&si0qs=' + (opts.issn ? opts.journal)
+          su += '&sortDirection=descending&sortKey=librarycount&applicationId=nd&requestType=search&searchType=advancedsearch&eventSource=df-advancedsearch'
+        else
+          su = user.service.openaccessbutton.ill.config.search
+          su += if opts.issn then opts.issn else opts.journal
         vars.details+= '<p>Search URL:<br><a href="' + su + '">' + su + '</a></p>'
         
       if not opts.forwarded
@@ -345,10 +349,11 @@ API.service.oab.ill.config = (user, config) ->
   if config?
     update = {}
     for k in ['ill_institution','ill_redirect_base_url','ill_redirect_params','method','sid','title','doi','pmid','pmcid','author','journal','issn','volume','issue','page','published','year','terms','book','other','cost','time','email','problem_email','subscription','search','autorun','autorunparams','intropara']
-      if k is 'ill_redirect_base_url' and config[k].indexOf('illiad.dll') isnt -1 and config[k].toLowerCase().indexOf('Action=') is -1
+      if k is 'ill_redirect_base_url' and config[k].indexOf('illiad.dll') isnt -1 and config[k].toLowerCase().indexOf('action=') is -1
         config[k] = config[k].split('?')[0]
         if config[k].indexOf('/openurl') is -1
-          config[k] = config[k].split('#')[0] + '/openurl' + (config[k].indexOf('#') is -1 ? '' : config[k].split('#')[1].split('?')[0])
+          config[k] = config[k].split('#')[0] + '/openurl'
+          config[k] += if config[k].indexOf('#') is -1 then '' else '#' + config[k].split('#')[1].split('?')[0]
         config[k] += '?genre=article'
       update[k] = config[k] if config[k]?
     if not user.service.openaccessbutton.ill?
@@ -401,45 +406,35 @@ API.service.oab.ill.openurl = (uid, meta={}, withoutbase=false) ->
     config[d] = defaults[d] if not config[d]
 
   url = if config.ill_redirect_base_url then config.ill_redirect_base_url else ''
-  if url.indexOf('/wms/') isnt -1
-    if meta.issn? or meta.journal?
-      url = url.split('?')[0] + '?ai0id=level3&ai0type=scope&offset=1&pageSize=10&si0in='
-      url += if meta.issn? then 'in%3A' else 'ti%3A'
-      url += '&si0qs=' + meta.issn ? meta.journal
-      url += '&sortDirection=descending&sortKey=librarycount&applicationId=nd&requestType=search&searchType=advancedsearch&eventSource=df-advancedsearch'
-      return url
-    else
-      return ''
-  else
-    url += if url.indexOf('?') is -1 then '?' else '&'
-    url += config.ill_redirect_params.replace('?','') + '&' if config.ill_redirect_params
-    url += config.sid + '=InstantILL&'
-    for k of meta
-      v = false
-      if k is 'author'
-        # need to check if config has aufirst and aulast or something similar, then need to use those instead, 
-        # if we have author name parts
-        try
-          if typeof meta.author is 'string'
-            v = meta.author
-          else if _.isArray meta.author
-            v = ''
-            for author in meta.author
-              v += ', ' if v.length
-              if typeof author is 'string'
-                v += author
-              else if author.family
-                v += author.family + if author.given then ', ' + author.given else ''
+  url += if url.indexOf('?') is -1 then '?' else '&'
+  url += config.ill_redirect_params.replace('?','') + '&' if config.ill_redirect_params
+  url += config.sid + '=InstantILL&'
+  for k of meta
+    v = false
+    if k is 'author'
+      # need to check if config has aufirst and aulast or something similar, then need to use those instead, 
+      # if we have author name parts
+      try
+        if typeof meta.author is 'string'
+          v = meta.author
+        else if _.isArray meta.author
+          v = ''
+          for author in meta.author
+            v += ', ' if v.length
+            if typeof author is 'string'
+              v += author
+            else if author.family
+              v += author.family + if author.given then ', ' + author.given else ''
+        else
+          if meta.author.family
+            v = meta.author.family + if meta.author.given then ', ' + meta.author.given else ''
           else
-            if meta.author.family
-              v = meta.author.family + if meta.author.given then ', ' + meta.author.given else ''
-            else
-              v = JSON.stringify meta.author
-      else if k not in ['started','ended','took','terms','book','other','cost','time','email','redirect','url','source','notes']
-        v = meta[k]
-      if v
-        url += (if config[k] then config[k] else k) + '=' + v + '&'
-    return url
+            v = JSON.stringify meta.author
+    else if k not in ['started','ended','took','terms','book','other','cost','time','email','redirect','url','source','notes']
+      v = meta[k]
+    if v
+      url += (if config[k] then config[k] else k) + '=' + v + '&'
+  return url
     
 API.service.oab.ill.terms = (uid) ->
   config = API.service.oab.ill.config uid
