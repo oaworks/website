@@ -25,7 +25,7 @@ API.service.oab.receive = (rid,files,url,title,description,firstname,lastname,cr
       if files? and files.length > 0
         up.content = files[0].data
         up.name = files[0].filename
-      up.publish = API.settings.service.openaccessbutton?.zenodo?.publish
+      up.publish = API.settings.service.openaccessbutton?.zenodo?.publish or r.received.admin
       creators = []
       if r.names
         try
@@ -68,6 +68,7 @@ API.service.oab.receive = (rid,files,url,title,description,firstname,lastname,cr
       r.received.zenodo_doi = z.metadata.prereserve_doi.doi if z.metadata?.prereserve_doi?.doi?
         
     oab_request.update r._id, {hold:'$DELETE',received:r.received,status:(if up.publish is false and not r.received.url? then 'moderate' else 'received')}
+    API.service.oab.admin(r._id,'successful_upload') if up.publish
     API.mail.send
       service: 'openaccessbutton'
       from: 'requests@openaccessbutton.org'

@@ -4,6 +4,8 @@
 /*]]>*/</script>
 <!-- End of openaccessbutton Zendesk Widget script -->
 
+<script src="/static/request_response.js"></script>
+
 <style>
   .panels {
     margin:20px 0px 20px 0px;
@@ -187,6 +189,7 @@
         <p>It would be great if you could give us some more <a id="refusefeedback" href="/feedback#noshare">feedback</a> about why you could not share the content.</p>
       </div>
 
+      <div id="foradmin" style="display:none;"></div>
     </div>
   </div>
 </div>
@@ -267,7 +270,7 @@
     $('.typedata').hide();
     $('.panels').hide();
     var request;
-    var rid = window.location.pathname.split('/')[2];
+    rid = window.location.pathname.split('/')[2];
     var clickedadmin = false;
     var firstsubmit = true;
 
@@ -298,7 +301,7 @@
     }
     $('#dorefuse').bind('click',dorefuse);
 
-    var submit = function(e,upload) {
+    var submitresponse = function(e,upload) {
       try { if (e) e.preventDefault(); } catch(err) {}
       var warns = ['researchgate.','academia.edu','readcube.'];
       if (firstsubmit) {
@@ -349,10 +352,10 @@
       clickedadmin = false;
     }
     $('#submiturl').bind('click',submit);
-    $('#adminsubmiturl').bind('click',function(e) { clickedadmin = true; submit(); });
+    $('#adminsubmiturl').bind('click',function(e) { clickedadmin = true; submitresponse(); });
     $('form#fileupload').submit(function(e) {
       if (e) e.preventDefault();
-      submit(undefined,new FormData(this));
+      submitresponse(undefined,new FormData(this));
       return false;
     });
     $('#adminsubmitfile').bind('click',function(e) { clickedadmin = true; });
@@ -423,20 +426,25 @@
       } else {
         $('#sherpa_unknown').show();
       }
-    }
-    $.ajax({
-      type: 'GET',
-      url: api + '/receive/' + rid,
-      success: details,
-      error: function() { $('.panels').hide(); $('#missing').show(); }
-    });
-
-    noddy.afterLogin = function() {
       if (noddy.hasRole('openaccessbutton.admin')) {
         $('.admin').show();
         $('.showupload').bind('click',function(e) { e.preventDefault(); $('.panels').hide(); $('#upload').show(); });
+        $('#foradmin').show().append(admin(request));
+        $('#admin').show();
       }
     }
+    
+    var start = function() {
+      $.ajax({
+        type: 'GET',
+        url: api + '/receive/' + rid,
+        success: details,
+        error: function() { $('.panels').hide(); $('#missing').show(); }
+      });
+    }
+
+    noddy.afterLogin = function() { start(); }
+    noddy.afterFailure = function() { start() }
     noddy.login();
   });
 </script>
