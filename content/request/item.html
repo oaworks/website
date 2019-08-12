@@ -73,7 +73,7 @@
     $('#topnav').removeClass('navbar-fixed-top');
     $('code').html(window.location.href.split('#')[0].split('?')[0]);
 
-    rid = window.location.pathname.split('/')[2];
+    var rid = window.location.pathname.split('/')[2];
 
     $('#widget').val('<div id="oab_insert"></div><script>var oabe = function() {var x = new XMLHttpRequest(); x.onreadystatechange = function() { if (x.readyState == 4 && x.status == 200) { document.getElementById("oab_insert").innerHTML = JSON.parse(x.responseText).data; } }; x.open("GET", "' + api+'/embed/'+rid + '", true); x.send(); }();<\/script>')
 
@@ -167,7 +167,7 @@
       if (noddy.loggedin()) {
         var opts = {
           type:'POST',
-          url: api+'/support/'+rid,
+          url: api+'/support/'+rec._id,
           cache:false,
           success: function(data) {
             $('#addsupport').hide().after('<p id="confirmadd">Thanks! You will be notified about this request.</p>');
@@ -176,7 +176,7 @@
         opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", noddy.apikey); }
         $.ajax(opts);
       } else {
-        window.location.href = '/account?next=/request/' + rid + encodeURIComponent('?support=true');
+        window.location.href = '/account?next=/request/' + rec._id + encodeURIComponent('?support=true');
       }
     }
 
@@ -199,7 +199,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       } catch(err) {}
     }
 
-    var details = function(data) {
+    details = function(data) {
       rec = data.data !== undefined ? data.data : data;
 
       $('#info').html('');
@@ -304,7 +304,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
             re += '<div class="input-group">\
               <input type="text" name="email" id="youremail" class="form-control" placeholder="Your email address"> \
               <div class="input-group-btn">\
-                <a id="gologin" href="/account?next=/request/' + rid + '" class="btn btn-action">Continue</a>\
+                <a id="gologin" href="/account?next=/request/' + rec._id + '" class="btn btn-action">Continue</a>\
               </div>\
             </div>';
           }
@@ -317,13 +317,13 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
             re += '<p style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Save</a></p>';
             re += '<p class="saved" style="display:none;">Changes saved, refreshing page.</p>';
           } else {
-            re += '<p style="margin-bottom:40px;"><a href="/account?next=/request/' + rid + '" class="btn btn-block btn-action">Login / sign up to continue</a></p>';
+            re += '<p style="margin-bottom:40px;"><a href="/account?next=/request/' + rec._id + '" class="btn btn-block btn-action">Login / sign up to continue</a></p>';
           }
         }
       }
 
       if ( (rec.status !== 'closed' || rec.closed_on_create_reason === 'gt5' || rec.closed_on_update_reason === 'gt5' ) && rec.status !== 'received' && !(noddy.loggedin() && rec.user && rec.user.id && noddy.user && noddy.user.account && noddy.user.account._id === rec.user.id) ) {
-        re += '<p style="margin-top:10px;">Are you the author? Please <a style="text-decoration:underline;" class="pinger" id="shareYourWork" href="/response/' + rec.receiver + '">share your work</a> or <a class="pinger" id="contactToShareWork" style="text-decoration:underline;" href="mailto:requests@openaccessbutton.org?subject=I\'m%20the%20author%20for%20request%20' + rid + '&body=Hi\,%0A%0AI%20the%20author%20of%20this%20paper.%20Please%20tell%20me%20how%20I%20can%20fulfil%20this%20request." target="_blank">contact us</a>!</p>';
+        re += '<p style="margin-top:10px;">Are you the author? Please <a style="text-decoration:underline;" class="pinger" id="shareYourWork" href="/response/' + rec.receiver + '">share your work</a> or <a class="pinger" id="contactToShareWork" style="text-decoration:underline;" href="mailto:requests@openaccessbutton.org?subject=I\'m%20the%20author%20for%20request%20' + rec._id + '&body=Hi\,%0A%0AI%20the%20author%20of%20this%20paper.%20Please%20tell%20me%20how%20I%20can%20fulfil%20this%20request." target="_blank">contact us</a>!</p>';
       }
 
       if (noddy.hasRole('openaccessbutton.admin')) {
@@ -387,8 +387,8 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
 
 
     // login not necessary but returns supports info if possible, so we try
-    var rurl = api + '/request/' + rid;
-    var runrequest = function() {
+    var rurl = api + '/request/' + rec._id;
+    runrequest = function() {
       $.ajax({
         type: 'GET',
         url: rurl,

@@ -67,14 +67,17 @@ API.add 'service/oab/ill',
 
 API.add 'service/oab/ill/subscription',
   get:
+    #roleRequired: 'openaccessbutton.user'
     authOptional: true
     action: () ->
       if this.user
         uid = this.user._id
-      else
-        try
-          uid = this.queryParams.uid
-          delete this.queryParams.uid
+      else if this.queryParams.uid
+        uid = this.queryParams.uid
+        delete this.queryParams.uid
+      #if this.queryParams.uid and this.user and API.accounts.auth 'openaccessbutton.admin', this.user
+      #  uid = this.queryParams.uid
+      #  delete this.queryParams.uid
       if not uid? or _.isEmpty this.queryParams
         return {}
       else
@@ -95,11 +98,13 @@ API.add 'service/oab/ill/openurl',
   get: () ->
     return 'Will eventually redirect after reading openurl params passed here, somehow. For now a POST of metadata here by a user with an open ulr registered will build their openurl'
   post:
+    #roleRequired: 'openaccessbutton.user'
     authOptional: true
     action: () ->
       opts = this.request.body ? {}
       for o of this.queryParams
         opts[o] = this.queryParams[o]
+      #delete opts.uid if opts.uid and not API.accounts.auth 'openaccessbutton.admin', this.user
       if not opts.uid and not this.user?
         return 404
       else
@@ -115,9 +120,10 @@ API.add 'service/oab/ill/validate',
 
 API.add 'service/oab/ill/config',
   get: 
+    authOptional: true
     action: () ->
       try
-        return API.service.oab.ill.config this.queryParams.uid
+        return API.service.oab.ill.config this.queryParams.uid ? this.user._id
       return 404
   post: 
     authRequired: 'openaccessbutton.user'
@@ -138,7 +144,19 @@ API.add 'service/oab/ill/:library',
     opts.library = this.urlParams.library ? {}
     return API.service.oab.ill.start opts
 
-API.add 'service/oab/ills', 'openaccessbutton.admin', () -> return oab_ill.search this
+API.add 'service/oab/ills',
+  get:
+    roleRequired:'openaccessbutton.user'
+    action: () ->
+      restrict = if API.accounts.auth('openaccessbutton.admin', this.user) and this.queryParams.all then [] else [{term:{from:this.userId}}]
+      delete this.queryParams.all if this.queryParams.all?
+      return oab_ill.search this.queryParams, {restrict:restrict}
+  post:
+    roleRequired:'openaccessbutton.user'
+    action: () ->
+      restrict = if API.accounts.auth('openaccessbutton.admin', this.user) and this.queryParams.all then [] else [{term:{from:this.userId}}]
+      delete this.queryParams.all if this.queryParams.all?
+      return oab_ill.search this.bodyParams, {restrict:[{term:{from:this.userId}}]}
 
 API.add 'service/oab/metadata', () -> return oab_metadata.search this
 
@@ -202,6 +220,13 @@ API.add 'service/oab/request/:rid',
           n.story ?= this.request.body.story if this.request.body.story? and this.request.body.story isnt r.story
           n.journal ?= this.request.body.journal if this.request.body.journal? and this.request.body.journal isnt r.journal
           n.notes = this.request.body.notes if this.request.body.notes? and this.request.body.notes isnt r.notes
+          n.access_right = this.request.body.access_right if this.request.body.access_right? and this.request.body.access_right isnt r.access_right
+          n.embargo_date = this.request.body.embargo_date if this.request.body.embargo_date? and this.request.body.embargo_date isnt r.embargo_date
+          n.access_conditions = this.request.body.access_conditions if this.request.body.access_conditions? and this.request.body.access_conditions isnt r.access_conditions
+          n.license = this.request.body.license if this.request.body.license? and this.request.body.license isnt r.license
+          if this.request.body.received?.description? and (not r.received? or this.request.body.received.description isnt r.received.description)
+            n.received = if r.received? then r.received else {}
+            n.received.description = this.request.body.received.description
         n.email = this.request.body.email if this.request.body.email? and ( API.accounts.auth('openaccessbutton.admin',this.user) || not r.status? || r.status is 'help' || r.status is 'moderate' || r.status is 'refused' )
         n.story = this.request.body.story if r.user? and this.userId is r.user.id and this.request.body.story? and this.request.body.story isnt r.story
         n.url ?= this.request.body.url if this.request.body.url? and this.request.body.url isnt r.url

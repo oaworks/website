@@ -1,7 +1,6 @@
 
-var rid = undefined;
+var details = undefined;
 var rec = undefined;
-var request = undefined;
 var runrequest = undefined;
 
 var blacklist = function(e) {
@@ -45,12 +44,13 @@ var submit = function(e) {
     if ( $('#admin_embargo_date').length && $('#admin_embargo_date').val() ) data.embargo_date = $('#admin_embargo_date').val();
     if ( $('#admin_access_conditions').length && $('#admin_access_conditions').val() ) data.access_conditions = $('#admin_access_conditions').val();
     if ( $('#admin_license').length && $('#admin_license').val() ) data.license = $('#admin_license').val();
+    if ( $('#admin_received_description').length && $('#admin_received_description').val() ) data.received = {description: $('#admin_received_description').val()};
 
     if ( $('#admin_story').length && ($('#admin_story').val() || $('#admin_story').val() !== rec.story) ) data.story = $('#admin_story').val();
     if ( $('#admin_notes').length && $('#admin_notes').val() ) data.notes = $('#admin_notes').val();
     adminsubmitting = false;
   }
-  var url = api+'/request/'+rid;
+  var url = api+'/request/'+rec._id;
   var opts = {
     type:'POST',
     url: url,
@@ -81,7 +81,7 @@ var checkemailthensubmit = function(e) {
     var email = $(tgt).val();
     var opts = {
       type:'GET',
-      url: api+'/dnr?validate=true&email=' + encodeURIComponent(email) + '&request=' + rid + '&user=' + noddy.user.account._id,
+      url: api+'/dnr?validate=true&email=' + encodeURIComponent(email) + '&request=' + rec._id + '&user=' + noddy.user.account._id,
       cache:false,
       contentType: 'application/json',
       dataType: 'json',
@@ -131,7 +131,7 @@ var action = function() {
     }
     $.ajax({
       type:'GET',
-      url:api+'/request/' + rid + '/admin/' + act,
+      url:api+'/request/' + rec._id + '/admin/' + act,
       beforeSend: function (request) { request.setRequestHeader("x-apikey", noddy.apikey); },
     });
     setTimeout(function() { if (runrequest) { runrequest(); } else { $('#admin').after('<p>Refresh the page to view changes.</p>'); } }, 4000);
@@ -141,7 +141,7 @@ var action = function() {
 var deleteitem = function() {
   $.ajax({
     type:'DELETE',
-    url:api+'/request/'+rid,
+    url:api+'/request/'+rec._id,
     beforeSend: function (request) { request.setRequestHeader("x-apikey", noddy.apikey); },
   });
   $('#admin').html('<p>This request has been deleted. You will be redirected to the requests page.</p>');
@@ -149,8 +149,6 @@ var deleteitem = function() {
 }
 
 var admin = function(record) {
-  console.log(record)
-  if (rid === undefined) rid = record._id;
   var dets = '<p style="text-align:right;"><a href="#" id="showadmin" style="color:orange;">Admin</a></p>';
   dets += '<div id="admin" style="display:none;">';
   dets += '<div class="well" style="background-color:orange;">';
@@ -239,6 +237,9 @@ var admin = function(record) {
   dets += '<p><input type="text" id="admin_license" class="form-control" placeholder="License" value="';
   if (record.license) dets += record.license;
   dets += '"></p>';
+  dets += '<p><textarea id="admin_received_description" class="form-control" placeholder="Received description">';
+  if (record.received && record.received.description) dets += record.received.description;
+  dets += '</textarea></p>';
 
   dets += '<p><textarea id="admin_story" class="form-control" placeholder="Story" style="min-height:100px;">';
   if (record.story) dets += record.story;
@@ -260,7 +261,7 @@ var admin = function(record) {
   } else {
     dets += '<a class="btn btn-action" href="/request/' + record._id + '">View the request page for this response</a> ';
   }
-  dets += '<a class="btn btn-action pull-right" href="/admin?request=' + rid + '">Send email via admin UI about this request</a></p>';
+  dets += '<a class="btn btn-action pull-right" href="/admin?request=' + record._id + '">Send email via admin UI about this request</a></p>';
   dets += '<p><textarea id="admin_notes" class="form-control" placeholder="Admin notes" style="min-height:200px;">';
   if (record.notes) dets += record.notes;
   dets += '</textarea></p>';
