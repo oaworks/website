@@ -1,6 +1,6 @@
 
 var details = undefined;
-var rec = undefined;
+var rec = {};
 var runrequest = undefined;
 
 var blacklist = function(e) {
