@@ -387,7 +387,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
 
 
     // login not necessary but returns supports info if possible, so we try
-    var rurl = api + '/request/' + rec._id;
+    var rurl = api + '/request/' + rid;
     runrequest = function() {
       $.ajax({
         type: 'GET',
