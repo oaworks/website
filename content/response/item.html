@@ -4,6 +4,8 @@
 /*]]>*/</script>
 <!-- End of openaccessbutton Zendesk Widget script -->
 
+<script src="/static/request_response.js"></script>
+
 <style>
   .panels {
     margin:20px 0px 20px 0px;
@@ -187,6 +189,7 @@
         <p>It would be great if you could give us some more <a id="refusefeedback" href="/feedback#noshare">feedback</a> about why you could not share the content.</p>
       </div>
 
+      <div id="foradmin" style="display:none;"></div>
     </div>
   </div>
 </div>
@@ -266,7 +269,6 @@
     $('.typearticle').hide();
     $('.typedata').hide();
     $('.panels').hide();
-    var request;
     var rid = window.location.pathname.split('/')[2];
     var clickedadmin = false;
     var firstsubmit = true;
@@ -275,30 +277,30 @@
       e.preventDefault();
       $('.panels').hide();
       $('#confirmrefuse').show();
-      $('#confirmemail').focus().val('@' + request.email.split('@')[1]).setCursorPosition(0);
+      $('#confirmemail').focus().val('@' + rec.email.split('@')[1]).setCursorPosition(0);
     }
     $('#showrefuse').bind('click',showrefuse);
     var dorefuse = function(e) {
       e.preventDefault();
-      if ($('#confirmemail').val() === request.email) {
+      if ($('#confirmemail').val() === rec.email) {
         $.ajax({
           type: 'GET',
-          url: api + '/receive/' + rid + '/refuse?email=' + encodeURIComponent(request.email),
+          url: api + '/receive/' + rid + '/refuse?email=' + encodeURIComponent(rec.email),
           success: function() {
             $('.panels').hide();
             $('#refused').show();
-            $('#refusefeedback').attr('href','/feedback#noshare?request=' + rid);
-            //window.location = '/feedback#noshare?request=' + rid;
+            $('#refusefeedback').attr('href','/feedback#noshare?request=' + rec._id);
+            //window.location = '/feedback#noshare?request=' + rec._id;
           }
         });
       } else {
         $('#noconfirm').show();
-        $('#confirmemail').focus().val('@' + request.email.split('@')[1]).setCursorPosition(0);
+        $('#confirmemail').focus().val('@' + rec.email.split('@')[1]).setCursorPosition(0);
       }
     }
     $('#dorefuse').bind('click',dorefuse);
 
-    var submit = function(e,upload) {
+    var submitresponse = function(e,upload) {
       try { if (e) e.preventDefault(); } catch(err) {}
       var warns = ['researchgate.','academia.edu','readcube.'];
       if (firstsubmit) {
@@ -349,10 +351,10 @@
       clickedadmin = false;
     }
     $('#submiturl').bind('click',submit);
-    $('#adminsubmiturl').bind('click',function(e) { clickedadmin = true; submit(); });
+    $('#adminsubmiturl').bind('click',function(e) { clickedadmin = true; submitresponse(); });
     $('form#fileupload').submit(function(e) {
       if (e) e.preventDefault();
-      submit(undefined,new FormData(this));
+      submitresponse(undefined,new FormData(this));
       return false;
     });
     $('#adminsubmitfile').bind('click',function(e) { clickedadmin = true; });
@@ -370,34 +372,34 @@
       }
     }
 
-    var details = function(data) {
-      request = data;
-      if (request.license) $('#licenselink').replaceWith(request.license);
+    details = function(data) {
+      rec = data;
+      if (rec.license) $('#licenselink').replaceWith(rec.license);
       var dets = '<div>';
-      dets += '<h2 style="text-align:center;"><a target="_blank" href="/request/' + request._id + '">';
-      dets += request.title ? request.title : (request.url.indexOf('h') !== 0 && request.url.indexOf('1') !== 0 ? request.url : 'Untitled article');
+      dets += '<h2 style="text-align:center;"><a target="_blank" href="/request/' + rec._id + '">';
+      dets += rec.title ? rec.title : (rec.url.indexOf('h') !== 0 && rec.url.indexOf('1') !== 0 ? rec.url : 'Untitled article');
       dets += '</a></h2>';
       dets += '<h2 style="text-align:center;margin-bottom:25px;">Can be freely, legally, and quickly shared</h2>';
       dets += '</div>';
       $('#request').html(dets).show();
-      $('.requestlink').attr('href','/request/'+request._id);
-      $('.type' + request.type).show();
-      if (request.title) $('#title').val(request.title);
-      if (request.author && request.email) {
-        for ( var a in request.author ) {
-          if (request.author[a].family && request.email.toLowerCase().indexOf(request.author[a].family.toLowerCase()) !== -1 ) {
-            $('#lastname').val(request.author[a].family);
-            if (request.author[a].given) $('#firstname').val(request.author[a].given);
+      $('.requestlink').attr('href','/request/'+rec._id);
+      $('.type' + rec.type).show();
+      if (rec.title) $('#title').val(rec.title);
+      if (rec.author && rec.email) {
+        for ( var a in rec.author ) {
+          if (rec.author[a].family && rec.email.toLowerCase().indexOf(rec.author[a].family.toLowerCase()) !== -1 ) {
+            $('#lastname').val(rec.author[a].family);
+            if (rec.author[a].given) $('#firstname').val(rec.author[a].given);
           }
         }
       }
-      if (request.email) $('#refusepls').show();
+      if (rec.email) $('#refusepls').show();
 
-      if (request.status === 'received') {
+      if (rec.status === 'received') {
         $('.showupload').show();
-        request.received && request.received.validated === false ? $('#validating').show() : $('#validated').show();
-        if (request.received && request.received.url) {
-          //$('div.admin').append('<p>Submitted URL: <a target="_blank" href="' + request.received.url + '">' + request.received.url + '</a></p>');
+        rec.received && rec.received.validated === false ? $('#validating').show() : $('#validated').show();
+        if (rec.received && rec.received.url) {
+          //$('div.admin').append('<p>Submitted URL: <a target="_blank" href="' + rec.received.url + '">' + rec.received.url + '</a></p>');
         }
       } else if (window.location.href.indexOf('hold=') !== -1) {
         $('.showupload').show();
@@ -410,33 +412,38 @@
       } else {
         $('#upload').show();
       }
-      if (request.journal) {
-        if (request.sherpa) {
-          romeo(undefined,request.sherpa.color);
+      if (rec.journal) {
+        if (rec.sherpa) {
+          romeo(undefined,rec.sherpa.color);
         } else {
           $.ajax({
             type: 'GET',
-            url: api.replace('/service/oab','') + '/use/sherpa/romeo/search?jtitle=' + request.journal,
+            url: api.replace('/service/oab','') + '/use/sherpa/romeo/search?jtitle=' + rec.journal,
             success: romeo
           });
         }
       } else {
         $('#sherpa_unknown').show();
       }
-    }
-    $.ajax({
-      type: 'GET',
-      url: api + '/receive/' + rid,
-      success: details,
-      error: function() { $('.panels').hide(); $('#missing').show(); }
-    });
-
-    noddy.afterLogin = function() {
       if (noddy.hasRole('openaccessbutton.admin')) {
         $('.admin').show();
         $('.showupload').bind('click',function(e) { e.preventDefault(); $('.panels').hide(); $('#upload').show(); });
+        $('#foradmin').show().append(admin(rec));
+        $('#admin').show();
       }
     }
+    
+    var start = function() {
+      $.ajax({
+        type: 'GET',
+        url: api + '/receive/' + rid,
+        success: details,
+        error: function() { $('.panels').hide(); $('#missing').show(); }
+      });
+    }
+
+    noddy.afterLogin = function() { start(); }
+    noddy.afterFailure = function() { start() }
     noddy.login();
   });
 </script>

@@ -4,6 +4,8 @@
   /*]]>*/</script>
   <!-- End of openaccessbutton Zendesk Widget script -->
 
+<script src="/static/request_response.js"></script>
+
 <style>
   body {
     margin-top:0px;
@@ -71,7 +73,6 @@
     $('#topnav').removeClass('navbar-fixed-top');
     $('code').html(window.location.href.split('#')[0].split('?')[0]);
 
-    var rec = undefined;
     var rid = window.location.pathname.split('/')[2];
 
     $('#widget').val('<div id="oab_insert"></div><script>var oabe = function() {var x = new XMLHttpRequest(); x.onreadystatechange = function() { if (x.readyState == 4 && x.status == 200) { document.getElementById("oab_insert").innerHTML = JSON.parse(x.responseText).data; } }; x.open("GET", "' + api+'/embed/'+rid + '", true); x.send(); }();<\/script>')
@@ -141,139 +142,6 @@
       if (sg.length) $('#suggestion').html(sg + '<br>');
     }
 
-    var blacklist = function(e) {
-      e.preventDefault();
-      var email = $('#admin_email').val();
-      $('#admin_email').val("");
-      var opts = {
-        type:'POST',
-        url: api+'/dnr?refuse=false&email=' + email,
-        cache:false,
-        contentType: 'application/json',
-        dataType: 'json'
-      }
-      $.ajax(opts);
-      $("#emailissue").html(email + " blacklisted and removed. Provide a new email address, and/or save this request.").show();
-    }
-    var adminsubmitting = false;
-    var submit = function(e) {
-      if (e) e.preventDefault();
-      var data = {};
-      if ( $('#email').length && $('#email').val() ) data.email = $('#email').val();
-      if ( $('#title').length && $('#title').val() ) data.title = $('#title').val();
-      if ( $('#doi').length && $('#doi').val() ) data.doi = $('#doi').val();
-      if ( $('#story').length && $('#story').val() ) data.story = $('#story').val();
-      if (noddy.hasRole('openaccessbutton.admin') && adminsubmitting) {
-        if ( $('#name').length ) data.name = $('#name').val();
-        if ( $('#status').length ) data.status = $('#status').val();
-        if ( $('#author_affiliation').length ) data.author_affiliation = $('#author_affiliation').val();
-        if ( $('#rating').length ) data.rating = $('#rating').val();
-        if ( $('#url').length ) data.url = $('#url').val();
-        if ( $('#test').length ) {
-          $('#test').is(':checked') ? data.test = true : data.test = false;
-        }
-        if ( $('#admin_email').length && $('#admin_email').val() ) data.email = $('#admin_email').val();
-        if ( $('#admin_title').length && $('#admin_title').val() ) data.title = $('#admin_title').val();
-        if ( $('#admin_journal').length && $('#admin_journal').val() ) data.journal = $('#admin_journal').val();
-        if ( $('#admin_doi').length && $('#admin_doi').val() ) data.doi = $('#admin_doi').val();
-        if ( $('#admin_story').length && ($('#admin_story').val() || $('#admin_story').val() !== rec.story) ) data.story = $('#admin_story').val();
-        if ( $('#admin_notes').length && $('#admin_notes').val() ) data.notes = $('#admin_notes').val();
-        adminsubmitting = false;
-      }
-      var url = api+'/request/'+rid;
-      var opts = {
-        type:'POST',
-        url: url,
-        cache:false,
-        processData:false,
-        contentType: 'application/json',
-        dataType: 'json',
-        success: function(data) {
-          $('.saved').show();
-          setTimeout(function() {$('.saved').hide(); details(data); }, 1500);
-        },
-        error: function(data) {
-          console.log('Save error');
-          console.log(data);
-        },
-        beforeSend: function (request) { request.setRequestHeader("x-apikey", noddy.apikey); }
-      }
-      opts.data = JSON.stringify(data);
-      $.ajax(opts);
-    }
-    var checkemailthensubmit = function(e) {
-      if (e) e.preventDefault();
-      if ($(this).attr('disabled') === 'true') return false;
-      $('.emailissue').html("").hide();
-      var tgt = adminsubmitting ? '#admin_email' : '#email';
-      if ( $(tgt).length && $(tgt).val() && $(tgt).val().length ) {
-        var email = $(tgt).val();
-        var opts = {
-          type:'GET',
-          url: api+'/dnr?validate=true&email=' + encodeURIComponent(email) + '&request=' + rid + '&user=' + noddy.user.account._id,
-          cache:false,
-          contentType: 'application/json',
-          dataType: 'json',
-          success: function(data) {
-            if (data.dnr === false) {
-              submit(e);
-            } else {
-              var issue = 'Sorry, ' + email + ' ';
-              if (typeof data.dnr === 'object') {
-                issue += 'was added to our block list on ' + data.dnr.created_date.split(' ')[0].split('-').reverse().join('/') + '. We cannot send requests to this email.';
-              } else if (data.dnr === 'creator') {
-                issue += 'matches the creator of this request, so this cannot be the author email address we should contact.';
-              } else if (data.dnr === 'user') {
-                issue += "is your email address! We need the author's email. Are you the author? If so, please see below.";
-              } else if (data.dnr === 'supporter') {
-                issue += 'matches the address of someone who already supports this request. They cannot be a suitable author to contact to request access.';
-              } else if (data.dnr === 'invalid') {
-                issue += 'is not a valid address.';
-                if (data.validation.did_you_mean) issue += ' Did you mean ' + data.validation.did_you_mean + '?';
-              } else  if (data.dnr === true) {
-                issue += 'is on the blacklist and cannot be used.';
-              }
-              $(tgt).val("").attr("placeholder",email + " is an unsuitable author email address - please try another");
-              $('.emailissue').html(issue).show();
-            }
-          },
-          error: function() {console.log('Check email error, submitting anyway'); submit(e); } // if we can't do the validation for some reason, just submit anyway
-        }
-        $.ajax(opts);
-      } else {
-        submit(e);
-      }
-    }
-    var adminsubmit = function(e) {
-      adminsubmitting = true;
-      checkemailthensubmit(e);
-    }
-
-    var action = function() {
-      var act = $('#action').val();
-      if (act) {
-        $('#admin').hide();
-        $('#adminframe').hide();
-        $('#admin').after('<p style="color:orange;">Working on it, please wait a few seconds for the page to update...</p>');
-        $.ajax({
-          type:'GET',
-          url:api+'/request/' + rid + '/admin/' + act,
-          beforeSend: function (request) { request.setRequestHeader("x-apikey", noddy.apikey); },
-        });
-        setTimeout(function() { runrequest(); }, 4000);
-      }
-    }
-
-    var deleteitem = function() {
-      $.ajax({
-        type:'DELETE',
-        url:api+'/request/'+rid,
-        beforeSend: function (request) { request.setRequestHeader("x-apikey", noddy.apikey); },
-      });
-      $('#admin').html('<p>This request has been deleted. You will be redirected to the requests page.</p>');
-      setTimeout(function() { window.location.href = '/request'; }, 2000);
-    }
-
     /*var scrape = function() {
       var url = $('#titlelink').attr('href');
       if (url) {
@@ -299,7 +167,7 @@
       if (noddy.loggedin()) {
         var opts = {
           type:'POST',
-          url: api+'/support/'+rid,
+          url: api+'/support/'+rec._id,
           cache:false,
           success: function(data) {
             $('#addsupport').hide().after('<p id="confirmadd">Thanks! You will be notified about this request.</p>');
@@ -308,7 +176,7 @@
         opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", noddy.apikey); }
         $.ajax(opts);
       } else {
-        window.location.href = '/account?next=/request/' + rid + encodeURIComponent('?support=true');
+        window.location.href = '/account?next=/request/' + rec._id + encodeURIComponent('?support=true');
       }
     }
 
@@ -331,106 +199,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       } catch(err) {}
     }
 
-    var admin = function(record) {
-      var dets = ''; //'<p>Dear admin, please notify when you are moderating in a few clicks at <a href="https://app.timebridge.com/mwm/requests">https://app.timebridge.com/mwm/requests</a></p>';
-      if (record.year) dets += '<p>Publication year: ' + record.year + '</p>';
-      if (record.sherpa !== undefined) {
-        dets += '<p>Sherpa color: ' + (record.sherpa.color === undefined ? 'unknown' : record.sherpa.color) + '</p>';
-        try { dets += '<p><a class="btn btn-block btn-action" target="_blank" href="http://www.sherpa.ac.uk/romeo/search.php?issn=' + record.sherpa.journal.issn + '">View journal on Sherpa Romeo</a></p>'; } catch(err) {}
-        try {
-          dets += '<p>Copyright links:</p>';
-          for (var i in record.sherpa.publisher.copyright) {
-            dets += '<p><a class="btn btn-action" target="_blank" href="' + record.sherpa.publisher.copyright[i].url + '">' + record.sherpa.publisher.copyright[i].text + '</a></p>';
-          }
-        } catch(err) {}
-        try {
-          dets += '<p>Journal conditions:</p>';
-          for (var p in record.sherpa.publisher.conditions) {
-            dets += '<p>' + record.sherpa.publisher.conditions[p] + '</p>';
-          }
-        } catch(err) {}
-
-      }
-      dets += '<p>Status: <select id="status" class="form-control" style="width:150px;display:inline;">';
-      var statuses = ['help','moderate','progress',/*'hold',*/'refused','received','closed'];
-      for ( var s in statuses ) {
-        dets += '<option value="' + statuses[s] + '"';
-        if (record.status === statuses[s]) dets += ' selected="selected"';
-        dets += '>' + statuses[s] + '</option>';
-      }
-      dets += '</select>';
-      dets += ' &nbsp;&nbsp;test: <input type="checkbox" id="test"';
-      if (record.test === true) dets += ' checked="checked"';
-      dets += '>';
-      dets += ' &nbsp;&nbsp;Action: <select id="action" class="form-control" style="width:150px;display:inline;">';
-      var actions = ['','send_to_author','story_too_bad','not_a_scholarly_article','dead_author','user_testing','broken_link','article_before_2000','author_email_not_found','link_by_author','link_by_admin','successful_upload','reject_upload'];
-      if (record.received && record.received.url) actions.push('remove_submitted_url');
-      for ( var a in actions ) {
-        dets += '<option value="' + actions[a] + '">' + actions[a].replace(/_/g,' ') + '</option>';
-      }
-      dets += '</select>';
-      dets += '</p>';
-      if (record.location && record.location.geo && record.location.geo.lat) {
-        dets += '<p>Location: ' + record.location.geo.lat + ',' + record.location.geo.lon
-        if (record.location.location) dets += ' - ' + record.location.location;
-        dets += '</p>';
-      }
-      dets += '<p>Dear moderator, please click "Save changes" immediately after having filled the form and BEFORE clicking "Send to author".</p>';
-      dets += '<p><input type="text" id="name" value="' + (record.name ? record.name : '') + '" placeholder="Author Name" class="form-control"></p>';
-      dets += '<p><input type="text" id="author_affiliation" value="' + (record.author_affiliation ? record.author_affiliation : '') + '" placeholder="Author Affiliation" class="form-control"></p>';
-      if (record.name) {
-        dets += '<p><a target="_blank" href="https://scholar.google.com/citations?view_op=search_authors&hl=en&mauthors=' + record.name.replace(/ /g,'+') + '" class="btn btn-block btn-action">View author Google scholar profile</a></p>';
-      }
-      if (!record.name && record.author) {
-        dets += '<p><a href="#" class="btn btn-block btn-action" id="viewpossibleauthors">View possible author names</a></p>';
-        dets += '<div style="display:none;" id="possibleauthors">';
-        for ( var a in record.author ) {
-          if (record.author[a].family) {
-            dets += '<p><a class="selectpossibleauthor" href="#">' + record.author[a].given + ' ' + record.author[a].family + '</a></p>';
-          }
-        }
-        dets += '</div>';
-      }
-      if (record.email) dets += '<div class="input-group">';
-      dets += '<input type="text" id="admin_email" value="' + (record.email ? record.email : '') + '" placeholder="Author Email" class="form-control">';
-      if (record.email) dets += '<div class="input-group-btn"><a id="blacklist" href="#" class="btn btn-action">Blacklist</a></div></div>';
-      dets += '<p class="emailissue" style="display:none;font-size:0.9em;"></p>';
-      dets += '<p style="margin-top:10px;"><input type="text" id="admin_title" class="form-control" placeholder="Title" value="';
-      if (record.title) dets += record.title;
-      dets += '"></p>';
-      dets += '<p style="margin-top:10px;"><input type="text" id="admin_journal" class="form-control" placeholder="Journal" value="';
-      if (record.journal) dets += record.journal;
-      dets += '"></p>';
-      dets += '<p><input type="text" id="admin_doi" class="form-control" placeholder="DOI" value="';
-      if (record.doi) dets += record.doi;
-      dets += '"></p>';
-      dets += '<p><textarea id="admin_story" class="form-control" placeholder="Story" style="min-height:100px;">';
-      if (record.story) dets += record.story;
-      dets += '</textarea></p>';
-      dets += '<p>Story rating: <select id="rating" class="form-control" style="width:100px;display:inline;"><option></option>';
-      dets += '<option value="0"';
-      if (parseInt(record.rating) === 0) dets += ' selected="selected"';
-      dets += '>fail</option>';
-      dets += '<option value="1"';
-      if (parseInt(record.rating) === 1) dets += ' selected="selected"';
-      dets += '>pass</option>';
-      dets += '</select>';
-      dets += '<a class="btn btn-danger pull-right" id="delete" href="#">DELETE</a></p>';
-      dets += '<p><input type="submit" id="submitchanges" value="Save changes before sending to author or any other action" class="btn btn-action btn-block"></p>';
-      dets += '<p class="saved" style="display:none;">Changes saved, refreshing page.</p>';
-      dets += '<p style="margin-top:20px;"><a class="btn btn-action" href="/response/' + record.receiver + '">View the response page for this request</a> ';
-      dets += '<a class="btn btn-action pull-right" href="/admin?request=' + rid + '">Send email via admin UI about this request</a></p>';
-      dets += '<p><textarea id="admin_notes" class="form-control" placeholder="Admin notes" style="min-height:200px;">';
-      if (record.notes) dets += record.notes;
-      dets += '</textarea></p>';
-      if (record.access_right) dets += '<p>Access right:' + record.access_right + '</p>';
-      if (record.embargo_date) dets += '<p>Embargo date:' + record.embargo_date + '</p>';
-      if (record.access_conditions) dets += '<p>Access conditions:' + record.access_conditions + '</p>';
-      if (record.license) dets += '<p>License:' + record.license + '</p>';
-      return dets;
-    }
-
-    var details = function(data) {
+    details = function(data) {
       rec = data.data !== undefined ? data.data : data;
 
       $('#info').html('');
@@ -535,7 +304,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
             re += '<div class="input-group">\
               <input type="text" name="email" id="youremail" class="form-control" placeholder="Your email address"> \
               <div class="input-group-btn">\
-                <a id="gologin" href="/account?next=/request/' + rid + '" class="btn btn-action">Continue</a>\
+                <a id="gologin" href="/account?next=/request/' + rec._id + '" class="btn btn-action">Continue</a>\
               </div>\
             </div>';
           }
@@ -548,20 +317,17 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
             re += '<p style="margin-bottom:60px;"><a class="btn btn-action" href="#" id="update">Save</a></p>';
             re += '<p class="saved" style="display:none;">Changes saved, refreshing page.</p>';
           } else {
-            re += '<p style="margin-bottom:40px;"><a href="/account?next=/request/' + rid + '" class="btn btn-block btn-action">Login / sign up to continue</a></p>';
+            re += '<p style="margin-bottom:40px;"><a href="/account?next=/request/' + rec._id + '" class="btn btn-block btn-action">Login / sign up to continue</a></p>';
           }
         }
       }
 
       if ( (rec.status !== 'closed' || rec.closed_on_create_reason === 'gt5' || rec.closed_on_update_reason === 'gt5' ) && rec.status !== 'received' && !(noddy.loggedin() && rec.user && rec.user.id && noddy.user && noddy.user.account && noddy.user.account._id === rec.user.id) ) {
-        re += '<p style="margin-top:10px;">Are you the author? Please <a style="text-decoration:underline;" class="pinger" id="shareYourWork" href="/response/' + rec.receiver + '">share your work</a> or <a class="pinger" id="contactToShareWork" style="text-decoration:underline;" href="mailto:requests@openaccessbutton.org?subject=I\'m%20the%20author%20for%20request%20' + rid + '&body=Hi\,%0A%0AI%20the%20author%20of%20this%20paper.%20Please%20tell%20me%20how%20I%20can%20fulfil%20this%20request." target="_blank">contact us</a>!</p>';
+        re += '<p style="margin-top:10px;">Are you the author? Please <a style="text-decoration:underline;" class="pinger" id="shareYourWork" href="/response/' + rec.receiver + '">share your work</a> or <a class="pinger" id="contactToShareWork" style="text-decoration:underline;" href="mailto:requests@openaccessbutton.org?subject=I\'m%20the%20author%20for%20request%20' + rec._id + '&body=Hi\,%0A%0AI%20the%20author%20of%20this%20paper.%20Please%20tell%20me%20how%20I%20can%20fulfil%20this%20request." target="_blank">contact us</a>!</p>';
       }
 
       if (noddy.hasRole('openaccessbutton.admin')) {
-        re += '<p style="text-align:right;"><a href="#" id="showadmin" style="color:orange;">Admin</a></p>';
-        re += '<div id="admin" style="display:none;"><div class="well" style="background-color:orange;">';
         re += admin(rec);
-        re += '</div><div id="history"></div></div>';
         history(rec._id);
       }
 
@@ -602,19 +368,8 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
 
       if ($('#story').length) $('#story').bind('keyup',suggest);
       $('#showembed').bind('click',function(e) { e.preventDefault(); $('#embed').toggle(); });
-      if ($('#showadmin').length) {
-        $('#showadmin').bind('click',function(e) { e.preventDefault(); $('#admin').toggle(); $('#adminframe').toggle(); });
-      }
       if ($('#addsupport').length) $('#addsupport').bind('click',addsupport);
-      if ($('#blacklist').length) $('#blacklist').bind('click',blacklist);
-      if ($('#viewpossibleauthors').length) {
-        $('#viewpossibleauthors').bind('click',function(e) { e.preventDefault(); $('#viewpossibleauthors').hide(); $('#possibleauthors').show(); });
-        $('.selectpossibleauthor').bind('click',function(e) { e.preventDefault(); $('#name').val($(this).html()); $('#viewpossibleauthors').show(); $('#possibleauthors').hide(); });
-      }
-      if ($('#submitchanges').length) $('#submitchanges').bind('click',adminsubmit);
       if ($('#update').length) $('#update').bind('click',checkemailthensubmit);
-      if ($('#delete').length) $('#delete').bind('click',deleteitem);
-      if ($('#action').length) $('#action').bind('change',action);
       if ($('#gologin').length) $('#gologin').bind('click',function(e) {
         if ($('#youremail').val()) $(this).attr('href',$(this).attr('href').replace('?','?email='+$('#youremail').val()+'&'));
       });
@@ -632,8 +387,8 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
 
 
     // login not necessary but returns supports info if possible, so we try
-    var rurl = api + '/request/' + rid;
-    var runrequest = function() {
+    var rurl = api + '/request/' + rec._id;
+    runrequest = function() {
       $.ajax({
         type: 'GET',
         url: rurl,
