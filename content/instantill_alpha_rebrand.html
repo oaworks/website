@@ -50,7 +50,7 @@
       <div class="col-md-4 col-md-offset-1 green">
         <div class="greenery">
           <p><a class="green view previous" href="#"><span class="glyphicon glyphicon-arrow-left"></span>  Go back</a></p>
-          <h2>Interlibrary loan</h2>
+          <h2>Interlibrary loan: Submission</h2>
           <p>
             InstantILL uses your existing Interlibrary Loan systems to manage authentication, fulfillment, and payment, or can submit to an email address.
           </p>
@@ -95,22 +95,27 @@
             Now that you can submit requests, you can adjust some key details about loans. Everything is optional, and we’ve set common defaults.
           </p>
 
-          What do your article ILLs cost, please include your currency symbol? e.g $4
-          <input id="cost" type="text" class="form-control setting green" placeholder="default free"><br>
-          How long do your ILLs take to process on average? e.g 24 hours
-          <input id="time" type="text" class="form-control setting green" placeholder="default 24 hours"><br>
-
-          What email address do you want users referred to? (optional for if there is a problem)
-          <input id="problem_email" type="text" class="form-control setting green" placeholder="no default, the user will be told to contact their library"><br>
-
-          Terms and conditions URL (optional for email alternative)
-          <input id="terms" type="text" class="form-control setting green" placeholder=""><br>
-
-          Book request URL (optional for if the user wants a book)
-          <input id="book" type="text" class="form-control setting green" placeholder="e.g https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=21"><br>
-
-          Other request URL (optional for if the user wants something other than article or book)
-          <input id="other" type="text" class="form-control setting green" placeholder="e.g https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=10"><br>
+          <p><b>Name of your institution</b><p>
+          <input id="ill_institution" type="text" class="form-control setting" placeholder="Institution name">
+          <br>
+          <p><b>What do your article ILLs cost, please include your currency symbol? e.g $4</b><p>
+          <input id="cost" type="text" class="form-control setting green" placeholder="default free">
+          <br>
+          <p><b>How long do your ILLs take to process on average? e.g 24 hours</b><p>
+          <input id="time" type="text" class="form-control setting green" placeholder="default 24 hours">
+          <br>
+          <p><b>What email address do you want users referred to? (optional for if there is a problem)</b><p>
+          <input id="problem_email" type="text" class="form-control setting green" placeholder="no default, the user will be told to contact their library">
+          <br>
+          <p><b>Terms and conditions URL (optional for email alternative)</b><p>
+          <input id="terms" type="text" class="form-control setting green" placeholder="">
+          <br>
+          <p><b>Book request URL (optional for if the user wants a book)</b><p>
+          <input id="book" type="text" class="form-control setting green" placeholder="e.g https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=21">
+          <br>
+          <p><b>Other request URL (optional for if the user wants something other than article or book)</b><p>
+          <input id="other" type="text" class="form-control setting green" placeholder="e.g https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=10">
+          <br>
 
         </div>
 
@@ -239,7 +244,7 @@
           <p>
             First, include the following in the source code (HTML) of your page:
           </p>
-
+          <!-- TODO: I can't get 'onlyyou' to work on the below without blowing shit up -->
           <pre class="stickidin">
 &lt;script src="{{site_url}}/static/instantill.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){instantill();});&lt;/script&gt;
 &lt;div id="instantill"&gt;&lt;/div&gt;</pre>
