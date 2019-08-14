@@ -698,7 +698,7 @@ API.add 'service/oab/job/:jid/request',
             rq.title ?= r.meta.article.title
           if rq.url
             rq.story = this.queryParams.story ? ''
-            created = API.service.oab.request rq, this.userId
+            created = API.service.oab.request rq, this.userId, undefined, false
             identifiers.push(created) if created
       return identifiers
 

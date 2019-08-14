@@ -48,7 +48,7 @@ to create a request the url and type are required, What about story?
   }
 }
 ###
-API.service.oab.request = (req,uacc,fast) ->
+API.service.oab.request = (req,uacc,fast,notify=true) ->
   dom
   if req.dom
     dom = req.dom
@@ -184,11 +184,15 @@ API.service.oab.request = (req,uacc,fast) ->
         to: req.user.email
         subject: sub.subject ? 'New request created ' + req._id
         html: sub.content
-  if req.story
+  if req.story # and notify
+    # for now still send if not notify, but remove Natalia (Joe requested it this way, so he still gets them on bulk creates, but Natalia does not)
+    addrs = API.settings.service.openaccessbutton.notify.request
+    if not notify and typeof addrs isnt 'string' and 'natalianorori@gmail.com' in addrs
+      addrs.splice(addrs.indexOf('natalianorori@gmail.com'),1)
     API.mail.send
       service: 'openaccessbutton'
       from: 'requests@openaccessbutton.org'
-      to: API.settings.service.openaccessbutton.notify.request
+      to: addrs
       subject: 'New request created ' + req._id
       text: (if API.settings.dev then 'https://dev.openaccessbutton.org/request/' else 'https://openaccessbutton.org/request/') + req._id
   return req
