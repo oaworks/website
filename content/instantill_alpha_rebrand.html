@@ -263,12 +263,23 @@ jQuery(document).ready(function() {
       beforeSend: function (request) { request.setRequestHeader("x-apikey", noddy.apikey); }
     }
     opts.data = JSON.stringify(data);
-    $.ajax(opts);
+    if (noddy.apikey) {
+      $.ajax(opts);
+    } else {
+      if (_preview) {
+        $('.save').hide().after('<p class="saved">You need to login to save changes! Your preview will run shortly.</p>');
+        setTimeout(function() { $('.saved').hide(); $('.save').show(); preview(undefined,_preview); }, 3000);
+        _preview = false;
+      } else {
+        $('.save').hide().after('<p class="saved">You need to login to save changes!</p>');
+        setTimeout(function() { $('.saved').hide(); $('.save').show(); }, 4000);
+      }
+    }
   }
+  $('body').on('click','.save',save);
 
   noddy.afterLogin = function() {
     $('.promptsignup').hide();
-    $('.installit').show();
     var uid = noddy.user.account._id;
     if ($('.yourid').length) $('.yourid').html($('.yourid').html().replace('instantill()','instantill({uid:"' + uid + '",api:"' + api + '"})'));
     if ($('.onlyyou').length) $('.onlyyou').html($('.onlyyou').html().replace('but only you ','but only you (' + noddy.user.account.profile.firstname + ') '));
@@ -285,7 +296,6 @@ jQuery(document).ready(function() {
         }
       }
     } catch(err) {}
-    $('body').on('click','.save',save);
     try {
       var q = {"size": 0, "query": {"filtered": {"query": {"bool": {"must": [{"term": {"plugin": "instantill"}},{"term": {"from": noddy.user.account._id}}]}}}}};
       q.aggregations = {"embeds": {"terms": {"field": "embedded.exact"}}};

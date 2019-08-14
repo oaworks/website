@@ -350,7 +350,7 @@
       $.ajax(opts);
       clickedadmin = false;
     }
-    $('#submiturl').bind('click',submit);
+    $('#submiturl').bind('click',submitresponse);
     $('#adminsubmiturl').bind('click',function(e) { clickedadmin = true; submitresponse(); });
     $('form#fileupload').submit(function(e) {
       if (e) e.preventDefault();
