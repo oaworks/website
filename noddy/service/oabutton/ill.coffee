@@ -349,17 +349,18 @@ API.service.oab.ill.config = (user, config) ->
   if config?
     update = {}
     for k in ['ill_institution','ill_redirect_base_url','ill_redirect_params','method','sid','title','doi','pmid','pmcid','author','journal','issn','volume','issue','page','published','year','terms','book','other','cost','time','email','problem_email','subscription','search','autorun','autorunparams','intropara']
-      if k is 'ill_redirect_base_url' and config[k].indexOf('illiad.dll') isnt -1 and config[k].toLowerCase().indexOf('action=') is -1
+      if k is 'ill_redirect_base_url' and config[k]? and config[k].indexOf('illiad.dll') isnt -1 and config[k].toLowerCase().indexOf('action=') is -1
         config[k] = config[k].split('?')[0]
         if config[k].indexOf('/openurl') is -1
           config[k] = config[k].split('#')[0] + '/openurl'
           config[k] += if config[k].indexOf('#') is -1 then '' else '#' + config[k].split('#')[1].split('?')[0]
         config[k] += '?genre=article'
       update[k] = config[k] if config[k]?
-    if not user.service.openaccessbutton.ill?
-      Users.update user._id, {'service.openaccessbutton.ill': {config: update}}
-    else
-      Users.update user._id, {'service.openaccessbutton.ill.config': update}
+    if JSON.stringify(update) isnt '{}'
+      if not user.service.openaccessbutton.ill?
+        Users.update user._id, {'service.openaccessbutton.ill': {config: update}}
+      else
+        Users.update user._id, {'service.openaccessbutton.ill.config': update}
     return true
   else
     try

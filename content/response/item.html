@@ -434,6 +434,7 @@
     }
     
     var start = function() {
+      console.log(rid)
       $.ajax({
         type: 'GET',
         url: api + '/receive/' + rid,
@@ -443,7 +444,7 @@
     }
 
     noddy.afterLogin = function() { start(); }
-    noddy.afterFailure = function() { start() }
+    noddy.nologin = function() { start() }
     noddy.login();
   });
 </script>
