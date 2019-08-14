@@ -57,6 +57,7 @@
 
           <p><b>What is your ILL article form link?</b><p>
           <input id="ill_redirect_base_url" type="text" class="form-control setting green" placeholder="URL">
+          <!-- TODO: placeholder text is grey, user entry is green. This kinda makes sense but decide joe -->
           <p>
           OR
           <p>
@@ -224,7 +225,7 @@
       </div>
 
       <div class="col-md-4 col-md-offset-1 green">
-        <div class="greenery">
+        <div class="greenery onlyyou">
           <p><a class="green view previous" href="#"><span class="glyphicon glyphicon-arrow-left"></span>  Go back</a></p>
           <h2>Website &amp; Brand</h2>
 
@@ -232,16 +233,16 @@
             InstantILL can be integrated onto any webpage on your website, and blend in with your brand.
           </p>
           <p>
-            To do that you can follow these simple instructions or we’ve drafted an email you can <a href="mailto:">send your developer</a>.
+            To do that you can follow these simple instructions or we’ve drafted an email you can <a href="mailto:" class="light">send your developer</a>.
           </p>
 
           <p>
             First, include the following in the source code (HTML) of your page:
           </p>
 
-          <pre class="stickidin onlyyou">
-  &lt;script src="{{site_url}}/static/instantill.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){instantill();});&lt;/script&gt;
-  &lt;div id="instantill"&gt;&lt;/div&gt;</pre>
+          <pre class="stickidin">
+&lt;script src="{{site_url}}/static/instantill.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){instantill();});&lt;/script&gt;
+&lt;div id="instantill"&gt;&lt;/div&gt;</pre>
 
 
         <p>
@@ -254,10 +255,10 @@
 
         <p>You can control where the search widget gets displayed by moving:</p>
           <pre>
-        &lt;div id="instantill"&gt;&lt;/div&gt;</pre>
+&lt;div id="instantill"&gt;&lt;/div&gt;</pre>
 
         <p>
-          If you don’t think it’s styled corrected, a developer can help you. If you have one, great, if not <a href="mailto:joe@openaccessbutton.org">reach out</a>.
+          If you don’t think it’s styled corrected, a developer can help you. If you have one, great, if not <a href="mailto:joe@openaccessbutton.org" class="light">reach out</a>.
         </p>
 
         <p>You should now be good to go!</p>
