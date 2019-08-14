@@ -63,9 +63,6 @@
           <p>
           <p><b>What email address do you want ILLs forwarded to? (optional for email alternative)</b></p>
           <input id="email" type="text" class="form-control setting green" placeholder="default is your OAB account email address">
-          <!-- <p>Mark's example input!</p>
-          <p><input type="text" class="form-control green" value="hello I am a form input"></p>
-          -->
           <p>
             If everything works, hit next! If it doesn’t, <a href="#illsetup-advanced" class="green">see advanced settings</a>.
           </p>
@@ -96,7 +93,7 @@
           </p>
 
           <p><b>Name of your institution</b><p>
-          <input id="ill_institution" type="text" class="form-control setting" placeholder="Institution name">
+          <input id="ill_institution" type="text" class="form-control setting green" placeholder="Institution name">
           <br>
           <p><b>What do your article ILLs cost, please include your currency symbol? e.g $4</b><p>
           <input id="cost" type="text" class="form-control setting green" placeholder="default free">
@@ -296,14 +293,20 @@
           <p><a class="green view previous" href="#"><span class="glyphicon glyphicon-arrow-left"></span>  Go back</a></p>
           <h2>Workflow</h2>
           <p>
-            If you embed instantill on a web page on your site, you can have it automatically run whenever certain URL parameters
-            are present in the web page address. By default this will happen if any of
+            You can link to InstantILL from any library system to integrate it into your existing workflows, say from library search or a link resolver.
+          </p>
+          <p>
+
+          </p>
+          <p>
+            If you embed instantill on a web page on your site, you can have it automatically run whenever certain URL parameters are present in the web page address. By default this will happen if any of
             'doi','title','url','atitle','rft_id','journal','issn','year','author' are supplied. You can configure these options below.
           </p>
           <p id="embeddedexample" style="display:none;"></p>
+          <!-- TODO: ask mark what does the above do? -->
           <p>
             <input id="autorun" type="checkbox" class="setting">
-            Do not automatically run instantill when identifiable URL parameters are present on the page it is embedded on (this is on by default)
+            Do not automatically run
           </p>
           <p>
             Which parameters should trigger instantill automatically. The defaults listed above will be used if this box is left empty.
@@ -312,11 +315,12 @@
             and "title" but with your own custom journal parameter, you could specify this as doi,title,mycustomparam=journal.
           </p>
           <p>
-            <input id="autorunparams" type="text" class="form-control setting" placeholder="defaults as above"><br>
+            <input id="autorunparams" type="text" class="form-control setting green" placeholder="defaults as above"><br>
           </p>
+          <p><b>If you're only linking to InstantILL in the middle of a workflow, you may not want the instructions to show.</b></p>
           <p>
             <input id="intropara" type="checkbox" class="setting">
-            Do not show the introductory paragraph before the instantill search box (this is on by default)
+            Do not show InstantILL's introductory statement.
           </p>
         </div>
         <div class="greenbottom">
