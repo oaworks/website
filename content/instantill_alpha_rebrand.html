@@ -296,32 +296,31 @@
             You can link to InstantILL from any library system to integrate it into your existing workflows, say from library search or a link resolver.
           </p>
           <p>
-
-          </p>
-          <p>
-            If you embed instantill on a web page on your site, you can have it automatically run whenever certain URL parameters are present in the web page address. By default this will happen if any of
-            'doi','title','url','atitle','rft_id','journal','issn','year','author' are supplied. You can configure these options below.
+            It will run automatically on the embedded page if it sees any of the following parameters in the URL: 'doi','title','url','atitle','rft_id','journal','issn','year','author'. You can change these, or turn this off entriely below.
           </p>
           <p id="embeddedexample" style="display:none;"></p>
           <!-- TODO: ask mark what does the above do? -->
-          <p>
-            <input id="autorun" type="checkbox" class="setting">
-            Do not automatically run
-          </p>
-          <p>
-            Which parameters should trigger instantill automatically. The defaults listed above will be used if this box is left empty.
-            Enter any that you want to use, separated by a comma. If you want to use a custom parameter to pass to one of our defaults listed above,
-            provide your parameter name followed by an "=" and the default name you want it to match. For example if you wanted to use our default "doi"
-            and "title" but with your own custom journal parameter, you could specify this as doi,title,mycustomparam=journal.
-          </p>
-          <p>
-            <input id="autorunparams" type="text" class="form-control setting green" placeholder="defaults as above"><br>
-          </p>
-          <p><b>If you're only linking to InstantILL in the middle of a workflow, you may not want the instructions to show.</b></p>
+          <p><b>
+            If you're only linking to InstantILL in the middle of a workflow, you may not want the instructions to show.
+          </b></p>
           <p>
             <input id="intropara" type="checkbox" class="setting">
             Do not show InstantILL's introductory statement.
           </p>
+          <p>
+            <input id="autorun" type="checkbox" class="setting">
+            Do not automatically run
+          </p>
+          <p><b>Adjust what triggers InstantILL</b></p>
+          <p>
+            <input id="autorunparams" type="text" class="form-control setting green" placeholder="defaults as above"><br>
+          </p>
+          <p>
+            The defaults listed above will be used if this box is left empty.
+            Enter any that you want to use, separated by a comma. If you want to use a custom parameter to pass to one of our defaults listed above, provide your parameter name followed by an "=" and the default name you want it to match. For example if you wanted to use our default "doi" and "title" but with your own custom journal parameter, you could specify this as doi,title,mycustomparam=journal.
+            <!-- TODO: why don't we use a list similar to how we do ILLs here? -->
+          </p>
+
         </div>
         <div class="greenbottom">
           <p><a class="green light" href="#">Get help</a> | <a class="green light" href="#">FAQ</a></p>
