@@ -290,6 +290,29 @@
         <div class="greenery">
           <p><a class="green view previous" href="#"><span class="glyphicon glyphicon-arrow-left"></span>  Go back</a></p>
           <h2>Workflow</h2>
+          <p>
+            If you embed instantill on a web page on your site, you can have it automatically run whenever certain URL parameters
+            are present in the web page address. By default this will happen if any of
+            'doi','title','url','atitle','rft_id','journal','issn','year','author' are supplied. You can configure these options below.
+          </p>
+          <p id="embeddedexample" style="display:none;"></p>
+          <p>
+            <input id="autorun" type="checkbox" class="setting">
+            Do not automatically run instantill when identifiable URL parameters are present on the page it is embedded on (this is on by default)
+          </p>
+          <p>
+            Which parameters should trigger instantill automatically. The defaults listed above will be used if this box is left empty.
+            Enter any that you want to use, separated by a comma. If you want to use a custom parameter to pass to one of our defaults listed above,
+            provide your parameter name followed by an "=" and the default name you want it to match. For example if you wanted to use our default "doi"
+            and "title" but with your own custom journal parameter, you could specify this as doi,title,mycustomparam=journal.
+          </p>
+          <p>
+            <input id="autorunparams" type="text" class="form-control setting" placeholder="defaults as above"><br>
+          </p>
+          <p>
+            <input id="intropara" type="checkbox" class="setting">
+            Do not show the introductory paragraph before the instantill search box (this is on by default)
+          </p>
         </div>
         <div class="greenbottom">
           <p><a class="green light" href="#">Get help</a> | <a class="green light" href="#">FAQ</a></p>
