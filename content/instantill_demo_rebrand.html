@@ -1,0 +1,244 @@
+
+<link rel="stylesheet" href="/static/oabutton_rebrand.css"> <!-- gets the new css (still also uses the old css, just overwrites where necessary) -->
+
+<style>
+  #topnav {
+    display: none;
+  }
+  #footer {
+    display: none;
+  }
+</style>
+
+<div id="rebrand" class="container-fluid">
+
+  <div id="demo" class="section">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-1 content">
+        <div id="instantill"></div>
+      </div>
+
+      <div class="col-md-4 col-md-offset-1 green">
+        <div class="greenery">
+          <h2><span class="glyphicon glyphicon-arrow-left"></span> Try it now</h2>
+
+          <p>Since this is a demo, we don’t have a real system to show you. But, it works on illiad, alma, tipasa and maybe more!
+          </p>
+          <p>
+            Below, you can see the meta-data we can pass to your systems! Hurray, less work for you.
+          </p>
+
+          <p><a class="btn btn-rebrand btn-block save preview" href="#" val="10.1145/2908080.2908114">Save &amp; preview</a></p>
+
+        </div>
+
+        <div class="greenbottom">
+          <p><a class="green light" href="#">Get help</a> | <a class="green light" href="#">FAQ</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+<!-- functions you can trigger:
+
+Put a div with ID "instantill" in the place where you want the instantill demo to show up. Note this can only appear in one place at a time.
+
+The page tries to execute a login on page load.
+If it succeeds it will try to replace the content of any element on the page with the "yourid" class with the user ID.
+It will also try to replace "but only you" in the content of any element with the "onlyyou" class with "but only you (USERNAME)".
+
+It will then go through any ILL config present for the logged in user, and for every value, it will look for an element on the page with the matching ID,
+and it will place the value of that config item as the value of the element (note as described below for saving, such elements should also have the "setting" class).
+(if it is a boolean value the element should be a checkbox, and it will be checked or not depending on boolean value).
+
+Any button with the "view" class will cause the UI view to change between divs with the "section" class.
+The "view" class button goes to the next "section" div by default. If you also give the button the "previous" class it goes to the previous one.
+If the "view" button has an href that is longer than 1 then the href value is assumed to be the ID of the div to show, or a classname for a set of things to show.
+Any execution of a "view" button first hides all "section" divs then shows the previous or next or defined things.
+
+Any button ("button" or "a" link tag) that has the "save" class will trigger a save
+A save will look for any element with the "setting" class and will take the value of that element and try to use it as the config value corresponding to the ID of that element.
+If the save button also has an attr called "preview" then it can be set to true to trigger an instantill preview run with a default value
+If preview attr is set but is some value other than true, then the value of the preview attr will be used in the instantill box
+
+Any button with the "preview" class will trigger the instantill box with a trial value. The value should be specified on the button
+in an attr called "val" or else the html content of the button will be used as the value.
+-->
+
+<script src="/static/instantill.js"></script>
+<script>
+jQuery(document).ready(function() {
+  $('#topnav').remove();
+  $('#footer').remove();
+  if ($('#rebrand').height() < $(window).height()) $('#rebrand').css({height:$(window).height()+'px'});
+
+  var view = function(e,which) {
+    if (e) e.preventDefault();
+    if (which) {
+      $('.section').hide();
+      if (which.indexOf('.') !== 0 && which.indexOf('#') !== 0) which = '#' + which;
+      $(which).show();
+    } else if ($(this).attr('href') === undefined) {
+      $('.section').hide();
+      if (window.location.hash) {
+        $(window.location.hash).show();
+      } else {
+        $('.section').first().show();
+      }
+    } else if ($(this).attr('href').length > 1) {
+      $('.section').hide();
+      which = $(this).attr('href');
+      if (which.indexOf('.') !== 0 && which.indexOf('#') !== 0) which = '#' + which;
+      $(which).show();
+    } else {
+      var movefrom = '#' + $('.section:visible').first().attr('id');
+      $('.section').hide();
+      $(this).hasClass('previous') ? $(movefrom).prev().show() : $(movefrom).next().show();
+      which = '#' + $('.section:visible').first().attr('id');
+    }
+    try {
+      var ch = $('.content:visible').height();
+      if (ch < $(window).height()/5) ch = $(window).height()/5;
+      var diff = $(window).height() - $('div.content:visible').offset().top - ch;
+      if (diff > 0 && parseInt($('div.content:visible').css('padding-top').replace('px','')) < 10 ) {
+        diff = Math.floor(diff/2 - $('div.content:visible').height() - 50) + 'px';
+        $('div.content:visible').css({'padding-top':diff});
+        //$('div.green:visible').css({'padding-top':diff});
+      }
+    } catch(err) {}
+		if (which && 'pushState' in window.history) window.history.pushState("", which, which);
+  }
+  $('body').on('click','.view',view);
+  $(window).on('popstate', view);
+  view();
+
+  var preview = function(e,val) {
+    try { e.preventDefault(); } catch (err) {}
+    if (typeof val !== 'string') {
+      try {
+        val = $(this).attr('val');
+      } catch(err) {
+        val = '10.1145/2908080.2908114';
+      }
+    }
+    if (typeof val !== 'string' || val.length < 10) val = '10.1145/2908080.2908114';
+    if (!$('#instantill').is(':visible')) {
+      view(undefined,'#demo');
+    }
+    _instantill_restart();
+    $('#oabutton_input').val(val);
+    setTimeout(function() { $('#oabutton_find').trigger('click'); },500);
+  }
+
+  $('.preview').bind('click',function(e) {
+    e.preventDefault();
+    $('#oabutton_input').val($(this).attr('val') ? $(this).attr('val') : $(this).html());
+    setTimeout(function() { $('#oabutton_find').trigger('click'); },500);
+  });
+
+  var _preview = false;
+  var save = function(e,pvw) {
+    try { e.preventDefault(); } catch (err) {}
+    if (e === true || pvw || $(this).attr('preview') || $(this).hasClass('preview')) _preview = $(this).attr('preview') ? $(this).attr('preview') : (pvw ? pvw : true);
+    var data = {};
+    $('.setting').each(function(i, obj) {
+      if ( $(this).is(':checkbox') ) {
+        data[$(this).attr('id')] = $(this).is(':checked');
+      } else if ( $(this).val() !== undefined ) {
+        data[$(this).attr('id')] = $(this).val();
+        if (['ill_redirect_base_url','terms','book','other'].indexOf($(this).attr('id')) !== -1 && data[$(this).attr('id')] !== '' && data[$(this).attr('id')].indexOf('http') !== 0) {
+          data[$(this).attr('id')] = 'http://' + data[$(this).attr('id')];
+          $(this).val(data[$(this).attr('id')]);
+        }
+      }
+    });
+
+    var opts = {
+      url: api + '/ill/config',
+      type:'POST',
+      cache:false,
+      processData:false,
+      contentType: 'application/json',
+      dataType: 'json',
+      success: function(data) {
+        if (_preview) {
+          $('.save').hide().after('<p class="saved">Changes saved! Your preview will run shortly.</p>');
+          setTimeout(function() { $('.saved').hide(); $('.save').show(); preview(undefined,_preview); }, 3000);
+          _preview = false;
+        } else {
+          $('.save').hide().after('<p class="saved">Changes saved!</p>');
+          setTimeout(function() { $('.saved').hide(); $('.save').show(); }, 4000);
+        }
+      },
+      error: function(data) {
+        $('#save').hide().after('<p class="saved">Sorry, changes could not be saved.</p>');
+        setTimeout(function() { $('.saved').hide(); $('#save').show(); }, 4000);
+        _preview = false;
+      },
+      beforeSend: function (request) { request.setRequestHeader("x-apikey", noddy.apikey); }
+    }
+    opts.data = JSON.stringify(data);
+    if (noddy.apikey) {
+      $.ajax(opts);
+    } else {
+      if (_preview) {
+        $('.save').hide().after('<p class="saved">You need to login to save changes! Your preview will run shortly.</p>');
+        setTimeout(function() { $('.saved').hide(); $('.save').show(); preview(undefined,_preview); }, 3000);
+        _preview = false;
+      } else {
+        $('.save').hide().after('<p class="saved">You need to login to save changes!</p>');
+        setTimeout(function() { $('.saved').hide(); $('.save').show(); }, 4000);
+      }
+    }
+  }
+  $('body').on('click','.save',save);
+
+  noddy.afterLogin = function() {
+    $('.promptsignup').hide();
+    var uid = noddy.user.account._id;
+    if ($('.yourid').length) $('.yourid').html($('.yourid').html().replace('instantill()','instantill({uid:"' + uid + '",api:"' + api + '"})'));
+    if ($('.onlyyou').length) $('.onlyyou').html($('.onlyyou').html().replace('but only you ','but only you (' + noddy.user.account.profile.firstname + ') '));
+    instantill({uid:uid, api:api});
+    try {
+      $('.email').attr('placeholder','default ' + (noddy.user.account.email ? noddy.user.account.email : noddy.user.account.emails[0].address));
+    } catch(err) {}
+    try {
+      for (var k in noddy.user.account.service.openaccessbutton.ill.config) {
+        if (typeof noddy.user.account.service.openaccessbutton.ill.config[k] === 'boolean') {
+          if (noddy.user.account.service.openaccessbutton.ill.config[k] === true) $('#'+k).prop('checked',true);
+        } else {
+          $('#'+k).val(noddy.user.account.service.openaccessbutton.ill.config[k]);
+        }
+      }
+    } catch(err) {}
+    try {
+      var q = {"size": 0, "query": {"filtered": {"query": {"bool": {"must": [{"term": {"plugin": "instantill"}},{"term": {"from": noddy.user.account._id}}]}}}}};
+      q.aggregations = {"embeds": {"terms": {"field": "embedded.exact"}}};
+      $.ajax({
+        url: api + '/availabilities',
+        type: 'POST',
+        data: q,
+        success: function(iia) {
+          try {
+            var eurl = iia.aggregations.embeds.buckets[0].key.split('?')[0].split('#')[0];
+            var ex = 'For example using the following URL parameter on one of your current embed URLs would automatically trigger an instantill search:<br>';
+            ex += eurl + '?doi=10.1145/2908080.2908114';
+            $('#embeddedexample').html(ex).show();
+          } catch(err) {}
+        }
+      });
+    } catch(err) {}
+    /*if (noddy.hasRole('root')) {
+      $('#ill_config').prepend('<input style="border-color:red;" id="uid" type="text" class="form-control setting" placeholder="UID (ADMIN setting override)"><br>')
+    }*/
+  }
+  noddy.nologin = function() {
+    instantill({uid:'oab_site', api:api});
+  }
+  noddy.login();
+});
+</script>
