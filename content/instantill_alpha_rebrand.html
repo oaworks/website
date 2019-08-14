@@ -195,15 +195,21 @@
   <div id="subscriptionsetup" class="section">
     <div class="row">
       <div class="col-md-6 col-md-offset-1 content">
-        <p>I am subscription / link resolver section</p>
+        <p>Hmmm, I wish InstantILL was here.</p>
       </div>
 
       <div class="col-md-4 col-md-offset-1 green">
         <div class="greenery">
-          <p><a class="green view previous" href="#"><span class="glyphicon glyphicon-arrow-left"></span>  Go back</a></p>
+          <p><a class="green view previous" href="#"><span class="glyphicon glyphicon-arrow-left"></span>Go back</a></p>
           <h2>Subscriptions</h2>
+          <p>
+            We use your link resolver to understand what you do and don’t have access to. Then, we figure out the best link and send your patrons to it through your proxy.
+            <p><b>What is you link resolver URL?</b></p>
+            <input id="subscription" type="text" class="form-control setting" placeholder="e.g http://rx8kl6yf4x.search.serialssolutions.com">
+          </p>
         </div>
         <div class="greenbottom">
+          <p><a class="btn btn-rebrand btn-block save preview" href="#">Save &amp; preview</a></p>
           <p><br><a class="green view next" href="#"><span class="glyphicon glyphicon-arrow-right"></span> Next</a></p>
           <p><a class="green light" href="#">Get help</a> | <a class="green light" href="#">FAQ</a></p>
         </div>
@@ -222,22 +228,47 @@
           <p><a class="green view previous" href="#"><span class="glyphicon glyphicon-arrow-left"></span>  Go back</a></p>
           <h2>Website &amp; Brand</h2>
 
-            <p id="onlyyou">InstantILL can be installed on your website for general use, but only you will be able to configure it.</p>
-            <p>To get started, include the following in the source code (HTML) of your page:</p>
-            <pre class="stickidin">
-    &lt;script src="{{site_url}}/static/instantill.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){instantill();});&lt;/script&gt;
-    &lt;div id="instantill"&gt;&lt;/div&gt;</pre>
+          <p>
+            InstantILL can be integrated onto any webpage on your website, and blend in with your brand.
+          </p>
+          <p>
+            To do that you can follow these simple instructions or we’ve drafted an email you can <a href="mailto:">send your developer</a>.
+          </p>
 
-            <p>You should now be good to go!</p>
+          <p>
+            First, include the following in the source code (HTML) of your page:
+          </p>
 
-            <p>If you still can't see the search box on your page you may need to manually include jquery by adding the following line <b>above</b> the one you already added:</p>
-            <pre>
-    &lt;script src="https://openaccessbutton.org/static/jquery-1.10.2.min.js"&gt;&lt;/script&gt;</pre>
+          <pre class="stickidin onlyyou">
+  &lt;script src="{{site_url}}/static/instantill.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){instantill();});&lt;/script&gt;
+  &lt;div id="instantill"&gt;&lt;/div&gt;</pre>
 
-            <p>You can control where the search widget gets displayed by moving:</p>
-              <pre>
-    &lt;div id="instantill"&gt;&lt;/div&gt;</pre>
 
+        <p>
+          If you still can't see the search box on your page you may need to manually include jquery by adding the following line <b>above</b> the one you already added:
+        </p>
+        <!-- TODO: Ask why we don't include by default -->
+        <pre>
+&lt;script src="https://openaccessbutton.org/static/jquery-1.10.2.min.js"&gt;&lt;/script&gt;</pre>
+
+
+        <p>You can control where the search widget gets displayed by moving:</p>
+          <pre>
+        &lt;div id="instantill"&gt;&lt;/div&gt;</pre>
+
+        <p>
+          If you don’t think it’s styled corrected, a developer can help you. If you have one, great, if not <a href="mailto:joe@openaccessbutton.org">reach out</a>.
+        </p>
+
+        <p>You should now be good to go!</p>
+
+        <h3>Some advice</h3>
+
+        <p>We suggest:</p>
+        <ul>
+          <li>Calling your page ‘Get a paper’</li>
+          <li>No need to mention 'InstantILL' to patrons</li>
+        </ul>
 
         </div>
         <div class="greenbottom">
