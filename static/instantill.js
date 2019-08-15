@@ -169,7 +169,7 @@ var instantill_run = function() {
   var attempts = 0;
   var clickwrong = false;
   var gotmore = false;
-  
+
   _instantill_restart = function() {
     matched = false;
     avail = undefined;
@@ -324,7 +324,7 @@ var instantill_run = function() {
             $('.oabutton_find').html('Find paper');
             $('.oabutton_ill').html('Complete request');
             var eml = typeof matched === 'string' ? matched : $('#oabutton_email').val();
-            $('#oabutton_availability').html('<h3>Thanks! Your request has been received</h3><p>Your confirmation code is: ' + res + ', this will not be emailed to you. The paper will be sent to ' + eml + ' as soon as possible.</p><p><a href="#" class="restart" style="font-weight:bold;">Try again</a></p>').show();
+            $('#oabutton_availability').html('<h3>Thanks! Your request has been received</h3><p>Your confirmation code is: ' + res + ', this will not be emailed to you. The paper will be sent to ' + eml + ' as soon as possible.</p><p><a href="#" class="restart" style="font-weight:bold;">Do another</a></p>').show();
           }
         },
         error: function(data) {
@@ -584,7 +584,7 @@ var instantill_run = function() {
   $('#oabutton_input').bind('keyup',availability);
   $('body').on('click','.oabutton_find',availability);
   $('body').on('click','.restart',_instantill_restart);
-  
+
   // could get custom _ops from the user config
   if (_oab_config.autorun !== true) {
     var searchfor = undefined;
