@@ -56,8 +56,9 @@ API.service.oab.receive = (rid,files,url,title,description,firstname,lastname,cr
         doi: r.doi,
         keywords: r.keywords,
         version: 'AAM',
-        journal_title: r.journal,
-        prereserve_doi: API.settings.service.openaccessbutton?.zenodo?.prereserve_doi and not r.doi?
+        journal_title: r.journal
+      if API.settings.service.openaccessbutton?.zenodo?.prereserve_doi and not r.doi?
+        meta.prereserve_doi = true # do this differently as sending false may still have been causing zenodo to give us a doi...
       try meta['access_right'] = r['access_right'] if typeof r['access_right'] is 'string' and r['access_right'] in ['open','embargoed','restricted','closed']
       try meta['embargo_date'] = r['embargo_date'] if r['embargo_date']? and meta['access_right'] is 'embargoed'
       try meta['access_conditions'] = r['access_conditions'] if typeof r['access_conditions'] is 'string'
@@ -73,7 +74,7 @@ API.service.oab.receive = (rid,files,url,title,description,firstname,lastname,cr
       service: 'openaccessbutton'
       from: 'requests@openaccessbutton.org'
       to: API.settings.service.openaccessbutton.notify.receive
-      subject: 'Request ' + r._id + ' received' + (if r.received.url? then ' - URL provided' else (if up.publish is false then ' - zenodo publish required' else ' - file published on Zenodo'))
+      subject: 'Request ' + r._id + ' received' + (if r.received.url? then ' - URL provided' else (if up.publish then ' - file published on Zenodo' else ' - zenodo publish required'))
       text: (if API.settings.dev then 'https://dev.openaccessbutton.org/request/' else 'https://openaccessbutton.org/request/') + r._id
     return {data: r}
 

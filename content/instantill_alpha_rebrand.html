@@ -21,11 +21,11 @@
       <div class="col-md-4 col-md-offset-1 green">
         <div class="greenery">
           <h2><span class="glyphicon glyphicon-arrow-left"></span> Try it now</h2>
-          
-          <p>On the left is a demo of InstantILL running real code. 
-          You can learn more of how it works, and what it feels like yourself. 
+
+          <p>On the left is a demo of InstantILL running real code.
+          You can learn more of how it works, and what it feels like yourself.
           Type in any article that interests you, or try these:</p>
-          
+
           <ul>
             <li><a class="green view" href="#illsetup"><span class="glyphicon glyphicon-arrow-right"></span> Interlibrary loans</a></li>
             <li><a class="green view" href="#subscriptionsetup"><span class="glyphicon glyphicon-arrow-right"></span> Subscriptions</a></li>
@@ -33,8 +33,48 @@
             <li><a class="green view" href="#workflowsetup"><span class="glyphicon glyphicon-arrow-right"></span> Workflow</a></li>
           </ul>
         </div>
-        
+
         <div class="greenbottom">
+          <p><a class="green light" href="#">Get help</a> | <a class="green light" href="#">FAQ</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="illsetup" class="section onlyyou">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-1 content">
+        <p>Hmmm... I want InstantILL to be visible here</p>
+
+<!-- TODO: I want InstantILL visible here. How do I make that happen? -->
+
+      </div>
+
+      <div class="col-md-4 col-md-offset-1 green">
+        <div class="greenery">
+          <p><a class="green view previous" href="#"><span class="glyphicon glyphicon-arrow-left"></span>  Go back</a></p>
+          <h2>Interlibrary loan: Submission</h2>
+          <p>
+            InstantILL uses your existing Interlibrary Loan systems to manage authentication, fulfillment, and payment, or can submit to an email address.
+          </p>
+
+          <p><b>What is your ILL article form link?</b><p>
+          <input id="ill_redirect_base_url" type="text" class="form-control setting green" placeholder="URL">
+          <!-- TODO: placeholder text is grey, user entry is green. This kinda makes sense but decide joe -->
+          <p>
+          OR
+          <p>
+          <p><b>What email address do you want ILLs forwarded to? (optional for email alternative)</b></p>
+          <input id="email" type="text" class="form-control setting green" placeholder="default is your OAB account email address">
+          <p>
+            If everything works, hit next! If it doesn’t, <a href="#illsetup-advanced" class="green">see advanced settings</a>.
+          </p>
+
+        </div>
+
+        <div class="greenbottom">
+          <p><a class="btn btn-rebrand btn-block save preview" href="#">Save &amp; preview</a></p>
+          <p><br><a class="green view next" href="#"><span class="glyphicon glyphicon-arrow-right"></span> Next</a></p>
           <p><a class="green light" href="#">Get help</a> | <a class="green light" href="#">FAQ</a></p>
         </div>
       </div>
@@ -44,16 +84,109 @@
   <div id="illsetup" class="section">
     <div class="row">
       <div class="col-md-6 col-md-offset-1 content">
-        <p>I am ILL setup section</p>
-        <p>Tell me lots of things about setting up my ILL</p>
+        <p>Hmmm... I want InstantILL to be visible here</p>
       </div>
 
       <div class="col-md-4 col-md-offset-1 green">
         <div class="greenery">
           <p><a class="green view previous" href="#"><span class="glyphicon glyphicon-arrow-left"></span>  Go back</a></p>
-          <h2>Interlibrary loan</h2>
-          <p>Bunch of info here...</p>
-          <p><input type="text" class="form-control green" value="hello I am a form input"></p>
+          <h2>Interlibrary loan: Settings</h2>
+          <p>
+            Now that you can submit requests, you can adjust some key details about loans. Everything is optional, and we’ve set common defaults.
+          </p>
+
+          <p><b>Name of your institution</b><p>
+          <input id="ill_institution" type="text" class="form-control setting green" placeholder="Institution name">
+          <br>
+          <p><b>What do your article ILLs cost, please include your currency symbol? e.g $4</b><p>
+          <input id="cost" type="text" class="form-control setting green" placeholder="default free">
+          <br>
+          <p><b>How long do your ILLs take to process on average? e.g 24 hours</b><p>
+          <input id="time" type="text" class="form-control setting green" placeholder="default 24 hours">
+          <br>
+          <p><b>What email address do you want users referred to? (optional for if there is a problem)</b><p>
+          <input id="problem_email" type="text" class="form-control setting green" placeholder="no default, the user will be told to contact their library">
+          <br>
+          <p><b>Terms and conditions URL (optional for email alternative)</b><p>
+          <input id="terms" type="text" class="form-control setting green" placeholder="">
+          <br>
+          <p><b>Book request URL (optional for if the user wants a book)</b><p>
+          <input id="book" type="text" class="form-control setting green" placeholder="e.g https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=21">
+          <br>
+          <p><b>Other request URL (optional for if the user wants something other than article or book)</b><p>
+          <input id="other" type="text" class="form-control setting green" placeholder="e.g https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=10">
+          <br>
+
+        </div>
+
+        <div class="greenbottom">
+          <p><a class="btn btn-rebrand btn-block save preview" href="#">Save &amp; preview</a></p>
+          <p><br><a class="green view next" href="#"><span class="glyphicon glyphicon-arrow-right"></span> Next</a></p>
+          <p><a class="green light" href="#">Get help</a> | <a class="green light" href="#">FAQ</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="illsetup-advanced" class="section">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-1 content">
+        <p>Hmmm... I want InstantILL to be visible here</p>
+      </div>
+
+      <div class="col-md-4 col-md-offset-1 green">
+        <div class="greenery">
+          <p><a class="green view previous" href="#"><span class="glyphicon glyphicon-arrow-left"></span>  Go back</a></p>
+          <h2>Interlibrary loan: Advanced</h2>
+          <p>
+            InstantILL uses your existing Interlibrary Loan systems to manage authentication, fulfillment, and payment, or can submit to an email address.
+          </p>
+
+          Add any additional params your base URL needs, such as a=b&c=d<br>
+          <input id="ill_redirect_params" type="text" class="form-control setting" placeholder="Add any additional params your base URL needs"><br>
+          <!--<input id="method" type="text" class="form-control setting" placeholder="default GET"><br>-->
+          Add the param used to provide a service ID (which will be InstantILL)<br>
+          <input id="sid" type="text" class="form-control setting green" placeholder="default sid">
+          <!-- TODO: page length issues -->
+          <br>
+          Title<br>
+          <input id="title" type="text" class="form-control setting green" placeholder="default atitle">
+          <br>
+          Journal title<br>
+          <input id="journal" type="text" class="form-control setting green" placeholder="default title">
+          <br>
+          DOI<br>
+          <input id="doi" type="text" class="form-control setting green" placeholder="default rft_id">
+          <br>
+          Author<br>
+          <input id="author" type="text" class="form-control setting green" placeholder="default au">
+          <br>
+          ISSN<br>
+          <input id="issn" type="text" class="form-control setting green" placeholder="default issn">
+          <br>
+          Volume<br>
+          <input id="volume" type="text" class="form-control setting green" placeholder="default volume">
+          <br>
+          Issue<br>
+          <input id="issue" type="text" class="form-control setting green" placeholder="default issue">
+          <br>
+          Page<br>
+          <input id="page" type="text" class="form-control setting green" placeholder="default pages">
+          <br>
+          Published<br>
+          <input id="published" type="text" class="form-control setting green" placeholder="default date">
+          <br>
+          PMID<br>
+          <input id="pmid" type="text" class="form-control setting green" placeholder="default pmid">
+          <br>
+          <!--<input id="pmcid" type="text" class="form-control setting" placeholder="default pmcid"><br>-->
+          Year
+          <input id="year" type="text" class="form-control setting green" placeholder="default rft.year">
+          <br>
+
+
+
+          </p>
         </div>
 
         <div class="greenbottom">
@@ -68,15 +201,21 @@
   <div id="subscriptionsetup" class="section">
     <div class="row">
       <div class="col-md-6 col-md-offset-1 content">
-        <p>I am subscription / link resolver section</p>
+        <p>Hmmm, I wish InstantILL was here.</p>
       </div>
 
       <div class="col-md-4 col-md-offset-1 green">
         <div class="greenery">
-          <p><a class="green view previous" href="#"><span class="glyphicon glyphicon-arrow-left"></span>  Go back</a></p>
+          <p><a class="green view previous" href="#"><span class="glyphicon glyphicon-arrow-left"></span>Go back</a></p>
           <h2>Subscriptions</h2>
+          <p>
+            We use your link resolver to understand what you do and don’t have access to. Then, we figure out the best link and send your patrons to it through your proxy.
+            <p><b>What is you link resolver URL?</b></p>
+            <input id="subscription" type="text" class="form-control setting green" placeholder="e.g http://rx8kl6yf4x.search.serialssolutions.com">
+          </p>
         </div>
         <div class="greenbottom">
+          <p><a class="btn btn-rebrand btn-block save preview" href="#">Save &amp; preview</a></p>
           <p><br><a class="green view next" href="#"><span class="glyphicon glyphicon-arrow-right"></span> Next</a></p>
           <p><a class="green light" href="#">Get help</a> | <a class="green light" href="#">FAQ</a></p>
         </div>
@@ -94,6 +233,49 @@
         <div class="greenery">
           <p><a class="green view previous" href="#"><span class="glyphicon glyphicon-arrow-left"></span>  Go back</a></p>
           <h2>Website &amp; Brand</h2>
+
+          <p>
+            InstantILL can be integrated onto any webpage on your website, and blend in with your brand.
+          </p>
+          <p>
+            To do that you can follow these simple instructions or we’ve drafted an email you can <a href="mailto:" class="light">send your developer</a>.
+          </p>
+
+          <p>
+            First, include the following in the source code (HTML) of your page:
+          </p>
+          <!-- TODO: I can't get 'onlyyou' to work on the below without blowing shit up -->
+          <pre class="stickidin">
+&lt;script src="{{site_url}}/static/instantill.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){instantill();});&lt;/script&gt;
+&lt;div id="instantill"&gt;&lt;/div&gt;</pre>
+
+
+        <p>
+          If you still can't see the search box on your page you may need to manually include jquery by adding the following line <b>above</b> the one you already added:
+        </p>
+        <!-- TODO: Ask why we don't include by default -->
+        <pre>
+&lt;script src="https://openaccessbutton.org/static/jquery-1.10.2.min.js"&gt;&lt;/script&gt;</pre>
+
+
+        <p>You can control where the search widget gets displayed by moving:</p>
+          <pre>
+&lt;div id="instantill"&gt;&lt;/div&gt;</pre>
+
+        <p>
+          If you don’t think it’s styled corrected, a developer can help you. If you have one, great, if not <a href="mailto:joe@openaccessbutton.org" class="light">reach out</a>.
+        </p>
+
+        <p>You should now be good to go!</p>
+
+        <h3>Some advice</h3>
+
+        <p>We suggest:</p>
+        <ul>
+          <li>Calling your page ‘Get a paper’</li>
+          <li>No need to mention 'InstantILL' to patrons</li>
+        </ul>
+
         </div>
         <div class="greenbottom">
           <p><br><a class="green view next" href="#"><span class="glyphicon glyphicon-arrow-right"></span> Next</a></p>
@@ -113,6 +295,35 @@
         <div class="greenery">
           <p><a class="green view previous" href="#"><span class="glyphicon glyphicon-arrow-left"></span>  Go back</a></p>
           <h2>Workflow</h2>
+          <p>
+            You can link to InstantILL from any library system to integrate it into your existing workflows, say from library search or a link resolver.
+          </p>
+          <p>
+            It will run automatically on the embedded page if it sees any of the following parameters in the URL: 'doi','title','url','atitle','rft_id','journal','issn','year','author'. You can change these, or turn this off entriely below.
+          </p>
+          <p id="embeddedexample" style="display:none;"></p>
+          <!-- TODO: ask mark what does the above do? -->
+          <p><b>
+            If you're only linking to InstantILL in the middle of a workflow, you may not want the instructions to show.
+          </b></p>
+          <p>
+            <input id="intropara" type="checkbox" class="setting">
+            Do not show InstantILL's introductory statement.
+          </p>
+          <p>
+            <input id="autorun" type="checkbox" class="setting">
+            Do not automatically run
+          </p>
+          <p><b>Adjust what triggers InstantILL</b></p>
+          <p>
+            <input id="autorunparams" type="text" class="form-control setting green" placeholder="defaults as above"><br>
+          </p>
+          <p>
+            The defaults listed above will be used if this box is left empty.
+            Enter any that you want to use, separated by a comma. If you want to use a custom parameter to pass to one of our defaults listed above, provide your parameter name followed by an "=" and the default name you want it to match. For example if you wanted to use our default "doi" and "title" but with your own custom journal parameter, you could specify this as doi,title,mycustomparam=journal.
+            <!-- TODO: why don't we use a list similar to how we do ILLs here? -->
+          </p>
+
         </div>
         <div class="greenbottom">
           <p><a class="green light" href="#">Get help</a> | <a class="green light" href="#">FAQ</a></p>
