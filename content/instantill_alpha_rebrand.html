@@ -8,7 +8,7 @@
   #footer {
     display: none;
   }
-  
+
   .btn-hollow {
     border-color: #46b633;
     border-width: 2px;
@@ -47,7 +47,7 @@
           Type in any article that interests you, or try these:</p>
 
           <ul class="arrowed">
-            <li><a class="green view" href="#illsetup"><span class="glyphicon glyphicon-arrow-right"></span> Interlibrary loans</a></li>
+            <li><a class="green view pull preview" val="text" href="#illsetup"><span class="glyphicon glyphicon-arrow-right"></span> Interlibrary loans</a></li>
             <li><a class="green view" href="#subscriptionsetup"><span class="glyphicon glyphicon-arrow-right"></span> Subscriptions</a></li>
             <li><a class="green view" href="#websiteembedsetup"><span class="glyphicon glyphicon-arrow-right"></span> Website &amp; Brand</a></li>
             <li><a class="green view" href="#workflowsetup"><span class="glyphicon glyphicon-arrow-right"></span> Workflow</a></li>
@@ -64,9 +64,6 @@
   <div id="illsetup" class="section onlyyou">
     <div class="row">
       <div class="col-md-6 col-md-offset-1 content">
-        <p>Hmmm... I want InstantILL to be visible here</p>
-
-<!-- TODO: I want InstantILL visible here. How do I make that happen? -->
 
       </div>
 
@@ -166,7 +163,6 @@
           <!--<input id="method" type="text" class="form-control setting" placeholder="default GET"><br>-->
           Add the param used to provide a service ID (which will be InstantILL)<br>
           <input id="sid" type="text" class="form-control setting green" placeholder="default sid">
-          <!-- TODO: page length issues -->
           <br>
           Title<br>
           <input id="title" type="text" class="form-control setting green" placeholder="default atitle">
@@ -362,7 +358,7 @@
       </div>
     </div>
   </div>
-  
+
 </div>
 
 
@@ -374,7 +370,7 @@ Put a div with ID "instantill" in the place where you want the instantill demo t
 The page tries to execute a login on page load.
 If it succeeds it will try to replace the content of any element on the page with the "stickidin" class with the user ID.
 It will also try to replace "but only you" in the content of any element with the "onlyyou" class with "but only you (USERNAME)".
-And it will look for any section with the class "stickidin" and will replace any text that contains instantill() with the instantill({SETTINGS}) 
+And it will look for any section with the class "stickidin" and will replace any text that contains instantill() with the instantill({SETTINGS})
 suitable for the logged in user (their user ID).
 
 It will then go through any ILL config present for the logged in user, and for every value, it will look for an element on the page with the matching ID,
@@ -386,8 +382,8 @@ The "view" class button goes to the next "section" div by default. If you also g
 If the "view" button has an href that is longer than 1 then the href value is assumed to be the ID of the div to show, or a classname for a set of things to show.
 Any execution of a "view" button first hides all "section" divs then shows the previous or next or defined things.
 
-If you want the section that you switch to with the "view" button to show the #instantill demo in it, you 
-can add the "pull" class to the button. Then, once the view has switched to the specified section, the #instantill 
+If you want the section that you switch to with the "view" button to show the #instantill demo in it, you
+can add the "pull" class to the button. Then, once the view has switched to the specified section, the #instantill
 demo div will be appended to the content section of the currently visible section.
 
 Any button ("button" or "a" link tag) that has the "save" class will trigger a save
@@ -398,8 +394,8 @@ If preview attr is set but is some value other than true, then the value of the 
 Any button with the "preview" class will trigger the instantill box with a trial value. The value should be specified on the button
 in an attr called "val" or else the html content of the button will be used as the value.
 
-NOTE: if you want the view to change when a preview is triggered, put the view class BEFORE the preview class. 
-That way the view will change, the preview will run, and if the preview is not visible it will be pulled forward 
+NOTE: if you want the view to change when a preview is triggered, put the view class BEFORE the preview class.
+That way the view will change, the preview will run, and if the preview is not visible it will be pulled forward
 into the view you have changed to.
 -->
 
