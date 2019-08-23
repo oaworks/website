@@ -372,9 +372,9 @@
 Put a div with ID "instantill" in the place where you want the instantill demo to show up. Note this can only appear in one place at a time.
 
 The page tries to execute a login on page load.
-If it succeeds it will try to replace the content of any element on the page with the "yourid" class with the user ID.
+If it succeeds it will try to replace the content of any element on the page with the "stickidin" class with the user ID.
 It will also try to replace "but only you" in the content of any element with the "onlyyou" class with "but only you (USERNAME)".
-And it will look for any section with the class "yourid" and will replace any text that contains instantill() with the instantill({SETTINGS}) 
+And it will look for any section with the class "stickidin" and will replace any text that contains instantill() with the instantill({SETTINGS}) 
 suitable for the logged in user (their user ID).
 
 It will then go through any ILL config present for the logged in user, and for every value, it will look for an element on the page with the matching ID,
@@ -585,12 +585,12 @@ jQuery(document).ready(function() {
   noddy.afterLogin = function() {
     $('.promptsignup').hide();
     var uid = noddy.user.account._id;
-    if ($('.yourid').length) {
+    if ($('.stickidin').length) {
       var uid = noddy.user.account._id;
       var repstr = 'instantill({uid:"' + uid + '"';
       if (api.indexOf('dev.') !== -1) repstr += ',api:"' + api + '"';
       repstr += '})';
-      $('.yourid').html($('.yourid').html().replace('instantill()',repstr));
+      $('.stickidin').html($('.stickidin').html().replace('instantill()',repstr));
     }
     if ($('.onlyyou').length) $('.onlyyou').html($('.onlyyou').html().replace('but only you ','but only you (' + noddy.user.account.profile.firstname + ') '));
     instantill({uid:uid, api:api});
