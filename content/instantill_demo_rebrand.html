@@ -48,7 +48,7 @@
           </p>
 
           <p><b>1. Try it with an Open Access article:</b></p>
-          <p><a class="btn btn-hollow btn-block preview view" href="#part2" val="10.1145/2908080.2908114">Show me!</a></p>
+          <p><a class="btn btn-hollow btn-block view preview" href="#part2" val="10.1145/2908080.2908114">Show me!</a></p>
           <!-- TODO: If something has a preview tag, can it also be a link? -->
         </div>
 
@@ -64,7 +64,7 @@
   <div id="part2" class="section">
     <div class="row">
       <div class="col-md-6 col-md-offset-1 content">
-        <p>I should be the response</p>
+        <!-- demo will be moved to here to show response-->
       </div>
 
       <div class="col-md-4 col-md-offset-1 green">
@@ -78,7 +78,7 @@
             Below, you can see the meta-data we can pass to your systems! Hurray, less work for you.
           </p>
           <p><b>2. Try it with an article you’ve subscribed too:</b></p>
-          <p><a class="btn btn-hollow btn-block preview" href="#part2" val="10.1145/2908080.2908114">Show me!</a></p>
+          <p><a class="btn btn-hollow btn-block view preview" href="#part2" val="10.1145/2908080.2908114">Show me!</a></p>
         </div>
         <div class="greenbottom">
           <p><a class="btn btn-rebrand btn-block" href="/instantill_alpha_rebrand">Install Now! For Free!</a></p>
@@ -159,6 +159,8 @@ Put a div with ID "instantill" in the place where you want the instantill demo t
 The page tries to execute a login on page load.
 If it succeeds it will try to replace the content of any element on the page with the "yourid" class with the user ID.
 It will also try to replace "but only you" in the content of any element with the "onlyyou" class with "but only you (USERNAME)".
+And it will look for any section with the class "yourid" and will replace any text that contains instantill() with the instantill({SETTINGS}) 
+suitable for the logged in user (their user ID).
 
 It will then go through any ILL config present for the logged in user, and for every value, it will look for an element on the page with the matching ID,
 and it will place the value of that config item as the value of the element (note as described below for saving, such elements should also have the "setting" class).
@@ -169,6 +171,10 @@ The "view" class button goes to the next "section" div by default. If you also g
 If the "view" button has an href that is longer than 1 then the href value is assumed to be the ID of the div to show, or a classname for a set of things to show.
 Any execution of a "view" button first hides all "section" divs then shows the previous or next or defined things.
 
+If you want the section that you switch to with the "view" button to show the #instantill demo in it, you 
+can add the "pull" class to the button. Then, once the view has switched to the specified section, the #instantill 
+demo div will be appended to the content section of the currently visible section.
+
 Any button ("button" or "a" link tag) that has the "save" class will trigger a save
 A save will look for any element with the "setting" class and will take the value of that element and try to use it as the config value corresponding to the ID of that element.
 If the save button also has an attr called "preview" then it can be set to true to trigger an instantill preview run with a default value
@@ -176,6 +182,10 @@ If preview attr is set but is some value other than true, then the value of the 
 
 Any button with the "preview" class will trigger the instantill box with a trial value. The value should be specified on the button
 in an attr called "val" or else the html content of the button will be used as the value.
+
+NOTE: if you want the view to change when a preview is triggered, put the view class BEFORE the preview class. 
+That way the view will change, the preview will run, and if the preview is not visible it will be pulled forward 
+into the view you have changed to.
 -->
 
 <script src="/static/instantill.js"></script>
@@ -184,6 +194,25 @@ jQuery(document).ready(function() {
   $('#topnav').remove();
   $('#footer').remove();
   if ($('#rebrand').height() < $(window).height()) $('#rebrand').css({height:$(window).height()+'px'});
+  $('div.green').css({'min-height':$(window).height()+'px'});
+
+  var fakeill = function(e) {
+    if (e) e.preventDefault();
+    console.log('Fake ILL trigger')
+  }
+
+  $(document).ajaxComplete(function(e,xhr) {
+    if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.match !== undefined) {
+      // an availability check finished, reposition the instantill window if necessary
+      if (($('#instantill').height() + $('#instantill').offset().top) > ($(window).height()*.95)) {
+        var diff = Math.floor(($(window).height() - $('#instantill').height())/2)-20;
+        if (diff < 20) diff = 20;
+        $('div.content:visible').css({'padding-top':diff+'px'});
+      }
+      $('body').off('.oabutton_ill');
+      $('body').on('click','.oabutton_ill',fakeill);
+    }
+  });
 
   var view = function(e,which) {
     if (e) e.preventDefault();
@@ -219,6 +248,7 @@ jQuery(document).ready(function() {
         //$('div.green:visible').css({'padding-top':diff});
       }
     } catch(err) {}
+    if ($(this).hasClass('pull') && $('#instantill','.section:visible').length !== 1) $('#instantill').appendTo($('.content','.section:visible'));
 		if (which && 'pushState' in window.history) window.history.pushState("", which, which);
   }
   $('body').on('click','.view',view);
@@ -227,27 +257,30 @@ jQuery(document).ready(function() {
 
   var preview = function(e,val) {
     try { e.preventDefault(); } catch (err) {}
-    if (typeof val !== 'string') {
-      try {
-        val = $(this).attr('val');
-      } catch(err) {
-        val = '10.1145/2908080.2908114';
+    if ($(this).hasClass('save') && val === undefined) {
+      // do nothing, the save will call this again once ready to run the preview with new values
+    } else {
+      if (typeof val !== 'string') {
+        try {
+          val = $(this).attr('val');
+        } catch(err) {
+          val = '10.1145/2908080.2908114';
+        }
       }
+      if (typeof val !== 'string' || val.length < 10) val = '10.1145/2908080.2908114';
+      if ($(this).hasClass('view')) {
+        if ($('#instantill','.section:visible').length !== 1) {
+          $('#instantill').appendTo($('.content','.section:visible'));
+        }
+      } else if (!$('#instantill').is(':visible')) {
+        view(undefined,'#demo');
+      }
+      _instantill_restart();
+      $('#oabutton_input').val(val);
+      setTimeout(function() { $('#oabutton_find').trigger('click'); },300);
     }
-    if (typeof val !== 'string' || val.length < 10) val = '10.1145/2908080.2908114';
-    if (!$('#instantill').is(':visible')) {
-      view(undefined,'#demo');
-    }
-    _instantill_restart();
-    $('#oabutton_input').val(val);
-    setTimeout(function() { $('#oabutton_find').trigger('click'); },500);
   }
-
-  $('.preview').bind('click',function(e) {
-    e.preventDefault();
-    $('#oabutton_input').val($(this).attr('val') ? $(this).attr('val') : $(this).html());
-    setTimeout(function() { $('#oabutton_find').trigger('click'); },500);
-  });
+  $('body').on('click','.preview',preview);
 
   var _preview = false;
   var save = function(e,pvw) {
@@ -309,7 +342,13 @@ jQuery(document).ready(function() {
   noddy.afterLogin = function() {
     $('.promptsignup').hide();
     var uid = noddy.user.account._id;
-    if ($('.yourid').length) $('.yourid').html($('.yourid').html().replace('instantill()','instantill({uid:"' + uid + '",api:"' + api + '"})'));
+    if ($('.yourid').length) {
+      var uid = noddy.user.account._id;
+      var repstr = 'instantill({uid:"' + uid + '"';
+      if (api.indexOf('dev.') !== -1) repstr += ',api:"' + api + '"';
+      repstr += '})';
+      $('.yourid').html($('.yourid').html().replace('instantill()',repstr));
+    }
     if ($('.onlyyou').length) $('.onlyyou').html($('.onlyyou').html().replace('but only you ','but only you (' + noddy.user.account.profile.firstname + ') '));
     instantill({uid:uid, api:api});
     try {
