@@ -452,7 +452,7 @@ API.service.oab.ill.metadata = (metadata={}, opts={}, refresh=false) ->
   # metadata may also contain options passed from query params, particularly refresh
   refresh = true if metadata.cache is 'false' or metadata.cache is false
   refresh = metadata.refresh if metadata.refresh?
-  refresh = 0 if opts.embedded? and opts.embedded.indexOf('openaccessbutton.org') isnt -1 # don't bother checking for previous results if on our site
+  #refresh = 0 if opts.embedded? and opts.embedded.indexOf('openaccessbutton.org') isnt -1 # don't bother checking for previous results if on our site
   
   want = ['title','doi','pmid','pmcid','author','journal','issn','volume','issue','page','published','year']
   _got = () ->
@@ -587,7 +587,7 @@ API.service.oab.ill.metadata = (metadata={}, opts={}, refresh=false) ->
   metadata.took ?= metadata.ended - metadata.started
   # should this save even when we do not get results, or should we always be trying again, or within some certain timeframe?
   # don't save if came from an embed on our own domains, so we don't save lots of test stuff
-  oab_metadata.insert(metadata) if metadata.title and (metadata.doi or metadata.journal or metadata.issn) and (not opts.embedded? or opts.embedded.indexOf('openaccessbutton.org') is -1)
+  oab_metadata.insert(metadata) if metadata.title and (metadata.doi or metadata.journal or metadata.issn) and JSON.stringify(metadata).toLowerCase().replace(/'/g,' ').replace(/"/g,' ').indexOf(' test ') is -1 #and (not opts.embedded? or opts.embedded.indexOf('openaccessbutton.org') is -1)
   return metadata
 
 API.service.oab.ill.progress = () ->
