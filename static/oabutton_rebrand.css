@@ -41,12 +41,12 @@ h1, h2, h3, h4, h5, h6 {
   font-weight:bold;
 }
 
-ul {
+ul.arrowed {
   margin-top:50px;
   margin-bottom:50px;
   list-style: none;
 }
-ul li {
+ul.arrowed li {
   margin-bottom:20px;
 }
 
@@ -111,19 +111,20 @@ div.green {
   background-color:#edf8ed;
   color:#46b633;
   height:100%;
+  padding-bottom:160px;
 }
 div.greenery {
   margin-top:15%;
   margin-left:10%;
   width:80%;
   max-width:500px;
-  text-align: justify;
-  text-justify: inter-word;
+  /*text-align: justify;
+  text-justify: inter-word;*/
 }
 div.greenbottom {
   position:absolute;
   bottom:20px;
-  left:10%;    
-  width:80%;
+  left:13%;
+  width:75%;
   max-width:500px;
 }

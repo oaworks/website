@@ -111,20 +111,36 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
           # <A title="Navigate to target in new window" HREF="javascript:openSFXMenuLink(this, 'basic1', undefined, '_blank');">Go to Journal website at</A>
           # but the content can be different on different sfx language pages, so need to find this link via the tag attributes, then trigger it, then get the page it opens
           # can test this with 10.1016/j.jtbi.2019.01.031 on instantill page
+          # note there is also now an sfx xml endpoint that we have found to check
           if url.indexOf('sfx.') isnt -1
             res.error.push 'SFX' if error
-            if spg.indexOf('<a title="navigate to target in new window') isnt -1 and spg.split('<a title="navigate to target in new window')[1].split('">')[0].indexOf('basic1') isnt -1
-              # tried to get the next link after the click through, but was not worth putting more time into it. For now, seems like this will have to do
-              res.url = url
-              res.findings.sfx = res.url
-              if not all and res.url?
-                if res.url.indexOf('getitnow') is -1
-                  res.found = 'sfx'
-                  API.http.cache(sig, 'oab_ill_subs', res)
-                  return res
-                else
-                  res.url = undefined
-                  rs.findings.sfx = undefined
+            if false and do_sfx_xml # remove the false once have worked out how to identify sfx URLs
+              if spg.indexOf('getFullTxt') isnt -1 and spg.indexOf('<target_url>') isnt -1
+                try
+                  # this will get the first target that has a getFullTxt type and has a target_url element with a value in it, or will error
+                  res.url = spg.split('getFullTxt')[1].split('</target>')[0].split('<target_url>')[1].split('</target_url>')[0].trim()
+                  res.findings.sfx = res.url
+                  if not all and res.url?
+                    if res.url.indexOf('getitnow') is -1
+                      res.found = 'sfx'
+                      API.http.cache(sig, 'oab_ill_subs', res)
+                      return res
+                    else
+                      res.url = undefined
+                      res.findings.sfx = undefined
+            else
+              if spg.indexOf('<a title="navigate to target in new window') isnt -1 and spg.split('<a title="navigate to target in new window')[1].split('">')[0].indexOf('basic1') isnt -1
+                # tried to get the next link after the click through, but was not worth putting more time into it. For now, seems like this will have to do
+                res.url = url
+                res.findings.sfx = res.url
+                if not all and res.url?
+                  if res.url.indexOf('getitnow') is -1
+                    res.found = 'sfx'
+                    API.http.cache(sig, 'oab_ill_subs', res)
+                    return res
+                  else
+                    res.url = undefined
+                    res.findings.sfx = undefined
   
           # eds
           # note eds does need a login, but IP address range is supposed to get round that
@@ -148,7 +164,24 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
                   return res
                 else
                   res.url = undefined
-                  rs.findings.eds = undefined
+          # with access:
+          # https://snc.idm.oclc.org/login?url=http://resolver.ebscohost.com/openurl?sid=google&auinit=RE&aulast=Marx&atitle=Platelet-rich+plasma:+growth+factor+enhancement+for+bone+grafts&id=doi:10.1016/S1079-2104(98)90029-4&title=Oral+Surgery,+Oral+Medicine,+Oral+Pathology,+Oral+Radiology,+and+Endodontology&volume=85&issue=6&date=1998&spage=638&issn=1079-2104
+          # can be tested on instantill page with 10.1016/S1079-2104(98)90029-4
+          # without:
+          # https://snc.idm.oclc.org/login?url=http://resolver.ebscohost.com/openurl?sid=google&auinit=MP&aulast=Newton&atitle=Librarian+roles+in+institutional+repository+data+set+collecting:+outcomes+of+a+research+library+task+force&id=doi:10.1080/01462679.2011.530546
+          else if url.indexOf('ebscohost.') isnt -1
+            res.error.push 'Ebsco' if error
+            if spg.indexOf('view this ') isnt -1 and pg.indexOf('<a data-auto="menu-link" href="') isnt -1
+              res.url = url.replace('://','______').split('/')[0].replace('______','://') + pg.split('<a data-auto="menu-link" href="')[1].split('" title="')[0]
+              res.findings.eds = res.url
+              if not all and res.url?
+                if res.url.indexOf('getitnow') is -1
+                  res.found = 'eds'
+                  API.http.cache(sig, 'oab_ill_subs', res)
+                  return res
+                else
+                  res.url = undefined
+                  res.findings.eds = undefined
           
           # serials solutions
           # the HTML source code for the No Results page includes a span element with the class SS_NoResults. This class is only found on the No Results page (confirmed by serialssolutions)
@@ -452,7 +485,7 @@ API.service.oab.ill.metadata = (metadata={}, opts={}, refresh=false) ->
   # metadata may also contain options passed from query params, particularly refresh
   refresh = true if metadata.cache is 'false' or metadata.cache is false
   refresh = metadata.refresh if metadata.refresh?
-  refresh = 0 if opts.embedded? and opts.embedded.indexOf('openaccessbutton.org') isnt -1 # don't bother checking for previous results if on our site
+  #refresh = 0 if opts.embedded? and opts.embedded.indexOf('openaccessbutton.org') isnt -1 # don't bother checking for previous results if on our site
   
   want = ['title','doi','pmid','pmcid','author','journal','issn','volume','issue','page','published','year']
   _got = () ->
@@ -587,7 +620,7 @@ API.service.oab.ill.metadata = (metadata={}, opts={}, refresh=false) ->
   metadata.took ?= metadata.ended - metadata.started
   # should this save even when we do not get results, or should we always be trying again, or within some certain timeframe?
   # don't save if came from an embed on our own domains, so we don't save lots of test stuff
-  oab_metadata.insert(metadata) if metadata.title and (metadata.doi or metadata.journal or metadata.issn) and (not opts.embedded? or opts.embedded.indexOf('openaccessbutton.org') is -1)
+  oab_metadata.insert(metadata) if metadata.title and (metadata.doi or metadata.journal or metadata.issn) and JSON.stringify(metadata).toLowerCase().replace(/'/g,' ').replace(/"/g,' ').indexOf(' test ') is -1 #and (not opts.embedded? or opts.embedded.indexOf('openaccessbutton.org') is -1)
   return metadata
 
 API.service.oab.ill.progress = () ->

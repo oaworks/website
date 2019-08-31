@@ -8,6 +8,26 @@
   #footer {
     display: none;
   }
+
+  .btn-hollow {
+    border-color: #46b633;
+    border-width: 2px;
+    border-radius: 0px;
+    color: #46b633;
+    font-weight: bold;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .btn-hollow:hover {
+    border-color: #46b633;
+    border-width: 2px;
+    border-radius: 0px;
+    color: #46b633;
+    font-weight: bold;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
 </style>
 
 <div id="rebrand" class="container-fluid">
@@ -26,8 +46,8 @@
           You can learn more of how it works, and what it feels like yourself.
           Type in any article that interests you, or try these:</p>
 
-          <ul>
-            <li><a class="green view" href="#illsetup"><span class="glyphicon glyphicon-arrow-right"></span> Interlibrary loans</a></li>
+          <ul class="arrowed">
+            <li><a class="green view pull preview" val="text" href="#illsetup"><span class="glyphicon glyphicon-arrow-right"></span> Interlibrary loans</a></li>
             <li><a class="green view" href="#subscriptionsetup"><span class="glyphicon glyphicon-arrow-right"></span> Subscriptions</a></li>
             <li><a class="green view" href="#websiteembedsetup"><span class="glyphicon glyphicon-arrow-right"></span> Website &amp; Brand</a></li>
             <li><a class="green view" href="#workflowsetup"><span class="glyphicon glyphicon-arrow-right"></span> Workflow</a></li>
@@ -44,9 +64,6 @@
   <div id="illsetup" class="section onlyyou">
     <div class="row">
       <div class="col-md-6 col-md-offset-1 content">
-        <p>Hmmm... I want InstantILL to be visible here</p>
-
-<!-- TODO: I want InstantILL visible here. How do I make that happen? -->
 
       </div>
 
@@ -60,7 +77,6 @@
 
           <p><b>What is your ILL article form link?</b><p>
           <input id="ill_redirect_base_url" type="text" class="form-control setting green" placeholder="URL">
-          <!-- TODO: placeholder text is grey, user entry is green. This kinda makes sense but decide joe -->
           <p>
           OR
           <p>
@@ -73,7 +89,7 @@
         </div>
 
         <div class="greenbottom">
-          <p><a class="btn btn-rebrand btn-block save preview" href="#">Save &amp; preview</a></p>
+          <p><a class="btn btn-rebrand btn-block save pull preview" href="#">Save &amp; preview</a></p>
           <p><br><a class="green view next" href="#"><span class="glyphicon glyphicon-arrow-right"></span> Next</a></p>
           <p><a class="green light" href="#">Get help</a> | <a class="green light" href="#">FAQ</a></p>
         </div>
@@ -143,11 +159,10 @@
           </p>
 
           Add any additional params your base URL needs, such as a=b&c=d<br>
-          <input id="ill_redirect_params" type="text" class="form-control setting" placeholder="Add any additional params your base URL needs"><br>
+          <input id="ill_redirect_params" type="text" class="form-control setting green" placeholder="Add any additional params your base URL needs"><br>
           <!--<input id="method" type="text" class="form-control setting" placeholder="default GET"><br>-->
           Add the param used to provide a service ID (which will be InstantILL)<br>
           <input id="sid" type="text" class="form-control setting green" placeholder="default sid">
-          <!-- TODO: page length issues -->
           <br>
           Title<br>
           <input id="title" type="text" class="form-control setting green" placeholder="default atitle">
@@ -244,19 +259,9 @@
           <p>
             First, include the following in the source code (HTML) of your page:
           </p>
-          <!-- TODO: I can't get 'onlyyou' to work on the below without blowing shit up -->
           <pre class="stickidin">
 &lt;script src="{{site_url}}/static/instantill.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){instantill();});&lt;/script&gt;
 &lt;div id="instantill"&gt;&lt;/div&gt;</pre>
-
-
-        <p>
-          If you still can't see the search box on your page you may need to manually include jquery by adding the following line <b>above</b> the one you already added:
-        </p>
-        <!-- TODO: Ask why we don't include by default -->
-        <pre>
-&lt;script src="https://openaccessbutton.org/static/jquery-1.10.2.min.js"&gt;&lt;/script&gt;</pre>
-
 
         <p>You can control where the search widget gets displayed by moving:</p>
           <pre>
@@ -302,7 +307,6 @@
             It will run automatically on the embedded page if it sees any of the following parameters in the URL: 'doi','title','url','atitle','rft_id','journal','issn','year','author'. You can change these, or turn this off entriely below.
           </p>
           <p id="embeddedexample" style="display:none;"></p>
-          <!-- TODO: ask mark what does the above do? -->
           <p><b>
             If you're only linking to InstantILL in the middle of a workflow, you may not want the instructions to show.
           </b></p>
@@ -332,6 +336,29 @@
     </div>
   </div>
 
+
+
+  <div id="fakeill" class="section">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-1 content">
+        <p>I am fake ILL section</p>
+        <table class="table table-bordered" id="fakeilltable">
+        </table>
+        <p><a class="btn btn-rebrand" href="#">Now you would click to submit your ILL in your ILL system...?</a></p>
+      </div>
+
+      <div class="col-md-4 col-md-offset-1 green">
+        <div class="greenery">
+          <p><a class="green view previous" href="#"><span class="glyphicon glyphicon-arrow-left"></span>  Go back</a></p>
+          <h2>A fake ILL</h2>
+        </div>
+        <div class="greenbottom">
+          <p><a class="green light" href="#">Get help</a> | <a class="green light" href="#">FAQ</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 
@@ -341,8 +368,11 @@
 Put a div with ID "instantill" in the place where you want the instantill demo to show up. Note this can only appear in one place at a time.
 
 The page tries to execute a login on page load.
-If it succeeds it will try to replace the content of any element on the page with the "yourid" class with the user ID.
+If it succeeds it will try to replace the content of any element on the page with the "stickidin" class with the user ID.
 It will also try to replace "but only you" in the content of any element with the "onlyyou" class with "but only you (USERNAME)".
+And it will look for any section with the class "stickidin" and will replace any text that contains instantill() with the instantill({SETTINGS})
+suitable for the logged in user (their user ID).
+
 It will then go through any ILL config present for the logged in user, and for every value, it will look for an element on the page with the matching ID,
 and it will place the value of that config item as the value of the element (note as described below for saving, such elements should also have the "setting" class).
 (if it is a boolean value the element should be a checkbox, and it will be checked or not depending on boolean value).
@@ -352,6 +382,10 @@ The "view" class button goes to the next "section" div by default. If you also g
 If the "view" button has an href that is longer than 1 then the href value is assumed to be the ID of the div to show, or a classname for a set of things to show.
 Any execution of a "view" button first hides all "section" divs then shows the previous or next or defined things.
 
+If you want the section that you switch to with the "view" button to show the #instantill demo in it, you
+can add the "pull" class to the button. Then, once the view has switched to the specified section, the #instantill
+demo div will be appended to the content section of the currently visible section.
+
 Any button ("button" or "a" link tag) that has the "save" class will trigger a save
 A save will look for any element with the "setting" class and will take the value of that element and try to use it as the config value corresponding to the ID of that element.
 If the save button also has an attr called "preview" then it can be set to true to trigger an instantill preview run with a default value
@@ -359,6 +393,10 @@ If preview attr is set but is some value other than true, then the value of the 
 
 Any button with the "preview" class will trigger the instantill box with a trial value. The value should be specified on the button
 in an attr called "val" or else the html content of the button will be used as the value.
+
+NOTE: if you want the view to change when a preview is triggered, put the view class BEFORE the preview class.
+That way the view will change, the preview will run, and if the preview is not visible it will be pulled forward
+into the view you have changed to.
 -->
 
 <script src="/static/instantill.js"></script>
@@ -366,7 +404,54 @@ in an attr called "val" or else the html content of the button will be used as t
 jQuery(document).ready(function() {
   $('#topnav').remove();
   $('#footer').remove();
-  if ($('#rebrand').height() < $(window).height()) $('#rebrand').css({height:$(window).height()+'px'});
+  if ($('#rebrand').height() < $(window).height()) $('#rebrand').css({'min-height':$(window).height()+'px'});
+  $('div.green').css({'min-height':$(window).height()+'px'});
+
+  var _ill_response = undefined;
+  var fakeill = function(e) {
+    if (e) e.preventDefault();
+    $('#fakeilltable').html('');
+    try {
+      for ( var i in _ill_response.meta.article) {
+        if (['started','ended','took'].indexOf(i) === -1) {
+          if (i === 'author') {
+            var append = '<tr><td>Author(s)</td><td><input class="form-control" type="text" value="';
+            for (var a in _ill_response.meta.article.author) {
+              try {
+                if (a !== '0') append += ', ';
+                append += _ill_response.meta.article.author[a].given + ' ' + _ill_response.meta.article.author[a].family
+              } catch(err) {}
+            }
+            $('#fakeilltable').append(append + '"></td></tr>');
+          } else {
+            try {
+              $('#fakeilltable').append('<tr><td>' + i.substring(0,1).toUpperCase() + (['doi','issn'].indexOf(i.toLowerCase()) !== -1 ? i.substring(1).toUpperCase() : i.substring(1)) + '</td><td><input class="form-control" type="text" value="' + _ill_response.meta.article[i] + '"></td></tr>');
+            } catch(err) {}
+          }
+        }
+      }
+    } catch(err) {}
+    if (($('#fakeill').height() + $('#fakeill').offset().top) > $(window).height()) {
+      var diff = Math.floor(($(window).height() - $('#fakeill').height())/2)-20;
+      if (diff < 20) diff = 20;
+      $('#fakeill').children('div.content').css({'padding-top':diff+'px'});
+    }
+    view(undefined,'#fakeill');
+  }
+
+  $(document).ajaxComplete(function(e,xhr) {
+    if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.match !== undefined) {
+      _ill_response = xhr.responseJSON.data;
+      // an availability check finished, reposition the instantill window if necessary
+      if (($('#instantill').height() + $('#instantill').offset().top) > ($(window).height()*.95)) {
+        var diff = Math.floor(($(window).height() - $('#instantill').height())/2)-20;
+        if (diff < 20) diff = 20;
+        $('div.content:visible').css({'padding-top':diff+'px'});
+      }
+      $('.oabutton_ill').off();
+      $('body').on('click','.oabutton_ill',fakeill);
+    }
+  });
 
   var view = function(e,which) {
     if (e) e.preventDefault();
@@ -392,16 +477,17 @@ jQuery(document).ready(function() {
       $(this).hasClass('previous') ? $(movefrom).prev().show() : $(movefrom).next().show();
       which = '#' + $('.section:visible').first().attr('id');
     }
+    if ($(this).hasClass('pull') && $('#instantill','.section:visible').length !== 1) $('#instantill').appendTo($('.content','.section:visible'));
     try {
-      var ch = $('.content:visible').height();
+      var ch = $('div.content:visible').height();
       if (ch < $(window).height()/5) ch = $(window).height()/5;
       var diff = $(window).height() - $('div.content:visible').offset().top - ch;
       if (diff > 0 && parseInt($('div.content:visible').css('padding-top').replace('px','')) < 10 ) {
         diff = Math.floor(diff/2 - $('div.content:visible').height() - 50) + 'px';
         $('div.content:visible').css({'padding-top':diff});
-        //$('div.green:visible').css({'padding-top':diff});
       }
     } catch(err) {}
+    $('div.green:visible').css({'min-height':$(document).height()+'px'});
 		if (which && 'pushState' in window.history) window.history.pushState("", which, which);
   }
   $('body').on('click','.view',view);
@@ -410,27 +496,30 @@ jQuery(document).ready(function() {
 
   var preview = function(e,val) {
     try { e.preventDefault(); } catch (err) {}
-    if (typeof val !== 'string') {
-      try {
-        val = $(this).attr('val');
-      } catch(err) {
-        val = '10.1145/2908080.2908114';
+    if ($(this).hasClass('save') && val === undefined) {
+      // do nothing, the save will call this again once ready to run the preview with new values
+    } else {
+      if (typeof val !== 'string') {
+        try {
+          val = $(this).attr('val');
+        } catch(err) {
+          val = '10.1145/2908080.2908114';
+        }
       }
+      if (typeof val !== 'string' || val.length < 10) val = '10.1145/2908080.2908114';
+      if ($(this).hasClass('view')) {
+        if ($('#instantill','.section:visible').length !== 1) {
+          $('#instantill').appendTo($('.content','.section:visible'));
+        }
+      } else if (!$('#instantill').is(':visible')) {
+        view(undefined,'#demo');
+      }
+      _instantill_restart();
+      $('#oabutton_input').val(val);
+      setTimeout(function() { $('#oabutton_find').trigger('click'); },300);
     }
-    if (typeof val !== 'string' || val.length < 10) val = '10.1145/2908080.2908114';
-    if (!$('#instantill').is(':visible')) {
-      view(undefined,'#demo');
-    }
-    _instantill_restart();
-    $('#oabutton_input').val(val);
-    setTimeout(function() { $('#oabutton_find').trigger('click'); },500);
   }
-
-  $('.preview').bind('click',function(e) {
-    e.preventDefault();
-    $('#oabutton_input').val($(this).attr('val') ? $(this).attr('val') : $(this).html());
-    setTimeout(function() { $('#oabutton_find').trigger('click'); },500);
-  });
+  $('body').on('click','.preview',preview);
 
   var _preview = false;
   var save = function(e,pvw) {
@@ -492,7 +581,13 @@ jQuery(document).ready(function() {
   noddy.afterLogin = function() {
     $('.promptsignup').hide();
     var uid = noddy.user.account._id;
-    if ($('.yourid').length) $('.yourid').html($('.yourid').html().replace('instantill()','instantill({uid:"' + uid + '",api:"' + api + '"})'));
+    if ($('.stickidin').length) {
+      var uid = noddy.user.account._id;
+      var repstr = 'instantill({uid:"' + uid + '"';
+      if (api.indexOf('dev.') !== -1) repstr += ',api:"' + api + '"';
+      repstr += '})';
+      $('.stickidin').html($('.stickidin').html().replace('instantill()',repstr));
+    }
     if ($('.onlyyou').length) $('.onlyyou').html($('.onlyyou').html().replace('but only you ','but only you (' + noddy.user.account.profile.firstname + ') '));
     instantill({uid:uid, api:api});
     try {
