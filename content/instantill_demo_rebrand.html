@@ -1,4 +1,5 @@
-
+<!-- TODO: Mark, can we get instantill.org/demo pointed here? -->
+<!-- TODO: not clear if fake ill page works here.  -->
 <link rel="stylesheet" href="/static/oabutton_rebrand.css"> <!-- gets the new css (still also uses the old css, just overwrites where necessary) -->
 
 <style>
@@ -7,6 +8,20 @@
   }
   #footer {
     display: none;
+  }
+
+  .form-control {
+    background-color:#edf8ed;
+    color:#46b633;
+    border:2px solid #46b633;
+  }
+
+  a {
+    color:#46b633;
+    font-weight:normal;
+  }
+  a:hover {
+    color:#46b633;
   }
 
   .btn-hollow {
@@ -73,6 +88,28 @@
       </div>
     </div>
   </div>
+
+  <div id="fakeill" class="section">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-1 content">
+        <p>I am fake ILL section</p>
+        <table class="table table-bordered" id="fakeilltable">
+        </table>
+        <p><a class="btn btn-rebrand" href="#">Now you would click to submit your ILL in your ILL system...?</a></p>
+      </div>
+
+      <div class="col-md-4 col-md-offset-1 green">
+        <div class="greenery">
+          <p><a class="green view previous" href="#"><span class="glyphicon glyphicon-arrow-left"></span>  Go back</a></p>
+          <h2>A fake ILL</h2>
+        </div>
+        <div class="greenbottom">
+          <p><a class="green light" href="mailto:joe@openaccessbutton.org">Get help</a> | <a class="green light" href="mailto:joe@openaccessbutton.org">Give Feedback</a> | <a class="green light" href="mailto:joe@openaccessbutton.org">Report an Issue</a> | <a class="green light" href="#faq">FAQ</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
   <div id="part2" class="section">
     <div class="row">
