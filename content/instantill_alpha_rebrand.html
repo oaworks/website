@@ -60,12 +60,30 @@
           Type in any article that interests you, or try these:</p>
 
           <ul class="arrowed">
-            <li><a class="green view pull preview" val="text" href="#ill"><span class="glyphicon glyphicon-arrow-right"></span> Interlibrary loans</a></li>
-            <li><a class="green view" href="#subscription"><span class="glyphicon glyphicon-arrow-right"></span> Subscriptions</a></li>
-            <li><a class="green view" href="#embed"><span class="glyphicon glyphicon-arrow-right"></span> Website &amp; Brand</a></li>
-            <li><a class="green view" href="#workflow"><span class="glyphicon glyphicon-arrow-right"></span> Workflow</a></li>
-            <li><a class="green view" href="#reporting"><span class="glyphicon glyphicon-arrow-right"></span> Reporting</a></li>
-            <li><a class="green view" href="#advanced"><span class="glyphicon glyphicon-arrow-right"></span> Advanced</a></li>
+            <li>
+              <a class="green view pull preview" val="10.1145/2908080.2908114" href="#ill"><span class="glyphicon glyphicon-arrow-right">
+              </span> Interlibrary loans</a>
+            </li>
+            <li>
+              <a class="green view pull preview" val="10.1145/2908080.2908114" href="#subscription"><span class="glyphicon glyphicon-arrow-right">
+              </span> Subscriptions</a>
+            </li>
+            <li>
+              <a class="green view pull preview" val="10.1145/2908080.2908114" href="#embed"><span class="glyphicon glyphicon-arrow-right">
+              </span> Website &amp; Brand</a>
+            </li>
+            <li>
+              <a class="green view pull preview" val="10.1145/2908080.2908114" href="#workflow"><span class="glyphicon glyphicon-arrow-right">
+              </span> Workflow</a>
+            </li>
+            <li>
+              <a class="green view pull preview" val="10.1145/2908080.2908114" href="#reporting"><span class="glyphicon glyphicon-arrow-right">
+              </span> Reporting</a>
+            </li>
+            <li>
+              <a class="green view pull preview" val="10.1145/2908080.2908114" href="#advanced"><span class="glyphicon glyphicon-arrow-right">
+              </span> Advanced</a>
+            </li>
           </ul>
         </div>
 
@@ -85,7 +103,6 @@
           <p>
             This is a stub for an FAQ. It'll work just like the about page when we have questions.
           </p>
-
 
       </div>
 
@@ -144,7 +161,7 @@
     </div>
   </div>
 
-  <div id="ill" class="section">
+  <div id="ill-customization" class="section">
     <div class="row">
       <div class="col-md-6 col-md-offset-1 content">
 
@@ -184,6 +201,7 @@
           <input id="search" type="text" class="form-control setting" placeholder="e.g  https://ambslibrary.share.worldcat.org/wms/cmnd/nd/discover/items/search"><br>
           </p>
           <p>
+            <!-- TODO: Mark, would be great if these were green, not blue -->
           <input id="noillifoa" type="checkbox" class="setting green">
             Do not allow ILLs if an open access article is found
           </p>
@@ -515,8 +533,7 @@ A save will look for any element with the "setting" class and will take the valu
 If the save button also has an attr called "preview" then it can be set to true to trigger an instantill preview run with a default value
 If preview attr is set but is some value other than true, then the value of the preview attr will be used in the instantill box
 
-Any button with the "preview" class will trigger the instantill box with a trial value. The value should be specified on the button
-in an attr called "val" or else the html content of the button will be used as the value.
+Any button with the "preview" class will trigger the instantill box with a trial value. The value should be specified on the button in an attr called "val" or else the html content of the button will be used as the value.
 
 NOTE: if you want the view to change when a preview is triggered, put the view class BEFORE the preview class.
 That way the view will change, the preview will run, and if the preview is not visible it will be pulled forward
