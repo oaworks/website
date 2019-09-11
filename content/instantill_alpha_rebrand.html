@@ -180,6 +180,10 @@
           <input id="other" type="text" class="form-control setting green" placeholder="e.g https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=10">
           <br>
           <p>
+          Insert your WMS URL. We can then give you direct links inside email notifications into WMS to aid loan processing.
+          <input id="search" type="text" class="form-control setting" placeholder="e.g  https://ambslibrary.share.worldcat.org/wms/cmnd/nd/discover/items/search"><br>
+          </p>
+          <p>
           <input id="noillifoa" type="checkbox" class="setting green">
             Do not allow ILLs if an open access article is found
           </p>
@@ -285,7 +289,21 @@
           <p>
             We use your link resolver to understand what you do and don’t have access to. Then, we figure out the best link and send your patrons to it through your proxy.
             <p><b>What is you link resolver URL?</b></p>
+            <!--  this shouldn't be done before.
             <input id="subscription" type="text" class="form-control setting green" placeholder="e.g http://rx8kl6yf4x.search.serialssolutions.com">
+            -->
+            <!-- TODO: THIS NEEDS THE NEW JAVASCRIPT. -->
+            <input type="text" class="form-control subscription setting" placeholder="e.g http://rx8kl6yf4x.search.serialssolutions.com">
+            <br>
+            <select class="form-control subscription_type setting">
+              <option value="">select subscription type...</option>
+              <option value="sfx">SFX</option>
+              <option value="eds">EDS / Ebsco</option>
+              <option value="serialssolutions">Serials Solutions</option>
+            </select>
+            <br>
+            <a class="btn btn-primary" id="addsubscription" href="#">Add another</a>
+
           </p>
         </div>
         <div class="greenbottom">
