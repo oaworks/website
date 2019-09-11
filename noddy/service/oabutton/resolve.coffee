@@ -177,7 +177,7 @@ API.service.oab.resolve = (meta, content, sources, all=false, titles=true, journ
       for ks of scraped
         meta[ks] ?= scraped[ks]
 
-  if not meta.doi and (not meta.reversed or (not titled and meta.title))
+  if not meta.doi and not titled and meta.title
     # try reverse lookup again if we got title from scrape but not doi
     meta = API.service.oab.citation meta
 

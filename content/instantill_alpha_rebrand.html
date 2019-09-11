@@ -9,6 +9,20 @@
     display: none;
   }
 
+  .form-control {
+    background-color:#edf8ed;
+    color:#46b633;
+    border:2px solid #46b633;
+  }
+
+  a {
+    color:#46b633;
+    font-weight:normal;
+  }
+  a:hover {
+    color:#46b633;
+  }
+
   .btn-hollow {
     border-color: #46b633;
     border-width: 2px;
@@ -521,6 +535,28 @@ jQuery(document).ready(function() {
   }
   $('body').on('click','.preview',preview);
 
+  var addsubscription = function(e) {
+    try {e.preventDefault(); } catch(err) {}
+    if ($('.subscription').last().val() && $('.subscription_type').last().val()) {
+      $('.subscription').last().clone().val('').insertBefore($('#addsubscription'));
+      $('.subscription_type').last().clone().val('').insertBefore($('#addsubscription'));
+    } else {
+      $('.subscription').last().focus();
+    }
+  }
+  $('body').on('click','#addsubscription',addsubscription);
+
+  var guesssubscription = function(e) {
+    if ($(this).val().indexOf('sfx.') !== -1) {
+      $(this).next('.subscription_type').val('sfx');
+    } else if ($(this).val().indexOf('ebscohost.') !== -1) {
+      $(this).next('.subscription_type').val('eds');
+    } else if ($(this).val().indexOf('serialssolutions.') !== -1) {
+      $(this).next('.subscription_type').val('sfx');
+    }
+  }
+  $('body').on('change','.subscription',guesssubscription);
+
   var _preview = false;
   var save = function(e,pvw) {
     try { e.preventDefault(); } catch (err) {}
@@ -529,6 +565,20 @@ jQuery(document).ready(function() {
     $('.setting').each(function(i, obj) {
       if ( $(this).is(':checkbox') ) {
         data[$(this).attr('id')] = $(this).is(':checked');
+      } else if ( $(this).hasClass('subscription') ) {
+        if ($(this).val()) {
+          if (data.subscription === undefined) data.subscription = [];
+          data.subscription.push($(this).val())
+        } else {
+          $(this).remove();
+        }
+      } else if ( $(this).hasClass('subscription_type') ) {
+        if ($(this).val()) {
+          if (data['subscription_type'] === undefined) data['subscription_type'] = [];
+          data['subscription_type'].push($(this).val())
+        } else {
+          $(this).remove();
+        }
       } else if ( $(this).val() !== undefined ) {
         data[$(this).attr('id')] = $(this).val();
         if (['ill_redirect_base_url','terms','book','other'].indexOf($(this).attr('id')) !== -1 && data[$(this).attr('id')] !== '' && data[$(this).attr('id')].indexOf('http') !== 0) {
@@ -589,16 +639,35 @@ jQuery(document).ready(function() {
       $('.stickidin').html($('.stickidin').html().replace('instantill()',repstr));
     }
     if ($('.onlyyou').length) $('.onlyyou').html($('.onlyyou').html().replace('but only you ','but only you (' + noddy.user.account.profile.firstname + ') '));
-    instantill({uid:uid, api:api});
+    instantill({uid:uid, api:api, css: false});
     try {
       $('.email').attr('placeholder','default ' + (noddy.user.account.email ? noddy.user.account.email : noddy.user.account.emails[0].address));
     } catch(err) {}
     try {
-      for (var k in noddy.user.account.service.openaccessbutton.ill.config) {
-        if (typeof noddy.user.account.service.openaccessbutton.ill.config[k] === 'boolean') {
-          if (noddy.user.account.service.openaccessbutton.ill.config[k] === true) $('#'+k).prop('checked',true);
-        } else {
-          $('#'+k).val(noddy.user.account.service.openaccessbutton.ill.config[k]);
+      var uc = noddy.user.account.service.openaccessbutton.ill.config;
+      for (var k in uc) {
+        if (typeof uc[k] === 'boolean') {
+          if (uc[k] === true) $('#'+k).prop('checked',true);
+        } else if (k === 'subscription') {
+          if (typeof uc.subscription === 'string') uc.subscription = uc.subscription.split(',');
+          for ( var s in uc.subscription) {
+            if (parseInt(s) !== 0) addsubscription();
+            if (typeof uc.subscription[s] === 'object') {
+              var url = uc.subscription[s].url;
+              var type = uc.subscription[s].type;
+            } else {
+              var url = uc.subscription[s];
+              try {
+                var type = uc.subscription_type[s];
+              } catch(err) {
+                var type = 'unknown';
+              }
+            }
+            $('.subscription').last().val(url);
+            $('.subscription_type').last().val(type);
+          }
+        } else if (k !== 'subscription_type') {
+          $('#'+k).val(uc[k]);
         }
       }
     } catch(err) {}
@@ -624,7 +693,7 @@ jQuery(document).ready(function() {
     }*/
   }
   noddy.nologin = function() {
-    instantill({uid:'oab_site', api:api});
+    instantill({uid:'oab_site', api:api, css: false});
   }
   noddy.login();
 });

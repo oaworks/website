@@ -9,8 +9,6 @@
     display: none;
   }
 
-/* TODO: add in element on the page called <header></header> and put whatever head desired in there (same for footer?). OR just put then in the new css. */
-
   .btn-hollow {
     border-color: #46b633;
     border-width: 2px;
@@ -214,9 +212,11 @@ into the view you have changed to.
 </div>
 
 <script type="text/javascript">
-    $(window).on('load',function(){
-        $('#myModal').modal('show');
-    });
+jQuery(document).ready(function() {
+  $(window).on('load',function(){
+    $('#myModal').modal('show');
+  });
+});
 </script>
 
 <script src="/static/instantill.js"></script>
