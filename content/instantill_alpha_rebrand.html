@@ -61,7 +61,8 @@
 
           <ul class="arrowed">
             <li>
-              <a class="green view pull preview" val="10.1145/2908080.2908114" href="#ill"><span class="glyphicon glyphicon-arrow-right">
+              <a class="green view pull preview" val="10.1145/2908080.2908114" href="#ill">
+                <span class="glyphicon glyphicon-arrow-right">
               </span> Interlibrary loans</a>
             </li>
             <li>
@@ -69,32 +70,36 @@
               </span> Subscriptions</a>
             </li>
             <li>
-              <a class="green view pull preview" val="10.1145/2908080.2908114" href="#embed"><span class="glyphicon glyphicon-arrow-right">
+              <a class="green view pull preview" val="10.1145/2908080.2908114" href="#embed">
+                <span class="glyphicon glyphicon-arrow-right">
               </span> Website &amp; Brand</a>
             </li>
             <li>
-              <a class="green view pull preview" val="10.1145/2908080.2908114" href="#workflow"><span class="glyphicon glyphicon-arrow-right">
+              <a class="green view pull preview" val="10.1145/2908080.2908114" href="#workflow">
+                <span class="glyphicon glyphicon-arrow-right">
               </span> Workflow</a>
             </li>
             <li>
-              <a class="green view pull preview" val="10.1145/2908080.2908114" href="#reporting"><span class="glyphicon glyphicon-arrow-right">
-              </span> Reporting</a>
+              <a class="green view pull preview" val="10.1145/2908080.2908114" href="#analytics">
+                <span class="glyphicon glyphicon-arrow-right">
+              </span> Analytics</a>
             </li>
             <li>
-              <a class="green view pull preview" val="10.1145/2908080.2908114" href="#advanced"><span class="glyphicon glyphicon-arrow-right">
+              <a class="green view pull preview" val="10.1145/2908080.2908114" href="#advanced">
+                <span class="glyphicon glyphicon-arrow-right">
               </span> Advanced</a>
             </li>
           </ul>
         </div>
 
         <div class="greenbottom">
-          <p><a class="green light" href="mailto:joe@openaccessbutton.org">Get help</a> | <a class="green light" href="#faq">FAQ</a></p>
+          <p><a class="green light" href="mailto:joe@openaccessbutton.org">Get help</a> | <a class="green light" href="mailto:joe@openaccessbutton.org">Give Feedback</a> | <a class="green light" href="mailto:joe@openaccessbutton.org">Report an Issue</a> | <a class="green light" href="#faq">FAQ</a></p>
         </div>
       </div>
     </div>
   </div>
 
-  <div id="faq" class="section onlyyou">
+  <div id="faq" class="section">
     <div class="row">
       <div class="col-md-6 col-md-offset-1 content">
 
@@ -108,7 +113,7 @@
 
       <div class="col-md-4 col-md-offset-1 green">
         <div class="greenery">
-          <p><a class="green view previous" href="#"><span class="glyphicon glyphicon-arrow-left"></span>  Go back</a></p>
+          <p><a class="green view" href="#"><span class="glyphicon glyphicon-arrow-left"></span>  Go back</a></p>
           <h2>FAQ</h2>
           <p>
             Not got your quesiton answered? Drop <a href="mailto:Joe@openaccessbutton.org">Joe@openaccessbutton.org</a> an email.
@@ -119,15 +124,17 @@
         <div class="greenbottom">
           <p><a class="btn btn-rebrand btn-block" href="#">Go to Menu</a></p>
           <p><br><a class="green view next" href="#"><span class="glyphicon glyphicon-arrow-right"></span> Next</a></p>
-          <p><a class="green light" href="mailto:joe@openaccessbutton.org">Get help</a> | <a class="green light" href="#faq">FAQ</a></p>
+          <p><a class="green light" href="mailto:joe@openaccessbutton.org">Get help</a> | <a class="green light" href="mailto:joe@openaccessbutton.org">Give Feedback</a> | <a class="green light" href="mailto:joe@openaccessbutton.org">Report an Issue</a> | <a class="green light" href="#faq">FAQ</a></p>
         </div>
       </div>
     </div>
   </div>
 
-  <div id="ill" class="section onlyyou">
+  <div id="ill" class="section">
     <div class="row">
       <div class="col-md-6 col-md-offset-1 content">
+
+        <!-- TODO: THE FAQ SECTION SEEMS TO TURN UP HERE, AND I'M NOT SURE WHY. Turns up at top of the screen. -->
 
       </div>
 
@@ -155,7 +162,7 @@
         <div class="greenbottom">
           <p><a class="btn btn-rebrand btn-block save pull preview" href="#">Save &amp; preview</a></p>
           <p><br><a class="green view next" href="#"><span class="glyphicon glyphicon-arrow-right"></span> Next</a></p>
-          <p><a class="green light" href="mailto:joe@openaccessbutton.org">Get help</a> | <a class="green light" href="#faq">FAQ</a></p>
+          <p><a class="green light" href="mailto:joe@openaccessbutton.org">Get help</a> | <a class="green light" href="mailto:joe@openaccessbutton.org">Give Feedback</a> | <a class="green light" href="mailto:joe@openaccessbutton.org">Report an Issue</a> | <a class="green light" href="#faq">FAQ</a></p>
         </div>
       </div>
     </div>
@@ -178,22 +185,23 @@
           <p><b>Name of your institution</b><p>
           <input id="ill_institution" type="text" class="form-control setting green" placeholder="Institution name">
           <br>
-          <p><b>What do your article ILLs cost, please include your currency symbol? e.g $4</b><p>
+          <p><b>What do your article ILLs cost? Please include your currency symbol e.g $4</b><p>
           <input id="cost" type="text" class="form-control setting green" placeholder="default free">
           <br>
           <p><b>How long do your ILLs take to process on average? e.g 24 hours</b><p>
           <input id="time" type="text" class="form-control setting green" placeholder="default 24 hours">
           <br>
-          <p><b>What email address do you want users referred to? (optional for if there is a problem)</b><p>
+          <p><b>What email address do you want users referred to? (optional)</b><p>
           <input id="problem_email" type="text" class="form-control setting green" placeholder="no default, the user will be told to contact their library">
           <br>
-          <p><b>Terms and conditions URL (optional for email alternative)</b><p>
+          <p><b>Terms and conditions link (optional)</b><p>
+            <!-- TODO: make sure there is something to go in the box here. maybe example page on terms -->
           <input id="terms" type="text" class="form-control setting green" placeholder="">
           <br>
-          <p><b>Book request URL (optional for if the user wants a book)</b><p>
+          <p><b>Book request link (optional for if the user wants a book)</b><p>
           <input id="book" type="text" class="form-control setting green" placeholder="e.g https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=21">
           <br>
-          <p><b>Other request URL (optional for if the user wants something other than article or book)</b><p>
+          <p><b>Other request link (optional for if the user wants something other than article or book)</b><p>
           <input id="other" type="text" class="form-control setting green" placeholder="e.g https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=10">
           <br>
           <p>
@@ -219,7 +227,7 @@
         <div class="greenbottom">
           <p><a class="btn btn-rebrand btn-block save preview" href="#">Save &amp; preview</a></p>
           <p><br><a class="green view next" href="#"><span class="glyphicon glyphicon-arrow-right"></span> Next</a></p>
-          <p><a class="green light" href="mailto:joe@openaccessbutton.org">Get help</a> | <a class="green light" href="#faq">FAQ</a></p>
+          <p><a class="green light" href="mailto:joe@openaccessbutton.org">Get help</a> | <a class="green light" href="mailto:joe@openaccessbutton.org">Give Feedback</a> | <a class="green light" href="mailto:joe@openaccessbutton.org">Report an Issue</a> | <a class="green light" href="#faq">FAQ</a></p>
         </div>
       </div>
     </div>
@@ -288,7 +296,7 @@
         <div class="greenbottom">
           <p><a class="btn btn-rebrand btn-block save preview" href="#">Save &amp; preview</a></p>
           <p><br><a class="green view next" href="#"><span class="glyphicon glyphicon-arrow-right"></span> Next</a></p>
-          <p><a class="green light" href="mailto:joe@openaccessbutton.org">Get help</a> | <a class="green light" href="#faq">FAQ</a></p>
+          <p><a class="green light" href="mailto:joe@openaccessbutton.org">Get help</a> | <a class="green light" href="mailto:joe@openaccessbutton.org">Give Feedback</a> | <a class="green light" href="mailto:joe@openaccessbutton.org">Report an Issue</a> | <a class="green light" href="#faq">FAQ</a></p>
         </div>
       </div>
     </div>
@@ -328,7 +336,7 @@
         <div class="greenbottom">
           <p><a class="btn btn-rebrand btn-block save preview" href="#">Save &amp; preview</a></p>
           <p><br><a class="green view next" href="#"><span class="glyphicon glyphicon-arrow-right"></span> Next</a></p>
-          <p><a class="green light" href="mailto:joe@openaccessbutton.org">Get help</a> | <a class="green light" href="#faq">FAQ</a></p>
+          <p><a class="green light" href="mailto:joe@openaccessbutton.org">Get help</a> | <a class="green light" href="mailto:joe@openaccessbutton.org">Give Feedback</a> | <a class="green light" href="mailto:joe@openaccessbutton.org">Report an Issue</a> | <a class="green light" href="#faq">FAQ</a></p>
         </div>
       </div>
     </div>
@@ -380,7 +388,7 @@
         </div>
         <div class="greenbottom">
           <p><br><a class="green view next" href="#"><span class="glyphicon glyphicon-arrow-right"></span> Next</a></p>
-          <p><a class="green light" href="mailto:joe@openaccessbutton.org">Get help</a> | <a class="green light" href="#faq">FAQ</a></p>
+          <p><a class="green light" href="mailto:joe@openaccessbutton.org">Get help</a> | <a class="green light" href="mailto:joe@openaccessbutton.org">Give Feedback</a> | <a class="green light" href="mailto:joe@openaccessbutton.org">Report an Issue</a> | <a class="green light" href="#faq">FAQ</a></p>
         </div>
       </div>
     </div>
@@ -427,13 +435,13 @@
         </div>
         <div class="greenbottom">
           <p><a class="btn btn-rebrand btn-block save preview" href="#">Save &amp; preview</a></p>
-          <p><a class="green light" href="mailto:joe@openaccessbutton.org">Get help</a> | <a class="green light" href="#faq">FAQ</a></p>
+          <p><a class="green light" href="mailto:joe@openaccessbutton.org">Get help</a> | <a class="green light" href="mailto:joe@openaccessbutton.org">Give Feedback</a> | <a class="green light" href="mailto:joe@openaccessbutton.org">Report an Issue</a> | <a class="green light" href="#faq">FAQ</a></p>
         </div>
       </div>
     </div>
   </div>
 
-  <div id="reporting" class="section">
+  <div id="analytics" class="section">
     <div class="row">
       <div class="col-md-6 col-md-offset-1 content">
 
@@ -442,14 +450,20 @@
       <div class="col-md-4 col-md-offset-1 green">
         <div class="greenery">
           <p><a class="green view previous" href="#"><span class="glyphicon glyphicon-arrow-left"></span>  Go back</a></p>
-          <h2>Reporting</h2>
+          <h2>Analytics</h2>
           <p>
-            This is a premium feature. If you're a leader and would like a report, email Joe. If you're not, consider our leadership offering and then email Joe.
+
+            We can provide individualized analytics detailing your use of InstantILL. However, since this is not essential to delivering an excellent service to end users, we only provide this to users who support our work through our 'Leadership Tier'. To find our more, go <a href="">here</a>.
+          </p>
+          <!-- TODO: ADD ABOVE LINK JOE. -->
+
+          <p>
+            If you're on our leadership teir, and would like a report, email Joe at <a href="joe@openaccessbutton.org">Joe@openaccessbutton.org</a>.
           </p>
 
         </div>
         <div class="greenbottom">
-          <p><a class="green light" href="mailto:joe@openaccessbutton.org">Get help</a> | <a class="green light" href="#faq">FAQ</a></p>
+          <p><a class="green light" href="mailto:joe@openaccessbutton.org">Get help</a> | <a class="green light" href="mailto:joe@openaccessbutton.org">Give Feedback</a> | <a class="green light" href="mailto:joe@openaccessbutton.org">Report an Issue</a> | <a class="green light" href="#faq">FAQ</a></p>
         </div>
       </div>
     </div>
@@ -463,7 +477,7 @@
 
       <div class="col-md-4 col-md-offset-1 green">
         <div class="greenery">
-          <p><a class="green view previous" href="#"><span class="glyphicon glyphicon-arrow-left"></span>  Go back</a></p>
+          <p><a class="green" href="#"><span class="glyphicon glyphicon-arrow-left"></span>  Go to menu</a></p>
           <h2>Advanced</h2>
           <p>
             There are lots of non-essential settings to look at in InstantILL. Here are some of them.
@@ -476,7 +490,7 @@
         </div>
         <div class="greenbottom">
           <p><a class="btn btn-rebrand btn-block save preview" href="#">Save &amp; preview</a></p>
-          <p><a class="green light" href="mailto:joe@openaccessbutton.org">Get help</a> | <a class="green light" href="#faq">FAQ</a></p>
+          <p><a class="green light" href="mailto:joe@openaccessbutton.org">Get help</a> | <a class="green light" href="mailto:joe@openaccessbutton.org">Give Feedback</a> | <a class="green light" href="mailto:joe@openaccessbutton.org">Report an Issue</a> | <a class="green light" href="#faq">FAQ</a></p>
         </div>
       </div>
     </div>
@@ -503,7 +517,7 @@
         </ul>
 
         <div class="greenbottom">
-          <p><a class="green light" href="mailto:joe@openaccessbutton.org">Get help</a> | <a class="green light" href="#faq">FAQ</a></p>
+          <p><a class="green light" href="mailto:joe@openaccessbutton.org">Get help</a> | <a class="green light" href="mailto:joe@openaccessbutton.org">Give Feedback</a> | <a class="green light" href="mailto:joe@openaccessbutton.org">Report an Issue</a> | <a class="green light" href="#faq">FAQ</a></p>
         </div>
       </div>
     </div>
@@ -524,7 +538,7 @@
           <h2>A fake ILL</h2>
         </div>
         <div class="greenbottom">
-          <p><a class="green light" href="mailto:joe@openaccessbutton.org">Get help</a> | <a class="green light" href="#faq">FAQ</a></p>
+          <p><a class="green light" href="mailto:joe@openaccessbutton.org">Get help</a> | <a class="green light" href="mailto:joe@openaccessbutton.org">Give Feedback</a> | <a class="green light" href="mailto:joe@openaccessbutton.org">Report an Issue</a> | <a class="green light" href="#faq">FAQ</a></p>
         </div>
       </div>
     </div>
