@@ -280,7 +280,7 @@
 
       <div class="col-md-4 col-md-offset-1 green">
         <div class="greenery">
-          <p><a class="green view previous" href="#"><span class="glyphicon glyphicon-arrow-left"></span>Go back</a></p>
+          <p><a class="green view previous" href="#"><span class="glyphicon glyphicon-arrow-left"></span>  Go back</a></p>
           <h2>Subscriptions</h2>
           <p>
             We use your link resolver to understand what you do and don’t have access to. Then, we figure out the best link and send your patrons to it through your proxy.
@@ -352,7 +352,7 @@
   <div id="workflow" class="section">
     <div class="row">
       <div class="col-md-6 col-md-offset-1 content">
-        <p>I am wokflow integration section</p>
+
       </div>
 
       <div class="col-md-4 col-md-offset-1 green">
@@ -428,7 +428,7 @@
           <p><a class="green view previous" href="#"><span class="glyphicon glyphicon-arrow-left"></span>  Go back</a></p>
           <h2>Advanced</h2>
           <p>
-            There are lots of non-essential settings to look at in InstantILL. Here are some of them. 
+            There are lots of non-essential settings to look at in InstantILL. Here are some of them.
           </p>
           <p>
           <input id="norequests" type="checkbox" class="setting green">
@@ -763,7 +763,7 @@ jQuery(document).ready(function() {
       }
     } catch(err) {}
     try {
-      var q = {"size": 0, "query": {"filtered": {"query": {"bool": {"must": [{"term": {"plugin": "instantill"}},{"term": {"from": noddy.user.account._id}}]}}}}};
+      var q = {"size": 0, "query": {"filtered": {"query": {"bool": {"must": [{"term": {"plugin": "instantill"}},{"term": {"from.exact": noddy.user.account._id}}]}}}}};
       q.aggregations = {"embeds": {"terms": {"field": "embedded.exact"}}};
       $.ajax({
         url: api + '/availabilities',
