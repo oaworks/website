@@ -226,7 +226,8 @@
           <input id="other" type="text" class="form-control setting green" placeholder="e.g https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=10">
           <br>
           <p><b>
-          Insert your WMS URL. We can then give you direct links inside email notifications into WMS to aid loan processing.</b>
+            If you use WMS, inside our notifications we can provide direct links to journals to save you time. Just let us know your WMS URL.
+          </b>
           <input id="search" type="text" class="form-control setting" placeholder="e.g  https://ambslibrary.share.worldcat.org/wms/cmnd/nd/discover/items/search"><br>
           </p>
           <p>
@@ -243,7 +244,7 @@
           <p>
           <input id="noillifsub" type="checkbox" class="setting green">
             No
-          </p><b>
+          </p>
           <p><b>
             We use article to refer to academic journal publications by default. Would you like to change that?
           </b></p>
@@ -919,7 +920,6 @@ jQuery(document).ready(function() {
             var eurl = iia.aggregations.embeds.buckets[0].key.split('?')[0].split('#')[0];
             var ex = 'For example:<br>';
             ex += eurl + '?doi=10.1145/2908080.2908114';
-            var ex = 'For example using the following URL parameter on one of your current embed URLs would automatically trigger an instantill search:<br>';
             $('#embeddedexample').html(ex).show();
           } catch(err) {}
         }
