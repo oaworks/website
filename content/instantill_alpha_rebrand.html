@@ -225,27 +225,28 @@
           <p><b>Where do you want people sent if they want something other than a book or article</b><p>
           <input id="other" type="text" class="form-control setting green" placeholder="e.g https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=10">
           <br>
-          <p>
-          Insert your WMS URL. We can then give you direct links inside email notifications into WMS to aid loan processing.
+          <p><b>
+          Insert your WMS URL. We can then give you direct links inside email notifications into WMS to aid loan processing.</b>
           <input id="search" type="text" class="form-control setting" placeholder="e.g  https://ambslibrary.share.worldcat.org/wms/cmnd/nd/discover/items/search"><br>
           </p>
           <p>
             <!-- TODO: Mark, would be great if these were green, not blue -->
-            <p>
+            <p><b>
               If we find an article Open Access, do you want to let patrons still request an ILL?
-            </p>
+            </b></p>
           <input id="noillifoa" type="checkbox" class="setting green">
             No
           </p>
-          <p>
+          <p><b>
             If we find that you're subscribed to an article, do you still want patrons to be able to request an ILL?
-          </p>
+          </b></p>
           <p>
           <input id="noillifsub" type="checkbox" class="setting green">
             No
-          </p>
-          <p>We use article to refer to academic journal publications by default. Would you like to change that?
-          </p>
+          </p><b>
+          <p><b>
+            We use article to refer to academic journal publications by default. Would you like to change that?
+          </b></p>
           <p>
           <input id="saypaper" type="checkbox" class="setting green">
             Yes, use 'paper' instead.
@@ -437,30 +438,60 @@
           <p>
             You can link to InstantILL from any library system to integrate it into your existing workflows, say from library search or a link resolver.
           </p>
+          <p id="embeddedexample" style="display:none;"></p>
+          <p>
+            If everything works, hit next! If it doesn’t, <a href="#ill-advanced" class="green">see advanced settings
+          </p>
+
+        </div>
+        <div class="greenbottom">
+          <p><br><a class="green view" href="menu"><span class="glyphicon glyphicon-arrow-right"></span> Next</a></p>
+          <p><a class="btn btn-rebrand btn-block save preview" href="#">Save &amp; preview</a></p>
+          <p><a class="green light" href="mailto:joe@openaccessbutton.org">Get help</a> | <a class="green light" href="mailto:joe@openaccessbutton.org">Give Feedback</a> | <a class="green light" href="mailto:joe@openaccessbutton.org">Report an Issue</a> | <a class="green light" href="#faq">FAQ</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="workflow-advanced" class="section">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-1 content">
+
+      </div>
+
+      <div class="col-md-4 col-md-offset-1 green">
+        <div class="greenery">
+          <p><a class="green view pull" href="#menu"><span class="glyphicon glyphicon-arrow-left"></span>  Go to Menu</a></p>
+          <h2>Workflow, advanced</h2>
           <p>
             It will run automatically on the embedded page if it sees any of the following parameters in the URL: 'doi','title','url','atitle','rft_id','journal','issn','year','author'. You can change these, or turn this off entriely below.
           </p>
-          <p id="embeddedexample" style="display:none;"></p>
           <!-- TODO: Joe, make sure this goes to the right page eventually! -->
           <p><b>
             If you're only linking to InstantILL in the middle of a workflow, you may not want the instructions to show.
           </b></p>
+          <small>The instructions are what appear above InstatILLs search box</small>
           <p>
             <input id="intropara" type="checkbox" class="setting">
-            Do not show InstantILL's introductory statement.
-          </p>
-          <p>
-            <input id="autorun" type="checkbox" class="setting">
-            Do not automatically run
+            Don't show
           </p>
           <p><b>Adjust what triggers InstantILL</b></p>
           <p>
             <input id="autorunparams" type="text" class="form-control setting green" placeholder="defaults as above"><br>
           </p>
           <p>
-            The defaults listed above will be used if this box is left empty.
-            Enter any that you want to use, separated by a comma. If you want to use a custom parameter to pass to one of our defaults listed above, provide your parameter name followed by an "=" and the default name you want it to match. For example if you wanted to use our default "doi" and "title" but with your own custom journal parameter, you could specify this as doi,title,mycustomparam=journal.
+            If InstantILL isn't running when you might expect, that's likely because you're using a paramater we don't recognise.
+          </p>
+          <p>
+            In the box below, you can help us recognise your paramaters.<!-- TODO: I really don't understand these instrutions -->Enter any that you want to use, separated by a comma. If you want to use a custom parameter to pass to one of our defaults listed above, provide your parameter name followed by an "=" and the default name you want it to match. For example if you wanted to use our default "doi" and "title" but with your own custom journal parameter, you could specify this as doi,title,mycustomparam=journal.
             <!-- TODO: why don't we use a list similar to how we do ILLs here? -->
+          </p>
+          <p><b>
+            You can completely turn off this feature too.
+          </b></p>
+          <p>
+            <input id="autorun" type="checkbox" class="setting">
+            Turn off
           </p>
 
         </div>
@@ -886,8 +917,9 @@ jQuery(document).ready(function() {
         success: function(iia) {
           try {
             var eurl = iia.aggregations.embeds.buckets[0].key.split('?')[0].split('#')[0];
-            var ex = 'For example using the following URL parameter on one of your current embed URLs would automatically trigger an instantill search:<br>';
+            var ex = 'For example:<br>';
             ex += eurl + '?doi=10.1145/2908080.2908114';
+            var ex = 'For example using the following URL parameter on one of your current embed URLs would automatically trigger an instantill search:<br>';
             $('#embeddedexample').html(ex).show();
           } catch(err) {}
         }
