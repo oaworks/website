@@ -107,10 +107,10 @@
             You just put an title into InstantILL, and we found a version that's Open Access, so you can go straight to the full text.
           </p>
           <p>
-            We do this because users want to access content instantly. This is what Open Access enables, but, sometimes, patrons need help finding an accessible copy. So, we built the ability to find and show Open Access articles into the heart of InstantILL. If there is an Open Access copy, which can be 23% of the time, and the library doesn’t subscribe to the work, we’ll use the Open Access Button API to give immediate access alongside clear instructions on how it can and can’t be used, and the option to submit an ILL. We’ve been pioneers in discovering and delivering Open Access copies, and our content comes only from legal aggregators, such as Unpaywall, DOAJ, and many more.
+            We built this into the heart of InstantILL because patrons want to access content instantly, and often more than 20% of ILLs can be found Open Access, saving you money and time. We’ve been pioneers in delivery Open Access, and our content comes only from legal aggregators, such as Unpaywall, DOAJ, and many more.
           </p>
           <p><b>
-            Patrons can still make an ILL, if they want. Why don't you try to? Hit 'Complete Request' to continue the demo.
+            Why don't you try to make an ILL request? Hit 'Complete Request' to continue the demo.
           <b></p>
         </div>
         <div class="greenbottom">
@@ -125,23 +125,26 @@
   <div id="fakeill" class="section">
     <div class="row">
       <div class="col-md-6 col-md-offset-1 content">
-        <p>I am fake ILL section</p>
+        <p>UNIVERSITY OF YOU INTERLIBRARY LOAN FORM</p>
         <table class="table table-bordered" id="fakeilltable">
           <!-- TODO: how do we remove some things from this table? like cache -->
         </table>
-        <p><a class="btn btn-rebrand" href="#part4">Continue demo!</a></p>
+        <!-- <p><a class="btn btn-rebrand" href="#part4">Continue demo!</a></p>-->
       </div>
 
       <div class="col-md-4 col-md-offset-1 green">
         <div class="greenery">
-          <h2>A fake ILL</h2>
+          <h2>Request made!</h2>
           <p>
-            Since this is a demo, we don’t have a real system to show you. But, it works on illiad, alma, tipasa and maybe more!
+            Since this a demo, we can't really make an ILL for you, so we're showing you all the article meta-data we'd pass to you instead. You can set-up InstantILL to point to your existing ILL form, where you can handle authentication and submission into your existing systems, or of course, submit it over email.
           </p>
           <p>
-            You can see the meta-data we can pass to your systems! Hurray, less work for you.
+            We just made sure that patrons don't need to complete a long form, and when it arrives, you have everything you need to send the request for fulfilment.
           </p>
-          <p><b>3. Now, try it with an article you’ve subscribed too:</b></p>
+          <p>
+
+          </p>
+          <p><b>3. Next, try InstantILL with an article you’ve subscribed too:</b></p>
           <p><a class="btn btn-hollow btn-block view preview" href="#part4" val="10.1145/2908080.2908114">Show me!</a></p>
 
         </div>
@@ -163,13 +166,15 @@
         <div class="greenery">
           <h2>We got that too!</h2>
           <p>
-            As you can see, we've found that even though it's subscribed!
+            InstantILL knows the electronic resources you subscribe to, and can make sure patrons see them before making a request. If you have access, InstantILL will provide a direct link for the user to access through your proxy. Off campus, they’ll be nudged to login to access the content.</p>
+          <p>
+            Since this a demo, we're just linking you to an Open Access version of an article, but you get the idea!
           </p>
           <p>
-            But, a lot of your patrons probably don't go straigth to the ILL form, so you can link to use from your link resolver or discovery system.
+            InstantILL can also be integrated inside your library search, and link resolver worflows in a couple of different ways.
           </p>
-          <p><b>5. Checkout InstantILL in your workflow:</b></p>
-          <p><a class="btn btn-hollow btn-block view preview" href="#part5" val="10.1126/science.196.4287.293">https://dev.openaccessbutton.org/instantill_demo_rebrand#part5?doi=10.1126/science.196.4287.293</a></p>
+          <p><b>5. Let's test linking to a page with InstantILL on it:</b></p>
+          <p><a class="btn btn-hollow btn-block view preview" href="#part5" val="Corrective gene transfer in the human skin disorder lamellar ichthyosis">https://dev.openaccessbutton.org/instantill_demo_rebrand#part5?doi=10.1126/science.196.4287.293</a></p>
           <!-- TODO: can the above work? openurl to anchor with instantill showing. OR, this could be a gif. -->
           <!-- TODO: add pings for tracking -->
         </div>
@@ -190,12 +195,14 @@
 
       <div class="col-md-4 col-md-offset-1 green">
         <div class="greenery">
-          <h2>Oh, hello again!</h2>
+          <h2>Nearly finished!</h2>
           <p>
-            See, it works the same! Except we add in lots of information on the way.
+            InstantILL can work like a link resolver, so you can link to it and it can be embedded into link resolvers and let patrons know what they can get. This makes it a great replacement in 'request a copy' buttons, or for embedding into link resolvers.
           </p>
-          <!-- TODO: Also, as you can see we didn't find anything here. Sad times. But at least you now know what the looks like. -->
-          <p><b>5. See what it takes to set InstantILL up!:</b></p>
+          <p>
+            Also, the article we tested there isn't available there, so all you can do is submit an Interlibrary Loan.
+          </p>
+          <p><b>5. Finally, see what it takes to set InstantILL up!:</b></p>
           <p><a class="btn btn-hollow btn-block view preview" href="#part6" val="10.1145/2908080.2908114">Show me!</a></p>
           <!-- TODO: add pings to me -->
         </div>
@@ -216,15 +223,18 @@
 
       <div class="col-md-4 col-md-offset-1 green">
         <div class="greenery">
-          <h2>Setting up InstantILL is pretty easy</h2>
+          <h2>It's pretty easy...</h2>
           <p>
             All it takes is three steps. Pretty rad, right?
           </p>
           <ul>
-            <li>Tell us your ILL form link</li>
-            <li>Tell us your SFX link</li>
+            <li>Tell us your ILL form link (if you have one)</li>
+            <li>Tell us your link resolver URL</li>
             <li>Copy and paste a line of code onto your website</li>
           </ul>
+          <p>
+            No coding, or special systems knowledge required. Of course, you can tweak a dozen settings too, so everything works just right.
+          </p>
           <p>
             So, you can get started today with your systems:
           </p>
@@ -319,7 +329,7 @@
 
 
 
-
+<!--
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-12">
@@ -329,7 +339,7 @@
     </div>
   </div>
 </div>
-
+-->
 
 
 <!-- functions you can trigger:
