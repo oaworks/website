@@ -70,7 +70,7 @@ var bigdeal_build = function() {
       var w = $(this).attr('href') !== '#' ? $(this).attr('href') : $(this).html().toLowerCase();
       var cs = $('.holder.sortfield').val();
       var icon = $(this).children('img').attr('src');
-      var src = opts.static.replace('https:','').replace('http:','');
+      var src = opts.static.replace('https:','').replace('http:','') + '/';
       src += icon.indexOf('red') === -1 ? (icon.indexOf('up') !== -1 ? 'up' : 'down') : (icon.indexOf('up') === -1 ? 'up' : 'down');
       $(this).children('img').attr('src',src + '_red_cropped.png');
       $(this).parent().siblings().children().children('img').each(function() {
@@ -93,7 +93,11 @@ var bigdeal_build = function() {
         rr += '<tr class="holder result from' + fromclass + '"><td style="max-width:400px;overflow-wrap:break-word;"><h5 style="margin-bottom:3px;">' + (rec.url ? '<a target="_blank" alt="View the agreement" title="View the agreement" href="' + rec.url + '">' + rec.institution + '</a>' : rec.institution) + '</h5>';
         rr += '<p style="font-size:1em;">' + (rec.notes && rec.notes.toLowerCase().trim() !== 'not found' ? rec.notes : '') + '</p>';
         rr += '</td><td>' + rec.publisher + '</td><td>' + rec.collection + '</td>';
-        rr += '<td>' + rec.fte + '</td><td>' + rec.carnegiebasicclassification + '</td><td>' + rec.years + '</td><td>$' + rec.usdvalue + '</td></tr>';
+        try {
+          var parts = rec.usdvalue.toString().split('.');
+          rec.usdvalue = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") + (parts.length > 1 ? '.' + parts[1] : '');
+        } catch(err) {}
+        rr += '<td>' + rec.fte + '</td><td>' + rec.carnegiebasicclassification + '</td><td>' + rec.years + '</td><td style="text-align:right">$' + rec.usdvalue + '</td></tr>';
       }
       return rr;
     }    

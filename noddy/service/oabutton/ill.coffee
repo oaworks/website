@@ -54,6 +54,7 @@ API.service.oab.ill = {}
 
 API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
   do_serialssolutions_xml = true
+  do_sfx_xml = true
   sig = uid + JSON.stringify(meta) + all
   sig = crypto.createHash('md5').update(sig, 'utf8').digest('base64')
   res = API.http.cache(sig, 'oab_ill_subs', undefined, refresh) if refresh and refresh isnt true and refresh isnt 0
@@ -67,8 +68,18 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
       openurl = API.service.oab.ill.openurl uid, meta, true
       openurl = openurl.replace(config.ill_redirect_params.replace('?',''),'') if config.ill_redirect_params
       openurl = openurl.split('?')[1] if openurl.indexOf('?') isnt -1
-      config.subscription = config.subscription.split(',') if typeof config.subscription is 'string'
-      for sub in config.subscription
+      if typeof config.subscription is 'string'
+        config.subscription = config.subscription.split(',')
+      if typeof config.subscription_type is 'string'
+        config.subscription_type = config.subscription_type.split(',')
+      config.subscription_type ?= []
+      for s of config.subscription
+        sub = config.subscription[s]
+        if typeof sub is 'object'
+          subtype = sub.type
+          sub = sub.url
+        else
+          subtype = config.subscription_type[s] ? 'unknown'
         sub = sub.trim()
         if sub
           if sub.indexOf('serialssolutions') isnt -1 and sub.indexOf('.xml.') is -1 and do_serialssolutions_xml is true
@@ -112,9 +123,9 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
           # but the content can be different on different sfx language pages, so need to find this link via the tag attributes, then trigger it, then get the page it opens
           # can test this with 10.1016/j.jtbi.2019.01.031 on instantill page
           # note there is also now an sfx xml endpoint that we have found to check
-          if url.indexOf('sfx.') isnt -1
+          if subtype is 'sfx' or url.indexOf('sfx.') isnt -1
             res.error.push 'SFX' if error
-            if false and do_sfx_xml # remove the false once have worked out how to identify sfx URLs
+            if do_sfx_xml # remove the false once have worked out how to identify sfx URLs
               if spg.indexOf('getFullTxt') isnt -1 and spg.indexOf('<target_url>') isnt -1
                 try
                   # this will get the first target that has a getFullTxt type and has a target_url element with a value in it, or will error
@@ -152,7 +163,7 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
           # can be tested on instantill page with 10.1016/S1079-2104(98)90029-4
           # without:
           # https://snc.idm.oclc.org/login?url=http://resolver.ebscohost.com/openurl?sid=google&auinit=MP&aulast=Newton&atitle=Librarian+roles+in+institutional+repository+data+set+collecting:+outcomes+of+a+research+library+task+force&id=doi:10.1080/01462679.2011.530546
-          else if url.indexOf('ebscohost.') isnt -1
+          else if subtype is 'eds' or url.indexOf('ebscohost.') isnt -1
             res.error.push 'Ebsco' if error
             if spg.indexOf('view this ') isnt -1 and pg.indexOf('<a data-auto="menu-link" href="') isnt -1
               res.url = url.replace('://','______').split('/')[0].replace('______','://') + pg.split('<a data-auto="menu-link" href="')[1].split('" title="')[0]
@@ -164,25 +175,7 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
                   return res
                 else
                   res.url = undefined
-          # with access:
-          # https://snc.idm.oclc.org/login?url=http://resolver.ebscohost.com/openurl?sid=google&auinit=RE&aulast=Marx&atitle=Platelet-rich+plasma:+growth+factor+enhancement+for+bone+grafts&id=doi:10.1016/S1079-2104(98)90029-4&title=Oral+Surgery,+Oral+Medicine,+Oral+Pathology,+Oral+Radiology,+and+Endodontology&volume=85&issue=6&date=1998&spage=638&issn=1079-2104
-          # can be tested on instantill page with 10.1016/S1079-2104(98)90029-4
-          # without:
-          # https://snc.idm.oclc.org/login?url=http://resolver.ebscohost.com/openurl?sid=google&auinit=MP&aulast=Newton&atitle=Librarian+roles+in+institutional+repository+data+set+collecting:+outcomes+of+a+research+library+task+force&id=doi:10.1080/01462679.2011.530546
-          else if url.indexOf('ebscohost.') isnt -1
-            res.error.push 'Ebsco' if error
-            if spg.indexOf('view this ') isnt -1 and pg.indexOf('<a data-auto="menu-link" href="') isnt -1
-              res.url = url.replace('://','______').split('/')[0].replace('______','://') + pg.split('<a data-auto="menu-link" href="')[1].split('" title="')[0]
-              res.findings.eds = res.url
-              if not all and res.url?
-                if res.url.indexOf('getitnow') is -1
-                  res.found = 'eds'
-                  API.http.cache(sig, 'oab_ill_subs', res)
-                  return res
-                else
-                  res.url = undefined
-                  res.findings.eds = undefined
-          
+
           # serials solutions
           # the HTML source code for the No Results page includes a span element with the class SS_NoResults. This class is only found on the No Results page (confirmed by serialssolutions)
           # does not appear to need proxy or password
@@ -203,7 +196,7 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
           
           # we also have an xml alternative for serials solutions
           # see https://journal.code4lib.org/articles/108
-          else if url.indexOf('serialssolutions.') isnt -1
+          else if subtype is 'serialssolutions' or url.indexOf('serialssolutions.') isnt -1
             res.error.push 'SerialsSolutions' if error
             if do_serialssolutions_xml is true
               if spg.indexOf('<ssopenurl:url type="article">') isnt -1
@@ -334,6 +327,7 @@ API.service.oab.ill.start = (opts={}) ->
           else if ['started','ended','took'].indexOf(r) is -1
             vars.details += '<p>' + r + ':<br>' + opts[r] + '</p>'
         #vars.details += '<p>' + o + ':<br>' + opts[o] + '</p>'
+      opts.norequests = true if user.service?.openaccessbutton?.ill?.config?.norequests
       vars.illid = oab_ill.insert opts
       vars.details += '<p>Open access button ILL ID:<br>' + vars.illid + '</p>';
       eml = if user.service?.openaccessbutton?.ill?.config?.email and user.service?.openaccessbutton?.ill?.config?.email.length then user.service?.openaccessbutton?.ill?.config?.email else if user.email then user.email else user.emails[0].address
@@ -381,7 +375,7 @@ API.service.oab.ill.config = (user, config) ->
   # tested it and set values as below defaults, but also noted that it has year and month boxes, but these do not correspond to year and month params, or date params
   if config?
     update = {}
-    for k in ['ill_institution','ill_redirect_base_url','ill_redirect_params','method','sid','title','doi','pmid','pmcid','author','journal','issn','volume','issue','page','published','year','terms','book','other','cost','time','email','problem_email','subscription','search','autorun','autorunparams','intropara']
+    for k in ['ill_institution','ill_redirect_base_url','ill_redirect_params','method','sid','title','doi','pmid','pmcid','author','journal','issn','volume','issue','page','published','year','terms','book','other','cost','time','email','problem_email','subscription','subscription_type','search','autorun','autorunparams','intropara','norequests','noillifoa','noillifsub','saypaper']
       if k is 'ill_redirect_base_url' and config[k]? and config[k].indexOf('illiad.dll') isnt -1 and config[k].toLowerCase().indexOf('action=') is -1
         config[k] = config[k].split('?')[0]
         if config[k].indexOf('/openurl') is -1

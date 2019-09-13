@@ -40,5 +40,14 @@ API.service.oab.redirect = (url) ->
           return false
         else if listing.blacklist is "yes"
           return false
+  if typeof url is 'string'
+    # some URLs can be confirmed as resolvable but we also hit a captcha response and end up serving that to the user
+    # we want to avoid that, so when such URLs appear to be found here, just return true instead, which will cause 
+    # us to accept the original URL
+    # we introduced this because of issue https://github.com/OAButton/discussion/issues/1257
+    # and for example https://www.tandfonline.com/doi/pdf/10.1080/17521740701702115?needAccess=true
+    # ends up as https://www.tandfonline.com/action/captchaChallenge?redirectUri=%2Fdoi%2Fpdf%2F10.1080%2F17521740701702115%3FneedAccess%3Dtrue
+    for avoid in ['captcha','challenge']
+      return undefined if url.toLowerCase().indexOf(avoid) isnt -1
   return url
 

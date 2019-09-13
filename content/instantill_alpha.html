@@ -8,6 +8,28 @@ jQuery(document).ready(function() {
       $('#oabutton_find').trigger('click');
     },500)
   });
+  
+  var addsubscription = function(e) {
+    try {e.preventDefault(); } catch(err) {}
+    if ($('.subscription').last().val() && $('.subscription_type').last().val()) {
+      $('.subscription').last().clone().val('').insertBefore($('#addsubscription'));
+      $('.subscription_type').last().clone().val('').insertBefore($('#addsubscription'));
+    } else {
+      $('.subscription').last().focus();
+    }
+  }
+  $('body').on('click','#addsubscription',addsubscription);
+
+  var guesssubscription = function(e) {
+    if ($(this).val().indexOf('sfx.') !== -1) {
+      $(this).next('.subscription_type').val('sfx');
+    } else if ($(this).val().indexOf('ebscohost.') !== -1) {
+      $(this).next('.subscription_type').val('eds');
+    } else if ($(this).val().indexOf('serialssolutions.') !== -1) {
+      $(this).next('.subscription_type').val('sfx');
+    }
+  }
+  $('body').on('change','.subscription',guesssubscription);
 
   var save = function(e) {
     if (e) e.preventDefault();
@@ -15,6 +37,20 @@ jQuery(document).ready(function() {
     $('.setting').each(function(i, obj) {
       if ( $(this).is(':checkbox') ) {
         data[$(this).attr('id')] = $(this).is(':checked');
+      } else if ( $(this).hasClass('subscription') ) {
+        if ($(this).val()) {
+          if (data.subscription === undefined) data.subscription = [];
+          data.subscription.push($(this).val())
+        } else {
+          $(this).remove();
+        }
+      } else if ( $(this).hasClass('subscription_type') ) {
+        if ($(this).val()) {
+          if (data['subscription_type'] === undefined) data['subscription_type'] = [];
+          data['subscription_type'].push($(this).val())
+        } else {
+          $(this).remove();
+        }
       } else if ( $(this).val() !== undefined ) {
         data[$(this).attr('id')] = $(this).val();
         if (['ill_redirect_base_url','terms','book','other'].indexOf($(this).attr('id')) !== -1 && data[$(this).attr('id')] !== '' && data[$(this).attr('id')].indexOf('http') !== 0) {
@@ -59,17 +95,36 @@ jQuery(document).ready(function() {
       $('#email').attr('placeholder','default ' + (noddy.user.account.email ? noddy.user.account.email : noddy.user.account.emails[0].address));
     } catch(err) {}
     try {
-      for (var k in noddy.user.account.service.openaccessbutton.ill.config) {
-        if (typeof noddy.user.account.service.openaccessbutton.ill.config[k] === 'boolean') {
-          if (noddy.user.account.service.openaccessbutton.ill.config[k] === true) $('#'+k).prop('checked',true);
-        } else {
-          $('#'+k).val(noddy.user.account.service.openaccessbutton.ill.config[k]);
+      var uc = noddy.user.account.service.openaccessbutton.ill.config;
+      for (var k in uc) {
+        if (typeof uc[k] === 'boolean') {
+          if (uc[k] === true) $('#'+k).prop('checked',true);
+        } else if (k === 'subscription') {
+          if (typeof uc.subscription === 'string') uc.subscription = uc.subscription.split(',');
+          for ( var s in uc.subscription) {
+            if (parseInt(s) !== 0) addsubscription();
+            if (typeof uc.subscription[s] === 'object') {
+              var url = uc.subscription[s].url;
+              var type = uc.subscription[s].type;
+            } else {
+              var url = uc.subscription[s];
+              try {
+                var type = uc.subscription_type[s];
+              } catch(err) {
+                var type = 'unknown';
+              }
+            }
+            $('.subscription').last().val(url);
+            $('.subscription_type').last().val(type);
+          }
+        } else if (k !== 'subscription_type') {
+          $('#'+k).val(uc[k]);
         }
       }
     } catch(err) {}
     $('.save').bind('click',save);
     try {
-      var q = {"size": 0, "query": {"filtered": {"query": {"bool": {"must": [{"term": {"plugin": "instantill"}},{"term": {"from": noddy.user.account._id}}]}}}}};
+      var q = {"size": 0, "query": {"filtered": {"query": {"bool": {"must": [{"term": {"plugin": "instantill"}},{"term": {"from.exact": noddy.user.account._id}}]}}}}};
       q.aggregations = {"embeds": {"terms": {"field": "embedded.exact"}}};
       $.ajax({
         url: api + '/availabilities',
@@ -248,8 +303,17 @@ jQuery(document).ready(function() {
           Do you have a subscription lookup URL where you send requests to find out if you have access to content?
           For example an SFX, EDS, or serialssolutions URL? If so, enter it below. Note we also need any required URL parameters
           to be added here, but not article metadata parameters. If you have more than one subscription
-          service to check, enter additional URLs separated by a comma.
-          <input id="subscription" type="text" class="form-control setting" placeholder="e.g http://rx8kl6yf4x.search.serialssolutions.com"><br>
+          service to check, you can add additional ones below.
+          <input type="text" class="form-control subscription setting" placeholder="e.g http://rx8kl6yf4x.search.serialssolutions.com">
+          <select class="form-control subscription_type setting">
+            <option value="">select subscription type...</option>
+            <option value="sfx">SFX</option>
+            <option value="eds">EDS / Ebsco</option>
+            <option value="serialssolutions">Serials Solutions</option>
+          </select>
+          <a class="btn btn-primary" id="addsubscription" href="#">Add another</a>
+          <br>
+          
           An example SFX URL:<br>
           https://cricksfx.hosted.exlibrisgroup.com/crick?sid=Elsevier:Scopus&_service_type=getFullTxt
           <br>An example EDS URL:<br>
@@ -290,6 +354,22 @@ jQuery(document).ready(function() {
         <p>
           <input id="intropara" type="checkbox" class="setting">
           Do not show the introductory paragraph before the instantill search box (this is on by default)
+        </p>
+        <p>
+          <input id="norequests" type="checkbox" class="setting">
+          Do not generate Open Access Button requests for submitted ILLs (by default we may also create requests to get access when an ILL is generated)
+        </p>
+        <p>
+          <input id="noillifoa" type="checkbox" class="setting">
+          Do not allow ILLs if an open access article is found
+        </p>
+        <p>
+          <input id="noillifsub" type="checkbox" class="setting">
+          Do not allow ILLs if a subscription article is found
+        </p>
+        <p>
+          <input id="saypaper" type="checkbox" class="setting">
+          Use the word "paper" in InstantILL wording instead of the word "article".
         </p>
         <p><a class="btn btn-primary btn-block save" href="#">Save your settings</a></p>
       </div>

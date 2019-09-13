@@ -131,7 +131,7 @@ API.add 'service/oab/ill/config',
       opts = this.request.body ? {}
       for o of this.queryParams
         opts[o] = this.queryParams[o]
-      if opts.uid and API.accounts.auth 'root', this.user
+      if opts.uid and API.accounts.auth 'openaccessbutton.admin', this.user
         user = Users.get opts.uid
         delete opts.uid
       else
