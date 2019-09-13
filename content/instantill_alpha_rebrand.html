@@ -127,7 +127,7 @@
         <h1 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">FAQ</h1>
 
           <p>
-            This is a stub for an FAQ. It'll work just like the about page when we have questions.
+            This is a stub for an FAQ. It'll work just like you'd expect when we have questions.
           </p>
 
       </div>
@@ -135,9 +135,9 @@
       <div class="col-md-4 col-md-offset-1 green">
         <div class="greenery">
           <p><a class="green view pull" href="#menu"><span class="glyphicon glyphicon-arrow-left"></span>  Go back</a></p>
-          <h2>FAQ</h2>
+          <h2>Not got your quesiton answered?</h2>
           <p>
-            Not got your quesiton answered? Drop <a href="mailto:Joe@openaccessbutton.org">Joe@openaccessbutton.org</a> an email.
+            Drop <a href="mailto:Joe@openaccessbutton.org">Joe@openaccessbutton.org</a> an email.
           </p>
 
         </div>
@@ -209,20 +209,20 @@
           <input id="cost" type="text" class="form-control setting green" placeholder="default free">
           <!-- TODO: when hitting save and preview after changing values, like the above, it doesn't update in the preview. -->
           <br>
-          <p><b>How long do your ILLs take to process on average? e.g 24 hours</b><p>
+          <p><b>How long do your ILLs take to deliver on average? e.g 24 hours</b><p>
           <input id="time" type="text" class="form-control setting green" placeholder="default 24 hours">
           <br>
-          <p><b>What email address do you want users referred to? (optional)</b><p>
+          <p><b>What email address do you want users referred to if there is a problem?</b><p>
           <input id="problem_email" type="text" class="form-control setting green" placeholder="no default, the user will be told to contact their library">
           <br>
-          <p><b>Terms and conditions link (optional)</b><p>
+          <p><b>Terms and conditions link</b><p>
             <!-- TODO: Joe, make sure there is something to go in the box here. maybe example page on terms -->
           <input id="terms" type="text" class="form-control setting green" placeholder="">
           <br>
-          <p><b>Book request link (optional for if the user wants a book)</b><p>
+          <p><b>Where do you want people sent if they want a book?</b><p>
           <input id="book" type="text" class="form-control setting green" placeholder="e.g https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=21">
           <br>
-          <p><b>Other request link (optional for if the user wants something other than article or book)</b><p>
+          <p><b>Where do you want people sent if they want something other than a book or article</b><p>
           <input id="other" type="text" class="form-control setting green" placeholder="e.g https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=10">
           <br>
           <p>
@@ -231,16 +231,24 @@
           </p>
           <p>
             <!-- TODO: Mark, would be great if these were green, not blue -->
+            <p>
+              If we find an article Open Access, do you want to let patrons still request an ILL?
+            </p>
           <input id="noillifoa" type="checkbox" class="setting green">
-            Do not allow ILLs if an open access article is found
+            No
+          </p>
+          <p>
+            If we find that you're subscribed to an article, do you still want patrons to be able to request an ILL?
           </p>
           <p>
           <input id="noillifsub" type="checkbox" class="setting green">
-            Do not allow ILLs if a subscription article is found
+            No
+          </p>
+          <p>We use article to refer to academic journal publications by default. Would you like to change that?
           </p>
           <p>
           <input id="saypaper" type="checkbox" class="setting green">
-            Use the word "paper" in InstantILL wording instead of the word "article".
+            Yes, use 'paper' instead.
           </p>
           <!-- TODO: for some reason the above question is over lapping with the save button -->
         </div>
@@ -404,7 +412,7 @@
         <p>We suggest:</p>
         <ul>
           <li>Calling your page ‘Get a paper’</li>
-          <li>No need to mention 'InstantILL' to patrons</li>
+          <li>Not mentioning 'InstantILL' to patrons</li>
         </ul>
 
         </div>
