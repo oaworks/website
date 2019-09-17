@@ -19,7 +19,7 @@
     <div class="col-md-12">
 
       <div id="missing" style="display:none;">
-          <p>Sorry, we have no record of expecting to receive any items at this URL. If you think we should be, please <a href="mailto:requests@openaccessbutton.org">get in touch</a> and mention this URL.</p>
+          <p>Sorry, we have no record of expecting to receive any items at this URL. If you think we should be, please <a href="mailto:requests@openaccessbutton.org">get in touch</a>, mention this URL and include any files or links you'd like shared.</p>
       </div>
 
       <div id="request" style="display:none;">
@@ -62,10 +62,6 @@
               If the article is already publicly available online please share a full text link to a repository or your website.
             </p>
 
-            <p class="typedata">
-              Is the requested data publicly available online? That’s great! Just give us the URL. We suggest a link to a repository record. <!--If your data isn't in a repository, please consider uploading it instead.-->
-            </p>
-
             <input style="margin-bottom:5px;" id="url" type="text" class="form-control" placeholder="Enter the publicly available URL here">
             <p class="admin" style="display:none;color:orange;"><input type="checkbox" id="urlnotfromauthor"> Tick if URL not provided by author</p>
             <a href="#" class="btn btn-warning btn-block admin" style="display:none;margin-top:5px;" id="adminsubmiturl">submit URL as Admin</a>
@@ -83,14 +79,6 @@
             <h3>Upload a file</h3>
             <p class="typearticle">
               We'll then upload your article to <a target="_blank" href="https://zenodo.org" target="_blank">Zenodo</a> who will preserve and make it available to everyone under a <a id="licenselink" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC-BY</a> license.
-            </p>
-
-            <p class="typedata">
-              If you want to upload your data, we’ll send it to the <a href="https://osf.io">Open Science Framework</a>.
-              OSF will preserve your data and make it publicly available under a
-              <a target="_blank" href="https://creativecommons.org/publicdomain/zero/1.0/">CC-0 license</a>,
-              the recommended license for sharing data. Once you submit the data we’ll ask our community to validate it. If you have more than one file, please create a zip folder to upload.<br><br>
-              Need some help organizing your data first? Ask your library if they have a research data management specialist who can help.
             </p>
 
             <form id="fileupload" enctype="multipart/form-data" method="POST">
@@ -114,9 +102,6 @@
             <p class="typearticle">
               If you are the author and you can't share your article, or don't want to, you can <a href="#" id="showrefuse">click here</a> and we'll let the requestor know.
             </p>
-            <p class="typedata">
-              If you can't share your data, or don't want to, you can simply <a href="#" id="showrefuse">click here</a> and we'll let the requestor know.
-            </p>
         </div>
       -->
       </div>
@@ -133,8 +118,7 @@
           <p>
             The link to your content
             <span class="noturl" style="display:none;">, saved
-            <span class="typearticle">on Zenodo</span>
-            <span class="typedata">at the Open Science Foundation</span>,
+            <span class="typearticle">on Zenodo</span>,
             </span> will appear on the
             <a class="requestlink" href="/request">request</a>
             page in a few minutes.
@@ -269,7 +253,6 @@
   jQuery(document).ready(function() {
 
     $('.typearticle').hide();
-    $('.typedata').hide();
     $('.panels').hide();
     var rid = window.location.pathname.split('/')[2];
     var clickedadmin = false;
