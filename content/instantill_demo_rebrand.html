@@ -1,6 +1,6 @@
 <!-- TODO: MARK, can we get instantill.org/demo pointed here? -->
-<!-- TODO: JOE: Talk to Mark. I think a general rule is that instantill should be visible on page load??? -->
-<!-- TODO: What to do if people sign signed in on this demo page? They might get a personal version of instantill. we should probably turn that off here, or link the demo to a certain user account.-->
+<!-- TODO: MARK. I think a general rule is that instantill should be visible on page load if it has 'pull' class. Problem is that when you hit https://dev.openaccessbutton.org/instantill_demo_rebrand#part2  you don't see instantill. people will likely link directly to bits.-->
+<!-- TODO: MARK: What to do if people sign signed in on this demo page? They might get a personal version of instantill. we should probably turn that off here, or link the demo to a certain user account.-->
 <!-- TODO: JOE, what to do with this on mobile? -->
 
 <link rel="stylesheet" href="/static/oabutton_rebrand.css"> <!-- gets the new css (still also uses the old css, just overwrites where necessary) -->
@@ -130,7 +130,8 @@
       <div class="col-md-6 col-md-offset-1 content">
         <p>UNIVERSITY OF YOU INTERLIBRARY LOAN FORM</p>
         <table class="table table-bordered" id="fakeilltable">
-          <!-- TODO: Mark, how do we remove some things from this table? like cache? -->
+          <!-- TODO: Mark, can you remove: 'cache', 'Redirect', 'Source'? from this table -->
+          <!-- TODO: Mark, can you make the values in this table non-editable -->          
         </table>
         <!-- <p><a class="btn btn-rebrand" href="#part4">Continue demo!</a></p>-->
       </div>
@@ -178,7 +179,7 @@
           </p>
           <p><b>4. Let's test linking to a page with InstantILL on it:</b></p>
           <p><a class="btn btn-hollow btn-block view preview" href="#part5" val="Corrective gene transfer in the human skin disorder lamellar ichthyosis">https://dev.openaccessbutton.org/instantill_demo_rebrand#part5?doi=10.1126/science.196.4287.293</a></p>
-          <!-- TODO: can the above work? openurl to anchor with instantill showing. OR, this could be a gif. -->
+          <!-- TODO: JOE. Consider how to make  the above work? openurl to anchor with instantill showing. OR, this could be a gif. -->
           <!-- TODO: JOE: add pings for tracking -->
           <!-- TODO: JOE: I need to make sure this is the stays in the button -->
         </div>
