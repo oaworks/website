@@ -458,11 +458,14 @@ API.service.oab.ill.openurl = (uid, meta={}, withoutbase=false) ->
             v = meta.author.family + if meta.author.given then ', ' + meta.author.given else ''
           else
             v = JSON.stringify meta.author
-    else if k not in ['started','ended','took','terms','book','other','cost','time','email','redirect','url','source','notes']
+    else if k not in ['started','ended','took','terms','book','other','cost','time','email','redirect','url','source','notes','createdAt','created_date','_id']
       v = meta[k]
     if v
       url += (if config[k] then config[k] else k) + '=' + v + '&'
-  return url
+  try
+    return url.replace('/&&/g','&')
+  catch
+    return url
     
 API.service.oab.ill.terms = (uid) ->
   config = API.service.oab.ill.config uid
@@ -588,7 +591,7 @@ API.service.oab.ill.metadata = (metadata={}, opts={}, refresh=false) ->
   want = _.without want, 'pmcid', 'pmid' # there is no other way we will find these after the above is done
 
   if not _got() and metadata.doi
-    dr = API.service.oab.resolve metadata, undefined, ['core','openaire','doaj'], true, false, true, true, true
+    dr = API.service.oab.resolve metadata, undefined, ['openaire','doaj'], true, false, true, true, true # removed core sep 2019
     try
       for w in want
         metadata[w] ?= dr[w]
@@ -596,7 +599,7 @@ API.service.oab.ill.metadata = (metadata={}, opts={}, refresh=false) ->
   if not _got() and metadata.title?
     pretitledoi = metadata.doi
     delete metadata.doi
-    tr = API.service.oab.resolve metadata, undefined, ['core','openaire','doaj'], true, true, true, true, true
+    tr = API.service.oab.resolve metadata, undefined, ['openaire','doaj'], true, true, true, true, true # removed core sep 2019
     metadata.doi = pretitledoi
     try
       for w in want

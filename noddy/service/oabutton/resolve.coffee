@@ -1,6 +1,5 @@
 
 import Future from 'fibers/future'
-import request from 'request'
 import unidecode from 'unidecode'
 
 API.service.oab.citation = (meta) ->

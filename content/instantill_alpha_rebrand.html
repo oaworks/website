@@ -1,4 +1,3 @@
-<!-- TODO: Mark, can we get instantill.org/setup pointed here -->
 
 <link rel="stylesheet" href="/static/oabutton_rebrand.css"> <!-- gets the new css (still also uses the old css, just overwrites where necessary) -->
 
@@ -11,7 +10,6 @@
   }
 
   .form-control {
-    background-color:#edf8ed;
     color:#46b633;
     border:2px solid #46b633;
   }
@@ -51,12 +49,6 @@
     <div class="row">
       <div class="col-md-6 col-md-offset-1 content">
         <div id="instantill"></div>
-
-        <!-- TODO: MARK, need to stop the background of instantill ill being green.
-        .form-control {    background-color: #edf8ed;
-        this can go back to default, or whatever it was before
-       -->
-
       </div>
 
       <div class="col-md-4 col-md-offset-1 green">
@@ -154,8 +146,6 @@
     <div class="row">
       <div class="col-md-6 col-md-offset-1 content">
 
-        <!-- TODO: MARK, THE FAQ SECTION SEEMS TO TURN UP HERE, AND I'M NOT SURE WHY. Turns up at top of the screen. -->
-
       </div>
 
       <div class="col-md-4 col-md-offset-1 green">
@@ -175,7 +165,7 @@
           <input id="email" type="text" class="form-control setting green" placeholder="default is your OAB account email address">
           <br>
           <p>
-            If everything works, hit next! If it doesn’t, <a href="#ill-advanced" class="green">see advanced settings</a>.
+            If everything works, hit next! If it doesn’t, <a href="#ill-advanced" class="green pull">see advanced settings</a>.
 
             <!-- TODO: JOE, are you clear about WHEN to test? -->
           </p>
@@ -354,8 +344,7 @@
             -->
             <!-- TODO: Mark, When you click add another, the formatting is sad. Can it mimic the normal formatting of these -->
             <!-- TODO: Joe, verify with mark that the javascript all works on this -->
-            <input type="text" class="form-control subscription setting" placeholder="e.g http://rx8kl6yf4x.search.serialssolutions.com">
-            <br>
+            <input style="margin-bottom:10px;" type="text" class="form-control subscription setting" placeholder="e.g http://rx8kl6yf4x.search.serialssolutions.com">
             <select class="form-control subscription_type setting">
               <option value="">select subscription type...</option>
               <option value="sfx">SFX</option>
@@ -444,7 +433,7 @@
           </p>
           <p id="embeddedexample" style="display:none;"></p>
           <p>
-            If everything works, hit next! If it doesn’t, <a href="#workflow-advanced" class="green">see advanced settings
+            If everything works, hit next! If it doesn’t, <a href="#workflow-advanced" class="green pull">see advanced settings
           </p>
 
           <!-- TODO: JOE: Next is in the wrong place, and also, what is embedexample doesn't show anything. hmmmmmmmm. -->
@@ -627,8 +616,6 @@
     </div>
   </div>
 
-<!-- TODO: MARK: when the person isn't logged in they need to see the below 'login'. Otherwise it'll be quite confusing. This is a temporary solution, don't invest too much. -->
-
   <div id="login" class="section">
     <div class="row">
       <div class="col-md-6 col-md-offset-1 content">
@@ -693,127 +680,18 @@ into the view you have changed to.
 -->
 
 <script src="/static/instantill.js"></script>
+
 <script>
 jQuery(document).ready(function() {
   $('#topnav').remove();
   $('#footer').remove();
-  if ($('#rebrand').height() < $(window).height()) $('#rebrand').css({'min-height':$(window).height()+'px'});
-  $('div.green').css({'min-height':$(window).height()+'px'});
+});
+</script>
 
-  var _ill_response = undefined;
-  var fakeill = function(e) {
-    if (e) e.preventDefault();
-    $('#fakeilltable').html('');
-    try {
-      for ( var i in _ill_response.meta.article) {
-        if (['started','ended','took'].indexOf(i) === -1) {
-          if (i === 'author') {
-            var append = '<tr><td>Author(s)</td><td><input class="form-control" type="text" value="';
-            for (var a in _ill_response.meta.article.author) {
-              try {
-                if (a !== '0') append += ', ';
-                append += _ill_response.meta.article.author[a].given + ' ' + _ill_response.meta.article.author[a].family
-              } catch(err) {}
-            }
-            $('#fakeilltable').append(append + '"></td></tr>');
-          } else {
-            try {
-              $('#fakeilltable').append('<tr><td>' + i.substring(0,1).toUpperCase() + (['doi','issn'].indexOf(i.toLowerCase()) !== -1 ? i.substring(1).toUpperCase() : i.substring(1)) + '</td><td><input class="form-control" type="text" value="' + _ill_response.meta.article[i] + '"></td></tr>');
-            } catch(err) {}
-          }
-        }
-      }
-    } catch(err) {}
-    if (($('#fakeill').height() + $('#fakeill').offset().top) > $(window).height()) {
-      var diff = Math.floor(($(window).height() - $('#fakeill').height())/2)-20;
-      if (diff < 20) diff = 20;
-      $('#fakeill').children('div.content').css({'padding-top':diff+'px'});
-    }
-    view(undefined,'#fakeill');
-  }
+<script src="/static/instantill_ui.js"></script>
 
-  $(document).ajaxComplete(function(e,xhr) {
-    if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.match !== undefined) {
-      _ill_response = xhr.responseJSON.data;
-      // an availability check finished, reposition the instantill window if necessary
-      if (($('#instantill').height() + $('#instantill').offset().top) > ($(window).height()*.95)) {
-        var diff = Math.floor(($(window).height() - $('#instantill').height())/2)-20;
-        if (diff < 20) diff = 20;
-        $('div.content:visible').css({'padding-top':diff+'px'});
-      }
-      $('.oabutton_ill').off();
-      $('body').on('click','.oabutton_ill',fakeill);
-    }
-  });
-
-  var view = function(e,which) {
-    if (e) e.preventDefault();
-    if (which) {
-      $('.section').hide();
-      if (which.indexOf('.') !== 0 && which.indexOf('#') !== 0) which = '#' + which;
-      $(which).show();
-    } else if ($(this).attr('href') === undefined) {
-      $('.section').hide();
-      if (window.location.hash) {
-        $(window.location.hash).show();
-      } else {
-        $('.section').first().show();
-      }
-    } else if ($(this).attr('href').length > 1) {
-      $('.section').hide();
-      which = $(this).attr('href');
-      if (which.indexOf('.') !== 0 && which.indexOf('#') !== 0) which = '#' + which;
-      $(which).show();
-    } else {
-      var movefrom = '#' + $('.section:visible').first().attr('id');
-      $('.section').hide();
-      $(this).hasClass('previous') ? $(movefrom).prev().show() : $(movefrom).next().show();
-      which = '#' + $('.section:visible').first().attr('id');
-    }
-    if ($(this).hasClass('pull') && $('#instantill','.section:visible').length !== 1) $('#instantill').appendTo($('.content','.section:visible'));
-    try {
-      var ch = $('div.content:visible').height();
-      if (ch < $(window).height()/5) ch = $(window).height()/5;
-      var diff = $(window).height() - $('div.content:visible').offset().top - ch;
-      if (diff > 0 && parseInt($('div.content:visible').css('padding-top').replace('px','')) < 10 ) {
-        diff = Math.floor(diff/2 - $('div.content:visible').height() - 50) + 'px';
-        $('div.content:visible').css({'padding-top':diff});
-      }
-    } catch(err) {}
-    $('div.green:visible').css({'min-height':$(document).height()+'px'});
-		if (which && 'pushState' in window.history) window.history.pushState("", which, which);
-  }
-  $('body').on('click','.view',view);
-  $(window).on('popstate', view);
-  view();
-
-  var preview = function(e,val) {
-    try { e.preventDefault(); } catch (err) {}
-    if ($(this).hasClass('save') && val === undefined) {
-      // do nothing, the save will call this again once ready to run the preview with new values
-    } else {
-      if (typeof val !== 'string') {
-        try {
-          val = $(this).attr('val');
-        } catch(err) {
-          val = '10.1145/2908080.2908114';
-        }
-      }
-      if (typeof val !== 'string' || val.length < 10) val = '10.1145/2908080.2908114';
-      if ($(this).hasClass('view')) {
-        if ($('#instantill','.section:visible').length !== 1) {
-          $('#instantill').appendTo($('.content','.section:visible'));
-        }
-      } else if (!$('#instantill').is(':visible')) {
-        view(undefined,'#demo');
-      }
-      _instantill_restart();
-      $('#oabutton_input').val(val);
-      setTimeout(function() { $('#oabutton_find').trigger('click'); },300);
-    }
-  }
-  $('body').on('click','.preview',preview);
-
+<script>
+jQuery(document).ready(function() {
   var addsubscription = function(e) {
     try {e.preventDefault(); } catch(err) {}
     if ($('.subscription').last().val() && $('.subscription_type').last().val()) {
@@ -972,7 +850,7 @@ jQuery(document).ready(function() {
     }*/
   }
   noddy.nologin = function() {
-    instantill({uid:'oab_site', api:api, css: false});
+    view(undefined,'#login');
   }
   noddy.login();
 });

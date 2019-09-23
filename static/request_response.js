@@ -153,7 +153,11 @@ var admin = function(record) {
   dets += '<div id="admin" style="display:none;">';
   dets += '<div class="well" style="background-color:orange;">';
   //dets += '<p>Dear admin, please notify when you are moderating in a few clicks at <a href="https://app.timebridge.com/mwm/requests">https://app.timebridge.com/mwm/requests</a></p>';
-  if (record.year) dets += '<p>Publication year: ' + record.year + '</p>';
+  if (record.published) {
+    dets += '<p>Publication date: ' + record.published + '</p>';
+  } else if (record.year) {
+    dets += '<p>Publication year: ' + record.year + '</p>';
+  }
   if (record.sherpa !== undefined) {
     dets += '<p>Sherpa color: ' + (record.sherpa.color === undefined ? 'unknown' : record.sherpa.color) + '</p>';
     try { dets += '<p><a class="btn btn-block btn-action" target="_blank" href="http://www.sherpa.ac.uk/romeo/search.php?issn=' + record.sherpa.journal.issn + '">View journal on Sherpa Romeo</a></p>'; } catch(err) {}

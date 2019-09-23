@@ -23,7 +23,7 @@ import { Random } from 'meteor/random'
 ###
 API.service.oab.find = (opts={url:undefined,type:undefined}) ->
   opts.type ?= 'article'
-  opts.sources ?= ['oabutton','eupmc','oadoi','core','openaire','figshare','doaj']
+  opts.sources ?= ['oabutton','eupmc','oadoi','openaire','figshare','doaj'] # removed core sep 2019
   opts.refresh ?= 30 # default refresh. If true then we won't even use successful previous lookups, otherwise if number only use failed lookups within refresh days
   opts.refresh = 0 if opts.refresh is true
   if typeof opts.refresh isnt 'number'
@@ -102,7 +102,7 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
       finder += 'title:"' + opts.title + '"'
     finder += ')'
     if opts.refresh isnt 0 and 'oabutton' in opts.sources
-      avail = oab_availability.find finder + ' AND discovered.article:* AND NOT discovered.article:false', true
+      avail = oab_availability.find finder + ' AND discovered.article:* AND NOT discovered.article:false AND NOT source.article:core', true # don't re-use core ones, sep 2019
       if avail?.discovered?.article and ret.meta.article.redirect = API.service.oab.redirect(avail.discovered.article)
         ret.meta.article.url = avail.discovered.article
         ret.meta.article.source = avail.source?.article
@@ -154,7 +154,7 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
     ret.accepts = []
     already.push request.type
 
-  delete opts.dom if not API.settings.dev
+  #delete opts.dom if not API.settings.dev
   oab_availability.insert(opts) if not opts.nosave # save even if was a cache hit, to track usage of the endpoint
   return ret
 
