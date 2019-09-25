@@ -1,4 +1,4 @@
-
+<!-- found at instantill.org/setup -->
 <link rel="stylesheet" href="/static/oabutton_rebrand.css"> <!-- gets the new css (still also uses the old css, just overwrites where necessary) -->
 
 <style>
@@ -19,6 +19,9 @@
     font-weight:normal;
   }
   a:hover {
+    color:#46b633;
+  }
+  a:visited {
     color:#46b633;
   }
 
@@ -68,7 +71,6 @@
           <ul class="arrowed">
             <li>
               <a class="green view pull preview" val="10.1145/2908080.2908114" href="#ill">
-                <!-- TODO: MARK, When pulling, the centering of the preview is lost -->
                 <span class="glyphicon glyphicon-arrow-right">
               </span> Interlibrary loans</a>
             </li>
@@ -214,8 +216,7 @@
           <input id="problem_email" type="text" class="form-control setting green" placeholder="no default, the user will be told to contact their library">
           <br>
           <p><b>Terms and conditions link</b><p>
-            <!-- TODO: JOE, make sure there is something to go in the box here. maybe example page on terms -->
-          <input id="terms" type="text" class="form-control setting green" placeholder="">
+          <input id="terms" type="text" class="form-control setting green" placeholder="e.g https://libguides.newman.ac.uk/students/inter_library/terms">
           <br>
           <p><b>Where do you want people sent if they want a book?</b><p>
           <input id="book" type="text" class="form-control setting green" placeholder="e.g https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=21">
@@ -229,7 +230,7 @@
           <input id="search" type="text" class="form-control setting green" placeholder="e.g  https://ambslibrary.share.worldcat.org/wms/cmnd/nd/discover/items/search"><br>
           </p>
           <p>
-            <!-- TODO: MARK, would be great if these were green, not blue -->
+            <!-- Would be great if these were green, not blue -->
             <p><b>
               If we find an article Open Access, do you want to let patrons still request an ILL?
             </b></p>
@@ -347,7 +348,7 @@
             <!--  this shouldn't be done before.
             <input id="subscription" type="text" class="form-control setting green" placeholder="e.g http://rx8kl6yf4x.search.serialssolutions.com">
             -->
-            <!-- TODO: Mark, When you click add another, the formatting is sad. Can it mimic the normal formatting of these -->
+            <!-- TODO: Mark, Can it mimic the normal formatting of these? Stick missing some spacing. -->
             <input style="margin-bottom:10px;" type="text" class="form-control subscription setting green" placeholder="e.g http://rx8kl6yf4x.search.serialssolutions.com">
             <select class="form-control subscription_type setting green">
               <option value="">select subscription type...</option>
@@ -482,6 +483,7 @@
             <input id="intropara" type="checkbox" class="setting">
             Don't show
           </p>
+          <!--
           <p><b>Adjust what triggers InstantILL</b></p>
           <p>
             <input id="autorunparams" type="text" class="form-control setting green" placeholder="defaults as above"><br>
@@ -490,9 +492,11 @@
             If InstantILL isn't running when you might expect, that's likely because you're using a paramater we don't recognise.
           </p>
           <p>
-            In the box below, you can help us recognise your paramaters.<!-- TODO: I really don't understand these instrutions. JOE, discuss with Mark. -->Enter any that you want to use, separated by a comma. If you want to use a custom parameter to pass to one of our defaults listed above, provide your parameter name followed by an "=" and the default name you want it to match. For example if you wanted to use our default "doi" and "title" but with your own custom journal parameter, you could specify this as doi,title,mycustomparam=journal.
-            <!-- TODO: Joe, why don't we use a list similar to how we do ILLs here? -->
+            In the box below, you can help us recognise your paramaters.<!-- I really don't understand these instrutions. JOE, discuss with Mark. --><!--Enter any that you want to use, separated by a comma. If you want to use a custom parameter to pass to one of our defaults listed above, provide your parameter name followed by an "=" and the default name you want it to match. For example if you wanted to use our default "doi" and "title" but with your own custom journal parameter, you could specify this as doi,title,mycustomparam=journal.-->
+            <!-- Joe, why don't we use a list similar to how we do ILLs here? -->
+          <!--
           </p>
+          -->
           <p><b>
             You can completely turn off this feature too.
           </b></p>
@@ -525,8 +529,6 @@
 
             We can provide individualized analytics detailing your use of InstantILL. However, since this is not essential to delivering an excellent service to end users, we only provide this to users who support our work through our 'Leadership Tier'. To find our more, go <a href="https://openaccessbutton.org/libraries">here</a>.
           </p>
-          <!-- TODO: JOE: ADD ABOVE LINK. -->
-
           <p>
             If you're on our leadership teir, and would like a report, email Joe at <a href="joe@openaccessbutton.org">Joe@openaccessbutton.org</a>.
           </p>
