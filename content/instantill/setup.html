@@ -587,11 +587,24 @@
           <h2>Login</h2>
         </div>
 
-        <p>Oh dear, you need to be <a href="/account?next=/instantill_alpha_rebrand/">logged in</a> to see this otherwise you won't see your settings, it won't save, and it'll all just get quite confusing. We don't want that.</p>
+        <p>Oh dear, you need to be <a href="/account?next=/instantill/setup">logged in</a> to see this.</p>
 
-        <p>
-          We'll take you to the OAB site to do this... sit tight.
-        </p>
+        <div class="input-group">
+          <input type="text" name="email" id="youremail" class="form-control green" placeholder="Your email address">
+          <div class="input-group-btn">
+            <a id="gologin" href="/account?next=/instantill/setup' + rec._id + '" class="btn btn-rebrand btn-block">Continue</a>
+          </div>
+
+          <!-- TODO:
+
+          See /request/item line 373 & 307 for code
+
+          if ($('#gologin').length) $('#gologin').bind('click',function(e) {
+            if ($('#youremail').val()) $(this).attr('href',$(this).attr('href').replace('?','?email='+$('#youremail').val()+'&'));
+          });
+
+         -->
+
 
         <div class="greenbottom">
           <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green" href="/feedback#bug">Issue</a> | <a class="green" href="#faq">FAQ</a></p>
