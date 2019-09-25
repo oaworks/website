@@ -1,4 +1,3 @@
-<!-- TODO: JOE, what to do with this on mobile? -->
 <!-- TODO: JOE: on click links on instantill becomes blue -->
 
 
@@ -23,6 +22,9 @@
     font-weight:normal;
   }
   a:hover {
+    color:#46b633;
+  }
+  a:visited {
     color:#46b633;
   }
 
@@ -82,14 +84,13 @@
           </p>
 
           <p><b>1. Try InstantILL with an Open Access article:</b></p>
-          <p><a class="btn btn-hollow btn-block view preview" href="#part2" val="Exposing errors related to weak memory in GPU applications">Show me!</a></p>
+          <p><a class="btn btn-hollow btn-block view preview pinger" id=instantill_demo_start href="#part2" val="Exposing errors related to weak memory in GPU applications">Show me!</a></p>
           <!-- TODO: JOE: would be good to replace 'part2' and other 'parts' with nicer names -->
         </div>
 
         <div class="greenbottom">
           <p><a class="btn btn-rebrand btn-block" href="/instantill_alpha_rebrand">Install Now!</a></p>
-          <!-- TODO: JOE: Maybe remove the tour, as we don't have it yet! -->
-          <p>Or, get a <a href="#tour" class="green">guided tour</a> and <a href="#examples" class="green">ask how others use it</a>.</p>
+          <p>Or, <!--get a <a href="#tour" class="green">guided tour</a> and --><a href="#examples" class="green">ask how others use it</a>.</p>
 
         </div>
       </div>
@@ -117,7 +118,7 @@
         </div>
         <div class="greenbottom">
           <p><a class="btn btn-rebrand btn-block" href="/instantill_alpha_rebrand">Install Now!</a></p>
-          <p>Or, get a <a href="#tour" class="green">guided tour</a> and <a href="#examples" class="green">ask how others use it</a>.</p>
+          <p><a class="btn btn-hollow btn-block save pull preview" href="#">Preview</a></p>
 
         </div>
       </div>
@@ -146,12 +147,12 @@
 
           </p>
           <p><b>3. Next, try InstantILL with an article you’ve subscribed too:</b></p>
-          <p><a class="btn btn-hollow btn-block view preview" href="#part4" val="10.1145/2908080.2908114">Show me!</a></p>
+          <p><a class="btn btn-hollow btn-block view preview pinger" id=instantill_demo_subs href="#part4" val="10.1145/2908080.2908114">Show me!</a></p>
 
         </div>
         <div class="greenbottom">
           <p><a class="btn btn-rebrand btn-block" href="/instantill_alpha_rebrand">Install Now!</a></p>
-          <p>Or, get a <a href="#tour" class="green">guided tour</a> and <a href="#examples" class="green">ask how others use it</a>.</p>
+          <p><a class="btn btn-hollow btn-block save pull preview" href="#">Preview</a></p>
                   </div>
       </div>
     </div>
@@ -177,12 +178,11 @@
           <p><b>4. Let's test linking to a page with InstantILL on it:</b></p>
           <p><a class="btn btn-hollow btn-block view preview" href="#part5" val="Corrective gene transfer in the human skin disorder lamellar ichthyosis">https://dev.openaccessbutton.org/instantill_demo_rebrand#part5?doi=10.1126/science.196.4287.293</a></p>
           <!-- TODO: JOE. Consider how to make  the above work? openurl to anchor with instantill showing. OR, this could be a gif. -->
-          <!-- TODO: JOE: add pings for tracking -->
           <!-- TODO: JOE: I need to make sure this is the stays in the button -->
         </div>
         <div class="greenbottom">
           <p><a class="btn btn-rebrand btn-block" href="/instantill_alpha_rebrand">Install Now!</a></p>
-          <p>Or, get a <a href="#tour" class="green">guided tour</a> and <a href="#examples" class="green">ask how others use it</a>.</p>
+          <p><a class="btn btn-hollow btn-block save pull preview" href="#">Preview</a></p>
 
         </div>
       </div>
@@ -205,11 +205,11 @@
             Also, the article we tested there isn't available there, so all you can do is submit an Interlibrary Loan.
           </p>
           <p><b>5. Finally, see what it takes to set InstantILL up!:</b></p>
-          <p><a class="btn btn-hollow btn-block view preview" href="#part6" val="10.1145/2908080.2908114">Show me!</a></p>
+          <p><a class="btn btn-hollow btn-block view preview pinger" id=instantill_demo_setup href="#part6" val="10.1145/2908080.2908114">Show me!</a></p>
         </div>
         <div class="greenbottom">
           <p><a class="btn btn-rebrand btn-block" href="/instantill_alpha_rebrand">Install Now!</a></p>
-          <p>Or, get a <a href="#tour" class="green">guided tour</a> and <a href="#examples" class="green">ask how others use it</a>.</p>
+          <p><a class="btn btn-hollow btn-block save pull preview" href="#">Preview</a></p>
 
         </div>
       </div>
@@ -239,13 +239,13 @@
           <p>
             So, you can get started today with your systems:
           </p>
-          <p><a class="btn btn-rebrand btn-block" href="/instantill_alpha_rebrand">Install Now!</a></p>
+          <p><a class="btn btn-rebrand btn-block pinger" id=instantill_demo_install href="/instantill_alpha_rebrand">Install Now!</a></p>
           <p>Or, if you're not sure yet you can... </p>
         </div>
         <div class="greenbottom">
           <!--
           <p><a class="btn btn-rebrand btn-block" href="/instantill_alpha_rebrand">Install Now!</a></p>
-          <p>Or, get a <a href="#tour" class="green">guided tour</a> and <a href="#examples" class="green">ask how others use it</a>.</p>
+          <p><a class="btn btn-hollow btn-block save pull preview" href="#">Preview</a></p>
         -->
         </div>
       </div>
@@ -293,7 +293,7 @@
     <div class="row">
       <div class="col-md-6 col-md-offset-1 content">
 
-        <!-- TODO: JOE, what goes here? -->
+        <!-- JOE, what goes here? -->
 
       </div>
 
