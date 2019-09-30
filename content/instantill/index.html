@@ -127,9 +127,15 @@
     margin: auto;
     margin-top:30px;
   }
+  .programs{
+    display: flex;
+    justify-content: space-between;  
+    text-align: center;
+  }
 
   .program{
     width:50%;
+    color:#46B633;
   }
   .programcontents{
     max-width:350px;
@@ -138,18 +144,26 @@
     text-align: center;
   }
 
+  .programcontents .btn{
+    margin:20px 0;
+  }
+
   .program li{
-    list-style-image: url('/static/ul-tick-green');
+    list-style-image: url('/static/ul-tick-green.png');
+    padding:8px 0;
   }
 
   .quote{
     display: flex;
     justify-content: space-between;  
     text-align: center;
+    align-items: center;
   }
   .quotetext{
     max-width: 800px;
-    padding: 0 30px;
+    padding: 90px 30px;
+    text-align: center;
+    line-height: 130%;
   }
 
   .profilephoto{
@@ -172,7 +186,7 @@
   }
 
 
-  @media screen and (max-width: 500px){
+  @media screen and (max-width: 768px){
     .pitch{
       flex-direction: column-reverse;  
       padding: 30px 0;
@@ -190,6 +204,13 @@
     }
     .featurebox{
       width:100%;
+    }
+    .programs{
+      flex-direction: column;
+    }
+    .quote{
+      flex-direction: column-reverse;
+      align-items: center;
     }
 
   }
@@ -532,11 +553,11 @@
 </div>
 
 <!-- programs -->
-<div class="quote">
+<div class="programs">
   <div class="program">
     <div class="programcontents">
     <h2>Basic</h2>
-    <p>Free, Forever</p>
+    <p><strong>Free, Forever</strong></p>
     <a class="btn btn-hollow btn-block" href="#rebrand">Install now</a>
     <ul style="text-align: left;">
       <li>
@@ -549,8 +570,8 @@
   <div style="background-color: #F7FCF7" class="program">
     <div class="programcontents">
     <h2>Leadership</h2>
-    <p>Flexible pricing, flexible length.</p>
-    <a class="btn btn-hollow btn-block" href="#rebrand">Learn More</a>
+    <p><strong>Flexible pricing, flexible length.</strong></p>
+    <a class="btn btn-rebrand btn-block" href="#rebrand">Learn More</a>
     <ul style="text-align: left;">
       <li><strong>InstantILL:</strong> with all the features above.</li>
       <li><strong>Analytics:</strong> simple summaries of how InstantILL is performing.</li>
@@ -569,7 +590,7 @@
 <!-- quote -->
 <div class="green-bg">
   <div class="center-col quote">
-    <h3 class="quotetext">We support at the leadership level as part of our partnership building InstantILL to invest in community-owned infrastructure that improves our services, reduces dependency on subscriptions, and advances equitable access to information.
+    <h3 style="text-align: left;" class="quotetext">We support at the leadership level as part of our partnership building InstantILL to invest in community-owned infrastructure that improves our services, reduces dependency on subscriptions, and advances equitable access to information.
 - Tina Baich, Senior Associate Dean for Scholarly Communication & Content Strategies at IUPUI University Library.</h3>
     <img class="profilephoto" src="/static/tina-photo.png">
   </div>
