@@ -52,6 +52,9 @@
   }
 
   /*style things that sam added below*/
+  html {
+    scroll-behavior: smooth;
+  }
 
   p{
     margin: 0;
@@ -75,8 +78,15 @@
     color: white;
   }
   
+  .navy-bg{
+    width: 100%;
+    padding: 30px;
+    background-color: #212F3F;
+    color: white;
+  }
+
   .pitch{
-    padding: 160px 0;
+    padding: 120px 0;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -107,6 +117,7 @@
     height: 260px;
     padding: 30px;
     display: inline-block;
+    vertical-align:top;
   }
   .featurebox h2{
     text-align: center;
@@ -116,6 +127,40 @@
     margin: auto;
     margin-top:30px;
   }
+
+  .program{
+    width:50%;
+
+  }
+
+  .program ul{
+    list-style-image: url('/static/ul-tick-green');
+  }
+
+  .quote{
+    display: flex;
+    justify-content: space-between;  
+  }
+  .profilephoto{
+    width: 200px;
+    height: 200px;
+    border-radius: 100px;
+  }
+
+  .footer{
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .footer span{
+    color: white;
+    padding: 0 10px;
+  }
+  .footer a{
+    color: white;
+  }
+
+
   @media screen and (max-width: 500px){
     .pitch{
       flex-direction: column-reverse;  
@@ -130,6 +175,7 @@
     }
     .unilogo{
       width:49%;
+      padding:20px;
     }
     .featurebox{
       width:100%;
@@ -156,7 +202,7 @@
     <div class="pitchhalf">
       <h2>A powerfully simple library tool to deliver papers.</h2>
       <p style="padding: 30px 0">InstantILL instantly delivers papers your patrons need from your holdings,  Open Access and simplifies your ILL process to save you and your patrons money and time. It’s free, open source, community owned and easily set up in minutes.</p>
-      <a class="btn btn-rebrand btn-block">Try it now</a>
+      <a class="btn btn-rebrand btn-block" href="#rebrand">Try it now</a>
     </div>
     <div class="pitchhalf">
       <img width="100%" src="/static/Instant-ILL-transparent-green.png">
@@ -210,8 +256,7 @@
 </div>
 
 
-<!-- the demo section -->
-
+<!-- the demo section , no touchy-->
 <div id="rebrand" class="container-fluid">
 
   <div id="demo" class="section">
@@ -463,22 +508,67 @@
       </div>
     </div>
   </div>
+</div>
 
+<!-- tagline -->
+<div class="center-col">
+<h3>For change, not for profit</h3>
+  <p>
+    We’re building a world where — regardless of a campus’ subscription access — there is a simple, community-owned, one-stop shop to get free, fast, and legal access. It’s free so anyone can use it, but we need your support to sustain it. 
+  </p>
+</div>
+
+<!-- programs -->
+<div class="quote">
+  <div class="program">
+    <h2>Basic</h2>
+    <p>Free, Forever</p>
+    <a class="btn btn-hollow btn-block" href="#rebrand">Install now</a>
+    <ul>
+      <li>
+        <strong>InstantILL:</strong> with all the features above.
+      </li>
+    </ul>
+  </div>
+
+  <div class="program">
+    <h2>Basic</h2>
+    <p>Free, Forever</p>
+    <a class="btn btn-hollow btn-block" href="#rebrand">Install now</a>
+    <ul>
+      <li><strong>InstantILL:</strong> with all the features above.</li>
+      <li><strong>Analytics:</strong> simple summaries of how InstantILL is performing.</li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- quote -->
+<div class="green-bg">
+  <div class="center-col quote">
+    <h4 style="width:80%">We support at the leadership level as part of our partnership building InstantILL to invest in community-owned infrastructure that improves our services, reduces dependency on subscriptions, and advances equitable access to information.
+- Tina Baich, Senior Associate Dean for Scholarly Communication & Content Strategies at IUPUI University Library.</h4>
+    <img class="profilephoto" src="/static/tina-photo.png">
+  </div>
 </div>
 
 
 
-<!--
-<div id="rebrand" class="container-fluid">
-  <div class="row">
-    <div class="col-md-12">
-    <h1>
-      I am the bottom of the page for fun marketting stuff!
-    </h1>
+
+<!-- footer -->
+<div class="navy-bg">
+  <div class="center-col footer">
+    <div>
+      <span><strong>InstantILL</strong></span><span>Open Source • Community Controlled • Not for Profit</span>
+    </div>
+    <div style="text-align: right;">
+      <span><a>Privacy</a></span><span><a>Terms</a></span><span><a>Email</a></span>
     </div>
   </div>
 </div>
--->
+
+
+
 
 
 <!-- functions you can trigger:
