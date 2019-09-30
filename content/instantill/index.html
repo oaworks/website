@@ -87,6 +87,10 @@
     padding: 30px;
   }
 
+  .btn-rebrand{
+    margin-top: 30px;
+  }
+
   .unilogos{
     display: flex;
     flex-direction: row;
@@ -109,16 +113,24 @@
   .featurebox h2{
     text-align: center;
   }
-
+  .featurebox ul{
+    width:70%;
+    margin: auto;
+  }
   @media screen and (max-width: 500px){
     .pitch{
       flex-direction: column-reverse;  
+      padding: 30px 0;
+    }
+    .pitchhalf{
+      width:100%;
+      padding: 0 30px;
     }
     .unilogos{
-      flex-direction: column;
+      display: inline;
     }
     .unilogo{
-      width:100%;
+      width:49%;
     }
 
   }
@@ -141,7 +153,7 @@
   <div class="pitch">
     <div class="pitchhalf">
       <h2>A powerfully simple library tool to deliver papers.</h2>
-      <h3>InstantILL instantly delivers papers your patrons need from your holdings,  Open Access and simplifies your ILL process to save you and your patrons money and time. It’s free, open source, community owned and easily set up in minutes.</h3>
+      <h4>InstantILL instantly delivers papers your patrons need from your holdings,  Open Access and simplifies your ILL process to save you and your patrons money and time. It’s free, open source, community owned and easily set up in minutes.</h4>
       <a class="btn btn-rebrand btn-block">Try it now</a>
     </div>
     <div class="pitchhalf">
@@ -166,39 +178,31 @@
 <!-- feature blocks -->
 <div class="center-col">
   <div class="featurebox">
-    <h2>title</h2>
+    <h2>Saves Money</h2>
     <ul>
-      <li>thing</li>
-      <li>thing</li>
-      <li>thing</li>
-      <li>thing</li>
+      <li>Instantly delivers 25% of papers that are Open Access or you’ve subscribed to. </li>
+      <li>Reduce ILL delivery time and staff time as requests arrive with complete metadata, and all checks completed</li>
     </ul>
   </div>
- <div class="featurebox">
-    <h2>title</h2>
+  <div class="featurebox">
+    <h2>Improve Services</h2>
     <ul>
-      <li>thing</li>
-      <li>thing</li>
-      <li>thing</li>
-      <li>thing</li>
+      <li>No long forms for patrons to submit to your existing ILL system. Just one box.</li>
+      <li>Patron privacy protected: Use your systems for authentication whenever possible</li>
+      <li>Simple, mobile friendly interface seamlessly embeds into your website, workflow, and brand</li>
     </ul>
   </div>
    <div class="featurebox">
-    <h2>title</h2>
+    <h2>Advances Mission</h2>
     <ul>
-      <li>thing</li>
-      <li>thing</li>
-      <li>thing</li>
-      <li>thing</li>
+      <li>Creates a cheaper ILL system by automatically working with authors to freely share their research</li>
     </ul>
   </div>
-   <div class="featurebox">
-    <h2>title</h2>
+  <div class="featurebox">
+    <h2>Ease of use</h2>
     <ul>
-      <li>thing</li>
-      <li>thing</li>
-      <li>thing</li>
-      <li>thing</li>
+      <li>Easy set-up and maintenance with no migrations, no tech team and no upgrades required</li>
+      <li>Works with the systems you already use: WMS & Serial Solutions, ALMA & Primo, ILLiad, Relais ILL, Tipasa, EBSCO Full Text Finder, SFX and more</li>
     </ul>
   </div>
 </div>
