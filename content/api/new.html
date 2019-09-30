@@ -63,7 +63,7 @@
       <hr>
       <h3>
         GET
-      </h3>  
+      </h3>
         <p>
           <a class="api" target="_blank" href="{{api}}/availability?url=http%3A%2F%2Fjournals.plos.org%2Fplosone%2Farticle%3Fid%3Dinfo%253Adoi%2F10.1371%2Fjournal.pone.0163591">
             Example:
@@ -71,6 +71,32 @@
         </p>
       <p>
         Accepts a single parameter called “id”, which should contain (in order of preference) a URL-encoded doi, pmc, pmid, url, title, or citation.
+      </p>
+
+
+      <h2>
+        /subscription
+      </h2>
+      <p>
+        Tells you if an institution has access to a certain paper and provides a direct link
+      </p>
+      <hr>
+      <h3>
+        GET
+      </h3>
+        <p>
+          <a class="api" target="_blank" href="{{api}}/subscription?uid=WpGYaq7yRCNggawBY&doi=10.1145/2908080.2908114/availability?url=http%3A%2F%2Fjournals.plos.org%2Fplosone%2Farticle%3Fid%3Dinfo%253Adoi%2F10.1371%2Fjournal.pone.0163591">
+            Example:
+          </a>
+        </p>
+
+        <p>
+          Requires both an paper ID, and a specified institution to return a response. Accepts papers IDs as described in /find. Institutions are specified by passing a code in “UID”.
+          <p>
+
+      <p id="InstantILL">
+        <!-- TODO:  -->
+        Institutions are specified by passing a code, obtained by logging in and setting up InstantILL with your subscription. | Your institution is code is <<your ID>> by passing a code in “uid”. You’ll need to set this up with InstantILL.
       </p>
 
     </div>
