@@ -53,27 +53,38 @@
 
   /*style things that sam added below*/
 
+  p{
+    margin: 0;
+  }
+
+  h2{
+    color:#46B633;
+  }
   .center-col{
     max-width: 1400px;
     margin: auto;
   }
+  
   .green-bg{
     width: 100%;
     padding: 30px;
     background-color: #46B633;
     color: white;
   }
+  .green-bg h2{
+    color: white;
+  }
   
-
   .pitch{
-    padding: 100px, 30px, 100px, 30px;
+    padding: 160px 0;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
   }
 
-  .halftowhole{
+  .pitchhalf{
     width:50%;
+    padding: 30px;
   }
 
   .unilogos{
@@ -88,14 +99,28 @@
     padding: 30px;
   }
 
-  p{
-    margin: 0;
+
+  .featurebox{
+    width: 45%;
+    height: 200px;
+    padding: 30px;
+    display: inline-block;
+  }
+  .featurebox h2{
+    text-align: center;
   }
 
-  @media (max-width: 500px){
+  @media screen and (max-width: 500px){
+    .pitch{
+      flex-direction: column-reverse;  
+    }
     .unilogos{
       flex-direction: column;
     }
+    .unilogo{
+      width:100%;
+    }
+
   }
 
   /*sams added style above*/
@@ -114,12 +139,12 @@
 <!-- pitch -->
 <div class="center-col">
   <div class="pitch">
-    <div class="halftowhole">
+    <div class="pitchhalf">
       <h2>A powerfully simple library tool to deliver papers.</h2>
       <h3>InstantILL instantly delivers papers your patrons need from your holdings,  Open Access and simplifies your ILL process to save you and your patrons money and time. It’s free, open source, community owned and easily set up in minutes.</h3>
       <a class="btn btn-rebrand btn-block">Try it now</a>
     </div>
-    <div class="halftowhole">
+    <div class="pitchhalf">
       <img width="100%" src="/static/Instant-ILL-transparent-green.png">
     </div>
   </div>
@@ -128,15 +153,55 @@
 <!-- those sweet as heck universities omg the proof -->
 <div class="green-bg">
   <div class="center-col">
+    <h2 style="text-align: center;">Supported by leaders at</h2>
     <div class="unilogos">
-    <img class="unilogo" src="/static/goldsmiths-white.png">
-    <img class="unilogo" src="/static/montania-uni-white.png">
-    <img class="unilogo" src="/static/iupui-logo-white.png">
-    <img class="unilogo" src="/static/florida-uni-white.png">
-  </div>
+      <img class="unilogo" src="/static/goldsmiths-white.png">
+      <img class="unilogo" src="/static/montania-uni-white.png">
+      <img class="unilogo" src="/static/iupui-logo-white.png">
+      <img class="unilogo" src="/static/florida-uni-white.png">
+    </div>
   </div>
 </div>
 
+<!-- feature blocks -->
+<div class="center-col">
+  <div class="featurebox">
+    <h2>title</h2>
+    <ul>
+      <li>thing</li>
+      <li>thing</li>
+      <li>thing</li>
+      <li>thing</li>
+    </ul>
+  </div>
+ <div class="featurebox">
+    <h2>title</h2>
+    <ul>
+      <li>thing</li>
+      <li>thing</li>
+      <li>thing</li>
+      <li>thing</li>
+    </ul>
+  </div>
+   <div class="featurebox">
+    <h2>title</h2>
+    <ul>
+      <li>thing</li>
+      <li>thing</li>
+      <li>thing</li>
+      <li>thing</li>
+    </ul>
+  </div>
+   <div class="featurebox">
+    <h2>title</h2>
+    <ul>
+      <li>thing</li>
+      <li>thing</li>
+      <li>thing</li>
+      <li>thing</li>
+    </ul>
+  </div>
+</div>
 
 
 <!-- the demo section -->
