@@ -130,17 +130,28 @@
 
   .program{
     width:50%;
-
+  }
+  .programcontents{
+    max-width:350px;
+    margin: auto;
+    padding: 50px 0;
+    text-align: center;
   }
 
-  .program ul{
+  .program li{
     list-style-image: url('/static/ul-tick-green');
   }
 
   .quote{
     display: flex;
     justify-content: space-between;  
+    text-align: center;
   }
+  .quotetext{
+    max-width: 800px;
+    padding: 0 30px;
+  }
+
   .profilephoto{
     width: 200px;
     height: 200px;
@@ -512,42 +523,54 @@
 
 <!-- tagline -->
 <div class="center-col">
+  <div class="quotetext">
 <h3>For change, not for profit</h3>
   <p>
     We’re building a world where — regardless of a campus’ subscription access — there is a simple, community-owned, one-stop shop to get free, fast, and legal access. It’s free so anyone can use it, but we need your support to sustain it. 
   </p>
 </div>
+</div>
 
 <!-- programs -->
 <div class="quote">
   <div class="program">
+    <div class="programcontents">
     <h2>Basic</h2>
     <p>Free, Forever</p>
     <a class="btn btn-hollow btn-block" href="#rebrand">Install now</a>
-    <ul>
+    <ul style="text-align: left;">
       <li>
         <strong>InstantILL:</strong> with all the features above.
       </li>
     </ul>
   </div>
+</div>
 
-  <div class="program">
-    <h2>Basic</h2>
-    <p>Free, Forever</p>
-    <a class="btn btn-hollow btn-block" href="#rebrand">Install now</a>
-    <ul>
+  <div style="background-color: #F7FCF7" class="program">
+    <div class="programcontents">
+    <h2>Leadership</h2>
+    <p>Flexible pricing, flexible length.</p>
+    <a class="btn btn-hollow btn-block" href="#rebrand">Learn More</a>
+    <ul style="text-align: left;">
       <li><strong>InstantILL:</strong> with all the features above.</li>
       <li><strong>Analytics:</strong> simple summaries of how InstantILL is performing.</li>
+      <li><strong>Investment:</strong> Ensure InstantILL can be sustained and improved.</li>
+      <li><strong>Priority support:</strong> <18 hour response time 24/7 from our Director.</li>
+      <li><strong>Priority training & set up:</strong> Proactive training, and help getting set up.</li>
+      <li><strong>Priority input:</strong> Guide the direction of InstantILL and our tools.</li>
+      <li><strong>Recognition of your leadership:</strong></li>
+      <li>Upgraded version of other Open Access Button tools.</li>
+      
     </ul>
   </div>
-
+</div>
 </div>
 
 <!-- quote -->
 <div class="green-bg">
   <div class="center-col quote">
-    <h4 style="width:80%">We support at the leadership level as part of our partnership building InstantILL to invest in community-owned infrastructure that improves our services, reduces dependency on subscriptions, and advances equitable access to information.
-- Tina Baich, Senior Associate Dean for Scholarly Communication & Content Strategies at IUPUI University Library.</h4>
+    <h3 class="quotetext">We support at the leadership level as part of our partnership building InstantILL to invest in community-owned infrastructure that improves our services, reduces dependency on subscriptions, and advances equitable access to information.
+- Tina Baich, Senior Associate Dean for Scholarly Communication & Content Strategies at IUPUI University Library.</h3>
     <img class="profilephoto" src="/static/tina-photo.png">
   </div>
 </div>
