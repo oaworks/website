@@ -1,0 +1,120 @@
+<style>
+  #docs h2 {
+    margin-top:80px;
+  }
+  @media handheld, only screen and (max-width: 767px) {
+    #docs {
+      word-wrap: break-word;
+    }
+    code {
+      white-space: pre-wrap;
+    }
+  }
+</style>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2">
+      <h1 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">
+        API
+      </h1>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid" id="docs" style="margin-bottom:100px;">
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2" style="text-align:justify;">
+      <p>
+        Our API allows you to find out if an article, published at some URL but not freely available there,
+        is freely available anywhere else. It can also check for supporting data too. You can also search all the
+        availability checks we have made, all the requests for access our users have created, and all their declarations
+        of support too.
+      </p>
+      <p id="apikey">
+        Please <a href="/account?next=/api" class="label label-info">sign up / sign in</a> to see your API key here.
+      </p>
+
+      <h2>
+        {{api}}
+      </h2>
+      <p>
+        This is the base URL of our API
+      </p>
+      <hr>
+      <h3>
+        GET
+      </h3>
+      <p>
+          <a class="api" target="_blank" href="{{api}}">
+            Example
+          </a>
+      </p>
+      <p>
+        Returns a JSON status success message and 200 response code if the API is operational.
+      </p>
+
+      <h2>
+        /find
+      </h2>
+      <p>
+        Gives URL to any Open Access paper.
+      </p>
+      <hr>
+      <h3>
+        GET
+      </h3>
+        <p>
+          <a class="api" target="_blank" href="{{api}}/availability?url=http%3A%2F%2Fjournals.plos.org%2Fplosone%2Farticle%3Fid%3Dinfo%253Adoi%2F10.1371%2Fjournal.pone.0163591">
+            Example:
+          </a>
+        </p>
+      <p>
+        Accepts a single parameter called “id”, which should contain (in order of preference) a URL-encoded doi, pmc, pmid, url, title, or citation.
+      </p>
+
+
+      <h2>
+        /subscription
+      </h2>
+      <p>
+        Tells you if an institution has access to a certain paper and provides a direct link
+      </p>
+      <hr>
+      <h3>
+        GET
+      </h3>
+        <p>
+          <a class="api" target="_blank" href="{{api}}/subscription?uid=WpGYaq7yRCNggawBY&doi=10.1145/2908080.2908114/availability?url=http%3A%2F%2Fjournals.plos.org%2Fplosone%2Farticle%3Fid%3Dinfo%253Adoi%2F10.1371%2Fjournal.pone.0163591">
+            Example:
+          </a>
+        </p>
+
+        <p>
+          Requires both an paper ID, and a specified institution to return a response. Accepts papers IDs as described in /find. Institutions are specified by passing a code in “UID”.
+          <p>
+
+      <p id="InstantILL">
+        <!-- TODO:  -->
+        Institutions are specified by passing a code, obtained by logging in and setting up InstantILL with your subscription. | Your institution is code is <<your ID>> by passing a code in “uid”. You’ll need to set this up with InstantILL.
+      </p>
+
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+  jQuery(document).ready(function() {
+    noddy.afterLogin = function() {
+      if (noddy.apikey) {
+        $('#apikey').html('Your API key is <code>' + noddy.apikey + '</code>');
+        $('.auth').each(function() { $(this).attr('href',$(this).attr('href')+'?apikey='+noddy.apikey); });
+      } else {
+        $('.auth').hide();
+      }
+    }
+    noddy.login();
+  });
+</script>
