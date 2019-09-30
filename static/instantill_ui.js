@@ -31,7 +31,7 @@ var fakeill = function(e) {
     if (diff < 20) diff = 20;
     $('#fakeill').children('div.content').css({'padding-top':diff+'px'});
   }
-  view(undefined,'#fakeill');
+  view(true,'#fakeill');
 }
 
 $(document).ajaxComplete(function(e,xhr) {
@@ -50,18 +50,18 @@ $(document).ajaxComplete(function(e,xhr) {
 
 var view = function(e,which) {
   var evented = true;
-  try { e.preventDefault(); } catch(err) { evented = false; }
+  try { e.preventDefault(); } catch(err) { evented = e; }
   if (which) {
     $('.section').hide();
     if (which.indexOf('.') !== 0 && which.indexOf('#') !== 0) which = '#' + which;
     $(which).show();
   } else if ($(this).attr('href') === undefined) {
     $('.section').hide();
-    if (window.location.hash) {
-      $(window.location.hash).show();
-    } else {
-      $('.section').first().show();
-    }
+    //if (window.location.hash) {
+    //  $(window.location.hash).show();
+    //} else {
+    $('.section').first().show();
+    //}
   } else if ($(this).attr('href').length > 1) {
     $('.section').hide();
     which = $(this).attr('href');

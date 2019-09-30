@@ -555,9 +555,9 @@
                   // get embedoa data
                   var m = [{term: {plugin: 'widget'}}];
                   var q = {"size": 0, "query": {"filtered": {"query": {"bool": {"must": m}}}}};
-                  q.aggregations = {"users": {"terms": {"field": "from", "size": 10000}}};
+                  q.aggregations = {"users": {"terms": {"field": "from.exact", "size": 10000}}};
                   q.aggregations.users.aggs = {"firsts": {"terms": {"field":"created_date", "size": 1, "order": {"_term": "asc"}}}};
-                  q.aggregations.users.aggs.oa = {"filter": {"bool": {"must_not": [{"term": {"discovered.article": false}}]}}, "aggs": {"from": {"terms": {"field": "from"}}}};
+                  q.aggregations.users.aggs.oa = {"filter": {"bool": {"must_not": [{"term": {"discovered.article": false}}]}}, "aggs": {"from": {"terms": {"field": "from.exact"}}}};
                   q.aggregations.users.aggs.embeds = {"terms": {"field": "embedded.exact", "size": 100}};
                   $.ajax({
                     url: api + '/availabilities',
@@ -565,7 +565,7 @@
                     data: q,
                     success: function(iia) {
                       var oq = {"size": 0, "query": {"filtered": {"query": {"query_string": {"query": "*"}}}}};
-                      oq.aggregations = {"users": {"terms": {"field": "from", "size": 10000}}};
+                      oq.aggregations = {"users": {"terms": {"field": "from.exact", "size": 10000}}};
 
                       var oainfo = '<h3>EmbedOA (widget) usage</h3>';
                       oainfo += '<table class="table table-bordered table-striped" style="background-color:white;"><thead>';
@@ -660,11 +660,11 @@
                   // get instantill data
                   var m = [{term: {plugin: 'instantill'}}];
                   var q = {"size": 0, "query": {"filtered": {"query": {"bool": {"must": m}}}}};
-                  q.aggregations = {"users": {"terms": {"field": "from", "size": 10000}}};
+                  q.aggregations = {"users": {"terms": {"field": "from.exact", "size": 10000}}};
                   q.aggregations.users.aggs = {"firsts": {"terms": {"field":"created_date", "size": 1, "order": {"_term": "asc"}}}};
-                  q.aggregations.users.aggs.oa = {"filter": {"bool": {"must_not": [{"term": {"discovered.article": false}}]}}, "aggs": {"from": {"terms": {"field": "from"}}}};
-                  q.aggregations.users.aggs.subs = {"filter": {"query": {"query_string": {"query": "ill.subscription.url:*"}}}, "aggs": {"from": {"terms": {"field": "from"}}}};
-                  q.aggregations.users.aggs.wrong = {"filter": {"term": {"wrong": true}}, "aggs": {"from": {"terms": {"field": "from"}}}};
+                  q.aggregations.users.aggs.oa = {"filter": {"bool": {"must_not": [{"term": {"discovered.article": false}}]}}, "aggs": {"from": {"terms": {"field": "from.exact"}}}};
+                  q.aggregations.users.aggs.subs = {"filter": {"query": {"query_string": {"query": "ill.subscription.url:*"}}}, "aggs": {"from": {"terms": {"field": "from.exact"}}}};
+                  q.aggregations.users.aggs.wrong = {"filter": {"term": {"wrong": true}}, "aggs": {"from": {"terms": {"field": "from.exact"}}}};
                   q.aggregations.users.aggs.embeds = {"terms": {"field": "embedded.exact", "size": 100}};
                   $.ajax({
                     url: api + '/availabilities',
@@ -672,9 +672,9 @@
                     data: q,
                     success: function(iia) {
                       var oq = {"size": 0, "query": {"filtered": {"query": {"query_string": {"query": "*"}}}}};
-                      oq.aggregations = {"users": {"terms": {"field": "from", "size": 10000}}};
-                      oq.aggregations.issn = {"filter": {"query": {"query_string": {"query": "metadata.title:* AND metadata.journal:* AND metadata.year:* AND metadata.issn:*"}}}, "aggs": {"users": {"terms": {"field": "from", "size": 10000}}}};
-                      oq.aggregations.forwarded = {"filter": {"term": {"forwarded": true}}, "aggs": {"users": {"terms": {"field": "from", "size": 10000}}}};
+                      oq.aggregations = {"users": {"terms": {"field": "from.exact", "size": 10000}}};
+                      oq.aggregations.issn = {"filter": {"query": {"query_string": {"query": "metadata.title:* AND metadata.journal:* AND metadata.year:* AND metadata.issn:*"}}}, "aggs": {"users": {"terms": {"field": "from.exact", "size": 10000}}}};
+                      oq.aggregations.forwarded = {"filter": {"term": {"forwarded": true}}, "aggs": {"users": {"terms": {"field": "from.exact", "size": 10000}}}};
                       var illopts = {
                         url: api + '/ills',
                         type: 'POST',
@@ -781,7 +781,7 @@
           },
           aggregations: {
             "users": {
-              "terms": {"field": "from", "size": 10000},
+              "terms": {"field": "from.exact", "size": 10000},
               "aggs": {"firsts": {"terms": {"field":"created_date", "size": 1, "order": {"_term": "asc"}}}}
             },
             "availabilities" : {

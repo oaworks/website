@@ -26,7 +26,7 @@ jQuery(document).ready(function() {
     } else if ($(this).val().indexOf('ebscohost.') !== -1) {
       $(this).next('.subscription_type').val('eds');
     } else if ($(this).val().indexOf('serialssolutions.') !== -1) {
-      $(this).next('.subscription_type').val('sfx');
+      $(this).next('.subscription_type').val('serialssolutions');
     }
   }
   $('body').on('change','.subscription',guesssubscription);
