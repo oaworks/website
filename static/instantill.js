@@ -16,12 +16,11 @@ var _parameta = {};
 var _lib_contact = undefined;
 
 var instantill_config = function() {
-  var opts = _oab_opts;
-  var api = opts.api ? opts.api : 'https://api.openaccessbutton.org';
-  if (opts.uid) {
+  var api = _oab_opts.api ? _oab_opts.api : 'https://api.openaccessbutton.org';
+  if (_oab_opts.uid) {
     $.ajax({
       type:'GET',
-      url:api+'/ill/config?uid='+opts.uid,
+      url:api+'/ill/config?uid='+_oab_opts.uid,
       success: function(data) {
         _oab_config = data;
         instantill_run();
@@ -36,36 +35,34 @@ var instantill_config = function() {
 }
 
 var instantill_run = function() {
-  var config = _oab_config;
-  var pora = config.saypaper ? 'paper' : 'article';
+  var pora = _oab_config.saypaper ? 'paper' : 'article';
   var porac = pora[0].toUpperCase() + pora.substring(1);
-  var cml = config.problem_email ? config.problem_email : (config.email ? config.email : (config.adminemail ? config.adminemail : undefined));
+  var cml = _oab_config.problem_email ? _oab_config.problem_email : (_oab_config.email ? _oab_config.email : (_oab_config.adminemail ? _oab_config.adminemail : undefined));
   _lib_contact = 'Please try ' + (cml ? '<a href="mailto:' + cml + '">contacting your library</a>' : 'contacting your library') + ' directly';
-  var opts = _oab_opts;
-  if (opts.bootstrap === undefined) opts.bootstrap = 'btn btn-primary btn-iu';
-  if (opts.placeholder === undefined) opts.placeholder = 'e.g. Lessons in data entry from digital native populations';
-  if (opts.data === undefined) opts.data = false;
-  var api = opts.api ? opts.api : 'https://api.openaccessbutton.org';
-  var site = opts.site ? opts.site : 'https://openaccessbutton.org';
+  if (_oab_opts.bootstrap === undefined) _oab_opts.bootstrap = 'btn btn-primary btn-iu';
+  if (_oab_opts.placeholder === undefined) _oab_opts.placeholder = 'e.g. Lessons in data entry from digital native populations';
+  if (_oab_opts.data === undefined) _oab_opts.data = false;
+  var api = _oab_opts.api ? _oab_opts.api : 'https://api.openaccessbutton.org';
+  var site = _oab_opts.site ? _oab_opts.site : 'https://openaccessbutton.org';
   if (window.location.host.indexOf('dev.openaccessbutton.org') !== -1) {
-    if (!opts.api) api = 'https://dev.api.cottagelabs.com/service/oab';
-    if (!opts.site) site = 'https://dev.openaccessbutton.org';
+    if (!_oab_opts.api) api = 'https://dev.api.cottagelabs.com/service/oab';
+    if (!_oab_opts.site) site = 'https://dev.openaccessbutton.org';
   }
-  if (opts.element === undefined) opts.element = '#instantill';
-  if (opts.uid === undefined) opts.uid = 'anonymous';
-  if ($(opts.element).length === 0) $('body').append('<div id="instantill"></div>');
+  if (_oab_opts.element === undefined) _oab_opts.element = '#instantill';
+  if (_oab_opts.uid === undefined) _oab_opts.uid = 'anonymous';
+  if ($(_oab_opts.element).length === 0) $('body').append('<div id="instantill"></div>');
 
   var w = '<h2 id="oabutton_request" style="display:none;">Request ' + (pora === 'article' ? 'an' : 'a') + ' ' + pora + '</h2><div id="oabutton_inputs">';
-  if (config.intropara !== true) {
-    w += '<p>If you need ' + (pora === 'article' ? 'an' : 'a') + ' ' + pora + ' ' + (config.book ? 'or book ' : '') + 'you can request it from any library in the world through Interlibrary loan. \
+  if (_oab_config.intropara !== true) {
+    w += '<p>If you need ' + (pora === 'article' ? 'an' : 'a') + ' ' + pora + ' ' + (_oab_config.book ? 'or book ' : '') + 'you can request it from any library in the world through Interlibrary loan. \
     Start by entering a full ' + pora + ' title, citation, DOI or URL:<br></p>';
   }
-  w += '<p><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_input" placeholder="' + opts.placeholder + '" aria-label="' + opts.placeholder + '" style="box-shadow:none;"></input></p>\
-  <p><a class="oabutton_find ' + (opts.bootstrap !== false ? (typeof opts.bootstrap === 'string' ? opts.bootstrap : 'btn btn-primary') : '') + '" href="#" id="oabutton_find" aria-label="Search" style="min-width:150px;">Find ' + pora + '</a></p>';
-  if (config.book || config.other) {
+  w += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_input" placeholder="' + _oab_opts.placeholder + '" aria-label="' + _oab_opts.placeholder + '" style="box-shadow:none;"></input></p>\
+  <p><a class="oabutton_find ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" href="#" id="oabutton_find" aria-label="Search" style="min-width:150px;">Find ' + pora + '</a></p>';
+  if (_oab_config.book || _oab_config.other) {
     w += '<p>Need ';
-    if (config.book) w += 'a <a href="' + config.book + '"><b>book</b></a>';
-    if (config.other) w += (config.book ? ' or ' : ' ') + '<a href="' + config.other + '"><b>something else</b></a>';
+    if (_oab_config.book) w += 'a <a href="' + _oab_config.book + '"><b>book</b></a>';
+    if (_oab_config.other) w += (_oab_config.book ? ' or ' : ' ') + '<a href="' + _oab_config.other + '"><b>something else</b></a>';
     w += '?</p>';
   }
   w += '\
@@ -149,7 +146,7 @@ var instantill_run = function() {
   border-color: #357ebd;\
 }';
 
-  if (opts.bootstrap !== false) {
+  if (_oab_opts.bootstrap !== false) {
     var bs = true;
     $('body').append('<div class="btn" id="oabutton_bootstrap_test" style="display:none;"></div>');
     if ( $('#oabutton_bootstrap_test').css('height') !== '0px' ) bs = false;
@@ -162,10 +159,10 @@ var instantill_run = function() {
       document.getElementsByTagName("head")[0].appendChild(bs);
     }
   }
-  if (opts.css) {
-    w = '<style>' + (typeof opts.css === 'string' ? opts.css : ws) + '</style>' + w;
+  if (_oab_opts.css) {
+    w = '<style>' + (typeof _oab_opts.css === 'string' ? _oab_opts.css : ws) + '</style>' + w;
   }
-  $(opts.element).html(w);
+  $(_oab_opts.element).html(w);
 
   var matched = false;
   var avail = undefined;
@@ -180,6 +177,15 @@ var instantill_run = function() {
     attempts = 0;
     clickwrong = false;
     gotmore = false;
+    if (_oab_opts.uid) {
+      $.ajax({
+        type:'GET',
+        url:api+'/ill/config?uid='+_oab_opts.uid,
+        success: function(data) {
+          _oab_config = data;
+        }
+      });
+    }
     $('#oabutton_availability').html('').hide();
     $('#oabutton_input').val('');
     $('#oabutton_inputs').show();
@@ -208,7 +214,7 @@ var instantill_run = function() {
   var openurl = function() {
     $.ajax({
       type:'POST',
-      url:api+'/ill/openurl?uid='+opts.uid,
+      url:api+'/ill/openurl?uid='+_oab_opts.uid,
       cache: false,
       processData: false,
       contentType: 'application/json',
@@ -237,12 +243,12 @@ var instantill_run = function() {
       attempts += 1;
       var info = '<div>';
       info += '<p>Sorry we didn\'t find that ' + pora + '! Can you please provide or amend the ' + pora + ' details?</p>';
-      info += '<p>' + porac + ' title (required)<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_title" type="text"></p>';
-      info += '<p>Author(s)<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_author" type="text"></p>';
-      info += '<p>Journal title (required)<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_journal" type="text"></p>';
-      info += '<p>Year of publication (required)<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_year" type="text"></p>';
-      info += '<p>' + porac + ' DOI or URL<br><input class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_doi" type="text"></p>';
-      info += '<p><a href="#" class="oabutton_find ' + (opts.bootstrap !== false ? (typeof opts.bootstrap === 'string' ? opts.bootstrap : 'btn btn-primary') : '') + '" id="oabutton_find" style="min-width:150px;">Continue</a></p>';
+      info += '<p>' + porac + ' title (required)<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_title" type="text"></p>';
+      info += '<p>Author(s)<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_author" type="text"></p>';
+      info += '<p>Journal title (required)<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_journal" type="text"></p>';
+      info += '<p>Year of publication (required)<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_year" type="text"></p>';
+      info += '<p>' + porac + ' DOI or URL<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_doi" type="text"></p>';
+      info += '<p><a href="#" class="oabutton_find ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" id="oabutton_find" style="min-width:150px;">Continue</a></p>';
       info += '<p><a href="#" class="restart" style="font-weight:bold;">Try again</a></p>';
       info += '</div>';
       $('#oabutton_availability').html(info);
@@ -297,7 +303,7 @@ var instantill_run = function() {
     $('.oabutton_find').html('Submitting .');
     $('.oabutton_ill').html('Submitting .');
     var eml = typeof matched === 'string' ? matched : $('#oabutton_email').val();
-    var data = {url:avail.data.match, email:eml, from:opts.uid, plugin:'instantill', embedded:window.location.href, metadata: avail.data.meta.article }
+    var data = {url:avail.data.match, email:eml, from:_oab_opts.uid, plugin:'instantill', embedded:window.location.href, metadata: avail.data.meta.article }
     if (!data.metadata.title || !data.metadata.journal || !data.metadata.year) {
       matched = data.email;
       if (!matched) matched = true;
@@ -308,7 +314,7 @@ var instantill_run = function() {
         if (avail.data.ill.subscription) data.notes += 'Subscription check done, found ' + (avail.data.ill.subscription.url ? avail.data.ill.subscription.url : (avail.data.ill.subscription.journal ? 'journal' : 'nothing')) + '. ';
         if (avail.data.availability) data.notes += 'OA availability check done, found ' + (avail.data.availability.length && avail.data.availability[0].url ? avail.data.availability[0].url : 'nothing') + '. ';
       }
-      if (avail.data.ill.openurl && opts.openurl !== false && !data.email) data.forwarded = true;
+      if (avail.data.ill.openurl && _oab_opts.openurl !== false && !data.email) data.forwarded = true;
       var illopts = {
         type:'POST',
         url:api+'/ill',
@@ -318,7 +324,7 @@ var instantill_run = function() {
         dataType: 'json',
         data: JSON.stringify(data),
         success: function(res) {
-          if (avail.data.ill.openurl && opts.openurl !== false && !data.email) {
+          if (avail.data.ill.openurl && _oab_opts.openurl !== false && !data.email) {
             if (matched) {
               openurl();
             } else {
@@ -332,7 +338,7 @@ var instantill_run = function() {
           }
         },
         error: function(data) {
-          if (avail.data.ill.openurl && opts.openurl !== false && !data.email) {
+          if (avail.data.ill.openurl && _oab_opts.openurl !== false && !data.email) {
             if (matched) {
               openurl();
             } else {
@@ -367,7 +373,7 @@ var instantill_run = function() {
         return;
       } else {
         $.ajax({
-          url: api + '/ill/validate?uid=' + opts.uid + '&email=' + $('#oabutton_email').val(),
+          url: api + '/ill/validate?uid=' + _oab_opts.uid + '&email=' + $('#oabutton_email').val(),
           type: 'POST',
           success: function(data) {
             if (data === true) {
@@ -441,32 +447,32 @@ var instantill_run = function() {
         info += '<p>It may not be the final published version and may lack graphs or figures making it unsuitable for citations.</p>';
         info += '<p><a target="_blank" href="' + avail.data.availability[0].url  + '"><b>Open ' + pora + ' in a new tab</b></a></p>';
         info += '</div>';
-        if (opts.requests !== false) {
+        if (_oab_opts.requests !== false) {
           if (avail.data.requests) {
             // show the request (not yet part of instantill)
           } else {
             // offer to create a request (not yet part of instantill)
-            //info += '<p><a target="_blank" href="' + site + '/request?data=false&plugin=instantill&from=' + opts.uid + '&url=' + encodeURIComponent(data.data.match) + '"><b>Start a request to the author to share it with you</b></a>';
+            //info += '<p><a target="_blank" href="' + site + '/request?data=false&plugin=instantill&from=' + _oab_opts.uid + '&url=' + encodeURIComponent(data.data.match) + '"><b>Start a request to the author to share it with you</b></a>';
           }
         }
       }
     }
-    if (avail.data.ill && opts.ill !== false && !((config.noillifsub && hassub) || (config.noillifoa && hasoa))) {
+    if (avail.data.ill && _oab_opts.ill !== false && !((_oab_config.noillifsub && hassub) || (_oab_config.noillifoa && hasoa))) {
       needmore = false;
       info += '<div>';
       info += '<h3><br>Ask the library to digitally send you the published full-text via Interlibrary Loan</h3>';
-      info += '<p>It ' + (config.cost ? 'costs ' + config.cost : 'is free to you,') + ' and we\'ll usually email the link within ' + (config.time ? config.time : '24 hours') + '.<br></p>';
-      if (avail.data.ill.openurl && opts.openurl !== false) {
+      info += '<p>It ' + (_oab_config.cost ? 'costs ' + _oab_config.cost : 'is free to you,') + ' and we\'ll usually email the link within ' + (_oab_config.time ? _oab_config.time : '24 hours') + '.<br></p>';
+      if (avail.data.ill.openurl && _oab_opts.openurl !== false) {
         if (avail.data.ill.openurl.indexOf('notes') === -1) {
           avail.data.ill.openurl += '&notes=';
           if (avail.data.ill.subscription) avail.data.ill.openurl += 'Subscription check done, found ' + (avail.data.ill.subscription.url ? avail.data.ill.subscription.url : (avail.data.ill.subscription.journal ? 'journal' : 'nothing')) + '. ';
           if (avail.data.availability) avail.data.ill.openurl += 'OA availability check done, found ' + (avail.data.availability.length && avail.data.availability[0].url ? avail.data.availability[0].url : 'nothing') + '. ';
         }
-        info += '<p><a class="oabutton_ill oabutton_ill_openurl ' + (opts.bootstrap !== false ? (typeof opts.bootstrap === 'string' ? opts.bootstrap : 'btn btn-primary') : '') + '" href="' + avail.data.ill.openurl + '" style="min-width:150px;">Complete request</a></p>';
+        info += '<p><a class="oabutton_ill oabutton_ill_openurl ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" href="' + avail.data.ill.openurl + '" style="min-width:150px;">Complete request</a></p>';
       } else {
         if (avail.data.ill.terms) info += '<p id="oabutton_terms_note"><input type="checkbox" id="oabutton_read_terms"> I have read the <a target="_blank" href="' + avail.data.ill.terms + '"><b>terms and conditions</b></a></p>';
-        info += '<p><input placeholder="Your university email address" id="oabutton_email" type="text" class="oabutton_form' + (opts.bootstrap !== false ? ' form-control' : '') + '"></p>';
-        info += '<p><a class="oabutton_ill oabutton_ill_email ' + (opts.bootstrap !== false ? (typeof opts.bootstrap === 'string' ? opts.bootstrap : 'btn btn-primary') : '') + '" href="' + api + '/ill?from=' + opts.uid + '&plugin=instantill&data=false&url=' + encodeURIComponent(avail.data.match) + '" style="min-width:150px;">Complete request</a></p>';
+        info += '<p><input placeholder="Your university email address" id="oabutton_email" type="text" class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '"></p>';
+        info += '<p><a class="oabutton_ill oabutton_ill_email ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" href="' + api + '/ill?from=' + _oab_opts.uid + '&plugin=instantill&data=false&url=' + encodeURIComponent(avail.data.match) + '" style="min-width:150px;">Complete request</a></p>';
       }
       info += '</div>';
     }
@@ -560,7 +566,7 @@ var instantill_run = function() {
           } catch(err) {}
         }, 800);
       }
-      data.from = opts.uid;
+      data.from = _oab_opts.uid;
       data.plugin = 'instantill';
       data.embedded = window.location.href;
 
@@ -594,10 +600,10 @@ var instantill_run = function() {
   $('body').on('click','.restart',_instantill_restart);
 
   // could get custom _ops from the user config
-  if (config.autorun !== true) {
+  if (_oab_config.autorun !== true) {
     var searchfor = undefined;
-    if (config.autorunparams) {
-      var cp = config.autorunparams.replace(/"/g,'').replace(/'/g,'').split(',');
+    if (_oab_config.autorunparams) {
+      var cp = _oab_config.autorunparams.replace(/"/g,'').replace(/'/g,'').split(',');
       for ( var o in cp) {
         var eq = undefined;
         var op = cp[o].trim();
@@ -625,8 +631,8 @@ var instantill_run = function() {
 var instantill = function(opts) {
   _oab_opts = opts;
   if ($ === undefined) {
-    var site = opts.site ? opts.site : 'https://openaccessbutton.org';
-    if (window.location.host.indexOf('dev.openaccessbutton.org') !== -1 && !opts.site) site = 'https://dev.openaccessbutton.org';
+    var site = _oab_opts.site ? _oab_opts.site : 'https://openaccessbutton.org';
+    if (window.location.host.indexOf('dev.openaccessbutton.org') !== -1 && !_oab_opts.site) site = 'https://dev.openaccessbutton.org';
     var headTag = document.getElementsByTagName("head")[0];
     var jqTag = document.createElement('script');
     jqTag.type = 'text/javascript';

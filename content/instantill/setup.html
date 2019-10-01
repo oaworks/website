@@ -172,7 +172,6 @@
           <br>
           <p><b>What do your article ILLs cost? Please include your currency symbol e.g $4</b><p>
           <input id="cost" type="text" class="form-control setting green" placeholder="default free">
-          <!-- TODO: MARK, when hitting save and preview after changing values, like the above, it doesn't update in the preview. -->
           <br>
           <p><b>How long do your ILLs take to deliver on average? e.g 24 hours</b><p>
           <input id="time" type="text" class="form-control setting green" placeholder="default 24 hours">
@@ -398,6 +397,9 @@
             You can link to InstantILL from any library system to integrate it into your existing workflows, say from library search or a link resolver.
           </p>
           <p id="embeddedexample" style="display:none;"></p>
+          <p id="noembeddedexampleavailable" style="display:none;">
+            <!-- TODO: Joe: you can put in text here which will show if there is not an embedded example to show-->
+          </p>
           <p>
             If everything works, hit next! If it doesn’t, <a href="#workflow-advanced" class="green pull">see advanced settings
           </p>
@@ -682,6 +684,23 @@ jQuery(document).ready(function() {
 
 <script>
 jQuery(document).ready(function() {
+  if ($('#rebrand').height() < $(window).height()) $('#rebrand').css({'min-height':$(window).height()+'px'});
+  $('div.green').css({'min-height':$(window).height()+'px'});
+
+  $(document).ajaxComplete(function(e,xhr) {
+    if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.match !== undefined) {
+      _ill_response = xhr.responseJSON.data;
+      // an availability check finished, reposition the instantill window if necessary
+      if (($('#instantill').height() + $('#instantill').offset().top) > ($(window).height()*.95)) {
+        var diff = Math.floor(($(window).height() - $('#instantill').height())/2)-20;
+        if (diff < 20) diff = 20;
+        $('div.content:visible').css({'padding-top':diff+'px'});
+      }
+      $('.oabutton_ill').off();
+      $('body').on('click','.oabutton_ill',fakeill);
+    }
+  });
+
   var addsubscription = function(e) {
     try {e.preventDefault(); } catch(err) {}
     if ($('.subscription').last().val() && $('.subscription_type').last().val()) {
@@ -704,6 +723,35 @@ jQuery(document).ready(function() {
   }
   $('body').on('change','.subscription',guesssubscription);
 
+  var uc = undefined;
+  var configure = function() {
+    for (var k in uc) {
+      if (typeof uc[k] === 'boolean') {
+        $('#'+k).prop('checked', uc[k] === true);
+      } else if (k === 'subscription') {
+        if (typeof uc.subscription === 'string') uc.subscription = uc.subscription.split(',');
+        for ( var s in uc.subscription) {
+          if (parseInt(s) !== 0) addsubscription();
+          if (typeof uc.subscription[s] === 'object') {
+            var url = uc.subscription[s].url;
+            var type = uc.subscription[s].type;
+          } else {
+            var url = uc.subscription[s];
+            try {
+              var type = uc.subscription_type[s];
+            } catch(err) {
+              var type = 'unknown';
+            }
+          }
+          $('.subscription').last().val(url);
+          $('.subscription_type').last().val(type);
+        }
+      } else if (k !== 'subscription_type') {
+        $('#'+k).val(uc[k]);
+      }
+    }
+  }
+  
   var _preview = false;
   var save = function(e,pvw) {
     try { e.preventDefault(); } catch (err) {}
@@ -743,6 +791,8 @@ jQuery(document).ready(function() {
       contentType: 'application/json',
       dataType: 'json',
       success: function(data) {
+        uc = data; // returns the updated user config
+        configure();
         if (_preview) {
           $('.save').hide().after('<p class="saved">Changes saved! Your preview will run shortly.</p>');
           setTimeout(function() { $('.saved').hide(); $('.save').show(); preview(undefined,_preview); }, 3000);
@@ -791,32 +841,8 @@ jQuery(document).ready(function() {
       $('.email').attr('placeholder','default ' + (noddy.user.account.email ? noddy.user.account.email : noddy.user.account.emails[0].address));
     } catch(err) {}
     try {
-      var uc = noddy.user.account.service.openaccessbutton.ill.config;
-      for (var k in uc) {
-        if (typeof uc[k] === 'boolean') {
-          if (uc[k] === true) $('#'+k).prop('checked',true);
-        } else if (k === 'subscription') {
-          if (typeof uc.subscription === 'string') uc.subscription = uc.subscription.split(',');
-          for ( var s in uc.subscription) {
-            if (parseInt(s) !== 0) addsubscription();
-            if (typeof uc.subscription[s] === 'object') {
-              var url = uc.subscription[s].url;
-              var type = uc.subscription[s].type;
-            } else {
-              var url = uc.subscription[s];
-              try {
-                var type = uc.subscription_type[s];
-              } catch(err) {
-                var type = 'unknown';
-              }
-            }
-            $('.subscription').last().val(url);
-            $('.subscription_type').last().val(type);
-          }
-        } else if (k !== 'subscription_type') {
-          $('#'+k).val(uc[k]);
-        }
-      }
+      uc = noddy.user.account.service.openaccessbutton.ill.config;
+      configure();
     } catch(err) {}
     try {
       var q = {"size": 0, "query": {"filtered": {"query": {"bool": {"must": [{"term": {"plugin": "instantill"}},{"term": {"from.exact": noddy.user.account._id}}]}}}}};
@@ -828,10 +854,12 @@ jQuery(document).ready(function() {
         success: function(iia) {
           try {
             var eurl = iia.aggregations.embeds.buckets[0].key.split('?')[0].split('#')[0];
-            var ex = 'For example:<br>';
-            ex += eurl + '?doi=10.1145/2908080.2908114'; // TODO: Mark: do not use instantill.org or openaccessbutton.org domains
+            if (eurl.indexOf('instantill.org') !== -1 || eurl.indexOf('openaccessbutton.org') !== -1) eurl = false;
+            var ex = 'For example:<br>' + eurl + '?doi=10.1145/2908080.2908114';
             $('#embeddedexample').html(ex).show();
-          } catch(err) {} // if we have no URLs to show them, show some sentence instead, which Joe will add - prob have a class to show when no embeddedexample
+          } catch(err) {
+            $('#noembeddedexampleavailable').show();
+          } 
         }
       });
     } catch(err) {}

@@ -373,6 +373,7 @@ API.service.oab.ill.config = (user, config) ->
   # https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=30&sid=OABILL&genre=InstantILL&aulast=Sapon-Shevin&aufirst=Mara&issn=10478248&title=Journal+of+Educational+Foundations&atitle=Cooperative+Learning%3A+Liberatory+Praxis+or+Hamburger+Helper&volume=5&part=&issue=3&spage=5&epage=&date=1991-07-01&pmid
   # and their openurl config https://docs.google.com/spreadsheets/d/1wGQp7MofLh40JJK32Rp9di7pEkbwOpQ0ioigbqsufU0/edit#gid=806496802
   # tested it and set values as below defaults, but also noted that it has year and month boxes, but these do not correspond to year and month params, or date params
+  user = Users.get(user) if typeof user is 'string'
   if config?
     update = {}
     for k in ['ill_institution','ill_redirect_base_url','ill_redirect_params','method','sid','title','doi','pmid','pmcid','author','journal','issn','volume','issue','page','published','year','terms','book','other','cost','time','email','problem_email','subscription','subscription_type','search','autorun','autorunparams','intropara','norequests','noillifoa','noillifsub','saypaper']
@@ -392,15 +393,13 @@ API.service.oab.ill.config = (user, config) ->
         Users.update user._id, {'service.openaccessbutton.ill': {config: update}}
       else
         Users.update user._id, {'service.openaccessbutton.ill.config': update}
-    return true
-  else
-    try
-      user = Users.get(user) if typeof user is 'string'
-      rs = user.service.openaccessbutton.ill.config ? {}
-      try rs.adminemail = if user.email then user.email else user.emails[0].address
-      return rs
-    catch
-      return {}
+      user = Users.get user._id
+  try
+    rs = user.service.openaccessbutton.ill.config ? {}
+    try rs.adminemail = if user.email then user.email else user.emails[0].address
+    return rs
+  catch
+    return {}
 
 API.service.oab.ill.resolver = (user, resolve, config) ->
   # should configure and return link resolver settings for the given user
