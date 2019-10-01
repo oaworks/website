@@ -46,10 +46,12 @@
         GET
       </h3>
       <p>
-          <a class="api" target="_blank" href="{{api}}">
+          <a class="api example" target="_blank" href="#get_root">
             Example
           </a>
       </p>
+      <pre id="get_root" class="example">
+curl -X GET "{{api}}"</pre>
       <p>
         Returns a JSON status success message and 200 response code if the API is operational.
       </p>
@@ -107,10 +109,14 @@
 
 <script>
   jQuery(document).ready(function() {
+    $('pre.example').hide();
+    $('a.example').bind('click',function(e) { e.preventDefault(); $($(this).attr('href')).toggle(); });
     noddy.afterLogin = function() {
       if (noddy.apikey) {
         $('#apikey').html('Your API key is <code>' + noddy.apikey + '</code>');
         $('.auth').each(function() { $(this).attr('href',$(this).attr('href')+'?apikey='+noddy.apikey); });
+        $('.apikey').html(noddy.apikey);
+        $('.yourid').html(noddy.user.account._id);
       } else {
         $('.auth').hide();
       }

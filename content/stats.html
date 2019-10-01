@@ -386,6 +386,10 @@
         }
       }
 
+      // "website" in the table is where our front page sends an availability check with from:website
+      // "oab_site" in the listing is where instantill or embedoa are triggered from our site and use the placeholder uid:oab_site which gets passed 
+      // as from:oab_site in their availability checks
+      // integration is anything that passes from:integration
       if (data.aggregations.users.buckets && (tool === undefined || tool === 'all')) {
         info += '<h4><br>We also have availability checks from the following services (and from some user IDs):</h4>';
         info += '<p><a id="emails" href="#">Get user email addresses</a></p>';

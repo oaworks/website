@@ -51,21 +51,18 @@ API.add 'service/oab/resolve',
   get: () ->
     return API.service.oab.resolve this.queryParams,undefined,this.queryParams.sources?.split(','),this.queryParams.all,this.queryParams.titles,this.queryParams.journal
 
-API.add 'service/oab/ill',
+API.add 'service/oab/metadata',
   get: () ->
-    return {data: 'ILL service'}
-  post:
-    authOptional: true
-    action: () ->
-      opts = this.request.body ? {}
-      for o of this.queryParams
-        opts[o] = this.queryParams[o]
-      if this.user
-        opts.from = this.user._id
-        opts.api = true
-      return API.service.oab.ill.start opts
+    return API.service.oab.ill.metadata this.queryParams
+  post: () ->
+    opts = this.request.body ? {}
+    for o of this.queryParams
+      opts[o] = this.queryParams[o]
+    return API.service.oab.ill.metadata opts
 
-API.add 'service/oab/ill/subscription',
+API.add 'service/oab/metadatas', () -> return oab_metadata.search this # this may not be necessary, and refactor may combine these with availabilities
+
+API.add 'service/oab/subscription',
   get:
     #roleRequired: 'openaccessbutton.user'
     authOptional: true
@@ -85,14 +82,19 @@ API.add 'service/oab/ill/subscription',
         res.subscription = API.service.oab.ill.subscription uid, res.metadata
         return res
 
-API.add 'service/oab/ill/metadata',
+API.add 'service/oab/ill',
   get: () ->
-    return API.service.oab.ill.metadata this.queryParams
-  post: () ->
-    opts = this.request.body ? {}
-    for o of this.queryParams
-      opts[o] = this.queryParams[o]
-    return API.service.oab.ill.metadata opts
+    return {data: 'ILL service'}
+  post:
+    authOptional: true
+    action: () ->
+      opts = this.request.body ? {}
+      for o of this.queryParams
+        opts[o] = this.queryParams[o]
+      if this.user
+        opts.from = this.user._id
+        opts.api = true
+      return API.service.oab.ill.start opts
 
 API.add 'service/oab/ill/openurl',
   get: () ->
@@ -157,8 +159,6 @@ API.add 'service/oab/ills',
       restrict = if API.accounts.auth('openaccessbutton.admin', this.user) and this.queryParams.all then [] else [{term:{from:this.userId}}]
       delete this.queryParams.all if this.queryParams.all?
       return oab_ill.search this.bodyParams, {restrict:[{term:{from:this.userId}}]}
-
-API.add 'service/oab/metadata', () -> return oab_metadata.search this
 
 API.add 'service/oab/stats', get: () -> return {} # plaeholder for possible later stats stuff, for now just to allow getting the emails
 API.add 'service/oab/stats/emails', 
