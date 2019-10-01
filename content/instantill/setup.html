@@ -1,6 +1,7 @@
 <!-- JOE: Think about how to lessen the jaring of both sides chaning. Add delay to button press, or add animation. -->
 <!-- TODO: JOE: Work on copy -->
 <!-- found at instantill.org/setup -->
+<!-- TODO: redirect https://instantill.org/set-up to /setup   -->
 <link rel="stylesheet" href="/static/oabutton_rebrand.css"> <!-- gets the new css (still also uses the old css, just overwrites where necessary) -->
 
 <style>
@@ -751,7 +752,7 @@ jQuery(document).ready(function() {
       }
     }
   }
-  
+
   var _preview = false;
   var save = function(e,pvw) {
     try { e.preventDefault(); } catch (err) {}
@@ -859,7 +860,7 @@ jQuery(document).ready(function() {
             $('#embeddedexample').html(ex).show();
           } catch(err) {
             $('#noembeddedexampleavailable').show();
-          } 
+          }
         }
       });
     } catch(err) {}
