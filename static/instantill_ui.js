@@ -1,36 +1,4 @@
 
-var _ill_response = undefined;
-var fakeill = function(e) {
-  if (e) e.preventDefault();
-  $('#fakeilltable').html('');
-  try {
-    for ( var i in _ill_response.meta.article) {
-      if (['started','ended','took','cache','redirect','source'].indexOf(i) === -1) {
-        if (i === 'author') {
-          var append = '<tr><td>Author(s)</td><td><p>';
-          for (var a in _ill_response.meta.article.author) {
-            try {
-              if (a !== '0') append += ', ';
-              append += _ill_response.meta.article.author[a].given + ' ' + _ill_response.meta.article.author[a].family
-            } catch(err) {}
-          }
-          $('#fakeilltable').append(append + '</p></td></tr>');
-        } else {
-          try {
-            $('#fakeilltable').append('<tr><td>' + i.substring(0,1).toUpperCase() + (['doi','issn'].indexOf(i.toLowerCase()) !== -1 ? i.substring(1).toUpperCase() : i.substring(1)) + '</td><td><p>' + _ill_response.meta.article[i] + '</p></td></tr>');
-          } catch(err) {}
-        }
-      }
-    }
-  } catch(err) {}
-  if (($('#fakeill').height() + $('#fakeill').offset().top) > $(window).height()) {
-    var diff = Math.floor(($(window).height() - $('#fakeill').height())/2)-20;
-    if (diff < 20) diff = 20;
-    $('#fakeill').children('div.content').css({'padding-top':diff+'px'});
-  }
-  view(true,'#fakeill');
-}
-
 var view = function(e,which) {
   var evented = true;
   try { e.preventDefault(); } catch(err) { evented = e; }
@@ -57,7 +25,10 @@ var view = function(e,which) {
     which = '#' + $('.section:visible').first().attr('id');
   }
   if (($(this).hasClass('pull') || !evented) && $('#instantill','.section:visible').length !== 1) $('#instantill').appendTo($('.content','.section:visible'));
-  if ($('div.content:visible').height() < $(window).height() && $('div.content:visible').offset().top < $(window).height()) {
+  if ($('div.content:visible').offset().top > $(window).height()) {
+    var pad = Math.floor(($('div.green').height() - $('#instantill').height())/2);
+    $('div.content:visible').css({'padding-top':pad+'px'});
+  } else if ($('div.content:visible').height() < $(window).height()) {
     var pad = Math.floor($('div.content:visible').offset().top + $('div.content:visible').height()/2 + $(window).height()/3);
     $('div.content:visible').css({'padding-top':pad+'px'});
   }

@@ -675,5 +675,53 @@ jQuery(document).ready(function() {
 <script>
 jQuery(document).ready(function() {
   instantill({uid:'oab_site', api:api, css: false}); // change this uid to the demo account uid once it has been created
+
+  var _ill_response = undefined;
+  var fakeill = function(e) {
+    if (e) e.preventDefault();
+    $('#fakeilltable').html('');
+    try {
+      for ( var i in _ill_response.meta.article) {
+        if (['started','ended','took','cache','redirect','source'].indexOf(i) === -1) {
+          if (i === 'author') {
+            var append = '<tr><td>Author(s)</td><td><p>';
+            for (var a in _ill_response.meta.article.author) {
+              try {
+                if (a !== '0') append += ', ';
+                append += _ill_response.meta.article.author[a].given + ' ' + _ill_response.meta.article.author[a].family
+              } catch(err) {}
+            }
+            $('#fakeilltable').append(append + '</p></td></tr>');
+          } else {
+            try {
+              $('#fakeilltable').append('<tr><td>' + i.substring(0,1).toUpperCase() + (['doi','issn'].indexOf(i.toLowerCase()) !== -1 ? i.substring(1).toUpperCase() : i.substring(1)) + '</td><td><p>' + _ill_response.meta.article[i] + '</p></td></tr>');
+            } catch(err) {}
+          }
+        }
+      }
+    } catch(err) {}
+    if (($('#fakeill').height() + $('#fakeill').offset().top) > $(window).height()) {
+      var diff = Math.floor(($(window).height() - $('#fakeill').height())/2)-20;
+      if (diff < 20) diff = 20;
+      $('#fakeill').children('div.content').css({'padding-top':diff+'px'});
+    }
+    view(true,'#fakeill');
+  }
+
+  $(document).ajaxComplete(function(e,xhr) {
+    if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.match !== undefined) {
+      _ill_response = xhr.responseJSON.data;
+      // an availability check finished, reposition the instantill window if necessary
+      //console.log($('div.content:visible').height())
+      //console.log($('div.green:visible').height())
+      if ($('div.content:visible').height() > $('div.green:visible').height()) {
+        var diff = Math.floor(($('div.content:visible').height() - $('div.green:visible').height())/1.5) + parseInt($('div.content:visible').css('padding-top').replace('px',''));
+        $('div.green:visible').css({'min-height':diff+'px'});
+      }
+      $('.oabutton_ill').off();
+      $('body').on('click','.oabutton_ill',fakeill);
+    }
+  });
+
 });
 </script>

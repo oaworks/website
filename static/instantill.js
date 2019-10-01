@@ -367,6 +367,7 @@ var instantill_run = function() {
         return;
       }
       if (!$('#oabutton_email').val().length) {
+        $('.oabutton_ill').html('Complete request');
         $('#oabutton_error').html('<p>Please provide your university email address.</p>').show();
         setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
         $('#oabutton_email').css('border-color','#f04717').focus();
