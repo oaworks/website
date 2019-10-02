@@ -67,7 +67,7 @@
     max-width: 1400px;
     margin: auto;
   }
-
+  
   .green-bg{
     width: 100%;
     padding: 30px;
@@ -77,7 +77,7 @@
   .green-bg h2{
     color: white;
   }
-
+  
   .navy-bg{
     width: 100%;
     padding: 30px;
@@ -129,7 +129,7 @@
   }
   .programs{
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between;  
     text-align: center;
   }
 
@@ -155,7 +155,7 @@
 
   .quote{
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between;  
     text-align: center;
     align-items: center;
   }
@@ -189,7 +189,7 @@
 
   @media screen and (max-width: 768px){
     .pitch{
-      flex-direction: column-reverse;
+      flex-direction: column-reverse;  
       padding: 30px 0;
     }
     .pitchhalf{
@@ -230,11 +230,9 @@
 <!-- sam starts here -->
 
 <!-- headder -->
-<div class="green-bg">
+<div class="green-bg"> 
   <div class="center-col">
-  <p><strong>InstantILL</strong> by <a href="https://openaccessbutton.org" style="color:white">Open Access Button</a></p>
-  <!-- TODO: ADD BETA in here -->
-  <!-- TODO: Add a 'install now' on the right hand side -->
+  <p><strong>InstantILL</strong> by Open Access Button</p>
   </div>
 </div>
 
@@ -257,7 +255,6 @@
   <div class="center-col">
     <p style="text-align: center;">Supported by leaders at</p>
     <div class="unilogos">
-      <!-- TODO: add links -->
       <img class="unilogo" src="/static/goldsmiths-white.png">
       <img class="unilogo" src="/static/montania-uni-white.png">
       <img class="unilogo" src="/static/iupui-logo-white.png">
@@ -300,7 +297,6 @@
 
 
 <!-- the demo section , no touchy-->
-<!-- TODO: rename 'rebrand' -->
 <div id="rebrand" class="container-fluid">
 
   <div id="demo" class="section">
@@ -325,6 +321,9 @@
         </div>
 
         <div class="greenbottom">
+          <p><a class="btn btn-rebrand btn-block" href="/instantill_alpha_rebrand">Install Now!</a></p>
+          <p>Or, <!--get a <a href="#tour" class="green">guided tour</a> and --><a href="#examples" class="green">ask how others use it</a>.</p>
+
         </div>
       </div>
     </div>
@@ -350,6 +349,7 @@
           </b></p>
         </div>
         <div class="greenbottom">
+          <p><a class="btn btn-rebrand btn-block" href="/instantill_alpha_rebrand">Install Now!</a></p>
         </div>
       </div>
     </div>
@@ -381,6 +381,7 @@
 
         </div>
         <div class="greenbottom">
+          <p><a class="btn btn-rebrand btn-block" href="/instantill_alpha_rebrand">Install Now!</a></p>
         </div>
       </div>
     </div>
@@ -408,6 +409,7 @@
           <!-- TODO: JOE. Consider how to make the above work? openurl to anchor with instantill showing. OR, this could be a gif. Need to handle button better too. -->
         </div>
         <div class="greenbottom">
+          <p><a class="btn btn-rebrand btn-block" href="/instantill_alpha_rebrand">Install Now!</a></p>
         </div>
       </div>
     </div>
@@ -432,6 +434,7 @@
           <p><a class="btn btn-hollow btn-block view preview pinger" id=instantill_demo_setup href="#part6" val="10.1145/2908080.2908114">Show me!</a></p>
         </div>
         <div class="greenbottom">
+          <p><a class="btn btn-rebrand btn-block" href="/instantill_alpha_rebrand">Install Now!</a></p>
         </div>
       </div>
     </div>
@@ -461,7 +464,7 @@
             So, you can get started today with your systems:
           </p>
           <p><a class="btn btn-rebrand btn-block pinger" id=instantill_demo_install href="/instantill_alpha_rebrand">Install Now!</a></p>
-          <p>Or, <!--get a <a href="#tour" class="green">guided tour</a> and --><a href="#examples" class="green">ask how others use it</a>.</p>
+          <p>Or, if you're not sure yet you can... </p>
         </div>
         <div class="greenbottom">
           <!--
@@ -553,7 +556,7 @@
   <div class="quotetext">
 <h1 style="margin-bottom: 35px">For change, not for profit</h1>
   <p>
-    We’re building a world where — regardless of a campus’ subscription access — there is a simple, community-owned, one-stop shop to get free, fast, and legal access. It’s free so anyone can use it, but we need your support to sustain it.
+    We’re building a world where — regardless of a campus’ subscription access — there is a simple, community-owned, one-stop shop to get free, fast, and legal access. It’s free so anyone can use it, but we need your support to sustain it. 
   </p>
 </div>
 </div>
@@ -565,7 +568,7 @@
     <div class="programcontents">
     <h2>Basic</h2>
     <p><strong>Free, Forever</strong></p>
-    <a class="btn btn-hollow btn-block" href="https://instantill.org/setup">Install now</a>
+    <a class="btn btn-hollow btn-block" href="#rebrand">Install now</a>
     <ul style="text-align: left;">
       <li>
         <strong>InstantILL:</strong> with all the features above.
@@ -578,17 +581,17 @@
     <div class="programcontents">
     <h2>Leadership</h2>
     <p><strong>Flexible pricing, flexible length.</strong></p>
-    <a class="btn btn-rebrand btn-block" href="https://openaccessbutton.org/libraries">Learn More</a>
+    <a class="btn btn-rebrand btn-block" href="#rebrand">Learn More</a>
     <ul style="text-align: left;">
       <li><strong>InstantILL:</strong> with all the features above.</li>
       <li><strong>Analytics:</strong> simple summaries of how InstantILL is performing.</li>
       <li><strong>Investment:</strong> Ensure InstantILL can be sustained and improved.</li>
-      <li><strong>Priority support:</strong> 18 hour response time 24/7 from our Director.</li>
+      <li><strong>Priority support:</strong> <18 hour response time 24/7 from our Director.</li>
       <li><strong>Priority training & set up:</strong> Proactive training, and help getting set up.</li>
       <li><strong>Priority input:</strong> Guide the direction of InstantILL and our tools.</li>
-      <li><strong>Recognition of your leadership:</strong> Thanks on our sites.</li>
+      <li><strong>Recognition of your leadership:</strong></li>
       <li>Upgraded version of other Open Access Button tools.</li>
-
+      
     </ul>
   </div>
 </div>
@@ -611,12 +614,10 @@
 <div class="navy-bg">
   <div class="center-col footer">
     <div>
-      <span><strong>InstantILL</strong></span> by <a href="https://openaccessbutton.org">Open Access Button</a><span> • Open Source • Community Controlled • Not for Profit</span>
+      <span><strong>InstantILL</strong></span><span>Open Source • Community Controlled • Not for Profit</span>
     </div>
     <div style="text-align: right;">
-      <span><a href="https://openaccessbutton.org/privacy">Privacy</a></span><span><a href="https://openaccessbutton.org/terms">Terms</a></span><span><a href="mailto:joe@openaccessbutton.org">Email</a></span>
-      <!-- TODO: add blog? -->
-      <!-- TODO: add dots between these? -->
+      <span><a>Privacy</a></span><span><a>Terms</a></span><span><a>Email</a></span>
     </div>
   </div>
 </div>

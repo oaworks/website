@@ -84,13 +84,12 @@ curl -X GET "{{api}}"</pre>
         GET
       </h3>
         <p>
-          <!-- TODO: Mark: HAVE 'HAVECODEREPLACETHIS' be replaced with correct code when logged in -->
-            Example: <a href="{{api}}/availability?id=http%3A%2F%2Fscience.sciencemag.org%2Fcontent%2F196%2F4287%2F293%2Ftab-pdf&apikey=HAVECODEREPLACETHIS" class="api" target="_blank">URL</a> | <a href="{{api}}/availability?id=10.1126%2Fscience.196.4287.293&apikey=HAVECODEREPLACETHIS" class="api" target="_blank">DOI</a> | <a href="{{api}}/availability?id=Ribulose%20bisphosphate%20carboxylase%3A%20a%20two-layered%2C%20square-shaped%20molecule%20of%20symmetry%20422&apikey=HAVECODEREPLACETHIS" class="api" target="_blank">Title</a> | <a class="api example" href="#get_find" target="_blank">cURL</a>
+            Example: <a href="{{api}}/availability?id=http%3A%2F%2Fscience.sciencemag.org%2Fcontent%2F196%2F4287%2F293%2Ftab-pdf" class="api" target="_blank">URL</a> | <a href="{{api}}/availability?id=10.1126%2Fscience.196.4287.293" class="api" target="_blank">DOI</a> | <a href="{{api}}/availability?id=Ribulose%20bisphosphate%20carboxylase%3A%20a%20two-layered%2C%20square-shaped%20molecule%20of%20symmetry%20422" class="api" target="_blank">Title</a> | <a class="api example" href="#get_find" target="_blank">cURL</a>
 <pre id="get_find" class="example">
-curl -H "x-apikey: APIKEY-HAVECODEREPLACETHIS" -X GET "https://api.openaccessbutton.org/find?id=10.1234/567890"</pre>
+curl -X GET "https://api.openaccessbutton.org/find?id=10.1234/567890"</pre>
         </p>
       <p>
-        Accepts a single parameter called “id”, which should contain (in order of preference) a URL-encoded doi, pmc, pmid, url, title, or citation.
+        Accepts a single parameter called "id", which should contain (in order of preference) a URL-encoded doi, pmc, pmid, url, title, or citation.
       </p>
 
       <!-- SUBS -->
@@ -114,8 +113,8 @@ curl -H "x-apikey: APIKEY-HAVECODEREPLACETHIS" -X GET "https://api.openaccessbut
         <p>
           Requires both a paper ID, and a specified institution to return a response. Accepts papers IDs as described in /find.
         <p>
-        <p id="InstantILL">
-          Institutions are specified by passing a code in “UID”, obtained by <a href="/account?next=/api#subscriptions">logging in</a> and setting up InstantILL with your details. <!-- TODO: Mark: When logged in, this needs to say " Institutions are specified by passing a code in “UID”, yours is <<yourid>>. You can alter the response through setting up InstantILL with your details." -->
+        <p id="instantill">
+          Institutions are specified by passing a code in "UID", obtained by <a href="/account?next=/api#subscriptions">logging in</a> and setting up InstantILL with your details.
         </p>
 
 
@@ -168,8 +167,7 @@ curl -H "x-apikey: APIKEY-HAVECODEREPLACETHIS" -X GET "https://api.openaccessbut
                 </a>
               </p>
 <pre id="post_request" class="example">
-curl -H "x-apikey: APIKEY-HAVECODEREPLACETHIS" -X POST "https://api.openaccessbutton.org/request" -d ‘{“blah”}’ (and content-type header)</pre>
-<!-- TODO: Mark: remove blah! -->
+curl -X POST "https://api.openaccessbutton.org/request" -d '{"doi": "10.1234/567890"}' -H "Content-Type: application/json"</pre>
               <p>
                 Note: Many services opt to point users to our website using: https://openaccessbutton.org/request?doi=DOI, allowing their users to sign up for our service, make requests and receive notifications.
               <p>
@@ -177,7 +175,7 @@ curl -H "x-apikey: APIKEY-HAVECODEREPLACETHIS" -X POST "https://api.openaccessbu
                 To start a request from your service ensure you have <a href="/account?next=api#request">signed up</a> and completed your account information with what you’d like seen on a request.
               </p>
               <p>
-                Start by posting a JSON object containing at least a “doi” parameter. We will start a request for papers published in the past 5 years. If you’re unsure the item being requested is already Open Access, use /find first to verify.
+                Start by posting a JSON object containing at least a "doi" parameter. We will start a request for papers published in the past 5 years. If you’re unsure the item being requested is already Open Access, use /find first to verify.
               </p>
               <p>
                 To be sent to an author, a request needs a justification. This can be provided in the ‘story’ parameter. Our team manually moderates stories we haven’t seen before, but once we approve a story we will automatically accept it, so you can re-use stories.
@@ -260,7 +258,7 @@ curl -H "x-apikey: APIKEY-HAVECODEREPLACETHIS" -X POST "https://api.openaccessbu
                     Start an ILL by posting an paper ID as URL parameters or ideally in a JSON body. A list of accepted IDs can be found at /find. Include as much meta-data as you can, utnder the list of parameters found in /metadata. We’ll enrich whatever you give us, or you can do it before by using /metadata directly or some other process.
                   </p>
                   <p>
-                    We will then attempt to start an ILL according to your InstantILL set-up. By default, we will send an email to your account email, but if configured we can pass you a link to a completed form. If you do not have InstantILL configured to point to a form, you’ll need to pass the requestors email in the “email” parameter.
+                    We will then attempt to start an ILL according to your InstantILL set-up. By default, we will send an email to your account email, but if configured we can pass you a link to a completed form. If you do not have InstantILL configured to point to a form, you’ll need to pass the requestors email in the "email" parameter.
                   </p>
 
                   <!-- SEARCH ILLs -->
@@ -284,7 +282,7 @@ curl -H "x-apikey: APIKEY-HAVECODEREPLACETHIS" -X POST "https://api.openaccessbu
                     Most useful for custom integrations with InstantILL. This endpoint can be used to retrieve all activity from your embed(s) and then processed as you wish.
                   </p>
                   <p>
-                    Queries are powered by Elasticsearch version 1.4.4. Knowledge of Elasticsearch will of course be helpful for using the endpoint. In short, simple searches can be created by adding a URL parameter “q”, and providing values you’d like to match.
+                    Queries are powered by Elasticsearch version 1.4.4. Knowledge of Elasticsearch will of course be helpful for using the endpoint. In short, simple searches can be created by adding a URL parameter "q", and providing values you’d like to match.
                   </p>
                   <p>
                     A well formed query for an InstantILL instance and the response format is demonstrated in the example. Any values you see can be queried. Don’t always expect all fields to be present.
@@ -302,15 +300,23 @@ curl -H "x-apikey: APIKEY-HAVECODEREPLACETHIS" -X POST "https://api.openaccessbu
 
 
 <script>
+
+  function anchor() { if (window.location.hash.length !== 0) window.scrollTo(window.scrollX, window.scrollY - 100); }
+  window.setTimeout(anchor, 1);
+  window.addEventListener("hashchange", anchor);
+
   jQuery(document).ready(function() {
     $('pre.example').hide();
     $('a.example').bind('click',function(e) { e.preventDefault(); $($(this).attr('href')).toggle(); });
     noddy.afterLogin = function() {
       if (noddy.apikey) {
         $('#apikey').html('Your API key is <code>' + noddy.apikey + '</code>' +'. Include this in either a URL param called "apikey" or a header called "x-apikey".');
+        $('#instantill').html('Institutions are specified by passing a code in "UID", yours is ' + noddy.user.account._id + '. You can alter the response through setting up InstantILL with your details.');
         $('.auth').each(function() { $(this).attr('href',$(this).attr('href')+'?apikey='+noddy.apikey); });
         $('.apikey').html(noddy.apikey);
         $('.yourid').html(noddy.user.account._id);
+        $('pre.example').each(function() { if ($(this).html().indexOf('curl -H ') === -1) $(this).html($(this).html().replace('curl ',  'curl -H "x-apikey: ' + noddy.apikey + '" ')); });
+        $('a.api').each(function() { if ($(this).attr('href').indexOf('apikey=') === -1 && $(this).attr('href').indexOf('#') !== 0) $(this).attr('href',$(this).attr('href')+($(this).attr('href').indexOf('?') !== -1 ? '&' : '?')+'apikey='+noddy.apikey); });
       } else {
         $('.auth').hide();
       }
