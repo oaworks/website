@@ -88,7 +88,6 @@ curl -H "x-apikey: APIKEY-HAVECODEREPLACETHIS" -X GET "https://api.openaccessbut
 
       <!-- SUBS -->
 
-
       <h2 id="subscriptions">
         /subscription
       </h2>
@@ -108,8 +107,8 @@ curl -H "x-apikey: APIKEY-HAVECODEREPLACETHIS" -X GET "https://api.openaccessbut
         <p>
           Requires both a paper ID, and a specified institution to return a response. Accepts papers IDs as described in /find.
         <p>
-        <p>
-          Institutions are specified by passing a code in “UID”, obtained by <a href="/account?next=/api#subscriptions">logging in</a> and setting up InstantILL with your details. <!-- TODO: When logged in, this needs to say " Institutions are specified by passing a code in “UID”, yours is <<your ID>>. You can alter the response through setting up InstantILL with your details." -->
+        <p id="InstantILL">
+          Institutions are specified by passing a code in “UID”, obtained by <a href="/account?next=/api#subscriptions">logging in</a> and setting up InstantILL with your details. <!-- TODO: When logged in, this needs to say " Institutions are specified by passing a code in “UID”, yours is <<yourid>>. You can alter the response through setting up InstantILL with your details." -->
         </p>
 
 
@@ -163,7 +162,7 @@ curl -H "x-apikey: APIKEY-HAVECODEREPLACETHIS" -X GET "https://api.openaccessbut
               </p>
 <pre id="post_request" class="example">
   curl -H "x-apikey: APIKEY-HAVECODEREPLACETHIS" -X POST "https://api.openaccessbutton.org/request" -d ‘{“blah”}’ (and content-type header)</pre>
-
+<!-- TODO: remove blah! -->
               <p>
                 Note: Many services opt to point users to our website using: https://openaccessbutton.org/request?doi=<<DOI>>, allowing their users to sign up for our service, make requests and receive notifications.
               <p>
@@ -208,11 +207,83 @@ curl -H "x-apikey: APIKEY-HAVECODEREPLACETHIS" -X GET "https://api.openaccessbut
                   If an author makes that paper available, you’ll find a link under ‘?’, if it’s been sent to the author the status will be ‘?’, if it’s awaiting sending the status will be ‘?’.
                 <p>
 
-      <p id="InstantILL">
-        <!-- TODO: -->
-        Institutions are specified by passing a code, obtained by logging in and setting up InstantILL with your subscription. | Your institution is code is <<yourid>> by passing a code in “uid”. You’ll need to set this up with InstantILL.
-      </p>
+                  <!-- MAKE DEPOSIT -->
 
+                  <h2 id="deposit">
+                    /deposit [coming soon]
+                  </h2>
+                  <p>
+                    Accepts files to facilitate self-archiving papers.
+                  </p>
+                  <hr>
+                  <h3>
+                    POST
+                  </h3>
+
+                  <p>
+                    Requests a post with at least a DOI, and a file. The file will be checked against our systems to ensure it’s the correct version and deposited to Zenodo. You’ll get back a deposit ID.
+                  </p>
+
+                  <!-- GET INFO FOR DEPOSIT -->
+
+                  <h2 id="deposit_id">
+                    /deposit/:id [coming soon]
+                  </h2>
+                  <p>
+                    Tells you the status of a deposit.
+                  </p>
+                  <hr>
+                  <h3>
+                    GET
+                  </h3>
+
+                  <!-- MAKE ILL -->
+
+                  <h2 id="ill">
+                    /ill
+                  </h2>
+                  <p>
+                    Starts an ILL request by returning a link to a completed ILL form or sending an email.
+                  </p>
+                  <hr>
+                  <h3>
+                    POST
+                  </h3>
+                  <p>
+                    Example
+                  </p>
+                  <p>
+                    Start an ILL by posting an paper ID as URL parameters or ideally in a JSON body. A list of accepted IDs can be found at /find. Include as much meta-data as you can, utnder the list of parameters found in /metadata. We’ll enrich whatever you give us, or you can do it before by using /metadata directly or some other process.
+                  </p>
+                  <p>
+                    We will then attempt to start an ILL according to your InstantILL set-up. By default, we will send an email to your account email, but if configured we can pass you a link to a completed form. If you do not have InstantILL configured to point to a form, you’ll need to pass the requestors email in the “email” parameter.
+                  </p>
+
+                  <!-- SEARCH ILLs -->
+
+                  <h2 id="ills">
+                    /ills
+                  </h2>
+                  <p>
+                    Search ILLs made at your institution
+                  </p>
+                  <hr>
+                  <h3>
+                    GET. Authorization required.
+                  </h3>
+                  <p>
+                    <a href="{{api}}/ills?apikey=f7028488fdbde2d1541f2346198a70&q=metadata.doi:*" class="api">
+                    Example
+                  </p>
+                  <p>
+                    Most useful for custom integrations with InstantILL. This endpoint can be used to retrieve all activity from your embed(s) and then processed as you wish.
+                  </p>
+                  <p>
+                    Queries are powered by Elasticsearch version 1.4.4. Knowledge of Elasticsearch will of course be helpful for using the endpoint. In short, simple searches can be created by adding a URL parameter “q”, and providing values you’d like to match.
+                  </p>
+                  <p>
+                    A well formed query for an InstantILL instance and the response format is demonstrated in the example. Any values you see can be queried. Don’t always expect all fields to be present.
+                  </p>
 
       <p>
       <hr>
