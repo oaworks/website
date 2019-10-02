@@ -19,6 +19,7 @@
         API
       </h1>
       <p>
+        <!-- TODO: these anchors land just below where needed to not cut off words. Can we fix? -->
         Free REST JSON API for everything the Open Access Button does including <a href="#find">Finding Open Access content</a>, making & searching requests to open up content, depositing content, finding meta-data, <a href="#subscriptions">subscriptions</a>, and making & searching Interlibrary loans. Support available at joe@openaccessbutton.org.
       </p>
     </div>
@@ -36,6 +37,8 @@
       <p>
       If you’re looking to integrate us with your tools, but aren’t able to code, our <a href="https://openaccessbutton.org/libraries">tools for librarians</a>, especially <a href="https://openaccessbutton.org/integrations">integration guides</a>, may be a better fit.
     </p>
+
+    <!-- BASE URL -->
 
       <h2>
         {{api}}
@@ -59,6 +62,10 @@ curl -X GET "{{api}}"</pre>
         Returns a JSON status success message and 200 response code if the API is operational.
       </p>
 
+
+      <!-- FIND -->
+
+
       <h2 id="find">
         /find
       </h2>
@@ -70,14 +77,16 @@ curl -X GET "{{api}}"</pre>
         GET
       </h3>
         <p>
-          <!-- TODO: HAVE 'HAVECODEREPLACETHIS' be replaced with code when logged in -->
-            Example: <a href="{{api}}/availability?id=http%3A%2F%2Fscience.sciencemag.org%2Fcontent%2F196%2F4287%2F293%2Ftab-pdf&apikey=HAVECODEREPLACETHIS" class="api">URL</a> | <a href="{{api}}/availability?id=10.1126%2Fscience.196.4287.293&apikey=HAVECODEREPLACETHIS" class="api">DOI</a> | <a href="{{api}}/availability?id=Ribulose%20bisphosphate%20carboxylase%3A%20a%20two-layered%2C%20square-shaped%20molecule%20of%20symmetry%20422&apikey=HAVECODEREPLACETHIS" class="api">Title</a> | <a class="api example" href="#get_find" target="_blank">cURL</a>
+          <!-- TODO: HAVE 'HAVECODEREPLACETHIS' be replaced with correct code when logged in -->
+            Example: <a href="{{api}}/availability?id=http%3A%2F%2Fscience.sciencemag.org%2Fcontent%2F196%2F4287%2F293%2Ftab-pdf&apikey=HAVECODEREPLACETHIS" class="api" target="_blank">URL</a> | <a href="{{api}}/availability?id=10.1126%2Fscience.196.4287.293&apikey=HAVECODEREPLACETHIS" class="api" target="_blank">DOI</a> | <a href="{{api}}/availability?id=Ribulose%20bisphosphate%20carboxylase%3A%20a%20two-layered%2C%20square-shaped%20molecule%20of%20symmetry%20422&apikey=HAVECODEREPLACETHIS" class="api" target="_blank">Title</a> | <a class="api example" href="#get_find" target="_blank">cURL</a>
 <pre id="get_find" class="example">
 curl -H "x-apikey: APIKEY-HAVECODEREPLACETHIS" -X GET "https://api.openaccessbutton.org/find?id=10.1234/567890"</pre>
         </p>
       <p>
         Accepts a single parameter called “id”, which should contain (in order of preference) a URL-encoded doi, pmc, pmid, url, title, or citation.
       </p>
+
+      <!-- SUBS -->
 
 
       <h2 id="subscriptions">
@@ -97,12 +106,117 @@ curl -H "x-apikey: APIKEY-HAVECODEREPLACETHIS" -X GET "https://api.openaccessbut
         </p>
 
         <p>
-          Requires both an paper ID, and a specified institution to return a response. Accepts papers IDs as described in /find. Institutions are specified by passing a code in “UID”.
+          Requires both a paper ID, and a specified institution to return a response. Accepts papers IDs as described in /find.
+        <p>
+        <p>
+          Institutions are specified by passing a code in “UID”, obtained by <a href="/account?next=/api#subscriptions">logging in</a> and setting up InstantILL with your details. <!-- TODO: When logged in, this needs to say " Institutions are specified by passing a code in “UID”, yours is <<your ID>>. You can alter the response through setting up InstantILL with your details." -->
+        </p>
+
+
+          <h2 id="metadata">
+            /metadata
+          </h2>
           <p>
+            Finds as complete as possible metadata for any paper
+          </p>
+          <hr>
+          <h3>
+            GET
+          </h3>
+            <p>
+              <a class="api" target="_blank" href="{{api}}/metadata?doi=10.1126/science.196.4287.293">
+                Example
+              </a>
+            </p>
+
+            <p>
+              As above, but accepts article information as described in /find as URL parameters or in a JSON body.
+            <p>
+
+            <h3>
+              POST
+            </h3>
+            <p>
+              Example
+            </p>
+
+            <p>
+              As above, but accepts article information as described in /find as URL parameters or in a JSON body.
+            </p>
+
+            <!-- REUQESTS -->
+
+            <h2 id="request">
+              /request
+            </h2>
+            <p>
+              Create a request to the author to make a paper Open Access.
+            </p>
+            <hr>
+            <h3>
+              POST
+            </h3>
+              <p>
+                <a class="api example" target="_blank" href="#post_request">
+                  Example
+                </a>
+              </p>
+<pre id="post_request" class="example">
+  curl -H "x-apikey: APIKEY-HAVECODEREPLACETHIS" -X POST "https://api.openaccessbutton.org/request" -d ‘{“blah”}’ (and content-type header)</pre>
+
+              <p>
+                Note: Many services opt to point users to our website using: https://openaccessbutton.org/request?doi=<<DOI>>, allowing their users to sign up for our service, make requests and receive notifications.
+              <p>
+              <p>
+                To start a request from your service ensure you have <a href = “/account”>signed up</a> and completed your account information with what you’d like seen on a request.
+              </p>
+              <p>
+                Start by posting a JSON object containing at least a “doi” parameter. We will start a request for papers published in the past 5 years. If you’re unsure the item being requested is already Open Access, use /find first to verify.
+              </p>
+              <p>
+                To be sent to an author, a request needs a justification. This can be provided in the ‘story’ parameter. Our team manually moderates stories we haven’t seen before, but once we approve a story we will automatically accept it, so you can re-use stories.
+              </p>
+              <p>
+                When your request is successfully created, we will return an ID in a "_id" JSON parameter.
+              </p>
+              <p>
+                If you expect to generate more than ~100 requests per week, that’s great, please <a href="joe@openaccessbutton.org">contact us</a> so we can ensure we plan adequate support as moderation and quality checks means this isn’t an entirely automated process.
+              </p>
+
+              <!-- CHECK REQUEST ID -->
+
+              <h2 id="request_id">
+                /request/:id
+              </h2>
+              <p>
+                Returns request metadata & status with the given ID.
+              </p>
+              <hr>
+              <h3>
+                GET
+              </h3>
+                <p>
+                  <a class="api" target="_blank" href="{{api}}/request/zN4EXcLhLjeb6aHDu">
+                    Example
+                  </a>
+                </p>
+
+                <p>
+                  Metadata fields returned are all optional, although DOI is always present in recent requests.
+                <p>
+                <p>
+                  If an author makes that paper available, you’ll find a link under ‘?’, if it’s been sent to the author the status will be ‘?’, if it’s awaiting sending the status will be ‘?’.
+                <p>
 
       <p id="InstantILL">
-        <!-- TODO:  -->
-        Institutions are specified by passing a code, obtained by logging in and setting up InstantILL with your subscription. | Your institution is code is <<your ID>> by passing a code in “uid”. You’ll need to set this up with InstantILL.
+        <!-- TODO: -->
+        Institutions are specified by passing a code, obtained by logging in and setting up InstantILL with your subscription. | Your institution is code is <<yourid>> by passing a code in “uid”. You’ll need to set this up with InstantILL.
+      </p>
+
+
+      <p>
+      <hr>
+        Haven’t found what you want? <a href="mailto:joe@openaccessbutton.org">Get in touch</a>. Only the most commonly required endpoints are included for brevity.
       </p>
 
     </div>
@@ -117,7 +231,7 @@ curl -H "x-apikey: APIKEY-HAVECODEREPLACETHIS" -X GET "https://api.openaccessbut
     $('a.example').bind('click',function(e) { e.preventDefault(); $($(this).attr('href')).toggle(); });
     noddy.afterLogin = function() {
       if (noddy.apikey) {
-        $('#apikey').html('Your API key is <code>' + noddy.apikey + '</code>' +'Include this in either a URL param called "apikey" or a header called "x-apikey".');
+        $('#apikey').html('Your API key is <code>' + noddy.apikey + '</code>' +'. Include this in either a URL param called "apikey" or a header called "x-apikey".');
         $('.auth').each(function() { $(this).attr('href',$(this).attr('href')+'?apikey='+noddy.apikey); });
         $('.apikey').html(noddy.apikey);
         $('.yourid').html(noddy.user.account._id);
