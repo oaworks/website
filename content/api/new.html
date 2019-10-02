@@ -48,8 +48,9 @@
         GET
       </h3>
       <p>
+        Examples: <a href="{{api}}" class="api">URL</a> |
           <a class="api example" target="_blank" href="#get_root">
-            Example
+            cURL
           </a>
       </p>
       <pre id="get_root" class="example">
@@ -70,8 +71,9 @@ curl -X GET "{{api}}"</pre>
       </h3>
         <p>
           <!-- TODO: HAVE 'HAVECODEREPLACETHIS' be replaced with code when logged in -->
-            Example: <a href="https://api.openaccessbutton.org/availability?id=http%3A%2F%2Fscience.sciencemag.org%2Fcontent%2F196%2F4287%2F293%2Ftab-pdf&apikey=HAVECODEREPLACETHIS">URL </a>| <a class="api" target="_blank" href="{{api}}/availability?url=http%3A%2F%2Fjournals.plos.org%2Fplosone%2Farticle%3Fid%3Dinfo%253Adoi%2F10.1371%2Fjournal.pone.0163591">cURL</a>
-
+            Example: <a href="{{api}}/availability?id=http%3A%2F%2Fscience.sciencemag.org%2Fcontent%2F196%2F4287%2F293%2Ftab-pdf&apikey=HAVECODEREPLACETHIS" class="api">URL </a>| <a class="api example" href="#get_find" target="_blank">cURL</a>
+<pre id="get_find" class="example">
+curl -H "x-apikey: APIKEY-HAVECODEREPLACETHIS" -X GET "https://api.openaccessbutton.org/find?id=10.1234/567890"</pre>
         </p>
       <p>
         Accepts a single parameter called “id”, which should contain (in order of preference) a URL-encoded doi, pmc, pmid, url, title, or citation.
