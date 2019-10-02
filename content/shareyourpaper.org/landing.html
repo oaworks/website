@@ -1,13 +1,3 @@
-<!-- found at instantill.org/demo -->
-
-<!-- TODO: JOE:  -->
-<!-- TODO: JOE: Make buttons on demo context specific -->
-<!-- TODO: JOE: Add 'show me' button with details for nerds -->
-<!-- TODO: JOE: refine copy -->
-<!-- TODO: JOE: make sure people know what's coming next -->
-<!-- TODO: JOE: Hit 'Complete Request’ to see how easy it is to makea. request for patrons -->
-<!-- TODO: JOE: and takes 30 minutes instead to ‘and doesn’t take long.’-->
-
 <link rel="stylesheet" href="/static/oabutton_rebrand.css"> <!-- gets the new css (still also uses the old css, just overwrites where necessary) -->
 
 <style>
@@ -233,6 +223,8 @@
 <div class="green-bg">
   <div class="center-col">
   <p><strong>Share Your Paper</strong> by <a href="https://openaccessbutton.org" style="color:white">Open Access Button</a></p>
+  <p><a href="/libraries">for Libraries</a></p>
+
   <!-- TODO: ADD BETA in here -->
   <!-- TODO: Add a 'install now' on the right hand side -->
   <!-- TODO: make this a nice wordmark, with good kerning? -->
@@ -244,17 +236,15 @@
   <div class="pitch">
     <div class="pitchhalf">
       <h2>Make your research visible and see 30% more citations</h2>
-      <p style="padding: 30px 0">like millions of researchers by sharing your article freely with colleagues and the public. We can help you do it legally, for free, in minutes.</p>
-      <p><b>
-        Coming Soon.
-      </b><p>
+      <p style="padding: 30px 0">like millions of researchers by sharing your article freely with colleagues and the public. We can help you do it legally, for free, in minutes.<b> Coming Soon</b></p>
       <a class="btn btn-rebrand btn-block" href="https://blog.openaccessbutton.org/how-to-support-fellow-scholars-at-uc-dffc98e85050">Try the Workflow Today</a>
       <p><b>
-        <a href="https://blog.openaccessbutton.org/building-shareyourpaper-org-to-make-self-archiving-the-simplest-way-to-increase-a-papers-impact-7af42b6903e1">Learn More</a>
+        <a href="https://blog.openaccessbutton.org/building-shareyourpaper-org-to-make-self-archiving-the-simplest-way-to-increase-a-papers-impact-7af42b6903e1">
+          Learn More
+        </a>
       </b><p>
     </div>
     <div class="pitchhalf">
-      <img width="100%" src="/static/Instant-ILL-transparent-green.png">
     </div>
   </div>
 </div>
@@ -277,106 +267,9 @@
   </div>
 </div>
 
-
-
-
-
-<!-- functions you can trigger:
-
-Put a div with ID "instantill" in the place where you want the instantill demo to show up. Note this can only appear in one place at a time.
-
-The page tries to execute a login on page load.
-If it succeeds it will try to replace the content of any element on the page with the "yourid" class with the user ID.
-It will also try to replace "but only you" in the content of any element with the "onlyyou" class with "but only you (USERNAME)".
-And it will look for any section with the class "yourid" and will replace any text that contains instantill() with the instantill({SETTINGS})
-suitable for the logged in user (their user ID).
-
-It will then go through any ILL config present for the logged in user, and for every value, it will look for an element on the page with the matching ID,
-and it will place the value of that config item as the value of the element (note as described below for saving, such elements should also have the "setting" class).
-(if it is a boolean value the element should be a checkbox, and it will be checked or not depending on boolean value).
-
-Any button with the "view" class will cause the UI view to change between divs with the "section" class.
-The "view" class button goes to the next "section" div by default. If you also give the button the "previous" class it goes to the previous one.
-If the "view" button has an href that is longer than 1 then the href value is assumed to be the ID of the div to show, or a classname for a set of things to show.
-Any execution of a "view" button first hides all "section" divs then shows the previous or next or defined things.
-
-If you want the section that you switch to with the "view" button to show the #instantill demo in it, you
-can add the "pull" class to the button. Then, once the view has switched to the specified section, the #instantill
-demo div will be appended to the content section of the currently visible section.
-
-Any button ("button" or "a" link tag) that has the "save" class will trigger a save
-A save will look for any element with the "setting" class and will take the value of that element and try to use it as the config value corresponding to the ID of that element.
-If the save button also has an attr called "preview" then it can be set to true to trigger an instantill preview run with a default value
-If preview attr is set but is some value other than true, then the value of the preview attr will be used in the instantill box
-
-Any button with the "preview" class will trigger the instantill box with a trial value. The value should be specified on the button
-in an attr called "val" or else the html content of the button will be used as the value.
-
-NOTE: if you want the view to change when a preview is triggered, put the view class BEFORE the preview class.
-That way the view will change, the preview will run, and if the preview is not visible it will be pulled forward
-into the view you have changed to.
--->
-
-<script src="/static/instantill.js"></script>
-
 <script>
 jQuery(document).ready(function() {
   $('#topnav').remove();
   $('#footer').remove();
-});
-</script>
-
-<script src="/static/instantill_ui.js"></script>
-<script>
-jQuery(document).ready(function() {
-  instantill({uid:(api.indexOf('dev.') !== -1 ? 'qZooaHWRz9NLFNcgR' : 'eZwJ83xp3oZDaec86'), api:api, css: false}); // change this uid to the demo account uid once it has been created
-
-  var _ill_response = undefined;
-  var fakeill = function(e) {
-    if (e) e.preventDefault();
-    $('#fakeilltable').html('');
-    try {
-      for ( var i in _ill_response.meta.article) {
-        if (['started','ended','took','cache','redirect','source'].indexOf(i) === -1) {
-          if (i === 'author') {
-            var append = '<tr><td>Author(s)</td><td><p>';
-            for (var a in _ill_response.meta.article.author) {
-              try {
-                if (a !== '0') append += ', ';
-                append += _ill_response.meta.article.author[a].given + ' ' + _ill_response.meta.article.author[a].family
-              } catch(err) {}
-            }
-            $('#fakeilltable').append(append + '</p></td></tr>');
-          } else {
-            try {
-              $('#fakeilltable').append('<tr><td>' + i.substring(0,1).toUpperCase() + (['doi','issn'].indexOf(i.toLowerCase()) !== -1 ? i.substring(1).toUpperCase() : i.substring(1)) + '</td><td><p>' + _ill_response.meta.article[i] + '</p></td></tr>');
-            } catch(err) {}
-          }
-        }
-      }
-    } catch(err) {}
-    if (($('#fakeill').height() + $('#fakeill').offset().top) > $(window).height()) {
-      var diff = Math.floor(($(window).height() - $('#fakeill').height())/2)-20;
-      if (diff < 20) diff = 20;
-      $('#fakeill').children('div.content').css({'padding-top':diff+'px'});
-    }
-    view(true,'#fakeill');
-  }
-
-  $(document).ajaxComplete(function(e,xhr) {
-    if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.match !== undefined) {
-      _ill_response = xhr.responseJSON.data;
-      // an availability check finished, reposition the instantill window if necessary
-      //console.log($('div.content:visible').height())
-      //console.log($('div.green:visible').height())
-      if ($('div.content:visible').height() > $('div.green:visible').height()) {
-        var diff = Math.floor(($('div.content:visible').height() - $('div.green:visible').height())/1.5) + parseInt($('div.content:visible').css('padding-top').replace('px',''));
-        $('div.green:visible').css({'min-height':diff+'px'});
-      }
-      $('.oabutton_ill').off();
-      $('body').on('click','.oabutton_ill',fakeill);
-    }
-  });
-
 });
 </script>
