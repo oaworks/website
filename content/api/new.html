@@ -18,6 +18,9 @@
       <h1 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">
         API
       </h1>
+      <p>
+        Free REST JSON API for everything the Open Access Button does including Finding Open Access content, making & searching requests to open up content, depositing content, finding meta-data, subscriptions, and making & searching Interlibrary loans. Support available at joe@openaccessbutton.org.
+      </p>
     </div>
   </div>
 </div>
@@ -25,15 +28,14 @@
 <div class="container-fluid" id="docs" style="margin-bottom:100px;">
   <div class="row">
     <div class="col-md-8 col-md-offset-2" style="text-align:justify;">
-      <p>
-        Our API allows you to find out if an article, published at some URL but not freely available there,
-        is freely available anywhere else. It can also check for supporting data too. You can also search all the
-        availability checks we have made, all the requests for access our users have created, and all their declarations
-        of support too.
-      </p>
       <p id="apikey">
-        Please <a href="/account?next=/api" class="label label-info">sign up / sign in</a> to see your API key here.
+        <a href="/account?next=/api" class="label label-info">Logging in</a> isn’t required, but it gets you an API key, helps us tell funders how we’re doing, and lets us contact you with issues and updates.
       </p>
+      <p>
+        Please limit your requests to one per second. We don’t enforce rate limits but if we notice prolo
+      <p>
+      If you’re looking to integrate us with your tools, but aren’t able to code, our <a href="https://openaccessbutton.org/libraries">tools for librarians</a>, especially <a href="https://openaccessbutton.org/integrations">integration guides</a>, may be a better fit.
+    </p>
 
       <h2>
         {{api}}
@@ -113,7 +115,7 @@ curl -X GET "{{api}}"</pre>
     $('a.example').bind('click',function(e) { e.preventDefault(); $($(this).attr('href')).toggle(); });
     noddy.afterLogin = function() {
       if (noddy.apikey) {
-        $('#apikey').html('Your API key is <code>' + noddy.apikey + '</code>');
+        $('#apikey').html('Your API key is <code>' + noddy.apikey + '</code>' +'Include this in either a URL param called "apikey" or a header called "x-apikey".');
         $('.auth').each(function() { $(this).attr('href',$(this).attr('href')+'?apikey='+noddy.apikey); });
         $('.apikey').html(noddy.apikey);
         $('.yourid').html(noddy.user.account._id);
