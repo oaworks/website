@@ -86,7 +86,7 @@ curl -X GET "{{api}}"</pre>
         <p>
             Example: <a href="{{api}}/availability?id=http%3A%2F%2Fscience.sciencemag.org%2Fcontent%2F196%2F4287%2F293%2Ftab-pdf" class="api" target="_blank">URL</a> | <a href="{{api}}/availability?id=10.1126%2Fscience.196.4287.293" class="api" target="_blank">DOI</a> | <a href="{{api}}/availability?id=Ribulose%20bisphosphate%20carboxylase%3A%20a%20two-layered%2C%20square-shaped%20molecule%20of%20symmetry%20422" class="api" target="_blank">Title</a> | <a class="api example" href="#get_find" target="_blank">cURL</a>
 <pre id="get_find" class="example">
-curl -X GET "https://api.openaccessbutton.org/find?id=10.1234/567890"</pre>
+curl -X GET "https://api.openaccessbutton.org/find?id=10.1126/science.196.4287.293"</pre>
         </p>
       <p>
         Accepts a single parameter called "id", which should contain (in order of preference) a URL-encoded doi, pmc, pmid, url, title, or citation.
@@ -167,7 +167,7 @@ curl -X GET "https://api.openaccessbutton.org/find?id=10.1234/567890"</pre>
                 </a>
               </p>
 <pre id="post_request" class="example">
-curl -X POST "https://api.openaccessbutton.org/request" -d '{"doi": "10.1234/567890"}' -H "Content-Type: application/json"</pre>
+curl -X POST "https://api.openaccessbutton.org/request" -d '{"doi": "10.1126/science.196.4287.293"}' -H "Content-Type: application/json"</pre>
               <p>
                 Note: Many services opt to point users to our website using: https://openaccessbutton.org/request?doi=DOI, allowing their users to sign up for our service, make requests and receive notifications.
               <p>
