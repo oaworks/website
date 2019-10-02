@@ -19,7 +19,7 @@
         API
       </h1>
       <p>
-        Free REST JSON API for everything the Open Access Button does including Finding Open Access content, making & searching requests to open up content, depositing content, finding meta-data, subscriptions, and making & searching Interlibrary loans. Support available at joe@openaccessbutton.org.
+        Free REST JSON API for everything the Open Access Button does including <a href="#find">Finding Open Access content</a>, making & searching requests to open up content, depositing content, finding meta-data, <a href="#subscriptions">subscriptions</a>, and making & searching Interlibrary loans. Support available at joe@openaccessbutton.org.
       </p>
     </div>
   </div>
@@ -32,7 +32,7 @@
         <a href="/account?next=/api" class="label label-info">Logging in</a> isn’t required, but it gets you an API key, helps us tell funders how we’re doing, and lets us contact you with issues and updates.
       </p>
       <p>
-        Please limit your requests to one per second. We don’t enforce rate limits but if we notice prolo
+        Please limit your requests to one per second. We don’t enforce rate limits but if we notice prolonged high usage we may suspend your account and contact you about your needs.
       <p>
       If you’re looking to integrate us with your tools, but aren’t able to code, our <a href="https://openaccessbutton.org/libraries">tools for librarians</a>, especially <a href="https://openaccessbutton.org/integrations">integration guides</a>, may be a better fit.
     </p>
@@ -58,7 +58,7 @@ curl -X GET "{{api}}"</pre>
         Returns a JSON status success message and 200 response code if the API is operational.
       </p>
 
-      <h2>
+      <h2 id="find">
         /find
       </h2>
       <p>
@@ -78,7 +78,7 @@ curl -X GET "{{api}}"</pre>
       </p>
 
 
-      <h2>
+      <h2 id="subscriptions">
         /subscription
       </h2>
       <p>
