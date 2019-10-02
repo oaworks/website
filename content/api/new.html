@@ -19,7 +19,7 @@
         API
       </h1>
       <p>
-        <!-- TODO: these anchors land just below where needed to not cut off words. Can we fix? -->
+        <!-- TODO: Mark: these anchors land just below where needed to not cut off words. Can we fix? -->
         Free REST JSON API for <a href="#find">finding Open Access content</a>, <a href="#request">making & searching requests to open up content</a>, <a href="#deposit">depositing papers</a>, <a href="#metadata">finding metadata</a>, <a href="#subscriptions">subscriptions</a>, and <a href="#ill">making & searching Interlibrary loans</a>.
       </p>
     </div>
@@ -79,7 +79,7 @@ curl -X GET "{{api}}"</pre>
         GET
       </h3>
         <p>
-          <!-- TODO: HAVE 'HAVECODEREPLACETHIS' be replaced with correct code when logged in -->
+          <!-- TODO: Mark: HAVE 'HAVECODEREPLACETHIS' be replaced with correct code when logged in -->
             Example: <a href="{{api}}/availability?id=http%3A%2F%2Fscience.sciencemag.org%2Fcontent%2F196%2F4287%2F293%2Ftab-pdf&apikey=HAVECODEREPLACETHIS" class="api" target="_blank">URL</a> | <a href="{{api}}/availability?id=10.1126%2Fscience.196.4287.293&apikey=HAVECODEREPLACETHIS" class="api" target="_blank">DOI</a> | <a href="{{api}}/availability?id=Ribulose%20bisphosphate%20carboxylase%3A%20a%20two-layered%2C%20square-shaped%20molecule%20of%20symmetry%20422&apikey=HAVECODEREPLACETHIS" class="api" target="_blank">Title</a> | <a class="api example" href="#get_find" target="_blank">cURL</a>
 <pre id="get_find" class="example">
 curl -H "x-apikey: APIKEY-HAVECODEREPLACETHIS" -X GET "https://api.openaccessbutton.org/find?id=10.1234/567890"</pre>
@@ -110,7 +110,7 @@ curl -H "x-apikey: APIKEY-HAVECODEREPLACETHIS" -X GET "https://api.openaccessbut
           Requires both a paper ID, and a specified institution to return a response. Accepts papers IDs as described in /find.
         <p>
         <p id="InstantILL">
-          Institutions are specified by passing a code in “UID”, obtained by <a href="/account?next=/api#subscriptions">logging in</a> and setting up InstantILL with your details. <!-- TODO: When logged in, this needs to say " Institutions are specified by passing a code in “UID”, yours is <<yourid>>. You can alter the response through setting up InstantILL with your details." -->
+          Institutions are specified by passing a code in “UID”, obtained by <a href="/account?next=/api#subscriptions">logging in</a> and setting up InstantILL with your details. <!-- TODO: Mark: When logged in, this needs to say " Institutions are specified by passing a code in “UID”, yours is <<yourid>>. You can alter the response through setting up InstantILL with your details." -->
         </p>
 
 
@@ -164,9 +164,9 @@ curl -H "x-apikey: APIKEY-HAVECODEREPLACETHIS" -X GET "https://api.openaccessbut
               </p>
 <pre id="post_request" class="example">
 curl -H "x-apikey: APIKEY-HAVECODEREPLACETHIS" -X POST "https://api.openaccessbutton.org/request" -d ‘{“blah”}’ (and content-type header)</pre>
-<!-- TODO: remove blah! -->
+<!-- TODO: Mark: remove blah! -->
               <p>
-                Note: Many services opt to point users to our website using: https://openaccessbutton.org/request?doi=<<DOI>>, allowing their users to sign up for our service, make requests and receive notifications.
+                Note: Many services opt to point users to our website using: https://openaccessbutton.org/request?doi=DOI, allowing their users to sign up for our service, make requests and receive notifications.
               <p>
               <p>
                 To start a request from your service ensure you have <a href="/account?next=api#request">signed up</a> and completed your account information with what you’d like seen on a request.
