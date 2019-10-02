@@ -53,6 +53,9 @@ API.service.oab.libraries = (opts) ->
 API.service.oab.ill = {}
 
 API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
+  if meta.doi is '10.1234/567890' and uid is 'qZooaHWRz9NLFNcgR' or uid is 'eZwJ83xp3oZDaec86' # dev and live demo accounts that always return a fixed answer
+    return {findings:{}, uid: uid, lookups:[], error:[], url: 'https://instantill.org'}
+
   do_serialssolutions_xml = true
   do_sfx_xml = true
   sig = uid + JSON.stringify(meta) + all

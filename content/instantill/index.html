@@ -674,7 +674,7 @@ jQuery(document).ready(function() {
 <script src="/static/instantill_ui.js"></script>
 <script>
 jQuery(document).ready(function() {
-  instantill({uid:'oab_site', api:api, css: false}); // change this uid to the demo account uid once it has been created
+  instantill({uid:(api.indexOf('dev.') !== -1 ? 'qZooaHWRz9NLFNcgR' : 'eZwJ83xp3oZDaec86'), api:api, css: false}); // change this uid to the demo account uid once it has been created
 
   var _ill_response = undefined;
   var fakeill = function(e) {
