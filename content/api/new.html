@@ -274,7 +274,7 @@ curl -X POST "https://api.openaccessbutton.org/request" -d '{"doi": "10.1234/567
                     GET. Authorization required.
                   </h3>
                   <p>
-                    <a href="{{api}}/ills?apikey=f7028488fdbde2d1541f2346198a70&q=metadata.doi:*" class="api">
+                    <a href="{{api}}/ills?apikey=f7028488fdbde2d1541f2346198a70&q=metadata.doi:*" class="api" target="_blank">
                     Example
                   </a>
                   </p>
@@ -311,7 +311,7 @@ curl -X POST "https://api.openaccessbutton.org/request" -d '{"doi": "10.1234/567
     noddy.afterLogin = function() {
       if (noddy.apikey) {
         $('#apikey').html('Your API key is <code>' + noddy.apikey + '</code>' +'. Include this in either a URL param called "apikey" or a header called "x-apikey".');
-        $('#instantill').html('Institutions are specified by passing a code in "UID", yours is ' + noddy.user.account._id + '. You can alter the response through setting up InstantILL with your details.');
+        $('#instantill').html('Institutions are specified by passing a code in "UID", yours is <code>' + noddy.user.account._id + '</code>. You can alter the response through setting up InstantILL with your details.');
         $('.auth').each(function() { $(this).attr('href',$(this).attr('href')+'?apikey='+noddy.apikey); });
         $('.apikey').html(noddy.apikey);
         $('.yourid').html(noddy.user.account._id);
