@@ -105,7 +105,7 @@ curl -X GET "https://api.openaccessbutton.org/find?id=10.1126/science.196.4287.2
         GET
       </h3>
         <p>
-          <a class="api" target="_blank" href="{{api}}/subscription?uid=WpGYaq7yRCNggawBY&doi=10.1145/2908080.2908114/availability?url=http%3A%2F%2Fjournals.plos.org%2Fplosone%2Farticle%3Fid%3Dinfo%253Adoi%2F10.1371%2Fjournal.pone.0163591">
+          <a class="api" target="_blank" href="{{api}}/subscription?uid=WpGYaq7yRCNggawBY&doi=10.1145/2908080.2908114">
             Example
           </a>
         </p>
@@ -114,7 +114,7 @@ curl -X GET "https://api.openaccessbutton.org/find?id=10.1126/science.196.4287.2
           Requires both a paper ID, and a specified institution to return a response. Accepts papers IDs as described in /find.
         <p>
         <p id="instantill">
-          Institutions are specified by passing a code in "UID", obtained by <a href="/account?next=/api#subscriptions">logging in</a> and setting up InstantILL with your details.
+          Institutions are specified by passing a code in "uid", obtained by <a href="/account?next=/api#subscriptions">logging in</a> and setting up InstantILL with your details.
         </p>
 
 
@@ -311,7 +311,7 @@ curl -X POST "https://api.openaccessbutton.org/request" -d '{"doi": "10.1126/sci
     noddy.afterLogin = function() {
       if (noddy.apikey) {
         $('#apikey').html('Your API key is <code>' + noddy.apikey + '</code>' +'. Include this in either a URL param called "apikey" or a header called "x-apikey".');
-        $('#instantill').html('Institutions are specified by passing a code in "UID", yours is <code>' + noddy.user.account._id + '</code>. You can alter the response through setting up InstantILL with your details.');
+        $('#instantill').html('Institutions are specified by passing a code in "uid", yours is <code>' + noddy.user.account._id + '</code>. You can alter the response through setting up InstantILL with your details.');
         $('.auth').each(function() { $(this).attr('href',$(this).attr('href')+'?apikey='+noddy.apikey); });
         $('.apikey').html(noddy.apikey);
         $('.yourid').html(noddy.user.account._id);
