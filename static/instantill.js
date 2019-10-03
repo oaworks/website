@@ -403,7 +403,7 @@ var instantill_run = function() {
       $('#oabutton_error').html('<p>Please note, we encountered errors querying the following subscription services: ' + avail.data.ill.error.join(', ') + '</p>').show();
       setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
     }
-    if (avail.data.meta && avail.data.meta.article) {
+    if (avail.data.meta && avail.data.meta.article && (!avail.data.ill || !avail.data.ill.subscription || !avail.data.ill.subscription.demo)) {
       var cit = cite(avail.data.meta.article);
       if (cit.length < 1) {
         if (attempts === 0) {
@@ -422,6 +422,7 @@ var instantill_run = function() {
         info += cit;
       }
     }
+    if (avail.data.ill && avail.data.ill.subscription && avail.data.ill.subscription.demo) info += '<h2>An example subscription title</h2>';
     info += '<p><a id="oabutton_getmore" href="#"><b>This is not the ' + pora + ' I searched.</b></a></p>';
     var needmore = true;
     var hassub = false;
