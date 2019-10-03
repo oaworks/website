@@ -51,7 +51,11 @@
   }
 
   h2{
-    color:#46B633;
+    color:#428BCA;
+  }
+
+  a{
+    color:#428BCA;
   }
   .center-col{
     max-width: 1400px;
@@ -71,103 +75,40 @@
   .navy-bg{
     width: 100%;
     padding: 30px;
-    background-color: #212F3F;
+    background-color: #428BCA;
     color: white;
   }
 
-  .pitch{
-    padding: 120px 0;
+  .header{
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-  }
-
-  .pitchhalf{
-    width:50%;
-    padding: 30px;
-  }
-
-  .unilogos{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
     align-items: center;
-  }
-
-  .unilogo{
-    width:20%;
-    padding: 40px;
-  }
-
-  .features{
-    padding:60px 0;
-  }
-  .featurebox{
-    width: 49%;
-    height: 260px;
-    padding: 30px;
-    display: inline-block;
-    vertical-align:top;
-  }
-  .featurebox h2{
-    text-align: center;
-  }
-  .featurebox ul{
-    width:80%;
-    margin: auto;
-    margin-top:30px;
-  }
-  .programs{
-    display: flex;
     justify-content: space-between;
-    text-align: center;
   }
-
-  .program{
-    width:50%;
-    color:#46B633;
+  .header strong{
+    letter-spacing: 2px;
   }
-  .programcontents{
-    max-width:350px;
-    margin: auto;
-    padding: 50px 0;
-    text-align: center;
-  }
-
-  .programcontents .btn{
-    margin:20px 0;
-  }
-
-  .program li{
-    list-style-image: url('/static/ul-tick-green.png');
-    padding:8px 0;
+  .header a{
+    color: white;
   }
 
   .quote{
     display: flex;
-    justify-content: space-between;
+    padding: 90px 30px;
+    justify-content: center;
     text-align: center;
     align-items: center;
   }
-  .quotetext{
+ 
+  .strapline{
     max-width: 800px;
-    padding: 90px 30px;
-    text-align: center;
-    line-height: 130%;
+    text-align: left;
     margin: auto;
-  }
-
-  .profilephoto{
-    width: 200px;
-    height: 200px;
-    border-radius: 100px;
   }
 
   .footer{
     display: flex;
     justify-content: space-between;
   }
-
   .footer span{
     color: white;
     padding: 0 10px;
@@ -175,42 +116,25 @@
   .footer a{
     color: white;
   }
+  .footer strong{
+    letter-spacing: 2px;
+  }
+
+  .stick-to-bottom{
+    position: absolute;
+    bottom: 0;
+  }
+
 
 
   @media screen and (max-width: 768px){
-    .pitch{
-      flex-direction: column-reverse;
-      padding: 30px 0;
+    .quote{
+      padding: 40px 0;
     }
-    .pitchhalf{
-      width:100%;
-      padding: 0 30px;
-    }
-    .unilogos{
-      display: inline;
-    }
-    .unilogo{
-      width:49%;
-      padding:20px;
-    }
-    .featurebox{
-      width:100%;
-      height: 100%;
-    }
-    .programs{
+    .footer{
+      align-items: flex-start;
       flex-direction: column;
     }
-    .program{
-      width:100%;
-    }
-    .quote{
-      flex-direction: column-reverse;
-      align-items: center;
-    }
-    #rebrand{
-      display: none;
-    }
-
   }
 
   /*sams added style above*/
@@ -220,8 +144,8 @@
 <!-- sam starts here -->
 
 <!-- headder -->
-<div class="green-bg">
-  <div class="center-col">
+<div class="navy-bg">
+  <div class="center-col header">
   <p><strong>Share Your Paper</strong> by <a href="https://openaccessbutton.org" style="color:white">Open Access Button</a></p>
   <p><a href="/libraries">for Libraries</a></p>
 
@@ -232,9 +156,8 @@
 </div>
 
 <!-- pitch -->
-<div class="center-col">
-  <div class="pitch">
-    <div class="pitchhalf">
+<div class="center-col quote">
+<div class="strapline">
       <h2>Make your research visible and see 30% more citations</h2>
       <p style="padding: 30px 0">like millions of researchers by sharing your article freely with colleagues and the public. We can help you do it legally, for free, in minutes.<b> Coming Soon</b></p>
       <a class="btn btn-rebrand btn-block" href="https://blog.openaccessbutton.org/how-to-support-fellow-scholars-at-uc-dffc98e85050">Try the Workflow Today</a>
@@ -242,19 +165,17 @@
         <a href="https://blog.openaccessbutton.org/building-shareyourpaper-org-to-make-self-archiving-the-simplest-way-to-increase-a-papers-impact-7af42b6903e1">
           Learn More
         </a>
-      </b><p>
+      </b></p>
     </div>
-    <div class="pitchhalf">
-    </div>
-  </div>
 </div>
 
 
 <!-- footer -->
-<div class="navy-bg">
+<div class="navy-bg stick-to-bottom">
   <div class="center-col footer">
     <div>
-      <span><strong>Share Your Paper</strong></span> by <a href="https://openaccessbutton.org">Open Access Button</a><span> • Open Source • Community Controlled • Not for Profit</span>
+      <p><strong>Share Your Paper</strong> by <a href="https://openaccessbutton.org" >Open Access Button</a>  <span> • Open Source • Community Controlled • Not for Profit</span></p>
+     
     </div>
     <div style="text-align: right;">
       <span><a href="https://openaccessbutton.org/api">API</a></span>
@@ -266,6 +187,7 @@
     </div>
   </div>
 </div>
+
 
 <script>
 jQuery(document).ready(function() {
