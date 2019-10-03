@@ -51,6 +51,7 @@ ul.arrowed li {
 }
 
 .form-control {
+  background-color: white;
   border-radius:0px;
 }
 .form-control.green {
