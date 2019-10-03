@@ -54,11 +54,11 @@ API.service.oab.ill = {}
 
 API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
   if meta.doi is '10.1234/567890' and uid is 'qZooaHWRz9NLFNcgR' or uid is 'eZwJ83xp3oZDaec86' # dev and live demo accounts that always return a fixed answer
-    return {findings:{}, uid: uid, lookups:[], error:[], url: 'https://instantill.org'}
+    return {findings:{}, uid: uid, lookups:[], error:[], url: 'https://instantill.org', demo: true}
 
   do_serialssolutions_xml = true
   do_sfx_xml = true
-  sig = uid + JSON.stringify(meta) + all
+  sig = uid + JSON.stringify(meta) + all + do_serialssolutions_xml + do_sfx_xml
   sig = crypto.createHash('md5').update(sig, 'utf8').digest('base64')
   res = API.http.cache(sig, 'oab_ill_subs', undefined, refresh) if refresh and refresh isnt true and refresh isnt 0
   if not res?
@@ -85,11 +85,13 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
           subtype = config.subscription_type[s] ? 'unknown'
         sub = sub.trim()
         if sub
-          if sub.indexOf('serialssolutions') isnt -1 and sub.indexOf('.xml.') is -1 and do_serialssolutions_xml is true
+          if (subtype is 'serialssolutions' or sub.indexOf('serialssolutions') isnt -1) and sub.indexOf('.xml.') is -1 and do_serialssolutions_xml is true
             tid = sub.split('.search')[0]
             tid = tid.split('//')[1] if tid.indexOf('//') isnt -1
             #bs = if sub.indexOf('://') isnt -1 then sub.split('://')[0] else 'http' # always use htto because https on the xml endpoint fails
             sub = 'http://' + tid + '.openurl.xml.serialssolutions.com/openurlxml?version=1.0&genre=article&'
+          else if (subtype is 'sfx' or sub.indexOf('sfx.') isnt -1) and sub.indexOf('sfx.response_type=simplexml') is -1 and do_sfx_xml is true
+            sub += (sub.indexOf('?') is -1 ? '?' : '&') + 'sfx.response_type=simplexml'
           url = sub + (if sub.indexOf('?') is -1 then '?' else '&') + openurl
           url = url.split('snc.idm.oclc.org/login?url=')[1] if url.indexOf('snc.idm.oclc.org/login?url=') isnt -1
           url = url.replace('cache=true','')
@@ -107,9 +109,9 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
           error = false
           try
             #pg = HTTP.call('GET', url, {timeout:15000, npmRequestOptions:{proxy:API.settings.proxy}}).content
-            pg = if url.indexOf('.xml.serialssolutions') isnt -1 then HTTP.call('GET',url).content else API.http.puppeteer url #, undefined, API.settings.proxy
+            pg = if url.indexOf('.xml.serialssolutions') isnt -1 or url.indexOf('sfx.response_type=simplexml') isnt -1 then HTTP.call('GET',url).content else API.http.puppeteer url #, undefined, API.settings.proxy
             spg = if pg.indexOf('<body') isnt -1 then pg.toLowerCase().split('<body')[1].split('</body')[0] else pg
-            console.log spg
+            #console.log spg
             res.contents.push spg
             res.lookups.push url
           catch
@@ -128,7 +130,7 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
           # note there is also now an sfx xml endpoint that we have found to check
           if subtype is 'sfx' or url.indexOf('sfx.') isnt -1
             res.error.push 'SFX' if error
-            if do_sfx_xml # remove the false once have worked out how to identify sfx URLs
+            if do_sfx_xml
               if spg.indexOf('getFullTxt') isnt -1 and spg.indexOf('<target_url>') isnt -1
                 try
                   # this will get the first target that has a getFullTxt type and has a target_url element with a value in it, or will error
