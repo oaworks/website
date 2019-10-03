@@ -92,8 +92,7 @@
     border-radius: 0px;
     color: #46b633;
     font-weight: bold;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding: 10px 30px;
   }
 
   .pitch{
@@ -164,28 +163,42 @@
     padding:8px 0;
   }
 
+  .strapline{
+    max-width: 800px;
+    text-align: center;
+    margin: auto;
+  }
+
   .quote{
     display: flex;
-    justify-content: space-between;
+    padding: 90px 30px;
+    justify-content: center;
     text-align: center;
     align-items: center;
   }
   .quotetext{
     max-width: 800px;
-    padding: 90px 30px;
     text-align: center;
     line-height: 130%;
-    margin: auto;
+    padding: 0 30px;
+    /*margin: auto;*/
+  }
+  .quotetext h3{
+    line-height: 120%;
+    text-align: left;
+    padding-bottom: 30px;
   }
 
   .profilephoto{
     width: 200px;
     height: 200px;
     border-radius: 100px;
+    margin: 0 30px;
   }
 
   .footer{
     display: flex;
+    align-items: center;
     justify-content: space-between;
   }
 
@@ -202,7 +215,7 @@
   }
 
   #rebrand{
-    border-top: solid 5px #46B633;
+    border-top: solid 5px #edf8ed;
   }
 
 
@@ -226,6 +239,9 @@
       width:100%;
       height: 100%;
     }
+  .featurebox ul{
+    width:100%;
+  }
     .programs{
       flex-direction: column;
     }
@@ -253,7 +269,7 @@
   <div class="center-col footer">
     <div><p style="margin: 0"><strong>InstantILL</strong> by <a href="https://openaccessbutton.org" style="color:white">Open Access Button</a></p></div>
     <div>
-       <a class="btn btn-rebrand-white" href="">Install</a>
+       <a class="btn btn-rebrand-white" href="">Install Now</a>
     </div>
   <!-- TODO: ADD BETA in here -->
   <!-- TODO: Add a 'install now' on the right hand side -->
@@ -569,8 +585,8 @@
 
 <!-- tagline -->
 <div class="green-bg">
-<div class="center-col">
-  <div class="quotetext">
+<div class="center-col quote">
+  <div class="strapline">
 <h1 style="margin-bottom: 35px">For change, not for profit</h1>
   <p>
     We’re building a world where — regardless of a campus’ subscription access — there is a simple, community-owned, one-stop shop to get free, fast, and legal access. It’s free so anyone can use it, but we need your support to sustain it.
@@ -633,7 +649,8 @@
 <div class="white-bg">
   <div class="center-col footer">
     <div>
-      <span><strong>InstantILL</strong>by</span>  <a href="https://openaccessbutton.org">Open Access Button</a><span>• Open Source • Community Controlled • Not for Profit</span>
+      <div><p><strong>InstantILL</strong> by <a href="https://openaccessbutton.org" style="color:white">Open Access Button</a></p></div>
+      <span>• Open Source • Community Controlled • Not for Profit</span>
     </div>
     <div style="text-align: right;">
       <span><a href="https://openaccessbutton.org/api">API</a></span>
