@@ -56,13 +56,14 @@
     scroll-behavior: smooth;
   }
 
-  .header p{
-    margin: 0;
-  }
-
   h2{
     color:#46B633;
   }
+
+  #instantill h2{
+    color:#212F3F;
+  }
+
   .center-col{
     max-width: 1400px;
     margin: auto;
@@ -78,11 +79,21 @@
     color: white;
   }
 
-  .navy-bg{
+  .white-bg{
     width: 100%;
     padding: 30px;
-    background-color: #212F3F;
+    background-color: white;
     color: white;
+  }
+
+  .btn-rebrand-white{
+    background-color: white;
+    border-color: white;
+    border-radius: 0px;
+    color: #46b633;
+    font-weight: bold;
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
 
   .pitch{
@@ -179,11 +190,19 @@
   }
 
   .footer span{
-    color: white;
+    color: #46B633;
     padding: 0 10px;
   }
   .footer a{
-    color: white;
+    color: #46B633;
+  }
+
+  .footer strong{
+    letter-spacing: 2px;
+  }
+
+  #rebrand{
+    border-top: solid 5px #46B633;
   }
 
 
@@ -213,11 +232,11 @@
     .program{
       width:100%;
     }
-    .quote{
-      flex-direction: column-reverse;
-      align-items: center;
-    }
+
     #rebrand{
+      display: none;
+    }
+    .profilephoto{
       display: none;
     }
 
@@ -231,8 +250,11 @@
 
 <!-- headder -->
 <div class="green-bg">
-  <div class="center-col">
-  <p><strong>InstantILL</strong> by <a href="https://openaccessbutton.org" style="color:white">Open Access Button</a></p>
+  <div class="center-col footer">
+    <div><p style="margin: 0"><strong>InstantILL</strong> by <a href="https://openaccessbutton.org" style="color:white">Open Access Button</a></p></div>
+    <div>
+       <a class="btn btn-rebrand-white" href="">Install</a>
+    </div>
   <!-- TODO: ADD BETA in here -->
   <!-- TODO: Add a 'install now' on the right hand side -->
   <!-- TODO: make this a nice wordmark, with good kerning? -->
@@ -595,9 +617,11 @@
 <!-- quote -->
 <div class="green-bg">
   <div class="center-col quote">
-    <h3 style="text-align: left;" class="quotetext">"We support at the leadership level as part of our partnership building InstantILL to invest in community-owned infrastructure that improves our services, reduces dependency on subscriptions, and advances equitable access to information."
+    <div class="quotetext">
+    <h3 style="text-align: left;">"We support at the leadership level as part of our partnership building InstantILL to invest in community-owned infrastructure that improves our services, reduces dependency on subscriptions, and advances equitable access to information."
     </h3>
-    <p>Tina Baich, Senior Associate Dean for Scholarly Communication & Content Strategies at IUPUI University Library.</p>
+    <p >Tina Baich, Senior Associate Dean for Scholarly Communication & Content Strategies at IUPUI University Library.</p>
+    </div>
     <img class="profilephoto" src="/static/tina-photo.png">
   </div>
 </div>
@@ -606,10 +630,10 @@
 
 
 <!-- footer -->
-<div class="navy-bg">
+<div class="white-bg">
   <div class="center-col footer">
     <div>
-      <span><strong>InstantILL</strong></span> by <a href="https://openaccessbutton.org">Open Access Button</a><span> • Open Source • Community Controlled • Not for Profit</span>
+      <span><strong>InstantILL</strong>by</span>  <a href="https://openaccessbutton.org">Open Access Button</a><span>• Open Source • Community Controlled • Not for Profit</span>
     </div>
     <div style="text-align: right;">
       <span><a href="https://openaccessbutton.org/api">API</a></span>
