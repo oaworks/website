@@ -125,16 +125,14 @@ var action = function() {
   var act = $('#action').val();
   if (act) {
     if ($('#adminframe').length) $('#adminframe').hide();
-    if (runrequest) {
-      $('#admin').hide();
-      $('#admin').after('<p style="color:orange;">Working on it, please wait a few seconds for the page to update...</p>');
-    }
+    $('#admin').hide();
+    $('#admin').after('<p style="color:orange;">' + (runrequest ? 'Working on it, please wait a few seconds for the page to update...' : 'Please wait for the page to reload to see changes') + '</p>');
     $.ajax({
       type:'GET',
       url:api+'/request/' + rec._id + '/admin/' + act,
       beforeSend: function (request) { request.setRequestHeader("x-apikey", noddy.apikey); },
     });
-    setTimeout(function() { if (runrequest) { runrequest(); } else { $('#admin').after('<p>Refresh the page to view changes.</p>'); } }, 4000);
+    setTimeout(function() { if (runrequest) { runrequest(); } else { $('#admin').after('<p>Reload the page to view changes.</p>'); window.location.reload(true); } }, 4000);
   }
 }
 
