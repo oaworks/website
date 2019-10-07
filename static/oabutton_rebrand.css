@@ -15,6 +15,7 @@ html, body{
 
 html {
   background-color:#ffffff;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -130,3 +131,113 @@ div.greenbottom {
   width:75%;
   max-width:500px;
 }
+
+/*sams css below*/
+
+ .center-col{
+    max-width: 1400px;
+    margin: auto;
+  }
+
+  .green-bg{
+    width: 100%;
+    padding: 30px;
+    background-color: #46B633;
+    color: white;
+  }
+  .green-bg h2{
+    color: white;
+  }
+
+  .navy-bg{
+    width: 100%;
+    padding: 30px;
+    background-color: #428BCA;
+    color: white;
+  }
+
+  
+
+  .header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .header strong{
+    letter-spacing: 2px;
+  }
+  .header a{
+    color: white;
+  }
+  .header p{
+    margin: 0;
+  }
+    .btn-rebrand-blue{
+    background-color: #428BCA;
+    border-color: #428BCA;
+    border-radius: 0px;
+    color: white;
+    font-weight: bold;
+    padding: 10px 30px;
+  }
+
+    .btn-rebrand-white{
+    background-color: white;
+    border-color: white;
+    border-radius: 0px;
+    color: #46b633;
+    font-weight: bold;
+    padding: 10px 30px;
+  }
+
+  .quote{
+    display: flex;
+    padding: 90px 30px;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+  }
+
+  .strapline{
+    max-width: 800px;
+    text-align: left;
+    margin: auto;
+  }
+
+  .footer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer span{
+    color: white;
+    padding: 0 10px;
+  }
+  .footer a{
+    color: white;
+  }
+  .footer strong{
+    letter-spacing: 2px;
+  }
+  .footer p{
+    margin: 0 10px;
+  }
+
+  .stick-to-bottom{
+    position: absolute;
+    bottom: 0;
+  }
+
+
+
+
+
+  @media screen and (max-width: 768px){
+    .quote{
+      padding: 40px 30px;
+    }
+    .footer{
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
