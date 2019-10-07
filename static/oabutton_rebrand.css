@@ -201,6 +201,7 @@ div.greenbottom {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
   }
 
   .pitchhalf{
@@ -305,12 +306,9 @@ div.greenbottom {
     text-align: center;
   }
 
-  .tool p{
-    padding: 30px 0;
-  }
-
   .tool img{
     width: 80%;
+    padding-bottom: 30px;
   }
 
   .tool a{
