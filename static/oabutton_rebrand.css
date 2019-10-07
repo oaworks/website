@@ -238,6 +238,12 @@ div.greenbottom {
     padding: 10px 30px;
   }
 
+  .btn:hover, .btn:focus {
+    background-color:#212f3f;
+    border-color: #212f3f;
+    color: white;
+  }
+
 /*features (lists of benefits)*/
 
   .features{
@@ -369,6 +375,14 @@ div.greenbottom {
     padding: 40px;
   }
 
+  .media{
+    display: inline-block;
+  } 
+
+  .media img{
+    width: 15%;
+    height: auto;
+  }
 
 /*footer*/
 
