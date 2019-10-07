@@ -680,7 +680,7 @@
                       oq.aggregations.issn = {"filter": {"query": {"query_string": {"query": "metadata.title:* AND metadata.journal:* AND metadata.year:* AND metadata.issn:*"}}}, "aggs": {"users": {"terms": {"field": "from.exact", "size": 10000}}}};
                       oq.aggregations.forwarded = {"filter": {"term": {"forwarded": true}}, "aggs": {"users": {"terms": {"field": "from.exact", "size": 10000}}}};
                       var illopts = {
-                        url: api + '/ills',
+                        url: api + '/ills?all=true',
                         type: 'POST',
                         processData: false,
                         cache: false,
