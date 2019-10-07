@@ -171,6 +171,12 @@ div.greenbottom {
     background-color: white;
   }
 
+  .dark-bg{
+    width: 100%;
+    padding: 30px;
+    background-color: #212f3f;
+    color: white; 
+  }
 
 /*header*/
 
@@ -380,8 +386,9 @@ div.greenbottom {
   } 
 
   .media img{
-    width: 15%;
+    width: 16%;
     height: auto;
+    padding:10px;
   }
 
 /*footer*/
@@ -464,6 +471,9 @@ div.greenbottom {
     .footer{
       align-items: flex-start;
       flex-direction: column;
+    }
+    .media img{
+      width: 32%;
     }
 
   }
