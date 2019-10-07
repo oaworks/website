@@ -42,6 +42,10 @@
   width: 0;
 }
 
+input[type="radio"], input[type="checkbox"]{
+	display: none;
+}
+
 /* Create a custom checkbox */
 .checkmark {
   position: absolute;
@@ -58,6 +62,7 @@
   display: block;
   position: relative;
   margin-bottom: 8px;
+  padding-left: 30px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -67,7 +72,7 @@
 
 	/* On mouse-over, add a grey background color */
 	.check-container:hover input ~ .checkmark {
-	  background-color: #ccc;
+	  background-color: #ffffff80;
 	}
 
 	/* When the checkbox is checked, add a blue background */
@@ -109,7 +114,7 @@
 	padding-left:15px;
 	margin-bottom: 15px;
 	-webkit-appearance: none;
-	background:url(/static/dropdown-triangle.png) no-repeat right none;
+	background:url(/static/dropdown-triangle.png) no-repeat right;
 }
 
 
@@ -487,14 +492,14 @@
 
 <!-- chunky about section -->
 <div class="dark-bg">
-	<div class="center-col pitch" >
+	<div class="center-col pitch"  style="padding: 60px 0; justify-content: center;">
 		<div class="quotetext">
 			<p>Founded in 2013 by students frustrated by paywalls, we’ve worked since to help pioneer simple delivery of open access content in repositories, doing that in Interlibrary Loan and browser plugins, and more effective self-archiving workflows with funding from Arcadia Fund, Jisc, the Open Society Foundations, Center for Open Science, and SPARC.
 			<br>
 			Help us keep building for change, not for profit.
 			</p>
 		</div>
-		<img style="width:285px; height: 265px;" src="/static/media-team.png">
+		<img style="width:315px; height: 295px; padding:30px 0" src="/static/media-team.png">
 	</div>
 	<div class="strapline">
 		<p style="padding:0">As seen in:</p>

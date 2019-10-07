@@ -352,6 +352,8 @@ div.greenbottom {
   }
   .quotetext p{
     text-align: left;
+    font-style: italic;
+    padding: 0;
   }
 
   .profilephoto{
