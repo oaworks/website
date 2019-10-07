@@ -138,6 +138,11 @@ div.greenbottom {
     margin: auto;
   }
 
+  h4{
+    margin: 0;
+    padding: 15px 0;
+  }
+
   a:hover{
     text-decoration: none;
   }
@@ -287,17 +292,31 @@ div.greenbottom {
   .tool-container{
     width: 33%;
     height: 560px;
+    display: inline-block;
+    padding: 30px;
   }
 
   .tool{
     display: flex;
     flex-direction: column;
+    align-items: center;
+  }
+
+  .tool h4{
+    text-align: center;
+  }
+
+  .tool p{
+    padding: 30 0;
   }
 
   .tool img{
-    width: 80%
+    width: 80%;
   }
 
+  .tool a{
+    width: 80%;
+  }
 
 /*quote with image*/
 
@@ -381,7 +400,7 @@ div.greenbottom {
     bottom: 0;
   }
 
-  @media screen and (max-width: 800px){
+  @media screen and (max-width: 1024px){
     .tool-container{
       width: 50%;
     }
