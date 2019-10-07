@@ -158,7 +158,7 @@ API.add 'service/oab/ills',
     action: () ->
       restrict = if API.accounts.auth('openaccessbutton.admin', this.user) and this.queryParams.all then [] else [{term:{from:this.userId}}]
       delete this.queryParams.all if this.queryParams.all?
-      return oab_ill.search this.bodyParams, {restrict:[{term:{from:this.userId}}]}
+      return oab_ill.search this.bodyParams, {restrict:restrict}
 
 API.add 'service/oab/stats', get: () -> return {} # plaeholder for possible later stats stuff, for now just to allow getting the emails
 API.add 'service/oab/stats/emails', 
