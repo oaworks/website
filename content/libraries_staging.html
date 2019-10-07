@@ -24,10 +24,94 @@
   }
   .programcontents{
   	text-align: left;
+  	padding:30px 0;
   }
   .program li{
   	list-style-image: none;
   }
+  .program h2{
+  	margin-bottom: 30px;
+  }
+
+  /* Hide the browser's default checkbox */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 22px;
+  width: 22px;
+  border-radius: 4px;
+  border: solid 1px white;
+  /*background-color: white;*/
+}
+  
+  .check-container {
+  display: block;
+  position: relative;
+  margin-bottom: 8px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+	/* On mouse-over, add a grey background color */
+	.check-container:hover input ~ .checkmark {
+	  background-color: #ccc;
+	}
+
+	/* When the checkbox is checked, add a blue background */
+	.check-container input:checked ~ .checkmark {
+	  background-color: white;
+	}
+
+	/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.check-container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.check-container .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid #F04717;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.dropdown{
+	display: block;
+	width: 100%;
+	height: 55px;
+	color: white;
+	border:solid 1px white;
+	padding-left:15px;
+	margin-bottom: 15px;
+	-webkit-appearance: none;
+	background:url(/static/dropdown-triangle.png) no-repeat right none;
+}
+
 
    @media screen and (max-width: 768px){
     .quote{
@@ -296,16 +380,16 @@
 </div>
 
 <!-- leadership benefits -->
-<div class="center-col quote" style="padding: 0 30px;">
-	<div class="strapline" style="background-image: url(/static/orange-line.png); background-repeat: repeat-x; background-position: center;">
-	<h2 style="background-color: white; padding: 0 5px;">Leadership Benefits</h2>
+<div class="center-col quote" style="padding: 0 30px; background-image: url(/static/orange-line.png); background-repeat: repeat-x; background-position: center;">
+	<div class="strapline">
+	<h2 style="background-color: white; padding: 0 15px; margin-top:10px">Leadership Benefits</h2>
 </div>
 </div>
 
 <div class="programs">
 	<div class="program">
 		<div class="programcontents" style="max-width: 600px;">
-			<h2>For you & your patrons</h2>
+			<h3>For you & your patrons</h3>
 			<ul>
 				<li><strong>Extra features:</strong> on InstantILL and Shareyourpaper.org with that benefit your library</li>
 			</ul>
@@ -321,7 +405,7 @@
 	</div>
 	<div class="program">
 		<div class="programcontents" style="max-width: 600px;">
-			<h2>For equitable infrastructure</h2>
+			<h3>For equitable infrastructure</h3>
 			<ul>
 				<li><strong>Supports people who can’t pay using our tools.</strong></li>
 				<li>Enables <strong>innovation</strong> towards <strong>lower costs</strong> and <strong>better services</strong>, including for your library.</li>
@@ -337,20 +421,43 @@
 
 <!-- leadership investment -->
 
-<div style="background-color: #F04717">
+<div style="background-color: #F04717; color: white;">
 	<div class="center-col quote">
 		<div class="strapline" style="max-width: 600px;">
 			<h2>Leadership Investment</h2>
 			<p><strong>What tools do you use?</strong>
 			<br>
 			We want to charge less than we save. Can you share what tools to use so we can estimate it:</p>
-			<input type="checkbox" name="option1" value="InstantILL">InstantILL<br>
+<!-- 			<input type="checkbox"><span class="checkmark">InstantILL<br>
 			<input type="checkbox" name="option2" value="Shareyourpaper.org">Shareyourpaper.org<br>
 			<input type="checkbox" name="option3" value="Permissions">Permissions<br>
 			<input type="checkbox" name="option4" value="Other">Other<br>
-			<input type="submit" value="submit">
+			<input type="submit" value="submit"> -->
+
+<label class="check-container">InstantILL
+  <input type="checkbox">
+  <span class="checkmark"></span>
+</label>
+<label class="check-container">Shareyourpaper.org
+  <input type="checkbox">
+  <span class="checkmark"></span>
+</label>
+<label class="check-container">Permissions
+  <input type="checkbox">
+  <span class="checkmark"></span>
+</label>
+<label class="check-container">Other
+  <input type="checkbox">
+  <span class="checkmark"></span>
+</label>
+
+
+
+
+
 			<p>Paid through a yearly invoice. We don’t want to lock you in, infact we’ll give a 5% discount for multi-year investments</p>
-			<select>
+			<select class="btn-block">
+				<option value="Library0">Describe your Library</option>
 				<option value="Library1">Micro library</option>
 				<option value="Library2">Small library</option>
 				<option value="Library3">Average library</option>
@@ -380,14 +487,15 @@
 
 <!-- chunky about section -->
 <div class="dark-bg">
-	<div class="center-col quote" >
+	<div class="center-col pitch" >
+		<img style="width:285px; height: 265px;" src="/static/media-team.png">
 		<div class="quotetext">
 			<p>Founded in 2013 by students frustrated by paywalls, we’ve worked since to help pioneer simple delivery of open access content in repositories, doing that in Interlibrary Loan and browser plugins, and more effective self-archiving workflows with funding from Arcadia Fund, Jisc, the Open Society Foundations, Center for Open Science, and SPARC.
 			<br>
 			Help us keep building for change, not for profit.
 			</p>
 		</div>
-		<img style="width:285px; height: 265px;" src="/static/media-team.png">
+		
 	</div>
 	<div class="strapline">
 		<p style="padding:0">As seen in:</p>
