@@ -129,7 +129,7 @@ $('.dl'+b).show();
 
 noddy.afterLogin = function() {
   $('#promptsignup').hide();
-  $('#cliocode').html($('#cliocode').html().replace('from=clio&','from=clio&uid=' + noddy.user.account._id + '&'));
+  if ($('#cliocode').length) $('#cliocode').html($('#cliocode').html().replace('from=clio&','from=clio&uid=' + noddy.user.account._id + '&'));
 }
 noddy.login();
 });

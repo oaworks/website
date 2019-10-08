@@ -95,7 +95,7 @@
       </h3>
       <p>
         Provide a url-encoded URL in a parameter named "url". The api will accept DOIs, PMIDs, PMC IDs, titles, and citations all of
-        which can alternately be passed in the "url" parameter.  The API will try to guess which type is being provided.  
+        which can alternately be passed in the "url" parameter.  The API will try to guess which type is being provided.
         Alternately, the specific type can be passed in by using a more specific parameter name: "doi", "pmc", "pmid", "title", "citation".
         In any case, note that only one parameter can be provided, and the preference for which to provide is:
         url, doi, pmc, pmid, title, citation.
@@ -137,7 +137,7 @@
         Create a new request by POSTing a JSON object to this endpoint.
         Please remember to include the header: content-type:"application/json"    The JSON object itself must contain at least the "url" parameter - the URL to create a request for. The
         "url" parameter can also be formatted as a url or alternately as a DOI, PMID, PMC ID, title, or citation.  NOTE that in any case, these values should be put in the "url" parameter, NOT in other parameter names (like doi, citation, etc).
-    
+
       </p>
       <p style="text-align:left;">
         When you provide DOI, PMID and PMC ID values in the "url parameter, please format the value in a URL format.
@@ -150,7 +150,7 @@
       <p>
         An "email" parameter should
         be provided having the email address of the author to contact about the request (we will try to find
-        an email address if one is not provided).Ideally, a "story" parameter should also be provided having text explaining why the request is necessary. 
+        an email address if one is not provided).Ideally, a "story" parameter should also be provided having text explaining why the request is necessary.
       </p>
       <p>
         "title" and "doi" parameters can also be provided as additional information about the resource.

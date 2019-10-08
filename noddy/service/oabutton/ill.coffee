@@ -53,9 +53,12 @@ API.service.oab.libraries = (opts) ->
 API.service.oab.ill = {}
 
 API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
+  if meta.doi is '10.1234/567890' and uid is 'qZooaHWRz9NLFNcgR' or uid is 'eZwJ83xp3oZDaec86' # dev and live demo accounts that always return a fixed answer
+    return {findings:{}, uid: uid, lookups:[], error:[], url: 'https://instantill.org', demo: true}
+
   do_serialssolutions_xml = true
   do_sfx_xml = true
-  sig = uid + JSON.stringify(meta) + all
+  sig = uid + JSON.stringify(meta) + all + do_serialssolutions_xml + do_sfx_xml
   sig = crypto.createHash('md5').update(sig, 'utf8').digest('base64')
   res = API.http.cache(sig, 'oab_ill_subs', undefined, refresh) if refresh and refresh isnt true and refresh isnt 0
   if not res?
@@ -82,11 +85,13 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
           subtype = config.subscription_type[s] ? 'unknown'
         sub = sub.trim()
         if sub
-          if sub.indexOf('serialssolutions') isnt -1 and sub.indexOf('.xml.') is -1 and do_serialssolutions_xml is true
+          if (subtype is 'serialssolutions' or sub.indexOf('serialssolutions') isnt -1) and sub.indexOf('.xml.') is -1 and do_serialssolutions_xml is true
             tid = sub.split('.search')[0]
             tid = tid.split('//')[1] if tid.indexOf('//') isnt -1
             #bs = if sub.indexOf('://') isnt -1 then sub.split('://')[0] else 'http' # always use htto because https on the xml endpoint fails
             sub = 'http://' + tid + '.openurl.xml.serialssolutions.com/openurlxml?version=1.0&genre=article&'
+          else if (subtype is 'sfx' or sub.indexOf('sfx.') isnt -1) and sub.indexOf('sfx.response_type=simplexml') is -1 and do_sfx_xml is true
+            sub += (sub.indexOf('?') is -1 ? '?' : '&') + 'sfx.response_type=simplexml'
           url = sub + (if sub.indexOf('?') is -1 then '?' else '&') + openurl
           url = url.split('snc.idm.oclc.org/login?url=')[1] if url.indexOf('snc.idm.oclc.org/login?url=') isnt -1
           url = url.replace('cache=true','')
@@ -104,9 +109,9 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
           error = false
           try
             #pg = HTTP.call('GET', url, {timeout:15000, npmRequestOptions:{proxy:API.settings.proxy}}).content
-            pg = if url.indexOf('.xml.serialssolutions') isnt -1 then HTTP.call('GET',url).content else API.http.puppeteer url #, undefined, API.settings.proxy
+            pg = if url.indexOf('.xml.serialssolutions') isnt -1 or url.indexOf('sfx.response_type=simplexml') isnt -1 then HTTP.call('GET',url).content else API.http.puppeteer url #, undefined, API.settings.proxy
             spg = if pg.indexOf('<body') isnt -1 then pg.toLowerCase().split('<body')[1].split('</body')[0] else pg
-            console.log spg
+            #console.log spg
             res.contents.push spg
             res.lookups.push url
           catch
@@ -125,7 +130,7 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
           # note there is also now an sfx xml endpoint that we have found to check
           if subtype is 'sfx' or url.indexOf('sfx.') isnt -1
             res.error.push 'SFX' if error
-            if do_sfx_xml # remove the false once have worked out how to identify sfx URLs
+            if do_sfx_xml
               if spg.indexOf('getFullTxt') isnt -1 and spg.indexOf('<target_url>') isnt -1
                 try
                   # this will get the first target that has a getFullTxt type and has a target_url element with a value in it, or will error
@@ -373,30 +378,33 @@ API.service.oab.ill.config = (user, config) ->
   # https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=30&sid=OABILL&genre=InstantILL&aulast=Sapon-Shevin&aufirst=Mara&issn=10478248&title=Journal+of+Educational+Foundations&atitle=Cooperative+Learning%3A+Liberatory+Praxis+or+Hamburger+Helper&volume=5&part=&issue=3&spage=5&epage=&date=1991-07-01&pmid
   # and their openurl config https://docs.google.com/spreadsheets/d/1wGQp7MofLh40JJK32Rp9di7pEkbwOpQ0ioigbqsufU0/edit#gid=806496802
   # tested it and set values as below defaults, but also noted that it has year and month boxes, but these do not correspond to year and month params, or date params
+  user = Users.get(user) if typeof user is 'string'
   if config?
     update = {}
     for k in ['ill_institution','ill_redirect_base_url','ill_redirect_params','method','sid','title','doi','pmid','pmcid','author','journal','issn','volume','issue','page','published','year','terms','book','other','cost','time','email','problem_email','subscription','subscription_type','search','autorun','autorunparams','intropara','norequests','noillifoa','noillifsub','saypaper']
-      if k is 'ill_redirect_base_url' and config[k]? and config[k].indexOf('illiad.dll') isnt -1 and config[k].toLowerCase().indexOf('action=') is -1
-        config[k] = config[k].split('?')[0]
-        if config[k].indexOf('/openurl') is -1
-          config[k] = config[k].split('#')[0] + '/openurl'
-          config[k] += if config[k].indexOf('#') is -1 then '' else '#' + config[k].split('#')[1].split('?')[0]
-        config[k] += '?genre=article'
+      if k is 'ill_redirect_base_url' and config[k]?
+        if config[k].indexOf('illiad.dll') isnt -1 and config[k].toLowerCase().indexOf('action=') is -1
+          config[k] = config[k].split('?')[0]
+          if config[k].indexOf('/openurl') is -1
+            config[k] = config[k].split('#')[0] + '/openurl'
+            config[k] += if config[k].indexOf('#') is -1 then '' else '#' + config[k].split('#')[1].split('?')[0]
+          config[k] += '?genre=article'
+        else if config[k].indexOf('relais') isnt -1 and config[k].toLowerCase().indexOf('genre=') is -1
+          config[k] = config[k].split('?')[0]
+          config[k] += '?genre=article'
       update[k] = config[k] if config[k]?
     if JSON.stringify(update) isnt '{}'
       if not user.service.openaccessbutton.ill?
         Users.update user._id, {'service.openaccessbutton.ill': {config: update}}
       else
         Users.update user._id, {'service.openaccessbutton.ill.config': update}
-    return true
-  else
-    try
-      user = Users.get(user) if typeof user is 'string'
-      rs = user.service.openaccessbutton.ill.config ? {}
-      try rs.adminemail = if user.email then user.email else user.emails[0].address
-      return rs
-    catch
-      return {}
+      user = Users.get user._id
+  try
+    rs = user.service.openaccessbutton.ill.config ? {}
+    try rs.adminemail = if user.email then user.email else user.emails[0].address
+    return rs
+  catch
+    return {}
 
 API.service.oab.ill.resolver = (user, resolve, config) ->
   # should configure and return link resolver settings for the given user
@@ -458,11 +466,14 @@ API.service.oab.ill.openurl = (uid, meta={}, withoutbase=false) ->
             v = meta.author.family + if meta.author.given then ', ' + meta.author.given else ''
           else
             v = JSON.stringify meta.author
-    else if k not in ['started','ended','took','terms','book','other','cost','time','email','redirect','url','source','notes']
+    else if k not in ['started','ended','took','terms','book','other','cost','time','email','redirect','url','source','notes','createdAt','created_date','_id']
       v = meta[k]
     if v
       url += (if config[k] then config[k] else k) + '=' + v + '&'
-  return url
+  try
+    return url.replace('/&&/g','&')
+  catch
+    return url
     
 API.service.oab.ill.terms = (uid) ->
   config = API.service.oab.ill.config uid
@@ -588,7 +599,7 @@ API.service.oab.ill.metadata = (metadata={}, opts={}, refresh=false) ->
   want = _.without want, 'pmcid', 'pmid' # there is no other way we will find these after the above is done
 
   if not _got() and metadata.doi
-    dr = API.service.oab.resolve metadata, undefined, ['core','openaire','doaj'], true, false, true, true, true
+    dr = API.service.oab.resolve metadata, undefined, ['openaire','doaj'], true, false, true, true, true # removed core sep 2019
     try
       for w in want
         metadata[w] ?= dr[w]
@@ -596,7 +607,7 @@ API.service.oab.ill.metadata = (metadata={}, opts={}, refresh=false) ->
   if not _got() and metadata.title?
     pretitledoi = metadata.doi
     delete metadata.doi
-    tr = API.service.oab.resolve metadata, undefined, ['core','openaire','doaj'], true, true, true, true, true
+    tr = API.service.oab.resolve metadata, undefined, ['openaire','doaj'], true, true, true, true, true # removed core sep 2019
     metadata.doi = pretitledoi
     try
       for w in want

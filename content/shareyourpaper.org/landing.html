@@ -1,0 +1,116 @@
+<link rel="stylesheet" href="/static/oabutton_rebrand.css"> <!-- gets the new css (still also uses the old css, just overwrites where necessary) -->
+
+<style>
+  #topnav {
+    display: none;
+  }
+  #footer {
+    display: none;
+  }
+
+  .form-control {
+    background-color:#edf8ed;
+    color:#46b633;
+    border:2px solid #46b633;
+  }
+
+  a {
+    color:#46b633;
+    font-weight:normal;
+  }
+
+  a:hover {
+    color:#212f3f;
+    text-decoration: none;
+  }
+
+  .btn-hollow {
+    border-color: #46b633;
+    border-width: 2px;
+    border-radius: 0px;
+    color: #46b633;
+    font-weight: bold;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .btn-hollow:hover {
+    border-color: #46b633;
+    border-width: 2px;
+    border-radius: 0px;
+    color: #46b633;
+    font-weight: bold;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  /*style things that sam added below*/
+  h2{
+    color:#428BCA;
+  }
+
+  a{
+    color:#428BCA;
+  }
+
+  @media screen and (max-width: 768px){
+    .quote{
+      padding: 40px 30px;
+    }
+  }
+   /*sams added style above*/
+
+</style>
+
+<!-- sam starts here -->
+
+<!-- headder -->
+<div class="navy-bg">
+  <div class="center-col header">
+  <p><strong>Share Your Paper</strong> by <a href="https://openaccessbutton.org" style="color:white">Open Access Button</a></p>
+  <p><a class="btn btn-rebrand-white" style="color: #428BCA" href="/Libraries">for Libraries</a></p>
+
+
+  <!-- TODO: ADD BETA in here -->
+  </div>
+</div>
+
+<!-- pitch -->
+<div class="center-col quote">
+<div class="strapline">
+      <h2>Make your research visible and see 30% more citations</h2>
+      <p style="padding: 30px 0">like millions of researchers by sharing your article freely with colleagues and the public. We can help you do it legally, for free, in minutes.<b> Coming Soon</b></p>
+      <a class="btn btn-rebrand-blue btn-block" href="https://blog.openaccessbutton.org/how-to-support-fellow-scholars-at-uc-dffc98e85050">Try the Workflow Today</a>
+      <p><br>
+        <a href="https://blog.openaccessbutton.org/building-shareyourpaper-org-to-make-self-archiving-the-simplest-way-to-increase-a-papers-impact-7af42b6903e1">
+          Learn More
+        </a>
+      </p>
+    </div>
+</div>
+
+
+<!-- footer -->
+<div class="navy-bg stick-to-bottom">
+  <div class="center-col footer">
+    <div>
+
+      <p><strong>Share Your Paper</strong> by <a href="https://openaccessbutton.org">Open Access Button</a></p>
+      <p>Open Source • Community Controlled • Not for Profit</p>
+
+    </div>
+    <div>
+      <span><a href="https://openaccessbutton.org/api">API</a></span>
+      <span><a href="https://openaccessbutton.org/privacy">Privacy</a></span>
+      <span><a href="https://openaccessbutton.org/terms">Terms</a></span>
+      <span><a href="mailto:joe@openaccessbutton.org">Email</a></span>
+    </div>
+  </div>
+</div>
+
+
+<script>
+jQuery(document).ready(function() {
+  $('#topnav').remove();
+  $('#footer').remove();
+});
+</script>

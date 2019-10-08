@@ -1,6 +1,5 @@
 
 import Future from 'fibers/future'
-import request from 'request'
 import unidecode from 'unidecode'
 
 API.service.oab.citation = (meta) ->
@@ -55,6 +54,7 @@ API.service.oab.resolve = (meta, content, sources, all=false, titles=true, journ
   # all source get checked by default (but oabutton availability overrides to not botehr with base and dissemin as covered by oadoi)
   # NOTE crossref does also get used to lookup DOIs from title/citation if necessary, but this is not considered a source in this context
   meta = {url:meta} if typeof meta is 'string'
+  meta.url = meta.doi if not meta.url? and meta.doi?
   meta.url = meta.title if not meta.url? and meta.title?
   meta.title = meta.url if not meta.title? and meta.url? and meta.url.toLowerCase().indexOf('pmc') isnt 0 and meta.url.indexOf('http') is -1 and isNaN(parseInt(meta.url.toLowerCase().replace('pmc','').split()[0]))
   meta.all = if all is false then false else all?

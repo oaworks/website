@@ -125,16 +125,14 @@ var action = function() {
   var act = $('#action').val();
   if (act) {
     if ($('#adminframe').length) $('#adminframe').hide();
-    if (runrequest) {
-      $('#admin').hide();
-      $('#admin').after('<p style="color:orange;">Working on it, please wait a few seconds for the page to update...</p>');
-    }
+    $('#admin').hide();
+    $('#admin').after('<p style="color:orange;">' + (runrequest ? 'Working on it, please wait a few seconds for the page to update...' : 'Please wait for the page to reload to see changes') + '</p>');
     $.ajax({
       type:'GET',
       url:api+'/request/' + rec._id + '/admin/' + act,
       beforeSend: function (request) { request.setRequestHeader("x-apikey", noddy.apikey); },
     });
-    setTimeout(function() { if (runrequest) { runrequest(); } else { $('#admin').after('<p>Refresh the page to view changes.</p>'); } }, 4000);
+    setTimeout(function() { if (runrequest) { runrequest(); } else { $('#admin').after('<p>Reload the page to view changes.</p>'); window.location.reload(true); } }, 4000);
   }
 }
 
@@ -153,7 +151,11 @@ var admin = function(record) {
   dets += '<div id="admin" style="display:none;">';
   dets += '<div class="well" style="background-color:orange;">';
   //dets += '<p>Dear admin, please notify when you are moderating in a few clicks at <a href="https://app.timebridge.com/mwm/requests">https://app.timebridge.com/mwm/requests</a></p>';
-  if (record.year) dets += '<p>Publication year: ' + record.year + '</p>';
+  if (record.published) {
+    dets += '<p>Publication date: ' + record.published + '</p>';
+  } else if (record.year) {
+    dets += '<p>Publication year: ' + record.year + '</p>';
+  }
   if (record.sherpa !== undefined) {
     dets += '<p>Sherpa color: ' + (record.sherpa.color === undefined ? 'unknown' : record.sherpa.color) + '</p>';
     try { dets += '<p><a class="btn btn-block btn-action" target="_blank" href="http://www.sherpa.ac.uk/romeo/search.php?issn=' + record.sherpa.journal.issn + '">View journal on Sherpa Romeo</a></p>'; } catch(err) {}
