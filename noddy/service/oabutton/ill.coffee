@@ -91,7 +91,7 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
             #bs = if sub.indexOf('://') isnt -1 then sub.split('://')[0] else 'http' # always use htto because https on the xml endpoint fails
             sub = 'http://' + tid + '.openurl.xml.serialssolutions.com/openurlxml?version=1.0&genre=article&'
           else if (subtype is 'sfx' or sub.indexOf('sfx.') isnt -1) and sub.indexOf('sfx.response_type=simplexml') is -1 and do_sfx_xml is true
-            sub += (sub.indexOf('?') is -1 ? '?' : '&') + 'sfx.response_type=simplexml'
+            sub += (if sub.indexOf('?') is -1 then '?' else '&') + 'sfx.response_type=simplexml'
           url = sub + (if sub.indexOf('?') is -1 then '?' else '&') + openurl
           url = url.split('snc.idm.oclc.org/login?url=')[1] if url.indexOf('snc.idm.oclc.org/login?url=') isnt -1
           url = url.replace('cache=true','')
