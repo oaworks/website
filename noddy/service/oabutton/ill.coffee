@@ -111,11 +111,13 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
           try
             #pg = HTTP.call('GET', url, {timeout:15000, npmRequestOptions:{proxy:API.settings.proxy}}).content
             pg = if url.indexOf('.xml.serialssolutions') isnt -1 or url.indexOf('sfx.response_type=simplexml') isnt -1 then HTTP.call('GET',url).content else API.http.puppeteer url #, undefined, API.settings.proxy
+            console.log pg
             spg = if pg.indexOf('<body') isnt -1 then pg.toLowerCase().split('<body')[1].split('</body')[0] else pg
-            #console.log spg
+            console.log spg
             res.contents.push spg
-          catch
-            API.log 'ILL subscription check error when looking up ' + url
+          catch err
+            console.log(err) if API.settings.log?.level is 'debug'
+            API.log {msg: 'ILL subscription check error when looking up ' + url, level:'warn', url: url, error: err}
             error = true
           #res.u ?= []
           #res.u.push url
@@ -170,7 +172,7 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
           # without:
           # https://snc.idm.oclc.org/login?url=http://resolver.ebscohost.com/openurl?sid=google&auinit=MP&aulast=Newton&atitle=Librarian+roles+in+institutional+repository+data+set+collecting:+outcomes+of+a+research+library+task+force&id=doi:10.1080/01462679.2011.530546
           else if subtype is 'eds' or url.indexOf('ebscohost.') isnt -1
-            res.error.push 'Ebsco' if error
+            res.error.push 'eds' if error
             if spg.indexOf('view this ') isnt -1 and pg.indexOf('<a data-auto="menu-link" href="') isnt -1
               res.url = url.replace('://','______').split('/')[0].replace('______','://') + pg.split('<a data-auto="menu-link" href="')[1].split('" title="')[0]
               res.findings.eds = res.url
@@ -203,7 +205,7 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
           # we also have an xml alternative for serials solutions
           # see https://journal.code4lib.org/articles/108
           else if subtype is 'serialssolutions' or url.indexOf('serialssolutions.') isnt -1
-            res.error.push 'SerialsSolutions' if error
+            res.error.push 'serialssolutions' if error
             if do_serialssolutions_xml is true
               if spg.indexOf('<ssopenurl:url type="article">') isnt -1
                 fnd = spg.split('<ssopenurl:url type="article">')[1].split('</ssopenurl:url>')[0].trim() # this gets us something that has an empty accountid param - do we need that for it to work?
@@ -245,7 +247,7 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
                         res.url = undefined
                         res.findings.serials = undefined
                 catch
-                  res.error.push 'SerialsSolutions' if error
+                  res.error.push 'serialssolutions' if error
 
     API.http.cache(sig, 'oab_ill_subs', res) if not _.isEmpty res.findings
     
@@ -472,7 +474,7 @@ API.service.oab.ill.openurl = (uid, meta={}, withoutbase=false) ->
     else if k not in ['started','ended','took','terms','book','other','cost','time','email','redirect','url','source','notes','createdAt','created_date','_id']
       v = meta[k]
     if v
-      url += (if config[k] then config[k] else k) + '=' + v + '&'
+      url += (if config[k] then config[k] else k) + '=' + encodeURIComponent(v) + '&'
   try
     return url.replace('/&&/g','&')
   catch
