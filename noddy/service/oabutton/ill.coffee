@@ -107,14 +107,15 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
           pg = ''
           spg = ''
           error = false
+          res.lookups.push url
           try
             #pg = HTTP.call('GET', url, {timeout:15000, npmRequestOptions:{proxy:API.settings.proxy}}).content
             pg = if url.indexOf('.xml.serialssolutions') isnt -1 or url.indexOf('sfx.response_type=simplexml') isnt -1 then HTTP.call('GET',url).content else API.http.puppeteer url #, undefined, API.settings.proxy
             spg = if pg.indexOf('<body') isnt -1 then pg.toLowerCase().split('<body')[1].split('</body')[0] else pg
             #console.log spg
             res.contents.push spg
-            res.lookups.push url
           catch
+            API.log 'ILL subscription check error when looking up ' + url
             error = true
           #res.u ?= []
           #res.u.push url
@@ -129,7 +130,7 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
           # can test this with 10.1016/j.jtbi.2019.01.031 on instantill page
           # note there is also now an sfx xml endpoint that we have found to check
           if subtype is 'sfx' or url.indexOf('sfx.') isnt -1
-            res.error.push 'SFX' if error
+            res.error.push 'sfx' if error
             if do_sfx_xml
               if spg.indexOf('getFullTxt') isnt -1 and spg.indexOf('<target_url>') isnt -1
                 try
@@ -249,6 +250,8 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
     API.http.cache(sig, 'oab_ill_subs', res) if not _.isEmpty res.findings
     
   # return cached or empty result if nothing else found
+  else
+    res.cache = true
   return res
 
 '''_testsfx = () ->
