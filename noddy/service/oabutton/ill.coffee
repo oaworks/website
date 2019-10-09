@@ -95,6 +95,8 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
           url = sub + (if sub.indexOf('?') is -1 then '?' else '&') + openurl
           url = url.split('snc.idm.oclc.org/login?url=')[1] if url.indexOf('snc.idm.oclc.org/login?url=') isnt -1
           url = url.replace('cache=true','')
+          if subtype is 'sfx' or sub.indexOf('sfx.') isnt -1 and url.indexOf('=10.') isnt -1
+            url = url.replace('=10.','=doi:10.')
           # need to use the proxy as some subscriptions endpoints need a registered IP address, and ours is registered for some of them already
           # but having a problem passing proxy details through, so ignore for now
           # BUT AGAIN eds definitely does NOT work without puppeteer so going to have to use that again for now and figure out the proxy problem later
