@@ -1,13 +1,5 @@
 <!-- found at instantill.org/demo -->
 
-<!-- TODO: JOE:  -->
-<!-- TODO: JOE: Make buttons on demo context specific -->
-<!-- TODO: JOE: Add 'show me' button with details for nerds -->
-<!-- TODO: JOE: refine copy -->
-<!-- TODO: JOE: make sure people know what's coming next -->
-<!-- TODO: JOE: Hit 'Complete Request’ to see how easy it is to makea. request for patrons -->
-<!-- TODO: JOE: and takes 30 minutes instead to ‘and doesn’t take long.’-->
-
 <link rel="stylesheet" href="/static/oabutton_rebrand.css"> <!-- gets the new css (still also uses the old css, just overwrites where necessary) -->
 
 <style>
@@ -170,14 +162,13 @@
           <h2><span class=""></span> Try it now</h2>
 
           <p>
-            This is a demo of InstantILL, it works just like it would on your website, placed wherever you normally have your ILL form.
+            This is a demo of InstantILL, it works just like it would on your website, placed wherever you normally have your ILL form and blending in with your brand.
           </p>
-          <p>
-          Let us show you InstantILL's main features!
-          </p>
+          <p><b>
+            Let us show you InstantILL's main features!
+          </b></p>
 
-          <p><b>1. Try InstantILL with an Open Access article:</b></p>
-          <p><a class="btn btn-hollow btn-block view preview pinger" id=instantill_demo_start href="#part2" val="Exposing errors related to weak memory in GPU applications">Show me!</a></p>
+          <p><a class="btn btn-hollow btn-block view preview pinger" id=instantill_demo_start href="#part2" val="Exposing errors related to weak memory in GPU applications">Try InstantILL</a></p>
         </div>
 
         <div class="greenbottom">
@@ -196,13 +187,41 @@
         <div class="greenery">
           <h2>Hurrah, thanks for trying InstantILL!</h2>
           <p>
-            You just put an title into InstantILL, and we found a version that's Open Access, so you can go straight to the full text.
+            You just put an article title into InstantILL, and we found a version that's Open Access, so you can instantly go straight to the full text.
           </p>
           <p>
-            We built this into the heart of InstantILL because patrons want to access content instantly, and often more than 20% of ILLs can be found Open Access, saving you money and time. We’ve been pioneers in delivery Open Access, and our content comes only from legal aggregators, such as Unpaywall, DOAJ, and many more.
+            We built Open Access into the heart of InstantILL because patrons want to access content instantly, and often 20% of ILLs can be found free, saving you money and time. We’ve been pioneers in Open Access delivery, and the content comes from legal sources.
           </p>
           <p><b>
-            2. Why don't you try to make an ILL request? Hit 'Complete Request' to continue the demo.
+            2/6. Next, let’s try an article you’ve subscribed to!
+          </b></p>
+
+          <p><a class="btn btn-hollow btn-block view preview pinger" id=instantill_demo_subs href="#part3" val="10.1234/567890">Show me!</a></p>
+
+        </div>
+        <div class="greenbottom">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="part3" class="section">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-1 content">
+        <!-- demo will be moved to here to show response-->
+      </div>
+
+      <div class="col-md-4 col-md-offset-1 green">
+        <div class="greenery">
+          <h2>We got that too!</h2>
+          <p>
+            From that DOI patrons go instantly to full text if you’re subscribed too, another win win for you and patrons.
+          </p>
+          <p>
+            InstantILL knows the electronic resources you subscribe to using your link resolver, and we provide a direct to PDF link for the user to access through your proxy. Off campus, they’ll be nudged to login as normal.
+          </p>
+          <p><b>
+            3/6. Now, hit 'Complete Request’ to see how easy it is to make a request
           </b></p>
         </div>
         <div class="greenbottom">
@@ -224,44 +243,18 @@
         <div class="greenery">
           <h2>Request made!</h2>
           <p>
-            Since this a demo, we can't really make an ILL for you, so we're showing you all the article meta-data we'd pass to you instead. You can set-up InstantILL to point to your existing ILL form, where you can handle authentication and submission into your existing systems, or of course, submit it over email.
+            No more completing long forms! We’ll autocomplete them using the meta-data you see, which we’re showing instead of your completed ILL form since this is a demo.
           </p>
           <p>
-            We just made sure that patrons don't need to complete a long form, and when it arrives, you have everything you need to send the request for fulfilment.
+            InstantILL point’s to your existing ILL form (or, sends you an email), where you handle authentication and submission into your existing systems. We just focus on making sure you don’t need to do anything before sending for fulfilment.
           </p>
           <p>
 
           </p>
-          <p><b>3. Next, try InstantILL with an article you’ve subscribed too:</b></p>
-          <p><a class="btn btn-hollow btn-block view preview pinger" id=instantill_demo_subs href="#part4" val="10.1234/567890">Show me!</a></p>
-
-        </div>
-        <div class="greenbottom">
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div id="part4" class="section">
-    <div class="row">
-      <div class="col-md-6 col-md-offset-1 content">
-        <!-- demo will be moved to here to show response-->
-      </div>
-
-      <div class="col-md-4 col-md-offset-1 green">
-        <div class="greenery">
-          <h2>We got that too!</h2>
-          <p>
-            InstantILL knows the electronic resources you subscribe to, and can make sure patrons see them before making a request. If you have access, InstantILL will provide a direct link for the user to access through your proxy. Off campus, they’ll be nudged to login to access the content.</p>
-          <p>
-            Since this a demo, we're just linking you to an Open Access version of an article, but you get the idea!
-          </p>
-          <p>
-            InstantILL can also be integrated inside your library search, and link resolver worflows in a couple of different ways.
-          </p>
-          <p><b>4. Let's test linking to a page with InstantILL on it:</b></p>
-          <p><a class="btn btn-hollow btn-block view preview" href="#part5" val="Corrective gene transfer in the human skin disorder lamellar ichthyosis">https://dev.openaccessbutton.org/instantill_demo_rebrand#part5?doi=10.1126/science.196.4287.293</a></p>
-          <!-- TODO: JOE. Consider how to make the above work? openurl to anchor with instantill showing. OR, this could be a gif. Need to handle button better too. -->
+          <p><b>
+            4/6. InstantILL also integrates into your workflows. Let's try to...
+          </b></p>
+          <p><a class="btn btn-hollow btn-block view preview pinger" id=instantill_demo_start href="#part5" val="Exposing errors related to weak memory in GPU applications">Get it Now</a></p>
         </div>
         <div class="greenbottom">
         </div>
@@ -277,14 +270,16 @@
 
       <div class="col-md-4 col-md-offset-1 green">
         <div class="greenery">
-          <h2>Nearly finished!</h2>
+          <h2>Link, Resolved!</h2>
           <p>
-            InstantILL can work like a link resolver, so you can link to it and it can be embedded into link resolvers and let patrons know what they can get. This makes it a great replacement in 'request a copy' buttons, or for embedding into link resolvers.
+            InstantILL can fit anywhere in your workflow, from library search, to link resolvers, and your ILL page.
           </p>
           <p>
-            Also, the article we tested there isn't available there, so all you can do is submit an Interlibrary Loan.
+            You can link to, or embed, InstantILL on pages and using OpenURL we’ll make sure patrons don’t need to enter what they need so you can InstantILL in 'request a copy' and ‘get it now’ buttons, or in link resolvers.
           </p>
-          <p><b>5. Finally, see what it takes to set InstantILL up!:</b></p>
+          <p><b>
+            5. Finally, see what it takes to set InstantILL up!:
+          </b></p>
           <p><a class="btn btn-hollow btn-block view preview pinger" id=instantill_demo_setup href="#part6" val="10.1145/2908080.2908114">Show me!</a></p>
         </div>
         <div class="greenbottom">
@@ -301,23 +296,24 @@
 
       <div class="col-md-4 col-md-offset-1 green">
         <div class="greenery">
-          <h2>It's pretty easy...</h2>
+          <h2>Only three simple steps</h2>
           <p>
-            All it takes is three steps. Pretty rad, right?
+            Set up yourself, in 30 minutes today, by:
           </p>
           <ul>
-            <li>Tell us your ILL form link (if you have one)</li>
-            <li>Tell us your link resolver URL</li>
-            <li>Copy and paste a line of code onto your website</li>
+            <li>Telling us your ILL form link (or, email address)</li>
+            <li>Telling us your link resolver URL</li>
+            <li>Add a line of code to your website</li>
           </ul>
           <p>
-            No coding, or special systems knowledge required. Of course, you can tweak a dozen settings too, so everything works just right.
+            No coding, special systems knowledge, or contract signing required. Of course, you can tweak dozens of settings, including how to handle other items, so everything works just right.
           </p>
-          <p>
-            So, you can get started today with your systems:
-          </p>
+          <p>Now you understand InstantILL, you can keep testing InstantILL here, or...</p>
+          <p><b>
+            6/6: Try InstantILL yourself, with your systems
+          </b></p>
           <p><a class="btn btn-rebrand btn-block pinger" id=instantill_demo_install href="https://instantill.org/setup">Install Now!</a></p>
-          <p>Or, <!--get a <a href="#tour" class="green">guided tour</a> and --><a href="#examples" class="green">ask how others use it</a>. </p>
+          <p>Or, <!--get a <a href="#tour" class="green">guided tour</a> and --><a href="#examples" class="green">see how others use it</a> and <a href="mailto:joe@openaccessbutton.org">contact us</a>. </p>
         </div>
         <div class="greenbottom">
         </div>
