@@ -24,8 +24,7 @@
         API
       </h1>
       <p>
-        <!-- TODO: Mark: these anchors land just below where needed to not cut off words. Can we fix? -->
-        Free REST JSON API for <a href="#find">finding Open Access content</a>, <a href="#request">making & searching requests to open up content</a>, <a href="#deposit">depositing papers</a>, <a href="#metadata">finding metadata</a>, <a href="#subscriptions">subscriptions</a>, and <a href="#ill">making & searching Interlibrary loans</a>.
+        Free REST JSON API for accessing papers (through <a href="#find">Open Access</a>, <a href="#subscriptions">subscriptions</a>, <a href="#ill">Interlibrary Loans</a>, and <a href="#request">emails to authors</a>), <a href="#metadata">finding metadata</a>, and <a href="#deposit">depositing papers</a>.
       </p>
     </div>
   </div>
@@ -38,9 +37,9 @@
         <a href="/account?next=/api" class="label label-info">Logging in</a> isn’t required, but it gets you an API key, helps us tell funders how we’re doing, and lets us contact you with issues and updates.
       </p>
       <p>
-        Please limit your requests to one per second. We don’t enforce rate limits but if we notice prolonged high usage we may suspend your account and contact you about your needs.
+        Please limit your requests to one per second. We don’t enforce rate limits, but if we notice prolonged high usage, we may suspend your account and contact you about your needs.
       <p>
-      If you’re looking to integrate us with your tools, but aren’t able to code, our <a href="https://openaccessbutton.org/libraries">tools for librarians</a>, especially <a href="https://openaccessbutton.org/integrations">integration guides</a>, may be a better fit.
+      If you’re looking to integrate us with your tools but aren’t able to code, our <a href="https://openaccessbutton.org/libraries">tools for librarians</a>, especially <a href="https://openaccessbutton.org/integrations">integration guides</a>, may be a better fit.
     </p>
     <p>
     Support available at <a href="mailto:Joe@openaccessbutton.org">Joe@openaccessbutton.org</a>.
@@ -105,16 +104,16 @@ curl -X GET "{{api}}/find?id=10.1126/science.196.4287.293"</pre>
         GET
       </h3>
         <p>
-          <a class="api" target="_blank" href="{{api}}/subscription?uid=WpGYaq7yRCNggawBY&doi=10.1145/2908080.2908114">
+          <a class="api" target="_blank" href="{{api}}/subscription?uid=WpGYaq7yRCNggawBY&id=10.1145/2908080.2908114">
             Example
           </a>
         </p>
 
         <p>
-          Requires both a paper ID, and a specified institution to return a response. Accepts papers IDs as described in /find.
+          Requires both a paper ID and a specified institution to return a response. Accepts paper IDs as described in /find.
         <p>
         <p id="instantill">
-          Institutions are specified by passing a code in "uid", obtained by <a href="/account?next=/api#subscriptions">logging in</a> and setting up InstantILL with your details.
+          Institutions are specified by passing a code in "uid" obtained by <a href="/account?next=/api#subscriptions">logging in</a> and setting up InstantILL with your details.
         </p>
 
 
@@ -122,20 +121,20 @@ curl -X GET "{{api}}/find?id=10.1126/science.196.4287.293"</pre>
             /metadata
           </h2>
           <p>
-            Finds as complete as possible metadata for any paper
+            Finds as complete as possible metadata for any paper.
           </p>
           <hr>
           <h3>
             GET
           </h3>
             <p>
-              <a class="api" target="_blank" href="{{api}}/metadata?doi=10.1126/science.196.4287.293">
+              <a class="api" target="_blank" href="{{api}}/metadata?id=10.1126/science.196.4287.293">
                 Example
               </a>
             </p>
 
             <p>
-              As above, but accepts article information as described in /find as URL parameters or in a JSON body.
+              Accepts article information as described in /find.
             <p>
 
             <h3>
@@ -150,7 +149,7 @@ curl -X GET "{{api}}/find?id=10.1126/science.196.4287.293"</pre>
 curl -X POST "{{api}}/metadata" -d '{"doi": "10.1126/science.196.4287.293"}' -H "Content-Type: application/json"</pre>
 
             <p>
-              As above, but accepts article information as described in /find as URL parameters or in a JSON body.
+              Accepts article information as described in /find as URL parameters or in a JSON body.
             </p>
 
             <!-- REUQESTS -->
@@ -173,22 +172,22 @@ curl -X POST "{{api}}/metadata" -d '{"doi": "10.1126/science.196.4287.293"}' -H 
 <pre id="post_request" class="example">
 curl -X POST "{{api}}/request" -d '{"doi": "10.1126/science.196.4287.293"}' -H "Content-Type: application/json"</pre>
               <p>
-                Note: Many services opt to point users to our website using: https://openaccessbutton.org/request?doi=DOI, allowing their users to sign up for our service, make requests and receive notifications.
+                Note: Many services opt to point users to our website using: https://openaccessbutton.org/request?doi=10.YOURDOI, allowing their users to sign up for our service, make requests, and receive notifications.
               <p>
               <p>
-                To start a request from your service ensure you have <a href="/account?next=api#request">signed up</a> and completed your account information with what you’d like seen on a request.
+                To start a request from your service, ensure you have <a href="/account?next=api#request">signed up</a> and completed your account information with what you’d like seen on a request.
               </p>
               <p>
-                Start by posting a JSON object containing at least a "doi" parameter. We will start a request for papers published in the past 5 years. If you’re unsure the item being requested is already Open Access, use /find first to verify.
+                Start by posting a JSON object containing at least a "doi" parameter. We will start a request for papers published in the past five years. If you’re unsure the item being requested is Open Access, use /find first to verify.
               </p>
               <p>
-                To be sent to an author, a request needs a justification. This can be provided in the ‘story’ parameter. Our team manually moderates stories we haven’t seen before, but once we approve a story we will automatically accept it, so you can re-use stories.
+                To be sent to an author, a request needs a justification. This can be provided in the "story" parameter. Our team manually moderates stories we haven’t seen before, but once we approve a story, we will automatically accept it so you can reuse stories.
               </p>
               <p>
                 When your request is successfully created, we will return an ID in a "_id" JSON parameter.
               </p>
               <p>
-                If you expect to generate more than ~100 requests per week, that’s great, please <a href="mailto:joe@openaccessbutton.org">contact us</a> so we can ensure we plan adequate support as moderation and quality checks means this isn’t an entirely automated process.
+                If you expect to generate more than ~100 requests per week regularly, that’s great; please <a href="mailto:joe@openaccessbutton.org">contact us</a> so we can ensure we plan adequate support such as moderation and quality checks.
               </p>
 
               <!-- CHECK REQUEST ID -->
@@ -197,7 +196,7 @@ curl -X POST "{{api}}/request" -d '{"doi": "10.1126/science.196.4287.293"}' -H "
                 /request/:id
               </h2>
               <p>
-                Returns request metadata & status with the given ID.
+                Returns request metadata and status with the given ID.
               </p>
               <hr>
               <h3>
@@ -227,7 +226,7 @@ curl -X POST "{{api}}/request" -d '{"doi": "10.1126/science.196.4287.293"}' -H "
                   </h3>
 
                   <p>
-                    Requests a post with at least a DOI, and a file. The file will be checked against our systems to ensure it’s the correct version and deposited to Zenodo. You’ll get back a deposit ID.
+                    Include at least a DOI and a file. The file will be checked to ensure it’s the correct version and deposited to Zenodo. You’ll get back a deposit ID.
                   </p>
 
                   <!-- GET INFO FOR DEPOSIT -->
@@ -242,6 +241,9 @@ curl -X POST "{{api}}/request" -d '{"doi": "10.1126/science.196.4287.293"}' -H "
                   <h3>
                     GET
                   </h3>
+                  <p>
+                    Metadata fields returned are all optional, except DOIs.
+                  </p>
 
                   <!-- MAKE ILL -->
 
@@ -264,10 +266,10 @@ curl -X POST "{{api}}/request" -d '{"doi": "10.1126/science.196.4287.293"}' -H "
 curl -X POST "{{api}}/ill" -d '{"doi": "10.1126/science.196.4287.293"}' -H "Content-Type: application/json"</pre>
 
                   <p>
-                    Start an ILL by posting an paper ID as URL parameters or ideally in a JSON body. A list of accepted IDs can be found at /find. Include as much meta-data as you can, utnder the list of parameters found in /metadata. We’ll enrich whatever you give us, or you can do it before by using /metadata directly or some other process.
+                    Start a ILL by posting an paper ID as URL parameters or ideally in a JSON body. A list of accepted IDs can be found at /find. Include as much metadata as you can, under the list of parameters found in /metadata. We’ll enrich whatever you give us, or you can do it before by using /metadata directly.
                   </p>
                   <p>
-                    We will then attempt to start an ILL according to your InstantILL set-up. By default, we will send an email to your account email, but if configured we can pass you a link to a completed form. If you do not have InstantILL configured to point to a form, you’ll need to pass the requestors email in the "email" parameter.
+                    We will then attempt to start an ILL according to your InstantILL configuration. By default, we will send an email to your account email, and you’ll need to pass the requestor’s email in the "email" parameter. If InstantILL is configured to do so, we can pass you a link to your completed ILL form.
                   </p>
 
                   <!-- SEARCH ILLs -->
@@ -276,7 +278,7 @@ curl -X POST "{{api}}/ill" -d '{"doi": "10.1126/science.196.4287.293"}' -H "Cont
                     /ills
                   </h2>
                   <p>
-                    Search ILLs made at your institution
+                    Search ILLs made at your institution.
                   </p>
                   <hr>
                   <h3>
@@ -291,10 +293,10 @@ curl -X POST "{{api}}/ill" -d '{"doi": "10.1126/science.196.4287.293"}' -H "Cont
                     Most useful for custom integrations with InstantILL. This endpoint can be used to retrieve all activity from your embed(s) and then processed as you wish.
                   </p>
                   <p>
-                    Queries are powered by Elasticsearch version 1.4.4. Knowledge of Elasticsearch will of course be helpful for using the endpoint. In short, simple searches can be created by adding a URL parameter "q", and providing values you’d like to match.
+                    Queries are powered by Elasticsearch version 1.4.4. Knowledge of Elasticsearch will of course be helpful. In short, simple searches can be created by adding a URL parameter "q" and providing values you’d like to match.
                   </p>
                   <p>
-                    A well formed query for an InstantILL instance and the response format is demonstrated in the example. Any values you see can be queried. Don’t always expect all fields to be present.
+                    A well-formed query for an InstantILL instance and the response format is demonstrated in the example. Any values you see can be queried. Don’t always expect all fields to be present.
                   </p>
 
       <p>
@@ -320,7 +322,7 @@ curl -X POST "{{api}}/ill" -d '{"doi": "10.1126/science.196.4287.293"}' -H "Cont
     noddy.afterLogin = function() {
       if (noddy.apikey) {
         $('#apikey').html('Your API key is <code>' + noddy.apikey + '</code>' +'. Include this in either a URL param called "apikey" or a header called "x-apikey".');
-        $('#instantill').html('Institutions are specified by passing a code in "uid", yours is <code>' + noddy.user.account._id + '</code>. You can alter the response through setting up InstantILL with your details.');
+        $('#instantill').html('Institutions are specified by passing a code in "uid"; yours is <code>' + noddy.user.account._id + '</code>. You can alter the response through setting up InstantILL with your details.');
         $('.auth').each(function() { $(this).attr('href',$(this).attr('href')+'?apikey='+noddy.apikey); });
         $('.apikey').html(noddy.apikey);
         $('.yourid').html(noddy.user.account._id);
