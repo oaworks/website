@@ -144,6 +144,8 @@ div.greenbottom {
 
   a:hover{
     text-decoration: none;
+    cursor:pointer;
+    color: #345484;
   }
 
 /*general div backgrounds*/
@@ -217,7 +219,7 @@ div.greenbottom {
 
 /*buttons*/
 
-    .btn-rebrand-blue{
+  .btn-rebrand-blue{
     background-color: #428BCA;
     border-color: #428BCA;
     border-radius: 0px;
@@ -226,7 +228,12 @@ div.greenbottom {
     padding: 10px 30px;
   }
 
-    .btn-rebrand-white{
+  .btn-rebrand-blue:hover{
+    background-color: #345484;
+    border-color: #345484;
+  }
+
+  .btn-rebrand-white{
     background-color: white;
     border-color: white;
     border-radius: 0px;
@@ -244,10 +251,9 @@ div.greenbottom {
     padding: 10px 30px;
   }
 
-  .btn:hover, .btn:focus {
-    background-color:#212f3f;
-    border-color: #212f3f;
-    color: white;
+  .btn-rebrand-green:hover{
+    background-color: #608891;
+    border-color: #608891;
   }
 
 /*features (lists of benefits)*/
