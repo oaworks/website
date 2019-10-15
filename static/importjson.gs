@@ -1,25 +1,30 @@
 /*====================================================================================================================================*
   ImportJSON by Brad Jasper and Trevor Lohrbeer
   ====================================================================================================================================
-  Version:      1.4.0
+  Version:      1.5.0
   Project Page: https://github.com/bradjasper/ImportJSON
-  Copyright:    (c) 2017 by Brad Jasper
+  Copyright:    (c) 2017-2019 by Brad Jasper
                 (c) 2012-2017 by Trevor Lohrbeer
   License:      GNU General Public License, version 3 (GPL-3.0)
                 http://www.opensource.org/licenses/gpl-3.0.html
   ------------------------------------------------------------------------------------------------------------------------------------
   A library for importing JSON feeds into Google spreadsheets. Functions include:
+
      ImportJSON            For use by end users to import a JSON feed from a URL
      ImportJSONFromSheet   For use by end users to import JSON from one of the Sheets
      ImportJSONViaPost     For use by end users to import a JSON feed from a URL using POST parameters
      ImportJSONAdvanced    For use by script developers to easily extend the functionality of this library
      ImportJSONBasicAuth   For use by end users to import a JSON feed from a URL with HTTP Basic Auth (added by Karsten Lettow)
+
   For future enhancements see https://github.com/bradjasper/ImportJSON/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement
 
   For bug reports see https://github.com/bradjasper/ImportJSON/issues
+
   ------------------------------------------------------------------------------------------------------------------------------------
   Changelog:
 
+  1.6.0 (June 2, 2019) Fixed null values (thanks @gdesmedt1)
+  1.5.0  (January 11, 2019) Adds ability to include all headers in a fixed order even when no data is present for a given header in some or all rows.
   1.4.0  (July 23, 2017) Transfer project to Brad Jasper. Fixed off-by-one array bug. Fixed previous value bug. Added custom annotations. Added ImportJSONFromSheet and ImportJSONBasicAuth.
   1.3.0  Adds ability to import the text from a set of rows containing the text to parse. All cells are concatenated
   1.2.1  Fixed a bug with how nested arrays are handled. The rowIndex counter wasn't incrementing properly when parsing.
@@ -47,6 +52,7 @@
  *    noTruncate:    Don't truncate values
  *    rawHeaders:    Don't prettify headers
  *    noHeaders:     Don't include headers, only the data
+ *    allHeaders:    Include all headers from the query parameter in the order they are listed
  *    debugLocation: Prepend each value with the row & column it belongs in
  *
  * For example:
@@ -89,6 +95,7 @@ function ImportJSON(url, query, parseOptions) {
  *    noTruncate:    Don't truncate values
  *    rawHeaders:    Don't prettify headers
  *    noHeaders:     Don't include headers, only the data
+ *    allHeaders:    Include all headers from the query parameter in the order they are listed
  *    debugLocation: Prepend each value with the row & column it belongs in
  *
  * For example:
@@ -146,6 +153,7 @@ function ImportJSONViaPost(url, payload, fetchOptions, query, parseOptions) {
  *    noTruncate:    Don't truncate values
  *    rawHeaders:    Don't prettify headers
  *    noHeaders:     Don't include headers, only the data
+ *    allHeaders:    Include all headers from the query parameter in the order they are listed
  *    debugLocation: Prepend each value with the row & column it belongs in
  *
  * For example:
@@ -209,10 +217,16 @@ function ImportJSONFromSheet(sheetName, query, options) {
  * @customfunction
  **/
 function ImportJSONAdvanced(url, fetchOptions, query, parseOptions, includeFunc, transformFunc) {
+try{
+  var sleepMS = Math.floor(((Math.random() * 5) + 0) * 1000);
+  Utilities.sleep(sleepMS);
   var jsondata = UrlFetchApp.fetch(url, fetchOptions);
   var object   = JSON.parse(jsondata.getContentText());
 
   return parseJSONObject_(object, query, parseOptions, includeFunc, transformFunc);
+}catch(e){
+  return [[e.message]]
+}
 }
 
 /**
@@ -320,6 +334,15 @@ function parseJSONObject_(object, query, options, includeFunc, transformFunc) {
     query = query.toString().split(",");
   }
 
+  // Prepopulate the headers to lock in their order
+  if (hasOption_(options, "allHeaders") && Array.isArray(query))
+  {
+    for (var i = 0; i < query.length; i++)
+    {
+      headers[query[i]] = Object.keys(headers).length;
+    }
+  }
+
   if (options) {
     options = options.toString().split(",");
   }
@@ -328,7 +351,8 @@ function parseJSONObject_(object, query, options, includeFunc, transformFunc) {
   parseHeaders_(headers, data);
   transformData_(data, options, transformFunc);
 
-  return hasOption_(options, "noHeaders") ? (data.length > 1 ? data.slice(1) : new Array()) : data;
+    return hasOption_(options, "noHeaders") ? (data.length > 1 ? data.slice(1) : new Array()) : data;
+
 }
 
 /**
@@ -407,7 +431,7 @@ function parseHeaders_(headers, data) {
  */
 function transformData_(data, options, transformFunc) {
   for (var i = 0; i < data.length; i++) {
-    for (var j = 0; j < data[i].length; j++) {
+    for (var j = 0; j < data[0].length; j++) {
       transformFunc(data, i, j, options);
     }
   }
