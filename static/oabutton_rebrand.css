@@ -138,6 +138,14 @@ div.greenbottom {
     margin: auto;
   }
 
+  h2{
+    line-height: 140%;
+  }
+
+  h3{
+    line-height: 140%;
+  }
+
   h4{
     margin: 0;
   }
