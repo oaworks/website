@@ -418,10 +418,12 @@ div.greenbottom {
 
   .media{
     display: inline-block;
+    width: 100%;
+    max-width: 1024px;
   } 
 
   .media img{
-    width: 16%;
+    width: 15%;
     height: auto;
     padding:10px;
   }
@@ -445,6 +447,13 @@ div.greenbottom {
   }
   .footer p{
     margin: 0 10px;
+  }
+
+  .footer-team p{
+    width:66%;
+  }
+  .footer-team img{
+    width: 33%;
   }
 
 /*if the footer sticks to bottom*/
