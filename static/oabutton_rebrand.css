@@ -148,6 +148,10 @@ div.greenbottom {
     color: #345484;
   }
 
+  p{
+    line-height: 165%;
+  }
+
 /*general div backgrounds*/
 
   .green-bg{
@@ -218,6 +222,11 @@ div.greenbottom {
   }
 
 /*buttons*/
+
+  .btn{
+    width:100%;
+    max-width: 245px;
+  }
 
   .btn-rebrand-blue{
     background-color: #428BCA;
@@ -330,10 +339,10 @@ div.greenbottom {
     width: 80%;
     padding-bottom: 30px;
   }
-
+/*
   .tool a{
     width: 80%;
-  }
+  }*/
 
 /*quote with image*/
 
