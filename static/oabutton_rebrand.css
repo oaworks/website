@@ -486,8 +486,11 @@ div.greenbottom {
     .tool-container{
       width: 49%;
     }
-  }
+    .featurebox{
+      height: 440px;
+    }
 
+  }
 
   @media screen and (max-width: 768px){
     .tool-container{
