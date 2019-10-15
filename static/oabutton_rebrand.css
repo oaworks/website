@@ -284,14 +284,15 @@ div.greenbottom {
     color: white;
   }
 
-  .btn-hollow {
+  .btn-hollow-green {
     border-color: #46b633;
     border-width: 2px;
     color: #46b633;
   }
-  .btn-hollow:hover {
+  .btn-hollow-green:hover {
     border-color: #46b633;
-    color: #46b633;
+    background-color: #46b633;
+    color: white;
   }
 
 /*features (lists of benefits)*/
