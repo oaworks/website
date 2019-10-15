@@ -231,6 +231,7 @@ div.greenbottom {
   .btn-rebrand-blue:hover{
     background-color: #345484;
     border-color: #345484;
+    color: white;
   }
 
   .btn-rebrand-white{
@@ -254,6 +255,7 @@ div.greenbottom {
   .btn-rebrand-green:hover{
     background-color: #608891;
     border-color: #608891;
+    color: white;
   }
 
 /*features (lists of benefits)*/
