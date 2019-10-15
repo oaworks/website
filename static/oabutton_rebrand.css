@@ -160,6 +160,7 @@ div.greenbottom {
   p{
     line-height: 165%;
     text-align: left;
+    padding:30px 0;
   }
 
   li{
@@ -281,6 +282,16 @@ div.greenbottom {
   .btn-rebrand-green:hover{
     background-color: #608891;
     color: white;
+  }
+
+  .btn-hollow {
+    border-color: #46b633;
+    border-width: 2px;
+    color: #46b633;
+  }
+  .btn-hollow:hover {
+    border-color: #46b633;
+    color: #46b633;
   }
 
 /*features (lists of benefits)*/
