@@ -158,6 +158,11 @@ div.greenbottom {
 
   p{
     line-height: 165%;
+    text-align: left;
+  }
+
+  li{
+    padding-top: 10px;
   }
 
 /*general div backgrounds*/
@@ -225,8 +230,13 @@ div.greenbottom {
   }
 
   .pitchhalf{
+    text-align: center;
     width:50%;
     padding: 30px;
+  }
+
+  .pitchhalf p{
+    text-align: left;
   }
 
 /*buttons*/
@@ -234,44 +244,41 @@ div.greenbottom {
   .btn{
     width:100%;
     max-width: 245px;
+    font-weight: bold;
+    padding: 10px 30px;
+    border-radius: 0px;
   }
 
   .btn-rebrand-blue{
     background-color: #428BCA;
-    border-color: #428BCA;
-    border-radius: 0px;
     color: white;
-    font-weight: bold;
-    padding: 10px 30px;
+    border:none;
   }
 
   .btn-rebrand-blue:hover{
     background-color: #345484;
-    border-color: #345484;
     color: white;
   }
 
   .btn-rebrand-white{
     background-color: white;
     border-color: white;
-    border-radius: 0px;
     color: #46b633;
-    font-weight: bold;
-    padding: 10px 30px;
+    border:none;
+  }
+
+  .btn-rebrand-white:hover{
+    background-color: #ddd;
   }
 
   .btn-rebrand-green{
     background-color: #46B633;
-    border-color: #46B633;
-    border-radius: 0px;
+    border:none;
     color:white;
-    font-weight: bold;
-    padding: 10px 30px;
   }
 
   .btn-rebrand-green:hover{
     background-color: #608891;
-    border-color: #608891;
     color: white;
   }
 
@@ -282,7 +289,7 @@ div.greenbottom {
   }
   .featurebox{
     width: 49%;
-    height: 260px;
+    height: 300px;
     padding: 30px;
     display: inline-block;
     vertical-align:top;
@@ -321,7 +328,6 @@ div.greenbottom {
 
   .program li{
     list-style-image: url('/static/ul-tick-green.png');
-    padding:8px 0;
   }
 
 /*sales tools*/
@@ -371,7 +377,6 @@ div.greenbottom {
   }
 
   .quotetext h3{
-    line-height: 120%;
     text-align: left;
     padding-bottom: 30px;
   }
