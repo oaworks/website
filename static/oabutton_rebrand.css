@@ -449,11 +449,23 @@ div.greenbottom {
     margin: 0 10px;
   }
 
+  .footer-team{
+    max-width: 1024px;
+    /*width: 100%;*/
+    margin:auto;
+    display: flex;
+    justify-content: space-between;
+    padding-top: 30px;
+  }
+
   .footer-team p{
-    width:66%;
+    width:55%;
+    padding:0;
   }
   .footer-team img{
-    width: 33%;
+    max-width: 395px;
+    height: 315px;
+    padding: 0 40px;
   }
 
 /*if the footer sticks to bottom*/
@@ -519,6 +531,16 @@ div.greenbottom {
     }
     .media img{
       width: 32%;
+    }
+
+    .footer-team{
+      flex-direction: column-reverse;
+      align-items: center;
+    }
+
+    .footer-team p{
+      width: 100%;
+      padding: 30px 0;
     }
 
   }
