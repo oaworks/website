@@ -46,9 +46,14 @@ ul.arrowed {
   margin-top:30px;
   margin-bottom:30px;
   list-style: none;
+  padding-left: 15px;
 }
 ul.arrowed li {
   margin-bottom:15px;
+}
+
+.glyphicon-arrow-right{
+  padding-right:5px;
 }
 
 .form-control {
@@ -74,7 +79,7 @@ a.green.light {
  
 }
 a.green:hover {
-  color:#46b633;
+  color:#608891;
 }
 
 .btn-rebrand {
@@ -112,12 +117,12 @@ a.green:hover {
 
 div.green {
   background-color:#edf8ed;
-  color:#46b633;
+  /*color:#46b633;*/
   height:100%;
   padding-bottom:160px;
 }
 div.greenery {
-  margin-top:15%;
+  margin-top:10%;
   margin-left:10%;
   width:80%;
   max-width:500px;
