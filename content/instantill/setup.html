@@ -147,13 +147,11 @@
             InstantILL uses your existing Interlibrary Loan systems to manage authentication, fulfillment, and payment, or can submit to an email address.
           </p>
 
-          <p><b>What is your ILL article form link?</b><p>
+          <p><b>What is your ILL article form link?</b></p>
           <input id="ill_redirect_base_url" type="text" class="form-control setting green" placeholder="URL">
           <p>
-          OR
-          <p>
-          <p><b>What email address do you want ILLs forwarded to? (optional for email alternative)</b></p>
-          <input id="email" type="text" class="form-control setting green" placeholder="default is your OAB account email address">
+          Or <a href="#ill-email" class="view green">submit over email</a>
+          </p>
           <br>
           <p>
             If everything works, hit next! If it doesn’t, <a href="#ill-advanced" class="view green pull">see advanced settings</a>.
@@ -196,25 +194,16 @@
           <p><b>What email address do you want users referred to if there is a problem?</b><p>
           <input id="problem_email" type="text" class="form-control setting green" placeholder="no default, the user will be told to contact their library">
           <br>
-          <p><b>Terms and conditions link</b><p>
-          <input id="terms" type="text" class="form-control setting green" placeholder="e.g https://libguides.newman.ac.uk/students/inter_library/terms">
-          <br>
           <p><b>Where do you want people sent if they want a book?</b><p>
           <input id="book" type="text" class="form-control setting green" placeholder="e.g https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=21">
           <br>
           <p><b>Where do you want people sent if they want something other than a book or article</b><p>
           <input id="other" type="text" class="form-control setting green" placeholder="e.g https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=10">
           <br>
-          <p><b>
-            If you use WMS, inside our notifications we can provide direct links to journals to save you time. Just let us know your WMS URL.
-          </b>
-          <input id="search" type="text" class="form-control setting green" placeholder="e.g  https://ambslibrary.share.worldcat.org/wms/cmnd/nd/discover/items/search"><br>
-          </p>
           <p>
-            <!-- Would be great if these were green, not blue -->
-            <p><b>
-              If we find an article Open Access, do you want to let patrons still request an ILL?
-            </b></p>
+          <p><b>
+            If we find an article Open Access, do you want to let patrons still request an ILL?
+          </b></p>
           <input id="noillifoa" type="checkbox" class="setting green">
             No
           </p>
@@ -306,6 +295,43 @@
         <div class="greenbottom">
           <p><a class="btn btn-hollow btn-block save pull preview" href="#">Preview & Test</a></p>
           <p><a class="btn btn-rebrand btn-block save view pull" href="#">Save & Continue</a></p>
+          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="ill-email" class="section">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-1 content">
+
+      </div>
+
+      <div class="col-md-4 col-md-offset-1 green">
+        <div class="greenery">
+          <p><a class="green view pull" href="#menu"><span class="glyphicon glyphicon-arrow-left"></span>  Go to Menu</a></p>
+          <h2>Interlibrary loans: Submission (1/2)</h2>
+          <p>
+            InstantILL uses your existing Interlibrary Loan systems to manage authentication, fulfillment, and payment, or can submit to an email address.
+          </p>
+          <p><b>What email address do you want ILLs sent to? (optional for email alternative)</b></p>
+          <input id="email" type="text" class="form-control setting green" placeholder="default is your OAB account email address">
+          <br>
+          <p><b>
+            If you use WMS, inside our notifications we can provide direct links to journals to save you time. Just let us know your WMS URL.
+          </b>
+          <input id="search" type="text" class="form-control setting green" placeholder="e.g  https://ambslibrary.share.worldcat.org/wms/cmnd/nd/discover/items/search"><br>
+          </p>
+          <br>
+          <p><b>Terms and conditions link</b><p>
+          <input id="terms" type="text" class="form-control setting green" placeholder="e.g https://libguides.newman.ac.uk/students/inter_library/terms">
+          <br>
+
+        </div>
+
+        <div class="greenbottom">
+          <p><a class="btn btn-hollow btn-block save pull preview" href="#">Preview & Test</a></p>
+          <p><a class="btn btn-rebrand btn-block save view pull" href="#ill-customization">Save & Continue</a></p>
           <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
         </div>
       </div>
