@@ -43,8 +43,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 ul.arrowed {
-  margin-top:30px;
-  margin-bottom:30px;
+  margin-top:15px;
+  margin-bottom:25px;
   list-style: none;
   padding-left: 15px;
 }
@@ -72,7 +72,7 @@ ul.arrowed li {
 
 a.green {
   color:#46b633;
-  font-weight:bold;
+  /*font-weight:bold;*/
 }
 a.green.light {
   font-weight:normal;
