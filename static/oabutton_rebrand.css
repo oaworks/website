@@ -191,6 +191,13 @@ div.greenbottom {
     color: white;
   }
 
+  .blue-bg{
+    width: 100%;
+    padding: 30px;
+    background-color: #428BCA;
+    color: white;
+  }
+
   .white-bg{
     width: 100%;
     padding: 30px;
