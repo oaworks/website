@@ -438,37 +438,37 @@ input[type="radio"], input[type="checkbox"]{
 			We want to charge less than we save. Can you share what tools to use so we can estimate it:</p>
 
 			<label class="check-container">InstantILL
-			  <input type="checkbox">
+			  <input type="checkbox" value="InstantILL">
 			  <span class="checkmark"></span>
 			</label>
 			<label class="check-container">Shareyourpaper.org
-			  <input type="checkbox">
+			  <input type="checkbox" value="Shareyourpaper.org">
 			  <span class="checkmark"></span>
 			</label>
 			<label class="check-container">Permissions
-			  <input type="checkbox">
+			  <input type="checkbox" value="Permissions">
 			  <span class="checkmark"></span>
 			</label>
-      <label class="check-container">Open Access Button
+      <label class="check-container" value="Open Access Button">Open Access Button
         <input type="checkbox">
         <span class="checkmark"></span>
       </label>
-			<label class="check-container">Other
+			<label class="check-container" value="Other">Other
 			  <input type="checkbox">
 			  <span class="checkmark"></span>
 			</label>
 
-      <select class="dropdown" id=size>
+      <select class="dropdown" id="size" style="display:block">
       	<option value="describe">Describe your Library</option>
-      	<option value="cc">Community College</option>
-      	<option value="baccalaureate">Baccalaureate (B)</option>
-      	<option value="postgraduate">Postgraduate (P)</option>
-      	<option value="Research">Research-intensive (R)</option>
-      	<option value="Consortial">Consortial</option>
+      	<option value="Community college">Community College</option>
+      	<option value="Baccalaureate">Baccalaureate (B)</option>
+      	<option value="Postgraduate">Postgraduate (P)</option>
+      	<option value="Research intensive">Research-intensive (R)</option>
+      	<option value="Consortia">Consortial</option>
         <option value="International">International</option>
       </select>
 
-      <div id="price">
+      <div id="price" style="display:block">
 			<h3 style="text-align: center;">$XXXX USD<br>
 			per month</h3>
 
@@ -479,14 +479,14 @@ input[type="radio"], input[type="checkbox"]{
 			<p style="text-align:centre">Cost too much? Have a question? <a href="mailto:joe@openaccessbutton.org" style="color:white"><b>Contact us</b></a>.</p>
       </div>
 
-      <div id="contact-consortial">
+      <div id="contact-consortial" style="display:none">
       <p><b>
         Thanks for your interest!
       </b></p>
       <p style="text-align:centre"> We don't have standard pricing for consortia yet. However, you can expect a steap discount against the individual price for an insitution. <a href="mailto:joe@openaccessbutton.org" style="color:white"><b>Contact us</b></a> to discuss.</p>
       </div>
 
-      <div id="contact-international">
+      <div id="contact-international" style="display:none">
       <p><b>
         Thanks for your interest!
       </b></p>
