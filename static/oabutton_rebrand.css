@@ -347,10 +347,27 @@ div.greenbottom {
     text-align: center;
   }
 
-  .program{
+  .program-green{
     width:50%;
     color:#46B633;
   }
+  .program-green li{
+    list-style-image: url('/static/ul-tick-green.png');
+  }
+
+
+  .program-blue{
+    width:50%;
+    color:#ECF3FA;
+  }
+  .program-blue li{
+    list-style-image: url('/static/ul-tick-blue.png');
+  }
+
+  /*.program{
+    width:50%;
+    color:#46B633;
+  }*/
   .programcontents{
     max-width:350px;
     margin: auto;
@@ -363,7 +380,6 @@ div.greenbottom {
   }
 
   .program li{
-    list-style-image: url('/static/ul-tick-green.png');
   }
 
 /*sales tools*/
