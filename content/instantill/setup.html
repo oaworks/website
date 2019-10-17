@@ -434,7 +434,7 @@
           </p>
           <p id="embeddedexample" style="display:none;"></p>
           <p id="noembeddedexampleavailable" style="display:none;">
-            <!-- TODO: Joe: you can put in text here which will show if there is not an embedded example to show-->
+            Once you've used InstantILL on one of your domains, we'll show you an example link you can use to integrate into other systems.
           </p>
           <p>
             If everything works, hit next! If it doesn’t, <a href="#workflow-advanced" class="view green pull">see advanced settings
@@ -1026,7 +1026,7 @@ jQuery(document).ready(function() {
           try {
             var eurl = iia.aggregations.embeds.buckets[0].key.split('?')[0].split('#')[0];
             if (eurl.indexOf('instantill.org') !== -1 || eurl.indexOf('openaccessbutton.org') !== -1) eurl = false;
-            var ex = 'For example:<br>' + eurl + '?doi=10.1145/2908080.2908114';
+            var ex = 'You can use the follow link to integrate InstantILL into your pages:<br>' + eurl + '?doi=10.1145/2908080.2908114';
             $('#embeddedexample').html(ex).show();
           } catch(err) {
             $('#noembeddedexampleavailable').show();
