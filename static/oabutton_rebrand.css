@@ -76,13 +76,13 @@ a.green {
 }
 a.green.light {
   font-weight:normal;
- 
+
 }
 a.green:hover {
   color:#608891;
 }
 
-.btn-rebrand {
+.btn-demo {
   background-color:#46b633;
   border-color:#46b633;
   border-radius:0px;
@@ -91,7 +91,7 @@ a.green:hover {
   padding-top:10px;
   padding-bottom:10px;
 }
-.btn-rebrand:hover {
+.btn-demo:hover {
   color:#ffffff;
 }
 
@@ -208,7 +208,7 @@ div.greenbottom {
     width: 100%;
     padding: 30px;
     background-color: #212f3f;
-    color: white; 
+    color: white;
   }
 
 /*header*/
@@ -263,35 +263,46 @@ div.greenbottom {
     border-radius: 0px;
   }
 
-  .btn-rebrand-blue{
+  .btn-demo-blue{
     background-color: #428BCA;
     color: white;
     border:none;
   }
 
-  .btn-rebrand-blue:hover{
+  .btn-demo-blue:hover{
     background-color: #345484;
     color: white;
   }
 
-  .btn-rebrand-white{
+  .btn-hollow-blue {
+    border-color: #428BCA;
+    border-width: 2px;
+    color: #428BCA;
+  }
+  .btn-hollow-blue:hover {
+    border-color: #428BCA;
+    background-color: #428BCA;
+    color: white;
+  }
+
+  .btn-demo-white{
     background-color: white;
     border-color: white;
     color: #46b633;
     border:none;
   }
 
-  .btn-rebrand-white:hover{
+  .btn-demo-white:hover{
     background-color: #ddd;
   }
 
-  .btn-rebrand-green{
+  .btn-demo-green{
     background-color: #46B633;
     border:none;
     color:white;
   }
 
-  .btn-rebrand-green:hover{
+  .btn-demo-green:hover{
     background-color: #608891;
     color: white;
   }
@@ -356,7 +367,7 @@ div.greenbottom {
   }
 
 /*sales tools*/
-  
+
   .tool-container{
     width: 33%;
     height: 560px;
@@ -444,7 +455,7 @@ div.greenbottom {
     display: inline-block;
     width: 100%;
     max-width: 1024px;
-  } 
+  }
 
   .media img{
     width: 15%;
@@ -542,7 +553,7 @@ div.greenbottom {
       width:100%;
     }
 
-    #rebrand{
+    #demo{
       display: none;
     }
     .profilephoto{
