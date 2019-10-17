@@ -565,7 +565,10 @@ div.greenbottom {
     .programs{
       flex-direction: column;
     }
-    .program{
+    .program-blue{
+      width:100%;
+    }
+    .program-green{
       width:100%;
     }
 
