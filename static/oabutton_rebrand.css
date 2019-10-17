@@ -76,7 +76,7 @@ a.green {
 }
 a.green.light {
   font-weight:normal;
- 
+
 }
 a.green:hover {
   color:#608891;
@@ -208,7 +208,7 @@ div.greenbottom {
     width: 100%;
     padding: 30px;
     background-color: #212f3f;
-    color: white; 
+    color: white;
   }
 
 /*header*/
@@ -270,6 +270,17 @@ div.greenbottom {
   }
 
   .btn-rebrand-blue:hover{
+    background-color: #345484;
+    color: white;
+  }
+
+  .btn-hollow-blue {
+    border-color: #345484;
+    border-width: 2px;
+    color: #345484;
+  }
+  .btn-hollow-blue:hover {
+    border-color: #345484;
     background-color: #345484;
     color: white;
   }
@@ -356,7 +367,7 @@ div.greenbottom {
   }
 
 /*sales tools*/
-  
+
   .tool-container{
     width: 33%;
     height: 560px;
@@ -444,7 +455,7 @@ div.greenbottom {
     display: inline-block;
     width: 100%;
     max-width: 1024px;
-  } 
+  }
 
   .media img{
     width: 15%;
