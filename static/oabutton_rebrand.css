@@ -275,13 +275,13 @@ div.greenbottom {
   }
 
   .btn-hollow-blue {
-    border-color: #345484;
+    border-color: #428BCA;
     border-width: 2px;
-    color: #345484;
+    color: #428BCA;
   }
   .btn-hollow-blue:hover {
-    border-color: #345484;
-    background-color: #345484;
+    border-color: #428BCA;
+    background-color: #428BCA;
     color: white;
   }
 
