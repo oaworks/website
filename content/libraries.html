@@ -1,451 +1,542 @@
-<head>
-	<meta name="description" content="We build tools that deliver significant savings, delight patrons, and help make the leap to Open by default." />
-</head>
+<link rel="stylesheet" href="/static/oabutton_rebrand.css">
 <style>
+  #topnav {
+    display: none;
+  }
+  #footer {
+    display: none;
+  }
+  }
+  h1{
+  	margin-top: 0;
+  }
+  .btn-rebrand-white{
+  	color: #F04717;
+  }
+  .program{
+  	color: #212f3f;
+  	padding:30px;
+  }
+  .programcontents{
+  	text-align: left;
+  	padding:30px 0;
+  }
+  .program li{
+  	list-style-image: none;
+  }
+  .program h2{
+  	margin-bottom: 30px;
+  }
 
-img{
-	width:100%;
-	height:auto;
+  /* Hide the browser's default checkbox */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
 }
 
-p{
-	line-height: 1.75;
-	padding:15px 0;
+input[type="radio"], input[type="checkbox"]{
+	display: none;
 }
 
-button{
-	width: 50%;
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 22px;
+  width: 22px;
+  border-radius: 4px;
+  border: solid 1px white;
+  /*background-color: white;*/
 }
-/*	HEY JOE if you want every other image flipped, uncomment this
-.flip-image-side{
-	flex-direction: row-reverse;
+
+  .check-container {
+  display: block;
+  position: relative;
+  margin-bottom: 8px;
+  padding-left: 30px;
+  cursor: pointer;
+  font-weight: normal;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
-*/
 
-.btn{
-  padding:10px 15px;
-  font-size:16px;
-  }
-
-.focal{
-  background-color: white;
-  text-align: center;
-  border-radius: 5px;
-  padding: 20px;
-  }
-
-  .library-tool{
-  	width: 100%;
-  	padding:20px 0;
-  	display: flex;
-  	/*flex-direction: row;*/
-  }
-
-  .tool-image{
-  	float: left;
-  	width: 50%;
-		padding-left: 10px;
-  }
-
-  .tool-description{
-  	padding:0 4rem;
-  	width: 50%;
-  	box-sizing: border-box;
-  }
-
-  .library-center-content{
-  	max-width: 768px;
-  	margin: auto;
-  	padding: 4rem;
-  }
-
-  .call-to-action{
-  	text-align: center;
-  }
-
-@media only screen and (max-width: 768px){
-	.library-tool{
-		flex-direction: column;
+	/* On mouse-over, add a grey background color */
+	.check-container:hover input ~ .checkmark {
+	  background-color: #ffffff80;
 	}
 
-	.tool-description{
-		width: 100%;
-		padding:2rem;
+	/* When the checkbox is checked, add a blue background */
+	.check-container input:checked ~ .checkmark {
+	  background-color: white;
 	}
 
-	.tool-image{
-		width: 100%;
-	}
-
-	.library-center-content{
-  		padding:2rem;
-  	}
-
-  	button{
-  		width:100%;
-  	}
+	/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
 }
 
+/* Show the checkmark when checked */
+.check-container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.check-container .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid #F04717;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.dropdown{
+	display: block;
+	width: 100%;
+	height: 55px;
+	color: white;
+	border:solid 1px white;
+	padding-left:15px;
+	margin: 30px 0 0 0;
+	-webkit-appearance: none;
+	background:url(/static/dropdown-triangle.png) no-repeat right;
+}
+
+
+   @media screen and (max-width: 768px){
+    .quote{
+      padding: 40px 30px;
+    }
+    .pitch{
+    	padding:90px 0;
+    }
+  }
 </style>
 
-<!-- Top Center -->
+<!-- header -->
 
-<div class="library-center-content">
-	<h1 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">For Libraries</h1>
-	<p>
-		Libraries have led the charge to open up access to 	the scholarly literature. It's time to turn that leadership into leverage to reduce costs, to save staff time, to improve library services, and to open up even more content.
-		<br><br>
-		The Open Access Button has built a suite of tools that provide the link necessary to translate gains toward Open Access into benefits for both budgets and patrons.
-	</p>
-
-	<a href="https://docs.google.com/forms/d/e/1FAIpQLSddhWH2_Pg_JQMCtPFqE6acURwSVQIClucOdW3loqKO0gKZxA/viewform?usp=sf_link">
-		<button type="button" class="btn btn-action">
-		Sign up to learn more
-		</button>
-	</a>
-</div>
-
-<!-- Begin two column split -->
-
+<div class="navy-bg">
+	<div class="center-col header">
 	<div>
-	<h1 style="text-align:left;margin-top:50px;margin-bottom:50px;padding-left:5%;font-size:4em;">Deliver Access</h1>
+		<a href="/" style="margin: 0"><strong>Open Access Button</strong></a>
+	</div>
+	<div>
+		<span><a href="/libraries">For Libraries</a></span>
+		<span><a href="/request">Requests</a></span>
+	</div>
+	</div>
+</div>
+
+<!-- pitch -->
+
+<div class="center-col quote">
+	<div class="strapline">
+		<h2>Powerfully Simple Tools to<br><a href="#deliver-articles">Deliver Articles</a> and <a href="#fill-repositories"> Fill Repositories</a></h2>
+
+		<div class="strapline">
+			<p>
+        Libraries have led the charge to open up access to the scholarly literature. We help turn that leadership into leverage to reduce costs, to save staff time, to improve library services, and to open up even more content.
+			<br><br>
+			To do that we’ve built, in partnership with librarians, a suite of powerfully simple tools that help<a href="#deliver-articles">  deliver articles</a> and <a href="#repository"> fill your repository.</a> They’re free, easy to use, open-source, and community-controlled tools to catalyse Open.</p>
+		</div>
+		<div class="strapline" style="text-align: center;">
+			<a class="btn btn-rebrand-blue" href="https://docs.google.com/forms/d/e/1FAIpQLSddhWH2_Pg_JQMCtPFqE6acURwSVQIClucOdW3loqKO0gKZxA/viewform">Stay up to date</div>
+			<p style="text-align: center;">and <a href="#leadership">learn how to support our work</a></p>
+		</div>
+	</div>
+</div>
+
+<!-- social proof with uni logos -->
+
+<div class="navy-bg">
+  <div class="center-col">
+    <p style="text-align: center; padding:0;">Supported by leaders at</p>
+    <div class="unilogos">
+      <!-- TODO: add links -->
+      <img class="unilogo" src="/static/goldsmiths-white.png">
+      <img class="unilogo" src="/static/montania-uni-white.png">
+      <img class="unilogo" src="/static/iupui-logo-white.png">
+      <img class="unilogo" src="/static/florida-uni-white.png">
+    </div>
+  </div>
+</div>
+
+<!-- deliver section head -->
+
+<div class="center-col quote">
+	<div id="deliver-articles" class="strapline" >
+		<h2>Deliver Articles</h2>
+		<p>Provide one-click access to legal, full-text articles, wherever your users are, while reducing reliance on subscriptions by leveraging Open Access and, streamlining Interlibrary Loans.</p>
+	</div>
+</div>
+
+<!-- instantILL pitch -->
+
+<div style="border-top: solid 5px #edf8ed" >
+<div class="center-col">
+	<div class="pitch">
+
+		<div class="pitchhalf">
+			<h3>InstantILL</h3>
+			<p>InstantILL instantly delivers papers your patrons need from your holdings, Open Access and simplifies your ILL process to save you and your patrons money and time. It’s free, open source, community owned and easily set up in minutes.</p>
+			<a href="https://instantill.org" class="btn btn-rebrand-green">Try it today</a>
+		</div>
+		<div class="pitchhalf">
+			<img width="100%" style="padding: 30px 0" src="/static/Instant-ILL-transparent-green.png">
+		</div>
+	</div>
+</div>
+</div>
+
+<!-- ILL tools -->
+
+<div style="background-color: #edf8ed; border-top: solid 5px #dbf1d9">
+	<div class="center-col">
+		<h4 style="padding:30px">More Tools to Deliver Articles</h4>
+	</div>
+</div>
+<div style="background-color: #edf8ed;">
+	<div  class="center-col">
+	<div class="tool-container">
+		<div class="tool">
+			<img src="/static/OAButton_Illiad_Success.png">
+			<h4>DeliverOA</h4>
+			<p>OA in ILL for Illiad, Clio, Alma & Email. Wipe 5% off your ILL budget and delivery times, and discover a new way to advocate for Open Access, today. No complex installation, no training required.</p>
+			<a href="/deliveroa" class="btn btn-rebrand-green">Try it now</a>
+		</div>
+	</div>
+		<div class="tool-container">
+		<div class="tool">
+			<img src="/static/embedoa_stylizedv2.png">
+			<h4>EmbedOA</h4>
+			<p>Help your patrons find OA resources from your ILL forms, Libguides and E-resources pages. Easily find Open Access articles from your Interlibrary Loan pages or Libguides. No coding required.</p>
+			<a href="/embedoa" class="btn btn-rebrand-green">Try it now</a>
+		</div>
+	</div>
+	<div class="tool-container">
+		<div class="tool">
+			<img src="/static/oasheet_stylized.png">
+			<h4>OAsheet</h4>
+			<p>Find 1000's of of Open Access articles all at once without wasting an afternoon or sneaking into CS classes. Give us a list of articles as a spreadsheet, and we'll tell you which ones are Open Access. </p>
+			<a href="/oasheet" class="btn btn-rebrand-green">Try it now</a>
+		</div>
+	</div>
+		<div class="tool-container">
+		<div class="tool">
+			<img src="/static/harnessing-OA-transparent-green.png">
+			<h4>Harnessing OA on your Campus</h4>
+			<p>An overview of the many ways you and your patrons can utilize Open Access content. Here we highlight key information about free, open-source, nonprofit, and community - centric options for you and your campus.</p>
+			<a href="/skip_the_paywall" class="btn btn-rebrand-green">Read guide</a>
+		</div>
+	</div>
+		<div class="tool-container">
+		<div class="tool">
+			<img src="/static/OAB-in-ILL-transparent-green.png">
+			<h4>OA in ILL Handbook</h4>
+			<p>Handbook for ILL practioners on Open Access. written in collaboration with Tina Baich, Head of Resource Sharing & Delivery Services and Bibliographic & Metadata Service at IUPUI University Library and ex-Chair of ALA RUSA STARS.</p>
+			<a href="/oa-for-ill-handbook" class="btn btn-rebrand-green">Read guide</a>
+		</div>
+	</div>
+	<div class="tool-container">
+		<div class="tool">
+			<img src="/static/skip-paywall-transparent-green.png">
+			<h4>Open Access Button For your Patrons</h4>
+    <!-- TODO: FIX! -->
+			<p>Form filled, document delivered instantilly. We've heard from patrons and librarians that they want ILL to be faster, friendlier, cheaper and to advance Open Access. In response, we're planning a next generation ILL form, codenamed InstantILL. </p>
+			<a href="/publicity-resources" class="btn btn-rebrand-green">Get resources</a>
+		</div>
 	</div>
 
-<!-- DeliverOA -->
-
-<div class="library-tool">
-	<div class="tool-image">
-		<a href="/deliveroa">
-		    <img src="/static/OAButton_Illiad_Success.png" alt="">
-		</a>
+	<div class="tool-container">
+		<div class="tool">
+			<img src="/static/Instant-ILL-transparent-green.png">
+			<h4>Integrations</h4>
+			<p>Simple guides to integrating Open Access content into your library search & link resolver.</p>
+			<a href="/integrations" class="btn btn-rebrand-green">Read guide</a>
+		</div>
 	</div>
-	<div class="tool-description">
-		<h1> DeliverOA </h1>
+</div>
+</div>
+
+<!-- ILL strapline -->
+
+<div class="green-bg">
+	<div class="center-col">
+		<div class="quote">
+			<div>
+			<h3 style="line-height: 240%">Millions of searches for free articles<br>
+			Thousands of authors engaged<br>
+			Hundreds of libraries use & reccomend the tools</h3>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- repositoiry section head -->
+
+<div class="center-col quote">
+	<div id="repository" class="strapline">
+		<h2>Fill your Repository</h2>
 		<p>
-			OA in ILL for Illiad, Clio, Alma & Email. Wipe 5% off your ILL budget and delivery times, and discover a new way to advocate for Open Access, today. No complex installation, no training required.
-		</p>
-		<a href="/deliveroa">
-			<button type="button" class="btn btn-action">
-				Try it now
-			</button>
-		</a>
+      Make self-archiving the simplest thing researchers do to increase their impact. Drag, drop, done. That’s the deposit workflow our tools enable, whatever repository you use.</p>
 	</div>
 </div>
 
-<!--  EmbedOA  -->
+<!-- repositiroy pitch -->
 
 
-<div class="library-tool">
-	<div class="tool-image">
-		<a href="/embedoa">
-		    <img src="/static/embedoa_stylizedv2.png" alt="">
-		</a>
+<div style="border-top: solid 5px #ecf3fa" >
+<div class="center-col">
+	<div class="pitch">
+		<div class="pitchhalf">
+			<h3>shareyourpaper.org</h3>
+			<p>Sharing should be simple. With shareyourpaper.org, we'll make sure that deposit into any repository is just that. For libraries, shareyourpaper.org helps you fill your repository by offering the simplest possible deposit workflow for authors, saves you time, and requires no migrations or upgrades to your current repository. </p>
+			<a href="https://shareyourpaper.org/libraires" class="btn btn-rebrand-blue">Learn More</a>
+		</div>
+		<div class="pitchhalf">
+			<img width="100%" style="padding: 30px 0" src="/static/paper-planes.png">
+		</div>
 	</div>
-	<div class="tool-description">
-		<h1> EmbedOA </h1>
-		<p>
-			Help your patrons find OA resources from your ILL forms, Libguides and E-resources pages. Easily find Open Access articles from your Interlibrary Loan pages or Libguides. No coding required. Power up your Open Access Libguide with a search bar showing patrons how to find alternatives to paywalled papers. Help your patrons discover E-Resources from thousands of credible sources, without leaving your website, learning how to use new ones, and being asked to pay.
-		</p>
-		<a href="/embedoa">
-			<button type="button" class="btn btn-action">
-				Try it now
-			</button>
-		</a>
-	</div>
-</div>
-
-<!--  OAsheet  -->
-
-<div class="library-tool flip-image-side">
-	<div class="tool-image">
-		<a href="/oasheet">
-			<img src="/static/oasheet_stylized.png"  alt="">
-		</a>
-	</div>
-
-	<div class="tool-description">
-		<h1> OAsheet </h1>
-		<p>
-			Find 1000's of of Open Access articles all at once without wasting an afternoon or sneaking into CS classes.
-			Give us a list of articles as a spreadsheet, and we'll tell you which ones are Open Access.
-		</p>
-		<a href="/oasheet">
-			<button type="button" class="btn btn-action">
-				Try it now
-			</button>
-		</a>
-	</div>
-</div>
-
-<!--  Campus  -->
-
-<div class="library-tool">
-	<div class="tool-image">
-		<a href="/skip_the_paywall">
-			<img src="/static/harnessing-OA-transparent.png" alt="">
-		</a>
-	</div>
-
-	<div class="tool-description">
-		<h1> Harnessing OA on your Campus </h1>
-		<p>
-			An overview of the many ways you and your patrons can utilize Open Access content.
-			Here we highlight key information about free, open-source, nonprofit, and community - centric options for you and your campus.
-		</p>
-		<a href="/skip_the_paywall">
-			<button type="button" class="btn btn-action">
-				Read it
-			</button>
-		</a>
-	</div>
-</div>
-
-<!--   OA in ILL Handbook  -->
-
-<div class="library-tool flip-image-side">
-	<div class="tool-image">
-		<a href="/oa-for-ill-handbook">
-			<img src="/static/OAB-in-ILL-transparent.png" alt="">
-		</a>
-	</div>
-
-	<div class="tool-description">
-		<h1> OA in ILL Handbook </h1>
-		<p>
-			Handbook for ILL practioners on Open Access
-			In this handbook, written in collaboration with <a href="https://twitter.com/tinabaich" target="_blank">Tina Baich</a>, Head of Resource Sharing & Delivery Services and Bibliographic & Metadata Service at IUPUI University Library and ex-Chair of ALA RUSA STARS, we hope to provide explainers on Open Access and resources for practioners.
-		</p>
-		<a href="/oa-for-ill-handbook">
-			<button type="button" class="btn btn-action">
-				Get it!
-			</button>
-		</a>
-	</div>
-</div>
-
-<!--   Integrations  -->
-
-<div class="library-tool">
-	<div class="tool-image">
-		<a href="/integrations">
-			<img src="/static/Integrations-transparent.png" alt="">
-		</a>
-	</div>
-
-	<div class="tool-description">
-		<h1> Integrations </h1>
-		<p>
-			Simple guides to integrating Open Access content into your library search & link resolver.
-		</p>
-		<a href="/integrations">
-			<button type="button" class="btn btn-action">
-				Find out more
-			</button>
-		</a>
-	</div>
-</div>
-
-<div class="library-tool">
-	<div class="tool-image">
-		<a href="/publicity-resources">
-			<img src="/static/skip-paywall-transparent.png" alt="">
-		</a>
-	</div>
-
-<div class="tool-description">
-	<h1> NEW: Open Access Button For your Patrons</h1>
-	<p>
-		Hundreds of libraries recommend the Open Access Button as a great way for their patrons, on campus and off, enrolled or alumni, to get free, fast, and legal access to research. Want to do the same?
-	</p>
-	<a href="/publicity-resources">
-		<button type="button" class="btn btn-action">
-			Get Resources
-		</button>
-	</a>
 </div>
 </div>
 
 
-<div>
-	<p><a id="repository"></a></p><p><!-- this adds padding so ID turns up in right place --></p>
-	<h1 style="text-align:left;margin-top:50px;margin-bottom:50px;padding-left:5%;font-size:4em;">Fill your Repository</h1>
-</div>
+<!-- ILL tools -->
 
-
-<!--  Permissions Tool  -->
-
-<div class="library-tool">
-	<div class="tool-image">
-		<a href="/permissions">
-			<img src="/static/permissions-transparent.png" alt="">
-		</a>
-	</div>
-
-	<div class="tool-description">
-		<h1> NEW: Automated Permissions Checker </h1>
-		<p>
-			Our new tools and open data make permission checking faster, easier, and clearer so you can unlock the power of mediated deposit and manage your repository more easily. Do permission checking with 100s of articles or journals in seconds, and for each one get embargos, completed deposit statements, metadata, open access availability, and more. Check over 20,000 policies from journals, universities, and more, and instantly contribute your expertise to the community.
-		</p>
-		<a href="/permissions">
-			<button type="button" class="btn btn-action">
-				Try it
-			</button>
-		</a>
+<div style="background-color: #ecf3fa; border-top: solid 5px #dbe9f5">
+	<div class="center-col">
+		<h4 style="padding:30px">More Tools to Fill your Repository</h4>
 	</div>
 </div>
-
-<!--  Self-Archiving Email Templates  -->
-
-<div class="library-tool">
-	<div class="tool-image">
-		<a href="/templates">
-			<img src="/static/self-archive-transparent.png" alt="">
-		</a>
+<div style="background-color: #ecf3fa;">
+	<div  class="center-col">
+	<div class="tool-container">
+		<div class="tool">
+			<img src="/static/version-explainer-transparent-blue.png">
+			<h4>Article Version Explainer </h4>
+			<p>Helping authors deposit the right content. An explainer for authors trying to share the correct version of their article with author friendly language, worked examples, and tips on tracking down versions. </p>
+			<a href="/versions-explained" class="btn btn-rebrand-blue">Use guide</a>
+		</div>
+	</div>
+		<div class="tool-container">
+		<div class="tool">
+			<img src="/static/AAM-transparent-blue.png">
+			<h4>Direct2AAM</h4>
+			<p>How to's Helping Author's Find AAMs. Simple jargon free, step-by-step guides for authors to self-archive quickly, and correctly. </p>
+			<a href="/direct2aam" class="btn btn-rebrand-blue">Use guide</a>
+		</div>
+	</div>
+	<div class="tool-container">
+		<div class="tool">
+			<img src="/static/self-archive-transparent-blue.png">
+			<h4>Self-Archiving Email Templates </h4>
+			<p>Our tried and tested templates are here to help get authors enthusiastic and educated about self-archiving.</p>
+			<a href="/templates" class="btn btn-rebrand-blue">Use guide</a>
+		</div>
+	</div>
+		<div class="tool-container">
+		<div class="tool">
+			<img src="/static/permissions-transparent-blue.png">
+			<h4>Automated Permissions Checker</h4>
+			<p>Permission checking with 100s of articles or journals in seconds, and for each one get embargos, completed deposit statements, metadata, open access availability, and more. </p>
+			<a href="/permissions" class="btn btn-rebrand-blue">Try it now</a>
+		</div>
 	</div>
 
-	<div class="tool-description">
-		<h1> Self-Archiving Email Templates </h1>
-		<p>
-			Tried and tested templates to get authors educated and enthusiastic about self-archiving. Authors not responding to your emails to self-archive in your institutional repository, or just getting started? Our tried and tested templates are here to help get authors enthusiastic and educated about self-archiving. There's one template for every situation, and each template is ready to use, backed up with performance data, and designed by experimentation and experience.
-		</p>
-		<a href="/templates">
-			<button type="button" class="btn btn-action">
-				Read it
-			</button>
-		</a>
-	</div>
 </div>
-<!--  Article Version Explainer  -->
-
-<div class="library-tool flip-image-side">
-	<div class="tool-image">
-		<a href="/versions-explained">
-			<img src="/static/version-explainer-transparent.png" alt="">
-		</a>
-	</div>
-
-	<div class="tool-description">
-		<h1> Article Version Explainer </h1>
-		<p>
-		Helping authors deposit the right content. An explainer for authors trying to share the correct version of their article with author friendly language, worked examples, and tips on tracking down versions.
-		</p>
-		<a href="/versions-explained">
-			<button type="button" class="btn btn-action">
-				Read it
-			</button>
-		</a>
-	</div>
 </div>
 
+<!-- quote -->
 
-<!--    Direct2AAM  -->
+<!--
 
-<div class="library-tool flip-image-side">
-	<div class="tool-image">
-		<a href="/direct2aam">
-			<img src="/static/AAM-transparent.png" alt="">
-		</a>
-	</div>
-
-	<div class="tool-description">
-		<h1> Direct2AAM </h1>
-		<p>
-			How to's Helping Author's Find AAMs. Simple jargon free, step-by-step guides for authors to self-archive quickly, and correctly.
-		</p>
-		<a href="/direct2aam">
-			<button type="button" class="btn btn-action">
-				Read it
-			</button>
-		</a>
-	</div>
+<div class="navy-bg">
+  <div class="center-col quote">
+    <div class="quotetext">
+    <h3>“Open Access Button has lead the charge for new delivery models, OA discovery & deposit. Nice people too.”
+    </h3>
+    <p >Great Library person</p>
+    </div>
+    <img class="profilephoto" src="/static/SarahCircle_200x200.png">
+  </div>
 </div>
 
-<div>
-	<p><a id="coming-soon"></a></p><p><!-- this adds padding so ID turns up in right place --></p>
-		<h1 style="text-align:left;margin-top:50px;margin-bottom:50px;padding-left:5%;font-size:4em;">Coming Soon</h1>
+-->
+
+<!-- leadership intro -->
+
+<div class="center-col quote">
+	<div id="leadership" class="strapline">
+        <h2>We’re not going to paywall our tools.<br>So we need your leadership.</h2>
+        <p>
+          You’ve seen our tools, now here’s the strategy: Redirect money and power in scholarly communications by reducing reliance on subscriptions. This will give libraries leverage to negotiate better prices and fairer terms with publishers to create a more equitable and open world.
+        </p>
+        <p>
+          To reduce reliance on subscriptions, community owned tools have to <a href="#deliver-articles">Deliver Articles</a> (differently) and <a href="#repository">Fill your Repository</a>.
+        </p>
+        <p><strong>To continue our cutting edge work, we need your support.</strong></p>
+    </div>
 </div>
 
+<!-- leadership benefits -->
+<div class="center-col quote" style="padding: 0 30px; background-image: url(/static/orange-line.png); background-repeat: repeat-x; background-position: center;">
+	<div class="strapline">
+	<h2 style="background-color: white; padding: 0 15px; margin-top:10px">Leadership Benefits</h2>
+</div>
+</div>
 
-
-<!--  shareyourpaper  -->
-
-<div class="library-tool">
-	<div class="tool-image">
-		<a href="/shareyourpaper.org">
-			<img src="/static/Depository_preview.png" alt="">
-		</a>
+<div class="programs">
+	<div class="program">
+		<div class="programcontents" style="max-width: 600px;">
+			<h3>Local Benefits for You & Your Patrons</h3>
+			<ul>
+				<li><strong>Extra features:</strong> on InstantILL and Shareyourpaper.org that benefit your library</li>
+				<li><strong>Priority support:</strong> <18 hour response time 24/7.</li>
+				<li><strong>Priority training & set up:</strong> If you need a hand, we're here!</li>
+				<li><strong>Priority input:</strong> Guide the direction of our tools.</li>
+				<li><strong>Early access:</strong> You’ll get new tools, and news, first.</li>
+				<li><stong>Recognition of your leadership:</stong> Thanks on our site, and interviews on your thoughts.</li>
+			</ul>
+		</div>
 	</div>
-
-	<div class="tool-description">
-		<h1> NEW: shareyourpaper.org</h1>
-		<p>
-			Sharing should be simple. With shareyourpaper.org, we'll make sure that deposit into any repository is just that. For libraries, shareyourpaper.org helps you fill your repository by offering the simplest possible deposit workflow for authors, saves you time, and requires no migrations or upgrades to your current repository.
-		</p>
-		<a href="/shareyourpaper.org">
-			<button type="button" class="btn btn-action">
-				Learn more
-			</button>
-		</a>
+	<div class="program">
+		<div class="programcontents" style="max-width: 600px;">
+			<h3>Equitable Infrastructure For All</h3>
+			<ul>
+				<li><strong>Supports people who can’t pay to use our tools.</strong></li>
+				<li>Enables <strong>innovation</strong> towards <strong>lower costs</strong> and <strong>better services</strong>, including for your library.</li>
+				<li>Supports <strong>non-APC driven Open Access</strong> owers the cost of providing first class access.</li>
+				<li>Supports <strong>competition with for-profit alternatives,</strong> and <strong>lower reliance on subscription content.</strong></li>
+				<li>Supports maintenance</li>
+				<li>Supports <strong>open, transparent, community-owned, privacy-centric, values-aligned infrastructure.</strong></li>
+				<li>Support <strong>social infrastructure</strong> like OpenCon and SPARC.</li>
+			</ul>
+		</div>
 	</div>
 </div>
 
-<!--  instantill  -->
+<!-- leadership investment -->
 
+<div style="background-color: #F04717; color: white;">
+	<div class="center-col quote">
+		<div class="strapline" style="max-width: 490px;">
+			<h2>Leadership Investment</h2>
 
-<div class="library-tool flip-image-side">
-	<div class="tool-image">
-		<a href="/instantill">
-			<img src="/static/Instant-ILL-transparent.png"  alt="">
-		</a>
-	</div>
+			<select class="dropdown">
+				<option value="describe">Describe your Library</option>
+				<option value="cc">Community College</option>
+				<option value="baccalaureate">Baccalaureate (B)</option>
+				<option value="postgraduate">Postgraduate (P)</option>
+				<option value="Research">Research-intensive (R)</option>
+				<option value="Consortial">Consortial</option>
+        <option value="International">International</option>
+			</select>
 
-	<div class="tool-description">
-		<h1> InstantILL </h1>
-		<p>
-			Coming soon: Form filled, document delivered instantilly. We've heard from patrons and librarians that they want ILL to be faster, friendlier, cheaper and to advance Open Access. In response, we're planning a next generation ILL form, codenamed InstantILL.
-		</p>
-		<a href="/instantill">
-			<button type="button" class="btn btn-action">
-				Learn more
-			</button>
-		</a>
+			<p><strong>What tools do you use?</strong>
+			<br>
+			We want to charge less than we save. Can you share what tools to use so we can estimate it:</p>
+
+			<label class="check-container">InstantILL
+			  <input type="checkbox">
+			  <span class="checkmark"></span>
+			</label>
+			<label class="check-container">Shareyourpaper.org
+			  <input type="checkbox">
+			  <span class="checkmark"></span>
+			</label>
+			<label class="check-container">Permissions
+			  <input type="checkbox">
+			  <span class="checkmark"></span>
+			</label>
+      <label class="check-container">Open Access Button
+        <input type="checkbox">
+        <span class="checkmark"></span>
+      </label>
+			<label class="check-container">Other
+			  <input type="checkbox">
+			  <span class="checkmark"></span>
+			</label>
+
+			<h3 style="text-align: center;">$XXXX USD<br>
+			per month</h3>
+
+			<p>Paid through a yearly invoice. We won’t want to lock you in.</p>
+			<div style="text-align: center;">
+			<a class="btn btn-rebrand-white" style="color: #F04717" href="https://docs.google.com/forms/d/e/1FAIpQLScG6tdPqY3ZN2onPVYo16zxK3WEd2TBotNmmDxefqqolqfxJg/viewform?usp=sf_link">Support Now</a>
+			</div>
+			<p style="text-align:centre">Cost too much? Have a question? <a href="mailto:joe@openaccessbutton.org">Contact us</a>.</p>
+		</div>
 	</div>
 </div>
 
-<!--  getpdf -->
+<!-- more uni proof, maybe replace with quote later -->
 
-<div class="library-tool">
-	<div class="tool-image">
-
-<a href="/getpdf">
-	<img src="/static/Get-PDF-transparent.png" alt="">
-</a>
+<div class="navy-bg">
+  <div class="center-col">
+    <p style="text-align: center; padding:0 30px;">Supported by leaders at</p>
+    <div class="unilogos">
+      <!-- TODO: add links -->
+      <img class="unilogo" src="/static/goldsmiths-white.png">
+      <img class="unilogo" src="/static/montania-uni-white.png">
+      <img class="unilogo" src="/static/iupui-logo-white.png">
+      <img class="unilogo" src="/static/florida-uni-white.png">
+    </div>
+  </div>
 </div>
 
-	<div class="tool-description">
-<h1> GetPDF </h1>
-<p>
-	Coming soon: Get Papers Delightfully Fast.
-	We're dreaming big and working hard to build a next generation tool for libraries, codenamed GetPDF, to provide world class access to their patrons anyplace, anytime, in a click.
-</p>
-<a href="/getpdf">
-	<button type="button" class="btn btn-action">
-		Learn more
-	</button>
-</a>
+<!-- chunky about section -->
+<div class="dark-bg">
+	<div class="center-col">
+		<h2 style="margin-top: 60px">We’re community owned, so we’re asking you to buy in</h2>
+		<div class="footer-team">
+			<p>Founded in 2013 by students frustrated by paywalls, we’ve worked since to help pioneer simple delivery of open access content in repositories, doing that in Interlibrary Loan and browser plugins, and more effective self-archiving workflows with funding from Arcadia Fund, Jisc, the Open Society Foundations, Center for Open Science, and SPARC.
+			<br><br>
+      Help us keep building for change, not for profit, by supporting our experimental, academy friendly model.
+			</p>
+
+			<img src="/static/media-team.png">
+		</div>
+	</div>
+	<div class="center-col" style="max-width: 1024px;">
+		<p style="padding:0">As seen in:</p>
+		<div class="media">
+			<img src="/static/media-sparc.png">
+			<img src="/static/media-nature.png">
+			<img src="/static/media-sa.png">
+			<img src="/static/media-guardian.png">
+			<img src="/static/media-lse.png">
+			<img src="/static/media-huffpost.png">
+		</div>
 	</div>
 </div>
 
-<!-- call to action -->
 
-<div class="library-center-content call-to-action">
-	<h1>Find out more & stay up to date</h1>
-	<br>
-	<!--    <p>Jump on our low traffic mailing list.</p> -->
 
-	<a href="https://docs.google.com/forms/d/e/1FAIpQLSddhWH2_Pg_JQMCtPFqE6acURwSVQIClucOdW3loqKO0gKZxA/viewform?usp=sf_link">
-		<button type="button" class="btn btn-action">
-			Sign up to learn more
-		</button>
-	</a>
+
+
+<!-- footer -->
+<div class="dark-bg">
+  <div class="center-col footer">
+    <div>
+      <p>Open Source • Community Controlled • Not for Profit</p>
+    </div>
+    <div>
+    	<span><a href="/about">About</a></span>
+        <span><a href="/api">API</a></span>
+       	<span><a href="/feedback#bug">Bugs</a></span>
+    	<span><a href="https://twitter.com/OA_Button">Twitter</a></span>
+    	<span><a href="/account">Account</a></span>
+    </div>
+  </div>
 </div>
