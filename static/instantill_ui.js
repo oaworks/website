@@ -14,6 +14,7 @@ var view = function(e,which) {
       $(window.location.hash).show();
     } else {
       $('.section').first().show();
+    	if ('pushState' in window.history) window.history.pushState("", document.title, window.location.pathname + window.location.search);
     }
   } else if ($(this).attr('href').length > 1) {
     $('.section').hide();
