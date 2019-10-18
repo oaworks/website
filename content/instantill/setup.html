@@ -372,8 +372,10 @@
               <option value="serialssolutions">Serials Solutions</option>
             </select>
             <a style="margin-top:10px;" class="btn btn-demo-green" id="addsubscription" href="#">Add another</a>
-
           </p>
+          
+          <p>Optionally, what is the DOI of an article you definitely have access to, which can be used for testing?</p>
+          <p><input id="val" type="text" class="form-control setting green" placeholder="e.g 10.1234/567890"></p>
         </div>
         <div class="greenbottom">
           <p><a class="btn btn-hollow-green  save pull preview" href="#">Preview & Test</a></p>
@@ -881,7 +883,6 @@ jQuery(document).ready(function() {
         $('div.content:visible').css({'padding-top':diff+'px'});
       }
       $('.oabutton_ill').off();
-      $('body').on('click','.oabutton_ill',fakeill);
     }
   });
 
@@ -907,7 +908,6 @@ jQuery(document).ready(function() {
   }
   $('body').on('change','.subscription',guesssubscription);
 
-  var uc = undefined;
   var configure = function() {
     for (var k in uc) {
       if (typeof uc[k] === 'boolean') {
