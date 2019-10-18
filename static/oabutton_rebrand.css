@@ -461,6 +461,7 @@ div.greenbottom {
   }
 
   .unilogo{
+    height: auto;
     max-width:20%;
     width: auto;
     max-height: 180px;
