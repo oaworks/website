@@ -343,7 +343,7 @@ div.greenbottom {
 
   .programs{
     display: flex;
-    justify-content: space-between;
+    justify-content:center;
     text-align: center;
   }
 
@@ -462,10 +462,8 @@ div.greenbottom {
 
   .unilogo{
     height: auto;
-    max-width:20%;
-    width: auto;
-    max-height: 180px;
-    padding: 40px;
+    width:20%;
+    padding: 20px;
   }
 
   .media{
@@ -549,9 +547,9 @@ div.greenbottom {
       display: inline;
     }
     .unilogo{
-      max-width:49%;
+      width:49%;
+      height: auto;
       padding:20px;
-      max-height: 1000px;
     }
     .quote{
       padding: 40px 0;
