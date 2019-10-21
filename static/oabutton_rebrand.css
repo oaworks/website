@@ -325,7 +325,7 @@ div.greenbottom {
   }
   .featurebox{
     width: 49%;
-    height: 300px;
+    height: 400px;
     padding: 30px;
     display: inline-block;
     vertical-align:top;
@@ -343,7 +343,7 @@ div.greenbottom {
 
   .programs{
     display: flex;
-    justify-content:center;
+    justify-content:space-around;
     text-align: center;
   }
 
@@ -473,7 +473,7 @@ div.greenbottom {
   }
 
   .media img{
-    width: 15%;
+    width: 20%;
     height: auto;
     padding:10px;
   }
@@ -549,7 +549,6 @@ div.greenbottom {
     .unilogo{
       width:49%;
       height: auto;
-      padding:20px;
     }
     .quote{
       padding: 40px 0;
