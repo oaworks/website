@@ -583,7 +583,7 @@
 
         <p>Paid through a yearly invoice. We won’t want to lock you in.</p>
         <div style="text-align: center;">
-          <a class="btn btn-demo-white" style="color: #F04717"
+          <a id="auto-link" class="btn btn-demo-white" style="color: #F04717"
             href="https://docs.google.com/forms/d/e/1FAIpQLScG6tdPqY3ZN2onPVYo16zxK3WEd2TBotNmmDxefqqolqfxJg/viewform?entry.1695660922=SIZE&entry.167645724=TOOL&entry.1968748516=PRICE">Invest
             Now</a>
         </div>
@@ -611,6 +611,8 @@
       <script>
         let arr = [];
         let size = "";
+        let base = "https://docs.google.com/forms/d/e/1FAIpQLScG6tdPqY3ZN2onPVYo16zxK3WEd2TBotNmmDxefqqolqfxJg/viewform?";
+        //entry.1695660922=SIZE&entry.167645724=TOOL&entry.1968748516=PRICE
         let tools = ['InstantILL', 'Shareyourpaper.org', 'Permissions', 'Open Access Button', 'Other'];
         let obj = {
           "Research intensive":	[400, 400, 200, 100, 100],
@@ -648,6 +650,10 @@
           }
           else {
             let price = getPrice();
+            let link = base + "entry.1695660922=" + size;
+            link = link + "&entry.1968748516=" + (price*12);
+            link = link + (arr.map(item => "&entry.167645724=" + item)).join('');
+            document.getElementById('auto-link').href = link;
             document.querySelector("#calculated-price").innerHTML = price;
             document.getElementById("price").style.display = "block";
           }
@@ -710,10 +716,6 @@
     </div>
   </div>
 </div>
-
-
-
-
 
 <!-- footer -->
 <div class="dark-bg">
