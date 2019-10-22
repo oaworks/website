@@ -103,7 +103,7 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
           #pg = API.http.puppeteer url #, undefined, API.settings.proxy
           # then get that link
           # then in that link find various content, depending on what kind of service it is
-          
+
           # try doing without puppeteer and see how that goes
           API.log 'Using OAB subscription check for ' + url
           pg = ''
@@ -125,7 +125,7 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
           #res.u.push url
           #res.pg = pg
 
-          # sfx 
+          # sfx
           # with access:
           # https://cricksfx.hosted.exlibrisgroup.com/crick?sid=Elsevier:Scopus&_service_type=getFullTxt&issn=00225193&isbn=&volume=467&issue=&spage=7&epage=14&pages=7-14&artnum=&date=2019&id=doi:10.1016%2fj.jtbi.2019.01.031&title=Journal+of+Theoretical+Biology&atitle=Potential+relations+between+post-spliced+introns+and+mature+mRNAs+in+the+Caenorhabditis+elegans+genome&aufirst=S.&auinit=S.&auinit1=S&aulast=Bo
           # which will contain a link like:
@@ -162,7 +162,7 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
                   else
                     res.url = undefined
                     res.findings.sfx = undefined
-  
+
           # eds
           # note eds does need a login, but IP address range is supposed to get round that
           # our IP is supposed to be registered with the library as being one of their internal ones so should not need login
@@ -203,7 +203,7 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
           # </div>
           # without:
           # https://rx8kl6yf4x.search.serialssolutions.com/directLink?&atitle=Writing+at+the+Speed+of+Sound%3A+Music+Stenography+and+Recording+beyond+the+Phonograph&author=Pierce%2C+J+Mackenzie&issn=01482076&title=Nineteenth+Century+Music&volume=41&issue=2&date=2017-10-01&spage=121&id=doi:&sid=ProQ_ss&genre=article
-          
+
           # we also have an xml alternative for serials solutions
           # see https://journal.code4lib.org/articles/108
           else if subtype is 'serialssolutions' or url.indexOf('serialssolutions.') isnt -1
@@ -252,7 +252,7 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
                   res.error.push 'serialssolutions' if error
 
     API.http.cache(sig, 'oab_ill_subs', res) if not _.isEmpty res.findings
-    
+
   # return cached or empty result if nothing else found
   else
     res.cache = true
@@ -270,7 +270,7 @@ API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
   page.on "request", (request) ->
     console.log request.url()
     request.continue()
-  await page.$eval('[href="javascript:openSFXMenuLink(this, \'basic1\', undefined, \'_blank\');"]', (el) -> 
+  await page.$eval('[href="javascript:openSFXMenuLink(this, \'basic1\', undefined, \'_blank\');"]', (el) ->
     console.log el
     el.click()
     console.log 'in eval'
@@ -291,7 +291,7 @@ API.service.oab.ill.start = (opts={}) ->
   meta = API.service.oab.ill.metadata opts.metadata, opts
   for m of meta
     opts.metadata[m] ?= meta[m] if m isnt 'cache'
-    
+
   if opts.library is 'imperial'
     # TODO for now we are just going to send an email when a user creates an ILL
     # until we have a script endpoint at the library to hit
@@ -345,7 +345,7 @@ API.service.oab.ill.start = (opts={}) ->
       eml = if user.service?.openaccessbutton?.ill?.config?.email and user.service?.openaccessbutton?.ill?.config?.email.length then user.service?.openaccessbutton?.ill?.config?.email else if user.email then user.email else user.emails[0].address
 
       # such as https://ambslibrary.share.worldcat.org/wms/cmnd/nd/discover/items/search?ai0id=level3&ai0type=scope&offset=1&pageSize=10&si0in=in%3A&si0qs=0021-9231&si1in=au%3A&si1op=AND&si2in=kw%3A&si2op=AND&sortDirection=descending&sortKey=librarycount&applicationId=nd&requestType=search&searchType=advancedsearch&eventSource=df-advancedsearch
-      # could be provided as: (unless other params are mandatory) 
+      # could be provided as: (unless other params are mandatory)
       # https://ambslibrary.share.worldcat.org/wms/cmnd/nd/discover/items/search?si0qs=0021-9231
       if user.service?.openaccessbutton?.ill?.config?.search and (opts.issn or opts.journal)
           su = user.service.openaccessbutton.ill.config.search.split('?')[0] + '?ai0id=level3&ai0type=scope&offset=1&pageSize=10&si0in='
@@ -356,10 +356,10 @@ API.service.oab.ill.start = (opts={}) ->
           su = user.service.openaccessbutton.ill.config.search
           su += if opts.issn then opts.issn else opts.journal
         vars.details+= '<p>Search URL:<br><a href="' + su + '">' + su + '</a></p>'
-        
+
       if not opts.forwarded
         API.service.oab.mail({vars: vars, template: {filename:'instantill_create.html'}, to: eml, from: "InstantILL <InstantILL@openaccessbutton.org>", subject: "ILL request " + vars.illid})
-      
+
       # send msg to mark and joe for testing (can be removed later)
       txt = vars.details
       delete vars.details
@@ -372,7 +372,7 @@ API.service.oab.ill.start = (opts={}) ->
         html: txt,
         text: txt
       }
-      
+
       return vars.illid
     else
       return 401
@@ -420,7 +420,7 @@ API.service.oab.ill.resolver = (user, resolve, config) ->
   # and has to apply per resolver url that the user gives us
   # this shouldn't actually be a user setting - it should be settings for a given link resolver address
   return false
-  
+
 API.service.oab.ill.openurl = (uid, meta={}, withoutbase=false) ->
   config = API.service.oab.ill.config uid
   config ?= {}
@@ -455,7 +455,7 @@ API.service.oab.ill.openurl = (uid, meta={}, withoutbase=false) ->
   for k of meta
     v = false
     if k is 'author'
-      # need to check if config has aufirst and aulast or something similar, then need to use those instead, 
+      # need to check if config has aufirst and aulast or something similar, then need to use those instead,
       # if we have author name parts
       try
         if typeof meta.author is 'string'
@@ -481,7 +481,7 @@ API.service.oab.ill.openurl = (uid, meta={}, withoutbase=false) ->
     return url.replace('/&&/g','&')
   catch
     return url
-    
+
 API.service.oab.ill.terms = (uid) ->
   config = API.service.oab.ill.config uid
   return config.terms
@@ -498,7 +498,7 @@ API.service.oab.ill.metadata = (metadata={}, opts={}, refresh=false) ->
   refresh = true if metadata.cache is 'false' or metadata.cache is false
   refresh = metadata.refresh if metadata.refresh?
   #refresh = 0 if opts.embedded? and opts.embedded.indexOf('openaccessbutton.org') isnt -1 # don't bother checking for previous results if on our site
-  
+
   want = ['title','doi','pmid','pmcid','author','journal','issn','volume','issue','page','published','year']
   _got = () ->
     for w in want
@@ -563,13 +563,13 @@ API.service.oab.ill.metadata = (metadata={}, opts={}, refresh=false) ->
         cached.took ?= cached.ended - cached.started
         cached.cache = true
         return cached
-    
+
   if not _got() and not metadata.doi and not opts.scraped and metadata.url
     s = API.service.oab.scrape metadata.url
     try
       for w in want
         metadata[w] ?= s[w]
-    
+
   if not _got() and metadata.doi
     cr = API.service.oab.crossref metadata.doi
     try
@@ -610,7 +610,7 @@ API.service.oab.ill.metadata = (metadata={}, opts={}, refresh=false) ->
     try
       for w in want
         metadata[w] ?= dr[w]
-    
+
   if not _got() and metadata.title?
     pretitledoi = metadata.doi
     delete metadata.doi
