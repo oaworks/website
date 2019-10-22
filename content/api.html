@@ -1,9 +1,9 @@
-<!-- Start of openaccessbutton Zendesk Widget script -->
-<script>/*<![CDATA[*/window.zEmbed||function(e,t){var n,o,d,i,s,a=[],r=document.createElement("iframe");window.zEmbed=function(){a.push(arguments)},window.zE=window.zE||window.zEmbed,r.src="javascript:false",r.title="",r.role="presentation",(r.frameElement||r).style.cssText="display: none",d=document.getElementsByTagName("script"),d=d[d.length-1],d.parentNode.insertBefore(r,d),i=r.contentWindow,s=i.document;try{o=s}catch(e){n=document.domain,r.src='javascript:var d=document.open();d.domain="'+n+'";void(0);',o=s}o.open()._l=function(){var e=this.createElement("script");n&&(this.domain=n),e.id="js-iframe-async",e.src="https://assets.zendesk.com/embeddable_framework/main.js",this.t=+new Date,this.zendeskHost="openaccessbutton.zendesk.com",this.zEQueue=a,this.body.appendChild(e)},o.write('<body onload="document._l();">'),o.close()}();
-/*]]>*/</script>
-<!-- End of openaccessbutton Zendesk Widget script -->
-
 <style>
+
+  .p{
+    line-height: 1.5
+  }
+
   #docs h2 {
     margin-top:80px;
   }
@@ -23,6 +23,9 @@
       <h1 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">
         API
       </h1>
+      <p>
+        Free REST JSON API for accessing papers (through <a href="#find">Open Access</a>, <a href="#subscriptions">subscriptions</a>, <a href="#ill">Interlibrary Loans</a>, and <a href="#request">emails to authors</a>), <a href="#metadata">finding metadata</a>, and <a href="#deposit">depositing papers</a>.
+      </p>
     </div>
   </div>
 </div>
@@ -30,281 +33,277 @@
 <div class="container-fluid" id="docs" style="margin-bottom:100px;">
   <div class="row">
     <div class="col-md-8 col-md-offset-2" style="text-align:justify;">
-      <p>
-        Our API allows you to find out if an article, published at some URL but not freely available there,
-        is freely available anywhere else. It can also check for supporting data too. You can also search all the
-        availability checks we have made, all the requests for access our users have created, and all their declarations
-        of support too.
-      </p>
-      <p>
-        The API uses JSON for all posts and responses.  Links to example responses are shown for each api operation documented below.<!-- - install a JSON viewer plugin to your
-        browser to make them easier to read-->. When POSTing data, remember to set the Content-Type header to application/json, e.g.
-        for curl this header is added like so: <code>curl -H "Content-Type:application/json"</code>.
-      </p>
-      <p>
-        There are no enforced rate limits, so limit your requests to a maximum of one request per second. If we notice problems we'll suspend your account and contact you about your needs.
-        Although most api operations do not require authorisation, we ask that you please obtain your own API key.
-      </p>
       <p id="apikey">
-        Please <a href="/account?next=/api" class="label label-info">sign up / sign in</a> to see your API key here.
+        <a href="/account?next=/api" class="label label-info">Logging in</a> isn’t required, but it gets you an API key, helps us tell funders how we’re doing, and lets us contact you with issues and updates.
       </p>
       <p>
-        Include the API key you are provided in either a URL param called "apikey"
-        or in a header called "x-apikey".
-        So, a curl call to the availability operation below might look like so (if you choose to use headers):
-        curl -H "Content-Type: application/json" -H "x-apikey: yourRegisteredApikey" '{{api}}'
-      </p>
+        Please limit your requests to one per second. We don’t enforce rate limits, but if we notice prolonged high usage, we may suspend your account and contact you about your needs.
+      <p>
+      If you’re looking to integrate us with your tools but aren’t able to code, our <a href="https://openaccessbutton.org/libraries">tools for librarians</a>, especially <a href="https://openaccessbutton.org/integrations">integration guides</a>, may be a better fit.
+    </p>
+    <p>
+    Support available at <a href="mailto:Joe@openaccessbutton.org">Joe@openaccessbutton.org</a>.
+    </p>
+    <!-- BASE URL -->
 
       <h2>
         {{api}}
       </h2>
+      <p>
+        Base URL of our API
+      </p>
       <hr>
       <h3>
         GET
-        <small style="margin-left:10px;">
-          <a class="api" target="_blank" href="{{api}}">
-            Example
+      </h3>
+      <p>
+        Examples: <a href="{{api}}" class="api" target="_blank">URL</a> |
+          <a class="api example" target="_blank" href="#get_root">
+            cURL
           </a>
-        </small>
-      </h3>
-      <p>
-        This is the prefix for all api calls and simply returns an indication of api status.
-        The API returns a json status success message and 200 response code if the api is operational; otherwise the API is not in operation.
       </p>
-      <!--
-      <h3>
-        POST
-      </h3>
+      <pre id="get_root" class="example">
+curl -X GET "{{api}}"</pre>
       <p>
-        <b>Authorisation required</b><br>
-        A POST to the root will return a 200 response code and an authorisation success message to validate that your API key is working correctly.
+        Returns a JSON status success message and 200 response code if the API is operational.
       </p>
-      -->
 
-      <h2>
-        /availability
+
+      <!-- FIND -->
+
+
+      <h2 id="find">
+        /find
       </h2>
+      <p>
+        Gives URL to any Open Access paper.
+      </p>
       <hr>
       <h3>
         GET
-        <small style="margin-left:10px;">
-          <a class="api" target="_blank" href="{{api}}/availability?url=http%3A%2F%2Fjournals.plos.org%2Fplosone%2Farticle%3Fid%3Dinfo%253Adoi%2F10.1371%2Fjournal.pone.0163591">
-            Example
-          </a>
-        </small>
       </h3>
+        <p>
+            Example: <a href="{{api}}/availability?id=http%3A%2F%2Fscience.sciencemag.org%2Fcontent%2F196%2F4287%2F293%2Ftab-pdf" class="api" target="_blank">URL</a> | <a href="{{api}}/availability?id=10.1126%2Fscience.196.4287.293" class="api" target="_blank">DOI</a> | <a href="{{api}}/availability?id=Ribulose%20bisphosphate%20carboxylase%3A%20a%20two-layered%2C%20square-shaped%20molecule%20of%20symmetry%20422" class="api" target="_blank">Title</a> | <a class="api example" href="#get_find" target="_blank">cURL</a>
+<pre id="get_find" class="example">
+curl -X GET "{{api}}/find?id=10.1126/science.196.4287.293"</pre>
+        </p>
       <p>
-        Provide a url-encoded URL in a parameter named "url". The api will accept DOIs, PMIDs, PMC IDs, titles, and citations all of
-        which can alternately be passed in the "url" parameter.  The API will try to guess which type is being provided.
-        Alternately, the specific type can be passed in by using a more specific parameter name: "doi", "pmc", "pmid", "title", "citation".
-        In any case, note that only one parameter can be provided, and the preference for which to provide is:
-        url, doi, pmc, pmid, title, citation.
-      </p>
-      <p>
-        A simple way to make a request to the availability API is the following one liner where YOURURL is your "url" paremeter:
-        curl -H "x-apikey: yourRegisteredApikey" -X GET "https://api.openaccessbutton.org/availability?url=YOURURL"
-      </p>
-      <p>
-        The response returned lists objects of any "availability" found, with each object declaring "type" (currently either article or data)
-        and the "url" where this object is found.
-      </p>
-      <p>
-        The response also includes a list of any open "requests", each object showing the request "type" and the request "id".
-      </p>
-      <p>
-        Finally the response includes an "accepts" list which shows what sorts of new requests we will accept.  we currently only
-        accept "article" or "data" requests, and we won't accept new requests if already available or already requested.
-      </p>
-      <p>
-        Note we do blacklist some URLs - see below for more info and how to check it.
-      </p>
-      <h3>
-        POST
-      </h3>
-      <p>
-        We are considering enabling bulk availability checks via the API.
-        Would you find this useful? <a target="_blank" href="mailto:hello@openaccessbutton.org">Let us know!</a>
+        Accepts a single parameter called "id", which should contain (in order of preference) a URL-encoded doi, pmc, pmid, url, title, or citation.
       </p>
 
-      <h2>
-        /request
+      <!-- SUBS -->
+
+      <h2 id="subscriptions">
+        /subscription
       </h2>
+      <p>
+        Tells you if an institution has access to a certain paper and provides a direct link
+      </p>
       <hr>
       <h3>
-        POST
+        GET
       </h3>
-      <p>
-        Create a new request by POSTing a JSON object to this endpoint.
-        Please remember to include the header: content-type:"application/json"    The JSON object itself must contain at least the "url" parameter - the URL to create a request for. The
-        "url" parameter can also be formatted as a url or alternately as a DOI, PMID, PMC ID, title, or citation.  NOTE that in any case, these values should be put in the "url" parameter, NOT in other parameter names (like doi, citation, etc).
-
-      </p>
-      <p style="text-align:left;">
-        When you provide DOI, PMID and PMC ID values in the "url parameter, please format the value in a URL format.
-        DOI can be provided as https://doi.org/10.1234/567890, PMID
-        as https://www.ncbi.nlm.nih.gov/pubmed/12345678, and PMC ID as https://www.ncbi.nlm.nih.gov/pubmed/1234567.  (This helps us disambiguate requests to ensure there are as few duplicates as possible).
-      </p>
-      <p>
-        The request "type" parameter should also be provided with a value of "article" or "data". If not provided the type defaults to "article".
-      </p>
-      <p>
-        An "email" parameter should
-        be provided having the email address of the author to contact about the request (we will try to find
-        an email address if one is not provided).Ideally, a "story" parameter should also be provided having text explaining why the request is necessary.
-      </p>
-      <p>
-        "title" and "doi" parameters can also be provided as additional information about the resource.
-      </p>
-      <p>
-        To avoid creating a request for a resource that is already available, please use the /availability endpoint to determine if the item is available or we already have an open request for it.
-      </p>
-      <p>
-        The response will be a JSON object of the new request, which will include the new request ID in the "_id" parameter.
-      </p>
-
-      <h2>
-        /availabilities
-      </h2>
-      <hr>
-      <h3>
-        GET or POST
-        <small style="margin-left:10px;">
-          <a class="api" target="_blank" href="{{api}}/availabilities?q=*sciencedirect*%20AND%20plugin:oabutton_1.0.0">
+        <p>
+          <a class="api" target="_blank" href="{{api}}/subscription?uid=WpGYaq7yRCNggawBY&id=10.1145/2908080.2908114">
             Example
           </a>
-        </small>
-      </h3>
-      <p>
-        This endpoint allows you to flexibly search and explore availability of all URLs previously received.  These are indexed by an elasticsearch so some knowledge of straightforward elasticsearch search semantics is necessary.      </p>
+        </p>
+
+        <p>
+          Requires both a paper ID and a specified institution to return a response. Accepts paper IDs as described in /find.
+        <p>
+        <p id="instantill">
+          Institutions are specified by passing a code in "uid" obtained by <a href="/account?next=/api#subscriptions">logging in</a> and setting up InstantILL with your details.
+        </p>
+
+
+          <h2 id="metadata">
+            /metadata
+          </h2>
           <p>
-        A simple search can be created by adding a url parameter called "q" (for query) and provide values you would like to match. For example to find all availability checks made on the sciencedirect
-        website by users of our v1.0.0 plugin with the query <code>?q=*sciencedirect* AND plugin:oabutton_1.0.0</code>
-        Note that in a query, * can be used as a wildcard to match anything (in the example, before and after "sciendedirect").  Also note that AND, OR and other logic can be used to combine search values in a query.
-      </p>
-  	  <p>
-        To make full use of this endpoint you should read the
-        <a href="https://www.elastic.co/guide/en/elasticsearch/reference/1.4/query-dsl.html" target="_blank">elasticsearch query DSL documentation</a>
-        (we are currently on ES 1.4, moving soon to 5.x).
-      </p>
+            Finds as complete as possible metadata for any paper.
+          </p>
+          <hr>
+          <h3>
+            GET
+          </h3>
+            <p>
+              <a class="api" target="_blank" href="{{api}}/metadata?id=10.1126/science.196.4287.293">
+                Example
+              </a>
+            </p>
 
-      <h2>
-        /blacklist
-      </h2>
+            <p>
+              Accepts article information as described in /find.
+            <p>
+
+            <h3>
+              POST
+            </h3>
+            <p>
+              <a class="api example" target="_blank" href="#post_metadata">
+                Example
+              </a>
+            </p>
+<pre id="post_metadata" class="example">
+curl -X POST "{{api}}/metadata" -d '{"doi": "10.1126/science.196.4287.293"}' -H "Content-Type: application/json"</pre>
+
+            <p>
+              Accepts article information as described in /find as URL parameters or in a JSON body.
+            </p>
+
+            <!-- REUQESTS -->
+
+            <h2 id="request">
+              /request
+            </h2>
+            <p>
+              Create a request to the author to make a paper Open Access.
+            </p>
+            <hr>
+            <h3>
+              POST
+            </h3>
+              <p>
+                <a class="api example" target="_blank" href="#post_request">
+                  Example
+                </a>
+              </p>
+<pre id="post_request" class="example">
+curl -X POST "{{api}}/request" -d '{"doi": "10.1126/science.196.4287.293"}' -H "Content-Type: application/json"</pre>
+              <p>
+                Note: Many services opt to point users to our website using: https://openaccessbutton.org/request?doi=10.YOURDOI, allowing their users to sign up for our service, make requests, and receive notifications.
+              <p>
+              <p>
+                To start a request from your service, ensure you have <a href="/account?next=api#request">signed up</a> and completed your account information with what you’d like seen on a request.
+              </p>
+              <p>
+                Start by posting a JSON object containing at least a "doi" parameter. We will start a request for papers published in the past five years. If you’re unsure the item being requested is Open Access, use /find first to verify.
+              </p>
+              <p>
+                To be sent to an author, a request needs a justification. This can be provided in the "story" parameter. Our team manually moderates stories we haven’t seen before, but once we approve a story, we will automatically accept it so you can reuse stories.
+              </p>
+              <p>
+                When your request is successfully created, we will return an ID in a "_id" JSON parameter.
+              </p>
+              <p>
+                If you expect to generate more than ~100 requests per week regularly, that’s great; please <a href="mailto:joe@openaccessbutton.org">contact us</a> so we can ensure we plan adequate support such as moderation and quality checks.
+              </p>
+
+              <!-- CHECK REQUEST ID -->
+
+              <h2 id="request_id">
+                /request/:id
+              </h2>
+              <p>
+                Returns request metadata and status with the given ID.
+              </p>
+              <hr>
+              <h3>
+                GET
+              </h3>
+                <p>
+                  <a class="api" target="_blank" href="{{api}}/request/zN4EXcLhLjeb6aHDu">
+                    Example
+                  </a>
+                </p>
+
+                <p>
+                  Metadata fields returned are all optional, although DOI is always present in recent requests.
+                <p>
+
+                  <!-- MAKE DEPOSIT -->
+
+                  <h2 id="deposit">
+                    /deposit [coming soon]
+                  </h2>
+                  <p>
+                    Accepts files to facilitate self-archiving papers.
+                  </p>
+                  <hr>
+                  <h3>
+                    POST
+                  </h3>
+
+                  <p>
+                    Include at least a DOI and a file. The file will be checked to ensure it’s the correct version and deposited to Zenodo. You’ll get back a deposit ID.
+                  </p>
+
+                  <!-- GET INFO FOR DEPOSIT -->
+
+                  <h2 id="deposit_id">
+                    /deposit/:id [coming soon]
+                  </h2>
+                  <p>
+                    Tells you the status of a deposit.
+                  </p>
+                  <hr>
+                  <h3>
+                    GET
+                  </h3>
+                  <p>
+                    Metadata fields returned are all optional, except DOIs.
+                  </p>
+
+                  <!-- MAKE ILL -->
+
+                  <h2 id="ill">
+                    /ill
+                  </h2>
+                  <p>
+                    Starts an ILL request by returning a link to a completed ILL form or sending an email.
+                  </p>
+                  <hr>
+                  <h3>
+                    POST
+                  </h3>
+                  <p>
+                    <a class="api example" target="_blank" href="#post_ill">
+                      Example
+                    </a>
+                  </p>
+<pre id="post_ill" class="example">
+curl -X POST "{{api}}/ill" -d '{"doi": "10.1126/science.196.4287.293"}' -H "Content-Type: application/json"</pre>
+
+                  <p>
+                    Start a ILL by posting an paper ID as URL parameters or ideally in a JSON body. A list of accepted IDs can be found at /find. Include as much metadata as you can, under the list of parameters found in /metadata. We’ll enrich whatever you give us, or you can do it before by using /metadata directly.
+                  </p>
+                  <p>
+                    We will then attempt to start an ILL according to your InstantILL configuration. By default, we will send an email to your account email, and you’ll need to pass the requestor’s email in the "email" parameter. If InstantILL is configured to do so, we can pass you a link to your completed ILL form.
+                  </p>
+
+                  <!-- SEARCH ILLs -->
+
+                  <h2 id="ills">
+                    /ills
+                  </h2>
+                  <p>
+                    Search ILLs made at your institution.
+                  </p>
+                  <hr>
+                  <h3>
+                    GET. Authorization required.
+                  </h3>
+                  <p>
+                    <a id="illsexample" href="{{api}}/ills?apikey=9feb7da71814b448b6c95a80c85bab&q=metadata.doi:*" class="api" target="_blank">
+                    Example
+                  </a>
+                  </p>
+                  <p>
+                    Most useful for custom integrations with InstantILL. This endpoint can be used to retrieve all activity from your embed(s) and then processed as you wish.
+                  </p>
+                  <p>
+                    Queries are powered by Elasticsearch version 1.4.4. Knowledge of Elasticsearch will of course be helpful. In short, simple searches can be created by adding a URL parameter "q" and providing values you’d like to match.
+                  </p>
+                  <p>
+                    A well-formed query for an InstantILL instance and the response format is demonstrated in the example. Any values you see can be queried. Don’t always expect all fields to be present.
+                  </p>
+
+      <p>
       <hr>
-      <h3>
-        GET
-        <small style="margin-left:10px;">
-          <a class="api" href="{{api}}/blacklist" target="_blank">
-            Example
-          </a>
-        </small>
-      </h3>
-      <p>
-        Returns a list of our currently blacklisted domains or URLs.  We won't accept availability checks or requests for URLs on this list,
-        because we believe the content will not contain anything we would consider to be a research article.
+        Haven’t found what you want? <a href="mailto:joe@openaccessbutton.org">Get in touch</a>. Only the most commonly required endpoints are included for brevity.
       </p>
 
-      <h2>
-        /scrape
-      </h2>
-      <hr>
-      <h3>
-        GET
-        <small style="margin-left:10px;">
-          <a class="api" target="_blank" href="{{api}}/scrape?url=http%3A%2F%2Fjournals.plos.org%2Fplosone%2Farticle%3Fid%3Dinfo%253Adoi%2F10.1371%2Fjournal.pone.0163591">
-            Example
-          </a>
-        </small>
-      </h3>
-      <p>
-        Returns metadata for a provided URL.  Simple provide a url-encoded URL in a parameter named "url".
-      </p>
-      <p>
-        Try the example above to see the returned metadata structure.  Note that we will not necessarily support the same metadata
-        for all scraped URLs, and we may change it over time, so don't assume a stable structure.
-      </p>
-
-      <h2>
-        /request/:id
-      </h2>
-      <hr>
-      <h3>
-        GET
-        <small style="margin-left:10px;">
-          <a class="api" target="_blank" href="{{api}}/request/RBNfJLPX382TZZtRR">
-            Example
-          </a>
-        </small>
-      </h3>
-      <p>
-        Returns the request with the given :id. View the example to see the request object structure.
-        Note that the metadata fields are all optional, so do not rely on them always being present.
-      </p>
-      <!--
-      <h3>
-        POST
-      </h3>
-      <p>
-        <b>Authorisation required</b><br>
-        POST a JSON object to change corresponding values in the identified request. Allowed fields in the
-        object are "url", "title", "doi". If you are the request creator you can also change the "story".
-      </p>
-      <p>
-        Also, if there is no author email for this request to be sent to yet, and if the status is help,
-        moderate, or refused, the "email" address can be changed too.<br>
-      </p>
-      -->
-
-      <h2>
-        /requests
-      </h2>
-      <hr>
-      <h3>
-        GET or POST
-        <small style="margin-left:10px;">
-          <a class="api" target="_blank" href="{{api}}/requests">
-            Example
-          </a>
-        </small>
-      </h3>
-      <p>
-        This endpoint allows you to flexibly search and explore all requests we have received.  As with the /availabilities endpoint above, valid elasticsearch queries are accepted (see /availabilities above for more information).
-      </p>
-
-      <!--
-      <p>
-        /support/:rid<br>
-        auth required<br>
-        GET or POST to this endpoint will add your support to the identified request<br>
-        You should provide a "story" query param on GET, or a "story" key in your POST data.<br>
-        The story should explain why you support the request.<br>
-        NOTE: are we going to allow API creation of support?
-      </p>
-      -->
-
-      <h2>
-        /supports
-      </h2>
-      <hr>
-      <h3>
-        GET or POST
-        <small style="margin-left:10px;">
-          <a class="api" href="{{api}}/supports?q=rid:6GY6Afbg6xnYQGjbt" target="_blank">
-            Example
-          </a>
-        </small>
-      </h3>
-      <p>
-        This endpoint allows you to flexibly search and explore all support declarations we have received for open requests.  As with the /availabilities and /requests endpoints above, valid elasticsearch queries are accepted (see /availabilities above for more information).
-      </p>
-      <p>
-        For example to find every declaration of support for the request with ID RBNfJLPX382TZZtRR: <br>
-        <code>?q=rid:6GY6Afbg6xnYQGjbt</code>
-      </p>
-      <p>
-        Or to find every declaration of support made by a user with username "jimmy": <br>
-        <code>?q=username:jimmy</code>
-      </p>
     </div>
   </div>
 </div>
@@ -312,11 +311,24 @@
 
 
 <script>
+
+  function anchor() { if (window.location.hash.length !== 0) window.scrollTo(window.scrollX, window.scrollY - 100); }
+  window.setTimeout(anchor, 1);
+  window.addEventListener("hashchange", anchor);
+
   jQuery(document).ready(function() {
+    if (noddy.api.indexOf('dev.api') === -1) $('#illexample').attr('href',$('#illexample').attr('href').replace('9feb7da71814b448b6c95a80c85bab','366678b522dd2f30fd3598d86ce70c'))
+    $('pre.example').hide();
+    $('a.example').bind('click',function(e) { e.preventDefault(); $($(this).attr('href')).toggle(); });
     noddy.afterLogin = function() {
       if (noddy.apikey) {
-        $('#apikey').html('Your API key is <code>' + noddy.apikey + '</code>');
+        $('#apikey').html('Your API key is <code>' + noddy.apikey + '</code>' +'. Include this in either a URL param called "apikey" or a header called "x-apikey".');
+        $('#instantill').html('Institutions are specified by passing a code in "uid"; yours is <code>' + noddy.user.account._id + '</code>. You can alter the response through setting up InstantILL with your details.');
         $('.auth').each(function() { $(this).attr('href',$(this).attr('href')+'?apikey='+noddy.apikey); });
+        $('.apikey').html(noddy.apikey);
+        $('.yourid').html(noddy.user.account._id);
+        $('pre.example').each(function() { if ($(this).html().indexOf('curl -H ') === -1) $(this).html($(this).html().replace('curl ',  'curl -H "x-apikey: ' + noddy.apikey + '" ')); });
+        $('a.api').each(function() { if ($(this).attr('href').indexOf('apikey=') === -1 && $(this).attr('href').indexOf('#') !== 0) $(this).attr('href',$(this).attr('href')+($(this).attr('href').indexOf('?') !== -1 ? '&' : '?')+'apikey='+noddy.apikey); });
       } else {
         $('.auth').hide();
       }
