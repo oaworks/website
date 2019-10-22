@@ -422,7 +422,7 @@ var instantill_run = function() {
         info += cit;
       }
     }
-    if (avail.data.ill && avail.data.ill.subscription && avail.data.ill.subscription.demo) info += '<h2>An example subscription title</h2>';
+    if (avail.data.ill && avail.data.ill.subscription && avail.data.ill.subscription.demo) info += '<h2>Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL</h2>';
     info += '<p><a id="oabutton_getmore" href="#"><b>This is not the ' + pora + ' I searched.</b></a></p>';
     var needmore = true;
     var hassub = false;
