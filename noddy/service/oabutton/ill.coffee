@@ -54,7 +54,7 @@ API.service.oab.ill = {}
 
 API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
   if meta.doi is '10.1234/567890' and (uid is 'qZooaHWRz9NLFNcgR' or uid is 'eZwJ83xp3oZDaec86') # dev and live demo accounts that always return a fixed answer
-    return {findings:{}, uid: uid, lookups:[], error:[], url: 'https://instantill.org', demo: true}
+    return {findings:{}, uid: uid, lookups:[], error:[], url: 'https://scholarworks.iupui.edu/bitstream/handle/1805/20422/07-PAXTON.pdf?sequence=1&isAllowed=y', demo: true}
 
   do_serialssolutions_xml = true
   do_sfx_xml = true
