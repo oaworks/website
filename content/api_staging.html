@@ -285,7 +285,7 @@ curl -X POST "{{api}}/ill" -d '{"doi": "10.1126/science.196.4287.293"}' -H "Cont
                     GET. Authorization required.
                   </h3>
                   <p>
-                    <a href="{{api}}/ills?apikey=f7028488fdbde2d1541f2346198a70&q=metadata.doi:*" class="api" target="_blank">
+                    <a id="illsexample" href="{{api}}/ills?apikey=9feb7da71814b448b6c95a80c85bab&q=metadata.doi:*" class="api" target="_blank">
                     Example
                   </a>
                   </p>
@@ -317,6 +317,7 @@ curl -X POST "{{api}}/ill" -d '{"doi": "10.1126/science.196.4287.293"}' -H "Cont
   window.addEventListener("hashchange", anchor);
 
   jQuery(document).ready(function() {
+    if (noddy.api.indexOf('dev.api') === -1) $('#illexample').attr('href',$('#illexample').attr('href').replace('9feb7da71814b448b6c95a80c85bab','366678b522dd2f30fd3598d86ce70c'))
     $('pre.example').hide();
     $('a.example').bind('click',function(e) { e.preventDefault(); $($(this).attr('href')).toggle(); });
     noddy.afterLogin = function() {

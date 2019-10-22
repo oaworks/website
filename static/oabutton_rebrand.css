@@ -43,12 +43,17 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 ul.arrowed {
-  margin-top:50px;
-  margin-bottom:50px;
+  margin-top:15px;
+  margin-bottom:25px;
   list-style: none;
+  padding-left: 15px;
 }
 ul.arrowed li {
-  margin-bottom:20px;
+  margin-bottom:15px;
+}
+
+.glyphicon-arrow-right{
+  padding-right:5px;
 }
 
 .form-control {
@@ -67,17 +72,17 @@ ul.arrowed li {
 
 a.green {
   color:#46b633;
-  font-weight:bold;
+  /*font-weight:bold;*/
 }
 a.green.light {
   font-weight:normal;
- 
+
 }
 a.green:hover {
-  color:#46b633;
+  color:#608891;
 }
 
-.btn-rebrand {
+.btn-demo {
   background-color:#46b633;
   border-color:#46b633;
   border-radius:0px;
@@ -86,7 +91,7 @@ a.green:hover {
   padding-top:10px;
   padding-bottom:10px;
 }
-.btn-rebrand:hover {
+.btn-demo:hover {
   color:#ffffff;
 }
 
@@ -112,12 +117,12 @@ a.green:hover {
 
 div.green {
   background-color:#edf8ed;
-  color:#46b633;
+  /*color:#46b633;*/
   height:100%;
   padding-bottom:160px;
 }
 div.greenery {
-  margin-top:15%;
+  margin-top:10%;
   margin-left:10%;
   width:80%;
   max-width:500px;
@@ -138,12 +143,33 @@ div.greenbottom {
     margin: auto;
   }
 
+  h2{
+    line-height: 140%;
+    text-align: center;
+  }
+
+  h3{
+    line-height: 140%;
+  }
+
   h4{
     margin: 0;
   }
 
   a:hover{
     text-decoration: none;
+    cursor:pointer;
+    color: #345484;
+  }
+
+  p{
+    line-height: 165%;
+    text-align: left;
+    padding:30px 0;
+  }
+
+  li{
+    padding-top: 10px;
   }
 
 /*general div backgrounds*/
@@ -165,6 +191,13 @@ div.greenbottom {
     color: white;
   }
 
+  .blue-bg{
+    width: 100%;
+    padding: 30px;
+    background-color: #428BCA;
+    color: white;
+  }
+
   .white-bg{
     width: 100%;
     padding: 30px;
@@ -175,7 +208,7 @@ div.greenbottom {
     width: 100%;
     padding: 30px;
     background-color: #212f3f;
-    color: white; 
+    color: white;
   }
 
 /*header*/
@@ -211,42 +244,77 @@ div.greenbottom {
   }
 
   .pitchhalf{
+    text-align: center;
     width:50%;
     padding: 30px;
   }
 
+  .pitchhalf p{
+    text-align: left;
+  }
+
 /*buttons*/
 
-    .btn-rebrand-blue{
-    background-color: #428BCA;
-    border-color: #428BCA;
-    border-radius: 0px;
-    color: white;
+  .btn{
+    width:100%;
+    max-width: 245px;
     font-weight: bold;
     padding: 10px 30px;
+    border-radius: 0px;
   }
 
-    .btn-rebrand-white{
+  .btn-demo-blue{
+    background-color: #428BCA;
+    color: white;
+    border:none;
+  }
+
+  .btn-demo-blue:hover{
+    background-color: #345484;
+    color: white;
+  }
+
+  .btn-hollow-blue {
+    border-color: #428BCA;
+    border-width: 2px;
+    color: #428BCA;
+  }
+  .btn-hollow-blue:hover {
+    border-color: #428BCA;
+    background-color: #428BCA;
+    color: white;
+  }
+
+  .btn-demo-white{
     background-color: white;
     border-color: white;
-    border-radius: 0px;
     color: #46b633;
-    font-weight: bold;
-    padding: 10px 30px;
+    border:none;
   }
 
-  .btn-rebrand-green{
+  .btn-demo-white:hover{
+    background-color: #ddd;
+  }
+
+  .btn-demo-green{
     background-color: #46B633;
-    border-color: #46B633;
-    border-radius: 0px;
+    border:none;
     color:white;
-    font-weight: bold;
-    padding: 10px 30px;
   }
 
-  .btn:hover, .btn:focus {
-    background-color:#212f3f;
-    border-color: #212f3f;
+  .btn-demo-green:hover{
+    background-color: #608891;
+    color: white;
+  }
+
+  .btn-hollow-green {
+    border-color: #46b633;
+    border-width: 2px;
+    color: #46b633;
+  }
+  .btn-hollow-green:hover {
+    border-color: #46b633;
+    background-color: #46b633;
     color: white;
   }
 
@@ -257,7 +325,7 @@ div.greenbottom {
   }
   .featurebox{
     width: 49%;
-    height: 260px;
+    height: 400px;
     padding: 30px;
     display: inline-block;
     vertical-align:top;
@@ -275,14 +343,31 @@ div.greenbottom {
 
   .programs{
     display: flex;
-    justify-content: space-between;
+    justify-content:space-around;
     text-align: center;
   }
 
-  .program{
+  .program-green{
     width:50%;
     color:#46B633;
   }
+  .program-green li{
+    list-style-image: url('/static/ul-tick-green.png');
+  }
+
+
+  .program-blue{
+    width:50%;
+    color:#ECF3FA;
+  }
+  .program-blue li{
+    list-style-image: url('/static/ul-tick-blue.png');
+  }
+
+  /*.program{
+    width:50%;
+    color:#46B633;
+  }*/
   .programcontents{
     max-width:350px;
     margin: auto;
@@ -295,12 +380,10 @@ div.greenbottom {
   }
 
   .program li{
-    list-style-image: url('/static/ul-tick-green.png');
-    padding:8px 0;
   }
 
 /*sales tools*/
-  
+
   .tool-container{
     width: 33%;
     height: 560px;
@@ -322,10 +405,10 @@ div.greenbottom {
     width: 80%;
     padding-bottom: 30px;
   }
-
+/*
   .tool a{
     width: 80%;
-  }
+  }*/
 
 /*quote with image*/
 
@@ -346,7 +429,6 @@ div.greenbottom {
   }
 
   .quotetext h3{
-    line-height: 120%;
     text-align: left;
     padding-bottom: 30px;
   }
@@ -379,16 +461,19 @@ div.greenbottom {
   }
 
   .unilogo{
+    height: auto;
     width:20%;
-    padding: 40px;
+    padding: 20px;
   }
 
   .media{
     display: inline-block;
-  } 
+    width: 100%;
+    max-width: 1024px;
+  }
 
   .media img{
-    width: 16%;
+    width: 20%;
     height: auto;
     padding:10px;
   }
@@ -404,14 +489,29 @@ div.greenbottom {
     color: white;
     padding: 0 10px;
   }
-  .footer a{
-    color: white;
-  }
   .footer strong{
     letter-spacing: 2px;
   }
   .footer p{
     margin: 0 10px;
+  }
+
+  .footer-team{
+    max-width: 1024px;
+    margin:auto;
+    display: flex;
+    justify-content: space-between;
+    padding-top: 60px;
+  }
+
+  .footer-team p{
+    width:55%;
+    padding:0;
+  }
+  .footer-team img{
+    max-width: 395px;
+    height: 315px;
+    padding: 0 40px;
   }
 
 /*if the footer sticks to bottom*/
@@ -424,8 +524,11 @@ div.greenbottom {
     .tool-container{
       width: 49%;
     }
-  }
+    .featurebox{
+      height: 440px;
+    }
 
+  }
 
   @media screen and (max-width: 768px){
     .tool-container{
@@ -445,7 +548,7 @@ div.greenbottom {
     }
     .unilogo{
       width:49%;
-      padding:20px;
+      height: auto;
     }
     .quote{
       padding: 40px 0;
@@ -460,11 +563,14 @@ div.greenbottom {
     .programs{
       flex-direction: column;
     }
-    .program{
+    .program-blue{
+      width:100%;
+    }
+    .program-green{
       width:100%;
     }
 
-    #rebrand{
+    #demo{
       display: none;
     }
     .profilephoto{
@@ -476,6 +582,16 @@ div.greenbottom {
     }
     .media img{
       width: 32%;
+    }
+
+    .footer-team{
+      flex-direction: column-reverse;
+      align-items: center;
+    }
+
+    .footer-team p{
+      width: 100%;
+      padding: 30px 0;
     }
 
   }

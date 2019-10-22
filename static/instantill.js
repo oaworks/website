@@ -422,7 +422,7 @@ var instantill_run = function() {
         info += cit;
       }
     }
-    if (avail.data.ill && avail.data.ill.subscription && avail.data.ill.subscription.demo) info += '<h2>An example subscription title</h2>';
+    if (avail.data.ill && avail.data.ill.subscription && avail.data.ill.subscription.demo) info += '<h2>Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL</h2>';
     info += '<p><a id="oabutton_getmore" href="#"><b>This is not the ' + pora + ' I searched.</b></a></p>';
     var needmore = true;
     var hassub = false;
@@ -485,7 +485,7 @@ var instantill_run = function() {
     if ($('#oabutton_email').length) $('#oabutton_email').bind('keyup', function(e) { if (e.keyCode === 13) ill() });
     if ($('#oabutton_getmore').length) {
       $('#oabutton_getmore').bind('click',function(e) { e.preventDefault(); clickwrong = true; getmore(); });
-      if (needmore || cit.length === 0) getmore();
+      if (needmore || (cit && cit.length === 0)) getmore();
     }
   }
 

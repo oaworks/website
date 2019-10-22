@@ -1,4 +1,6 @@
 
+var uc = undefined;
+
 var view = function(e,which) {
   var evented = true;
   try { e.preventDefault(); } catch(err) { evented = e; }
@@ -8,11 +10,12 @@ var view = function(e,which) {
     $(which).show();
   } else if ($(this).attr('href') === undefined) {
     $('.section').hide();
-    //if (window.location.hash) {
-    //  $(window.location.hash).show();
-    //} else {
-    $('.section').first().show();
-    //}
+    if (window.location.hash && window.location.href.indexOf('/setup') !== -1) {
+      $(window.location.hash).show();
+    } else {
+      $('.section').first().show();
+    	if ('pushState' in window.history) window.history.pushState("", document.title, window.location.pathname + window.location.search);
+    }
   } else if ($(this).attr('href').length > 1) {
     $('.section').hide();
     which = $(this).attr('href');
@@ -46,7 +49,11 @@ var preview = function(e,val) {
   } else {
     if (typeof val !== 'string') {
       try {
-        val = $(this).attr('val');
+        try {
+          if (uc.val) val = uc.val;
+        } catch(err) {
+          val = $(this).attr('val');
+        }
       } catch(err) {
         val = '10.1145/2908080.2908114';
       }

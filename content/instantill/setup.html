@@ -1,6 +1,4 @@
 <!-- JOE: Think about how to lessen the jaring of both sides chaning. Add delay to button press, or add animation. -->
-<!-- TODO: JOE: Work on copy -->
-<!-- TODO: redirect https://openaccessbutton.org/instantill/setup to /setup   -->
 <link rel="stylesheet" href="/static/oabutton_rebrand.css"> <!-- gets the new css (still also uses the old css, just overwrites where necessary) -->
 
 <style>
@@ -24,28 +22,42 @@
     color:#46b633;
   }
 
-  .btn-hollow {
-    border-color: #46b633;
-    border-width: 2px;
-    border-radius: 0px;
-    color: #46b633;
-    font-weight: bold;
-    padding-top: 10px;
-    padding-bottom: 10px;
+  .btn-hollow-green:hover {
+    color: #edf8ed;
   }
-  .btn-hollow:hover {
-    border-color: #46b633;
-    border-width: 2px;
-    border-radius: 0px;
-    color: #46b633;
-    font-weight: bold;
-    padding-top: 10px;
-    padding-bottom: 10px;
+
+  p{
+    padding:0;
+    margin: 10px 0;
+  }
+
+  h2{
+    text-align: left;
+  }
+
+  .alert-new {
+    width: 100%;
+    padding: 10px;
+    background-color: #46b633;
+    color: white;
+    text-align: center !important;
   }
 
 </style>
 
-<div id="rebrand" class="container-fluid">
+
+<div class="alert-new">
+  <div class="center-col">
+    <div>
+      <p style="text-align:center;">
+        InstantILL is currently in Beta. Please <a href="mailto:joe@openaccessbutton.org" class="green">let us know</a> if there is anything we can improve.
+      </p>
+    </div>
+  </div>
+</div>
+
+
+<div id="demo" class="container-fluid">
 
   <div id="menu" class="section">
     <div class="row">
@@ -55,17 +67,17 @@
 
       <div class="col-md-4 col-md-offset-1 green">
         <div class="greenery">
-          <h2>Welcome, let’s get you set up!</h2>
+          <h2>Let’s get you set up!</h2>
 
           <p>
-            Congrats, you already have InstantILL partly set up! Already, it can find Open Access articles and submit loans to your email. As you complete the steps below you’ll be able to customize further. It requires no coding or systems expertise, and doesn’t take long.
+            Congrats, you already have InstantILL partly set up! It finds Open Access articles and submit loans to your email. As you complete the steps below you’ll be able to customize further. It requires no coding or systems expertise, on <a href="#compatibility" class="view green">compatibile systems</a> and doesn’t take long.
           </p>
           <p>
-            At anytime you can test InstantILL, with your settings, on the left. It’ll work just like it would on your pages, although it won’t be styled with your brand yet.
+            At anytime you can test InstantILL, with your settings, on the left. It’ll work just like it would on your pages, although it won’t be styled to fit with your brand yet.
           </p>
-          <p>
+          <p><b>
             Get InstantILL working with your:
-          </p>
+          </b></p>
 
           <ul class="arrowed">
             <li>
@@ -85,32 +97,31 @@
             <li>
               <a class="green view pull preview" val="10.1145/2908080.2908114" href="#workflow">
                 <span class="glyphicon glyphicon-arrow-right">
-              </span> Workflow</a>
+              </span> Discovery tools</a>
             </li>
           </ul>
 
-            <p>Once you're set up, you might want to look at:</p>
+            <p><b>Once set up, it's time to:</b></p>
 
             <ul class="arrowed">
-
-            <li>
-              <a class="green view pull preview" val="10.1145/2908080.2908114" href="#analytics">
-                <span class="glyphicon glyphicon-arrow-right">
-              </span> Analytics</a>
-            </li>
-            <li>
-              <a class="green view pull preview" val="10.1145/2908080.2908114" href="#advanced">
-                <span class="glyphicon glyphicon-arrow-right">
-              </span> Advanced</a>
-            </li>
-          </ul>
-
-          <p><a class="btn btn-rebrand btn-block save view pull" href="#ill">Get Started</a></p>
+              <li>
+                <a class="green view pull preview" val="10.1145/2908080.2908114" href="#rollout">
+                <span class="glyphicon glyphicon-arrow-right"></span> Rollout</a>
+              </li>
+              <li>
+                <a class="green view pull preview" val="10.1145/2908080.2908114" href="#analytics">
+                <span class="glyphicon glyphicon-arrow-right"></span> View Analytics</a>
+              </li>
+            </ul>
+            <p>For more, check the
+              <a class="green view pull preview" val="10.1145/2908080.2908114" href="#advanced">advanced settings</a>.
+            </p>
 
         </div>
 
         <div class="greenbottom">
-          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green" href="/feedback#bug">Issue</a> | <a class="green view" href="#faq">FAQ</a></p>
+          <p><a class="btn btn-demo-green  save view pull" href="#ill">Get Started</a></p>
+          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
         </div>
       </div>
     </div>
@@ -125,18 +136,16 @@
       <div class="col-md-4 col-md-offset-1 green">
         <div class="greenery">
           <p><a class="green view pull" href="#menu"><span class="glyphicon glyphicon-arrow-left"></span>  Go to Menu</a></p>
-          <h2>Interlibrary loan: Submission</h2>
+          <h2>Interlibrary loans: Submission (1/2)</h2>
           <p>
             InstantILL uses your existing Interlibrary Loan systems to manage authentication, fulfillment, and payment, or can submit to an email address.
           </p>
 
-          <p><b>What is your ILL article form link?</b><p>
+          <p><b>What is your ILL article form link?</b></p>
           <input id="ill_redirect_base_url" type="text" class="form-control setting green" placeholder="URL">
           <p>
-          OR
-          <p>
-          <p><b>What email address do you want ILLs forwarded to? (optional for email alternative)</b></p>
-          <input id="email" type="text" class="form-control setting green" placeholder="default is your OAB account email address">
+          Or <a href="#ill-email" class="view green">submit over email</a>
+          </p>
           <br>
           <p>
             If everything works, hit next! If it doesn’t, <a href="#ill-advanced" class="view green pull">see advanced settings</a>.
@@ -145,9 +154,9 @@
         </div>
 
         <div class="greenbottom">
-          <p><a class="btn btn-hollow btn-block save pull preview" href="#">Preview & Test</a></p>
-          <p><a class="btn btn-rebrand btn-block save view pull" href="#ill-customization">Save & Continue</a></p>
-          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green" href="/feedback#bug">Issue</a> | <a class="green" href="#faq">FAQ</a></p>
+          <p><a class="btn btn-hollow-green  save pull preview" href="#">Preview & Test</a></p>
+          <p><a class="btn btn-demo-green  save view pull" href="#ill-customization">Save & Continue</a></p>
+          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
         </div>
       </div>
     </div>
@@ -162,12 +171,12 @@
       <div class="col-md-4 col-md-offset-1 green">
         <div class="greenery">
           <p><a class="green view" href="#ill"><span class="glyphicon glyphicon-arrow-left"></span>  Go back</a></p>
-          <h2>Interlibrary loan: Settings</h2>
+          <h2>Interlibrary loan: Settings (2/2)</h2>
           <p>
             Now that you can submit requests, you can adjust some key details about loans. Everything is optional, and we’ve set common defaults.
           </p>
 
-          <p><b>Name of your institution</b><p>
+          <p><b>What is the name of your institution?</b><p>
           <input id="ill_institution" type="text" class="form-control setting green" placeholder="Institution name">
           <br>
           <p><b>What do your article ILLs cost? Please include your currency symbol e.g $4</b><p>
@@ -177,27 +186,18 @@
           <input id="time" type="text" class="form-control setting green" placeholder="default 24 hours">
           <br>
           <p><b>What email address do you want users referred to if there is a problem?</b><p>
-          <input id="problem_email" type="text" class="form-control setting green" placeholder="no default, the user will be told to contact their library">
-          <br>
-          <p><b>Terms and conditions link</b><p>
-          <input id="terms" type="text" class="form-control setting green" placeholder="e.g https://libguides.newman.ac.uk/students/inter_library/terms">
+          <input id="problem_email" type="text" class="form-control setting green" placeholder="User will be told to 'contact their library'">
           <br>
           <p><b>Where do you want people sent if they want a book?</b><p>
           <input id="book" type="text" class="form-control setting green" placeholder="e.g https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=21">
           <br>
-          <p><b>Where do you want people sent if they want something other than a book or article</b><p>
+          <p><b>Where do you want people sent if they want something other than a book or article?</b><p>
           <input id="other" type="text" class="form-control setting green" placeholder="e.g https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=10">
           <br>
-          <p><b>
-            If you use WMS, inside our notifications we can provide direct links to journals to save you time. Just let us know your WMS URL.
-          </b>
-          <input id="search" type="text" class="form-control setting green" placeholder="e.g  https://ambslibrary.share.worldcat.org/wms/cmnd/nd/discover/items/search"><br>
-          </p>
           <p>
-            <!-- Would be great if these were green, not blue -->
-            <p><b>
-              If we find an article Open Access, do you want to let patrons still request an ILL?
-            </b></p>
+          <p><b>
+            If we find an article Open Access, do you want to let patrons still request an ILL?
+          </b></p>
           <input id="noillifoa" type="checkbox" class="setting green">
             No
           </p>
@@ -209,18 +209,34 @@
             No
           </p>
           <p><b>
-            We use article to refer to academic journal publications by default. Would you like to change that?
+            We use 'article' to refer to academic journal publications by default. Would you like to change that?
           </b></p>
           <p>
           <input id="saypaper" type="checkbox" class="setting green">
             Yes, use 'paper' instead.
           </p>
+
+          <p><b>If you want patrons want to learn details about Interlibrary Loan services, where can they find that?</b><p>
+          <small>This helps keep the page you embed InstantILL on clean and tidy while still making sure interested patrons can learn about ILL</small>
+          <input id="ill-info" type="text" class="form-control setting green" placeholder="e.g https://ulib.iupui.edu/services/ILL">
+          <br>
+
+          <p><b>If you want to allow users to view their account and outstanding loans, let us know where they can do that. </b><p>
+          <small>This helps keep the page you embed InstantILL on clean and tidy while allowing users to manage their accounts.</small>
+          <input id="view-account" type="text" class="form-control setting green" placeholder="e.g https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=62">
+          <br>
+
+          <p><b>If you want people to still be able to submit ILLs manually, let us know how they can do that.</b><p>
+          <small>This helps make sure people who liked the old way of doing things still can</small>
+          <input id="advanced-form" type="text" class="form-control setting green" placeholder="e.g https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=10">
+          <br>
+
         </div>
 
         <div class="greenbottom">
-          <p><a class="btn btn-hollow btn-block save pull preview" href="#">Preview & Test</a></p>
-          <p><a class="btn btn-rebrand btn-block save view pull" href="#subscription">Save & Continue</a></p>
-          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green" href="/feedback#bug">Issue</a> | <a class="green" href="#faq">FAQ</a></p>
+          <p><a class="btn btn-hollow-green  save pull preview" href="#">Preview & Test</a></p>
+          <p><a class="btn btn-demo-green  save view pull" href="#subscription">Save & Continue</a></p>
+          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
         </div>
       </div>
     </div>
@@ -287,9 +303,46 @@
         </div>
 
         <div class="greenbottom">
-          <p><a class="btn btn-hollow btn-block save pull preview" href="#">Preview & Test</a></p>
-          <p><a class="btn btn-rebrand btn-block save view pull" href="#">Save & Continue</a></p>
-          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green" href="/feedback#bug">Issue</a> | <a class="green" href="#faq">FAQ</a></p>
+          <p><a class="btn btn-hollow-green  save pull preview" href="#">Preview & Test</a></p>
+          <p><a class="btn btn-demo-green  save view pull" href="#">Save & Continue</a></p>
+          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="ill-email" class="section">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-1 content">
+
+      </div>
+
+      <div class="col-md-4 col-md-offset-1 green">
+        <div class="greenery">
+          <p><a class="green view pull" href="#menu"><span class="glyphicon glyphicon-arrow-left"></span>  Go to Menu</a></p>
+          <h2>Interlibrary loans: Submission (1/2)</h2>
+          <p>
+            InstantILL uses your existing Interlibrary Loan systems to manage authentication, fulfillment, and payment, or can submit to an email address.
+          </p>
+          <p><b>What email address do you want ILLs sent to? (optional for email alternative)</b></p>
+          <input id="email" type="text" class="form-control setting green" placeholder="default is your OAB account email address">
+          <br>
+          <p><b>
+            If you use WMS, inside our notifications we can provide direct links to journals to save you time. Just let us know your WMS URL.
+          </b>
+          <input id="search" type="text" class="form-control setting green" placeholder="e.g  https://ambslibrary.share.worldcat.org/wms/cmnd/nd/discover/items/search"><br>
+          </p>
+          <br>
+          <p><b>Terms and conditions link</b><p>
+          <input id="terms" type="text" class="form-control setting green" placeholder="e.g https://libguides.newman.ac.uk/students/inter_library/terms">
+          <br>
+
+        </div>
+
+        <div class="greenbottom">
+          <p><a class="btn btn-hollow-green  save pull preview" href="#">Preview & Test</a></p>
+          <p><a class="btn btn-demo-green  save view pull" href="#ill-customization">Save & Continue</a></p>
+          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
         </div>
       </div>
     </div>
@@ -318,14 +371,16 @@
               <option value="eds">EDS / Ebsco</option>
               <option value="serialssolutions">Serials Solutions</option>
             </select>
-            <a style="margin-top:10px;" class="btn btn-primary" id="addsubscription" href="#">Add another</a>
-
+            <a style="margin-top:10px;" class="btn btn-demo-green" id="addsubscription" href="#">Add another</a>
           </p>
+
+          <p>What is the DOI of an article you definitely have access to, which can be used for testing?</p>
+          <p><input id="val" type="text" class="form-control setting green" placeholder="e.g 10.1234/567890"></p>
         </div>
         <div class="greenbottom">
-          <p><a class="btn btn-hollow btn-block save pull preview" href="#">Preview & Test</a></p>
-          <p><a class="btn btn-rebrand btn-block save view pull" href="#">Save & Continue</a></p>
-          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green" href="/feedback#bug">Issue</a> | <a class="green" href="#faq">FAQ</a></p>
+          <p><a class="btn btn-hollow-green  save pull preview" href="#">Preview & Test</a></p>
+          <p><a class="btn btn-demo-green  save view pull" href="#">Save & Continue</a></p>
+          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
         </div>
       </div>
     </div>
@@ -366,18 +421,17 @@
 
         <p>You should now be good to go!</p>
 
-        <h3>Some advice</h3>
-
-        <p>We suggest:</p>
+        <h3>We suggest:</h3>
         <ul>
           <li>Calling your page ‘Get a paper’</li>
           <li>Not mentioning 'InstantILL' to patrons</li>
+          <li>Not putting anything above InstantILL (except a page title)</li>
         </ul>
 
         </div>
         <div class="greenbottom">
-          <p><a class="btn btn-rebrand btn-block save view pull" href="#">Save & Continue</a></p>
-          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green" href="/feedback#bug">Issue</a> | <a class="green" href="#faq">FAQ</a></p>
+          <p><a class="btn btn-demo-green  save view pull" href="#">Save & Continue</a></p>
+          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
         </div>
       </div>
     </div>
@@ -392,22 +446,22 @@
       <div class="col-md-4 col-md-offset-1 green">
         <div class="greenery">
           <p><a class="green view pull" href="#menu"><span class="glyphicon glyphicon-arrow-left"></span>  Go to Menu</a></p>
-          <h2>Workflow</h2>
+          <h2>Discovery tools</h2>
           <p>
             You can link to InstantILL from any library system to integrate it into your existing workflows, say from library search or a link resolver.
           </p>
           <p id="embeddedexample" style="display:none;"></p>
           <p id="noembeddedexampleavailable" style="display:none;">
-            <!-- TODO: Joe: you can put in text here which will show if there is not an embedded example to show-->
+            Once you've used InstantILL on one of your domains, we'll show you an example link you can use to integrate into other systems.
           </p>
           <p>
             If everything works, hit next! If it doesn’t, <a href="#workflow-advanced" class="view green pull">see advanced settings
           </p>
         </div>
         <div class="greenbottom">
-          <p><a class="btn btn-hollow btn-block save pull preview" href="#">Preview & Test</a></p>
-          <p><a class="btn btn-rebrand btn-block save view pull" href="menu"></span>Save & Continue</a></p>
-          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green" href="/feedback#bug">Issue</a> | <a class="green" href="#faq">FAQ</a></p>
+          <p><a class="btn btn-hollow-green  save pull preview" href="#">Preview & Test</a></p>
+          <p><a class="btn btn-demo-green  save view pull" href="menu"></span>Save & Continue</a></p>
+          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
         </div>
       </div>
     </div>
@@ -458,13 +512,68 @@
 
         </div>
         <div class="greenbottom">
-          <p><a class="btn btn-hollow btn-block save pull preview" href="#">Preview & Test</a></p>
-          <p><a class="btn btn-rebrand btn-block save view pull" href="menu">Save & Continue</a></p>
-          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green" href="/feedback#bug">Issue</a> | <a class="green" href="#faq">FAQ</a></p>
+          <p><a class="btn btn-hollow-green  save pull preview" href="#">Preview & Test</a></p>
+          <p><a class="btn btn-demo-green  save view pull" href="menu">Save & Continue</a></p>
+          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
         </div>
       </div>
     </div>
   </div>
+
+
+<div id="rollout" class="section">
+  <div class="row">
+
+    <div class="col-md-6 col-md-offset-1 content">
+
+    </div>
+
+    <div class="col-md-4 col-md-offset-1 green">
+      <div class="greenery">
+      <p><a class="green view pull" href="#menu"><span class="glyphicon glyphicon-arrow-left"></span>  Go to Menu</a></p>
+      <h2>Rollout</h2>
+      <p>
+        Once you're all set up, and you know it's working, it's time to put InstantILL in patron's hands.
+      </p>
+
+      <p><b>
+        Have you rolled it out?
+      </b></p>
+      <small>
+        Only click this around when you rollout InstantILL to patrons. This helps us support you best, track your stats, and understand how we're doing.
+      </small>
+      <p>
+      <input id="live" type="checkbox" class="setting green">
+        Yes
+      </p>
+
+      <p><b>
+        Activate pilot mode?
+      </b></p>
+      <small>
+        Pilot mode makes it easy to rollout a pilot. Patrons will know why you're trying something new, be able to give feedback and go back to old way. We'll also track the performance of your pilot, and you can ask us to let you know.
+      </small>
+      <p>
+      <input id="pilot" type="checkbox" class="setting green">
+        Yes
+      </p>
+
+      <p><b>
+        Can others contact you to find out about InstantILL?
+      </b></p>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSdK7CQ8J0lJ2hauS0A-qr3g5uBz9h3WZ6Uvj6vxzz0ut8GVbA/viewform?usp=sf_link" class="green">
+        Yes, sign me up!
+      </p>
+
+    </div>
+    <div class="greenbottom">
+      <p><a class="btn btn-hollow-green  save pull preview" href="#">Preview & Test</a></p>
+      <p><a class="btn btn-demo-green  save view pull" href="menu">Save & Continue</a></p>
+      <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
+    </div>
+  </div>
+</div>
+</div>
 
   <div id="analytics" class="section">
     <div class="row">
@@ -477,16 +586,16 @@
           <p><a class="green view pull" href="#menu"><span class="glyphicon glyphicon-arrow-left"></span>  Go to Menu</a></p>
           <h2>Analytics</h2>
           <p>
-
-            We can provide individualized analytics detailing your use of InstantILL. However, since this is not essential to delivering an excellent service to end users, we only provide this to users who support our work through our 'Leadership Tier'. To find our more, go <a href="https://openaccessbutton.org/libraries">here</a>.
+            If you're on our leadership teir, or in pilot mode, and would like a report, email Joe at <a href="joe@openaccessbutton.org">Joe@openaccessbutton.org</a>.
           </p>
           <p>
-            If you're on our leadership teir, and would like a report, email Joe at <a href="joe@openaccessbutton.org">Joe@openaccessbutton.org</a>.
+            We can provide individualized analytics detailing your use of InstantILL. However, since this is not essential to delivering an excellent service to end users, we only provide this to users who support our work through our 'Leadership Tier'. To find our more, go <a href="https://openaccessbutton.org/libraries#leadership">here</a>.
           </p>
+
 
         </div>
         <div class="greenbottom">
-          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green" href="/feedback#bug">Issue</a> | <a class="green" href="#faq">FAQ</a></p>
+          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
         </div>
       </div>
     </div>
@@ -513,6 +622,18 @@
           </p>
           <p>
             Full documentation on how to do this can be found <a href="https://openaccessbutton.org/api" class="green">here</a>.
+          </p>
+
+          <h3>Making your ILL form work well with InstantILL</h3>
+
+          <p>
+            InstantILL is designed to work with your standard form. However, you can improve the user experience by changing it. We suggest passing as much data in the background (not in user visible fields) and treating the page as a confirmation form. We’d like to provide examples of this in various systems, so if you do this and can share your code please <a href=”mailto:joe@openaccessbutton.org”>send it to us</a>.
+          </p>
+
+          <h3>Multiple Accounts</h3>
+
+          <p>
+            You can have as many InstantILL accounts as you need. This can be helpful for embedding InstantILL into different places (e.g homepage, link resolver, ILL page) with different settings.
           </p>
 
           <h3>Emails to Authors</h3>
@@ -543,8 +664,8 @@
 
         </div>
         <div class="greenbottom">
-          <p><a class="btn btn-hollow btn-block save pull preview" href="#">Preview & Test</a></p>
-          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green" href="/feedback#bug">Issue</a> | <a class="green" href="#faq">FAQ</a></p>
+          <p><a class="btn btn-demo-green  save view pull" href="menu">Save & Continue</a></p>
+          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
         </div>
       </div>
     </div>
@@ -567,7 +688,7 @@
         </ul>
 
         <div class="greenbottom">
-          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green" href="/feedback#bug">Issue</a> | <a class="green" href="#faq">FAQ</a></p>
+          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
         </div>
       </div>
     </div>
@@ -584,14 +705,16 @@
           <h2>Login</h2>
 
 
-        <p>Oh dear, you need to be <a href="/account?next=/instantill/setup">logged in</a> to see this.</p>
+        <p>You need to be <a href="/account?next=/instantill/setup">logged in</a> to set up InstantILL. It only takes a moment.</p>
           <input type="text" name="email" id="youremail" class="form-control green" placeholder="Your email address">
           <br>
-          <a id="gologin" href="/account?next=/instantill/setup" class="btn btn-rebrand btn-block">Login</a>
+          <a id="gologin" href="/account?next=/instantill/setup" class="btn btn-demo-green ">Login</a>
+           <p>We use your email to contact you about InstantILL, and ensure only you can access your InstantILL settings.</p>
         </div>
 
+
         <div class="greenbottom">
-          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green" href="/feedback#bug">Issue</a> | <a class="green" href="#faq">FAQ</a></p>
+          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
         </div>
       </div>
     </div>
@@ -614,19 +737,82 @@
           <p><a class="green view pull" href="#menu"><span class="glyphicon glyphicon-arrow-left"></span>  Go to Menu</a></p>
           <h2>Not got your quesiton answered?</h2>
           <p>
-            Drop <a href="mailto:Joe@openaccessbutton.org">Joe@openaccessbutton.org</a> an email.
+            Drop <a href="mailto:Joe@openaccessbutton.org" class="green">Joe@openaccessbutton.org</a> an email.
           </p>
 
           <h2>Think you've found an issue?</h2>
           <p>
-            Report it <a href="/feedback#bug">here</a>.
+            Report it <a href="/feedback#bug" class="green">here</a>.
           </p>
 
         </div>
 
         <div class="greenbottom">
-          <p><a class="btn btn-rebrand btn-block" href="#menu">Go to Menu</a></p>
-          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green" href="/feedback#bug">Issue</a> | <a class="green" href="#faq">FAQ</a></p>
+          <p><a class="btn btn-demo-green  view" href="#menu">Go to Menu</a></p>
+          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="compatibility" class="section">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-1 content">
+
+        <h1 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:3em;">Compatibility</h1>
+
+          <h2>Supported systems</h2>
+          <p>
+          <b>ILL</b>
+            <ul>
+              <li>ILLiad</li>
+              <li>Relais ILL</li>
+              <li>Tipasa</li>
+              <li>WMS</li>
+              <li>Email</li>
+            </ul>
+          </p>
+          <p>
+            <b>Subscriptions</b>
+            <ul>
+              <li>Serial Solutions</li>
+              <li>EBSCO Full Text Finder</li>
+              <li>SFX</li>
+            </ul>
+          </p>
+
+          <h2>Soon to be supported systems</h2>
+          <p>
+            <li>Primo</li>
+            <li>Alma</li>
+          </p>
+
+          <h2>I don't see my system...</h2>
+          <p>
+            That doesn't mean InstantILL won't work for you! InstantILL can submit ILL's to most systems that can fill forms with OpenURL. Even if not all the integrations work, that mean InstantILL can't still provide significant value.
+          </p>
+          <p>
+            If you find your system works, <a href="mailto:joe@openaccessbutton.org">let us know</a>, and we'll add it to supported systems.
+          </p>
+          <p>
+            Our hope is that InstantILL will support all major, or open, library systems.
+          </p>
+
+      </div>
+
+      <div class="col-md-4 col-md-offset-1 green">
+        <div class="greenery">
+          <p><a class="green view pull" href="#menu"><span class="glyphicon glyphicon-arrow-left"></span>  Go to Menu</a></p>
+          <h2>Need help?</h2>
+          <p>
+            Drop <a href="mailto:Joe@openaccessbutton.org" class="green">Joe@openaccessbutton.org</a> an email.
+          </p>
+
+        </div>
+
+        <div class="greenbottom">
+          <p><a class="btn btn-demo-green  view" href="#menu">Go to Menu</a></p>
+          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
         </div>
       </div>
     </div>
@@ -684,7 +870,7 @@ jQuery(document).ready(function() {
 
 <script>
 jQuery(document).ready(function() {
-  if ($('#rebrand').height() < $(window).height()) $('#rebrand').css({'min-height':$(window).height()+'px'});
+  if ($('#demo').height() < $(window).height()) $('#demo').css({'min-height':$(window).height()+'px'});
   $('div.green').css({'min-height':$(window).height()+'px'});
 
   $(document).ajaxComplete(function(e,xhr) {
@@ -697,7 +883,6 @@ jQuery(document).ready(function() {
         $('div.content:visible').css({'padding-top':diff+'px'});
       }
       $('.oabutton_ill').off();
-      $('body').on('click','.oabutton_ill',fakeill);
     }
   });
 
@@ -723,7 +908,6 @@ jQuery(document).ready(function() {
   }
   $('body').on('change','.subscription',guesssubscription);
 
-  var uc = undefined;
   var configure = function() {
     for (var k in uc) {
       if (typeof uc[k] === 'boolean') {
@@ -794,11 +978,11 @@ jQuery(document).ready(function() {
         uc = data; // returns the updated user config
         configure();
         if (_preview) {
-          $('.save').hide().after('<p class="saved">Changes saved! Your preview will run shortly.</p>');
+          $('.save').hide().after('<p class="saved">Saving changes! Your preview will run shortly.</p>');
           setTimeout(function() { $('.saved').hide(); $('.save').show(); preview(undefined,_preview); }, 3000);
           _preview = false;
         } else {
-          $('.save').hide().after('<p class="saved">Changes saved!</p>');
+          $('.save').hide().after('<p class="saved">Saving changes!</p>');
           setTimeout(function() { $('.saved').hide(); $('.save').show(); }, 4000);
         }
       },
@@ -855,7 +1039,7 @@ jQuery(document).ready(function() {
           try {
             var eurl = iia.aggregations.embeds.buckets[0].key.split('?')[0].split('#')[0];
             if (eurl.indexOf('instantill.org') !== -1 || eurl.indexOf('openaccessbutton.org') !== -1) eurl = false;
-            var ex = 'For example:<br>' + eurl + '?doi=10.1145/2908080.2908114';
+            var ex = 'You can use the follow link to integrate InstantILL into your pages:<br>' + eurl + '?doi=10.1145/2908080.2908114';
             $('#embeddedexample').html(ex).show();
           } catch(err) {
             $('#noembeddedexampleavailable').show();

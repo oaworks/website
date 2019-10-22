@@ -74,6 +74,12 @@ API.service.oab.find = (opts={url:undefined,type:undefined}) ->
   ret.libraries = API.service.oab.libraries(opts) if opts.libraries
   already = []
 
+  # shortcut for instantill demo
+  if opts.from? and opts.plugin is 'instantill' and opts.doi is '10.1234/567890' and (opts.from is 'qZooaHWRz9NLFNcgR' or opts.from is 'eZwJ83xp3oZDaec86') # dev and live demo accounts that always return a fixed answer
+    ret.ill = {openurl: ""}
+    ret.ill.subscription = {findings:{}, uid: opts.from, lookups:[], error:[], url: 'https://instantill.org', demo: true}
+    return ret
+
   if opts.url.indexOf('alma.exlibrisgroup.com') isnt -1 or opts.url.indexOf('/exlibristest') isnt -1
     # switch exlibris URLs for titles, which the scraper knows how to extract
     scraped = API.service.oab.scrape(undefined, opts.dom)
