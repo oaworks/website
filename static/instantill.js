@@ -65,6 +65,23 @@ var instantill_run = function() {
     if (_oab_config.other) w += (_oab_config.book ? ' or ' : ' ') + '<a href="' + _oab_config.other + '"><b>something else</b></a>';
     w += '?</p>';
   }
+  if (_oab_config.advancedform || _oab_config.viewaccount || _oab_config.illinfo) {
+    w += '<p>Or ';
+    if (_oab_config.advancedform) {
+      w += '<a href="' + _oab_config.advancedform + '">use advanced form</a>';
+      if (_oab_config.viewaccount && _oab_config.illinfo) {
+        w += ', '
+      } else if (_oab_config.viewaccount || _oab_config.illinfo) {
+        w += ' and '
+      }
+    }
+    if (_oab_config.viewaccount) {
+      w += '<a href="' + _oab_config.viewaccount + '">view account</a>';
+      if (_oab_config.illinfo) w += ' and ';
+    }
+    if (_oab_config.illinfo) w += '<a href="' + _oab_config.illinfo + '">learn about Interlibrary Loan</a>';
+    w += '</p>';
+  }
   w += '\
 </div>\
 <div id="oabutton_availability"></div>\
