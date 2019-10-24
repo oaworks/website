@@ -108,7 +108,7 @@
 
             <ul class="arrowed">
               <li>
-                <a class="green view pull preview" val="10.1145/2908080.2908114" href="#rollout">
+                <a class="green view pull preview" val="" href="#rollout">
                 <span class="glyphicon glyphicon-arrow-right"></span> Rollout</a>
               </li>
               <li>
@@ -165,7 +165,7 @@
     </div>
   </div>
 
-  <div id="ill-customization" class="section">
+  <div id="ill-input" class="section">
     <div class="row">
       <div class="col-md-6 col-md-offset-1 content">
 
@@ -174,52 +174,28 @@
       <div class="col-md-4 col-md-offset-1 green">
         <div class="greenery">
           <p><a class="green view" href="#ill"><span class="glyphicon glyphicon-arrow-left"></span>  Go back</a></p>
-          <h2>Interlibrary loan: Settings (2/2)</h2>
+          <h2>Interlibrary loan: Input (2/3)</h2>
           <p>
-            Now that you can submit requests, you can adjust some key details about loans. Everything is optional, and we’ve set common defaults.
+            Now that you can submit article requests, you can adjust some key details about loans. Everything is optional, and we’ve set common defaults.
           </p>
 
           <p><b>What is the name of your institution?</b><p>
           <input id="ill_institution" type="text" class="form-control setting green" placeholder="Institution name">
           <br>
-          <p><b>What do your article ILLs cost? Please include your currency symbol e.g $4</b><p>
-          <input id="cost" type="text" class="form-control setting green" placeholder="default free">
-          <br>
-          <p><b>How long do your ILLs take to deliver on average? e.g 24 hours</b><p>
-          <input id="time" type="text" class="form-control setting green" placeholder="default 24 hours">
-          <br>
+
           <p><b>What email address do you want users referred to if there is a problem?</b><p>
           <input id="problem_email" type="text" class="form-control setting green" placeholder="User will be told to 'contact their library'">
           <br>
+
           <p><b>Where do you want people sent if they want a book?</b><p>
           <input id="book" type="text" class="form-control setting green" placeholder="e.g https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=21">
           <br>
+
           <p><b>Where do you want people sent if they want something other than a book or article?</b><p>
           <input id="other" type="text" class="form-control setting green" placeholder="e.g https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=10">
           <br>
-          <p>
-          <p><b>
-            If we find an article Open Access, do you want to let patrons still request an ILL?
-          </b></p>
-          <input id="noillifoa" type="checkbox" class="setting green">
-            No
-          </p>
-          <p><b>
-            If we find that you're subscribed to an article, do you still want patrons to be able to request an ILL?
-          </b></p>
-          <p>
-          <input id="noillifsub" type="checkbox" class="setting green">
-            No
-          </p>
-          <p><b>
-            We use 'article' to refer to academic journal publications by default. Would you like to change that?
-          </b></p>
-          <p>
-          <input id="saypaper" type="checkbox" class="setting green">
-            Yes, use 'paper' instead.
-          </p>
 
-          <p><b>If you want patrons want to learn details about Interlibrary Loan services, where can they find that?</b><p>
+          <p><b>If you want patrons want to learn details about Interlibrary Loan services, where can they find that?</b></p>
           <small>This helps keep the page you embed InstantILL on clean and tidy while still making sure interested patrons can learn about ILL</small>
           <input id="illinfo" type="text" class="form-control setting green" placeholder="e.g https://ulib.iupui.edu/services/ILL">
           <br>
@@ -229,7 +205,7 @@
           <input id="viewaccount" type="text" class="form-control setting green" placeholder="e.g https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=62">
           <br>
 
-          <p><b>If you want people to still be able to submit ILLs manually, let us know how they can do that.</b><p>
+          <p><b>If you want people to still be able to submit ILLs manually, let us know how they can do that.</b></p>
           <small>This helps make sure people who liked the old way of doing things still can</small>
           <input id="advancedform" type="text" class="form-control setting green" placeholder="e.g https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=10">
           <br>
@@ -238,12 +214,73 @@
 
         <div class="greenbottom">
           <p><a class="btn btn-hollow-green  save pull preview" href="#">Preview & Test</a></p>
-          <p><a class="btn btn-demo-green  save view pull" href="#subscription">Save & Continue</a></p>
+          <p><a class="btn btn-demo-green  save view pull" href="#ill-results">Save & Continue</a></p>
           <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
         </div>
       </div>
     </div>
   </div>
+
+    <div id="ill-results" class="section">
+      <div class="row">
+        <div class="col-md-6 col-md-offset-1 content">
+
+        </div>
+
+        <div class="col-md-4 col-md-offset-1 green">
+          <div class="greenery">
+            <p><a class="green view" href="#ill"><span class="glyphicon glyphicon-arrow-left"></span>  Go back</a></p>
+            <h2>Interlibrary loan: Input (2/3)</h2>
+            <p>
+              Now that you can submit article requests, you can adjust some key details about loans. Everything is optional, and we’ve set common defaults.
+            </p>
+
+            <p><b>What do your article ILLs cost? Please include your currency symbol e.g $4</b><p>
+            <input id="cost" type="text" class="form-control setting green" placeholder="default free">
+            <br>
+
+            <p><b>How long do your ILLs take to deliver on average? e.g 24 hours</b><p>
+            <input id="time" type="text" class="form-control setting green" placeholder="default 24 hours">
+            <br>
+
+            <p><b>
+              If we find an article Open Access, do you want to let patrons still request an ILL?
+            </b></p>
+            <p>
+            <input id="noillifoa" type="checkbox" class="setting green">
+              No
+            </p>
+            <br>
+
+            <p><b>
+              If we find that you're subscribed to an article, do you still want patrons to be able to request an ILL?
+            </b></p>
+            <p>
+            <input id="noillifsub" type="checkbox" class="setting green">
+              No
+            </p>
+            <br>
+
+            <p><b>
+              We use 'article' to refer to academic journal publications by default. Would you like to change that?
+            </b></p>
+            <p>
+            <input id="saypaper" type="checkbox" class="setting green">
+              Yes, use 'paper' instead.
+            </p>
+            <br>
+
+          </div>
+
+          <div class="greenbottom">
+            <p><a class="btn btn-hollow-green  save pull preview" href="#">Preview & Test</a></p>
+            <p><a class="btn btn-demo-green  save view pull" href="#subscription">Save & Continue</a></p>
+            <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
   <div id="ill-advanced" class="section">
     <div class="row">
@@ -462,8 +499,8 @@
           </p>
         </div>
         <div class="greenbottom">
-          <p><a class="btn btn-hollow-green  save pull preview" href="#">Preview & Test</a></p>
-          <p><a class="btn btn-demo-green  save view pull" href="menu"></span>Save & Continue</a></p>
+          <p><a class="btn btn-hollow-green save pull preview" href="#">Preview & Test</a></p>
+          <p><a class="btn btn-demo-green save view pull" href="rollout"></span>Save & Continue</a></p>
           <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
         </div>
       </div>
@@ -515,8 +552,8 @@
 
         </div>
         <div class="greenbottom">
-          <p><a class="btn btn-hollow-green  save pull preview" href="#">Preview & Test</a></p>
-          <p><a class="btn btn-demo-green  save view pull" href="menu">Save & Continue</a></p>
+          <p><a class="btn btn-hollow-green save pull preview" href="#">Preview & Test</a></p>
+          <p><a class="btn btn-demo-green save view pull" href="menu">Save & Continue</a></p>
           <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
         </div>
       </div>
