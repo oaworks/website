@@ -216,8 +216,11 @@ var instantill_run = function() {
   var illpinger = function(what) {
     try {
       var noddy_api = api.indexOf('dev.') !== -1 ? 'https://dev.api.cottagelabs.com' : 'https://api.cottagelabs.com';
+      var url = noddy_api + '/ping.png?service=openaccessbutton&action=' + what + '&from=' + _oab_opts.uid;
+      if (_oab_config.pilot) url += '&pilot=' + _oab_config.pilot;
+      if (_oab_config.live) url += '&pilot=' + _oab_config.live;
       $.ajax({
-        url: noddy_api + '/ping.png?service=openaccessbutton&action=' + what
+        url: url
       });
     } catch (err) {}
   }
@@ -626,7 +629,7 @@ var instantill_run = function() {
   $('#oabutton_input').bind('keyup',availability);
   $('body').on('click','.oabutton_find',availability);
   $('body').on('click','.restart',_instantill_restart);
-  $('body').on('click','.oldpinger',function(e) { illpinger('use_the_old_form'); });
+  $('body').on('click','.oldpinger',function(e) { illpinger('Instantill_use_the_old_form'); });
 
   // could get custom _ops from the user config
   if (_oab_config.autorun !== true) {
