@@ -86,6 +86,11 @@ var instantill_run = function() {
 </div>\
 <div id="oabutton_availability"></div>\
 <div id="oabutton_error" style="display:none;"></div>';
+  if (_oab_config.pilot) {
+    w += '<p><br>Notice a change? We\'re testing a simpler and faster way to get your articles. You can ';
+    w += '<a href="mailto:' + cml + '">give feedback</a> or ';
+    w += '<a class="oldpinger" target="_blank" href="' + (_oab_config.advancedform ? _oab_config.advancedform : (_oab_config.ill_redirect_base_url ? _oab_config.ill_redirect_base_url : 'mailto:'+cml)) + '">use the old form</a>.</p>';
+  }
 
 // <img style="width:30px;" src="' + site + '/static/spin_orange.svg">   Powered by the <a href="https://openaccessbutton.org" target="_blank">Open Access Button</a>
 
@@ -208,7 +213,7 @@ var instantill_run = function() {
     $('#oabutton_inputs').show();
   }
 
-  var sorryping = function(what) {
+  var illpinger = function(what) {
     try {
       var noddy_api = api.indexOf('dev.') !== -1 ? 'https://dev.api.cottagelabs.com' : 'https://api.cottagelabs.com';
       $.ajax({
@@ -220,7 +225,7 @@ var instantill_run = function() {
   var fail = function(info) {
     if (info === undefined) {
       info = '<h3>Unknown ' + pora + '</h3><p>Sorry, we cannot find this ' + pora + ' or sufficient metadata. ' + _lib_contact + '</p>';
-      sorryping('InstantILL_unknown_article');
+      illpinger('InstantILL_unknown_article');
     }
     $('.oabutton_find').html('Find ' + pora);
     $('#oabutton_inputs').hide();
@@ -245,7 +250,7 @@ var instantill_run = function() {
           window.location = avail.data.ill.openurl;
         } catch(err) {
           $('#oabutton_error').html('<p>Sorry, we could\'nt create an Interlibrary Loan request for you. ' + _lib_contact + '</p>').show();
-          sorryping('InstantILL_openurl_couldnt_create_ill');
+          illpinger('InstantILL_openurl_couldnt_create_ill');
           fail('');
         }
       }
@@ -321,6 +326,8 @@ var instantill_run = function() {
     $('.oabutton_ill').html('Submitting .');
     var eml = typeof matched === 'string' ? matched : $('#oabutton_email').val();
     var data = {url:avail.data.match, email:eml, from:_oab_opts.uid, plugin:'instantill', embedded:window.location.href, metadata: avail.data.meta.article }
+    if (_oab_config.pilot) data.pilot = _oab_config.pilot;
+    if (_oab_config.live) data.live = _oab_config.live;
     if (!data.metadata.title || !data.metadata.journal || !data.metadata.year) {
       matched = data.email;
       if (!matched) matched = true;
@@ -365,7 +372,7 @@ var instantill_run = function() {
             $('.oabutton_find').html('Find ' + pora);
             $('.oabutton_ill').html('Complete request');
             $('#oabutton_error').html('<p>Sorry, we were not able to create an ILL request for you. ' + _lib_contact + '</p><p><a href="#" class="restart" style="font-weight:bold;">Try again</a></p>').show();
-            sorryping('InstantILL_couldnt_submit_ill');
+            illpinger('InstantILL_couldnt_submit_ill');
             setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
           }
         }
@@ -588,6 +595,8 @@ var instantill_run = function() {
       data.from = _oab_opts.uid;
       data.plugin = 'instantill';
       data.embedded = window.location.href;
+      if (_oab_config.pilot) data.pilot = _oab_config.pilot;
+      if (_oab_config.live) data.live = _oab_config.live;
 
       var avopts = {
         type:'POST',
@@ -617,6 +626,7 @@ var instantill_run = function() {
   $('#oabutton_input').bind('keyup',availability);
   $('body').on('click','.oabutton_find',availability);
   $('body').on('click','.restart',_instantill_restart);
+  $('body').on('click','.oldpinger',function(e) { illpinger('use_the_old_form'); });
 
   // could get custom _ops from the user config
   if (_oab_config.autorun !== true) {

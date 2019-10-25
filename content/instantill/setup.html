@@ -913,7 +913,9 @@ jQuery(document).ready(function() {
 
   var configure = function() {
     for (var k in uc) {
-      if (typeof uc[k] === 'boolean') {
+      if (k === 'pilot' || k === 'live') {
+        $('#'+k).prop('checked', uc[k]);
+      } else if (typeof uc[k] === 'boolean') {
         $('#'+k).prop('checked', uc[k] === true);
       } else if (k === 'subscription') {
         if (typeof uc.subscription === 'string') uc.subscription = uc.subscription.split(',');
