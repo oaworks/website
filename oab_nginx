@@ -84,6 +84,16 @@ server {
     expires 30d;
   }
 
+  location = /instantill_alpha {
+    rewrite ^/.* https://instantill.org/setup;
+  }
+  location = /instantill {
+    rewrite ^/.* https://instantill.org;
+  }
+  location = /shareyourpaper.org {
+    rewrite ^/.* https://shareyourpaper.org;
+  }
+
   location /blog {
     rewrite ^/.* https://medium.com/@openaccessbutton permanent;
   }
