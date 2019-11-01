@@ -28,14 +28,15 @@ var view = function(e,which) {
     which = '#' + $('.section:visible').first().attr('id');
   }
   if (($(this).hasClass('pull') || !evented) && $('#instantill','.section:visible').length !== 1) $('#instantill').appendTo($('.content','.section:visible'));
-  if ($('div.content:visible').offset().top > $(window).height()) {
+  /*if ($('div.content:visible').offset().top > $(window).height()) {
     var pad = Math.floor(($('div.green').height() - $('#instantill').height())/2);
     $('div.content:visible').css({'padding-top':pad+'px'});
   } else if ($('div.content:visible').height() < $(window).height()) {
     var pad = Math.floor($('div.content:visible').offset().top + $('div.content:visible').height()/2 + $(window).height()/3);
     $('div.content:visible').css({'padding-top':pad+'px'});
-  }
+  }*/
   //$('div.green:visible').css({'min-height':$(document).height()+'px'});
+  $('div.content:visible').css({'padding-top':'100px'});
 	if (which && 'pushState' in window.history) window.history.pushState("", which, which);
 }
 $('body').on('click','.view',view);

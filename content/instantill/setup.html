@@ -911,18 +911,22 @@ jQuery(document).ready(function() {
 
 <script>
 jQuery(document).ready(function() {
+  
   if ($('#demo').height() < $(window).height()) $('#demo').css({'min-height':$(window).height()+'px'});
   $('div.green').css({'min-height':$(window).height()+'px'});
+  var diff = Math.floor(($(window).height() - $('div.content:visible').height())/4);
+  $('div.content:visible').css({'padding-top':diff+'px'});
 
   $(document).ajaxComplete(function(e,xhr) {
     if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.match !== undefined) {
       _ill_response = xhr.responseJSON.data;
       // an availability check finished, reposition the instantill window if necessary
-      if (($('#instantill').height() + $('#instantill').offset().top) > ($(window).height()*.95)) {
+      /*if (($('#instantill').height() + $('#instantill').offset().top) > ($(window).height()*.95)) {
         var diff = Math.floor(($(window).height() - $('#instantill').height())/2)-20;
         if (diff < 20) diff = 20;
         $('div.content:visible').css({'padding-top':diff+'px'});
-      }
+      }*/
+      $('div.content:visible').css({'padding-top':'100px'});
       $('.oabutton_ill').off();
     }
   });
