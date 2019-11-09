@@ -1,7 +1,6 @@
 <head>
   <title>InstantILL</title>
 </head>
-<!-- JOE: Think about how to lessen the jaring of both sides changing. Add delay to button press, or add animation. -->
 <link rel="stylesheet" href="/static/oabutton_rebrand.css"> <!-- gets the new css (still also uses the old css, just overwrites where necessary) -->
 
 <style>
@@ -53,7 +52,7 @@
   <div class="center-col">
     <div>
       <p style="text-align:center;">
-        InstantILL is currently in Beta. Please <a href="mailto:joe@openaccessbutton.org" class="green" style="color:white"><b>let us know</b></a> if there is anything we can improve.
+        InstantILL is currently in Beta. Please <a href="https://docs.google.com/forms/d/e/1FAIpQLSfuOt79zFU9w4vWKhTJua7pjFnQotT_fq__3sA37sNOUsKhdg/viewform?usp=sf_link" class="green" style="color:white"><b>let us know</b></a> how setup goes.
       </p>
     </div>
   </div>
@@ -108,7 +107,7 @@
 
             <ul class="arrowed">
               <li>
-                <a class="green view pull" href="#rollout">
+                <a class="green view pull restart" href="#rollout">
                 <span class="glyphicon glyphicon-arrow-right"></span> Rollout</a>
               </li>
               <li>
@@ -157,8 +156,8 @@
         </div>
 
         <div class="greenbottom">
-          <p><a class="btn btn-hollow-green  save pull preview" href="#">Preview & Test</a></p>
-          <p><a class="btn btn-demo-green  save view pull" href="#ill-input">Save & Continue</a></p>
+          <p><a class="btn btn-hollow-green save pull preview" href="#">Preview & Test</a></p>
+          <p><a class="btn btn-demo-green save view pull reset" href="#ill-input">Save & Continue</a></p>
           <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
         </div>
       </div>
@@ -223,7 +222,7 @@
 
         <div class="greenbottom">
           <p><a class="btn btn-hollow-green  save pull preview" href="#">Preview & Test</a></p>
-          <p><a class="btn btn-demo-green  save view pull" href="#ill-results">Save & Continue</a></p>
+          <p><a class="btn btn-demo-green  save view pull preview" href="#ill-results">Save & Continue</a></p>
           <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
         </div>
       </div>
@@ -403,13 +402,13 @@
           <p>
             We use your link resolver to understand what you do and don’t have access to. Then, we figure out the best link and send your patrons to it through your proxy.
             <p><b>What is your link resolver URL?</b></p>
-            <small>Examples include: http://rx8kl6yf4x.search.serialssolutions.com, https://cricksfx.hosted.exlibrisgroup.com, http://resolver.ebscohost.com/openurl.</small>
+            <small>Examples include: http://rx8kl6yf4x.search.serialssolutions.com, https://cricksfx.hosted.exlibrisgroup.com<!--, http://resolver.ebscohost.com/openurl-->.</small>
 
             <input style="margin-top:10px;" type="text" class="form-control subscription setting green" placeholder="e.g http://rx8kl6yf4x.search.serialssolutions.com">
             <select style="margin-top:10px;" class="form-control subscription_type setting green">
               <option value="">select subscription type...</option>
               <option value="sfx">SFX</option>
-              <option value="eds">EDS / Ebsco</option>
+              <!--<option value="eds">EDS / Ebsco</option>-->
               <option value="serialssolutions">Serials Solutions</option>
             </select>
             <a style="margin-top:10px;" class="btn btn-demo-green" id="addsubscription" href="#">Add another</a>
@@ -501,7 +500,7 @@
         </div>
         <div class="greenbottom">
           <p><a class="btn btn-hollow-green save pull preview" href="#">Preview & Test</a></p>
-          <p><a class="btn btn-demo-green save view pull preview" val=" " href="#rollout"></span>Save & Continue</a></p>
+          <p><a class="btn btn-demo-green save view pull restart" href="#rollout"></span>Save & Continue</a></p>
           <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
         </div>
       </div>
@@ -911,18 +910,22 @@ jQuery(document).ready(function() {
 
 <script>
 jQuery(document).ready(function() {
+
   if ($('#demo').height() < $(window).height()) $('#demo').css({'min-height':$(window).height()+'px'});
   $('div.green').css({'min-height':$(window).height()+'px'});
+  var diff = Math.floor(($(window).height() - $('div.content:visible').height())/4);
+  $('div.content:visible').css({'padding-top':diff+'px'});
 
   $(document).ajaxComplete(function(e,xhr) {
     if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.match !== undefined) {
       _ill_response = xhr.responseJSON.data;
       // an availability check finished, reposition the instantill window if necessary
-      if (($('#instantill').height() + $('#instantill').offset().top) > ($(window).height()*.95)) {
+      /*if (($('#instantill').height() + $('#instantill').offset().top) > ($(window).height()*.95)) {
         var diff = Math.floor(($(window).height() - $('#instantill').height())/2)-20;
         if (diff < 20) diff = 20;
         $('div.content:visible').css({'padding-top':diff+'px'});
-      }
+      }*/
+      $('div.content:visible').css({'padding-top':'100px'});
       $('.oabutton_ill').off();
     }
   });
@@ -1082,7 +1085,7 @@ jQuery(document).ready(function() {
           try {
             var eurl = iia.aggregations.embeds.buckets[0].key.split('?')[0].split('#')[0];
             if (eurl.indexOf('instantill.org') !== -1 || eurl.indexOf('openaccessbutton.org') !== -1) eurl = false;
-            var ex = 'You can use the follow link to integrate InstantILL into your pages:<br>' + eurl + '?doi=10.1145/2908080.2908114';
+            var ex = 'You can use the following link to integrate InstantILL into your other systems:<br>' + eurl + '.<br>See an example of it in action here:<br>' + eurl + '?doi=10.1145/2908080.2908114';
             $('#embeddedexample').html(ex).show();
           } catch(err) {
             $('#noembeddedexampleavailable').show();
