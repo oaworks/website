@@ -1,7 +1,6 @@
 <head>
   <title>InstantILL</title>
 </head>
-<!-- JOE: Think about how to lessen the jaring of both sides changing. Add delay to button press, or add animation. -->
 <link rel="stylesheet" href="/static/oabutton_rebrand.css"> <!-- gets the new css (still also uses the old css, just overwrites where necessary) -->
 
 <style>
@@ -1086,7 +1085,7 @@ jQuery(document).ready(function() {
           try {
             var eurl = iia.aggregations.embeds.buckets[0].key.split('?')[0].split('#')[0];
             if (eurl.indexOf('instantill.org') !== -1 || eurl.indexOf('openaccessbutton.org') !== -1) eurl = false;
-            var ex = 'You can use the follow link to integrate InstantILL into your pages:<br>' + eurl + '?doi=10.1145/2908080.2908114';
+            var ex = 'You can use the following link to integrate InstantILL into your other systems:<br>' + eurl + '.<br>See an example of it in action here:<br>' + eurl + '?doi=10.1145/2908080.2908114';
             $('#embeddedexample').html(ex).show();
           } catch(err) {
             $('#noembeddedexampleavailable').show();
