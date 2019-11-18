@@ -470,6 +470,7 @@ div.greenbottom {
     display: inline-block;
     width: 100%;
     max-width: 1024px;
+    white-space: nowrap;
   }
 
   .media img{
