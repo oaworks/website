@@ -1,1 +1,601 @@
-<!-- Coming Soon. Here to just set up domain properly -->
+<head>
+  <title>Shareyourpaper.org</title>
+</head>
+<link rel="stylesheet" href="/static/oabutton_rebrand.css"> <!-- gets the new css (still also uses the old css, just overwrites where necessary) -->
+
+<style>
+  #topnav {
+    display: none;
+  }
+  #footer {
+    display: none;
+  }
+
+  .form-control {
+    color:#428BCA;
+    border:2px solid #428BCA;
+  }
+
+  a {
+    color:#428BCA;
+    font-weight:normal;
+  }
+  a:hover {
+    color:#428BCA;
+  }
+
+  .btn-hollow-green:hover {
+    color: #edf8ed;
+  }
+
+  p{
+    padding:0;
+    margin: 10px 0;
+  }
+
+  h2{
+    text-align: left;
+  }
+
+  .alert-new {
+    width: 100%;
+    padding: 10px;
+    background-color: #428BCA;
+    color: white;
+    text-align: center !important;
+  }
+
+</style>
+
+
+<div class="alert-new">
+  <div class="center-col">
+    <div>
+      <p style="text-align:center;">
+        InstantILL is currently in Beta. Please <a href="https://docs.google.com/forms/d/e/1FAIpQLSfuOt79zFU9w4vWKhTJua7pjFnQotT_fq__3sA37sNOUsKhdg/viewform?usp=sf_link" class="green" style="color:white"><b>let us know</b></a> how setup goes.
+      </p>
+    </div>
+  </div>
+</div>
+
+
+<div id="demo" class="container-fluid">
+
+  <div id="menu" class="section">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-1 content">
+        <div id="instantill"></div>
+      </div>
+
+      <div class="col-md-4 col-md-offset-1 green">
+        <div class="greenery">
+          <h2>Let’s get you set up!</h2>
+
+          <p>
+            Congrats, you already have InstantILL partly set up! It finds Open Access articles and submit loans to your email. As you complete the steps below you’ll be able to customize further. It requires no coding or systems expertise, on <a href="#compatibility" class="view green">compatibile systems</a> and doesn’t take long.
+          </p>
+          <p>
+            At anytime you can test InstantILL, with your settings, on the left. It’ll work just like it would on your pages, although it won’t be styled to fit with your brand yet.
+          </p>
+          <p><b>
+            Get InstantILL working with your:
+          </b></p>
+
+          <ul class="arrowed">
+            <li>
+              <a class="green view pull preview" val="10.1145/2908080.2908114" href="#ill">
+                <span class="glyphicon glyphicon-arrow-right">
+              </span> Interlibrary loans</a>
+            </li>
+            <li>
+              <a class="green view pull preview" val="10.1145/2908080.2908114" href="#subscription"><span class="glyphicon glyphicon-arrow-right">
+              </span> Subscriptions</a>
+            </li>
+            <li>
+              <a class="green view pull preview" val="10.1145/2908080.2908114" href="#embed">
+                <span class="glyphicon glyphicon-arrow-right">
+              </span> Website &amp; Brand</a>
+            </li>
+            <li>
+              <a class="green view pull preview" val="10.1145/2908080.2908114" href="#workflow">
+                <span class="glyphicon glyphicon-arrow-right">
+              </span> Discovery tools</a>
+            </li>
+          </ul>
+
+            <p><b>Once set up, it's time to:</b></p>
+
+            <ul class="arrowed">
+              <li>
+                <a class="green view pull restart" href="#rollout">
+                <span class="glyphicon glyphicon-arrow-right"></span> Rollout</a>
+              </li>
+              <li>
+                <a class="green view pull preview" val="10.1145/2908080.2908114" href="#analytics">
+                <span class="glyphicon glyphicon-arrow-right"></span> View Analytics</a>
+              </li>
+            </ul>
+            <p>For more, check the
+              <a class="green view pull preview" val="10.1145/2908080.2908114" href="#advanced">advanced settings</a>.
+            </p>
+
+        </div>
+
+        <div class="greenbottom">
+          <p><a class="btn btn-demo-green  save view pull" href="#ill">Get Started</a></p>
+          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="embed" class="section">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-1 content">
+
+      </div>
+
+      <div class="col-md-4 col-md-offset-1 green">
+        <div class="greenery">
+          <p><a class="green view pull" href="#menu"><span class="glyphicon glyphicon-arrow-left"></span>  Go to Menu</a></p>
+          <h2>Website &amp; Brand</h2>
+
+          <p>
+            InstantILL can be integrated onto any webpage on your website, and blend in with your brand.
+          </p>
+          <p>
+            To do that you can follow these simple instructions or we’ve drafted an email you can <a href="mailto:" class="light">send your developer</a>.
+          </p>
+
+          <p>
+            First, include the following in the source code (HTML) of your page:
+          </p>
+          <pre class="stickidin">
+&lt;script src="{{site_url}}/static/instantill.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){instantill();});&lt;/script&gt;
+&lt;div id="instantill"&gt;&lt;/div&gt;</pre>
+
+        <p>You can control where the search widget gets displayed by moving:</p>
+          <pre>
+&lt;div id="instantill"&gt;&lt;/div&gt;</pre>
+
+        <p>
+          If you don’t think it’s styled corrected, a developer can help you. If you have one, great, if not <a href="mailto:joe@openaccessbutton.org" class="light">reach out</a>.
+        </p>
+
+        <p>You should now be good to go!</p>
+
+        <h3>We suggest:</h3>
+        <ul>
+          <li>Calling your page ‘Get a paper’</li>
+          <li>Not mentioning 'InstantILL' to patrons</li>
+          <li>Not putting anything above InstantILL (except a page title)</li>
+        </ul>
+
+        </div>
+        <div class="greenbottom">
+          <p><a class="btn btn-demo-green  save view pull" href="#workflow">Save & Continue</a></p>
+          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="workflow" class="section">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-1 content">
+
+      </div>
+
+      <div class="col-md-4 col-md-offset-1 green">
+        <div class="greenery">
+          <p><a class="green view pull" href="#menu"><span class="glyphicon glyphicon-arrow-left"></span>  Go to Menu</a></p>
+          <h2>Discovery tools</h2>
+          <p>
+            You can link to InstantILL from any library system to integrate it into your existing workflows, say from library search or a link resolver.
+          </p>
+          <p id="embeddedexample" style="display:none;"></p>
+          <p id="noembeddedexampleavailable" style="display:none;">
+            Once you've used InstantILL on one of your domains, we'll show you an example link you can use to integrate into other systems.
+          </p>
+          <p>
+            If everything works, hit next! If it doesn’t, <a href="#workflow-advanced" class="view green pull">see advanced settings
+          </p>
+        </div>
+        <div class="greenbottom">
+          <p><a class="btn btn-hollow-green save pull preview" href="#">Preview & Test</a></p>
+          <p><a class="btn btn-demo-green save view pull restart" href="#rollout"></span>Save & Continue</a></p>
+          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<div id="rollout" class="section">
+  <div class="row">
+
+    <div class="col-md-6 col-md-offset-1 content">
+
+    </div>
+
+    <div class="col-md-4 col-md-offset-1 green">
+      <div class="greenery">
+      <p><a class="green view pull" href="#menu"><span class="glyphicon glyphicon-arrow-left"></span>  Go to Menu</a></p>
+      <h2>Rollout</h2>
+      <p>
+        Once you're all set up, and you know it's working, it's time to put InstantILL in patron's hands.
+      </p>
+
+      <p><b>
+        Have you rolled it out?
+      </b></p>
+      <small>
+        Only click this around when you rollout InstantILL to patrons. This helps us support you best, track your stats, and understand how we're doing.
+      </small>
+      <p>
+      <input id="live" type="checkbox" class="setting green">
+        Yes
+      </p>
+
+      <p><b>
+        Activate pilot mode?
+      </b></p>
+      <small>
+        Pilot mode makes it easy to rollout a pilot. Patrons will know why you're trying something new, be able to give feedback and go back to old way. We'll also track the performance of your pilot, and you can ask us to let you know.
+      </small>
+      <p>
+      <input id="pilot" type="checkbox" class="setting green">
+        Yes
+      </p>
+
+      <p><b>
+        Can others contact you to find out about InstantILL?
+      </b></p>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSdK7CQ8J0lJ2hauS0A-qr3g5uBz9h3WZ6Uvj6vxzz0ut8GVbA/viewform?usp=sf_link" class="green">
+        Yes, sign me up!
+      </p>
+
+    </div>
+    <div class="greenbottom">
+      <p><a class="btn btn-hollow-green  save pull preview" href="#">Preview & Test</a></p>
+      <p><a class="btn btn-demo-green  save view pull" href="menu">Save & Continue</a></p>
+      <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
+    </div>
+  </div>
+</div>
+</div>
+
+  <div id="advanced" class="section">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-1 content">
+
+      </div>
+
+      <div class="col-md-4 col-md-offset-1 green">
+        <div class="greenery">
+          <p><a class="green view pull" href="#menu"><span class="glyphicon glyphicon-arrow-left"></span>  Go to Menu</a></p>
+          <h2>Advanced</h2>
+          <p>
+            These aren't needed for normal Shareyourpaper.org set ups, but you may still be useful.
+          </p>
+
+        </div>
+        <div class="greenbottom">
+          <p><a class="btn btn-demo-green  save view pull" href="menu">Save & Continue</a></p>
+          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="login" class="section">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-1 content">
+
+      </div>
+
+      <div class="col-md-4 col-md-offset-1 green">
+        <div class="greenery">
+          <h2>Login</h2>
+
+
+        <p>You need to be <a href="/account?next=/instantill/setup">logged in</a> to set up InstantILL. It only takes a moment.</p>
+          <input type="text" name="email" id="youremail" class="form-control green" placeholder="Your email address">
+          <br>
+          <a id="gologin" href="/account?next=/instantill/setup" class="btn btn-demo-green ">Login</a>
+           <p>We use your email to contact you about InstantILL, and ensure only you can access your InstantILL settings.</p>
+        </div>
+
+
+        <div class="greenbottom">
+          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="faq" class="section">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-1 content">
+
+        <h1 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">FAQ</h1>
+
+          <p>
+            This is a stub for an FAQ. It'll work just like you'd expect when we have questions.
+          </p>
+
+      </div>
+
+      <div class="col-md-4 col-md-offset-1 green">
+        <div class="greenery">
+          <p><a class="green view pull" href="#menu"><span class="glyphicon glyphicon-arrow-left"></span>  Go to Menu</a></p>
+          <h2>Not got your quesiton answered?</h2>
+          <p>
+            Drop <a href="mailto:Joe@openaccessbutton.org" class="green">Joe@openaccessbutton.org</a> an email.
+          </p>
+
+          <h2>Think you've found an issue?</h2>
+          <p>
+            Report it <a href="/feedback#bug" class="green">here</a>.
+          </p>
+
+        </div>
+
+        <div class="greenbottom">
+          <p><a class="btn btn-demo-green  view" href="#menu">Go to Menu</a></p>
+          <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+
+
+<!-- functions you can trigger:
+
+Put a div with ID "instantill" in the place where you want the instantill demo to show up. Note this can only appear in one place at a time.
+
+The page tries to execute a login on page load.
+If it succeeds it will try to replace the content of any element on the page with the "stickidin" class with the user ID.
+It will also try to replace "but only you" in the content of any element with the "onlyyou" class with "but only you (USERNAME)".
+And it will look for any section with the class "stickidin" and will replace any text that contains instantill() with the instantill({SETTINGS})
+suitable for the logged in user (their user ID).
+
+It will then go through any ILL config present for the logged in user, and for every value, it will look for an element on the page with the matching ID,
+and it will place the value of that config item as the value of the element (note as described below for saving, such elements should also have the "setting" class).
+(if it is a boolean value the element should be a checkbox, and it will be checked or not depending on boolean value).
+
+Any button with the "view" class will cause the UI view to change between divs with the "section" class.
+The "view" class button goes to the next "section" div by default. If you also give the button the "previous" class it goes to the previous one.
+If the "view" button has an href that is longer than 1 then the href value is assumed to be the ID of the div to show, or a classname for a set of things to show.
+Any execution of a "view" button first hides all "section" divs then shows the previous or next or defined things.
+
+If you want the section that you switch to with the "view" button to show the #instantill demo in it, you
+can add the "pull" class to the button. Then, once the view has switched to the specified section, the #instantill demo div will be appended to the content section of the currently visible section.
+
+Any button ("button" or "a" link tag) that has the "save" class will trigger a save
+A save will look for any element with the "setting" class and will take the value of that element and try to use it as the config value corresponding to the ID of that element.
+If the save button also has an attr called "preview" then it can be set to true to trigger an instantill preview run with a default value
+If preview attr is set but is some value other than true, then the value of the preview attr will be used in the instantill box
+
+Any button with the "preview" class will trigger the instantill box with a trial value. The value should be specified on the button in an attr called "val" or else the html content of the button will be used as the value.
+
+NOTE: if you want the view to change when a preview is triggered, put the view class BEFORE the preview class.
+That way the view will change, the preview will run, and if the preview is not visible it will be pulled forward
+into the view you have changed to.
+-->
+
+<script src="/static/instantill.js"></script>
+
+<script>
+jQuery(document).ready(function() {
+  $('#topnav').remove();
+  $('#footer').remove();
+});
+</script>
+
+<script src="/static/instantill_ui.js"></script>
+
+<script>
+jQuery(document).ready(function() {
+
+  if ($('#demo').height() < $(window).height()) $('#demo').css({'min-height':$(window).height()+'px'});
+  $('div.green').css({'min-height':$(window).height()+'px'});
+  var diff = Math.floor(($(window).height() - $('div.content:visible').height())/4);
+  $('div.content:visible').css({'padding-top':diff+'px'});
+
+  $(document).ajaxComplete(function(e,xhr) {
+    if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.match !== undefined) {
+      _ill_response = xhr.responseJSON.data;
+      // an availability check finished, reposition the instantill window if necessary
+      /*if (($('#instantill').height() + $('#instantill').offset().top) > ($(window).height()*.95)) {
+        var diff = Math.floor(($(window).height() - $('#instantill').height())/2)-20;
+        if (diff < 20) diff = 20;
+        $('div.content:visible').css({'padding-top':diff+'px'});
+      }*/
+      $('div.content:visible').css({'padding-top':'100px'});
+      $('.oabutton_ill').off();
+    }
+  });
+
+  var addsubscription = function(e) {
+    try {e.preventDefault(); } catch(err) {}
+    if ($('.subscription').last().val() && $('.subscription_type').last().val()) {
+      $('.subscription').last().clone().val('').insertBefore($('#addsubscription'));
+      $('.subscription_type').last().clone().val('').insertBefore($('#addsubscription'));
+    } else {
+      $('.subscription').last().focus();
+    }
+  }
+  $('body').on('click','#addsubscription',addsubscription);
+
+  var guesssubscription = function(e) {
+    if ($(this).val().indexOf('sfx.') !== -1) {
+      $(this).next('.subscription_type').val('sfx');
+    } else if ($(this).val().indexOf('ebscohost.') !== -1) {
+      $(this).next('.subscription_type').val('eds');
+    } else if ($(this).val().indexOf('serialssolutions.') !== -1) {
+      $(this).next('.subscription_type').val('sfx');
+    }
+  }
+  $('body').on('change','.subscription',guesssubscription);
+
+  var configure = function() {
+    for (var k in uc) {
+      if (k === 'pilot' || k === 'live') {
+        $('#'+k).prop('checked', uc[k]);
+      } else if (typeof uc[k] === 'boolean') {
+        $('#'+k).prop('checked', uc[k] === true);
+      } else if (k === 'subscription') {
+        if (typeof uc.subscription === 'string') uc.subscription = uc.subscription.split(',');
+        for ( var s in uc.subscription) {
+          if (parseInt(s) !== 0) addsubscription();
+          if (typeof uc.subscription[s] === 'object') {
+            var url = uc.subscription[s].url;
+            var type = uc.subscription[s].type;
+          } else {
+            var url = uc.subscription[s];
+            try {
+              var type = uc.subscription_type[s];
+            } catch(err) {
+              var type = 'unknown';
+            }
+          }
+          $('.subscription').last().val(url);
+          $('.subscription_type').last().val(type);
+        }
+      } else if (k !== 'subscription_type') {
+        $('#'+k).val(uc[k]);
+      }
+    }
+  }
+
+  var _preview = false;
+  var save = function(e,pvw) {
+    try { e.preventDefault(); } catch (err) {}
+    if (e === true || pvw || $(this).attr('preview') || $(this).hasClass('preview')) _preview = $(this).attr('preview') ? $(this).attr('preview') : (pvw ? pvw : true);
+    var data = {};
+    $('.setting').each(function(i, obj) {
+      if ( $(this).is(':checkbox') ) {
+        data[$(this).attr('id')] = $(this).is(':checked');
+      } else if ( $(this).hasClass('subscription') ) {
+        if ($(this).val()) {
+          if (data.subscription === undefined) data.subscription = [];
+          data.subscription.push($(this).val())
+        } else {
+          $(this).remove();
+        }
+      } else if ( $(this).hasClass('subscription_type') ) {
+        if ($(this).val()) {
+          if (data['subscription_type'] === undefined) data['subscription_type'] = [];
+          data['subscription_type'].push($(this).val())
+        } else {
+          $(this).remove();
+        }
+      } else if ( $(this).val() !== undefined ) {
+        data[$(this).attr('id')] = $(this).val();
+        if (['ill_redirect_base_url','terms','book','other'].indexOf($(this).attr('id')) !== -1 && data[$(this).attr('id')] !== '' && data[$(this).attr('id')].indexOf('http') !== 0) {
+          data[$(this).attr('id')] = 'http://' + data[$(this).attr('id')];
+          $(this).val(data[$(this).attr('id')]);
+        }
+      }
+    });
+
+    var opts = {
+      url: api + '/ill/config',
+      type:'POST',
+      cache:false,
+      processData:false,
+      contentType: 'application/json',
+      dataType: 'json',
+      success: function(data) {
+        uc = data; // returns the updated user config
+        configure();
+        if (_preview) {
+          $('.save').hide().after('<p class="saved">Saving changes! Your preview will run shortly.</p>');
+          setTimeout(function() { $('.saved').hide(); $('.save').show(); preview(undefined,_preview); }, 3000);
+          _preview = false;
+        } else {
+          $('.save').hide().after('<p class="saved">Saving changes!</p>');
+          setTimeout(function() { $('.saved').hide(); $('.save').show(); }, 4000);
+        }
+      },
+      error: function(data) {
+        $('#save').hide().after('<p class="saved">Sorry, changes could not be saved.</p>');
+        setTimeout(function() { $('.saved').hide(); $('#save').show(); }, 4000);
+        _preview = false;
+      },
+      beforeSend: function (request) { request.setRequestHeader("x-apikey", noddy.apikey); }
+    }
+    opts.data = JSON.stringify(data);
+    if (noddy.apikey) {
+      $.ajax(opts);
+    } else {
+      if (_preview) {
+        $('.save').hide().after('<p class="saved">You need to login to save changes! Your preview will run shortly.</p>');
+        setTimeout(function() { $('.saved').hide(); $('.save').show(); preview(undefined,_preview); }, 3000);
+        _preview = false;
+      } else {
+        $('.save').hide().after('<p class="saved">You need to login to save changes!</p>');
+        setTimeout(function() { $('.saved').hide(); $('.save').show(); }, 4000);
+      }
+    }
+  }
+  $('body').on('click','.save',save);
+
+  noddy.afterLogin = function() {
+    $('.promptsignup').hide();
+    var uid = noddy.user.account._id;
+    if ($('.stickidin').length) {
+      var uid = noddy.user.account._id;
+      var repstr = 'instantill({uid:"' + uid + '"';
+      if (api.indexOf('dev.') !== -1) repstr += ',api:"' + api + '"';
+      repstr += '})';
+      $('.stickidin').html($('.stickidin').html().replace('instantill()',repstr));
+    }
+    if ($('.onlyyou').length) $('.onlyyou').html($('.onlyyou').html().replace('but only you ','but only you (' + noddy.user.account.profile.firstname + ') '));
+    instantill({uid:uid, api:api, css: false});
+    try {
+      $('.email').attr('placeholder','default ' + (noddy.user.account.email ? noddy.user.account.email : noddy.user.account.emails[0].address));
+    } catch(err) {}
+    try {
+      uc = noddy.user.account.service.openaccessbutton.ill.config;
+      configure();
+    } catch(err) {}
+    try {
+      var q = {"size": 0, "query": {"filtered": {"query": {"bool": {"must": [{"term": {"plugin": "instantill"}},{"term": {"from.exact": noddy.user.account._id}}]}}}}};
+      q.aggregations = {"embeds": {"terms": {"field": "embedded.exact"}}};
+      $.ajax({
+        url: api + '/availabilities',
+        type: 'POST',
+        data: q,
+        success: function(iia) {
+          try {
+            var eurl = iia.aggregations.embeds.buckets[0].key.split('?')[0].split('#')[0];
+            if (eurl.indexOf('instantill.org') !== -1 || eurl.indexOf('openaccessbutton.org') !== -1) eurl = false;
+            var ex = 'You can use the following link to integrate InstantILL into your other systems:<br>' + eurl + '.<br>See an example of it in action here:<br>' + eurl + '?doi=10.1145/2908080.2908114';
+            $('#embeddedexample').html(ex).show();
+          } catch(err) {
+            $('#noembeddedexampleavailable').show();
+          }
+        }
+      });
+    } catch(err) {}
+    /*if (noddy.hasRole('root')) {
+      $('#ill_config').prepend('<input style="border-color:red;" id="uid" type="text" class="form-control setting" placeholder="UID (ADMIN setting override)"><br>')
+    }*/
+  }
+
+  if ($('#gologin').length) $('#gologin').bind('click',function(e) {
+    if ($('#youremail').val()) $(this).attr('href',$(this).attr('href').replace('?','?email='+$('#youremail').val()+'&'));
+  });
+
+  noddy.nologin = function() {
+    view(undefined,'#login');
+  }
+  noddy.login();
+});
+</script>
