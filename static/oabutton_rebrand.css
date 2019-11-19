@@ -285,6 +285,14 @@ div.greenbottom {
     color: white;
   }
 
+  div.bluebottom {
+    position:absolute;
+    bottom:20px;
+    left:13%;
+    width:75%;
+    max-width:500px;
+  }
+
   .btn-demo-white{
     background-color: white;
     border-color: white;
