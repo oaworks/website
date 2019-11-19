@@ -285,6 +285,21 @@ div.greenbottom {
     color: white;
   }
 
+  div.blue {
+    background-color:#ECF3FA;
+    /*color:#46b633;*/
+    height:100%;
+    padding-bottom:160px;
+  }
+  div.blueery {
+    margin-top:10%;
+    margin-left:10%;
+    width:80%;
+    max-width:500px;
+    /*text-align: justify;
+    text-justify: inter-word;*/
+  }
+
   div.bluebottom {
     position:absolute;
     bottom:20px;
