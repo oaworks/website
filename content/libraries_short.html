@@ -16,6 +16,7 @@
   .btn-demo-white {
     color: #F04717;
   }
+
   .program {
     color: #212f3f;
     padding: 30px;
@@ -278,14 +279,7 @@
 <div style="background-color: #edf8ed; border-top: solid 5px #dbf1d9">
   <div class="center-col">
     <h4 style="padding:30px">
-      <input
-        type="checkbox"
-        style="display: inline-block; height: 20px; width: 20px"
-        value="articles"
-        name="section"
-        onchange="showSection(event, 'deliver-articles-more')"
-      />
-      <a href="#">More Tools to Deliver Articles</a>
+      <a onclick="showSection(0, 'deliver-articles-more')">More Tools to Deliver Articles</a>
     </h4>
   </div>
 </div>
@@ -352,7 +346,7 @@
       </div>
     </div>
 
-        <div class="tool-container">
+    <div class="tool-container">
       <div class="tool">
         <img src="static/Instant-ILL-transparent-green.png">
         <h4>Integrations</h4>
@@ -402,14 +396,7 @@
 <div style="background-color: #ecf3fa; border-top: solid 5px #dbe9f5">
   <div class="center-col">
     <h4 style="padding:30px">
-        <input
-          type="checkbox"
-          style="display: inline-block; height: 20px; width: 20px"
-          value="repository"
-          name="section2"
-          onchange="showSection(event, 'repository-more')"
-        />
-        <a href="#">More Tools to Fill your Repository</a>
+        <a onclick="showSection(1, 'repository-more')">More Tools to Fill your Repository</a>
     </h4>
   </div>
 </div>
@@ -711,9 +698,11 @@
           return sum;
         }
 
+        let sections = [false, false];
 
-        function showSection(e, id) {
-          if(e.target.checked)
+        function showSection(index, id) {
+          sections[index] = !sections[index];
+          if(sections[index])
             document.getElementById(id).style.display = "block";
           else
             document.getElementById(id).style.display = "none";
