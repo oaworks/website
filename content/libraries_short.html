@@ -197,6 +197,10 @@
     -webkit-animation-name: fadeIn;
     animation-name: fadeIn;
   }
+
+  .radioStyle {
+    display: inline-block !important; margin-bottom: 8px;
+  }
 </style>
 
 <!-- header -->
@@ -274,7 +278,16 @@
 
 <div style="background-color: #edf8ed; border-top: solid 5px #dbf1d9">
   <div class="center-col">
-    <h4 style="padding:30px"><a href="#">More Tools to Deliver Articles</a></h4>
+    <h4 style="padding:30px">
+      <input
+        type="checkbox"
+        style="display: inline-block; height: 20px; width: 20px"
+        value="articles"
+        name="section"
+        onchange="showSection(event, 'deliver-articles-more')"
+      />
+      <a href="#">More Tools to Deliver Articles</a>
+    </h4>
   </div>
 </div>
 
@@ -289,7 +302,7 @@
 
 -->
 
-<div style="background-color: #edf8ed: display:none;" id="deliver-articles-more">
+<div style="background-color: #edf8ed; display:none;" id="deliver-articles-more">
   <div class="center-col">
     <div class="tool-container">
       <div class="tool">
@@ -389,7 +402,16 @@
 
 <div style="background-color: #ecf3fa; border-top: solid 5px #dbe9f5">
   <div class="center-col">
-    <h4 style="padding:30px"><a href="#">More Tools to Fill your Repository</a></h4>
+    <h4 style="padding:30px">
+        <input
+          type="checkbox"
+          style="display: inline-block; height: 20px; width: 20px"
+          value="repository"
+          name="section2"
+          onchange="showSection(event, 'repository-more')"
+        />
+        <a href="#">More Tools to Fill your Repository</a>
+    </h4>
   </div>
 </div>
 
@@ -408,7 +430,7 @@
 </div>
 
 
-<div style="background-color: #ecf3fa:display:none;" id="repository-more">
+<div style="background-color: #ecf3fa; display:none;" id="repository-more">
   <div class="center-col">
     <div class="tool-container">
       <div class="tool">
@@ -557,15 +579,34 @@
         </label>
       </div>
 
-      <select onchange="onSizeSelect()" class="dropdown animated zoomIn" id="size" style="display:none">
-        <option value="describe">Describe your Library</option>
-        <option value="Community college">Community College</option>
-        <option value="Baccalaureate">Baccalaureate (B)</option>
-        <option value="Postgraduate">Postgraduate (M)</option>
-        <option value="Research intensive">Research-intensive (R)</option>
-        <option value="Consortia">Consortial</option>
-        <option value="International">International</option>
-      </select>
+      <div id="size" style="margin-top: 30px; display: none">
+        <h3 style="margin-bottom: 10px">Describe your library</h3>
+        <span>
+          <input class="radioStyle" id="radio2" type="radio" name="size" value="Community college" />
+          <label for="radio2">Community College</label> <br/>
+        </span>
+        <span>
+          <input class="radioStyle" id="radio3" type="radio" name="size" value="Baccalaureate" />
+          <label for="radio3">Baccalaureate (B)</label> <br/>
+        </span>
+        <span>
+          <input class="radioStyle" id="radio4" type="radio" name="size" value="Postgraduate" />
+          <label for="radio4">Postgraduate (M)</label> <br/>
+        </span>
+        <span>
+          <input class="radioStyle" id="radio5" type="radio" name="size" value="Research intensive" />
+          <label for="radio5">Research-intensive (R)</label> <br/>
+        </span>
+        <span>
+          <input class="radioStyle" id="radio6" type="radio" name="size" value="Consortia" />
+          <label for="radio6">Consortial</label> <br/>
+        </span>
+        <span>
+          <input class="radioStyle" id="radio7" type="radio" name="size" value="International" />
+          <label for="radio7">International</label> <br/>
+        </span>
+
+      </div>
 
       <div class="ifCheck animated fadeIn" id="price" style="display:none">
         <h3 style="text-align: center;"><span id="calculated-price">XXXX</span> USD<br>
@@ -618,6 +659,10 @@
           "Community college":	[50, 50, 25, 12.5, 12.5]
         };
 
+        document.getElementsByName('size').forEach(elm => {
+          elm.addEventListener('change', onSizeSelect)
+        })
+
         function onToolCheck(item) {
           let index = arr.indexOf(item);
           if(index == -1) {
@@ -638,7 +683,9 @@
 
         function onSizeSelect() {
           document.querySelectorAll(".ifCheck").forEach(elm => elm.style.display = "none");
-          size = document.getElementById("size").value;
+
+          size = document.querySelector('input[name="size"]:checked').value;
+
           if(size == "Consortia") {
             document.getElementById("contact-consortial").style.display = "block";
           }
@@ -663,6 +710,14 @@
             sum += obj[size][tools.indexOf(item)];
           }
           return sum;
+        }
+
+
+        function showSection(e, id) {
+          if(e.target.checked)
+            document.getElementById(id).style.display = "block";
+          else
+            document.getElementById(id).style.display = "none";
         }
       </script>
 
