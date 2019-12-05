@@ -622,7 +622,7 @@ jQuery(document).ready(function() {
   }
 
   $(document).ajaxComplete(function(e,xhr) {
-    if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.match !== undefined) {
+    if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.availability !== undefined) {
       _ill_response = xhr.responseJSON.data;
       // an availability check finished, reposition the instantill window if necessary
       //console.log($('div.content:visible').height())

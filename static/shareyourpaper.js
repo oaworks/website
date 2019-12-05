@@ -1,13 +1,9 @@
 
-// to use InstantILL, just include this js file, and then call instantill() in a script on the page
+// to use shareyourpaper, just include this js file, and then call shareyourpaper() in a script on the page
 // If jquery is not already used on the site, jquery is retrieved too.
 // bootstrap can optionally be used to apply styling
-// <script src="https://openaccessbutton.org/static/instantill.js"></script>
-// <script>jQuery(document).ready(function() { instantill(); });</script>
-
-// new features will be added to this script and a variable will be used to control which users
-// see newly developed features. These will be alpha, beta, etc, in a var called version. Running
-// this script without that var will result in the latest features being used.
+// <script src="https://openaccessbutton.org/static/shareyourpaper.js"></script>
+// <script>jQuery(document).ready(function() { shareyourpaper(); });</script>
 
 var _oab_opts = {};
 var _oab_config = {};
@@ -15,32 +11,30 @@ var _ops = ['doi','title','url','atitle','rft_id','journal','issn','year','autho
 var _parameta = {};
 var _lib_contact = undefined;
 
-var instantill_config = function() {
+var _config = function() {
   var api = _oab_opts.api ? _oab_opts.api : 'https://api.openaccessbutton.org';
   if (_oab_opts.uid) {
     $.ajax({
       type:'GET',
-      url:api+'/ill/config?uid='+_oab_opts.uid,
+      url:api+'/deposit/config?uid='+_oab_opts.uid,
       success: function(data) {
         _oab_config = data;
-        instantill_run();
+        _run();
       },
       error: function() {
-        instantill_run();
+        _run();
       }
     });
   } else {
-    instantill_run();
+    _run();
   }
 }
 
-var instantill_run = function() {
-  var pora = _oab_config.saypaper ? 'paper' : 'article';
-  var porac = pora[0].toUpperCase() + pora.substring(1);
+var _run = function() {
   var cml = _oab_config.problem_email ? _oab_config.problem_email : (_oab_config.email ? _oab_config.email : (_oab_config.adminemail ? _oab_config.adminemail : undefined));
   _lib_contact = 'Please try ' + (cml ? '<a href="mailto:' + cml + '">contacting your library</a>' : 'contacting your library') + ' directly';
   if (_oab_opts.bootstrap === undefined) _oab_opts.bootstrap = 'btn btn-primary btn-iu';
-  if (_oab_opts.placeholder === undefined) _oab_opts.placeholder = 'e.g. Lessons in data entry from digital native populations';
+  if (_oab_opts.placeholder === undefined) _oab_opts.placeholder = 'e.g. 10.1234/567890';
   if (_oab_opts.data === undefined) _oab_opts.data = false;
   var api = _oab_opts.api ? _oab_opts.api : 'https://api.openaccessbutton.org';
   var site = _oab_opts.site ? _oab_opts.site : 'https://openaccessbutton.org';
@@ -48,51 +42,20 @@ var instantill_run = function() {
     if (!_oab_opts.api) api = 'https://dev.api.cottagelabs.com/service/oab';
     if (!_oab_opts.site) site = 'https://dev.openaccessbutton.org';
   }
-  if (_oab_opts.element === undefined) _oab_opts.element = '#instantill';
+  if (_oab_opts.element === undefined) _oab_opts.element = '#shareyourpaper';
   if (_oab_opts.uid === undefined) _oab_opts.uid = 'anonymous';
-  if ($(_oab_opts.element).length === 0) $('body').append('<div id="instantill"></div>');
+  if ($(_oab_opts.element).length === 0) $('body').append('<div id="shareyourpaper"></div>');
 
-  var w = '<h2 id="oabutton_request" style="display:none;">Request ' + (pora === 'article' ? 'an' : 'a') + ' ' + pora + '</h2><div id="oabutton_inputs">';
-  if (_oab_config.intropara !== true) {
-    w += '<p>If you need ' + (pora === 'article' ? 'an' : 'a') + ' ' + pora + ' ' + (_oab_config.book ? 'or book ' : '') + 'you can request it from any library in the world through Interlibrary loan. \
-    Start by entering a full ' + pora + ' title, citation, DOI or URL:<br></p>';
-  }
+  var w = '<div id="oabutton_inputs"><h2>Make your research visible and see 30% more citations</h2>';
+  w += '<p>Share your paper with help from the library in ScholarWorks. Legally, for free, in minutes. Join millions of researchers sharing their papers freely with colleagues and the public.</p>';
+  w += '<h3>Start by entering the DOI of your paper</h3>';
+  w += '<p>We\'ll gather information about your paper and find the easiest way to share it.</p>';
   w += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_input" placeholder="' + _oab_opts.placeholder + '" aria-label="' + _oab_opts.placeholder + '" style="box-shadow:none;"></input></p>\
-  <p><a class="oabutton_find ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" href="#" id="oabutton_find" aria-label="Search" style="min-width:150px;">Find ' + pora + '</a></p>';
-  if (_oab_config.book || _oab_config.other) {
-    w += '<p>Need ';
-    if (_oab_config.book) w += 'a <a href="' + _oab_config.book + '"><b>book</b></a>';
-    if (_oab_config.other) w += (_oab_config.book ? ' or ' : ' ') + '<a href="' + _oab_config.other + '"><b>something else</b></a>';
-    w += '?</p>';
-  }
-  if (_oab_config.advancedform || _oab_config.viewaccount || _oab_config.illinfo) {
-    w += '<p>Or ';
-    if (_oab_config.advancedform) {
-      w += '<a href="' + _oab_config.advancedform + '">use advanced form</a>';
-      if (_oab_config.viewaccount && _oab_config.illinfo) {
-        w += ', '
-      } else if (_oab_config.viewaccount || _oab_config.illinfo) {
-        w += ' and '
-      }
-    }
-    if (_oab_config.viewaccount) {
-      w += '<a href="' + _oab_config.viewaccount + '">view account</a>';
-      if (_oab_config.illinfo) w += ' and ';
-    }
-    if (_oab_config.illinfo) w += '<a href="' + _oab_config.illinfo + '">learn about Interlibrary Loan</a>';
-    w += '</p>';
-  }
+  <p><a class="oabutton_find ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" href="#" id="oabutton_find" aria-label="Search" style="min-width:150px;">Next</a></p>';
   w += '\
 </div>\
 <div id="oabutton_availability"></div>\
 <div id="oabutton_error" style="display:none;"></div>';
-  if (_oab_config.pilot) {
-    w += '<p><br>Notice a change? We\'re testing a simpler and faster way to get your articles. You can ';
-    w += '<a href="mailto:' + cml + '">give feedback</a> or ';
-    w += '<a class="oldpinger" target="_blank" href="' + (_oab_config.advancedform ? _oab_config.advancedform : (_oab_config.ill_redirect_base_url ? _oab_config.ill_redirect_base_url : 'mailto:'+cml)) + '">use the old form</a>.</p>';
-  }
-
-// <img style="width:30px;" src="' + site + '/static/spin_orange.svg">   Powered by the <a href="https://openaccessbutton.org" target="_blank">Open Access Button</a>
 
   var ws = '#oabutton_inputs {\
   position: relative;\
@@ -143,7 +106,7 @@ var instantill_run = function() {
   background-color: #428bca;\
   border-color: #357ebd;\
 }\
-.oabutton_ill {\
+.oabutton_deposit {\
   /*display: inline-block;*/\
   height:34px;\
   padding: 6px 3px;\
@@ -189,31 +152,30 @@ var instantill_run = function() {
   var matched = false;
   var avail = undefined;
   var attempts = 0;
-  var clickwrong = false;
   var gotmore = false;
 
-  _instantill_restart = function(e) {
+  _restart = function(e) {
     try { e.preventDefault(); } catch(err) {}
     matched = false;
     avail = undefined;
     attempts = 0;
-    clickwrong = false;
     gotmore = false;
     if (_oab_opts.uid) {
       $.ajax({
         type:'GET',
-        url:api+'/ill/config?uid='+_oab_opts.uid,
+        url:api+'/deposit/config?uid='+_oab_opts.uid,
         success: function(data) {
           _oab_config = data;
         }
       });
     }
     $('#oabutton_availability').html('').hide();
+    $('#oabutton_find').html('Next');
     $('#oabutton_input').val('');
     $('#oabutton_inputs').show();
   }
 
-  var illpinger = function(what) {
+  var pinger = function(what) {
     try {
       var noddy_api = api.indexOf('dev.') !== -1 ? 'https://dev.api.cottagelabs.com' : 'https://api.cottagelabs.com';
       var url = noddy_api + '/ping.png?service=openaccessbutton&action=' + what + '&from=' + _oab_opts.uid;
@@ -227,37 +189,12 @@ var instantill_run = function() {
 
   var fail = function(info) {
     if (info === undefined) {
-      info = '<h3>Unknown ' + pora + '</h3><p>Sorry, we cannot find this ' + pora + ' or sufficient metadata. ' + _lib_contact + '</p>';
-      illpinger('InstantILL_unknown_article');
+      info = '<h3>Unknown paper</h3><p>Sorry, we cannot find this paper or sufficient metadata. ' + _lib_contact + '</p>';
+      pinger('Shareyourpaper_unknown_article');
     }
-    $('.oabutton_find').html('Find ' + pora);
     $('#oabutton_inputs').hide();
     $('#oabutton_availability').html(info).show();
-    setTimeout(_instantill_restart, 6000);
-  }
-
-  var openurl = function() {
-    $.ajax({
-      type:'POST',
-      url:api+'/ill/openurl?uid='+_oab_opts.uid,
-      cache: false,
-      processData: false,
-      contentType: 'application/json',
-      dataType: 'json',
-      data: JSON.stringify(avail.data.meta.article),
-      success: function(res) {
-        window.location = res;
-      },
-      error: function(data) {
-        try {
-          window.location = avail.data.ill.openurl;
-        } catch(err) {
-          $('#oabutton_error').html('<p>Sorry, we could\'nt create an Interlibrary Loan request for you. ' + _lib_contact + '</p>').show();
-          illpinger('InstantILL_openurl_couldnt_create_ill');
-          fail('');
-        }
-      }
-    });
+    setTimeout(_restart, 6000);
   }
 
   var getmore = function(e) {
@@ -267,12 +204,12 @@ var instantill_run = function() {
     } else {
       attempts += 1;
       var info = '<div>';
-      info += '<p>Sorry we didn\'t find that ' + pora + '! Can you please provide or amend the ' + pora + ' details?</p>';
-      info += '<p>' + porac + ' title (required)<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_title" type="text"></p>';
+      info += '<p>Sorry we didn\'t find that paper! Can you please provide or amend the paper details?</p>';
+      info += '<p>Paper title (required)<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_title" type="text"></p>';
       info += '<p>Author(s)<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_author" type="text"></p>';
       info += '<p>Journal title (required)<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_journal" type="text"></p>';
       info += '<p>Year of publication (required)<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_year" type="text"></p>';
-      info += '<p>' + porac + ' DOI or URL<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_doi" type="text"></p>';
+      info += '<p>Paper DOI or URL<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_doi" type="text"></p>';
       info += '<p><a href="#" class="oabutton_find ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" id="oabutton_find" style="min-width:150px;">Continue</a></p>';
       info += '<p><a href="#" class="restart" style="font-weight:bold;">Try again</a></p>';
       info += '</div>';
@@ -324,196 +261,168 @@ var instantill_run = function() {
     return c;
   }
 
-  var _submit_ill = function() {
+  var _submit_deposit = function(e,upload) {
+    // this could be just an email for a dark deposit, or a file for actual deposit
+    // for file deposit will need file deposit js
     $('.oabutton_find').html('Submitting .');
-    $('.oabutton_ill').html('Submitting .');
+    $('.oabutton_deposit').html('Depositing .');
     var eml = typeof matched === 'string' ? matched : $('#oabutton_email').val();
-    var data = {url:avail.data.match, email:eml, from:_oab_opts.uid, plugin:'instantill', embedded:window.location.href, metadata: avail.data.meta.article }
+    var data = {email:eml, from:_oab_opts.uid, plugin:'shareyourpaper', embedded:window.location.href, metadata: avail.data.meta.article }
     if (_oab_config.pilot) data.pilot = _oab_config.pilot;
     if (_oab_config.live) data.live = _oab_config.live;
-    if (!data.metadata.title || !data.metadata.journal || !data.metadata.year) {
+    if (!data.metadata.title || !data.metadata.journal) {
       matched = data.email;
       if (!matched) matched = true;
       getmore();
     } else {
-      if (avail.data.ill && avail.data.ill.openurl && avail.data.ill.openurl.indexOf('notes') === -1 && (avail.data.ill.subscription || avail.data.availability)) {
-        data.notes = '';
-        if (avail.data.ill.subscription) data.notes += 'Subscription check done, found ' + (avail.data.ill.subscription.url ? avail.data.ill.subscription.url : (avail.data.ill.subscription.journal ? 'journal' : 'nothing')) + '. ';
-        if (avail.data.availability) data.notes += 'OA availability check done, found ' + (avail.data.availability.length && avail.data.availability[0].url ? avail.data.availability[0].url : 'nothing') + '. ';
-      }
-      if (avail.data.ill.openurl && _oab_opts.openurl !== false && !data.email) data.forwarded = true;
-      var illopts = {
+      var opts = {
         type:'POST',
-        url:api+'/ill',
+        url:api+'/deposit' + (avail.v2 && avail.v2.catalogue ? '/' + avail.v2.catalogue : ''),
         cache: false,
         processData: false,
-        contentType: 'application/json',
-        dataType: 'json',
-        data: JSON.stringify(data),
         success: function(res) {
-          if (avail.data.ill.openurl && _oab_opts.openurl !== false && !data.email) {
-            if (matched) {
-              openurl();
-            } else {
-              window.location = avail.data.ill.openurl;
-            }
-          } else {
-            $('.oabutton_find').html('Find ' + pora);
-            $('.oabutton_ill').html('Complete request');
-            var eml = typeof matched === 'string' ? matched : $('#oabutton_email').val();
-            $('#oabutton_availability').html('<h3>Thanks! Your request has been received</h3><p>Your confirmation code is: ' + res + ', this will not be emailed to you. The ' + pora + ' will be sent to ' + eml + ' as soon as possible.</p><p><a href="#" class="restart" style="font-weight:bold;">Do another</a></p>').show();
-          }
+          $('.oabutton_deposit').html('Submit deposit');
+          $('#oabutton_availability').html('<h3>Hurray, you\'re done!</h3><p>We\'ll email you a link to your paper in ScholarWorks soon. Next time, before you publish <a href="#">check here</a> to see if your journal allows you to have the most impact by making your research available to everyone, for free.</p><p><a href="#" class="restart" style="font-weight:bold;">Do another</a></p>').show();
         },
         error: function(data) {
-          if (avail.data.ill.openurl && _oab_opts.openurl !== false && !data.email) {
-            if (matched) {
-              openurl();
-            } else {
-              window.location = avail.data.ill.openurl;
-            }
-          } else {
-            $('.oabutton_find').html('Find ' + pora);
-            $('.oabutton_ill').html('Complete request');
-            $('#oabutton_error').html('<p>Sorry, we were not able to create an ILL request for you. ' + _lib_contact + '</p><p><a href="#" class="restart" style="font-weight:bold;">Try again</a></p>').show();
-            illpinger('InstantILL_couldnt_submit_ill');
-            setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
-          }
+          $('.oabutton_deposit').html('Complete deposit');
+          $('#oabutton_error').html('<p>Sorry, we were not able to deposit this paper for you. ' + _lib_contact + '</p><p><a href="#" class="restart" style="font-weight:bold;">Try again</a></p>').show();
+          pinger('Shareyourpaper_couldnt_submit_deposit');
+          setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
         }
       }
-      $.ajax(illopts);
+      if (upload) {
+        for ( var d in data ) upload.append(d,data[d]);
+        opts.data = upload;
+        opts.contentType = false;
+      } else {
+        opts.data = JSON.stringify(data);
+        opts.contentType = 'application/json';
+        opts.dataType = 'json';
+      }
+      $.ajax(opts);
     }
   }
-  var ill = function(e) {
+  var deposit = function(e) {
     e.preventDefault();
-    $('.oabutton_ill').html('Submitting .');
-    if ($(this).hasClass('oabutton_ill_email')) {
+    $('.oabutton_deposit').html('Depositing .');
+    if ($(this).hasClass('oabutton_email')) {
       try { e.preventDefault(); } catch (err) {}
-      if ($('#oabutton_read_terms').length && !$('#oabutton_read_terms').is(':checked')) {
-        $('#oabutton_error').html('<p>Please agree to the terms first.</p>').show();
-        setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
-        return;
-      }
       if (!$('#oabutton_email').val().length) {
-        $('.oabutton_ill').html('Complete request');
+        $('.oabutton_deposit').html('Complete deposit');
         $('#oabutton_error').html('<p>Please provide your university email address.</p>').show();
         setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
         $('#oabutton_email').css('border-color','#f04717').focus();
         return;
       } else {
         $.ajax({
-          url: api + '/validate?uid=' + _oab_opts.uid + '&email=' + $('#oabutton_email').val(),
+          url: api + '/validate?uid=' + _oab_opts.uid + '&email=' + $('#oabutton_email').val(), // TODO add a way to check the email belongs to the institution
           type: 'POST',
           success: function(data) {
             if (data === true) {
-              _submit_ill();
+              _submit_deposit();
             } else {
               $('#oabutton_error').html('<p>Sorry, your email does not look right. ' + (data !== false ? 'Did you mean ' + data + '? ' : '') + 'Please check and try again.</p>').show();
-              $('.oabutton_ill').html('Complete request');
+              $('.oabutton_deposit').html('Complete deposit');
               setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
             }
           },
           error: function(data) {
-            _submit_ill();
+            _submit_deposit();
           }
         });
       }
-    } else {
-      _submit_ill();
+    } else if ($(this).attr('id') !== 'submitfile') { // the submit file one will trigger with the file submission
+      _submit_deposit();
     }
+  }
+  
+  var forcedeposit = false;
+  var opendeposit = function(e) {
+    e.preventDefault();
+    forcedeposit = true;
+    inform();
   }
 
   var inform = function() {
     $('#oabutton_inputs').hide();
     $('#oabutton_error').html('').hide();
     var info = '';
-    if (avail.data.ill && avail.data.ill.error && avail.data.ill.error.length) {
-      $('#oabutton_error').html('<p>Please note, we encountered errors querying the following subscription services: ' + avail.data.ill.error.join(', ') + '</p>').show();
-      setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
-    }
-    if (avail.data.meta && avail.data.meta.article && (!avail.data.ill || !avail.data.ill.subscription || !avail.data.ill.subscription.demo)) {
+    if (avail.data.meta && avail.data.meta.article) {
       var cit = cite(avail.data.meta.article);
       if (cit.length < 1) {
         if (attempts === 0) {
           attempts = 1;
           getmore();
-        } else if ((avail.data.ill.subscription && (avail.data.ill.subscription.journal || avail.data.ill.subscription.url)) || (avail.data.availability && avail.data.availability.length && avail.data.availability[0].url)) {
-          if (avail.data.meta.article.title) {
-            info += '<h2>' + avail.data.meta.article.title + '</h2>';
-          } else {
-            info += '<h2>Unknown ' + pora + '</h2>';
-          }
         } else if (!gotmore) {
           fail();
         }
-      } else {
-        info += cit;
       }
     }
-    if (avail.data.ill && avail.data.ill.subscription && avail.data.ill.subscription.demo) info += '<h2>Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL</h2>';
-    info += '<p><a id="oabutton_getmore" href="#"><b>This is not the ' + pora + ' I searched.</b></a></p>';
     var needmore = true;
-    var hassub = false;
-    var hasoa = false;
-    if (avail.data.ill.subscription && (avail.data.ill.subscription.journal || avail.data.ill.subscription.url)) {
+    if (!forcedeposit && avail.data.availability && avail.data.availability.length && avail.data.availability[0].url) {
+      // if there is an oa article show a link to it
       needmore = false;
-      hassub = true;
-      // if there is a subscribed version available show a link to it
       info += '<div>';
-      info += '<h3>We have an online copy instantly available</h3>';
-      if (avail.data.ill.subscription.url) {
-        info += '<p><a target="_blank" href="' + avail.data.ill.subscription.url  + '"><b>Open ' + pora + ' in a new tab</b></a></p>';
-      } else {
-        info += '<p>You should be able to access it on the publisher\'s website.</p>';
-      }
+      info += '<h2>Your paper is already freely available!</h2>';
+      info += '<p>Congrats, you\'re already getting the benefits of sharing your work.</p>';
+      info += '<p><a target="_blank" href="' + avail.data.availability[0].url  + '" class="' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">View paper</a></p>';
+      info += '<p><a href="#" class="oabutton_opendeposit"><b>I still want it in ScholarWorks</b></a></p>';
+      info += '</div>';
+    } else if (!forcedeposit && avail.v2 && avail.v2.permissions && avail.v2.permissions.acceptable) {
+      // can be shared, depending on permissions info that may soon be changing
+      needmore = false;
+      info += '<div>';
+      info += '<h2>You can freely share your paper now!</h2>';
+      info += '<p>To enable colleagues and the public to freely download and cite your paper the library has checked and the journal encourages you to freely share a version of the article.</p>';
+      info += '<h3>Find the version that was accepted. It\'s usually not a PDF</h3>';
+      info += '<p>This is the only version you\'re able to share legally. The accepted version, or \'post-print\', is what you sent to publisher after peer-review and acceptance but before formatting. Often, it\'s a docx or latex export, not publisher proofs.</p>';
+      info += '<h3>Check there isn\'t publisher branding or typesetting</h3>';
+      info += '<p>It\'s normal to share accepted versions as the research is the same, and we\'ll link to the final published pdf for those who can pay for it. It\'s fine to make small edits to formatting, remove comments, arrange figures etc.</p>';
+      info += '<h3>We\'ll check the version, then preserve, and promote your work</h3>';
+      info += '<p>It\'s normal to share accepted versions as the research is the same. It\'s fine to make small edits to formatting, remove comments, etc.</p>';
+      info += '<form id="oabfileupload" enctype="multipart/form-data" method="POST"> \
+        <p><input type="file" name="file" id="file" class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '"></p> \
+        <input type="hidden" name="service" value="openaccessbutton">';
+      info += '<p>By uploading you\'re agreeing to the terms and conditions and to license your work CC-BY on Zenodo and ScholarWorks</p>';
+      info += '<p><input type="submit" class="oabutton_deposit' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : ' btn btn-primary') : '') + '" id="submitfile" value="Submit deposit" style="min-width:150px;">';
+      info += '</form>';
       info += '</div>';
     } else {
-      if (avail.data.availability && avail.data.availability.length && avail.data.availability[0].url) {
-        needmore = false;
-        hasoa = true;
-        // else if there is an oa article show a link to it
-        info += '<div>';
-        info += '<h3><br>There is a free, instantly accessible copy online</h3>';
-        info += '<p>It may not be the final published version and may lack graphs or figures making it unsuitable for citations.</p>';
-        info += '<p><a target="_blank" href="' + avail.data.availability[0].url  + '"><b>Open ' + pora + ' in a new tab</b></a></p>';
-        info += '</div>';
-        if (_oab_opts.requests !== false) {
-          if (avail.data.requests) {
-            // show the request (not yet part of instantill)
-          } else {
-            // offer to create a request (not yet part of instantill)
-            //info += '<p><a target="_blank" href="' + site + '/request?data=false&plugin=instantill&from=' + _oab_opts.uid + '&url=' + encodeURIComponent(data.data.match) + '"><b>Start a request to the author to share it with you</b></a>';
-          }
-        }
-      }
-    }
-    if (avail.data.ill && _oab_opts.ill !== false && !((_oab_config.noillifsub && hassub) || (_oab_config.noillifoa && hasoa))) {
+      // can't be directly shared but can be passed to library for dark deposit
       needmore = false;
       info += '<div>';
-      info += '<h3><br>Ask the library to digitally send you the published full-text via Interlibrary Loan</h3>';
-      info += '<p>It ' + (_oab_config.cost ? 'costs ' + _oab_config.cost : 'is free to you,') + ' and we\'ll usually email the link within ' + (_oab_config.time ? _oab_config.time : '24 hours') + '.<br></p>';
-      if (avail.data.ill.openurl && _oab_opts.openurl !== false) {
-        if (avail.data.ill.openurl.indexOf('notes') === -1) {
-          avail.data.ill.openurl += '&notes=';
-          if (avail.data.ill.subscription) avail.data.ill.openurl += 'Subscription check done, found ' + (avail.data.ill.subscription.url ? avail.data.ill.subscription.url : (avail.data.ill.subscription.journal ? 'journal' : 'nothing')) + '. ';
-          if (avail.data.availability) avail.data.ill.openurl += 'OA availability check done, found ' + (avail.data.availability.length && avail.data.availability[0].url ? avail.data.availability[0].url : 'nothing') + '. ';
-        }
-        info += '<p><a class="oabutton_ill oabutton_ill_openurl ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" href="' + avail.data.ill.openurl + '" style="min-width:150px;">Complete request</a></p>';
-      } else {
-        if (avail.data.ill.terms) info += '<p id="oabutton_terms_note"><input type="checkbox" id="oabutton_read_terms"> I have read the <a target="_blank" href="' + avail.data.ill.terms + '"><b>terms and conditions</b></a></p>';
-        info += '<p><input placeholder="Your university email address" id="oabutton_email" type="text" class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '"></p>';
-        info += '<p><a class="oabutton_ill oabutton_ill_email ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" href="' + api + '/ill?from=' + _oab_opts.uid + '&plugin=instantill&data=false&url=' + encodeURIComponent(avail.data.match) + '" style="min-width:150px;">Complete request</a></p>';
+      info += '<h2>You can share your paper!</h2>';
+      if (!forcedeposit) {
+        info += '<p>We checked and unfortunately the journal won\'t let you share this paper freely with everyone.';
+        info += 'The good news is the library can legally make your paper much easier to find, access and share by putting the publisher PDF ';
+        info += 'in ScholarWorks and we\'ll then share it on your behalf whenever it is requested.</p>';
       }
+      info += '<h3>All we need is your email</h3>';
+      info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="email@montana.edu" aria-label="email@montana.edu" style="box-shadow:none;"></input></p>';
+      info += '<p>We\'ll only use this to send you a link to your paper when it is in ScholarWorks.';
+      info += 'By submitting, you\'re agreeing to the terms and conditions.</p>';
+      info += '<p><a target="_blank" href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Submit</a></p>';
       info += '</div>';
     }
-    $('.oabutton_find').html('Find ' + pora);
+    forcedeposit = false;
     $('#oabutton_inputs').hide();
     $('#oabutton_availability').html(info).show();
-    if ($('.oabutton_ill').length) $('.oabutton_ill').bind('click',ill);
-    if ($('#oabutton_email').length) $('#oabutton_email').bind('keyup', function(e) { if (e.keyCode === 13) ill() });
+    if ($('#oabfileupload').length) {
+      $('form#oabfileupload').submit(function(e) {
+        if (e) e.preventDefault();
+        _submit_deposit(undefined,new FormData(this));
+        return false;
+      });
+    }
+    if ($('.oabutton_deposit').length) $('.oabutton_deposit').bind('click',deposit);
+    if ($('.oabutton_opendeposit').length) $('.oabutton_opendeposit').bind('click',opendeposit);
+    if ($('#oabutton_email').length) $('#oabutton_email').bind('keyup', function(e) { if (e.keyCode === 13) deposit() });
     if ($('#oabutton_getmore').length) {
-      $('#oabutton_getmore').bind('click',function(e) { e.preventDefault(); clickwrong = true; getmore(); });
+      $('#oabutton_getmore').bind('click',function(e) { e.preventDefault(); getmore(); });
       if (needmore || (cit && cit.length === 0)) getmore();
     }
+    if (_parameta.email && $('#oabutton_email').length) $('#oabutton_email').val(_parameta.email);//.trigger('keyup'); // should this just auto trigger as well?
   }
 
   var _doing_availability = false;
@@ -557,12 +466,8 @@ var instantill_run = function() {
         for ( var d in data ) {
           if (data[d] && (avail.data.meta.article[d] === undefined || avail.data.meta.article[d] ==='')) avail.data.meta.article[d] = data[d]
         }
-        _submit_ill();
+        _submit_deposit();
         return;
-      }
-      if (clickwrong) {
-        data.wrong = true;
-        clickwrong = false;
       }
       if (data.doi && data.doi.indexOf('10.') === -1 && (data.doi.indexOf('/') === -1 || data.doi.indexOf('http') === 0)) {
         data.url = data.doi;
@@ -581,7 +486,7 @@ var instantill_run = function() {
         _intervaled = true;
         setInterval(function() {
           try {
-            var w = $('.oabutton_ill').length ? $('.oabutton_ill') : $('.oabutton_find');
+            var w = $('.oabutton_deposit').length ? $('.oabutton_deposit') : $('.oabutton_find');
             var srch = w.first().html();
             if (srch.indexOf('.') !== -1) {
               var dots = srch.split('.');
@@ -596,7 +501,7 @@ var instantill_run = function() {
         }, 800);
       }
       data.from = _oab_opts.uid;
-      data.plugin = 'instantill';
+      data.plugin = 'shareyourpaper';
       data.embedded = window.location.href;
       if (_oab_config.pilot) data.pilot = _oab_config.pilot;
       if (_oab_config.live) data.live = _oab_config.live;
@@ -618,7 +523,6 @@ var instantill_run = function() {
         error: function() {
           _doing_availability = false;
           $('#oabutton_input').val('');
-          $('.oabutton_find').html('Find ' + pora);
           $('#oabutton_error').show().html('<p>Oh dear, the service is down! We\'re aware, and working to fix the problem. ' + _lib_contact + '</p>');
           setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
         }
@@ -628,8 +532,7 @@ var instantill_run = function() {
   }
   $('#oabutton_input').bind('keyup',availability);
   $('body').on('click','.oabutton_find',availability);
-  $('body').on('click','.restart',_instantill_restart);
-  $('body').on('click','.oldpinger',function(e) { illpinger('Instantill_use_the_old_form'); });
+  $('body').on('click','.restart',_restart);
 
   // could get custom _ops from the user config
   if (_oab_config.autorun !== true) {
@@ -660,7 +563,7 @@ var instantill_run = function() {
   }
 };
 
-var instantill = function(opts) {
+var shareyourpaper = function(opts) {
   _oab_opts = opts;
   if ($ === undefined) {
     var site = _oab_opts.site ? _oab_opts.site : 'https://openaccessbutton.org';
@@ -669,9 +572,9 @@ var instantill = function(opts) {
     var jqTag = document.createElement('script');
     jqTag.type = 'text/javascript';
     jqTag.src = site + '/static/jquery-1.10.2.min.js';
-    jqTag.onload = instantill_config;
+    jqTag.onload = _config;
     headTag.appendChild(jqTag);
   } else {
-     instantill_config();
+     _config();
   }
 }

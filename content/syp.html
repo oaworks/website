@@ -1,0 +1,123 @@
+<head>
+  <title>Shareyourpaper.org</title>
+</head>
+<link rel="stylesheet" href="/static/oabutton_rebrand.css"> <!-- gets the new css (still also uses the old css, just overwrites where necessary) -->
+
+<style>
+  #topnav {
+    display: none;
+  }
+  #footer {
+    display: none;
+  }
+
+  .form-control {
+    color:#428BCA;
+    border:2px solid #428BCA;
+  }
+
+  a {
+    color:#428BCA;
+    font-weight:normal;
+  }
+  a:hover {
+    color:#428BCA;
+  }
+
+  .btn-hollow-blue:hover {
+    color: #ECF3FA;
+  }
+
+  p{
+    padding:0;
+    margin: 10px 0;
+  }
+
+  h2{
+    text-align: left;
+  }
+
+  .alert-new {
+    width: 100%;
+    padding: 10px;
+    background-color: #428BCA;
+    color: white;
+    text-align: center !important;
+  }
+  .btn-primary {
+    background-color:#428BCA;
+    border-color:#428BCA;
+    border-radius:0px;
+    color:#ffffff;
+    width:49%;
+    font-weight:bold;
+    padding-top:10px;
+    padding-bottom:10px;
+  }
+  .btn-primary:hover {
+    background-color:#428BCA;
+    border-color:#428BCA;
+    color:#ffffff;
+  }
+
+</style>
+
+<div class="alert-new">
+  <div class="center-col">
+    <div>
+      <p style="text-align:center;">
+        Dev
+      </p>
+    </div>
+  </div>
+</div>
+
+<div id="demo" class="container-fluid">
+  <div id="menu" class="section">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-1 content">
+        <div id="shareyourpaper"></div>
+      </div>
+
+      <div class="col-md-4 col-md-offset-1 blue">
+        <div class="blueery">
+          <h2>The dev of share your paper...</h2>
+        </div>
+
+        <div class="bluebottom">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<script src="/static/shareyourpaper.js"></script>
+
+<script>
+jQuery(document).ready(function() {
+  $('#topnav').remove();
+  $('#footer').remove();
+});
+</script>
+
+<script src="/static/shareyourpaper_ui.js"></script>
+
+<script>
+jQuery(document).ready(function() {
+
+  if ($('#demo').height() < $(window).height()) $('#demo').css({'min-height':$(window).height()+'px'});
+  $('div.blue').css({'min-height':$(window).height()+'px'});
+  var diff = Math.floor(($(window).height() - $('div.content:visible').height())/4);
+  $('div.content:visible').css({'padding-top':diff+'px'});
+
+  noddy.afterLogin = function() {
+    $('.promptsignup').hide();
+    var uid = noddy.user.account._id;
+    shareyourpaper({uid:uid, api:api, css: false});
+  }
+  noddy.login();
+});
+</script>
