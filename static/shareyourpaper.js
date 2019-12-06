@@ -12,22 +12,24 @@ var _parameta = {};
 var _lib_contact = undefined;
 
 var _config = function() {
-  var api = _oab_opts.api ? _oab_opts.api : 'https://api.openaccessbutton.org';
-  if (_oab_opts.uid) {
-    $.ajax({
-      type:'GET',
-      url:api+'/deposit/config?uid='+_oab_opts.uid,
-      success: function(data) {
-        _oab_config = data;
-        _run();
-      },
-      error: function() {
-        _run();
-      }
-    });
-  } else {
-    _run();
-  }
+  jQuery(document).ready(function(){
+    var api = _oab_opts.api ? _oab_opts.api : 'https://api.openaccessbutton.org';
+    if (_oab_opts.uid) {
+      $.ajax({
+        type:'GET',
+        url:api+'/deposit/config?uid='+_oab_opts.uid,
+        success: function(data) {
+          _oab_config = data;
+          _run();
+        },
+        error: function() {
+          _run();
+        }
+      });
+    } else {
+      _run();
+    }
+  });
 }
 
 var _run = function() {
@@ -261,7 +263,12 @@ var _run = function() {
     return c;
   }
 
+  var flupload = false;
   var _submit_deposit = function(e,upload) {
+    if (flupload !== false && upload === undefined) {
+      upload = flupload;
+      flupload = false;
+    }
     // this could be just an email for a dark deposit, or a file for actual deposit
     // for file deposit will need file deposit js
     $('.oabutton_find').html('Submitting .');
@@ -282,7 +289,7 @@ var _run = function() {
         processData: false,
         success: function(res) {
           $('.oabutton_deposit').html('Submit deposit');
-          $('#oabutton_availability').html('<h3>Hurray, you\'re done!</h3><p>We\'ll email you a link to your paper in ScholarWorks soon. Next time, before you publish <a href="#">check here</a> to see if your journal allows you to have the most impact by making your research available to everyone, for free.</p><p><a href="#" class="restart" style="font-weight:bold;">Do another</a></p>').show();
+          $('#oabutton_availability').html('<h3>Congrats, you\'re done!</h3><p>Check back soon to see your paper live, or we\'ll email you with issues.</p><p><a href="#" class="restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>').show();
         },
         error: function(data) {
           $('.oabutton_deposit').html('Complete deposit');
@@ -303,11 +310,11 @@ var _run = function() {
       $.ajax(opts);
     }
   }
-  var deposit = function(e) {
-    e.preventDefault();
+  var deposit = function(e,upload) {
+    try { e.preventDefault(); } catch (err) {}
+    if (upload) flupload = upload;
     $('.oabutton_deposit').html('Depositing .');
-    if ($(this).hasClass('oabutton_email')) {
-      try { e.preventDefault(); } catch (err) {}
+    if ($('#oabutton_email').length) {
       if (!$('#oabutton_email').val().length) {
         $('.oabutton_deposit').html('Complete deposit');
         $('#oabutton_error').html('<p>Please provide your university email address.</p>').show();
@@ -316,13 +323,17 @@ var _run = function() {
         return;
       } else {
         $.ajax({
-          url: api + '/validate?uid=' + _oab_opts.uid + '&email=' + $('#oabutton_email').val(), // TODO add a way to check the email belongs to the institution
+          url: api + '/validate?uid=' + _oab_opts.uid + '&email=' + $('#oabutton_email').val() + '&domained=' + _oab_opts.uid,
           type: 'POST',
           success: function(data) {
             if (data === true) {
               _submit_deposit();
             } else {
-              $('#oabutton_error').html('<p>Sorry, your email does not look right. ' + (data !== false ? 'Did you mean ' + data + '? ' : '') + 'Please check and try again.</p>').show();
+              if (data === 'baddomain') {
+                $('#oabutton_error').html('<p>Sorry, your email does not belong to the institutional domain. Please try again with your institutional email address.</p>').show();
+              } else {
+                $('#oabutton_error').html('<p>Sorry, your email does not look right. ' + (data !== false ? 'Did you mean ' + data + '? ' : '') + 'Please check and try again.</p>').show();
+              }
               $('.oabutton_deposit').html('Complete deposit');
               setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
             }
@@ -332,8 +343,18 @@ var _run = function() {
           }
         });
       }
-    } else if ($(this).attr('id') !== 'submitfile') { // the submit file one will trigger with the file submission
-      _submit_deposit();
+    } else {
+      var info = '<div>';
+      info += '<h3>Nearly there! We\'ll double check your paper</h3>';
+      info += '<p>We\'ll do that in the next day to make sure it\'s legal to share.</p>';
+      info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="email@montana.edu" aria-label="email@montana.edu" style="box-shadow:none;"></input></p>';
+      info += '<p>We\'ll only use this to send you a link or questions.</p>';
+      info += '<p><a target="_blank" href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Submit</a></p>';
+      info += '</div>';
+      $('#oabutton_availability').html(info).show();
+      if ($('.oabutton_deposit').length) $('.oabutton_deposit').bind('click',deposit);
+      if ($('#oabutton_email').length) $('#oabutton_email').bind('keyup', function(e) { if (e.keyCode === 13) deposit() });
+      if (_parameta.email) $('#oabutton_email').val(_parameta.email);//.trigger('keyup'); // should this just auto trigger as well?
     }
   }
   
@@ -411,7 +432,7 @@ var _run = function() {
     if ($('#oabfileupload').length) {
       $('form#oabfileupload').submit(function(e) {
         if (e) e.preventDefault();
-        _submit_deposit(undefined,new FormData(this));
+        deposit(undefined,new FormData(this));
         return false;
       });
     }
@@ -565,7 +586,7 @@ var _run = function() {
 
 var shareyourpaper = function(opts) {
   _oab_opts = opts;
-  if ($ === undefined) {
+  if (window.jQuery === undefined) {
     var site = _oab_opts.site ? _oab_opts.site : 'https://openaccessbutton.org';
     if (window.location.host.indexOf('dev.openaccessbutton.org') !== -1 && !_oab_opts.site) site = 'https://dev.openaccessbutton.org';
     var headTag = document.getElementsByTagName("head")[0];

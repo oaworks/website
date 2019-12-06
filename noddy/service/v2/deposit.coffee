@@ -20,16 +20,16 @@ API.add 'service/oab/deposit/:did',
 
 API.add 'service/oab/deposits',
   get:
-    roleRequired:'openaccessbutton.user'
+    authOptional: true
     action: () ->
-      restrict = if API.accounts.auth('openaccessbutton.admin', this.user) and this.queryParams.all then [] else [{term:{'dark.from':this.userId}}]
-      delete this.queryParams.all if this.queryParams.all?
+      restrict = if this.userId or this.queryParams.uid then [{term:{'deposit.from':this.queryParams.uid ? this.userId}}] else [{exists:{field:'deposit.type'}}]
+      delete this.queryParams.uid if this.queryParams.uid?
       return oab_catalogue.search this.queryParams, {restrict:restrict}
   post:
-    roleRequired:'openaccessbutton.user'
+    authOptional: true
     action: () ->
-      restrict = if API.accounts.auth('openaccessbutton.admin', this.user) and this.queryParams.all then [] else [{term:{'dark.from':this.userId}}]
-      delete this.queryParams.all if this.queryParams.all?
+      restrict = if this.userId or this.queryParams.uid then [{term:{'deposit.from':this.queryParams.uid ? this.userId}}] else [{exists:{field:'deposit.type'}}]
+      delete this.queryParams.uid if this.queryParams.uid?
       return oab_catalogue.search this.bodyParams, {restrict:restrict}
 
 API.add 'service/oab/deposit/config',
@@ -104,19 +104,23 @@ API.service.oab.deposit = (d,options={},files) ->
     # if not possible it should send an email with file attachment to OAB admin if it is not an institutional deposit
     # for an institutional deposit it should send the email to the institutional account email address or the config email
     # for now we will only do the email option anyway until permssions is further developed
-    d.deposit ?= {}
+    d.deposit ?= []
+    dep = {filename: files[0].filename}
+    dep.email = options.email if options.email
     if options.from
-      d.deposit.forward ?= []
-      d.deposit.forward.push {from: options.from, filename: files[0].filename}
+      dep.from = options.from
+      dep.type = 'forward'
     else
-      d.deposit.review ?= []
-      d.deposit.review.push {filename: files[0].filename}
+      dep.type = 'review'
+    dep.pilot = options.pilot if options.pilot # are pilot and live going to be needed for shareyourpaper?
+    dep.live = options.pilot if options.live
+    d.deposit.push dep
     oab_catalogue.update d._id, deposit: d.deposit
     API.service.oab.mail # later this should probably be a template call
       from: 'deposits@openaccessbutton.org'
       to: tos
       subject: 'Forwarded deposit'
-      text: 'This is an example email that we will send to an institution for file deposit that needs reviewed. File called ' +  files[0].filename + ' should be attached.\n\nMETADATA:\n' + JSON.stringify(d.metadata,undefined,2) + '\n\nPERMISSIONS:\n' + JSON.stringify(d.permissions,undefined,2)
+      text: 'This is an example email that we will send to an institution for file deposit that needs reviewed. File called ' +  files[0].filename + ' should be attached.\n\n' + (if options.email then 'Author to contact if necessary: ' + options.email else '') + '\n\nMETADATA:\n' + JSON.stringify(d.metadata,undefined,2) + '\n\nPERMISSIONS:\n' + JSON.stringify(d.permissions,undefined,2)
       attachments: [{filename: files[0].filename, content: files[0].data}]
 
   else if options.email
@@ -125,9 +129,11 @@ API.service.oab.deposit = (d,options={},files) ->
     # we could record this on the record as a dark deposit from the email address provided, for the account running the embed
     # but this would only be useful to other people looking up the record as somewhere we could say "request this from them, they have a copy"
     # we can record these in the catalogue under a key called "dark", which should be a list of objects. Each object would need a from key and an email
-    d.deposit ?= {}
-    d.deposit.dark ?= []
-    d.deposit.dark.push {from: options.from, email: options.email}
+    d.deposit ?= []
+    dep = {from: options.from, email: options.email, type: 'dark'}
+    dep.pilot = options.pilot if options.pilot
+    dep.live = options.pilot if options.live
+    d.deposit.push dep
     # if later there is a config option where the institutional account provides the name of the institution, include that in the update
     # also would be good to later get confirmation that the institution did actually get the user to deposit, and maybe even a URL to that deposit
     # or a way for us to trigger a request to the institution for the item

@@ -34,15 +34,28 @@ API.add 'service/oab/mail',
     action: () -> return API.service.oab.mail this.request.body
 
 API.add 'service/oab/validate',
-  post: () ->
-    # TODO add a way to pick up the institution that the email address has to be valid for, for shareyourpaper and possibly other uses later
-    # probably use the uid to get the user account, which should be the account of the institution configuring the embed, which probably 
-    # needs to list valid domains their user email addresses could be under. Then only valid the valid address that is also in those domains
-    if not this.queryParams.uid or not this.queryParams.email or not API.accounts.retrieve this.queryParams.uid
-      return undefined
-    else
-      v = API.mail.validate(this.queryParams.email, API.settings.service.openaccessbutton.mail.pubkey)
-      return if v.is_valid then true else if v.did_you_mean then v.did_you_mean else false
+  post: 
+    authOptional:true
+    action: () ->
+      if (not this.queryParams.uid and not this.userId) or not this.queryParams.email or not API.accounts.retrieve this.userId ? this.queryParams.uid
+        return undefined
+      else
+        v = API.mail.validate(this.queryParams.email, API.settings.service.openaccessbutton.mail.pubkey)
+        if v.is_valid
+          if this.queryParams.domained
+            iacc = API.accounts.retrieve this.queryParams.domained
+            return 'baddomain' if not iacc?
+            eml = iacc.email ? iacc.emails[0].address # may also later have a config where the allowed domains can be listed but for now just match the domain of the account holder
+            if eml.toLowerCase().indexOf(this.queryParams.email.split('@')[1].split('.')[0].toLowerCase()) is -1
+              return 'baddomain'
+            else
+              return true
+          else
+            return true
+        else if v.did_you_mean
+          return v.did_you_mean
+        else
+          return false
 
 API.add 'service/oab/dnr',
   get:

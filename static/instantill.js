@@ -16,22 +16,24 @@ var _parameta = {};
 var _lib_contact = undefined;
 
 var instantill_config = function() {
-  var api = _oab_opts.api ? _oab_opts.api : 'https://api.openaccessbutton.org';
-  if (_oab_opts.uid) {
-    $.ajax({
-      type:'GET',
-      url:api+'/ill/config?uid='+_oab_opts.uid,
-      success: function(data) {
-        _oab_config = data;
-        instantill_run();
-      },
-      error: function() {
-        instantill_run();
-      }
-    });
-  } else {
-    instantill_run();
-  }
+  jQuery(document).ready(function(){
+    var api = _oab_opts.api ? _oab_opts.api : 'https://api.openaccessbutton.org';
+    if (_oab_opts.uid) {
+      $.ajax({
+        type:'GET',
+        url:api+'/ill/config?uid='+_oab_opts.uid,
+        success: function(data) {
+          _oab_config = data;
+          instantill_run();
+        },
+        error: function() {
+          instantill_run();
+        }
+      });
+    } else {
+      instantill_run();
+    }
+  });
 }
 
 var instantill_run = function() {
@@ -662,7 +664,7 @@ var instantill_run = function() {
 
 var instantill = function(opts) {
   _oab_opts = opts;
-  if ($ === undefined) {
+  if (window.jQuery === undefined) {
     var site = _oab_opts.site ? _oab_opts.site : 'https://openaccessbutton.org';
     if (window.location.host.indexOf('dev.openaccessbutton.org') !== -1 && !_oab_opts.site) site = 'https://dev.openaccessbutton.org';
     var headTag = document.getElementsByTagName("head")[0];
