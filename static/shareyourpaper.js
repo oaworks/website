@@ -421,7 +421,7 @@ var _run = function() {
       }
       info += '<h3>All we need is your email</h3>';
       info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="email@montana.edu" aria-label="email@montana.edu" style="box-shadow:none;"></input></p>';
-      info += '<p>We\'ll only use this to send you a link to your paper when it is in ScholarWorks.';
+      info += '<p>We\'ll only use this to send you a link to your paper when it is in ScholarWorks. ';
       info += 'By submitting, you\'re agreeing to the <a href="https://scholarworks.montana.edu/docs/#what" target="_blank">terms and conditions</a>.</p>';
       info += '<p><a target="_blank" href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Submit</a></p>';
       info += '</div>';
