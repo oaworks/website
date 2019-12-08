@@ -57,7 +57,7 @@ var instantill_run = function() {
   var w = '<h2 id="oabutton_request" style="display:none;">Request ' + (pora === 'article' ? 'an' : 'a') + ' ' + pora + '</h2><div id="oabutton_inputs">';
   if (_oab_config.intropara !== true) {
     w += '<p>If you need ' + (pora === 'article' ? 'an' : 'a') + ' ' + pora + ' ' + (_oab_config.book ? 'or book ' : '') + 'you can request it from any library in the world through Interlibrary loan. \
-    Start by entering a full ' + pora + ' title, citation, DOI or URL:<br></p>';
+    <br>Start by entering a full ' + pora + ' title, citation, DOI or URL:<br></p>';
   }
   w += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_input" placeholder="' + _oab_opts.placeholder + '" aria-label="' + _oab_opts.placeholder + '" style="box-shadow:none;"></input></p>\
   <p><a class="oabutton_find ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" href="#" id="oabutton_find" aria-label="Search" style="min-width:150px;">Find ' + pora + '</a></p>';
@@ -572,7 +572,7 @@ var instantill_run = function() {
       }
       if (!input || !input.length) input = data.title;
       if (input === undefined || !input.length || (input.toLowerCase().indexOf('http') === -1 && input.indexOf('10.') === -1 && input.indexOf('/') === -1 && isNaN(parseInt(input.toLowerCase().replace('pmc',''))) && (input.length < 30 || input.replace(/\+/g,' ').split(' ').length < 3) ) ) {
-        $('#oabutton_error').html('<p>Sorry, we can\'t use partial titles/citations. Please provide the full title or citation, or a suitable URL or identifier.</p>').show();
+        $('#oabutton_error').html('<p>Sorry, we can\'t use partial titles/citations. Please provide the full title/citation, or something else.</p>').show();
         setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
         _doing_availability = false;
         return;
