@@ -354,7 +354,7 @@ var _run = function() {
       if (_parameta.email) $('#oabutton_email').val(_parameta.email);//.trigger('keyup'); // should this just auto trigger as well?
     }
   }
-  
+
   var forcedeposit = false;
   var opendeposit = function(e) {
     e.preventDefault();
@@ -399,13 +399,9 @@ var _run = function() {
       info += '<p>It\'s normal to share accepted versions as the research is the same, and we\'ll link to the final published pdf for those who can pay for it. It\'s fine to make small edits to formatting, remove comments, arrange figures etc.</p>';
       info += '<h3>We\'ll check the version, then preserve, and promote your work</h3>';
       info += '<p>It\'s normal to share accepted versions as the research is the same. It\'s fine to make small edits to formatting, remove comments, etc.</p>';
-      //info += '<form id="oabfileupload" enctype="multipart/form-data" method="POST"> \
       info += '<p><input type="file" name="file" id="file" class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '"></p>';// \
-        //<input type="hidden" name="service" value="openaccessbutton">';
-      info += '<p>By uploading you\'re agreeing to the terms and conditions and to license your work CC-BY on Zenodo and ScholarWorks</p>';
+      info += '<p>By uploading you\'re agreeing to the <a href="https://scholarworks.montana.edu/docs/#what" target="_blank">terms and conditions</a> and to license your work CC-BY on Zenodo and ScholarWorks</p>';
       info += '<p><a href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : ' btn btn-primary') : '') + '" id="submitfile" style="min-width:150px;">Submit deposit</a>';
-      //info += '<p><input type="submit" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : ' btn btn-primary') : '') + '" id="submitfile" value="Submit deposit" style="min-width:150px;">';
-      //info += '</form>';
       info += '</div>';
     } else {
       // can't be directly shared but can be passed to library for dark deposit
@@ -419,8 +415,8 @@ var _run = function() {
       }
       info += '<h3>All we need is your email</h3>';
       info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="email@montana.edu" aria-label="email@montana.edu" style="box-shadow:none;"></input></p>';
-      info += '<p>We\'ll only use this to send you a link to your paper when it is in ScholarWorks.';
-      info += 'By submitting, you\'re agreeing to the terms and conditions.</p>';
+      info += '<p>We\'ll only use this to send you a link to your paper when it is in ScholarWorks. ';
+      info += 'By submitting, you\'re agreeing to the <a href="https://scholarworks.montana.edu/docs/#what" target="_blank">terms and conditions</a>.</p>';
       info += '<p><a target="_blank" href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Submit</a></p>';
       info += '</div>';
     }
