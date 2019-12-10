@@ -1,3 +1,6 @@
+
+import moment from 'moment'
+
 API.add 'service/oab/deposit',
   get: 
     authOptional: true
@@ -94,58 +97,42 @@ API.service.oab.deposit = (d,options={},files) ->
       fnd = API.service.oab.find d ? options.metadata ? options # this will create a catalogue record out of whatever is provided, and also checks to see if thing is available already
       d = oab_catalogue.get fnd.catalogue
   return 400 if not d?
+  
+  d.deposit ?= []
+  dep = {createdAt: Date.now()}
+  dep.created_date = moment(dep.createdAt, "x").format "YYYY-MM-DD HHmm.ss"
+  dep.pilot = options.pilot if options.pilot # are pilot and live going to be needed for shareyourpaper?
+  dep.live = options.pilot if options.live
+  dep.filename = files[0].filename if files? and files.length
+  dep.email = options.email if options.email
+  # later will test file and permissions and deposit to zenodo if possible
+  if options.from
+    dep.from = options.from
+    dep.type = if options.redeposit then 'redeposit' else if files? and files.length then 'forward' else 'dark'
+  else
+    dep.type = 'review'
+  d.deposit.push dep
+  oab_catalogue.update d._id, deposit: d.deposit
+
   tos = API.settings.service.openaccessbutton.notify.deposit ? ['mark@cottagelabs.com','joe@righttoresearch.org']
   if options.from
     iacc = API.accounts.retrieve options.from
     tos.push iacc.email ? iacc.emails[0].address # the institutional user may set a config value to use as the contact email address but for now it is the account address
-  if files? and files.length > 0
-    # later this should test the file and check the permissions and deposit to zenodo if possible
-    # for zenodo deposit, use similar to the old receive code
-    # if not possible it should send an email with file attachment to OAB admin if it is not an institutional deposit
-    # for an institutional deposit it should send the email to the institutional account email address or the config email
-    # for now we will only do the email option anyway until permssions is further developed
-    d.deposit ?= []
-    dep = {filename: files[0].filename}
-    dep.email = options.email if options.email
-    if options.from
-      dep.from = options.from
-      dep.type = 'forward'
-    else
-      dep.type = 'review'
-    dep.pilot = options.pilot if options.pilot # are pilot and live going to be needed for shareyourpaper?
-    dep.live = options.pilot if options.live
-    d.deposit.push dep
-    oab_catalogue.update d._id, deposit: d.deposit
-    API.service.oab.mail # later this should probably be a template call
-      from: 'deposits@openaccessbutton.org'
-      to: tos
-      subject: 'Forwarded deposit'
-      text: 'This is an example email that we will send to an institution for file deposit that needs reviewed. File called ' +  files[0].filename + ' should be attached.\n\n' + (if options.email then 'Author to contact if necessary: ' + options.email else '') + '\n\nMETADATA:\n' + JSON.stringify(d.metadata,undefined,2) + '\n\nPERMISSIONS:\n' + JSON.stringify(d.permissions,undefined,2)
-      attachments: [{filename: files[0].filename, content: files[0].data}]
 
-  else if options.email
-    # in some cases a user may "dark" deposit an item, this means we will tell them they can deposit 
-    # but all we will do is pass their email to their institutional contact (the address of the owner account of them embed)
-    # we could record this on the record as a dark deposit from the email address provided, for the account running the embed
-    # but this would only be useful to other people looking up the record as somewhere we could say "request this from them, they have a copy"
-    # we can record these in the catalogue under a key called "dark", which should be a list of objects. Each object would need a from key and an email
-    d.deposit ?= []
-    dep = {from: options.from, email: options.email, type: 'dark'}
-    dep.pilot = options.pilot if options.pilot
-    dep.live = options.pilot if options.live
-    d.deposit.push dep
-    # if later there is a config option where the institutional account provides the name of the institution, include that in the update
-    # also would be good to later get confirmation that the institution did actually get the user to deposit, and maybe even a URL to that deposit
-    # or a way for us to trigger a request to the institution for the item
-    oab_catalogue.update d._id, deposit: d.deposit
-    # email the institution to get them to follow up with the email address that can provide the content
-    API.service.oab.mail # later this should probably be a template call
-      from: 'deposits@openaccessbutton.org'
-      to: tos
-      subject: 'Dark deposit' # to be customised later
-      text: 'This is an example email that we will send to an institution for dark deposit\n\n' + 'Author to email for file: ' + options.email + '\n\nMETADATA:\n' + JSON.stringify(d.metadata,undefined,2) + '\n\nPERMISSIONS\n' + JSON.stringify(d.permissions,undefined,2)
-      #vars: vars
-      #template: {filename: ''}
+  text = 'This is an example email that we will send to an institution for ' + dep.type + ' deposit\n\n'
+  text += 'File called ' +  files[0].filename + ' should be attached.\n\n' if files? and files.length
+  text += 'Author email to contact: \n' + options.email + '\n\n' if options.email 
+  text += 'There is already an open URL for this article at \n' + options.redeposit + '\n\n' if typeof options.redeposit is 'string'
+  text += 'METADATA:\n' + JSON.stringify(d.metadata,undefined,2) + '\n\nPERMISSIONS:\n' + JSON.stringify(d.permissions,undefined,2)
+
+  API.service.oab.mail
+    from: 'deposits@openaccessbutton.org'
+    to: tos
+    subject: dep.type + ' deposit'
+    text: text
+    attachments: (if files? then [{filename: files[0].filename, content: files[0].data}] else undefined)
+    #vars: vars # later this may become a template call
+    #template: {filename: ''}
 
   # eventually this could also close any open requests for the same item, but that has not been prioritised to be done yet
   return d

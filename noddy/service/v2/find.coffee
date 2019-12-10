@@ -5,6 +5,26 @@ import unidecode from 'unidecode'
 #oab_find.delete true, true
 #oab_catalogue.delete true, true
 
+_ftitle = (title) ->
+  ft = ''
+  for tp in unidecode(title.toLowerCase()).replace(/[^a-z0-9 ]/g,'').replace(/ +/g,' ').split(' ')
+    ft += tp if tp.length > 2
+  return ft
+
+_finder = (metadata) ->
+  finder = ''
+  for tid in ['doi','pmid','pmcid','url','title']
+    if metadata[tid]
+      finder += ' OR ' if finder isnt ''
+      if tid is 'title'
+        finder += 'ftitle:' + _ftitle(metadata.title) + '~ OR '
+      finder += 'metadata.' + tid + (if tid is 'url' or tid is 'title' then '' else '.exact') + ':"' + metadata[tid] + '"'
+  return finder
+
+oab_catalogue.finder = (metadata) ->
+  finder = _finder metadata
+  return if finder isnt '' then oab_catalogue.find(finder, true) else undefined
+
 _find =
   authOptional: true
   action: () ->
@@ -22,7 +42,11 @@ API.add 'service/oab/finds', () -> return oab_find.search this
 API.add 'service/oab/found', () -> return oab_catalogue.search this, {restrict:[{exists: {field:'url'}}]}
 API.add 'service/oab/catalogue', () -> return oab_catalogue.search this
 API.add 'service/oab/catalogue/:cid', get: () -> return oab_catalogue.get this.urlParams.cid
-  
+
+API.add 'service/oab/metadata',
+  get: () -> return API.service.oab.metadata this.queryParams
+  post: () -> return API.service.oab.metadata this.request.body
+
 
 # exists for legacy reasons, _avail should be altered to make sure the _find returns what _avail used to
 _avail =
@@ -42,33 +66,21 @@ _avail =
       afnd.data.match = opts.doi ? opts.pmid ? opts.pmc ? opts.pmcid ? opts.title ? opts.url ? opts.id ? opts.citation ? opts.q
       afnd.v2 = API.service.oab.find opts
       try
+        afnd.data.ill = afnd.v2.ill
         afnd.data.meta.article = afnd.v2.metadata
         afnd.data.meta.cache = afnd.v2.cached
         afnd.data.meta.refresh = afnd.v2.refresh
         afnd.data.availability.push({type: 'article', url: afnd.v2.url}) if afnd.v2.url
+      try
+        if request = oab_request.find _finder(afnd.v2.metadata) + ' AND type:article'
+          rq = type: 'article', _id: request._id
+          rq.ucreated = if opts.uid and request.user?.id is opts.uid then true else false
+          rq.usupport = if opts.uid then API.service.oab.supports(request._id, opts.uid)? else false
+          afnd.data.requests.push rq
       return afnd
 API.add 'service/oab/availability', get:_avail, post:_avail
+API.add 'service/oab/availabilities', () -> return oab_find.search this
 
-API.add 'service/oab/metadata',
-  get: () -> return API.service.oab.metadata this.queryParams
-  post: () -> return API.service.oab.metadata this.request.body
-
-
-_ftitle = (title) ->
-  ft = ''
-  for tp in unidecode(title.toLowerCase()).replace(/[^a-z0-9 ]/g,'').replace(/ +/g,' ').split(' ')
-    ft += tp if tp.length > 2
-  return ft
-
-oab_catalogue.finder = (metadata) ->
-  finder = ''
-  for tid in ['doi','pmid','pmcid','url','title']
-    if metadata[tid]
-      finder += ' OR ' if finder isnt ''
-      if tid is 'title'
-        finder += 'ftitle:' + _ftitle(metadata.title) + '~ OR '
-      finder += 'metadata.' + tid + (if tid is 'url' or tid is 'title' then '' else '.exact') + ':"' + metadata[tid] + '"'
-  return if finder isnt '' then oab_catalogue.find(finder, true) else undefined
 
 
 API.service.oab.metadata = (options={}) -> # pass-through to find that ensures the settings will get metadata rather than fail fast on find
@@ -94,6 +106,7 @@ API.service.oab.find = (options={}, metadata={}, content) ->
     metadata = options.metadata
     options.metadata = true
   options.metadata = if options.metadata is true then ['title','doi','author','journal','issn','volume','issue','page','published','year'] else if _.isArray(options.metadata) then options.metadata else []
+  content ?= options.dom if options.dom?
 
   # other possible options are permissions
   # TODO what other options values should we be sure to collect based on old behaviour? from,uid...
@@ -102,8 +115,9 @@ API.service.oab.find = (options={}, metadata={}, content) ->
   res.all = options.all ? false
   res.parallel = options.parallel ? true
   res.find = options.find ? true
-  # other possible sources are ['base','dissemin','share','core','openaire']
-  res.sources = options.sources ? ['oabutton','crossref','epmc','reverse','bing','scrape','oadoi','figshare','doaj']
+  # other possible sources are ['base','dissemin','share','core','openaire','bing']
+  res.sources = options.sources ? ['oabutton','crossref','epmc','reverse','scrape','oadoi','figshare','doaj']
+  res.sources.push('bing') if options.plugin in ['widget','oasheet'] or options.from in ['illiad','clio'] or options.url.indexOf('alma.exlibrisgroup.com') isnt -1
   try res.refresh = if options.refresh is false then 30 else if options.refresh is true then 0 else parseInt options.refresh
   res.refresh = 30 if typeof res.refresh isnt 'number' or isNaN res.refresh
   res.embedded ?= options.embedded if options.embedded?
@@ -118,7 +132,7 @@ API.service.oab.find = (options={}, metadata={}, content) ->
     delete metadata.id
   options.url = options.url[0] if _.isArray options.url
   res.checked = []
-  
+
   _got = (obj=metadata) ->
     for w in options.metadata
       if not obj[w]?
@@ -172,21 +186,25 @@ API.service.oab.find = (options={}, metadata={}, content) ->
           metadata.title = options.citation.split('"')[0].split("'")[0].trim()
         metadata.title = metadata.title.replace(/(<([^>]+)>)/g,'').trim()
 
+  # special cases for instantill demo and exlibris - dev and live demo accounts that always return a fixed answer
+  if options.plugin is 'instantill' and metadata.doi is '10.1234/567890' and options.from in ['qZooaHWRz9NLFNcgR','eZwJ83xp3oZDaec86'] 
+    res.ill = {openurl: ""}
+    res.ill.subscription = {findings:{}, uid: options.from, lookups:[], error:[], url: 'https://instantill.org', demo: true}
+    return res # for demo this also used to return fast and not save, should it still do so?
+  if not metadata.title and content and typeof options.url is 'string' and (options.url.indexOf('alma.exlibrisgroup.com') isnt -1 or options.url.indexOf('/exlibristest') isnt -1)
+    # switch exlibris URLs for titles, which the scraper knows how to extract, because the exlibris url would always be the same
+    delete options.url
+    res.exlibris = true
+    _.extend metadata, API.service.oab.scrape undefined, content
+
   API.log msg: 'OAB finding academic content', level: 'debug', metadata: JSON.stringify metadata
   try metadata[w] ?= options[w] for w in options.metadata # get whatever other metadata we may have been given to begin with, just in case
 
   # check for an entry in our catalogue already
-  used = []
-  finder = ''
+  used = _.keys metadata
   catalogued = undefined
   _findoab = () ->
-    for tid in ['doi','pmid','pmcid','url','title']
-      if metadata[tid] and tid not in used
-        used.push tid
-        finder += ' OR ' if finder isnt ''
-        if tid is 'title'
-          finder += 'ftitle:' + _ftitle(metadata.title) + '~ OR '
-        finder += 'metadata.' + tid + (if tid is 'url' or tid is 'title' then '' else '.exact') + ':"' + metadata[tid] + '"'
+    finder = _finder metadata
     if finder isnt ''
       catalogued = oab_catalogue.find finder, true
       # if user wants a total refresh, don't use any of it (we still search for it though, because will overwrite later with the fresh stuff)
@@ -414,6 +432,13 @@ API.service.oab.find = (options={}, metadata={}, content) ->
       res.catalogue = catalogued._id
     else
       res.catalogue = oab_catalogue.insert upd
+
+  # get ill info for instantill widget
+  if res.from? and res.plugin is 'instantill'
+    res.ill = {}
+    try res.ill.openurl = API.service.oab.ill.openurl res.from, metadata
+    try res.ill.terms = API.service.oab.ill.terms res.from
+    try res.ill.subscription = API.service.oab.ill.subscription res.from, metadata, res.refresh
 
   # always save a new find with a new ID, so we can track all the attempts to find something, and record who did it if known
   if options.uid

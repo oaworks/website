@@ -263,18 +263,15 @@ var _run = function() {
     return c;
   }
 
-  var flupload = false;
-  var _submit_deposit = function(e,upload) {
-    if (flupload !== false && upload === undefined) {
-      upload = flupload;
-      flupload = false;
-    }
+  var flupload = undefined;
+  var _submit_deposit = function() {
     // this could be just an email for a dark deposit, or a file for actual deposit
     // for file deposit will need file deposit js
     $('.oabutton_find').html('Submitting .');
     $('.oabutton_deposit').html('Depositing .');
     var eml = typeof matched === 'string' ? matched : $('#oabutton_email').val();
     var data = {email:eml, from:_oab_opts.uid, plugin:'shareyourpaper', embedded:window.location.href, metadata: avail.data.meta.article }
+    if (avail.v2 && avail.v2.url) data.redeposit = avail.v2.url;
     if (_oab_config.pilot) data.pilot = _oab_config.pilot;
     if (_oab_config.live) data.live = _oab_config.live;
     if (!data.metadata.title || !data.metadata.journal) {
@@ -288,19 +285,20 @@ var _run = function() {
         cache: false,
         processData: false,
         success: function(res) {
+          flupload = undefined;
           $('.oabutton_deposit').html('Submit deposit');
           $('#oabutton_availability').html('<h3>Congrats, you\'re done!</h3><p>Check back soon to see your paper live, or we\'ll email you with issues.</p><p><a href="#" class="restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>').show();
         },
         error: function(data) {
+          flupload = undefined;
           $('.oabutton_deposit').html('Complete deposit');
           $('#oabutton_error').html('<p>Sorry, we were not able to deposit this paper for you. ' + _lib_contact + '</p><p><a href="#" class="restart" style="font-weight:bold;">Try again</a></p>').show();
           pinger('Shareyourpaper_couldnt_submit_deposit');
-          setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
         }
       }
-      if (upload) {
-        for ( var d in data ) upload.append(d,data[d]);
-        opts.data = upload;
+      if (flupload) {
+        for ( var d in data ) flupload.append(d,data[d]);
+        opts.data = flupload;
         opts.contentType = false;
       } else {
         opts.data = JSON.stringify(data);
@@ -310,15 +308,17 @@ var _run = function() {
       $.ajax(opts);
     }
   }
-  var deposit = function(e,upload) {
+  var deposit = function(e) {
     try { e.preventDefault(); } catch (err) {}
-    if (upload) flupload = upload;
     $('.oabutton_deposit').html('Depositing .');
+    if ($('#file').length) {
+      flupload = new FormData();
+      flupload.append('file',$('#file')[0].files[0]);
+    }
     if ($('#oabutton_email').length) {
       if (!$('#oabutton_email').val().length) {
         $('.oabutton_deposit').html('Complete deposit');
         $('#oabutton_error').html('<p>Please provide your university email address.</p>').show();
-        setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
         $('#oabutton_email').css('border-color','#f04717').focus();
         return;
       } else {
@@ -335,7 +335,6 @@ var _run = function() {
                 $('#oabutton_error').html('<p>Sorry, your email does not look right. ' + (data !== false ? 'Did you mean ' + data + '? ' : '') + 'Please check and try again.</p>').show();
               }
               $('.oabutton_deposit').html('Complete deposit');
-              setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
             }
           },
           error: function(data) {
@@ -352,8 +351,6 @@ var _run = function() {
       info += '<p><a target="_blank" href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Submit</a></p>';
       info += '</div>';
       $('#oabutton_availability').html(info).show();
-      if ($('.oabutton_deposit').length) $('.oabutton_deposit').bind('click',deposit);
-      if ($('#oabutton_email').length) $('#oabutton_email').bind('keyup', function(e) { if (e.keyCode === 13) deposit() });
       if (_parameta.email) $('#oabutton_email').val(_parameta.email);//.trigger('keyup'); // should this just auto trigger as well?
     }
   }
@@ -402,12 +399,13 @@ var _run = function() {
       info += '<p>It\'s normal to share accepted versions as the research is the same, and we\'ll link to the final published pdf for those who can pay for it. It\'s fine to make small edits to formatting, remove comments, arrange figures etc.</p>';
       info += '<h3>We\'ll check the version, then preserve, and promote your work</h3>';
       info += '<p>It\'s normal to share accepted versions as the research is the same. It\'s fine to make small edits to formatting, remove comments, etc.</p>';
-      info += '<form id="oabfileupload" enctype="multipart/form-data" method="POST"> \
-        <p><input type="file" name="file" id="file" class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '"></p> \
-        <input type="hidden" name="service" value="openaccessbutton">';
+      //info += '<form id="oabfileupload" enctype="multipart/form-data" method="POST"> \
+      info += '<p><input type="file" name="file" id="file" class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '"></p>';// \
+        //<input type="hidden" name="service" value="openaccessbutton">';
       info += '<p>By uploading you\'re agreeing to the terms and conditions and to license your work CC-BY on Zenodo and ScholarWorks</p>';
-      info += '<p><input type="submit" class="oabutton_deposit' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : ' btn btn-primary') : '') + '" id="submitfile" value="Submit deposit" style="min-width:150px;">';
-      info += '</form>';
+      info += '<p><a href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : ' btn btn-primary') : '') + '" id="submitfile" style="min-width:150px;">Submit deposit</a>';
+      //info += '<p><input type="submit" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : ' btn btn-primary') : '') + '" id="submitfile" value="Submit deposit" style="min-width:150px;">';
+      //info += '</form>';
       info += '</div>';
     } else {
       // can't be directly shared but can be passed to library for dark deposit
@@ -429,20 +427,7 @@ var _run = function() {
     forcedeposit = false;
     $('#oabutton_inputs').hide();
     $('#oabutton_availability').html(info).show();
-    if ($('#oabfileupload').length) {
-      $('form#oabfileupload').submit(function(e) {
-        if (e) e.preventDefault();
-        deposit(undefined,new FormData(this));
-        return false;
-      });
-    }
-    if ($('.oabutton_deposit').length) $('.oabutton_deposit').bind('click',deposit);
-    if ($('.oabutton_opendeposit').length) $('.oabutton_opendeposit').bind('click',opendeposit);
-    if ($('#oabutton_email').length) $('#oabutton_email').bind('keyup', function(e) { if (e.keyCode === 13) deposit() });
-    if ($('#oabutton_getmore').length) {
-      $('#oabutton_getmore').bind('click',function(e) { e.preventDefault(); getmore(); });
-      if (needmore || (cit && cit.length === 0)) getmore();
-    }
+    if ($('#oabutton_getmore').length && (needmore || (cit && cit.length === 0))) getmore();
     if (_parameta.email && $('#oabutton_email').length) $('#oabutton_email').val(_parameta.email);//.trigger('keyup'); // should this just auto trigger as well?
   }
 
@@ -464,12 +449,10 @@ var _run = function() {
         if ($('#oabutton_doi').length && $('#oabutton_doi').val()) data.doi = $('#oabutton_doi').val();
         if (data.year && data.year.length !== 4) {
           $('#oabutton_error').html('<p>Please provide the full year e.g 2019</p>').show();
-          setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
           return;
         }
         if (!data.title || !data.journal || !data.year) {
           $('#oabutton_error').html('<p>Please complete all required fields</p>').show();
-          setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
           return;
         }
       }
@@ -497,7 +480,6 @@ var _run = function() {
       if (!input || !input.length) input = data.title;
       if (input === undefined || !input.length || (input.toLowerCase().indexOf('http') === -1 && input.indexOf('10.') === -1 && input.indexOf('/') === -1 && isNaN(parseInt(input.toLowerCase().replace('pmc',''))) && (input.length < 30 || input.replace(/\+/g,' ').split(' ').length < 3) ) ) {
         $('#oabutton_error').html('<p>Sorry, we can\'t use partial titles/citations. Please provide the full title or citation, or a suitable URL or identifier.</p>').show();
-        setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
         _doing_availability = false;
         return;
       }
@@ -545,15 +527,19 @@ var _run = function() {
           _doing_availability = false;
           $('#oabutton_input').val('');
           $('#oabutton_error').show().html('<p>Oh dear, the service is down! We\'re aware, and working to fix the problem. ' + _lib_contact + '</p>');
-          setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
         }
       };
       $.ajax(avopts);
     }
   }
-  $('#oabutton_input').bind('keyup',availability);
-  $('body').on('click','.oabutton_find',availability);
-  $('body').on('click','.restart',_restart);
+
+  $(_oab_opts.element).on('keyup','#oabutton_input',availability);
+  $(_oab_opts.element).on('click','.oabutton_find',availability);
+  $(_oab_opts.element).on('click','.restart',_restart);
+  $(_oab_opts.element).on('click','.oabutton_deposit',deposit);
+  $(_oab_opts.element).on('keyup','#oabutton_email',function(e) { if (e.keyCode === 13) deposit() });
+  $(_oab_opts.element).on('click','.oabutton_opendeposit',opendeposit);
+  $(_oab_opts.element).on('click','#oabutton_getmore',function(e) { e.preventDefault(); getmore(); });
 
   // could get custom _ops from the user config
   if (_oab_config.autorun !== true) {

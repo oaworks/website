@@ -223,6 +223,6 @@ var openaccessbutton_widget = function(opts) {
       $.ajax(avopts);
     }
   }
-  $('#oabutton_url').bind('keyup',availability);
-  $('#oabutton_find').bind('click',availability);
+  $('body').on('keyup','#oabutton_url',availability);
+  $('body').on('click','#oabutton_find',availability);
 }

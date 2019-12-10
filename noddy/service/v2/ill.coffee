@@ -91,7 +91,7 @@ API.add 'service/oab/ills',
 
 API.service.oab.ill = {}
 
-API.service.oab.ill.subscription = (uid, meta={}, all=false, refresh=false) ->
+API.service.oab.ill.subscription = (uid, meta={}, refresh=false) ->
   # dev and live demo accounts that always return a fixed answer
   if meta.doi is '10.1234/567890' and uid is 'qZooaHWRz9NLFNcgR' or uid is 'eZwJ83xp3oZDaec86'
     return {findings:{}, uid: uid, lookups:[], error:[], url: 'https://instantill.org', demo: true}

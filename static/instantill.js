@@ -386,11 +386,11 @@ var instantill_run = function() {
     }
   }
   var ill = function(e) {
-    e.preventDefault();
     $('.oabutton_ill').html('Submitting .');
     if ($(this).hasClass('oabutton_ill_email')) {
       try { e.preventDefault(); } catch (err) {}
       if ($('#oabutton_read_terms').length && !$('#oabutton_read_terms').is(':checked')) {
+        $('.oabutton_ill').html('Complete request');
         $('#oabutton_error').html('<p>Please agree to the terms first.</p>').show();
         setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
         return;
@@ -503,17 +503,15 @@ var instantill_run = function() {
       } else {
         if (avail.data.ill.terms) info += '<p id="oabutton_terms_note"><input type="checkbox" id="oabutton_read_terms"> I have read the <a target="_blank" href="' + avail.data.ill.terms + '"><b>terms and conditions</b></a></p>';
         info += '<p><input placeholder="Your university email address" id="oabutton_email" type="text" class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '"></p>';
-        info += '<p><a class="oabutton_ill oabutton_ill_email ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" href="' + api + '/ill?from=' + _oab_opts.uid + '&plugin=instantill&data=false&url=' + encodeURIComponent(avail.data.match) + '" style="min-width:150px;">Complete request</a></p>';
+        info += '<p><a class="oabutton_ill oabutton_ill_email ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" href="#" style="min-width:150px;">Complete request</a></p>';
       }
       info += '</div>';
     }
     $('.oabutton_find').html('Find ' + pora);
     $('#oabutton_inputs').hide();
     $('#oabutton_availability').html(info).show();
-    if ($('.oabutton_ill').length) $('.oabutton_ill').bind('click',ill);
-    if ($('#oabutton_email').length) $('#oabutton_email').bind('keyup', function(e) { if (e.keyCode === 13) ill() });
     if ($('#oabutton_getmore').length) {
-      $('#oabutton_getmore').bind('click',function(e) { e.preventDefault(); clickwrong = true; getmore(); });
+      $(_oab_opts.element).on('click','#oabutton_getmore',function(e) { e.preventDefault(); clickwrong = true; getmore(); });
       if (needmore || (cit && cit.length === 0)) getmore();
     }
   }
@@ -628,10 +626,12 @@ var instantill_run = function() {
       $.ajax(avopts);
     }
   }
-  $('#oabutton_input').bind('keyup',availability);
-  $('body').on('click','.oabutton_find',availability);
-  $('body').on('click','.restart',_instantill_restart);
-  $('body').on('click','.oldpinger',function(e) { illpinger('Instantill_use_the_old_form'); });
+  $(_oab_opts.element).on('keyup','#oabutton_input',availability);
+  $(_oab_opts.element).on('click','.oabutton_ill',ill);
+  $(_oab_opts.element).on('click','.oabutton_find',availability);
+  $(_oab_opts.element).on('click','.restart',_instantill_restart);
+  $(_oab_opts.element).on('click','.oldpinger',function(e) { illpinger('Instantill_use_the_old_form'); });
+  $(_oab_opts.element).on('keyup','#oabutton_email',function(e) { if (e.keyCode === 13) ill() });
 
   // could get custom _ops from the user config
   if (_oab_config.autorun !== true) {
