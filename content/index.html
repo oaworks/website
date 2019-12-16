@@ -129,10 +129,11 @@
     }
     $('.example').bind('click',example);
     noddy.login();
+    var url = undefined;
     var availability = function(e) {
       if ($(this).attr('id') === 'find' || e === undefined || e.keyCode === 13) {
         if (e && $(this).attr('id') === 'find') e.preventDefault();
-        var url = $('#url').val().trim();
+        url = $('#url').val().trim();
         if (!url.length) {
           $('#url').css('border-color','#f04717').focus();
           return;
@@ -169,7 +170,7 @@
         if (url.lastIndexOf('.') === url.length-1) url = url.substring(0,url.length-1);
         $('.intro').hide();
         $('#loading').show();
-        var lurl = api+'/find?plugin=website&'
+        var lurl = api+'/availability?plugin=website&'
         if (window.location.search.indexOf('refresh=') !== -1) lurl += 'refresh=' + window.location.search.split('refresh=')[1].split('&')[0] + '&';
         if (window.location.search.indexOf('from=') !== -1) lurl += 'from=' + window.location.search.split('from=')[1].split('&')[0] + '&';
         if (window.location.search.indexOf('uid=') !== -1) lurl += 'uid=' + window.location.search.split('uid=')[1].split('&')[0] + '&';
@@ -191,16 +192,15 @@
                 if (!has[data.data.requests[r].type]) has[data.data.requests[r].type] = {id:data.data.requests[r]._id,ucreated:data.data.requests[r].ucreated,usupport:data.data.requests[r].usupport};
               }
             }
-            if (data.data.match && data.data.match.indexOf('http') !== 0 && data.data.meta && data.data.meta.article && data.data.meta.article.doi) data.data.match = 'https://doi.org/' + data.data.meta.article.doi;
             if (JSON.stringify(has) === '{}') {
-              // find out if we have something from which a request can really be created - e.g. not just a title or citation
+              // find out if we have something from which a request can really be created
               // if usable, try to create via the API then redirect to the created request
               // if no title or author email a new extract will be triggered so this will be slow - so try to avoid that if possible
-              if (data.data.match.indexOf('http') === 0) {
+              if (data.data.meta.article.title || data.data.meta.article.doi || data.data.meta.article.url) {
                 var dr = {};
                 try { dr.title = data.data.meta.article.title; } catch(err) {}
                 try { dr.doi = data.data.meta.article.doi; } catch(err) {}
-                try { dr.url = data.data.match; } catch(err) {}
+                try { dr.url = data.data.meta.article.url; } catch(err) {}
                 var opts = {
                   type:'POST',
                   url: api+'/request?fast=true',
@@ -213,13 +213,13 @@
                     window.location = '/request/' + resp.data._id;
                   },
                   error: function() {
-                    window.location = '/request?url=' + encodeURIComponent(data.data.match);
+                    window.location = '/request?url=' + encodeURIComponent(url);
                   }
                 }
                 try { if (noddy.apikey) opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", noddy.apikey); } } catch(err) {}
                 $.ajax(opts);
               } else {
-                $('#availability').html('<p>Sorry, we couldn\'t find anything for <b>' + data.data.match + '</b>.</p><p>Matching titles and citations can be tricky. Please find a URL, DOI, PMID or PMCID and <a href="/">try again</a>.</p>');
+                $('#availability').html('<p>Sorry, we couldn\'t find anything for <b>' + url + '</b>.</p><p>Matching titles and citations can be tricky. Please find a URL, DOI, PMID or PMCID and <a href="/">try again</a>.</p>');
               }
             } else if (has.article && !has.data) {
               var availability = '';
@@ -236,17 +236,17 @@
                 availability += '<h2 style="color:#212f3f;">This article is available!</h2>';
                 availability += '<p"><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + has.article.url + '</a></p>';
                 availability += '<p>Not what you were expecting? <a target="_blank" href ="/feedback#wrong?searched=' + encodeURIComponent(url) + '&given=' + encodeURIComponent(has.article.url) + '">Report an error</a>.</p>';
-                availability += '<p> You can <a href="/request?url=' + encodeURIComponent(data.data.match) + '">request it from the author</a> if it isn\'t available.</p>';
+                availability += '<p> You can <a href="/request?url=' + encodeURIComponent(url) + '">request it from the author</a> if it isn\'t available.</p>';
       	      }
               if (false) { // data disabled for now (window.location.search.indexOf('data=false') === -1) {
                 availability += '<p style="color:#212f3f;padding-top:50px;">';
                 availability += 'Want the data supporting the article? ';
-                availability += '<a class="btn btn-action" href="/request?type=data&url=' + encodeURIComponent(data.data.match) + '">Request it from the author</a></p>';
+                availability += '<a class="btn btn-action" href="/request?type=data&url=' + encodeURIComponent(url) + '">Request it from the author</a></p>';
               }
               $('#availability').html(availability);
             } else if (!has.article && has.data) {
               var availability = '<h2 style="color:#212f3f;">This article is not available</h2>';
-              availability += '<h3 style="text-align:center;"><a class="btn btn-action" href="/request?url=' + encodeURIComponent(data.data.match) + '">Start a request</a></h3>';
+              availability += '<h3 style="text-align:center;"><a class="btn btn-action" href="/request?url=' + encodeURIComponent(url) + '">Start a request</a></h3>';
               if (window.location.search.indexOf('data=false') === -1) {
                 availability += '<p style="color:#212f3f;padding-top:50px;">';
                 if (has.data.id) {
@@ -272,7 +272,7 @@
                   availability += 'This article is available!</h2>';
                   availability += '<h><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + has.article.url;
                   availability += '<p>Not what you were expecting? <a target="_blank" href ="/feedback#wrong?searched=' + encodeURIComponent(url) + '&given=' + encodeURIComponent(has.article.url) + '">Report an error</a>.</p>';
-                  availability += '<p> You can <a href="/request?url=' + encodeURIComponent(data.data.match) + '">request it from the author</a> if it isn\'t available.</p>';
+                  availability += '<p> You can <a href="/request?url=' + encodeURIComponent(url) + '">request it from the author</a> if it isn\'t available.</p>';
 		            }
                 if (has.article.id) {
                   if (has.article.ucreated) {
@@ -313,7 +313,7 @@
         if (noddy.apikey) {
           opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", noddy.apikey); };
           opts.type = 'POST';
-          opts.url = api+'/find';
+          opts.url = api+'/availability';
           opts.cache = false;
           opts.processData = false;
           opts.contentType = 'application/json';

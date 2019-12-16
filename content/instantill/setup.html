@@ -111,6 +111,10 @@
                 <span class="glyphicon glyphicon-arrow-right"></span> Rollout</a>
               </li>
               <li>
+                <a class="green" href="https://instantill.org/leadership">
+                <span class="glyphicon glyphicon-arrow-right"></span> Support InstantILL</a>
+              </li>
+              <li>
                 <a class="green view pull preview" val="10.1145/2908080.2908114" href="#analytics">
                 <span class="glyphicon glyphicon-arrow-right"></span> View Analytics</a>
               </li>
@@ -441,14 +445,17 @@
             InstantILL can be integrated onto any webpage on your website, and blend in with your brand.
           </p>
           <p>
+            <!--
             To do that you can follow these simple instructions or we’ve drafted an email you can <a href="mailto:" class="light">send your developer</a>.
+            -->
+            To do that you can follow these simple instructions or send these to your developers.
           </p>
 
           <p>
             First, include the following in the source code (HTML) of your page:
           </p>
           <pre class="stickidin">
-&lt;script src="{{site_url}}/static/instantill.js"&gt;&lt;/script&gt;&lt;script&gt;jQuery(document).ready(function(){instantill();});&lt;/script&gt;
+&lt;script src="{{site_url}}/static/instantill.js"&gt;&lt;/script&gt;&lt;script&gt;instantill();&lt;/script&gt;
 &lt;div id="instantill"&gt;&lt;/div&gt;</pre>
 
         <p>You can control where the search widget gets displayed by moving:</p>
@@ -917,7 +924,7 @@ jQuery(document).ready(function() {
   $('div.content:visible').css({'padding-top':diff+'px'});
 
   $(document).ajaxComplete(function(e,xhr) {
-    if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.match !== undefined) {
+    if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.availability !== undefined) {
       _ill_response = xhr.responseJSON.data;
       // an availability check finished, reposition the instantill window if necessary
       /*if (($('#instantill').height() + $('#instantill').offset().top) > ($(window).height()*.95)) {

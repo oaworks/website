@@ -285,6 +285,29 @@ div.greenbottom {
     color: white;
   }
 
+  div.blue {
+    background-color:#ECF3FA;
+    /*color:#46b633;*/
+    height:100%;
+    padding-bottom:160px;
+  }
+  div.blueery {
+    margin-top:10%;
+    margin-left:10%;
+    width:80%;
+    max-width:500px;
+    /*text-align: justify;
+    text-justify: inter-word;*/
+  }
+
+  div.bluebottom {
+    position:absolute;
+    bottom:20px;
+    left:13%;
+    width:75%;
+    max-width:500px;
+  }
+
   .btn-demo-white{
     background-color: white;
     border-color: white;
@@ -470,6 +493,7 @@ div.greenbottom {
     display: inline-block;
     width: 100%;
     max-width: 1024px;
+    white-space: nowrap;
   }
 
   .media img{
@@ -515,11 +539,12 @@ div.greenbottom {
   }
 
 /*if the footer sticks to bottom*/
+@media screen and (min-width: 640px) {
   .stick-to-bottom{
     position: absolute;
     bottom: 0;
   }
-
+  }
   @media screen and (max-width: 1024px){
     .tool-container{
       width: 49%;
