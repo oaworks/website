@@ -73,7 +73,8 @@ _avail =
         afnd.data.meta.refresh = afnd.v2.refresh
         afnd.data.availability.push({type: 'article', url: afnd.v2.url}) if afnd.v2.url
       try
-        if request = oab_request.find _finder(afnd.v2.metadata) + ' AND type:article'
+        finder = _finder(afnd.v2.metadata)
+        if finder isnt '' and request = oab_request.find finder + ' AND type:article'
           rq = type: 'article', _id: request._id
           rq.ucreated = if opts.uid and request.user?.id is opts.uid then true else false
           rq.usupport = if opts.uid then API.service.oab.supports(request._id, opts.uid)? else false
