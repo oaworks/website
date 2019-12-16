@@ -15,10 +15,11 @@ _finder = (metadata) ->
   finder = ''
   for tid in ['doi','pmid','pmcid','url','title']
     if metadata[tid]
+      mt = metadata[tid][0] if _.isArray metadata[tid]
       finder += ' OR ' if finder isnt ''
       if tid is 'title'
         finder += 'ftitle:' + _ftitle(metadata.title) + '~ OR '
-      finder += 'metadata.' + tid + (if tid is 'url' or tid is 'title' then '' else '.exact') + ':"' + metadata[tid] + '"'
+      finder += 'metadata.' + tid + (if tid is 'url' or tid is 'title' then '' else '.exact') + ':"' + mt + '"'
   return finder
 
 oab_catalogue.finder = (metadata) ->
