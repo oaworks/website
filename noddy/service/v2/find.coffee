@@ -108,23 +108,6 @@ API.service.oab.find = (options={}, metadata={}, content) ->
   options.metadata = if options.metadata is true then ['title','doi','author','journal','issn','volume','issue','page','published','year'] else if _.isArray(options.metadata) then options.metadata else []
   content ?= options.dom if options.dom?
 
-  # other possible options are permissions
-  # TODO what other options values should we be sure to collect based on old behaviour? from,uid...
-  res.plugin = options.plugin if options.plugin?
-  res.from = options.from if options.from?
-  res.all = options.all ? false
-  res.parallel = options.parallel ? true
-  res.find = options.find ? true
-  # other possible sources are ['base','dissemin','share','core','openaire','bing']
-  res.sources = options.sources ? ['oabutton','crossref','epmc','reverse','scrape','oadoi','figshare','doaj']
-  res.sources.push('bing') if options.plugin in ['widget','oasheet'] or options.from in ['illiad','clio'] or options.url.indexOf('alma.exlibrisgroup.com') isnt -1
-  try res.refresh = if options.refresh is false then 30 else if options.refresh is true then 0 else parseInt options.refresh
-  res.refresh = 30 if typeof res.refresh isnt 'number' or isNaN res.refresh
-  res.embedded ?= options.embedded if options.embedded?
-  res.pilot = options.pilot if options.pilot?
-  res.live = options.live if options.live?
-  res.found = {}
-
   if metadata.url
     options.url ?= metadata.url
   if metadata.id
@@ -132,12 +115,6 @@ API.service.oab.find = (options={}, metadata={}, content) ->
     delete metadata.id
   options.url = options.url[0] if _.isArray options.url
   res.checked = []
-
-  _got = (obj=metadata) ->
-    for w in options.metadata
-      if not obj[w]?
-        return false
-    return true
 
   metadata.doi ?= options.doi.replace(/doi\:/i,'').trim() if typeof options.doi is 'string'
   metadata.title ?= options.title.trim() if typeof options.title is 'string'
@@ -185,6 +162,28 @@ API.service.oab.find = (options={}, metadata={}, content) ->
         else if options.citation.indexOf('"') isnt -1 or options.citation.indexOf("'") isnt -1
           metadata.title = options.citation.split('"')[0].split("'")[0].trim()
         metadata.title = metadata.title.replace(/(<([^>]+)>)/g,'').trim()
+
+  # other possible options are permissions
+  res.plugin = options.plugin if options.plugin?
+  res.from = options.from if options.from?
+  res.all = options.all ? false
+  res.parallel = options.parallel ? true
+  res.find = options.find ? true
+  # other possible sources are ['base','dissemin','share','core','openaire','bing']
+  res.sources = options.sources ? ['oabutton','crossref','epmc','reverse','scrape','oadoi','figshare','doaj']
+  res.sources.push('bing') if options.plugin in ['widget','oasheet'] or options.from in ['illiad','clio'] or (options.url? and options.url.indexOf('alma.exlibrisgroup.com') isnt -1)
+  try res.refresh = if options.refresh is false then 30 else if options.refresh is true then 0 else parseInt options.refresh
+  res.refresh = 30 if typeof res.refresh isnt 'number' or isNaN res.refresh
+  res.embedded ?= options.embedded if options.embedded?
+  res.pilot = options.pilot if options.pilot?
+  res.live = options.live if options.live?
+  res.found = {}
+
+  _got = (obj=metadata) ->
+    for w in options.metadata
+      if not obj[w]?
+        return false
+    return true
 
   # special cases for instantill demo and exlibris - dev and live demo accounts that always return a fixed answer
   if options.plugin is 'instantill' and metadata.doi is '10.1234/567890' and options.from in ['qZooaHWRz9NLFNcgR','eZwJ83xp3oZDaec86'] 
