@@ -98,7 +98,7 @@ API.service.oab.ill.subscription = (uid, meta={}, refresh=false) ->
 
   do_serialssolutions_xml = true
   do_sfx_xml = true
-  sig = uid + JSON.stringify(meta) + all + do_serialssolutions_xml + do_sfx_xml
+  sig = uid + JSON.stringify(meta) + do_serialssolutions_xml + do_sfx_xml
   sig = crypto.createHash('md5').update(sig, 'utf8').digest('base64')
   res = API.http.cache(sig, 'oab_ill_subs', undefined, refresh) if refresh and refresh isnt true and refresh isnt 0
   if not res?
@@ -181,7 +181,7 @@ API.service.oab.ill.subscription = (uid, meta={}, refresh=false) ->
                   # this will get the first target that has a getFullTxt type and has a target_url element with a value in it, or will error
                   res.url = spg.split('getFullTxt')[1].split('</target>')[0].split('<target_url>')[1].split('</target_url>')[0].trim()
                   res.findings.sfx = res.url
-                  if not all and res.url?
+                  if res.url?
                     if res.url.indexOf('getitnow') is -1
                       res.found = 'sfx'
                       API.http.cache(sig, 'oab_ill_subs', res)
@@ -194,7 +194,7 @@ API.service.oab.ill.subscription = (uid, meta={}, refresh=false) ->
                 # tried to get the next link after the click through, but was not worth putting more time into it. For now, seems like this will have to do
                 res.url = url
                 res.findings.sfx = res.url
-                if not all and res.url?
+                if res.url?
                   if res.url.indexOf('getitnow') is -1
                     res.found = 'sfx'
                     API.http.cache(sig, 'oab_ill_subs', res)
@@ -218,7 +218,7 @@ API.service.oab.ill.subscription = (uid, meta={}, refresh=false) ->
             if spg.indexOf('view this ') isnt -1 and pg.indexOf('<a data-auto="menu-link" href="') isnt -1
               res.url = url.replace('://','______').split('/')[0].replace('______','://') + pg.split('<a data-auto="menu-link" href="')[1].split('" title="')[0]
               res.findings.eds = res.url
-              if not all and res.url?
+              if res.url?
                 if res.url.indexOf('getitnow') is -1
                   res.found = 'eds'
                   API.http.cache(sig, 'oab_ill_subs', res)
@@ -254,7 +254,7 @@ API.service.oab.ill.subscription = (uid, meta={}, refresh=false) ->
                 if fnd.length
                   res.url = fnd
                   res.findings.serials = res.url
-                  if not all and res.url?
+                  if res.url?
                     if res.url.indexOf('getitnow') is -1
                       res.found = 'serials'
                       API.http.cache(sig, 'oab_ill_subs', res)
@@ -266,10 +266,9 @@ API.service.oab.ill.subscription = (uid, meta={}, refresh=false) ->
               #else if spg.indexOf('<ssopenurl:result format="journal">') isnt -1
               #  # we assume if there is a journal result but not a URL that it means the institution has a journal subscription but we don't have a link
               #  res.journal = true
-              #  if not all
-              #    res.found = 'serials'
-              #    API.http.cache(sig, 'oab_ill_subs', res)
-              #    return res
+              #  res.found = 'serials'
+              #  API.http.cache(sig, 'oab_ill_subs', res)
+              #  return res
             else
               if spg.indexOf('ss_noresults') is -1
                 try
@@ -280,7 +279,7 @@ API.service.oab.ill.subscription = (uid, meta={}, refresh=false) ->
                   if npg.indexOf('ArticleCL') isnt -1 and npg.split('DatabaseCL')[0].indexOf('href="./log') isnt -1
                     res.url = surl.split('?')[0] + npg.split('ArticleCL')[1].split('DatabaseCL')[0].split('href="')[1].split('">')[0]
                     res.findings.serials = res.url
-                    if not all and res.url?
+                    if res.url?
                       if res.url.indexOf('getitnow') is -1
                         res.found = 'serials'
                         API.http.cache(sig, 'oab_ill_subs', res)

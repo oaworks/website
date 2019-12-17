@@ -94,7 +94,8 @@ API.service.oab.metadata = (options={}) -> # pass-through to find that ensures t
 
 API.service.oab.find = (options={}, metadata={}, content) ->
   API.log msg: 'OAB finding academic content', level: 'debug'
-  res = {started: Date.now()}
+  started = Date.now()
+  res = {url: false}
 
   if typeof options is 'string'
     metadata = options
@@ -427,6 +428,8 @@ API.service.oab.find = (options={}, metadata={}, content) ->
   res.permissions = API.service.oab.permissions(metadata) if not res.permissions? and options.permissions isnt false
   res.test = true if JSON.stringify(metadata).toLowerCase().replace(/'/g,' ').replace(/"/g,' ').indexOf(' test ') isnt -1 #or (options.embedded? and options.embedded.indexOf('openaccessbutton.org') isnt -1)
   res.metadata = metadata
+  
+  delete res.url if res.url is false # we put url to the top of the response for humans using false, but remove that before saving
 
   # update or create a catalogue record
   if JSON.stringify(metadata) isnt '{}' and res.test isnt true
@@ -456,6 +459,7 @@ API.service.oab.find = (options={}, metadata={}, content) ->
     res.uid = options.uid
     res.username = options.username
     res.email = options.email
+  res.started = started
   res.ended = Date.now()
   res.took = res.ended - res.started
   oab_find.insert res
