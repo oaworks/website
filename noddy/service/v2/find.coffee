@@ -432,6 +432,8 @@ API.service.oab.find = (options={}, metadata={}, content) ->
       delete metadata.year if isNaN parseInt metadata.year
     catch
       delete metadata.year
+    try
+      delete metadata.year if metadata.year.length isnt 4 or metadata.year.replace(/[^0-9]/gi,'').length isnt 0
   if not metadata.year? and metadata.published?
     try
       mps = metadata.published.split('-')
