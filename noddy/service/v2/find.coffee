@@ -68,10 +68,11 @@ _avail =
       afnd.v2 = API.service.oab.find opts
       try
         afnd.data.ill = afnd.v2.ill
-        afnd.data.meta.article = afnd.v2.metadata
+        afnd.data.meta.article = _.clone afnd.v2.metadata
         afnd.data.meta.cache = afnd.v2.cached
         afnd.data.meta.refresh = afnd.v2.refresh
-        afnd.data.availability.push({type: 'article', url: afnd.v2.url}) if afnd.v2.url
+        afnd.data.meta.article.url = afnd.data.meta.article.url[0] if _.isArray afnd.data.meta.article.url
+        afnd.data.availability.push({type: 'article', url: afnd.data.meta.article.url}) if afnd.data.meta.article.url
       try
         finder = _finder(afnd.v2.metadata)
         if finder isnt '' and request = oab_request.find finder + ' AND type:article'
