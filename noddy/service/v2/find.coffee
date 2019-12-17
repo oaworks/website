@@ -420,6 +420,28 @@ API.service.oab.find = (options={}, metadata={}, content) ->
         _findoab()
         break
 
+  # fix possibly messy years
+  if metadata.year?
+    try
+      for ms in metadata.year.split('/')
+        metadata.year = ms if ms.length is 4
+    try
+      for md in metadata.year.split('-')
+        metadata.year = md if md.length is 4
+    try
+      delete metadata.year if isNaN parseInt metadata.year
+    catch
+      delete metadata.year
+  if not metadata.year? and metadata.published?
+    try
+      mps = metadata.published.split('-')
+      metadata.year = mps[0] if mps[0].length is 4
+  if metadata.year?
+    try
+      delete metadata.year if isNaN parseInt metadata.year
+    catch
+      delete metadata.year
+      
   metadata.url = catalogued.metadata.url if catalogued?.metadata?.url?
   metadata.url = [metadata.url] if typeof metadata.url is 'string'
   if options.url?
