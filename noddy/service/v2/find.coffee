@@ -72,7 +72,7 @@ _avail =
         afnd.data.meta.cache = afnd.v2.cached
         afnd.data.meta.refresh = afnd.v2.refresh
         afnd.data.meta.article.url = afnd.data.meta.article.url[0] if _.isArray afnd.data.meta.article.url
-        afnd.data.availability.push({type: 'article', url: afnd.data.meta.article.url}) if afnd.data.meta.article.url
+        afnd.data.availability.push({type: 'article', url: afnd.v2.url}) if afnd.v2.url
       try
         finder = _finder(afnd.v2.metadata)
         if finder isnt '' and request = oab_request.find finder + ' AND type:article'
@@ -131,8 +131,16 @@ API.service.oab.find = (options={}, metadata={}, content) ->
     options.url ?= options.id
     delete options.id
   if options.url # which would now also include anything passed in as "id" or "q"
-    if options.url.replace(/doi\:/i,'').trim().indexOf('10.') is 0
-      metadata.doi ?= options.url.replace(/doi\:/i,'').trim()
+    if options.url.indexOf('/10.') isnt -1
+      # we don't use a regex to try to pattern match a DOI because people often make mistakes typing them, so instead try to find one
+      # in ways that may still match even with different expressions (as long as the DOI portion itself is still correct after extraction we can match it)
+      dd = '10.' + options.url.split('/10.')[1].split('&')[0].split('#')[0]
+      if dd.indexOf('/') isnt -1 and dd.split('/')[0].length > 6 and dd.length > 8
+        dps = dd.split('/')
+        dd = dps[0] + '/' + dps[1] if dps.length > 2
+        metadata.doi = dd
+    if options.url.replace('doi:','').replace('doi.org/','').trim().indexOf('10.') is 0
+      metadata.doi ?= options.url.replace('doi:','').replace('doi.org/','').trim()
       options.url = 'https://doi.org/' + metadata.doi
     else if options.url.toLowerCase().indexOf('pmc') is 0
       metadata.pmcid ?= options.url.toLowerCase().replace('pmcid','').replace('pmc','')
@@ -143,7 +151,8 @@ API.service.oab.find = (options={}, metadata={}, content) ->
     else if not metadata.title? and options.url.indexOf('http') isnt 0
       metadata.title = options.url
     delete options.url if options.url.indexOf('http') isnt 0 or options.url.indexOf('.') is -1
-  metadata.doi = metadata.doi.replace(/doi\:/i,'').trim() if metadata.doi? and metadata.doi.indexOf('doi:') is 0
+  metadata.doi = metadata.doi.replace('doi.org/','').trim() if metadata.doi? and metadata.doi.indexOf('doi.org/') is 0
+  metadata.doi = metadata.doi.replace('doi:','').trim() if metadata.doi? and metadata.doi.indexOf('doi:') is 0
   delete metadata.doi if metadata.doi and metadata.doi.indexOf('10.') isnt 0
   if metadata.title and (metadata.title.indexOf('{') isnt -1 or (metadata.title.replace('...','').match(/\./gi) || []).length > 3 or (metadata.title.match(/\(/gi) || []).length > 2)
     options.citation = metadata.title # titles that look like citations
@@ -191,7 +200,7 @@ API.service.oab.find = (options={}, metadata={}, content) ->
   # special cases for instantill demo and exlibris - dev and live demo accounts that always return a fixed answer
   if options.plugin is 'instantill' and metadata.doi is '10.1234/567890' and options.from in ['qZooaHWRz9NLFNcgR','eZwJ83xp3oZDaec86'] 
     res.ill = {openurl: ""}
-    res.ill.subscription = {findings:{}, uid: options.from, lookups:[], error:[], url: 'https://instantill.org', demo: true}
+    res.ill.subscription = {findings:{}, uid: options.from, lookups:[], error:[], url: 'https://scholarworks.iupui.edu/bitstream/handle/1805/20422/07-PAXTON.pdf?sequence=1&isAllowed=y', demo: true}
     return res # for demo this also used to return fast and not save, should it still do so?
   if not metadata.title and content and typeof options.url is 'string' and (options.url.indexOf('alma.exlibrisgroup.com') isnt -1 or options.url.indexOf('/exlibristest') isnt -1)
     # switch exlibris URLs for titles, which the scraper knows how to extract, because the exlibris url would always be the same
