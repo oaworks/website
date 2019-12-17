@@ -24,10 +24,6 @@ API.add 'service/oab/request/:rid',
     action: () ->
       if r = oab_request.get this.urlParams.rid
         r.supports = API.service.oab.supports(this.urlParams.rid,this.userId) if this.userId
-        others = oab_request.search({url:r.url})
-        if others?
-          for o in others.hits.hits
-            r.other = o._source._id if o._source._id isnt r._id and o._source.type isnt r.type
         return {data: r}
       else
         return 404
@@ -203,6 +199,7 @@ API.service.oab.request = (req,uacc,fast,notify=true) ->
   req.type ?= 'article'
   req.doi = req.url if not req.doi? and req.url? and req.url.indexOf('10.') isnt -1 and req.url.split('10.')[1].indexOf('/') isnt -1
   req.doi = '10.' + req.doi.split('10.')[1] if req.doi? and req.doi.indexOf('10.') isnt 0
+  req.url = req.url[0] if _.isArray req.url
   if req.url? and req.url.indexOf('eu.alma.exlibrisgroup.com') isnt -1
     req.url += (if req.url.indexOf('?') is -1 then '?' else '&') + 'oabLibris=' + Random.id()
     if req.title? and typeof req.title is 'string' and req.title.length > 0 and texist = oab_request.find {title:req.title,type:req.type}
