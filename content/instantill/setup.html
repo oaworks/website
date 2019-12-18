@@ -1001,14 +1001,14 @@ jQuery(document).ready(function() {
         if ($(this).val()) {
           if (data.subscription === undefined) data.subscription = [];
           data.subscription.push($(this).val())
-        } else {
+        } else if ($('.subscription').length > 1) {
           $(this).remove();
         }
       } else if ( $(this).hasClass('subscription_type') ) {
         if ($(this).val()) {
           if (data['subscription_type'] === undefined) data['subscription_type'] = [];
           data['subscription_type'].push($(this).val())
-        } else {
+        } else if ($('.subscription_type').length > 1) {
           $(this).remove();
         }
       } else if ( $(this).val() !== undefined ) {

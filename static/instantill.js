@@ -261,6 +261,8 @@ var instantill_run = function() {
       }
     });
   }
+  
+  var searchfor = undefined;
 
   var getmore = function(e) {
     try { e.preventDefault(); } catch(err) {}
@@ -271,7 +273,7 @@ var instantill_run = function() {
       var info = '<div>';
       info += '<p>Sorry we didn\'t find that ' + pora + '! Can you please provide or amend the ' + pora + ' details?</p>';
       info += '<p>' + porac + ' title (required)<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_title" type="text"></p>';
-      info += '<p>Author(s)<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_author" type="text"></p>';
+      //info += '<p>Author(s)<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_author" type="text"></p>';
       info += '<p>Journal title (required)<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_journal" type="text"></p>';
       info += '<p>Year of publication (required)<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_year" type="text"></p>';
       info += '<p>' + porac + ' DOI or URL<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_doi" type="text"></p>';
@@ -279,6 +281,7 @@ var instantill_run = function() {
       info += '<p><a href="#" class="restart" style="font-weight:bold;">Try again</a></p>';
       info += '</div>';
       $('#oabutton_availability').html(info);
+      $('.oabutton_find').html('Find ' + pora);
       gotmore = true;
       try {
         for ( var m in avail.data.meta.article ) {
@@ -305,6 +308,7 @@ var instantill_run = function() {
           } catch(err) {}
         }
       } catch(err) {}
+      if ($('#oabutton_title').length && !$('#oabutton_title').val().length && searchfor && typeof searchfor === 'string' && searchfor.indexOf('http') !== 0 && searchfor.indexOf('10.') === -1 && searchfor.indexOf('www') === -1) $('#oabutton_title').val(searchfor);
     }
   }
 
@@ -378,7 +382,6 @@ var instantill_run = function() {
             $('.oabutton_ill').html('Complete request');
             $('#oabutton_error').html('<p>Sorry, we were not able to create an ILL request for you. ' + _lib_contact + '</p><p><a href="#" class="restart" style="font-weight:bold;">Try again</a></p>').show();
             illpinger('InstantILL_couldnt_submit_ill');
-            setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
           }
         }
       }
@@ -392,13 +395,11 @@ var instantill_run = function() {
       if ($('#oabutton_read_terms').length && !$('#oabutton_read_terms').is(':checked')) {
         $('.oabutton_ill').html('Complete request');
         $('#oabutton_error').html('<p>Please agree to the terms first.</p>').show();
-        setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
         return;
       }
       if (!$('#oabutton_email').val().length) {
         $('.oabutton_ill').html('Complete request');
         $('#oabutton_error').html('<p>Please provide your university email address.</p>').show();
-        setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
         $('#oabutton_email').css('border-color','#f04717').focus();
         return;
       } else {
@@ -411,7 +412,6 @@ var instantill_run = function() {
             } else {
               $('#oabutton_error').html('<p>Sorry, your email does not look right. ' + (data !== false ? 'Did you mean ' + data + '? ' : '') + 'Please check and try again.</p>').show();
               $('.oabutton_ill').html('Complete request');
-              setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
             }
           },
           error: function(data) {
@@ -430,7 +430,6 @@ var instantill_run = function() {
     var info = '';
     if (avail.data.ill && avail.data.ill.error && avail.data.ill.error.length) {
       $('#oabutton_error').html('<p>Please note, we encountered errors querying the following subscription services: ' + avail.data.ill.error.join(', ') + '</p>').show();
-      setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
     }
     var demo = avail.data.ill && avail.data.ill.subscription && avail.data.ill.subscription.demo;
     if (avail.data.meta && avail.data.meta.article && !demo) {
@@ -439,6 +438,7 @@ var instantill_run = function() {
         if (attempts === 0) {
           attempts = 1;
           getmore();
+          return;
         } else if ((avail.data.ill.subscription && (avail.data.ill.subscription.journal || avail.data.ill.subscription.url)) || (avail.data.availability && avail.data.availability.length && avail.data.availability[0].url)) {
           if (avail.data.meta.article.title) {
             info += '<h2>' + avail.data.meta.article.title + '</h2>';
@@ -525,6 +525,7 @@ var instantill_run = function() {
       $('#oabutton_error').html('').hide();
       if (e && $(this).attr('id') === 'oabutton_find') e.preventDefault();
       var input = $('#oabutton_input').val().trim();
+      searchfor = input;
       if (input.lastIndexOf('.') === input.length-1) input = input.substring(0,input.length-1);
       var data = {};
       if ($('#oabutton_title').length) {
@@ -535,12 +536,10 @@ var instantill_run = function() {
         if ($('#oabutton_doi').length && $('#oabutton_doi').val()) data.doi = $('#oabutton_doi').val();
         if (data.year && data.year.length !== 4) {
           $('#oabutton_error').html('<p>Please provide the full year e.g 2019</p>').show();
-          setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
           return;
         }
         if (!data.title || !data.journal || !data.year) {
           $('#oabutton_error').html('<p>Please complete all required fields</p>').show();
-          setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
           return;
         }
       }
@@ -572,7 +571,6 @@ var instantill_run = function() {
       if (!input || !input.length) input = data.title;
       if (input === undefined || !input.length || (input.toLowerCase().indexOf('http') === -1 && input.indexOf('10.') === -1 && input.indexOf('/') === -1 && isNaN(parseInt(input.toLowerCase().replace('pmc',''))) && (input.length < 30 || input.replace(/\+/g,' ').split(' ').length < 3) ) ) {
         $('#oabutton_error').html('<p>Sorry, we can\'t use partial titles/citations. Please provide the full title/citation, or something else.</p>').show();
-        setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
         _doing_availability = false;
         return;
       }
@@ -621,7 +619,6 @@ var instantill_run = function() {
           $('#oabutton_input').val('');
           $('.oabutton_find').html('Find ' + pora);
           $('#oabutton_error').show().html('<p>Oh dear, the service is down! We\'re aware, and working to fix the problem. ' + _lib_contact + '</p>');
-          setTimeout(function() { $('#oabutton_error').html('').hide(); }, 5000);
         }
       };
       $.ajax(avopts);

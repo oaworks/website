@@ -14,7 +14,7 @@ _ftitle = (title) ->
 _finder = (metadata) ->
   finder = ''
   for tid in ['doi','pmid','pmcid','url','title']
-    if metadata[tid]
+    if typeof metadata[tid] is 'string' or typeof metadata[tid] is 'number' or _.isArray metadata[tid]
       mt = metadata[tid][0] if _.isArray metadata[tid]
       finder += ' OR ' if finder isnt ''
       if tid is 'title'
@@ -429,21 +429,23 @@ API.service.oab.find = (options={}, metadata={}, content) ->
       for md in metadata.year.split('-')
         metadata.year = md if md.length is 4
     try
-      delete metadata.year if isNaN parseInt metadata.year
-    catch
-      delete metadata.year
-    try
-      delete metadata.year if metadata.year.length isnt 4 or metadata.year.replace(/[^0-9]/gi,'').length isnt 0
+      delete metadata.year if typeof metadata.year isnt 'number' and (metadata.year.length isnt 4 or metadata.year.replace(/[0-9]/gi,'').length isnt 0)
   if not metadata.year? and metadata.published?
     try
       mps = metadata.published.split('-')
       metadata.year = mps[0] if mps[0].length is 4
   if metadata.year?
     try
-      delete metadata.year if isNaN parseInt metadata.year
+      delete metadata.year if typeof metadata.year isnt 'number' and (metadata.year.length isnt 4 or metadata.year.replace(/[0-9]/gi,'').length isnt 0)
     catch
       delete metadata.year
       
+  # remove authors if only present as strings (end users may provide them this way which causes problems in saving and re-using them
+  # and author strings are not much use for discovering articles anyway
+  if metadata.author?
+    delete metadata.author if typeof metadata.author is 'string'
+    delete metadata.author if _.isArray metadata.author and metadata.author.length > 0 and typeof metadata.author[0] is 'string'
+
   metadata.url = catalogued.metadata.url if catalogued?.metadata?.url?
   metadata.url = [metadata.url] if typeof metadata.url is 'string'
   if options.url?

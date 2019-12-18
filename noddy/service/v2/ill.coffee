@@ -353,6 +353,8 @@ API.service.oab.ill.start = (opts={}) ->
             vars.details += '<p>' + r + ':<br>' + opts[r] + '</p>'
         #vars.details += '<p>' + o + ':<br>' + opts[o] + '</p>'
       opts.norequests = true if user.service?.openaccessbutton?.ill?.config?.norequests
+      delete opts.author if opts.author? # remove author metadata due to messy provisions causing save issues
+      delete opts.metadata.author if opts.metadata?.author?
       vars.illid = oab_ill.insert opts
       vars.details += '<p>Open access button ILL ID:<br>' + vars.illid + '</p>';
       eml = if user.service?.openaccessbutton?.ill?.config?.email and user.service?.openaccessbutton?.ill?.config?.email.length then user.service?.openaccessbutton?.ill?.config?.email else if user.email then user.email else user.emails[0].address
