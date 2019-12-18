@@ -271,7 +271,7 @@ var instantill_run = function() {
     } else {
       attempts += 1;
       var info = '<div>';
-      info += '<h2>Sorry we didn\'t find that ' + pora + '!</h2><p>Can you please provide or amend the ' + pora + ' details?</p>';
+      info += '<h2>Sorry we didn\'t find that!</h2><p>Please provide or amend the ' + pora + ' details</p>';
       info += '<p>' + porac + ' title (required)<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_title" type="text"></p>';
       //info += '<p>Author(s)<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_author" type="text"></p>';
       info += '<p>Journal title (required)<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_journal" type="text"></p>';
