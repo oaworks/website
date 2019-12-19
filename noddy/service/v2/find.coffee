@@ -253,7 +253,7 @@ API.service.oab.find = (options={}, metadata={}, content) ->
         try metadata.volume = cr.volume if cr.volume?
         try metadata.page = cr.page.toString() if cr.page?
         try metadata.issn ?= cr.ISSN[0] if cr.ISSN?
-        try metadata.subject = cr.subject if cr.subject? # not sure if this is present in crossref... check anyway
+        #try metadata.subject = cr.subject if cr.subject? # not sure if this is present in crossref... check anyway - commented out because getting clashes with the mapping
         try metadata.publisher = cr.publisher if cr.publisher?
         try metadata.year ?= cr['published-print']['date-parts'][0][0] if cr['published-print']['date-parts'][0][0].length
         try metadata.year ?= cr.created['date-time'].split('-')[0]
@@ -285,7 +285,7 @@ API.service.oab.find = (options={}, metadata={}, content) ->
         try metadata.volume = cr.journalInfo.volume if cr.journalInfo.volume?
         try metadata.page = cr.pageInfo.toString() if cr.pageInfo?
         try metadata.issn = cr.journalInfo.journal.issn if cr.journalInfo.journal.issn?
-        try metadata.subject = cr.subject if cr.subject? # not sure if epmc has subject
+        #try metadata.subject = cr.subject if cr.subject? # not sure if epmc has subject
         #try metadata.publisher = cr.publisher #epmc does not appear to have publisher
         try metadata.year = cr.journalInfo.yearOfPublication if cr.journalInfo.yearOfPublication?
         try metadata.year ?= cr.journalInfo.printPublicationDate.split('-')[0]
