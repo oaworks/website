@@ -7,7 +7,7 @@
 
 var _oab_opts = {};
 var _oab_config = {};
-var _ops = ['doi','title','url','atitle','rft_id','journal','issn','year','author'];
+var _ops = ['doi','title','url','atitle','rft_id','journal','issn','year','author','email'];
 var _parameta = {};
 var _lib_contact = undefined;
 
@@ -54,8 +54,8 @@ var _run = function() {
   w += '<p>We\'ll gather information about your paper and find the easiest way to share it.</p>';
   w += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_input" placeholder="' + _oab_opts.placeholder + '" aria-label="' + _oab_opts.placeholder + '" style="box-shadow:none;"></input></p>\
   <p><a class="oabutton_find ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" href="#" id="oabutton_find" aria-label="Search" style="min-width:150px;">Next</a></p>';
-  w += '\
-</div>\
+  w += '<p><a id="nodoi" href="mailto:' + (cml ? cml : 'help@openaccessbutton.org') + '" style="font-size:0.9em;">I don\'t have a DOI</a></p>';
+  w += '</div>\
 <div id="oabutton_availability"></div>\
 <div id="oabutton_error" style="display:none;"></div>';
 
@@ -266,7 +266,6 @@ var _run = function() {
   var flupload = undefined;
   var _submit_deposit = function() {
     // this could be just an email for a dark deposit, or a file for actual deposit
-    // for file deposit will need file deposit js
     $('.oabutton_find').html('Submitting .');
     $('.oabutton_deposit').html('Depositing .');
     var eml = typeof matched === 'string' ? matched : $('#oabutton_email').val();
@@ -285,9 +284,13 @@ var _run = function() {
         cache: false,
         processData: false,
         success: function(res) {
-          flupload = undefined;
           $('.oabutton_deposit').html('Submit deposit');
-          $('#oabutton_availability').html('<h3>Congrats, you\'re done!</h3><p>Check back soon to see your paper live, or we\'ll email you with issues.</p><p><a href="#" class="restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>').show();
+          if (flupload) {
+            $('#oabutton_availability').html('<h3>Congrats, you\'re done!</h3><p>Check back soon to see your paper live, or we\'ll email you with issues.</p><p><a href="#" class="restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>').show();
+          } else {
+            $('#oabutton_availability').html('<h3>Hurray, you\'re done!</h3><p>We\'ll email you a link to your paper in ScholarWorks soon. Next time, before you publish check to see if your journal allows you to have the most impact by making your research available to everyone, for free.</p><p><a href="#" class="restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>').show();
+          }
+          flupload = undefined;
         },
         error: function(data) {
           flupload = undefined;
@@ -550,13 +553,13 @@ var _run = function() {
           op = op.split('=')[0];
         }
         if (window.location.search.replace('?','&').indexOf('&'+op+'=') !== -1) _parameta[eq !== undefined ? eq : op] = decodeURIComponent(window.location.search.replace('?','&').split('&'+op+'=')[1].split('&')[0].replace(/\+/g,' '));
-        if (searchfor === undefined) searchfor = _parameta[eq !== undefined ? eq : op];
+        if (searchfor === undefined && ['doi'].indexOf(eq !== undefined ? eq : op) !== -1) searchfor = _parameta[eq !== undefined ? eq : op];
       }
     } else {
       for ( var o in _ops) {
         var op = _ops[o];
         if (window.location.search.replace('?','&').indexOf('&'+op+'=') !== -1) _parameta[op] = decodeURIComponent(window.location.search.replace('?','&').split('&'+op+'=')[1].split('&')[0].replace(/\+/g,' '));
-        if (searchfor === undefined) searchfor = _parameta[op];
+        if (searchfor === undefined && ['doi'].indexOf(op) !== -1) searchfor = _parameta[op];
       }
     }
     if (searchfor) {

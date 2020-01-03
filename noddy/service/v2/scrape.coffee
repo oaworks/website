@@ -3,17 +3,18 @@
 API.add 'service/oab/scrape',
   get:
     #roleRequired:'openaccessbutton.user'
-    action: () -> return API.service.oab.scrape this.queryParams.url,this.queryParams.content,this.queryParams.doi
+    action: () -> return API.service.oab.scrape this.queryParams.url, this.queryParams.content, this.queryParams.doi
 
 # https://jcheminf.springeropen.com/articles/10.1186/1758-2946-3-47 (the OBSTM article, open, on jcheminf, findable by CORE and BASE)
 # http://www.sciencedirect.com/science/article/pii/S0735109712600734 (open on elsevier, not findable by CORE or BASE)
 # http://journals.plos.org/plosone/article?id=info%3Adoi%2F10.1371%2Fjournal.pone.0159909 (open, on PLOS, findable by BASE)
 # http://www.tandfonline.com/doi/abs/10.1080/09505431.2014.928678 (closed, not findable by CORE or BASE)
-API.service.oab.scrape = (url,content,doi) ->
+API.service.oab.scrape = (url, content, doi) ->
   meta = {url:url,doi:doi}
-  try
-    content ?= API.http.puppeteer url
-    content = undefined if typeof content is 'number'
+  if url? and not content? and url.indexOf('.pdf') isnt -1
+    try content = API.convert.pdf2txt url
+  try content ?= API.http.puppeteer url
+  content = undefined if typeof content is 'number'
 
   if url and not meta.doi # quick check to get a DOI if at the end of a URL, as they often are
     mr = new RegExp(/\/(10\.[^ &#]+\/[^ &#]+)$/)
@@ -38,6 +39,19 @@ API.service.oab.scrape = (url,content,doi) ->
         cl = cl.split("'")[1] if cl.indexOf("'") isnt -1
         meta.doi = cl if cl.indexOf('10.') is 0 and cl.indexOf('/') isnt -1
 
+  if not meta.doi and content # look for a doi in the first 600 words
+    cnts = 0
+    for str in content.split(' ')
+      cnts += 1
+      if cnts < 600
+        str = str.replace(/ /g,'').replace('doi:','')
+        str = str.split('doi.org')[1] if str.indexOf('doi.org') isnt -1
+        str = str.replace('/','') if str.indexOf('/') is 0
+        str = str.trim()
+        if str.indexOf('10.') is 0 and str.indexOf('/') isnt -1 # don't use a regex
+          meta.doi = str
+          break
+      
   if not meta.doi and content
     try
       d = API.tdm.extract

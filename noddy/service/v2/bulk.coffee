@@ -17,50 +17,40 @@ API.add 'service/oab/import',
                 if (not p[up]? or p[up]) and p[up] not in ['createdAt','created_date','plugin','from','embedded','names','count','receiver']
                   if up.indexOf('refused.') is 0
                     if up isnt 'refused.date' and (not rq[up]? or rq[up].length isnt p[up].split(',').length)
-                      rq.refused ?= []
-                      added = false
+                      update.refused = rq.refused ? []
                       for eml in p[up].split(',')
                         eml = eml.trim()
                         add = true
                         for ref in rq.refused
                           add = ref.email isnt eml
                         if add
-                          added = true
-                          rq.refused.push {email: eml, date: Date.now()}
-                      if added
-                        update.refused = rq.refused
+                          update.refused.push {email: eml, date: Date.now()}
                   else if up.indexOf('received.') is 0
                     if not rq.received? or rq.received[up.split('.')[1]] isnt p[up]
-                      rq.received ?= {}
-                      rq.received[up.split('.')[1]] = p[up]
-                      update.received = rq.received
+                      update.received = rq.received ? {}
+                      update.received[up.split('.')[1]] = p[up]
                   else if up.indexOf('followup.') is 0
                     if up isnt 'followup.date' and p['followup.count'] isnt rq.followup?.count
-                      rq.followup ?= {}
-                      rq.followup.count = p['followup.count']
-                      rq.followup.date ?= []
-                      rq.followup.date.push moment(Date.now(), "x").format "YYYYMMDD"
-                      update.followup = rq.followup
+                      update.followup = rq.followup ? {}
+                      update.followup.count = p['followup.count']
+                      update.followup.date ?= []
+                      update.followup.date.push moment(Date.now(), "x").format "YYYYMMDD"
                   else if up is 'sherpa.color'
                     if not rq.sherpa? or rq.sherpa.color isnt p[up]
-                      rq.sherpa ?= {}
-                      rq.sherpa.color = p[up]
-                      update.sherpa = rq.sherpa
+                      update.sherpa = rq.sherpa ? {}
+                      update.sherpa.color = p[up]
                   else if up.indexOf('user.') is 0
                     if not rq.user? or rq.user[up.split('.')[1]] isnt p[up]
-                      rq.user ?= {}
-                      rq.user[up.split('.')[1]] = p[up]
-                      update.user = rq.user
+                      update.user = rq.user ? {}
+                      update.user[up.split('.')[1]] = p[up]
                   else if rq[up] isnt p[up]
-                    rq[up] = p[up]
-                    update[up] = rq[up]
+                    update[up] = p[up]
               if not _.isEmpty update
                 try
-                  rq._bulk_import ?= {}
-                  rq._bulk_import[Date.now()] = JSON.stringify update
-                rq.updatedAt = Date.now()
-                rq.updated_date = moment(rq.updatedAt, "x").format "YYYY-MM-DD HHmm.ss"
-                updates.push rq
+                  update._bulk_import = rq._bulk_import ? {}
+                  update._bulk_import[Date.now()] = JSON.stringify update
+                update._id = rq._id
+                updates.push update
                 resp.updated += 1
                 if this.queryParams.notify_users
                   try
@@ -78,7 +68,7 @@ API.add 'service/oab/import',
             else
               resp.missing.push p._id
         if updates.length
-          resp.imports = oab_request.import(updates)
+          resp.updates = oab_request.bulk updates, 'update'
         return resp
       catch err
         return {status:'error'}
@@ -196,7 +186,7 @@ API.add 'service/oab/job',
           p.refresh = 0 if this.request.body.refresh
           p.titles = this.request.body.titles ?= true
           p.bing = this.request.body.bing if this.request.body.bing?
-        job = API.job.create {refresh:this.request.body.refresh, complete:'API.service.oab.job_complete', user:this.userId, service:'openaccessbutton', function:'API.service.oab.find', name:(this.request.body.name ? "oab_availability"), processes:processes}
+        job = API.job.create {refresh:this.request.body.refresh, complete:'API.service.oab.job_complete', user:this.userId, service:'openaccessbutton', function:'API.service.oab.find', name:(this.request.body.name ? "oab_find"), processes:processes}
         API.service.oab.job_started job
         return job
 

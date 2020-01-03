@@ -1,4 +1,6 @@
 
+import moment from 'moment'
+
 API.service ?= {}
 API.service.oab ?= {}
 
@@ -20,7 +22,7 @@ API.add 'service/oab',
       return {data: 'You are authenticated'}
 
 API.add 'service/oab/blacklist',
-  get: () -> return {data:API.service.oab.blacklist(undefined,undefined,this.queryParams.stale)}
+  get: () -> return {data:API.service.oab.blacklist(this.queryParams.url,this.queryParams.stale)}
 
 API.add 'service/oab/templates',
   get: () -> return API.service.oab.template(this.queryParams.template,this.queryParams.refresh)
@@ -131,7 +133,7 @@ API.add 'service/oab/users',
       return res
 
 API.add 'service/oab/status', get: () -> return API.service.oab.status()
-API.add 'service/oab/stats', get: () -> return {} # plaeholder for possible later stats stuff, for now just to allow getting the emails
+API.add 'service/oab/stats', get: () -> return API.service.oab.stats this.queryParams.tool
 API.add 'service/oab/stats/emails', 
   post: 
     roleRequired:'openaccessbutton.admin'
@@ -145,8 +147,9 @@ API.add 'service/oab/stats/emails',
 
 
 API.service.oab.status = () ->
-  return
+  return # simple queries to get basic status - use stats below for more complex feedback
     requests: oab_request.count()
+    stories: oab_request.count undefined, 'story:*'
     test: oab_request.count undefined, {test:true}
     help: oab_request.count undefined, {status:'help'}
     moderate: oab_request.count undefined, {status:'moderate'}
@@ -155,9 +158,141 @@ API.service.oab.status = () ->
     refused: oab_request.count undefined, {status:'refused'}
     received: oab_request.count undefined, {status:'received'}
     supports: oab_support.count()
-    availabilities: oab_availability.count()
+    finds: oab_find.count()
+    found: oab_find.count undefined, 'url:*'
     users: Users.count undefined, {exists:{field:"roles.openaccessbutton"}}
-    requested: oab_request.count 'user.id', {exists:{field:'user.id'}}
+    requested: oab_request.count 'user.id', {exists:{field:"user.id"}}
+
+API.service.oab.stats = (tool) ->
+  tool = undefined if tool? and tool not in ['embedoa','illiad','clio']
+  q = if tool is 'embedoa' then 'plugin:'+tool else if tool? then 'from:'+tool else undefined
+  res = status: API.service.oab.status(), requests: {}
+  if q?
+    res.status.finds = oab_find.count undefined, q
+    res.status.found = oab_find.count undefined, q + ' AND url:*'
+    res.status.stories = oab_request.count undefined, q + ' AND story:*'
+
+  twoyearsago = Date.now() - (31536000000*2)
+  rgs = {requests: {date_histogram: {field: "createdAt", interval: "week"}}}
+  rgs.requests2yrs = {aggs: {vals: {date_histogram: {field: "createdAt", interval: "week"}}}, filter: {range: {createdAt: {gt: twoyearsago }}}}
+  rgs.stories2yrs = {aggs: {vals: {date_histogram: {field: "createdAt", interval: "week"}}}, filter: {bool: {must: [{exists: {field: 'story'}}, {range: {createdAt: {gt: twoyearsago }}}]}}}
+  rgs.received2yrs = {aggs: {vals: {date_histogram: {field: "received.data", interval: "week"}}}, filter: {bool: {must: [{term: {status: 'received'}}, {range: {createdAt: {gt: twoyearsago }}}]}}}
+  ra = oab_request.search q, {size: 0, aggregations: rgs}
+  res.requests.requests = ra.aggregations.requests.buckets
+  res.requests.requests2yrs = ra.aggregations.requests2yrs.vals.buckets
+  res.requests.stories2yrs = ra.aggregations.stories2yrs.vals.buckets
+  res.requests.received2yrs = ra.aggregations.received2yrs.vals.buckets
+
+  # query finds
+  tmwk = moment().startOf('week').valueOf() # timestamp up to a week ago
+  tm1 = moment().startOf('month').valueOf() # timestamp at start of the current month
+  tm3 = moment().subtract(3,'months').valueOf() # timestamp 3 months ago
+  aggs =
+    users: {terms: {field: "from.exact", size: 10000}, aggs: {firsts: {terms: {field: "created_date", size: 1, order: {_term: "asc"}}}}}
+    finds: {date_histogram: {field: "createdAt", interval: "week"}}
+    emails: {cardinality : {field: "email.exact"}}
+    tm1: {filter: {range: {createdAt: {gt: tm1}}}, aggs: {tm1v: {cardinality: {field: "email.exact" }}}}
+    tm3: {filter: {range: {createdAt: {gt: tm3, lte: tm1 }}}, aggs: {tm3v: {cardinality: {field: "email.exact" }}}}
+  facets =
+    plugin: { terms: { field: "plugin.exact", size: 500}}
+    plugin_week: { terms: { field: "plugin.exact", size: 500 }, facet_filter: {range: {createdAt: {gt: tmwk }}}}
+    plugin_month: { terms: { field: "plugin.exact", size: 500 }, facet_filter: {range: {createdAt: {gt: tm1 }}}}
+    plugin_threemonth: { terms: { field: "plugin.exact", size: 500 }, facet_filter: {range: {createdAt: {gt: tm3 }}}}
+    plugin_june18: { terms: { field: "plugin.exact", size: 500 }, facet_filter: {range: {createdAt: {gt: 1527811200000 }}}}
+    email: { terms: { field: "email.exact", size: 1 } }
+    embeds: { terms: { field: "embedded.exact", size: 500 } }
+    from_week: { terms: { field: "from.exact", size: 500 }, facet_filter: {range: {createdAt: {gt: tmwk  }}}}
+    from_month: { terms: { field: "from.exact", size: 500 }, facet_filter: {range: {createdAt: {gt: tm1 }}}}
+    from_threemonth: { terms: { field: "from.exact", size: 500 }, facet_filter: {range: {createdAt: {gt: tm3 }}}}
+    from_june18: { terms: { field: "from.exact", size: 500 }, facet_filter: {range: {createdAt: {gt: 1527811200000 }}}}
+  finds = oab_find.search q, { size: 0, aggs: aggs, facets: facets}
+  res.find = {total: finds.hits.total, users: {}}
+  try
+    for u in finds.aggregations.users.buckets
+      res.find.users[u.key] = count: u.doc_count, first: u.firsts.buckets[0].key_as_string.split(' ')[0].split('-').reverse().join('/')
+  try res.find.finds = finds.aggregations.finds.buckets
+  try res.find.emails = finds.aggregations.emails.value
+  try res.find.tm1 = finds.aggregations.tm1.tm1v.value
+  try res.find.tm3 = finds.aggregations.tm3.tm3v.value
+  try res.find.plugin = finds.facets.plugin.terms
+  try res.find.plugin_week = finds.facets.plugin_week.terms
+  try res.find.plugin_month = finds.facets.plugin_month.terms
+  try res.find.plugin_threemonth = finds.facets.plugin_threemonth.terms
+  try res.find.plugin_june18 = finds.facets.plugin_june18.terms
+  try res.find.email = finds.facets.email.terms
+  try res.find.anonymous = finds.facets.email.missing
+  try res.find.embeds = finds.facets.embeds.terms
+  try res.find.from_week = finds.facets.from_week.terms
+  try res.find.from_month = finds.facets.from_month.terms
+  try res.find.from_threemonth = finds.facets.from_threemonth.terms
+  try res.find.from_june18 = finds.facets.from_june18.terms
+
+  res.plugins = {api:{all:finds.facets.plugin.missing, week:finds.facets.plugin_week.missing, month:finds.facets.plugin_month.missing, threemonth:finds.facets.plugin_threemonth.missing, june18:finds.facets.plugin_june18.missing}}
+
+  if not tool? # get pings
+    pingcounts = {alltime:{},week:{},month:{},threemonth:{},june18:{}}
+    for h in pings.search('service:openaccessbutton AND action:*', {newest: false, size: 100000}).hits.hits
+      hr = h._source
+      for nm in _.keys pingcounts
+        if nm is 'alltime' or (nm is 'week' and hr.createdAt > tmwk) or (nm is 'month' and hr.createdAt > tm1) or (nm is 'threemonth' and hr.createdAt > tm3) or (nm is 'june18' and hr.createdAt > 1527811200000)
+          pingcounts[nm][hr.action] = (pingcounts[nm][hr.action] ? 0) + 1
+    sorts = []
+    for kv of pingcounts.alltime
+      sp = action: kv
+      sp[nm] = (pingcounts[nm][kv] ? 0) for nm in _.keys pingcounts
+      sorts.push sp
+    res.pings = sorts.sort((a, b) -> return a.alltime - b.alltime)
+
+  if not tool? or tool is 'embedoa' # stats on embedoa
+    eggs = {users: {terms: {field: "from.exact", size: 10000}}}
+    eggs.users.aggs = {firsts: {terms: {field:"created_date", size: 1, order: {_term: "asc"}}}}
+    eggs.users.aggs.oa = {filter: {bool: {must: [{exists: {field: "url"}}]}}, aggs: {from: {terms: {field: "from.exact"}}}}
+    eggs.users.aggs.embeds = {terms: {field: "embedded.exact", size: 100}}
+    eres = oab_find.search {plugin: 'widget'}, {size: 0, aggs: eggs}
+    # TODO finish formatting the embedoa results into the necessary stats
+    res.embedoa = {}
+    try
+      for u in eres.aggregations.users.buckets
+        res.embedoa[u.key] = count: u.doc_count
+        try res.embedoa[u.key].first = u.firsts.buckets[0].key_as_string.split(' ')[0].split('-').reverse().join('/')
+        try res.embedoa[u.key].oa = u.oa.doc_count # check this
+        res.embedoa[u.key].embeds = []
+        for em in u.embeds.buckets
+          tk = em.key.split('?')[0].split('#')[0]
+          res.embedoa[u.key].embeds.push(tk) if tk not in res.embedoa[u.key].embeds
+
+  if not tool? # ills
+    iggs = {users: {terms: {field: "from.exact", size: 10000}}}
+    iggs.users.aggs = {firsts: {terms: {field:"created_date", size: 1, order: {_term: "asc"}}}}
+    iggs.users.aggs.oa = {filter: {bool: {must: [{exists: {field: "url"}}]}}, aggs: {from: {terms: {field: "from.exact"}}}}
+    iggs.users.aggs.subs = {filter: {query: {query_string: {query: "ill.subscription.url:*"}}}, aggs: {from: {terms: {field: "from.exact"}}}}
+    iggs.users.aggs.wrong = {filter: {term: {wrong: true}}, aggs: {from: {terms: {field: "from.exact"}}}}
+    iggs.users.aggs.embeds = {terms: {field: "embedded.exact", size: 100}}
+    illfinds = oab_find.search {plugin: 'instantill'}, {size: 0, aggs: iggs}
+    res.ill = {}
+    try
+      for u in illfinds.aggregations.users.buckets
+        res.ill[u.key] = count: u.doc_count
+        try res.ill[u.key].first = u.firsts.buckets[0].key_as_string.split(' ')[0].split('-').reverse().join('/')
+        try res.ill[u.key].oa = u.oa.doc_count
+        try res.ill[u.key].subs = u.subs.doc_count
+        try res.ill[u.key].wrong = u.wrong.doc_count
+        res.ill[u.key].embeds = []
+        for em in u.embeds.buckets
+          tk = em.key.split('?')[0].split('#')[0]
+          res.ill[u.key].embeds.push(tk) if tk not in res.ill[u.key].embeds
+    igs = {users: {terms: {field: "from.exact", size: 10000}}}
+    igs.issn = {filter: {query: {query_string: {query: "metadata.title:* AND metadata.journal:* AND metadata.year:* AND metadata.issn:*"}}}, aggs: {users: {terms: {field: "from.exact", size: 10000}}}}
+    igs.forwarded = {filter: {term: {forwarded: true}}, aggs: {users: {terms: {field: "from.exact", size: 10000}}}}
+    ills = oab_ill.search undefined, {size: 0, aggs: igs}
+    try
+      for u in ills.aggregations.users.buckets
+        res.ill[u.key] ?= {}
+        res.ill[u.key].ill = u.doc_count
+    try res.ill[u.key].withissn = u.doc_count for u in ills.aggregations.issn.users.buckets
+    try res.ill[u.key].forwarded = u.doc_count for u in ills.aggregations.forwarded.users.buckets
+
+  return res
 
 API.service.oab.blacklist = (url,stale=360000) ->
   API.log msg: 'Checking OAB blacklist', url: url
