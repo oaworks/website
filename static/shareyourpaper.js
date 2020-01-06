@@ -54,7 +54,7 @@ var _run = function() {
   w += '<p>We\'ll gather information about your paper and find the easiest way to share it.</p>';
   w += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_input" placeholder="' + _oab_opts.placeholder + '" aria-label="' + _oab_opts.placeholder + '" style="box-shadow:none;"></input></p>\
   <p><a class="oabutton_find ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" href="#" id="oabutton_find" aria-label="Search" style="min-width:150px;">Next</a></p>';
-  w += '<p><a id="nodoi" href="mailto:' + (cml ? cml : 'help@openaccessbutton.org') + '" style="font-size:0.9em;">I don\'t have a DOI</a></p>';
+  w += '<p><a id="nodoi" href="mailto:' + (cml ? cml : 'help@openaccessbutton.org') + '"><b>I don\'t have a DOI</b></a></p>';
   w += '</div>\
 <div id="oabutton_availability"></div>\
 <div id="oabutton_error" style="display:none;"></div>';

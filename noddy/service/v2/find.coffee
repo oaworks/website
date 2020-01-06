@@ -214,9 +214,12 @@ API.service.oab.find = (options={}, metadata={}, content) ->
 
   # special cases for instantill demo and exlibris - dev and live demo accounts that always return a fixed answer
   if options.plugin is 'instantill' and (metadata.doi is '10.1234/567890' or metadata.title is 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL') and options.from in ['qZooaHWRz9NLFNcgR','eZwJ83xp3oZDaec86'] 
+    res.metadata = {title: 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL', year: '2019', doi: 'https://scholarworks.iupui.edu/bitstream/handle/1805/20422/07-PAXTON.pdf?sequence=1&isAllowed=y'}
+    res.metadata.journal = 'Proceedings of the 16th IFLA ILDS conference: Beyond the paywall - Resource sharing in a disruptive ecosystem'
+    res.metadata.author = [{given: 'Mike', family: 'Paxton'}, {given: 'Gary', family: 'Maixner III'}, {given: 'Joseph', family: 'McArthur'}, {given: 'Tina', family: 'Baich'}]
     res.ill = {openurl: ""}
     res.ill.subscription = {findings:{}, uid: options.from, lookups:[], error:[], url: 'https://scholarworks.iupui.edu/bitstream/handle/1805/20422/07-PAXTON.pdf?sequence=1&isAllowed=y', demo: true}
-    return res # for demo this also used to return fast and not save, should it still do so?
+    return res
   if not metadata.title and content and typeof options.url is 'string' and (options.url.indexOf('alma.exlibrisgroup.com') isnt -1 or options.url.indexOf('/exlibristest') isnt -1)
     # switch exlibris URLs for titles, which the scraper knows how to extract, because the exlibris url would always be the same
     delete options.url
