@@ -96,7 +96,6 @@ API.add 'service/oab/availabilities', () -> return oab_find.search this
 API.service.oab.metadata = (options={}, content) -> # pass-through to find that ensures the settings will get metadata rather than fail fast on find
   options.metadata ?= true
   options.find = false
-  options.permissions = false
   return API.service.oab.find(options, undefined, content).metadata
 
 API.service.oab.find = (options={}, metadata={}, content) ->
@@ -471,7 +470,7 @@ API.service.oab.find = (options={}, metadata={}, content) ->
   if options.url?
     metadata.url ?= []
     metadata.url.push(options.url) if options.url not in metadata.url
-  res.permissions = API.service.oab.permissions(metadata) if not res.permissions? and options.permissions and not _.isEmpty metadata
+  res.permissions = API.service.oab.permissions(metadata) if not res.permissions?.permitted? and options.permissions and not _.isEmpty metadata
   res.test = true if JSON.stringify(metadata).toLowerCase().replace(/'/g,' ').replace(/"/g,' ').indexOf(' test ') isnt -1 #or (options.embedded? and options.embedded.indexOf('openaccessbutton.org') isnt -1)
   res.metadata = metadata
   

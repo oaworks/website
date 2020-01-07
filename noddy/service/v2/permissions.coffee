@@ -24,12 +24,12 @@ API.service.oab.permissions = (meta={}, file, url) ->
   if not file? and url?
     file = {}
     file.data = if url.indexOf('.pdf') isnt -1 then HTTP.call('GET',url,{timeout:20000,npmRequestOptions:{encoding:null}}).content else API.http.puppeteer url
-    file.name = if url.substr(url.lastIndexOf('/')+1).indexOf('.') isnt -1 then url.substr(url.lastIndexOf('/')+1) else undefined
+    file.name = if url.substr(url.lastIndexOf('/')+1).indexOf('.') isnt -1 then url.substr(url.lastIndexOf('/')+1).split('?')[0].split('#')[0] else undefined
 
   f = {}
   if file?
     try f.name = file.name
-    try f.type = if file.name? and file.name.indexOf('.') isnt -1 then file.name.substr(file.name.lastIndexOf('.')+1) else 'html'
+    try f.type = if file.name? and file.name.indexOf('.') isnt -1 then file.name.substr(file.name.lastIndexOf('.')+1).split('?')[0].split('#')[0] else 'html'
     if f.type is 'pdf'
       try content = API.convert.pdf2txt file.data
     if not content? and f.type? and API.convert[f.type+'2txt']?
@@ -76,6 +76,8 @@ API.service.oab.permissions = (meta={}, file, url) ->
     f.expected = {} # check if the file meets our expectations
     f.expected.words = content.split(' ').length # will need to be at least 500 words
     f.expected.doi = meta.doi and lowercontentstart.indexOf(_clean meta.doi) isnt -1 # should have the doi in it near the front
+    if not f.expected.doi and not meta.title? and not metad?
+      meta = API.service.oab.metadata meta, content # get at least title again if not already tried to get it, and could not find doi in the file
     f.expected.title = meta.title and API.service.oab.ftitle(lowercontentstart).indexOf(API.service.oab.ftitle meta.title) isnt -1
     if meta.author?
       try
