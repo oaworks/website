@@ -38,7 +38,7 @@
     border-color: #46b633;
     border-width: 2px;
     border-radius: 0px;
-    color: #46b633;
+    color: white;
     font-weight: bold;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -92,6 +92,20 @@
       color: #46B633;
   }
 
+  #demo .btn-hollow-green:hover {
+    border-color: #46b633;
+    border-width: 2px;
+    border-radius: 0px;
+    color: white;
+    font-weight: bold;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  #demo .btn-demo-green {
+    color: white;
+  }
+
   a.btn-iu {
       color: #ffffff !important;
   }
@@ -141,7 +155,7 @@
 <!-- header -->
 <div class="green-bg">
   <div class="center-col header">
-    <div><span><strong>InstantILL</strong> by <a href="https://openaccessbutton.org" style="color:white">Open Access Button</a></span></div>
+    <div><span><strong><a href="/">InstantILL</a></strong> by <a href="https://openaccessbutton.org" style="color:white">Open Access Button</a></span></div>
     <div>
        <a class="btn btn-demo-white" href="/beta">Install Now</a>
     </div>
@@ -532,7 +546,6 @@
   <div class="center-col footer">
     <div>
       <p>Open Source • Community Controlled • Not for Profit</p>
-
     </div>
     <div>
       <span><a href="https://openaccessbutton.org/api">API</a></span>
@@ -602,6 +615,21 @@ jQuery(document).ready(function() {
     if (e) e.preventDefault();
     $('#fakeilltable').html('');
     try {
+      if (_ill_response.meta.article === undefined || JSON.stringify(_ill_response.meta.article) === '{}') {
+        _ill_response.meta.article = {
+          title: 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL',
+          journal: 'Proceedings of the 16th IFLA ILDS conference: Beyond the paywall - Resource sharing in a disruptive ecosystem',
+          author: [
+            {given: 'Mike', family: 'Paxton'},
+            {given: 'Gary', family: 'Maixner III'},
+            {given: 'Joseph', family: 'McArthur'},
+            {given: 'Tina', family: 'Baich'}
+          ],
+          year: '2019'
+        };
+      }
+    } catch(err) {}
+    try {
       for ( var i in _ill_response.meta.article) {
         if (['started','ended','took','cache','redirect','source'].indexOf(i) === -1) {
           if (i === 'author') {
@@ -639,7 +667,7 @@ jQuery(document).ready(function() {
         var diff = Math.floor(($('div.content:visible').height() - $('div.green:visible').height())/1.5) + parseInt($('div.content:visible').css('padding-top').replace('px',''));
         $('div.green:visible').css({'min-height':diff+'px'});
       }
-      $('.oabutton_ill').off();
+      $(_oab_opts.element).off('click','.oabutton_ill');
       $('body').on('click','.oabutton_ill',fakeill);
     }
   });

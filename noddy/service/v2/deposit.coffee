@@ -150,8 +150,8 @@ API.service.oab.deposit.config = (user, config) ->
         Users.update user._id, {'service.openaccessbutton.deposit.config': update}
       user = Users.get user._id
   try
-    rs = user.service.openaccessbutton.deposit.config ? {}
-    try rs.adminemail = if user.email then user.email else user.emails[0].address
+    rs = user.service.openaccessbutton.deposit?.config ? {}
+    try rs.adminemail = user.email ? user.emails[0].address
     return rs
   catch
     return {}

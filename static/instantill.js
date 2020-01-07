@@ -241,7 +241,7 @@ var instantill_run = function() {
   var openurl = function() {
     $.ajax({
       type:'POST',
-      url:api+'/ill/openurl?uid='+_oab_opts.uid,
+      url:api+'/ill/openurl?uid='+_oab_opts.uid + (gotmore ? '&usermetadata=true' : ''),
       cache: false,
       processData: false,
       contentType: 'application/json',
@@ -334,7 +334,8 @@ var instantill_run = function() {
     $('.oabutton_find').html('Submitting .');
     $('.oabutton_ill').html('Submitting .');
     var eml = typeof matched === 'string' ? matched : $('#oabutton_email').val();
-    var data = {url:avail.data.match, email:eml, from:_oab_opts.uid, plugin:'instantill', embedded:window.location.href, metadata: avail.data.meta.article }
+    var data = {url:avail.data.match, email:eml, from:_oab_opts.uid, plugin:'instantill', embedded:window.location.href, metadata: avail.data.meta.article };
+    if (gotmore) data.notes = 'The user provided some metadata. ';
     if (_oab_config.pilot) data.pilot = _oab_config.pilot;
     if (_oab_config.live) data.live = _oab_config.live;
     if (!data.metadata.title || !data.metadata.journal || !data.metadata.year) {
@@ -343,7 +344,7 @@ var instantill_run = function() {
       getmore();
     } else {
       if (avail.data.ill && avail.data.ill.openurl && avail.data.ill.openurl.indexOf('notes') === -1 && (avail.data.ill.subscription || avail.data.availability)) {
-        data.notes = '';
+        if (data.notes === undefined) data.notes = '';
         if (avail.data.ill.subscription) data.notes += 'Subscription check done, found ' + (avail.data.ill.subscription.url ? avail.data.ill.subscription.url : (avail.data.ill.subscription.journal ? 'journal' : 'nothing')) + '. ';
         if (avail.data.availability) data.notes += 'OA availability check done, found ' + (avail.data.availability.length && avail.data.availability[0].url ? avail.data.availability[0].url : 'nothing') + '. ';
       }

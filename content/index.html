@@ -233,7 +233,7 @@
                   availability += 'Someone has requested access to the article <a class="btn btn-action" href="/request/' + has.article.id + '?support=true">Notify me</a></p>';
                 }
               } else {
-                availability += '<h2 style="color:#212f3f;">This article is available!</h2>';
+                availability += '<h2 style="color:#212f3f;">This article is freely available!</h2>';
                 availability += '<p"><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + has.article.url + '</a></p>';
                 availability += '<p>Not what you were expecting? <a target="_blank" href ="/feedback#wrong?searched=' + encodeURIComponent(url) + '&given=' + encodeURIComponent(has.article.url) + '">Report an error</a>.</p>';
                 availability += '<p> You can <a href="/request?url=' + encodeURIComponent(url) + '">request it from the author</a> if it isn\'t available.</p>';
@@ -269,7 +269,7 @@
               } else {
                 var availability = '<h2 style="color:#212f3f;">';
                 if (has.article.url) {
-                  availability += 'This article is available!</h2>';
+                  availability += 'This article is freely available!</h2>';
                   availability += '<h><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + has.article.url;
                   availability += '<p>Not what you were expecting? <a target="_blank" href ="/feedback#wrong?searched=' + encodeURIComponent(url) + '&given=' + encodeURIComponent(has.article.url) + '">Report an error</a>.</p>';
                   availability += '<p> You can <a href="/request?url=' + encodeURIComponent(url) + '">request it from the author</a> if it isn\'t available.</p>';

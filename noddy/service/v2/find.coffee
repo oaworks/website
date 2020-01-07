@@ -2,10 +2,11 @@
 import Future from 'fibers/future'
 import unidecode from 'unidecode'
 
-#oab_find.delete true, true
-#oab_catalogue.delete true, true
+#oab_find.remove '*'
+#oab_catalogue.remove '*'
 
-_ftitle = (title) ->
+API.service.oab.ftitle = (title) ->
+  # a useful way to show a title (or other string) as one long string with no weird characters, and no words shorter than 2 chars, for easier fuzzy matching
   ft = ''
   for tp in unidecode(title.toLowerCase()).replace(/[^a-z0-9 ]/g,'').replace(/ +/g,' ').split(' ')
     ft += tp if tp.length > 2
@@ -16,10 +17,10 @@ _finder = (metadata) ->
   for tid in ['doi','pmid','pmcid','url','title']
     if typeof metadata[tid] is 'string' or typeof metadata[tid] is 'number' or _.isArray metadata[tid]
       mt = if _.isArray metadata[tid] then metadata[tid][0] else metadata[tid]
-      if typeof mt is 'string' and mt.length isnt 0
+      if typeof mt is 'number' or (typeof mt is 'string' and mt.length > 5) # people pass n/a and such into title, so ignore anything too small to be a title or a valid id
         finder += ' OR ' if finder isnt ''
         if tid is 'title'
-          finder += 'ftitle:' + _ftitle(mt) + '~ OR '
+          finder += 'ftitle:' + API.service.oab.ftitle(mt) + '~ OR '
         finder += 'metadata.' + tid + (if tid is 'url' or tid is 'title' then '' else '.exact') + ':"' + mt + '"'
   return finder
 
@@ -37,7 +38,11 @@ _find =
       opts.username = this.user.username
       opts.email = this.user.emails[0].address
     opts.url = opts.url[0] if _.isArray opts.url
-    return if not opts.test and opts.url and API.service.oab.blacklist(opts.url) then 400 else API.service.oab.find opts
+    if not opts.test and opts.url and API.service.oab.blacklist(opts.url) is true
+      API.log 'find request blacklisted for ' + JSON.stringify opts
+      return 400
+    else
+      return API.service.oab.find opts
 
 API.add 'service/oab/find', get:_find, post:_find
 API.add 'service/oab/finds', () -> return oab_find.search this
@@ -61,7 +66,8 @@ _avail =
       opts.username = this.user.username
       opts.email = this.user.emails[0].address
     opts.url = opts.url[0] if _.isArray opts.url
-    if not opts.test and opts.url and API.service.oab.blacklist(opts.url)
+    if not opts.test and opts.url and API.service.oab.blacklist(opts.url) is true
+      API.log 'find request blacklisted for ' + JSON.stringify opts
       return 400
     else
       afnd = {data: {availability: [], requests: [], accepts: [], meta: {article: {}, data: {}}}}
@@ -69,14 +75,14 @@ _avail =
       afnd.v2 = API.service.oab.find opts
       try
         afnd.data.ill = afnd.v2.ill
-        afnd.data.meta.article = _.clone afnd.v2.metadata
+        afnd.data.meta.article = _.clone(afnd.v2.metadata) if afnd.v2.metadata?
         afnd.data.meta.cache = afnd.v2.cached
         afnd.data.meta.refresh = afnd.v2.refresh
         afnd.data.meta.article.url = afnd.data.meta.article.url[0] if _.isArray afnd.data.meta.article.url
         afnd.data.availability.push({type: 'article', url: afnd.v2.url}) if afnd.v2.url
       try
         finder = _finder(afnd.v2.metadata)
-        if finder isnt '' and request = oab_request.find finder + ' AND type:article'
+        if finder isnt '' and request = oab_request.find '(' + finder + ') AND type:article'
           rq = type: 'article', _id: request._id
           rq.ucreated = if opts.uid and request.user?.id is opts.uid then true else false
           rq.usupport = if opts.uid then API.service.oab.supports(request._id, opts.uid)? else false
@@ -87,11 +93,11 @@ API.add 'service/oab/availabilities', () -> return oab_find.search this
 
 
 
-API.service.oab.metadata = (options={}) -> # pass-through to find that ensures the settings will get metadata rather than fail fast on find
+API.service.oab.metadata = (options={}, content) -> # pass-through to find that ensures the settings will get metadata rather than fail fast on find
   options.metadata ?= true
   options.find = false
   options.permissions = false
-  return API.service.oab.find(options).metadata
+  return API.service.oab.find(options, undefined, content).metadata
 
 API.service.oab.find = (options={}, metadata={}, content) ->
   _get = (metadata, info) ->
@@ -120,6 +126,9 @@ API.service.oab.find = (options={}, metadata={}, content) ->
     options.metadata = true
   options.metadata = if options.metadata is true then ['title','doi','author','journal','issn','volume','issue','page','published','year'] else if _.isArray(options.metadata) then options.metadata else []
   content ?= options.dom if options.dom?
+
+  if content and _.isEmpty metadata
+    _get metadata, API.service.oab.scrape undefined, content
 
   if metadata.url
     options.url ?= metadata.url
@@ -183,9 +192,10 @@ API.service.oab.find = (options={}, metadata={}, content) ->
           metadata.title = options.citation.split('}')[0].trim()
         else if options.citation.indexOf('"') isnt -1 or options.citation.indexOf("'") isnt -1
           metadata.title = options.citation.split('"')[0].split("'")[0].trim()
-        metadata.title = metadata.title.replace(/(<([^>]+)>)/g,'').trim()
+  metadata.title = metadata.title.replace(/(<([^>]+)>)/g,'').replace(/\+/g,' ').trim() if typeof metadata.title is 'string'
 
-  # other possible options are permissions
+  options.permissions ?= false # don't get permissions by default now that the permissions check could take longer
+
   res.plugin = options.plugin if options.plugin?
   res.from = options.from if options.from?
   res.all = options.all ? false
@@ -197,15 +207,19 @@ API.service.oab.find = (options={}, metadata={}, content) ->
   try res.refresh = if options.refresh is false then 30 else if options.refresh is true then 0 else parseInt options.refresh
   res.refresh = 30 if typeof res.refresh isnt 'number' or isNaN res.refresh
   res.embedded ?= options.embedded if options.embedded?
-  res.pilot = options.pilot if options.pilot?
+  res.pilot = options.pilot if options.pilot? # instantill and shareyourpaper can state if they are live or pilot, and if wrong item supplied
   res.live = options.live if options.live?
+  res.wrong = options.wrong if options.wrong?
   res.found = {}
 
   # special cases for instantill demo and exlibris - dev and live demo accounts that always return a fixed answer
-  if options.plugin is 'instantill' and metadata.doi is '10.1234/567890' and options.from in ['qZooaHWRz9NLFNcgR','eZwJ83xp3oZDaec86'] 
+  if options.plugin is 'instantill' and (metadata.doi is '10.1234/567890' or metadata.title is 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL') and options.from in ['qZooaHWRz9NLFNcgR','eZwJ83xp3oZDaec86'] 
+    res.metadata = {title: 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL', year: '2019', doi: 'https://scholarworks.iupui.edu/bitstream/handle/1805/20422/07-PAXTON.pdf?sequence=1&isAllowed=y'}
+    res.metadata.journal = 'Proceedings of the 16th IFLA ILDS conference: Beyond the paywall - Resource sharing in a disruptive ecosystem'
+    res.metadata.author = [{given: 'Mike', family: 'Paxton'}, {given: 'Gary', family: 'Maixner III'}, {given: 'Joseph', family: 'McArthur'}, {given: 'Tina', family: 'Baich'}]
     res.ill = {openurl: ""}
     res.ill.subscription = {findings:{}, uid: options.from, lookups:[], error:[], url: 'https://scholarworks.iupui.edu/bitstream/handle/1805/20422/07-PAXTON.pdf?sequence=1&isAllowed=y', demo: true}
-    return res # for demo this also used to return fast and not save, should it still do so?
+    return res
   if not metadata.title and content and typeof options.url is 'string' and (options.url.indexOf('alma.exlibrisgroup.com') isnt -1 or options.url.indexOf('/exlibristest') isnt -1)
     # switch exlibris URLs for titles, which the scraper knows how to extract, because the exlibris url would always be the same
     delete options.url
@@ -222,17 +236,17 @@ API.service.oab.find = (options={}, metadata={}, content) ->
     catalogued = oab_catalogue.finder metadata
     # if user wants a total refresh, don't use any of it (we still search for it though, because will overwrite later with the fresh stuff)
     if catalogued? and res.refresh isnt 0
-      res.permissions ?= catalogued.permissions if catalogued.metadata?.journal? or catalogued.metadata?.issn?
+      res.permissions ?= catalogued.permissions if catalogued.permissions? and (catalogued.metadata?.journal? or catalogued.metadata?.issn?)
       if 'oabutton' in res.sources
         res.checked.push('oabutton') if 'oabutton' not in res.checked
         if catalogued.url? # within or without refresh time, if we have already found it, re-use it
           _get metadata, catalogued.metadata
-          res.cached = true
+          res.cached = true if _got() # no need for further finding if we have the url and all necessary metadata
           res.url = catalogued.url
           res.found.oabutton = res.url
         else if catalogued.createdAt > Date.now() - res.refresh*86400000
           _get metadata, catalogued.metadata # it is in the catalogue but we don't have a link for it, and it is within refresh days old, so re-use the metadata from it
-          res.cached = true # and cause an immediate return, we don't bother looking for everything again within a given refresh window
+          res.cached = true # and cause an immediate return, we don't bother looking for everything again if we already couldn't find it within a given refresh window
   _findoab()
   
   # TODO update requests so successful ones write the source to the catalogue - but updating requests is not priority yet, so not doing right now
@@ -457,7 +471,7 @@ API.service.oab.find = (options={}, metadata={}, content) ->
   if options.url?
     metadata.url ?= []
     metadata.url.push(options.url) if options.url not in metadata.url
-  res.permissions = API.service.oab.permissions(metadata) if not res.permissions? and options.permissions isnt false
+  res.permissions = API.service.oab.permissions(metadata) if not res.permissions? and options.permissions and not _.isEmpty metadata
   res.test = true if JSON.stringify(metadata).toLowerCase().replace(/'/g,' ').replace(/"/g,' ').indexOf(' test ') isnt -1 #or (options.embedded? and options.embedded.indexOf('openaccessbutton.org') isnt -1)
   res.metadata = metadata
   
@@ -474,10 +488,10 @@ API.service.oab.find = (options={}, metadata={}, content) ->
       upd.checked = uc if JSON.stringify(uc.sort()) isnt JSON.stringify catalogued.checked.sort()
       uf = _.extend(res.found, catalogued.found)
       upd.found = uf if not _.isEqual uf, catalogued.found
-      upd.permissions = res.permissions if not _.isEqual res.permissions, catalogued.permissions
+      upd.permissions = res.permissions if res.permissions? and not _.isEqual res.permissions, catalogued.permissions
       upd.usermetadata = res.usermetadata if res.usermetadata?
       if typeof metadata.title is 'string'
-        ftm = _ftitle(metadata.title)
+        ftm = API.service.oab.ftitle(metadata.title)
         upd.ftitle = ftm if ftm isnt catalogued.ftitle
       oab_catalogue.update(catalogued._id, upd) if not _.isEmpty upd
       res.catalogue = catalogued._id
@@ -489,7 +503,7 @@ API.service.oab.find = (options={}, metadata={}, content) ->
         checked: res.checked
         found: res.found
         permissions: res.permissions
-      fl.ftitle = _ftitle(metadata.title) if typeof metadata.title is 'string'
+      fl.ftitle = API.service.oab.ftitle(metadata.title) if typeof metadata.title is 'string'
       fl.usermetadata = res.usermetadata if res.usermetadata?
       res.catalogue = oab_catalogue.insert fl
 

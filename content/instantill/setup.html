@@ -111,7 +111,7 @@
                 <span class="glyphicon glyphicon-arrow-right"></span> Rollout</a>
               </li>
               <li>
-                <a class="green" href="/leadership">
+                <a class="green" href="https://instantill.org/leadership">
                 <span class="glyphicon glyphicon-arrow-right"></span> Support InstantILL</a>
               </li>
               <li>
@@ -497,7 +497,7 @@
           <p>
             To ensure users never need to re-enter their search across different systems you can link to InstantILL from any library system to integrate it into your existing workflows, say from library search or a link resolver.
           </p>
-          <p id="embeddedexample" style="display:none;"></p>
+          <p id="embeddedexample" style="display:none;word-wrap:break-word"></p>
           <p id="noembeddedexampleavailable" style="display:none;">
             Once you've used InstantILL on one of your domains, we'll show you an example link you can use to integrate into other systems.
           </p>
@@ -636,7 +636,7 @@
             If you're on our leadership teir, or in pilot mode, and would like a report, email Joe at <a href="joe@openaccessbutton.org">Joe@openaccessbutton.org</a>.
           </p>
           <p>
-            We can provide individualized analytics detailing your use of InstantILL. However, since this is not essential to delivering an excellent service to end users, we only provide this to users who support our work through our 'Leadership Tier'. To find our more, go <a href="https://openaccessbutton.org/libraries#leadership">here</a>.
+            We can provide individualized analytics detailing your use of InstantILL. However, since this is not essential to delivering an excellent service to end users, we only provide this to users who support our work through our 'Leadership Tier'. To find our more, go <a href="https://instantill.org/leadership">here</a>.
           </p>
 
 
@@ -1090,10 +1090,20 @@ jQuery(document).ready(function() {
         data: q,
         success: function(iia) {
           try {
-            var eurl = iia.aggregations.embeds.buckets[0].key.split('?')[0].split('#')[0];
-            if (eurl.indexOf('instantill.org') !== -1 || eurl.indexOf('openaccessbutton.org') !== -1) eurl = false;
-            var ex = 'You can use this as the Base URL to integrate InstantILL into your other systems:<br>' + eurl + '.<br><br>Here is an example URL:<br>' + eurl + '?doi=10.1145/2908080.2908114 .<br><br>You likely have a more complex looking OpenURL. Not to worry! InstantILL can recognize a wide variety of standard OpenURL parameters so it should still just work.';
-            $('#embeddedexample').html(ex).show();
+            var eurl = false;
+            for (var eu in iia.aggregations.embeds.buckets) {
+              var eur = iia.aggregations.embeds.buckets[eu].key.split('?')[0].split('#')[0];
+              if (eur.indexOf('instantill.org') === -1 && eur.indexOf('openaccessbutton.org') === -1) {
+                eurl = eur;
+                break;
+              }
+            }
+            if (eurl) {
+              var ex = 'You can use this as the Base URL to integrate InstantILL into your other systems:<br>' + eurl + '.<br><br>Here is an example URL:<br>' + eurl + '?doi=10.1145/2908080.2908114 .<br><br>You likely have a more complex looking OpenURL. Not to worry! InstantILL can recognize a wide variety of standard OpenURL parameters so it should still just work.';
+              $('#embeddedexample').html(ex).show();
+            } else {
+              $('#noembeddedexampleavailable').show();
+            }
           } catch(err) {
             $('#noembeddedexampleavailable').show();
           }
