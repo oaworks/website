@@ -226,7 +226,12 @@ div.greenbottom {
     height: 100%; 
     align-items: center;
   }
-
+  .card-logo{
+    display: flex; 
+    height: 100%; 
+    align-items: flex-end;
+    justify-content: center;
+  }
 
 /*general div backgrounds*/
 
@@ -599,10 +604,6 @@ div.greenbottom {
     position: absolute;
     bottom: 0;
   }
-  .card-outer{
-    width: 100%;
-    padding-top: 161%;
-  }
 
   }
 @media screen and (max-width: 1024px){
@@ -683,5 +684,10 @@ div.greenbottom {
       width: 100%;
       padding: 30px 0;
     }
+
+    .card-outer{
+    width: 100%;
+    padding-top: 161%;
+  }
 
 }
