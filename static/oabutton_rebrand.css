@@ -176,15 +176,18 @@ div.greenbottom {
   .card-holder{
     display: inline-block;
     background-color: grey;
+    width: 100%;
   }
 
   .card-container{
     width: 25%;
-    padding-top: 61.8%;
+    padding-top: 31.19%;
+    margin: 20px;
+    position: relative;
   }
 
   .card-gradient{
-    position: static;
+    position: absolute;
     bottom: 0;
     height: 50%;
     width: 100%;
@@ -195,6 +198,11 @@ div.greenbottom {
     width: 100%;
     display: flex;
     transition: 1s;
+  }
+
+  .card p{
+    font-style: italic;
+    text-align: right;
   }
 
   .card:hover{
