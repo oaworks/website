@@ -233,7 +233,7 @@ div.greenbottom {
   }
 
   .card-logo img{
-    height: 15%;
+    max-height: 15%;
     width: auto;
   }
 
