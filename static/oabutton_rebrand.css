@@ -220,7 +220,7 @@ div.greenbottom {
   }
 
   .card-outer:hover .layer-vanish{
-    opacity: 0;
+    opacity: 0 !important;
   }
 
   .card p{
