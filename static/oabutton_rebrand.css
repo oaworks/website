@@ -214,6 +214,11 @@ div.greenbottom {
    flex-direction: column;
    padding:20px;
    height: 100%; 
+   transition: 0.5s;
+  }
+
+  .card:hover{
+    display: none;
   }
 
   .card p{
