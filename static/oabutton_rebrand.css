@@ -172,6 +172,31 @@ div.greenbottom {
     padding-top: 10px;
   }
 
+/*face cards*/
+  .card-holder{
+
+  }
+
+  .card{
+    display: flex;
+  }
+
+  .card img{
+
+  }
+
+  .card-quote{
+
+  }
+
+  .card-name{
+
+  }
+
+  .card-gradient{
+    
+  }
+
 /*general div backgrounds*/
 
   .green-bg{
@@ -231,7 +256,6 @@ div.greenbottom {
   .header span{
     padding: 0 10px;
   }
-
 
 /* first thing the user sees at page top banner*/
 
