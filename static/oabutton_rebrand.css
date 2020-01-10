@@ -182,8 +182,6 @@ div.greenbottom {
     display: inline-block;
     width: 25%;
     padding-top: 40.19%;
-    background-position: center;
-    background-size: cover;
     position: relative;
   }
 
@@ -192,7 +190,10 @@ div.greenbottom {
     bottom: 0;
     width: 100%;
     height: 100%;
+    background-position: center;
+    background-size: cover;
   }
+
 /*
   .card-container{
     width: 25%;
@@ -217,7 +218,7 @@ div.greenbottom {
    transition: 0.5s;
   }
 
-  .card:hover{
+  .card-inner:hover .card{
     display: none;
   }
 
