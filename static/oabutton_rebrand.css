@@ -201,7 +201,6 @@ div.greenbottom {
    display: flex;
    justify-content: flex-end;
    flex-direction: column;
-   padding:20px;
    height: 100%; 
   }
 
@@ -231,6 +230,11 @@ div.greenbottom {
     height: 100%; 
     align-items: flex-end;
     justify-content: center;
+  }
+
+  .card-logo img{
+    height: 15%;
+    width: auto;
   }
 
 /*general div backgrounds*/
