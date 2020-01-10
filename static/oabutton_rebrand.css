@@ -176,6 +176,7 @@ div.greenbottom {
   .card-holder{
     background-color: grey;
     width: 100%;
+    font-size: 0;
   }
 
   .card-outer{
@@ -192,6 +193,7 @@ div.greenbottom {
     height: 100%;
     background-position: center;
     background-size: cover;
+    transition: 0.5s;
   }
 
 /*
@@ -215,10 +217,9 @@ div.greenbottom {
    flex-direction: column;
    padding:20px;
    height: 100%; 
-   transition: 0.5s;
   }
 
-  .card-inner:hover .card{
+  .card-outer:hover .layer-vanish{
     display: none;
   }
 
@@ -228,6 +229,7 @@ div.greenbottom {
     color: white;
     padding: 0;
     margin: 0;
+    font-size: 1em;
   }
 
   .card h3{
