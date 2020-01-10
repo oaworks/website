@@ -191,25 +191,11 @@ div.greenbottom {
     bottom: 0;
     width: 100%;
     height: 100%;
+    padding:20px;
     background-position: center;
     background-size: cover;
-    transition: 0.5s;
+    transition: 0.2s;
   }
-
-/*
-  .card-container{
-    width: 25%;
-    padding-top: 31.19%;
-    display: inline-block;
-    position: relative;
-  }*/
-
-  /*.card{
-    height: 100%;
-    width: 100%;
-    display: flex;
-    transition: 1s;
-  }*/
 
   .card{
    display: flex;
@@ -613,6 +599,10 @@ div.greenbottom {
     position: absolute;
     bottom: 0;
   }
+  .card-outer{
+    width: 100%;
+    padding-top: 161%;
+  }
 
   }
 @media screen and (max-width: 1024px){
@@ -621,6 +611,11 @@ div.greenbottom {
     }
     .featurebox{
       height: 440px;
+    }
+
+    .card-outer{
+      width: 50%;
+      padding-top: 81%;
     }
 
 }
