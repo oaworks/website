@@ -174,11 +174,31 @@ div.greenbottom {
 
 /*face cards*/
   .card-holder{
+    display: inline-block;
+    background-color: grey;
+  }
 
+  .card-container{
+    width: 25%;
+    padding-top: 61.8%;
+  }
+
+  .card-gradient{
+    position: static;
+    bottom: 0;
+    height: 50%;
+    width: 100%;
   }
 
   .card{
+    height: 100%;
+    width: 100%;
     display: flex;
+    transition: 1s;
+  }
+
+  .card:hover{
+    display: none;
   }
 
   .card img{
