@@ -1,0 +1,449 @@
+<link rel="stylesheet" href="/static/oabutton_rebrand.css">
+<style>
+  #topnav {
+    display: none;
+  }
+
+  #footer {
+    display: none;
+  }
+  }
+
+  h1 {
+    margin-top: 0;
+  }
+
+  .btn-demo-white {
+    color: #F04717;
+  }
+
+  .program {
+    color: #212f3f;
+    padding: 30px;
+  }
+
+  .programcontents {
+    text-align: left;
+    padding: 30px 0;
+  }
+
+  .program li {
+    list-style-image: none;
+  }
+
+  .program h2 {
+    margin-bottom: 30px;
+  }
+
+  /* Hide the browser's default checkbox */
+  .container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+
+  input[type="radio"],
+  input[type="checkbox"] {
+    display: none;
+  }
+
+  /* Create a custom checkbox */
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 22px;
+    width: 22px;
+    border-radius: 4px;
+    border: solid 1px white;
+    /*background-color: white;*/
+  }
+
+  .check-container {
+    display: block;
+    position: relative;
+    margin-bottom: 8px;
+    padding-left: 30px;
+    cursor: pointer;
+    font-weight: normal;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  /* On mouse-over, add a grey background color */
+  .check-container:hover input~.checkmark {
+    background-color: #ffffff80;
+  }
+
+  /* When the checkbox is checked, add a blue background */
+  .check-container input:checked~.checkmark {
+    background-color: white;
+  }
+
+  /* Create the checkmark/indicator (hidden when not checked) */
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+
+  /* Show the checkmark when checked */
+  .check-container input:checked~.checkmark:after {
+    display: block;
+  }
+
+  /* Style the checkmark/indicator */
+  .check-container .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid #F04717;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+
+  .dropdown {
+    display: block;
+    width: 100%;
+    height: 55px;
+    color: white;
+    border: solid 1px white;
+    padding-left: 15px;
+    margin: 30px 0 0 0;
+    -webkit-appearance: none;
+    background: url(static/dropdown-triangle.png) no-repeat right;
+  }
+
+
+  @media screen and (max-width: 768px) {
+    .quote {
+      padding: 40px 30px;
+    }
+
+    .pitch {
+      padding: 90px 0;
+    }
+  }
+
+  /* ANIMATIONS */
+  .animated {
+    -webkit-animation-duration: 0.5s;
+    animation-duration: 0.5s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+  }
+
+  @-webkit-keyframes zoomIn {
+    from {
+      opacity: 0;
+      height: 0;
+      -webkit-transform: scale3d(0.3, 0.3, 0.3);
+      transform: scale3d(0.3, 0.3, 0.3);
+    }
+
+    50% {
+      height: 55px;
+      opacity: 1;
+    }
+  }
+
+  @keyframes zoomIn {
+    from {
+      opacity: 0;
+      height: 0;
+      -webkit-transform: scale3d(0.3, 0.3, 0.3);
+      transform: scale3d(0.3, 0.3, 0.3);
+    }
+
+    50% {
+      height: 55px;
+      opacity: 1;
+    }
+  }
+
+  .zoomIn {
+    -webkit-animation-name: zoomIn;
+    animation-name: zoomIn;
+  }
+
+  @-webkit-keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  .fadeIn {
+    -webkit-animation-name: fadeIn;
+    animation-name: fadeIn;
+  }
+</style>
+
+<!-- header -->
+
+  <div class="navy-bg">
+    <div class="center-col header">
+      <div>
+        <a href="/" style="margin: 0"><strong>Open Access Button</strong></a>
+      </div>
+      <div>
+        <span><a href="/libraries">For Libraries</a></span>
+        <span><a href="/request">Requests</a></span>
+      </div>
+    </div>
+  </div>
+
+<!-- pitch -->
+
+  <div class="center-col quote">
+    <div class="strapline">
+      <h2>Leaders</h2>
+
+      <div class="strapline">
+        <p>
+         These leading institutions and individuals have choosen to step up to advance 
+  open and community ownership of scholarship. 
+          <br><br>
+          We’re incredibly grateful for their generous, essential support.
+      </div>
+      <div class="strapline" style="text-align: center;">
+        <a class="btn btn-demo-blue"
+          href="https://docs.google.com/forms/d/e/1FAIpQLSddhWH2_Pg_JQMCtPFqE6acURwSVQIClucOdW3loqKO0gKZxA/viewform">Cash Plz</a>
+      </div>
+    </div>
+  </div>
+  </div>
+
+<!-- Arcadia -->
+
+  <div style="background-color: yellow">
+    <div class="center-col">
+      <div class="quote">
+        <div>
+          <h3 style="line-height: 240%">With Underwriting Support From</h3>
+          <img src="static/paper-planes.png">
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- need your leadership blurb -->
+
+  <div class="center-col quote">
+    <div class="strapline">
+      <h2>We’re not going to paywall our tools.<br> So we need your leadership.</h2>
+      <p>You’ve seen our tools, now here’s the strategy. Redirect money and power in scholarly communications by reducing reliance on subscriptions so libraries have leverage to negotiate for better prices and terms with publishers in order to make a more equitable and open world. To reduce reliance on subscriptions, community owned tools have to <a href="">Deliver Articles</a> (differently) <a href="">and Fill your Repository.</a> We won’t let paying us to get in the way, it’s hard enough already, or stop libraries who can’t afford subscriptions already using our tools.
+      <br><br>
+
+      To continue our work, we need Leadership from libraries who want to join us on the cutting edge of open, or just benefit from our tools, to financially support our work.</p>
+    </div>
+  </div>
+
+<!-- leadership investment -->
+
+  <div style="background-color: #F04717; color: white;">
+    <div class="center-col quote">
+      <div class="strapline" style="max-width: 490px;">
+        <h2>Leadership Investment</h2>
+
+        <div id="tools">
+          <p><strong>What tools do you use?</strong>
+            <br>
+            We want to charge less than we save you. Share what tools you use so we can estimate it:</p>
+
+          <label class="check-container">InstantILL
+            <input onchange="onToolCheck('InstantILL')" type="checkbox" value="InstantILL">
+            <span class="checkmark"></span>
+          </label>
+          <label class="check-container">Shareyourpaper.org
+            <input onchange="onToolCheck('Shareyourpaper.org')" type="checkbox" value="Shareyourpaper.org">
+            <span class="checkmark"></span>
+          </label>
+          <label class="check-container">Permissions
+            <input onchange="onToolCheck('Permissions')" type="checkbox" value="Permissions">
+            <span class="checkmark"></span>
+          </label>
+          <label class="check-container">Open Access Button
+            <input onchange="onToolCheck('Open Access Button')" type="checkbox" value="Open Access Button">
+            <span class="checkmark"></span>
+          </label>
+          <label class="check-container">Other
+            <input onchange="onToolCheck('Other')" type="checkbox" value="Other">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+
+        <select onchange="onSizeSelect()" class="dropdown animated zoomIn" id="size" style="display:none">
+          <option value="describe">Describe your Library</option>
+          <option value="Community college">Community College</option>
+          <option value="Baccalaureate">Baccalaureate (B)</option>
+          <option value="Postgraduate">Postgraduate (M)</option>
+          <option value="Research intensive">Research-intensive (R)</option>
+          <option value="Consortia">Consortial</option>
+          <option value="International">International</option>
+        </select>
+
+        <div class="ifCheck animated fadeIn" id="price" style="display:none">
+          <h3 style="text-align: center;"><span id="calculated-price">XXXX</span> USD<br>
+            per month</h3>
+
+          <p>Paid through a yearly invoice. We won’t want to lock you in.</p>
+          <div style="text-align: center;">
+            <a id="auto-link" class="btn btn-demo-white" style="color: #F04717"
+              href="https://docs.google.com/forms/d/e/1FAIpQLScG6tdPqY3ZN2onPVYo16zxK3WEd2TBotNmmDxefqqolqfxJg/viewform?entry.1695660922=SIZE&entry.167645724=TOOL&entry.1968748516=PRICE">Invest
+              Now</a>
+          </div>
+          <p style="text-align:centre">Cost too much? Have a question? <a href="mailto:joe@openaccessbutton.org"
+              style="color:white"><b>Contact us</b></a>.</p>
+        </div>
+
+        <div class="ifCheck animated fadeIn" id="contact-consortial" style="display:none">
+          <p><b>
+              Thanks for your interest!
+            </b>
+            <br>
+            <br>
+          We don't have standard pricing for consortia yet. However, you can expect a steap discount against the individual price for an insitution.</p>
+            <div style="text-align: center;">
+            <a href="mailto:joe@openaccessbutton.org" class="btn btn-demo-white" style="color: #F04717"><b>Contact us</b></a>
+          </div>
+        </div>
+
+        <div class="ifCheck animated fadeIn" id="contact-international" style="display:none">
+          <p><b>
+              Thanks for your interest!
+            </b>
+            <br>
+            <br>
+          We don't have standard pricing for insitutions outside North America yet.</p>
+            <div style="text-align: center;">
+            <a href="mailto:joe@openaccessbutton.org" class="btn btn-demo-white" style="color: #F04717"><b>Contact us</b></a>
+          </div>
+        </div>
+
+        <script>
+          let arr = [];
+          let size = "";
+          let base = "https://docs.google.com/forms/d/e/1FAIpQLScG6tdPqY3ZN2onPVYo16zxK3WEd2TBotNmmDxefqqolqfxJg/viewform?";
+          //entry.1695660922=SIZE&entry.167645724=TOOL&entry.1968748516=PRICE
+          let tools = ['InstantILL', 'Shareyourpaper.org', 'Permissions', 'Open Access Button', 'Other'];
+          let obj = {
+            "Research intensive": [400, 400, 200, 100, 100],
+            "Postgraduate": [200, 200, 100, 50, 50],
+            "Baccalaureate":  [100, 100, 50,  25, 25],
+            "Community college":  [50, 50, 25, 12.5, 12.5]
+          };
+
+          function onToolCheck(item) {
+            let index = arr.indexOf(item);
+            if(index == -1) {
+              arr.push(item);
+            }
+            else {
+              arr.splice(index, 1);
+              if(arr.length == 0)
+              {
+                document.querySelectorAll(".ifCheck").forEach(elm => elm.style.display = "none");
+                size = "";
+              }
+            }
+            if(size)
+              onSizeSelect();
+            document.getElementById("size").style.display = arr.length ? "block" : "none";
+          }
+
+          function onSizeSelect() {
+            document.querySelectorAll(".ifCheck").forEach(elm => elm.style.display = "none");
+            size = document.getElementById("size").value;
+            if(size == "Consortia") {
+              document.getElementById("contact-consortial").style.display = "block";
+            }
+            else if(size == "International") {
+              document.getElementById("contact-international").style.display = "block";
+            }
+            else {
+              let price = getPrice();
+              let link = base + "entry.1695660922=" + size;
+              link = link + "&entry.1968748516=" + (price*12);
+              link = link + (arr.map(item => "&entry.167645724=" + item)).join('');
+              document.getElementById('auto-link').href = link;
+              document.querySelector("#calculated-price").innerHTML = price;
+              document.getElementById("price").style.display = "block";
+            }
+          }
+
+          function getPrice() {
+            let sum = 0;
+            for(let item of arr)
+            {
+              sum += obj[size][tools.indexOf(item)];
+            }
+            return sum;
+          }
+        </script>
+
+      </div>
+    </div>
+  </div>
+
+<!-- chunky about section -->
+  <div class="dark-bg">
+    <div class="center-col">
+      <h2 style="margin-top: 60px">We’re community owned, so we’re asking you to buy in</h2>
+      <div class="footer-team">
+        <p>Founded in 2013 by students frustrated by paywalls, we’ve worked since to help pioneer simple delivery of open access content in repositories, doing that in Interlibrary Loan and browser plugins, and more effective self-archiving workflows with funding from Arcadia Fund, Jisc, the Open Society Foundations, Center for Open Science, and SPARC.
+          <br><br>
+          Help us keep building for change, not for profit, by supporting our experimental, academy friendly model.
+        </p>
+
+        <img src="static/media-team.png">
+      </div>
+    </div>
+    <div class="center-col" style="max-width: 1024px;">
+      <p style="padding:0">As seen in:</p>
+      <div class="media">
+        <!-- <img src="static/media-sparc.png"> -->
+        <img src="static/media-nature.png">
+        <img src="static/media-sa.png">
+        <img src="static/media-guardian.png">
+        <img src="static/media-lse.png">
+        <img src="static/media-huffpost.png">
+      </div>
+    </div>
+  </div>
+
+<!-- footer -->
+  <div class="dark-bg">
+    <div class="center-col footer">
+      <div>
+        <p>Open Source • Community Controlled • Not for Profit</p>
+      </div>
+      <div>
+        <span><a href="/about">About</a></span>
+        <span><a href="/api">API</a></span>
+        <span><a href="/feedback#bug">Bugs</a></span>
+        <span><a href="https://twitter.com/OA_Button">Twitter</a></span>
+        <span><a href="/account">Account</a></span>
+      </div>
+    </div>
+  </div>

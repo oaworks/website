@@ -544,8 +544,9 @@ div.greenbottom {
     position: absolute;
     bottom: 0;
   }
+
   }
-  @media screen and (max-width: 1024px){
+@media screen and (max-width: 1024px){
     .tool-container{
       width: 49%;
     }
@@ -553,9 +554,9 @@ div.greenbottom {
       height: 440px;
     }
 
-  }
+}
 
-  @media screen and (max-width: 768px){
+@media screen and (max-width: 768px){
     .tool-container{
       width: 100%;
     }
@@ -619,4 +620,4 @@ div.greenbottom {
       padding: 30px 0;
     }
 
-  }
+}
