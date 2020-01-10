@@ -174,44 +174,57 @@ div.greenbottom {
 
 /*face cards*/
   .card-holder{
-    display: inline-block;
     background-color: grey;
     width: 100%;
   }
 
+  .card-outer{
+    display: inline-block;
+    width: 25%;
+    padding-top: 31.19%;
+  }
+
+  .card-inner{
+    position: absolute;
+  }
+/*
   .card-container{
     width: 25%;
     padding-top: 31.19%;
-    
+    display: inline-block;
     position: relative;
-  }
+  }*/
 
-  .card-gradient{
-    position: absolute;
-    bottom: 0;
-    height: 50%;
-    width: 100%;
-  }
-
-  .card{
+  /*.card{
     height: 100%;
     width: 100%;
     display: flex;
     transition: 1s;
+  }*/
+
+  .card{
+   display: flex;
+   justify-content: flex-end;
+   padding:20px; 
   }
 
   .card p{
     font-style: italic;
     text-align: right;
+    color: white;
   }
 
-  .card:hover{
+  .card h3{
+    color: white;
+  }
+
+ /* .card:hover{
     display: none;
   }
 
   .card img{
 
-  }
+  }*/
 
   .card-quote{
 
