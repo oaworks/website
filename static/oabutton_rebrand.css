@@ -220,7 +220,7 @@ div.greenbottom {
   }
 
   .card-outer:hover .layer-vanish{
-    display: none;
+    opacity: 0;
   }
 
   .card p{
@@ -229,32 +229,18 @@ div.greenbottom {
     color: white;
     padding: 0;
     margin: 0;
-    font-size: 1em;
+    font-size: 16px;
   }
 
   .card h3{
     color: white;
   }
-
- /* .card:hover{
-    display: none;
-  }
-
-  .card img{
-
-  }*/
-
   .card-quote{
-
+    display: flex; 
+    height: 100%; 
+    align-items: center;
   }
 
-  .card-name{
-
-  }
-
-  .card-gradient{
-    
-  }
 
 /*general div backgrounds*/
 
