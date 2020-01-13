@@ -773,9 +773,134 @@
 
         <h1 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">FAQ</h1>
 
-          <p>
-            This is a stub for an FAQ. It'll work just like you'd expect when we have questions.
-          </p>
+        <h1>In this FAQ</h1>
+
+            <p><strong>How, generally, does InstantILL work?</strong></p>
+            <p><strong>What systems do you work with?</strong></p>
+            <p><strong>How do you find my subscriptions?</strong></p>
+            <p><strong>How do you find Open Access?</strong></p>
+            <p><strong>How do you find article metadata?</strong></p>
+            <p><strong>How do you submit ILLs?</strong></p>
+            <p><strong>How much OA can I expect to find?</strong></p>
+            <p><strong>How do you decide what links to Open Access / Subscriptions to provide?</strong></p>
+            <p><strong>Where do I put InstantILL?</strong></p>
+            <p><strong>How can I be sure InstantILL is sustainable?</strong></p>
+            <p><strong>Who's using InstantILL?</strong></p>
+            <p><strong>What's on the roadmap?</strong></p>
+            <p><strong>Can I alter the text of InstantILL?</strong></p>
+            <p><strong>Is InstantILL a link resolver?</strong></p>
+            <p><strong>How do you handle our patrons data?</strong></p>
+            <p><br /><br /></p>
+            <ol>
+            <li>
+            <h1>How, generally, does InstantILL work?</h1>
+            </li>
+            </ol>
+            <p>A brief overview can be found <a href="https://blog.openaccessbutton.org/instantill-is-being-rolled-out-at-iupui-heres-how-it-works-8103a096df0d">here</a>. A deeper dive can be found <a href="https://scholarworks.iupui.edu/bitstream/handle/1805/20422/07-PAXTON.pdf?sequence=1&amp;isAllowed=y">here</a>.</p>
+            <ol>
+            <li>
+            <h1>What systems do you work with?</h1>
+            </li>
+            </ol>
+            <p>See the <a href="https://dev.openaccessbutton.org/instantill/setup#compatibility">compatibility list</a>.</p>
+            <ol>
+            <li>
+            <h1>How do you find my subscriptions?</h1>
+            </li>
+            </ol>
+            <p>Our goal is to find what you have subscribed to and be able to direct users on or off campus to a full-text link.</p>
+            <p>We understand your holdings by integrating with your link resolver. If it says you have access, we tell the patron that you do, and we provide them with the link. This means that you handle authentication, you don't have another system to maintain, and only you know what your patron is accessing. To set this up, all we need is your link resolver URL.</p>
+            <ol>
+            <li>
+            <h1>How do you find Open Access?</h1>
+            </li>
+            </ol>
+            <p>Sometimes, patrons need help finding an accessible copy. If there is an open access copy, we'll use the Open Access Button API to give immediate access and provide clear instructions on how it can and can't be used. We've been pioneers in discovering and delivering open access copies, and our content comes only from legal aggregators such as Unpaywall, DOAJ, and <a href="https://openaccessbutton.org/about#sources">many more</a>.</p>
+            <p>Our sources include all of the aggregated repositories in the world, hybrid articles, open access journals, and those on authors' personal pages. We don't use content from ResearchGate or Academia.edu.</p>
+            <ol>
+            <li>
+            <h1>How do you find article metadata?</h1>
+            </li>
+            </ol>
+            <p>Our goal is to identify, from reliable sources, metadata about articles so we can give ILL teams (and other services) everything they need to know. We do that using a similar approach and <a href="https://openaccessbutton.org/about#sources">sources that we use for finding Open Access</a>, plus Crossref.</p>
+            <ol>
+            <li>
+            <h1>How do you submit ILLs?</h1>
+            </li>
+            </ol>
+            <p>Our goal is to streamline the submission of your ILL forms without you needing to change systems or do complex integrations.</p>
+            <p>InstantILL works with your existing ILL systems to create requests in one of three ways. The primary method is to use a flexible OpenURL (or URL parameters, where article information is communicated through the URL), commonly supported in library systems, to send patrons to your existing ILL form with all the required fields filled out for confirmation. This means your existing ILL system handles login, submission, payment, and fulfillment, and as we never want to handle your patrons' information. If your patrons submit requests via email instead of a form, InstantILL can submit requests to any email address. Lastly, we provide a free, documented API that your technical staff can use to integrate with your ILL system.</p>
+            <p>Soon, we hope to do deep integrations over APIs with ILL systems to enable users to submit requests directly through our streamlined UI.</p>
+            <ol>
+            <li>
+            <h1>How much OA can I expect to find?</h1>
+            </li>
+            </ol>
+            <p>In short, an increasing amount. It depends on what your patrons read, what you subscribe to, and how you configure your systems to access the content. There is no one-size-fits-all answer. We've seen as <a href="https://pdxscholar.library.pdx.edu/cgi/viewcontent.cgi?article=1276&amp;context=ulib_fac">high as 23%</a> and <a href="https://blog.openaccessbutton.org/what-weve-been-doing-to-understand-how-to-put-open-access-into-ill-5d4b9a3e89e3">as low as 5%</a>. We consider 10% to be a reasonable guess, and we <a href="https://openaccessbutton.org/oasheet">built OAsheets so you can get an exact answer</a>. However, what we know is that <a href="https://blog.ourresearch.org/future-oa-key-findings/">more and more articles will be Open Access</a>, so this is increasingly important to take into account.</p>
+            <ol>
+            <li>
+            <h1>How do you decide what links to Open Access / Subscriptions to provide?</h1>
+            </li>
+            </ol>
+            <p>If we find you have subscribed access to something, we'll provide that even if we find an open access version. With both subscribed and open access content, we try to provide links directly to full text (i.e. avoiding splash pages).</p>
+            <ol>
+            <li>
+            <h1>Where do I put InstantILL?</h1>
+            </li>
+            </ol>
+            <p>Wherever you want your Interlibrary Loan form. Anywhere you can put a couple of lines of code InstantILL can be integrated. This means it can be put:</p>
+            <ul>
+            <li>On your ILL information pages</li>
+            <li>Inside your current ILL system</li>
+            <li>Inside your library search</li>
+            <li>On a link resolver page</li>
+            <li>On an alternative access page</li>
+            <li>Into the middle of a workflow (e.g. Link resolver to ILL form)</li>
+            </ul>
+            <p>And more.</p>
+            <ol>
+            <li>
+            <h1>How can I be sure InstantILL is sustainable?</h1>
+            </li>
+            </ol>
+            <p>A focus on sustainability is essential for open-source community-owned projects, and it's something that we have given a lot of thought to. While we keep a version of InstantILL free for anyone to use in order to serve our mission, we offer a paid service and strongly recommend that institutions concerned about the sustainability of the tool pay to ensure it is. Details of what you'll get in return can be found at <a href="https://instantill.org/leadership">InstantILL.org/leadership</a>. Even for those who pay, we're committed to creating more cost savings for institutions than we request back in financial support.</p>
+            <p>If we're not able to sustain the tool, then our <a href="https://openaccessbutton.org/contingency-and-succession-plan">contingency and succession plan</a> will come into effect.</p>
+            <ol>
+            <li>
+            <h1>Who's using InstantILL?</h1>
+            </li>
+            </ol>
+            <p>We partnered with IUPUI to be the first to rollout InstantILL. In late 2019, we started a beta where others could implement it. With over 400 institutions on the waiting list for InstantILL, we expect many campuses to be using it soon.</p>
+            <p>Soon, we'll have examples for you to see and people you can contact to discuss experiences with InstantILL.</p>
+            <ol>
+            <li>
+            <h1>What's on the roadmap?</h1>
+            </li>
+            </ol>
+            <p>We're continuing to build out features from your requests and user feedback &mdash; for example, supporting purchase on demand, using InstantILL as a replacement for link resolvers/library search, and enabling InstantILL to help authors make their work open access. You can track what we're planning on <a href="https://github.com/OAButton/discussion/issues?q=is%3Aopen+is%3Aissue+label%3A%221.+InstantILL%22+sort%3Aupdated-desc">Github</a>, where we openly discuss issues and enhancements to make.</p>
+            <ol>
+            <li>
+            <h1>Can I alter the text of InstantILL?</h1>
+            </li>
+            </ol>
+            <p>The goal of InstantILL's copy is to succinctly and simply explain to an end-user how to use the tool, while ensuring users understand what they're receiving. To this end, we work with experts in website copywriting and librarians, we test directly with users (through user testing), and we review real usage data. This means any sentence you see in InstantILL has likely undergone dozens of revisions and benefits from hours of real work testing. This often results in counter-intuitive results, but ones that work.</p>
+            <p>Copy is automatically customized to meet major use cases (e.g placement on front pages, link resolvers, ILL forms, etc.), significant settings changes (e.g enabling forms for books, changing ILL price and delivery times), and regional differences.</p>
+            <p>Generally, we don't allow individual libraries to further customize copy for their version given the above process helping ensure high quality and consistent copy for users while ensuring we can build and maintain InstantILL for a broad audience at a low cost without individual libraries needing to manage updates. However, we gratefully accept feedback and suggestions, and where we see strong ideas or frequent issues, we'll ensure they're resolved through the process above.</p>
+            <p>If you want deeply customized copy, you're welcome to use our APIs and code to replicate the functionality with your own preferences.</p>
+            <h1>14. Is InstantILL a link resolver?</h1>
+            <p>InstantILL is a next generation Interlibrary Loan form with a strong focus on excellent user interfaces and experience. It delivers accessible content immediately, while streamlining Interlibrary Loan requesting and management. As we speak with the library community we're hearing that it feels similar to a link resolver, and we're exploring if there is a strong desire to actively cultivate that.</p>
+            <p>Currently, we don't consider InstantILL a fully fledged link resolver because it can't directly manage what you do or don't subscribe to. We use your existing Link Resolver for that. However, we can:</p>
+            <ul>
+            <li>Be integrated into databases via OpenURL</li>
+            <li>Streamline access to research articles through subscriptions, Open Access, and interlibrary loan</li>
+            <li>Provide a new user interface for your current link resolver</li>
+            <li>Be placed between your current link resolver and ILL form to ensure patrons don't submit ILL requests for available content.</li>
+            </ul>
+            <h1>15. How do you protect our patrons' privacy?</h1>
+            <p>We value, and are strong advocates for, privacy. We don't want your patrons' data, and so we build products and business models that don't rely on collecting it.</p>
+            <p>Whenever possible, we try not to collect data on who's using InstantILL, for example we rely on your authentication systems to log patrons in. The one exception to this is when ILLs are submitted over email, where we ask for a patron's email so the library can contact them.</p>
+            <p>Analytics provided through InstantILL only give aggregated figures on how many searches have been done, and what their outcome was.</p>
+            <p>You can find more in our <a href="https://openaccessbutton.org/privacy">privacy policy</a>, and <a href="https://openaccessbutton.org/terms">terms of use</a>. If you have concerns, let us know.</p>
 
       </div>
 
