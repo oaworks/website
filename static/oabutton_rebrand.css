@@ -320,7 +320,7 @@ div.greenbottom {
     margin: 0;
   }
   .header span{
-    padding: 0 10px;
+    /*padding: 0 10px;*/
   }
 
 /* first thing the user sees at page top banner*/
@@ -450,6 +450,7 @@ div.greenbottom {
     width:80%;
     margin: auto;
     margin-top:30px;
+    padding-left:20px;
   }
 
 /*programs(basic or leadership)*/
@@ -601,7 +602,7 @@ div.greenbottom {
   }
   .footer span{
     color: white;
-    padding: 0 10px;
+    padding-right: 12px;
   }
   .footer strong{
     letter-spacing: 2px;
