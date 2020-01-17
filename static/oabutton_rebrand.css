@@ -640,6 +640,14 @@ div.greenbottom {
   }*/
 
   }
+
+@media screen and (max-width: 1024px){
+  .card-outer{
+    width:25%;
+    padding-top:41%;
+  }
+}
+
 @media screen and (max-width: 1024px){
     .tool-container{
       width: 49%;
