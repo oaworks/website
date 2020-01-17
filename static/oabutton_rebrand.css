@@ -685,7 +685,7 @@ div.greenbottom {
       height: auto;
     }
     .quote{
-      padding: 40px 0;
+      /*padding: 40px 0;*/
     }
 
     .supportedby{
@@ -740,6 +740,10 @@ div.greenbottom {
     .card-outer{
     width: 100%;
     padding-top: 120%;
+    }
+
+    .quotetext{
+      padding:0;
     }
 
 }
