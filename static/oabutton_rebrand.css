@@ -740,6 +740,13 @@ div.greenbottom {
     .card-outer{
     width: 100%;
     padding-top: 120%;
-  }
+    }
 
+}
+
+/*not on small phones*/
+@media screen and (max-width: 450px){
+  .notonsmallphones{
+    display: none;
+  }
 }
