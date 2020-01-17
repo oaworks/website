@@ -598,7 +598,7 @@ div.greenbottom {
   }
   .footer-team img{
     height: 315px;
-    padding: 0 40px;
+   /* padding: 0 40px;*/
   }
 
 /*if the footer sticks to bottom*/
