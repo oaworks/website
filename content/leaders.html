@@ -1,203 +1,228 @@
-<link rel="stylesheet" href="/static/oabutton_rebrand.css">
-<style>
-  #topnav {
-    display: none;
-  }
+<head>
+  <title>Open Access Button</title>
 
-  #footer {
-    display: none;
-  }
-  }
+  <link rel="stylesheet" href="/static/oabutton_rebrand.css">
 
-  h1 {
-    margin-top: 0;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  .btn-demo-white {
-    color: #F04717;
-  }
+  <!-- social paste -->
+  <meta property="og:image:height" content="200">
+  <meta property="og:image:width" content="200">
+  <meta property="og:description" content="Finding free, legal, full-text articles and making research available.">
+  <meta property="og:title" content="Open Access Button">
+  <meta property="og:url" content="https://openaccessbutton.org">
+  <meta property="og:image" content="https://dev.openaccessbutton.org/static/icon_OAB_200px.png">
 
-  .program {
-    color: #212f3f;
-    padding: 30px;
-  }
+  <!-- twitter paste -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="OA_Button">
+  <meta name="twitter:creator" content="OA_Button">
+  <meta name="twitter:title" content="Open Access Button">
+  <meta name="twitter:description" content="Finding free, legal, full-text articles and making research available.">
+  <meta name="twitter:image" content="https://dev.openaccessbutton.org/static/icon_OAB_200px.png">
 
-  .programcontents {
-    text-align: left;
-    padding: 30px 0;
-  }
-
-  .program li {
-    list-style-image: none;
-  }
-
-  .program h2 {
-    margin-bottom: 30px;
-  }
-
-  /* Hide the browser's default checkbox */
-  .container input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    height: 0;
-    width: 0;
-  }
-
-  input[type="radio"],
-  input[type="checkbox"] {
-    display: none;
-  }
-
-  /* Create a custom checkbox */
-  .checkmark {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 22px;
-    width: 22px;
-    border-radius: 4px;
-    border: solid 1px white;
-    /*background-color: white;*/
-  }
-
-  .check-container {
-    display: block;
-    position: relative;
-    margin-bottom: 8px;
-    padding-left: 30px;
-    cursor: pointer;
-    font-weight: normal;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-  }
-
-  /* On mouse-over, add a grey background color */
-  .check-container:hover input~.checkmark {
-    background-color: #ffffff80;
-  }
-
-  /* When the checkbox is checked, add a blue background */
-  .check-container input:checked~.checkmark {
-    background-color: white;
-  }
-
-  /* Create the checkmark/indicator (hidden when not checked) */
-  .checkmark:after {
-    content: "";
-    position: absolute;
-    display: none;
-  }
-
-  /* Show the checkmark when checked */
-  .check-container input:checked~.checkmark:after {
-    display: block;
-  }
-
-  /* Style the checkmark/indicator */
-  .check-container .checkmark:after {
-    left: 9px;
-    top: 5px;
-    width: 5px;
-    height: 10px;
-    border: solid #F04717;
-    border-width: 0 3px 3px 0;
-    -webkit-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    transform: rotate(45deg);
-  }
-
-  .dropdown {
-    display: block;
-    width: 100%;
-    height: 55px;
-    color: white;
-    border: solid 1px white;
-    padding-left: 15px;
-    margin: 30px 0 0 0;
-    -webkit-appearance: none;
-    background: url(static/dropdown-triangle.png) no-repeat right;
-  }
-
-
-  @media screen and (max-width: 768px) {
-    .quote {
-      padding: 40px 30px;
+  <style>
+    #topnav {
+      display: none;
     }
 
-    .pitch {
-      padding: 90px 0;
+    #footer {
+      display: none;
     }
-  }
+    }
 
-  /* ANIMATIONS */
-  .animated {
-    -webkit-animation-duration: 0.5s;
-    animation-duration: 0.5s;
-    -webkit-animation-fill-mode: both;
-    animation-fill-mode: both;
-  }
+    h1 {
+      margin-top: 0;
+    }
 
-  @-webkit-keyframes zoomIn {
-    from {
+    .btn-demo-white {
+      color: #F04717;
+    }
+
+    .program {
+      color: #212f3f;
+      padding: 30px;
+    }
+
+    .programcontents {
+      text-align: left;
+      padding: 30px 0;
+    }
+
+    .program li {
+      list-style-image: none;
+    }
+
+    .program h2 {
+      margin-bottom: 30px;
+    }
+
+    /* Hide the browser's default checkbox */
+    .container input {
+      position: absolute;
       opacity: 0;
+      cursor: pointer;
       height: 0;
-      -webkit-transform: scale3d(0.3, 0.3, 0.3);
-      transform: scale3d(0.3, 0.3, 0.3);
+      width: 0;
     }
 
-    50% {
+    input[type="radio"],
+    input[type="checkbox"] {
+      display: none;
+    }
+
+    /* Create a custom checkbox */
+    .checkmark {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 22px;
+      width: 22px;
+      border-radius: 4px;
+      border: solid 1px white;
+      /*background-color: white;*/
+    }
+
+    .check-container {
+      display: block;
+      position: relative;
+      margin-bottom: 8px;
+      padding-left: 30px;
+      cursor: pointer;
+      font-weight: normal;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    /* On mouse-over, add a grey background color */
+    .check-container:hover input~.checkmark {
+      background-color: #ffffff80;
+    }
+
+    /* When the checkbox is checked, add a blue background */
+    .check-container input:checked~.checkmark {
+      background-color: white;
+    }
+
+    /* Create the checkmark/indicator (hidden when not checked) */
+    .checkmark:after {
+      content: "";
+      position: absolute;
+      display: none;
+    }
+
+    /* Show the checkmark when checked */
+    .check-container input:checked~.checkmark:after {
+      display: block;
+    }
+
+    /* Style the checkmark/indicator */
+    .check-container .checkmark:after {
+      left: 9px;
+      top: 5px;
+      width: 5px;
+      height: 10px;
+      border: solid #F04717;
+      border-width: 0 3px 3px 0;
+      -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+      transform: rotate(45deg);
+    }
+
+    .dropdown {
+      display: block;
+      width: 100%;
       height: 55px;
-      opacity: 1;
-    }
-  }
-
-  @keyframes zoomIn {
-    from {
-      opacity: 0;
-      height: 0;
-      -webkit-transform: scale3d(0.3, 0.3, 0.3);
-      transform: scale3d(0.3, 0.3, 0.3);
+      color: white;
+      border: solid 1px white;
+      padding-left: 15px;
+      margin: 30px 0 0 0;
+      -webkit-appearance: none;
+      background: url(static/dropdown-triangle.png) no-repeat right;
     }
 
-    50% {
-      height: 55px;
-      opacity: 1;
-    }
-  }
 
-  .zoomIn {
-    -webkit-animation-name: zoomIn;
-    animation-name: zoomIn;
-  }
+    @media screen and (max-width: 768px) {
+      .quote {
+        padding: 40px 30px;
+      }
 
-  @-webkit-keyframes fadeIn {
-    from {
-      opacity: 0;
+      .pitch {
+        padding: 90px 0;
+      }
     }
 
-    to {
-      opacity: 1;
-    }
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
+    /* ANIMATIONS */
+    .animated {
+      -webkit-animation-duration: 0.5s;
+      animation-duration: 0.5s;
+      -webkit-animation-fill-mode: both;
+      animation-fill-mode: both;
     }
 
-    to {
-      opacity: 1;
-    }
-  }
+    @-webkit-keyframes zoomIn {
+      from {
+        opacity: 0;
+        height: 0;
+        -webkit-transform: scale3d(0.3, 0.3, 0.3);
+        transform: scale3d(0.3, 0.3, 0.3);
+      }
 
-  .fadeIn {
-    -webkit-animation-name: fadeIn;
-    animation-name: fadeIn;
-  }
-</style>
+      50% {
+        height: 55px;
+        opacity: 1;
+      }
+    }
+
+    @keyframes zoomIn {
+      from {
+        opacity: 0;
+        height: 0;
+        -webkit-transform: scale3d(0.3, 0.3, 0.3);
+        transform: scale3d(0.3, 0.3, 0.3);
+      }
+
+      50% {
+        height: 55px;
+        opacity: 1;
+      }
+    }
+
+    .zoomIn {
+      -webkit-animation-name: zoomIn;
+      animation-name: zoomIn;
+    }
+
+    @-webkit-keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    .fadeIn {
+      -webkit-animation-name: fadeIn;
+      animation-name: fadeIn;
+    }
+  </style>
+</head>
+
 
 <!-- header -->
 
@@ -338,7 +363,7 @@
     </div>
   </div>
   </a>
-  
+
 </div>
 
 
