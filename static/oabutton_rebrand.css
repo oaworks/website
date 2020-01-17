@@ -683,6 +683,7 @@ div.greenbottom {
     .unilogo{
       width:49%;
       height: auto;
+      padding: 0;
     }
     .quote{
       /*padding: 40px 0;*/
