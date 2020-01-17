@@ -739,8 +739,12 @@ div.greenbottom {
 
     .card-outer{
     width: 100%;
-    padding-top: 120%;
+    padding-top: 100%;
     }
+
+    /*.card-logo img{
+      max-height: 20%;
+    }*/
 
     .quotetext{
       padding:0;
