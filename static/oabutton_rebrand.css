@@ -234,7 +234,21 @@ div.greenbottom {
 
   .card-logo img{
     max-height: 15%;
+    max-width: 100%;
     width: auto;
+  }
+
+  .supportedby{
+    display: flex;
+    padding: 0 30px 90px 30px;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+  }
+
+  .supportedby h4{
+    padding-top: 20px;
+    padding-bottom: 30px;
   }
 
 /*general div backgrounds*/
@@ -647,6 +661,11 @@ div.greenbottom {
     .quote{
       padding: 40px 0;
     }
+
+    .supportedby{
+    padding: 0 0px 40px 0px;
+    }
+
     .featurebox{
       width:100%;
       height: 100%;
