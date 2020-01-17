@@ -641,7 +641,7 @@ div.greenbottom {
 
   }
 
-@media screen and (max-width: 1024px){
+@media screen and (max-width: 1400px){
   .card-outer{
     width:25%;
     padding-top:41%;
