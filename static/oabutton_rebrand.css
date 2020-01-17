@@ -607,7 +607,7 @@ div.greenbottom {
     letter-spacing: 2px;
   }
   .footer p{
-    margin: 0 10px;
+    margin: 0 6px;
   }
 
   .footer-team{
@@ -628,11 +628,16 @@ div.greenbottom {
   }
 
 /*if the footer sticks to bottom*/
-@media screen and (min-width: 640px) {
   .stick-to-bottom{
     position: absolute;
     bottom: 0;
   }
+
+@media screen and (min-width: 640px) {
+/*  .stick-to-bottom{
+    position: absolute;
+    bottom: 0;
+  }*/
 
   }
 @media screen and (max-width: 1024px){
