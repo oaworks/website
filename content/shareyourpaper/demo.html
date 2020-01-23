@@ -1,0 +1,220 @@
+<head>
+  <title>Shareyourpaper.org</title>
+</head>
+<link rel="stylesheet" href="/static/oabutton_rebrand.css"> <!-- gets the new css (still also uses the old css, just overwrites where necessary) -->
+
+<style>
+  #topnav {
+    display: none;
+  }
+  #footer {
+    display: none;
+  }
+
+  .form-control {
+    color:#428BCA;
+    border:2px solid #428BCA;
+  }
+
+  a {
+    color:#428BCA;
+    font-weight:normal;
+  }
+  a:hover {
+    color:#428BCA;
+  }
+
+  .btn-hollow-blue:hover {
+    color: #ECF3FA;
+  }
+
+  p{
+    padding:0;
+    margin: 10px 0;
+  }
+
+  h2{
+    text-align: left;
+  }
+
+  .alert-new {
+    width: 100%;
+    padding: 10px;
+    background-color: #428BCA;
+    color: white;
+    text-align: center !important;
+  }
+  .btn-primary {
+    background-color:#428BCA;
+    border-color:#428BCA;
+    border-radius:0px;
+    color:#ffffff;
+    width:49%;
+    font-weight:bold;
+    padding-top:10px;
+    padding-bottom:10px;
+  }
+  .btn-primary:hover {
+    background-color:#428BCA;
+    border-color:#428BCA;
+    color:#ffffff;
+  }
+
+</style>
+
+
+<div class="alert-new">
+  <div class="center-col">
+    <div>
+      <p style="text-align:center;">
+        Shareyourpaper.org is currently in Alpha. Please <a href="" class="blue" style="color:white"><b>let us know</b></a> how setup goes.
+      </p>
+    </div>
+  </div>
+</div>
+
+
+<div id="demo" class="container-fluid">
+
+  <div id="menu" class="section">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-1 content">
+        <div id="shareyourpaper"></div>
+      </div>
+
+      <div class="col-md-4 col-md-offset-1 blue">
+        <div class="blueery">
+          <h2>Demo</h2>
+          
+          <p>To demo the different kinds of shareyourpaper responses and actions. Use "start demo" button below for main action, or options here for testing:</p>
+          
+          <p>
+            <ul>
+              <li>Start a redeposit with <a href="#" class="preview" val="10.1186/1758-2946-3-47">10.1186/1758-2946-3-47</a> then choose "still want it in scholarworks" to see the redeposit flow.</li>
+              <li>A DOI that shows full info about not submitting publisher PDF etc: <a href="#" class="preview" val="10.1126/scitranslmed.3008973">10.1126/scitranslmed.3008973</a></li>
+              <li>A DOI where publisher PDF would be allowed: <a href="#" class="preview" val="10.1063/1.4937158">10.1063/1.4937158</a></li>
+            </ul>
+          </p>
+
+          <div class="bluebottom">
+            <p><a class="btn btn-demo-blue view preview pull" href="#general">Start demo</a></p>
+            <p><a class="blue" href="/feedback#general">Feedback</a> | <a class="blue view" href="#faq">FAQ</a> | <a class="blue" href="/feedback#bug"> Report Issue</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="general" class="section">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-1 content">
+
+      </div>
+
+      <div class="col-md-4 col-md-offset-1 blue">
+        <div class="blueery">
+          <p><a class="blue view pull" href="#menu"><span class="glyphicon glyphicon-arrow-left"></span> Go to Menu</a></p>
+          <h2>A demo result</h2>
+          
+          <p>Try uploading a file. It doesn't matter what file, this is just a demo.</p>
+          
+          <p>But what if you had submitted the wrong thing! Click below to find out...</p>
+
+        </div>
+        <div class="bluebottom">
+          <p><a class="btn btn-demo-blue" href="#wrong" id="fakedeposit">Mock submit a wrong thing</a></p>
+          <p><a class="blue" href="/feedback#general">Feedback</a> | <a class="blue view" href="#faq">FAQ</a> | <a class="blue" href="/feedback#bug"> Report Issue</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="wrong" class="section">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-1 content">
+
+      </div>
+
+      <div class="col-md-4 col-md-offset-1 blue">
+        <div class="blueery">
+          <p><a class="blue view pull" href="#menu"><span class="glyphicon glyphicon-arrow-left"></span> Go to Menu</a></p>
+          <h2>A demo wrong file submission</h2>
+          
+          <p>Oh dear look what happened...</p>
+          
+          <p>Next - another fake doi that results in the dark deposit screen, meaning it can't actually be deposited but we can still notify the institutional repo who will get in touch with the user to put in their local repo "dark"</p>
+
+        </div>
+        <div class="bluebottom">
+          <p><a class="btn btn-demo-blue view preview pull" href="#dark" val="10.1234/oab-syp-dark">Cause a dark deposit</a></p>
+          <p><a class="blue" href="/feedback#general">Feedback</a> | <a class="blue view" href="#faq">FAQ</a> | <a class="blue" href="/feedback#bug"> Report Issue</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="dark" class="section">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-1 content">
+
+      </div>
+
+      <div class="col-md-4 col-md-offset-1 blue">
+        <div class="blueery">
+          <p><a class="blue view pull" href="#menu"><span class="glyphicon glyphicon-arrow-left"></span> Go to Menu</a></p>
+          <h2>A demo of a dark deposit option</h2>
+          
+          <p>There you go, you can get your institution to contact you to put in the local repo</p>
+
+        </div>
+        <div class="bluebottom">
+          <p><a class="blue" href="/feedback#general">Feedback</a> | <a class="blue view" href="#faq">FAQ</a> | <a class="blue" href="/feedback#bug"> Report Issue</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+
+<script src="/static/shareyourpaper.js"></script>
+
+<script>
+jQuery(document).ready(function() {
+  $('#topnav').remove();
+  $('#footer').remove();
+});
+</script>
+
+<script src="/static/shareyourpaper_ui.js"></script>
+
+<script>
+jQuery(document).ready(function() {
+
+  if ($('#demo').height() < $(window).height()) $('#demo').css({'min-height':$(window).height()+'px'});
+  $('div.blue').css({'min-height':$(window).height()+'px'});
+  var diff = Math.floor(($(window).height() - $('div.content:visible').height())/4);
+  $('div.content:visible').css({'padding-top':diff+'px'});
+
+  /*$(document).ajaxComplete(function(e,xhr) {
+    if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.availability !== undefined) {
+      _ill_response = xhr.responseJSON.data;
+      $('div.content:visible').css({'padding-top':'100px'});
+      $('.oabutton_ill').off();
+    }
+  });*/
+
+  var fakedeposit = function(e) {
+    e.preventDefault();
+    view(undefined,'#wrong');
+    _restart();
+    setTimeout(function() { _fake_deposit(); },300);
+  }
+  $('#fakedeposit').bind('click',fakedeposit);
+  
+  shareyourpaper({uid:(api.indexOf('dev.') !== -1 ? 'qZooaHWRz9NLFNcgR' : 'eZwJ83xp3oZDaec86'), api:api, css: false});
+
+});
+</script>

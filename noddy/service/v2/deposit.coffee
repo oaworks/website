@@ -5,11 +5,11 @@ API.add 'service/oab/deposit',
   get: 
     authOptional: true
     action: () -> 
-      return API.service.oab.deposit undefined, this.queryParams
+      return API.service.oab.deposit undefined, this.queryParams, undefined, this.userId
   post: 
     authOptional: true
     action: () -> 
-      return API.service.oab.deposit undefined, this.bodyParams, this.request.files
+      return API.service.oab.deposit undefined, this.bodyParams, this.request.files, this.userId
 
 API.add 'service/oab/deposit/:did',
   get: 
@@ -88,7 +88,15 @@ API.add 'service/oab/receive/:rid/:holdrefuse',
 
 
 
-API.service.oab.deposit = (d,options={},files) ->
+API.service.oab.deposit = (d,options={},files,uid) ->
+  console.log d
+  console.log options
+  console.log files
+  if options.metadata?.doi? and options.metadata.doi.indexOf('10.1234/oab-syp-') is 0
+    dm = {demo: true}
+    dm.zenodo = {url: 'https://zenodo.org/record/DEMO'} if options.metadata.doi is '10.1234/oab-syp-aam' # without this the UI will treat it as if a wrong version was given
+    return dm
+    
   if typeof d is 'string' # a catalogue ID
     d = oab_catalogue.get d
   else
@@ -97,49 +105,118 @@ API.service.oab.deposit = (d,options={},files) ->
       fnd = API.service.oab.find d ? options.metadata ? options # this will create a catalogue record out of whatever is provided, and also checks to see if thing is available already
       d = oab_catalogue.get fnd.catalogue
   return 400 if not d?
-  
+
   d.deposit ?= []
   dep = {createdAt: Date.now()}
   dep.created_date = moment(dep.createdAt, "x").format "YYYY-MM-DD HHmm.ss"
   dep.pilot = options.pilot if options.pilot # are pilot and live going to be needed for shareyourpaper?
   dep.live = options.pilot if options.live
-  dep.filename = files[0].filename if files? and files.length
+  dep.name = files[0].filename if files? and files.length
   dep.email = options.email if options.email
-  # later will test file and permissions and deposit to zenodo if possible
-  if options.from
-    dep.from = options.from
+  dep.from = options.from if options.from
+  dep.from ?= uid if uid
+  dep.plugin = options.plugin if options.plugin
+
+  perms = API.service.oab.permissions d, files, undefined, options.confirmed # if confirmed is true the submitter has confirmed this is the right file. If confirmed is the checksum this is a resubmit by an admin
+  if perms.file?.acceptable
+    zn = {}
+    zn.content = files[0].data
+    zn.name = perms.file.name
+    zn.publish = API.settings.service.openaccessbutton?.deposit?.zenodo is true
+    creators = []
+    try
+      for a in d.metadata.author
+        creators.push({name: a.family + (if a.given then ', ' + a.given else '')}) if a.family?
+    creators = [{name:'Unknown'}] if creators.length is 0
+    description = perms.statement ? (if d.metadata.doi? then 'The publisher\'s final version of this work can be found at https://doi.org/' + d.metadata.doi else '')
+    description += ' Deposited by shareyourpaper.org and openaccessbutton.org. We\'ve taken reasonable steps to ensure this content doesn\'t violate copyright, however, if you think it does you can request a takedown by emailing help@openaccessbutton.org.'
+    meta =
+      title: d.metadata.title ? 'Unknown',
+      description: description.trim(),
+      creators: creators,
+      doi: d.metadata.doi,
+      version: if perms.file.version is 'preprint' then 'submittedVersion' else if perms.file.version is 'postprint' then 'acceptedVersion' else if perms.file.version is 'publisher pdf' then 'publishedVersion' else 'AAM',
+      journal_title: d.metadata.journal
+      journal_volume: d.metadata.volume
+      journal_issue: d.metadata.issue
+      journal_page: d.metadata.page
+    meta.keywords = d.metadata.keywords if _.isArray(d.metadata.keywords) and d.metadata.keywords.length and typeof d.metadata.keywords[0] is 'string'
+    meta.prereserve_doi = true if API.settings.service.openaccessbutton?.zenodo?.prereserve_doi and not d.metadata.doi?
+    meta['related_identifiers'] = [{relation: (if meta.version is 'AAM' or meta.version is 'preprint' then 'isPreviousVersionOf' else 'isIdenticalTo'), identifier: d.metadata.doi}] if d.metadata.doi?
+    meta['access_right'] = 'open'
+    meta.license = perms.file.licence ? 'cc-by'
+    if perms.embargo?
+      meta['access_right'] = 'embargoed'
+      meta['embargo_date'] = perms.embargo # check date format required by zenodo
+    try meta['publication_date'] = d.metadata.published if d.metadata.published? and typeof d.metadata.published is 'string'
+    if dep.from and (options.community or uc = API.service.oab.deposit.config dep.from)
+      if options.community
+        uc ?= {}
+        uc.communities = []
+        uc.communities.push({identifier: ccm}) for ccm in options.community.split ','
+      if uc.community? or uc.communities?
+        uc.communities ?= uc.community
+        uc.communities = [uc.communities] if typeof uc.communities is 'string'
+        meta['communities'] = []
+        meta.communities.push(if typeof com is 'string' then {identifier: com} else com) for com in uc.communities
+    z = API.use.zenodo.deposition.create meta, up, API.settings.service.openaccessbutton?.zenodo?.token
+    if z.id
+      dep.zenodo = {}
+      dep.zenodo.id = z.id
+      dep.zenodo.url = 'https://zenodo.org/record/' + z.id
+      dep.zenodo.doi = z.metadata.prereserve_doi.doi if z.metadata?.prereserve_doi?.doi?
+      dep.zenodo.file = '' # TODO get the file URL directly - scrape if it is not provided by the zenodo deposit data
+    else
+      dep.error = 'Deposit to Zenodo failed'
+      try dep.error += ': ' + JSON.stringify z
+
+  dep.version = perms.file.version if perms.file?.version?
+  if perms.embargo
+    dep.embargo = perms.embargo
+    dep.type = 'embargoed'
+  else if dep.zenodo?.id
+    dep.type = 'zenodo'
+  else if options.from
     dep.type = if options.redeposit then 'redeposit' else if files? and files.length then 'forward' else 'dark'
   else
     dep.type = 'review'
   d.deposit.push dep
-  oab_catalogue.update d._id, deposit: d.deposit
+  dd = {deposit: d.deposit, permissions: perms}
+  oab_catalogue.update d._id, dd
 
   tos = API.settings.service.openaccessbutton.notify.deposit ? ['mark@cottagelabs.com','joe@righttoresearch.org']
   if options.from
     iacc = API.accounts.retrieve options.from
     tos.push iacc.email ? iacc.emails[0].address # the institutional user may set a config value to use as the contact email address but for now it is the account address
 
-  text = 'This is an example email that we will send to an institution for ' + dep.type + ' deposit\n\n'
+  text = 'This is an example email that we will send to an institution or our own admins for ' + dep.type + ' deposit\n\n'
   text += 'File called ' +  files[0].filename + ' should be attached.\n\n' if files? and files.length
+  text += 'This file needs reviewed as we could not automatically judge if it is suitable for this type of deposit.\n\n' if dep.type is 'review'
+  text += 'The attached file is for local deposit to the institutional repository.\n\n' if dep.type is 'forward'
+  text += 'This email notifies the institution that the depositor wishes to deposit their article with the institutional repository, but we do not yet have the article - the institution should contact the depositor directly.\n\n' if dep.typ is 'dark'
+  text += 'We have deposited this in Zenodo.\n\n' if dep.type is 'zenodo'
+  text += 'We have deposited this in Zenodo under embargo until ' + perms.embargo + '\n\n' if dep.type is 'embargoed'
   text += 'Author email to contact: \n' + options.email + '\n\n' if options.email 
   text += 'There is already an open URL for this article at \n' + options.redeposit + '\n\n' if typeof options.redeposit is 'string'
-  text += 'METADATA:\n' + JSON.stringify(d.metadata,undefined,2) + '\n\nPERMISSIONS:\n' + JSON.stringify(d.permissions,undefined,2)
+  text += 'METADATA:\n' + JSON.stringify(d.metadata,undefined,2) + '\n\nPERMISSIONS:\n' + JSON.stringify(perms,undefined,2) + '\n\nDEPOSIT:\n' + JSON.stringify(dep,undefined,2)
 
+  # the email could have a link back to a deposit of this article with a confirmed param that is the checksum, which allows an admin override
+  # if the file given is not a version that is allowed, create a dark deposit but delay emails by six hours, and cancel if a different or confirmed version is received in the meantime
   API.service.oab.mail
     from: 'deposits@openaccessbutton.org'
     to: tos
-    subject: dep.type + ' deposit'
+    subject: dep.type + ' deposit ' + dep.createdAt
     text: text
-    attachments: (if files? then [{filename: files[0].filename, content: files[0].data}] else undefined)
-    #vars: vars # later this may become a template call
-    #template: {filename: ''}
+    attachments: (if _.isArray(files) and files.length then [{filename: files[0].filename, content: files[0].data}] else undefined)
 
   # eventually this could also close any open requests for the same item, but that has not been prioritised to be done yet
-  return d
+  dep.permissions = perms
+  dep.metadata = d.metadata
+  return dep
 
 API.service.oab.deposit.config = (user, config) ->
   user = Users.get(user) if typeof user is 'string'
-  if config?
+  if typeof user is 'object' and config?
     update = {}
     for k in [] # the fields allowed in deposit config will be listed here
       update[k] = config[k] if config[k]?
@@ -155,6 +232,8 @@ API.service.oab.deposit.config = (user, config) ->
     return rs
   catch
     return {}
+
+
 
 # for legacy - remove once refactored request and OAB receive
 API.service.oab.receive = (rid,files,url,title,description,firstname,lastname,cron,admin) ->

@@ -223,35 +223,40 @@ noddy.tokenSuccess = function(data) {
   }
 }
 noddy.tokenProgress = function() {
-  if (noddy.getCookie(noddy.cookie) && noddy.user.login !== 'success') window.location = window.location.href; // refreshes a page sitting waiting if login is completed on another page such as by clicking the login link on a login email opening another page where login completes
-  var progress = noddy.getCookie('noddyprogress');
-  var timeout = (new Date()).valueOf() - 180000;
-  if (progress && progress.createdAt > timeout) {
-    var opts = {
-      type:'GET',
-      url: noddy.api + '/mail/progress/' + progress.mid,
-      success: function(event) {
-        try {
-          noddy.user.token = event;
-          if (event === 'delivered') $('#noddyToken').attr('placeholder','Delivered to ' + progress.email).css('border-color','orange');
-          if (event === 'opened') $('#noddyToken').attr('placeholder','Email opened by ' + progress.email).css('border-color','green');
-          if (event === 'dropped') {
-            $('#noddyToken').attr('placeholder','Enter your email address').css('border-color','#ccc');
-            $('.noddyLogin').show();
-            $('.noddyToken').hide();
-            $('.noddyMessage').html('Email failed to deliver to ' + progress.email + '. Please try again.');
-            clearInterval(progress.interval);
-            noddy.removeCookie('noddyprogress');
-          }
-        } catch(err) {}
-      }
-    }
-    $.ajax(opts);
-  } else if (progress && progress.interval) {
-    clearInterval(progress.interval);
+  if (noddy.getCookie(noddy.cookie) && noddy.user.login !== 'success') {
+    // refreshes a page sitting waiting if login is completed on another page
     noddy.removeCookie('noddyprogress');
-  } else if (noddy.progress_interval) {
-    clearInterval(noddy.progress_interval);
+    window.location = window.location.href;
+  } else {
+    var progress = noddy.getCookie('noddyprogress');
+    var timeout = (new Date()).valueOf() - 180000;
+    if (progress && progress.createdAt > timeout) {
+      var opts = {
+        type:'GET',
+        url: noddy.api + '/mail/progress/' + progress.mid,
+        success: function(event) {
+          try {
+            noddy.user.token = event;
+            if (event === 'delivered') $('#noddyToken').attr('placeholder','Delivered to ' + progress.email).css('border-color','orange');
+            if (event === 'opened') $('#noddyToken').attr('placeholder','Email opened by ' + progress.email).css('border-color','green');
+            if (event === 'dropped') {
+              $('#noddyToken').attr('placeholder','Enter your email address').css('border-color','#ccc');
+              $('.noddyLogin').show();
+              $('.noddyToken').hide();
+              $('.noddyMessage').html('Email failed to deliver to ' + progress.email + '. Please try again.');
+              clearInterval(progress.interval);
+              noddy.removeCookie('noddyprogress');
+            }
+          } catch(err) {}
+        }
+      }
+      $.ajax(opts);
+    } else if (progress && progress.interval) {
+      clearInterval(progress.interval);
+      noddy.removeCookie('noddyprogress');
+    } else if (noddy.progress_interval) {
+      clearInterval(noddy.progress_interval);
+    }
   }
 }
 noddy.token = function(e) {

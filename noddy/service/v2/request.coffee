@@ -205,9 +205,17 @@ API.service.oab.request = (req,uacc,fast,notify=true) ->
     if req.title? and typeof req.title is 'string' and req.title.length > 0 and texist = oab_request.find {title:req.title,type:req.type}
       texist.cache = true
       return texist
-  else if exists = oab_request.find {url:req.url,type:req.type}
-    exists.cache = true
-    return exists
+  else if req.doi or req.title or req.url
+    eq = {type: req.type}
+    if req.doi
+      eq.doi = req.doi
+    else if req.title
+      eq.title = req.title
+    else
+      eq.url = req.url
+    if exists = oab_request.find eq
+      exists.cache = true
+      return exists
   return false if not req.test and API.service.oab.blacklist req.url
   req.doi = decodeURIComponent(req.doi) if req.doi
   rid = if req._id and oab_request.get(req._id) then req._id else oab_request.insert {url:req.url,type:req.type,_id:req._id}

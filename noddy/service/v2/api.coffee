@@ -44,7 +44,7 @@ API.add 'service/oab/validate',
       else
         v = API.mail.validate(this.queryParams.email, API.settings.service.openaccessbutton.mail.pubkey)
         if v.is_valid
-          if this.queryParams.domained
+          if this.queryParams.domained and this.queryParams.domained not in ['qZooaHWRz9NLFNcgR','eZwJ83xp3oZDaec86']
             iacc = API.accounts.retrieve this.queryParams.domained
             return 'baddomain' if not iacc?
             eml = iacc.email ? iacc.emails[0].address # may also later have a config where the allowed domains can be listed but for now just match the domain of the account holder
@@ -91,6 +91,21 @@ API.add 'service/oab/dnr',
 API.add 'service/oab/bug',
   post: () ->
     whoto = ['help@openaccessbutton.org']
+    text = ''
+    for k of this.request.body
+      text += k + ': ' + this.request.body[k] + '\n\n'
+    subject = '[OAB forms]'
+    if this.request.body?.form is 'uninstall' # wrong bug general other
+      subject += ' Uninstall notice'
+    else if this.request.body?.form is 'wrong'
+      subject += ' Wrong article'
+    else if this.request.body?.form is 'bug'
+      subject += ' Bug'
+    else if this.request.body?.form is 'general'
+      subject += ' General'
+    else
+      subject += ' Other'
+    subject += ' ' + Date.now()
     try
       if this.request.body?.form is 'wrong'
         whoto.push 'requests@openaccessbutton.org'
@@ -98,8 +113,8 @@ API.add 'service/oab/bug',
       service: 'openaccessbutton',
       from: 'help@openaccessbutton.org',
       to: whoto,
-      subject: 'Feedback form submission',
-      text: JSON.stringify(this.request.body,undefined,2)
+      subject: subject,
+      text: text
     }
     return {
       statusCode: 302,
@@ -176,12 +191,12 @@ API.service.oab.stats = (tool) ->
   rgs = {requests: {date_histogram: {field: "createdAt", interval: "week"}}}
   rgs.requests2yrs = {aggs: {vals: {date_histogram: {field: "createdAt", interval: "week"}}}, filter: {range: {createdAt: {gt: twoyearsago }}}}
   rgs.stories2yrs = {aggs: {vals: {date_histogram: {field: "createdAt", interval: "week"}}}, filter: {bool: {must: [{exists: {field: 'story'}}, {range: {createdAt: {gt: twoyearsago }}}]}}}
-  rgs.received2yrs = {aggs: {vals: {date_histogram: {field: "received.data", interval: "week"}}}, filter: {bool: {must: [{term: {status: 'received'}}, {range: {createdAt: {gt: twoyearsago }}}]}}}
-  ra = oab_request.search q, {size: 0, aggregations: rgs}
-  res.requests.requests = ra.aggregations.requests.buckets
-  res.requests.requests2yrs = ra.aggregations.requests2yrs.vals.buckets
-  res.requests.stories2yrs = ra.aggregations.stories2yrs.vals.buckets
-  res.requests.received2yrs = ra.aggregations.received2yrs.vals.buckets
+  rgs.received2yrs = {aggs: {vals: {date_histogram: {field: "received.date", interval: "week"}}}, filter: {bool: {must: [{term: {status: 'received'}}, {range: {createdAt: {gt: twoyearsago }}}]}}}
+  #ra = oab_request.search q, {size: 0, aggregations: rgs}
+  #res.requests.requests = ra.aggregations.requests.buckets
+  #res.requests.requests2yrs = ra.aggregations.requests2yrs.vals.buckets
+  #res.requests.stories2yrs = ra.aggregations.stories2yrs.vals.buckets
+  #res.requests.received2yrs = ra.aggregations.received2yrs.vals.buckets
 
   # query finds
   tmwk = moment().startOf('week').valueOf() # timestamp up to a week ago

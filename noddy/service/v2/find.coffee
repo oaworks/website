@@ -211,13 +211,14 @@ API.service.oab.find = (options={}, metadata={}, content) ->
   res.wrong = options.wrong if options.wrong?
   res.found = {}
 
-  # special cases for instantill demo and exlibris - dev and live demo accounts that always return a fixed answer
-  if options.plugin is 'instantill' and (metadata.doi is '10.1234/567890' or metadata.title is 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL') and options.from in ['qZooaHWRz9NLFNcgR','eZwJ83xp3oZDaec86'] 
+  # special cases for instantill/shareyourpaper/other demos and exlibris - dev and live demo accounts that always return a fixed answer
+  if (options.plugin is 'instantill' or options.plugin is 'shareyourpaper') and (metadata.doi is '10.1234/567890' or (metadata.doi? and metadata.doi.indexOf('10.1234/oab-syp-') is 0) or metadata.title is 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL') and options.from in ['qZooaHWRz9NLFNcgR','eZwJ83xp3oZDaec86'] 
     res.metadata = {title: 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL', year: '2019', doi: 'https://scholarworks.iupui.edu/bitstream/handle/1805/20422/07-PAXTON.pdf?sequence=1&isAllowed=y'}
     res.metadata.journal = 'Proceedings of the 16th IFLA ILDS conference: Beyond the paywall - Resource sharing in a disruptive ecosystem'
     res.metadata.author = [{given: 'Mike', family: 'Paxton'}, {given: 'Gary', family: 'Maixner III'}, {given: 'Joseph', family: 'McArthur'}, {given: 'Tina', family: 'Baich'}]
     res.ill = {openurl: ""}
     res.ill.subscription = {findings:{}, uid: options.from, lookups:[], error:[], url: 'https://scholarworks.iupui.edu/bitstream/handle/1805/20422/07-PAXTON.pdf?sequence=1&isAllowed=y', demo: true}
+    res.permissions = API.service.oab.permissions(metadata) if options.permissions
     return res
   if not metadata.title and content and typeof options.url is 'string' and (options.url.indexOf('alma.exlibrisgroup.com') isnt -1 or options.url.indexOf('/exlibristest') isnt -1)
     # switch exlibris URLs for titles, which the scraper knows how to extract, because the exlibris url would always be the same
@@ -256,21 +257,27 @@ API.service.oab.find = (options={}, metadata={}, content) ->
       res.checked.push('crossref') if 'crossref' not in res.checked
       try
         cr ?= API.use.crossref.works.doi metadata.doi
-        try metadata.title = cr.title[0] if cr.title.length
-        try metadata.doi = cr.DOI if cr.DOI?
-        try metadata.doi = cr.doi if cr.doi? # just in case
-        try metadata.crossref_type = cr.type
-        try metadata.author = cr.author if cr.author?
-        try metadata.journal = cr['container-title'][0] if cr['container-title'].length
-        try metadata.issue = cr.issue if cr.issue?
-        try metadata.volume = cr.volume if cr.volume?
-        try metadata.page = cr.page.toString() if cr.page?
-        try metadata.issn ?= cr.ISSN[0] if cr.ISSN?
-        #try metadata.subject = cr.subject if cr.subject? # not sure if this is present in crossref... check anyway - commented out because getting clashes with the mapping
-        try metadata.publisher = cr.publisher if cr.publisher?
-        try metadata.year ?= cr['published-print']['date-parts'][0][0] if cr['published-print']['date-parts'][0][0].length
-        try metadata.year ?= cr.created['date-time'].split('-')[0]
-        try metadata.published = if cr['published-online']?['date-parts'] and cr['published-online']['date-parts'][0].length is 3 then cr['published-online']['date-parts'][0].join('-') else if cr['published-print']?['date-parts'] and cr['published-print']?['date-parts'][0].length is 3 then cr['published-print']['date-parts'][0].join('-') else undefined
+        if cr is undefined
+          if metadata.doi?
+            delete options.url if options.url.indexOf('doi.org/' + metadata.doi) isnt -1
+            delete metadata.doi
+            delete options.doi # don't allow the user-provided data to later override if we can't validate it on crossref
+        else
+          try metadata.title = cr.title[0] if cr.title.length
+          try metadata.doi = cr.DOI if cr.DOI?
+          try metadata.doi = cr.doi if cr.doi? # just in case
+          try metadata.crossref_type = cr.type
+          try metadata.author = cr.author if cr.author?
+          try metadata.journal = cr['container-title'][0] if cr['container-title'].length
+          try metadata.issue = cr.issue if cr.issue?
+          try metadata.volume = cr.volume if cr.volume?
+          try metadata.page = cr.page.toString() if cr.page?
+          try metadata.issn ?= cr.ISSN[0] if cr.ISSN?
+          #try metadata.subject = cr.subject if cr.subject? # not sure if this is present in crossref... check anyway - commented out because getting clashes with the mapping
+          try metadata.publisher = cr.publisher if cr.publisher?
+          try metadata.year ?= cr['published-print']['date-parts'][0][0] if cr['published-print']['date-parts'][0][0].length
+          try metadata.year ?= cr.created['date-time'].split('-')[0]
+          try metadata.published = if cr['published-online']?['date-parts'] and cr['published-online']['date-parts'][0].length is 3 then cr['published-online']['date-parts'][0].join('-') else if cr['published-print']?['date-parts'] and cr['published-print']?['date-parts'][0].length is 3 then cr['published-print']['date-parts'][0].join('-') else undefined
     _get_formatted_crossref() if (not _got() or (res.find and not res.url)) and metadata.doi and 'crossref' in res.sources # crossref is usually fast and worth checking, even if just a find and the metadata is not strictly needed
   
     # check epmc if we don't have enough

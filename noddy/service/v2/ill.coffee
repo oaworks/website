@@ -93,7 +93,7 @@ API.service.oab.ill = {}
 
 API.service.oab.ill.subscription = (uid, meta={}, refresh=false) ->
   # dev and live demo accounts that always return a fixed answer
-  if (meta.doi is '10.1234/567890' or meta.title is 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL') and uid is 'qZooaHWRz9NLFNcgR' or uid is 'eZwJ83xp3oZDaec86'
+  if (meta.doi is '10.1234/567890' or meta.title is 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL') and (uid is 'qZooaHWRz9NLFNcgR' or uid is 'eZwJ83xp3oZDaec86')
     return {findings:{}, uid: uid, lookups:[], error:[], url: 'https://scholarworks.iupui.edu/bitstream/handle/1805/20422/07-PAXTON.pdf?sequence=1&isAllowed=y', demo: true}
 
   do_serialssolutions_xml = true
@@ -363,6 +363,7 @@ API.service.oab.ill.start = (opts={}) ->
       # could be provided as: (unless other params are mandatory) 
       # https://ambslibrary.share.worldcat.org/wms/cmnd/nd/discover/items/search?si0qs=0021-9231
       if user.service?.openaccessbutton?.ill?.config?.search and (opts.issn or opts.journal)
+        if user.service.openaccessbutton.ill.config.search.indexOf('worldcat') isnt -1
           su = user.service.openaccessbutton.ill.config.search.split('?')[0] + '?ai0id=level3&ai0type=scope&offset=1&pageSize=10&si0in='
           su += if opts.issn? then 'in%3A' else 'ti%3A'
           su += '&si0qs=' + (opts.issn ? opts.journal)
@@ -370,7 +371,7 @@ API.service.oab.ill.start = (opts={}) ->
         else
           su = user.service.openaccessbutton.ill.config.search
           su += if opts.issn then opts.issn else opts.journal
-        vars.details+= '<p>Search URL:<br><a href="' + su + '">' + su + '</a></p>'
+        vars.details += '<p>Search URL:<br><a href="' + su + '">' + su + '</a></p>'
         
       if not opts.forwarded
         API.service.oab.mail({vars: vars, template: {filename:'instantill_create.html'}, to: eml, from: "InstantILL <InstantILL@openaccessbutton.org>", subject: "ILL request " + vars.illid})
