@@ -212,9 +212,9 @@
           <p>
             We know how important outreach is to getting deposits, both from you and champions outside the library. Our hope is that Shareyourpaper.org frees up time to do outreach, and makes it more effective as depositing is easier to do and recommend to others.
           </p>
-          <p>
+          <p><b>
             To make outreach easier, we’ve given every paper a direct link to deposit into your repository.
-          </p>
+          </b></p>
 
           <p id="embeddedexample" style="display:none;word-wrap:break-word"></p>
           <p id="noembeddedexampleavailable" style="display:none;">
@@ -598,7 +598,7 @@ jQuery(document).ready(function() {
               }
             }
             if (eurl) {
-              var ex = 'Here is an example:<br>' + eurl + '?doi=10.10/something&email=something@university.edu .<br><br>Any DOI will work, and you don’t need to include an email if you don’t have it.';
+              var ex = 'Here is an example:<br> <a href ="' + eurl + '?doi=10.10/something&email=something@university.edu" target="_blank"> '+ eurl +'</a>.<br><br>Any DOI will work, and you don’t need to include an email if you don’t have it.';
               $('#embeddedexample').html(ex).show();
             } else {
               $('#noembeddedexampleavailable').show();
