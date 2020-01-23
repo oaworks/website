@@ -458,9 +458,9 @@ var _run = function() {
 
       if (avail.v2.permissions.permits !== 'publisher pdf') {
         info += '<p>The library has checked and the journal encourages you to freely share your paper so colleagues and the public can freely read and cite it</p>';
-        info += '<h3><span>&#10003;</span> Find the manuscript the journal accepted. It\’s not a PDF from the journal site</h3>';
+        info += '<h3>Find the manuscript the journal accepted. It\’s not a PDF from the journal site</h3>';
         info += '<p>This is the only version you\’re able to share legally. The accepted manuscript is the word file or LaTeX export you sent the publisher after peer-review and before formatting (publisher proofs).</p>';
-        info += '<h3>\U+'2713' Check there aren\’t publisher logos or formatting</h3>';
+        info += '<h3>Check there aren\’t publisher logos or formatting</h3>';
         info += '<p>It\’s normal to share accepted manuscript as the research is the same. It\’s fine to save your file as a pdf, make small edits to formatting, fix typos, remove comments, and arrange figures.</p>';
       }
       info += '<h3>We\'ll check it\’s legal, then promote, and preserve your work</h3>';
