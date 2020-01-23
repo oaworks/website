@@ -297,20 +297,18 @@ var _run = function() {
               $('#oabutton_availability').html('<h3>Congrats, you\'re done!</h3><p>Check back soon to see your paper live, or we\'ll email you with issues.</p><p><a href="#" class="oabutton_restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>').show();
             } else if (res.zenodo && res.zenodo.url) {
               // deposit was possible, show the user a congrats page with a link to the item in zenodo
-              var info = '<h3>Congrats! Your paper will be available to everyone, forever</h3>';
+              var info = '<h3>Congrats! Your paper will be available to everyone, forever!</h3>';
               if (res.embargo) {
-                info += '<p>Unfortunately the journal won\'t let us make it public until ';
+                info += '<p>You\’ve done your part for now. Unfortunately, the journal won’t let us make it public until ';
                 info += res.embargo; // TODO how should this date be formatted
-                info += '. You\'ve done everything you can now. We\'ll soon send you a link where your paper will be available after that, and for now we\'ll share it on your behalf whenever it\'s requested. ';
-                info += 'After release, you\'ll find your paper on Google Scholar, Web of Science, and popular tools like Unpaywall. You can put the link on your website, CV, any profiles, and ResearchGate.</p>';
+                info += 'After release, you\'ll find your paper on Google Scholar, Web of Science, and popular tools like Unpaywall.</p>';
                 info += '<h4>Your paper will be freely available at this link:</h4>';
               } else {
-                info += '<p>You\'ll soon find it in ScholarWorks, on Google Scholar, Web of Science, and popular tools like Unpaywall. ';
-                info += 'You can put the link on your website, CV, any profiles, and ResearchGate.</p>';
+                info += '<p>You\’ll soon find your paper freely available in Scholarworks, Google Scholar, Web of Science, and other popular tools.';
                 info += '<h4>Your paper is now freely available at this link:</h4>';
               }
               info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" style="box-shadow:none;" value="' + res.zenodo.url + '"></input></p>';
-              info += '<p>Check back soon to see your paper in ScholarWorks, until then we\'ve put it in Zenodo.</p>';
+              info += '<p>You can put the link on your website, CV, any profiles, and ResearchGate.</p>';
               info += '<p><a href="#" class="oabutton_restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>';
               $('#oabutton_availability').html(info).show();
             } else {
