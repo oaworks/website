@@ -441,7 +441,7 @@ var _run = function() {
       info += '<div>';
       info += '<h2>Your paper is already freely available!</h2>';
       info += '<p>Great news, you\’re already getting the benefits of sharing your work! Your publisher or co-author have already shared it at this';
-      info += '<a target="_blank" href="'avail.data.availability[0].url'">freely available link</a></p>';
+      info += '<a target="_blank" href=" + 'avail.data.availability[0].url' + ">freely available link</a></p>';
       info += '<h3>Give us your email to confirm deposit</h3>';
       info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="email@montana.edu" aria-label="email@montana.edu" style="box-shadow:none;"></input></p>';
       info += '<p>We\'ll use this to send you a link. By confirming, you\'re agreeing to the <a href="https://scholarworks.montana.edu/docs/#what" target="_blank">terms and conditions</a>.</p>';
