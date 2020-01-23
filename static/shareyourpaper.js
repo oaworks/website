@@ -317,10 +317,10 @@ var _run = function() {
               // if the file given is not a version that is allowed, show a page saying something looks wrong
               // also the backend should create a dark deposit in this case, but delay it by six hours, and cancel if received in the meantime
               var info = '<h3>Hmmm, something looks wrong</h3>';
-              info += '<p>We just checked the paper, and it looks like it is probably a publisher PDF or final proof which the journal prohibits legally sharing in ScholarWorks';
-              info += 'You\'re nearly done, we just need an earlier version to help you get the 30% citation advantage, however we\'ll share this version on your behalf whenever it\'s requested.</p>';
-              info += '<p><a href="#" class="' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : ' btn btn-primary') : '') + '" id="oabutton_inform" style="min-width:150px;">Try again</a></p>';
-              info += '<p><a href="#" id="oabutton_filecorrect">This is the right version</a></p>';
+              info += '<p>You\’re nearly done. It looks like what you uploaded is a publisher\’s PDF which the journal prohibits legally sharing. It can only be shared on a limited basis.';
+              info += 'We just need the version accepted by the journal to make your work available to everyone.</p>';
+              info += '<p><a href="#" class="' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : ' btn btn-primary') : '') + '" id="oabutton_inform" style="min-width:150px;">Try uploading again</a></p>';
+              info += '<p><b><u><a href="#" id="oabutton_filecorrect">My upload was an accepted manuscript</a></u></b></p>';
               $('#oabutton_availability').html(info).show();
             }
           } else {
