@@ -453,6 +453,14 @@
             When something is Open Access, we can find that! By default, we can let scholars confirm they want it in your repository too, but if you’d prefer not to do that we won’t.
           </p>
 
+          <p><b>
+            Turn off the ability to deposit already open access content?
+          </b></p>
+          <p>
+          <input id="allow_oa_deposit" type="checkbox" class="setting blue">
+            Yes
+          </p>
+
         </div>
         <div class="bluebottom">
           <p><a class="btn btn-hollow-blue save pull preview" href="#">Preview & Test</a></p>
@@ -504,6 +512,22 @@
 
           <p>
             Dark deposit is where publisher PDFs which can’t be shared openly are stored in the repository and only accessible on request. Since this is not systematic description, it’s generally considered legally fine to do. You may or may not want to though.
+          </p>
+
+          <p><b>
+            When doing Dark Deposit, by default we say the library handles access requests. Would you like to change that?
+          </b></p>
+          <p>
+          <input id="library_handles_dark_deposit_requests" type="checkbox" class="setting blue">
+            Yes, have authors do it
+          </p>
+
+          <p><b>
+            Would you like to turn off dark deposit?
+          </b></p>
+          <p>
+          <input id="dark_deposit_off" type="checkbox" class="setting blue">
+            Yes
           </p>
 
         </div>
@@ -569,7 +593,7 @@
 
         </div>
         <div class="bluebottom">
-          <p><a class="btn btn-demo-blue save view pull" href="#preferences-pdfs">Save & Continue</a></p>
+          <p><a class="btn btn-demo-blue save view pull" href="#policy">Save & Continue</a></p>
           <p><a class="blue" href="/feedback#general">Feedback</a> | <a class="blue view" href="#faq">FAQ</a> | <a class="blue" href="/feedback#bug"> Report Issue</a></p>
         </div>
       </div>
