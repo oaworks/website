@@ -54,7 +54,7 @@ var _run = function() {
   w += '<p>We\'ll gather information about your paper and find the easiest way to share it.</p>';
   w += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_input" placeholder="' + _oab_opts.placeholder + '" aria-label="' + _oab_opts.placeholder + '" style="box-shadow:none;"></input></p>\
   <p><a class="oabutton_find ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" href="#" id="oabutton_find" aria-label="Search" style="min-width:150px;">Next</a></p>';
-  w += '<p><a id="nodoi" href="mailto:' + (cml ? cml : 'help@openaccessbutton.org') + '"><b>I don\'t have a DOI</b></a></p>';
+  w += '<p><a id="nodoi" href="mailto:' + (cml ? cml : 'help@openaccessbutton.org') + '"><u><b>My paper doesn\’t have a DOI</b></u></a></p>';
   w += '</div>\
 <div id="oabutton_availability"></div>\
 <div id="oabutton_error" style="display:none;"></div>';
@@ -406,7 +406,7 @@ var _run = function() {
       if (_parameta.email) $('#oabutton_email').val(_parameta.email);//.trigger('keyup'); // should this just auto trigger as well?
     }
   }
-  
+
   _fake_deposit = function(e) { // for demos
     try { e.preventDefault(); } catch(err) {}
     flupload = true;
@@ -451,16 +451,21 @@ var _run = function() {
       needmore = false;
       info += '<div>';
       info += '<h2>You can freely share your paper now!</h2>';
-      info += '<p>To enable colleagues and the public to freely download and cite your paper the library has checked and the journal encourages you to freely share a version of the article.</p>';
-      if (avail.v2.permissions.permits !== 'publisher pdf') {
-        info += '<h3>Find the version that was accepted. It\'s usually not a PDF</h3>';
-        info += '<p>This is the only version you\'re able to share legally. The accepted version, or \'post-print\', is what you sent to publisher after peer-review and acceptance but before formatting. Often, it\'s a docx or latex export, not publisher proofs.</p>';
-        info += '<h3>Check there isn\'t publisher branding or formatting</h3>';
-        info += '<p>It\'s normal to share accepted versions as the research is the same, and we\'ll link to the final published pdf for those who can pay for it. It\'s fine to make small edits to formatting, remove comments, arrange figures etc.</p>';
+
+      if (avail.v2.permissions.permits === 'publisher pdf') {
+        info += '<p>The library has checked and the journal encourages you to freely share the publisher pdf of your paper so colleagues and the public can freely read and cite it [?].</p>';
       }
-      info += '<h3>We\'ll check the version, then preserve, and promote your work</h3>';
+
+      if (avail.v2.permissions.permits !== 'publisher pdf') {
+        info += '<p>The library has checked and the journal encourages you to freely share your paper so colleagues and the public can freely read and cite it</p>';
+        info += '<h3>\U2713 Find the manuscript the journal accepted. It\’s not a PDF from the journal site</h3>';
+        info += '<p>This is the only version you\’re able to share legally. The accepted manuscript is the word file or LaTeX export you sent the publisher after peer-review and before formatting (publisher proofs).</p>';
+        info += '<h3>\U2713 Check there aren\’t publisher logos or formatting</h3>';
+        info += '<p>It\’s normal to share accepted manuscript as the research is the same. It\’s fine to save your file as a pdf, make small edits to formatting, fix typos, remove comments, and arrange figures.</p>';
+      }
+      info += '<h3>We\'ll check it\’s legal, then promote, and preserve your work</h3>';
       info += '<p><input type="file" name="file" id="file" class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '"></p>';// \
-      info += '<p>By uploading you\'re agreeing to the <a href="https://scholarworks.montana.edu/docs/#what" target="_blank">terms and conditions</a> and to license your work CC-BY on Zenodo and ScholarWorks</p>';
+      info += '<p>By uploading you\'re agreeing to the <a href="https://scholarworks.montana.edu/docs/#what" target="_blank">terms and conditions</a> and to license your work CC-BY.</p>';
       info += '<p><a href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : ' btn btn-primary') : '') + '" id="submitfile" style="min-width:150px;">Submit deposit</a>';
       info += '</div>';
     } else {
