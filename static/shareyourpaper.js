@@ -308,7 +308,7 @@ var _run = function() {
                 info += '<h4>Your paper is now freely available at this link:</h4>';
               }
               info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" style="box-shadow:none;" value="' + res.zenodo.url + '"></input></p>';
-              info += '<p>You can put the link on your website, CV, any profiles, and ResearchGate.</p>';
+              info += '<p>You can now put the link on your website, CV, any profiles, and ResearchGate.</p>';
               info += '<p><a href="#" class="oabutton_restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>';
               $('#oabutton_availability').html(info).show();
             } else {
