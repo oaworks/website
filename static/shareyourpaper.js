@@ -440,9 +440,16 @@ var _run = function() {
       needmore = false;
       info += '<div>';
       info += '<h2>Your paper is already freely available!</h2>';
-      info += '<p>Congrats, you\'re already getting the benefits of sharing your work.</p>';
-      info += '<p><a target="_blank" href="' + avail.data.availability[0].url  + '" class="' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">View paper</a></p>';
-      info += '<p><a href="#" class="oabutton_forcedeposit"><b>I still want it in ScholarWorks</b></a></p>';
+      info += '<p>Great news, you’re already getting the benefits of sharing your work! Your publisher or co-author have already shared it at this';
+      info += '<a target="_blank" href="'avail.data.availability[0].url'">freely available link</a></p>';
+      info += '<a target="_blank" href="#" class="oabutton_forcedeposit btn btn-primary" style="min-width:150px;">Confirm</a></p>';
+
+      <!--
+
+      info += '<p><a href="#" class=""><b><u>My paper isn’t actually freely available</u></b></a></p>';
+
+      -->
+
       info += '</div>';
     } else if (!forcedeposit && avail.v2 && avail.v2.permissions && avail.v2.permissions.permitted) {
       // can be shared, depending on permissions info
