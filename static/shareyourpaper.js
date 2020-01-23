@@ -446,11 +446,7 @@ var _run = function() {
       info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="email@montana.edu" aria-label="email@montana.edu" style="box-shadow:none;"></input></p>';
       info += '<p>We\'ll use this to send you a link. By confirming, you\'re agreeing to the <a href="https://scholarworks.montana.edu/docs/#what" target="_blank">terms and conditions</a>.</p>';
       info += '<a target="_blank" href="#" class="oabutton_forcedeposit btn btn-primary" style="min-width:150px;">Confirm</a></p>';
-
-      <!--
-      info += '<p><a href="#" class=""><b><u>My paper isn’t actually freely available</u></b></a></p>';
-      -->
-
+      info += '<!--<p><a href="#" class=""><b><u>My paper isn’t actually freely available</u></b></a></p>-->';
       info += '</div>';
     } else if (!forcedeposit && avail.v2 && avail.v2.permissions && avail.v2.permissions.permitted) {
       // can be shared, depending on permissions info
