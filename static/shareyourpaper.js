@@ -387,12 +387,12 @@ var _run = function() {
     } else {
       var info = '<div>';
       info += '<h3>Nearly there! We\'ll double check your paper</h3>';
-      info += '<p>We\'ll do that in the next day to make sure it\'s legal to share.</p>';
+      info += '<p>You\’ve done your part for now. We\’ll check in the next day to make sure it\’s legal to share.</p>';
       try {
         if (avail.v2.permissions.embargo) {
-          info += '<p>The journal won\'t let us make it public until ';
+          info += '<p>Hopefully, we\’ll soon send you a link soon. Unfortunately, the journal won\’t let us make it public until ';
           info += avail.v2.permissions.embargo; // TODO how should this date be formatted
-          info += ' but you\'ve done everything you can now. We\'ll soon send you a link where your paper will be available after that, and for now we\'ll share it on your behalf whenever it\'s requested.</p>';
+          info += ' After release, you\’ll find your paper on Scholarworks Google Scholar, Web of Science.</p>';
         }
       } catch (err) {}
       info += '<h3>Let us know your email</h3>';
