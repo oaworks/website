@@ -418,13 +418,19 @@ jQuery(document).ready(function() {
 jQuery(document).ready(function() {
 
   if ($('#demo').height() < $(window).height()) $('#demo').css({'min-height':$(window).height()+'px'});
-  $('div.blue').css({'min-height':$(window).height()+'px'});
+  $('div.green').css({'min-height':$(window).height()+'px'});
   var diff = Math.floor(($(window).height() - $('div.content:visible').height())/4);
   $('div.content:visible').css({'padding-top':diff+'px'});
 
   $(document).ajaxComplete(function(e,xhr) {
     if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.availability !== undefined) {
       _ill_response = xhr.responseJSON.data;
+      // an availability check finished, reposition the instantill window if necessary
+      /*if (($('#instantill').height() + $('#instantill').offset().top) > ($(window).height()*.95)) {
+        var diff = Math.floor(($(window).height() - $('#instantill').height())/2)-20;
+        if (diff < 20) diff = 20;
+        $('div.content:visible').css({'padding-top':diff+'px'});
+      }*/
       $('div.content:visible').css({'padding-top':'100px'});
       $('.oabutton_ill').off();
     }
@@ -494,14 +500,14 @@ jQuery(document).ready(function() {
         if ($(this).val()) {
           if (data.subscription === undefined) data.subscription = [];
           data.subscription.push($(this).val())
-        } else {
+        } else if ($('.subscription').length > 1) {
           $(this).remove();
         }
       } else if ( $(this).hasClass('subscription_type') ) {
         if ($(this).val()) {
           if (data['subscription_type'] === undefined) data['subscription_type'] = [];
           data['subscription_type'].push($(this).val())
-        } else {
+        } else if ($('.subscription_type').length > 1) {
           $(this).remove();
         }
       } else if ( $(this).val() !== undefined ) {
@@ -574,6 +580,38 @@ jQuery(document).ready(function() {
       uc = noddy.user.account.service.openaccessbutton.ill.config;
       configure();
     } catch(err) {}
+    try {
+      var q = {"size": 0, "query": {"filtered": {"query": {"bool": {"must": [{"term": {"plugin": "shareyourpaper"}},{"term": {"from.exact": noddy.user.account._id}}]}}}}};
+      q.aggregations = {"embeds": {"terms": {"field": "embedded.exact"}}};
+      $.ajax({
+        url: api + '/availabilities',
+        type: 'POST',
+        data: q,
+        success: function(iia) {
+          try {
+            var eurl = false;
+            for (var eu in iia.aggregations.embeds.buckets) {
+              var eur = iia.aggregations.embeds.buckets[eu].key.split('?')[0].split('#')[0];
+              if (eur.indexOf('shareyourpaper.org') === -1 && eur.indexOf('openaccessbutton.org') === -1) {
+                eurl = eur;
+                break;
+              }
+            }
+            if (eurl) {
+              var ex = 'Here is an example:<br>' + eurl + '?doi=10.10/something&email=something@university.edu .<br><br>Any DOI will work, and you don’t need to include an email if you don’t have it.';
+              $('#embeddedexample').html(ex).show();
+            } else {
+              $('#noembeddedexampleavailable').show();
+            }
+          } catch(err) {
+            $('#noembeddedexampleavailable').show();
+          }
+        }
+      });
+    } catch(err) {}
+    /*if (noddy.hasRole('root')) {
+      $('#ill_config').prepend('<input style="border-color:red;" id="uid" type="text" class="form-control setting" placeholder="UID (ADMIN setting override)"><br>')
+    }*/
   }
 
   if ($('#gologin').length) $('#gologin').bind('click',function(e) {
