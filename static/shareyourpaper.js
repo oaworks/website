@@ -156,6 +156,7 @@ var _run = function() {
   var attempts = 0;
   var gotmore = false;
   var filecorrect = undefined;
+  var flupload = undefined;
 
   _restart = function(e) {
     try { e.preventDefault(); } catch(err) {}
@@ -164,6 +165,7 @@ var _run = function() {
     attempts = 0;
     gotmore = false;
     filecorrect = undefined;
+    flupload = undefined;
     if (_oab_opts.uid) {
       $.ajax({
         type:'GET',
@@ -265,7 +267,6 @@ var _run = function() {
     return c;
   }
 
-  var flupload = undefined;
   var _submit_deposit = function() {
     // this could be just an email for a dark deposit, or a file for actual deposit
     $('.oabutton_find').html('Submitting .');
