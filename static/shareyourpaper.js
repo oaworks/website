@@ -412,13 +412,6 @@ var _run = function() {
     _submit_deposit();
   }
 
-  var forcedeposit = false;
-  var doforcedeposit = function(e) {
-    e.preventDefault();
-    forcedeposit = true;
-    inform();
-  }
-
   var inform = function() {
     $('#oabutton_inputs').hide();
     $('#oabutton_error').html('').hide();
@@ -435,7 +428,7 @@ var _run = function() {
       }
     }
     var needmore = true;
-    if (!forcedeposit && avail.data.availability && avail.data.availability.length && avail.data.availability[0].url) {
+    if (avail.data.availability && avail.data.availability.length && avail.data.availability[0].url) {
       // if there is an oa article show a link to it
       needmore = false;
       info += '<div>';
@@ -445,10 +438,10 @@ var _run = function() {
       info += '<h3>Give us your email to confirm deposit</h3>';
       info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="email@montana.edu" aria-label="email@montana.edu" style="box-shadow:none;"></input></p>';
       info += '<p>We\'ll use this to send you a link. By confirming, you\'re agreeing to the <a href="https://scholarworks.montana.edu/docs/#what" target="_blank">terms and conditions</a>.</p>';
-      info += '<a target="_blank" href="#" class="oabutton_forcedeposit btn btn-primary" style="min-width:150px;">Confirm</a></p>';
+      info += '<a target="_blank" href="#" class="oabutton_deposit btn btn-primary" style="min-width:150px;">Confirm</a></p>';
       info += '<!--<p><a href="#" class=""><b><u>My paper isn’t actually freely available</u></b></a></p>-->';
       info += '</div>';
-    } else if (!forcedeposit && avail.v2 && avail.v2.permissions && avail.v2.permissions.permitted) {
+    } else if (avail.v2 && avail.v2.permissions && avail.v2.permissions.permitted) {
       // can be shared, depending on permissions info
       needmore = false;
       info += '<div>';
@@ -475,11 +468,9 @@ var _run = function() {
       needmore = false;
       info += '<div>';
       info += '<h2>You can share your paper!</h2>';
-      if (!forcedeposit) {
-        info += '<p>We checked and unfortunately the journal won\'t let you share this paper freely with everyone.';
-        info += 'The good news is the library can legally make your paper much easier to find, access and share by putting the publisher PDF ';
-        info += 'in ScholarWorks and we\'ll then share it on your behalf whenever it is requested.</p>';
-      }
+      info += '<p>We checked and unfortunately the journal won\'t let you share this paper freely with everyone.';
+      info += 'The good news is the library can legally make your paper much easier to find, access and share by putting the publisher PDF ';
+      info += 'in ScholarWorks and we\'ll then share it on your behalf whenever it is requested.</p>';
       info += '<h3>All we need is your email</h3>';
       info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="email@montana.edu" aria-label="email@montana.edu" style="box-shadow:none;"></input></p>';
       info += '<p>We\'ll only use this to send you a link to your paper when it is in ScholarWorks. ';
@@ -487,7 +478,6 @@ var _run = function() {
       info += '<p><a target="_blank" href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Submit</a></p>';
       info += '</div>';
     }
-    forcedeposit = false;
     $('#oabutton_inputs').hide();
     $('#oabutton_availability').html(info).show();
     if ($('#oabutton_getmore').length && (needmore || (cit && cit.length === 0))) getmore();
@@ -602,7 +592,6 @@ var _run = function() {
   $(_oab_opts.element).on('click','.oabutton_restart',_restart);
   $(_oab_opts.element).on('click','.oabutton_deposit',deposit);
   $(_oab_opts.element).on('keyup','#oabutton_email',function(e) { if (e.keyCode === 13) deposit() });
-  $(_oab_opts.element).on('click','.oabutton_forcedeposit',doforcedeposit);
   $(_oab_opts.element).on('click','#oabutton_getmore',function(e) { e.preventDefault(); getmore(); });
   $(_oab_opts.element).on('click','#oabutton_filecorrect',function(e) { e.preventDefault(); filecorrect = true; _submit_deposit(); });
   $(_oab_opts.element).on('click','#oabutton_inform',function(e) { e.preventDefault(); inform(); });

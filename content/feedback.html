@@ -29,6 +29,7 @@
   <div class="row">
     <div class="col-md-8 col-md-offset-2">
       <form id="form" method="POST" action="https://api.openaccessbutton.org/bug" style="display:none;">
+        <input type="text" name="contact">
 
         <!-- particular forms can be directly reached for example by appending #dnr to the page URL -->
         <!-- extra parameters for the bug message can be added as URL params too -->
@@ -152,6 +153,8 @@
 
 <script>
   jQuery(document).ready(function() {
+    $('[name="contact"]').css('display','none');
+    
 		if (window.location.href.indexOf('?') !== -1) {
 			var pt = window.location.href.split('?')[1];
 			var pts = pt.split('&');
@@ -204,7 +207,7 @@
           if ( key && val ) {
             if (data[key] === undefined) {
               data[key] = val;
-            } else {
+            } else if (key !== 'email') {
               if (typeof data[key] !== 'object') data[key] = [data[key]];
               data[key].push(val);
             }

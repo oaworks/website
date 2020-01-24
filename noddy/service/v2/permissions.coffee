@@ -36,25 +36,7 @@ API.service.oab.permissions = (meta={}, file, url, confirmed, verbose) ->
   if _.isArray file
     file = if file.length then file[0] else undefined
   if not file? and url?
-    file = {}
-    isfile = false
-    for tp in types
-      if tp not in ['htm'] and url.indexOf('.'+tp) isnt -1
-        isfile = true
-        break
-    if isfile
-      try
-        file.data = HTTP.call('GET',url,{timeout:20000,npmRequestOptions:{encoding:null}}).content
-      catch
-        file.error = 'File not found'
-    else
-      file.data = API.http.puppeteer url
-      if not file.data
-        try
-          file.data = HTTP.call('GET',url,{timeout:20000,npmRequestOptions:{encoding:null}}).content
-        catch
-          file.error = 'File not found'
-    file.name ?= if url.substr(url.lastIndexOf('/')+1).indexOf('.') isnt -1 then url.substr(url.lastIndexOf('/')+1).split('?')[0].split('#')[0] else undefined
+    file = API.http.getFile url
 
   f = {acceptable: undefined, acceptance: undefined, unacceptable: undefined, version: 'unknown', licence: undefined, match: undefined}
   if file?
@@ -202,16 +184,14 @@ API.service.oab.permissions = (meta={}, file, url, confirmed, verbose) ->
               wtsc = _clean wts
               matched = true if (l.wheretosearch is 'file' and lowercontentsmall.indexOf(wtsc) isnt -1) or (l.wheretosearch isnt 'file' and ((meta.title? and _clean(meta.title).indexOf(wtsc) isnt -1) or (f.name? and _clean(f.name).indexOf(wtsc) isnt -1)))
             else
-              re = new RegExp wts, 'gi'
+              re = new RegExp wts, 'giu'
               matched = true if (l.wheretosearch is 'file' and lowercontentsmall.match(re) isnt null) or (l.wheretosearch isnt 'file' and ((meta.title? and meta.title.match(re) isnt null) or (f.name? and f.name.match(re) isnt null)))
             if matched
               if l.whatitindicates is 'publisher pdf' then f.versioning.ve += 1 else f.versioning.ve -= 1
-              f.version = l.whatitindicates # TODO check which one should take precedence
               f.versioning.matches.push {indicates: l.whatitindicates, by: l.howtosearch + ' ' + wts, in: l.wheretosearch}
 
       f.version = 'publisher pdf' if f.versioning.ve > 0
       f.version = 'postprint' if f.versioning.ve < 0
-      #f.version = 'unknown' if f.versioning.ve = 0
       if f.version is 'unknown' and f.type? and f.type isnt 'pdf'
         f.versioning.override = 'Version set as AAM due to file type not being PDF and no other version being detected'
         f.version = 'AAM'

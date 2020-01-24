@@ -90,10 +90,13 @@ API.add 'service/oab/dnr',
 
 API.add 'service/oab/bug',
   post: () ->
+    if this.request.body?.contact? and this.request.body.contact.length
+      return ''
+      
     whoto = ['help@openaccessbutton.org']
     text = ''
     for k of this.request.body
-      text += k + ': ' + this.request.body[k] + '\n\n'
+      text += k + ': ' + JSON.stringify(this.request.body[k],undefined,2) + '\n\n'
     subject = '[OAB forms]'
     if this.request.body?.form is 'uninstall' # wrong bug general other
       subject += ' Uninstall notice'
@@ -120,9 +123,9 @@ API.add 'service/oab/bug',
       statusCode: 302,
       headers: {
         'Content-Type': 'text/plain',
-        'Location': (if API.settings.dev then 'https://dev.openaccessbutton.org' else 'https://openaccessbutton.org') + '/bug#defaultthanks'
+        'Location': (if API.settings.dev then 'https://dev.openaccessbutton.org' else 'https://openaccessbutton.org') + '/feedback#defaultthanks'
       },
-      body: 'Location: ' + (if API.settings.dev then 'https://dev.openaccessbutton.org' else 'https://openaccessbutton.org') + '/bug#defaultthanks'
+      body: 'Location: ' + (if API.settings.dev then 'https://dev.openaccessbutton.org' else 'https://openaccessbutton.org') + '/feedback#defaultthanks'
     }
 
 API.add 'service/oab/history', () -> return oab_request.history this

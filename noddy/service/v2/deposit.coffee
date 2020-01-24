@@ -5,7 +5,7 @@ API.add 'service/oab/deposit',
   get: 
     authOptional: true
     action: () -> 
-      return API.service.oab.deposit undefined, this.queryParams, undefined, this.userId
+      return API.service.oab.deposit undefined, this.queryParams, API.http.getFiles(this.queryParams.url), this.userId
   post: 
     authOptional: true
     action: () -> 
