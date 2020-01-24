@@ -318,7 +318,7 @@ var _run = function() {
               info += '<p>You\’re nearly done. It looks like what you uploaded is a publisher\’s PDF which the journal prohibits legally sharing. It can only be shared on a limited basis.';
               info += 'We just need the version accepted by the journal to make your work available to everyone.</p>';
               info += '<p><a href="#" class="' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : ' btn btn-primary') : '') + '" id="oabutton_inform" style="min-width:150px;">Try uploading again</a></p>';
-              info += '<p><b><u><a href="#" id="oabutton_filecorrect">My upload was an accepted manuscript</a></u></b></p>';
+              info += '<p><a href="#" id="oabutton_filecorrect"><b><u>My upload was an accepted manuscript</a></u></b></p>';
               $('#oabutton_availability').html(info).show();
             }
           } else {
