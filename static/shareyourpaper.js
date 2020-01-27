@@ -58,6 +58,12 @@ var _run = function() {
   w += '</div>\
 <div id="oabutton_availability"></div>\
 <div id="oabutton_error" style="display:none;"></div>';
+  if (_oab_config.pilot) {
+    w += '<p><br>Notice a change? We\'re testing a simpler and faster way to deposit your articles. You can ';
+    w += '<a href="mailto:' + cml + '">give feedback</a>';
+    w += ' or <a class="oldpinger" target="_blank" href="' + (_oab_config.advancedform ? _oab_config.advancedform : 'mailto:'+cml) + '">use the old form</a>.</p>';
+  }
+
 
   var ws = '#oabutton_inputs {\
   position: relative;\

@@ -120,7 +120,7 @@ API.service.oab.find = (options={}, metadata={}, content) ->
     metadata = {}
   else if typeof metadata isnt 'object'
     metadata = {}
-  else if not metadata? and typeof options.metadata is 'object' and not _.isArray options.metadata
+  else if _.isEmpty(metadata) and typeof options.metadata is 'object' and not _.isArray options.metadata
     metadata = options.metadata
     options.metadata = true
   options.metadata = if options.metadata is true then ['title','doi','author','journal','issn','volume','issue','page','published','year'] else if _.isArray(options.metadata) then options.metadata else []

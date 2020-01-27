@@ -22,6 +22,7 @@ API.add 'service/oab/deposit/:did',
       return API.service.oab.deposit this.urlParams.did, this.bodyParams, this.request.files
 
 API.add 'service/oab/deposits',
+  csv: true
   get:
     authOptional: true
     action: () ->
@@ -89,9 +90,6 @@ API.add 'service/oab/receive/:rid/:holdrefuse',
 
 
 API.service.oab.deposit = (d,options={},files,uid) ->
-  console.log d
-  console.log options
-  console.log files
   if options.metadata?.doi? and options.metadata.doi.indexOf('10.1234/oab-syp-') is 0
     dm = {demo: true}
     dm.zenodo = {url: 'https://zenodo.org/record/DEMO'} if options.metadata.doi is '10.1234/oab-syp-aam' # without this the UI will treat it as if a wrong version was given
@@ -100,7 +98,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
   if typeof d is 'string' # a catalogue ID
     d = oab_catalogue.get d
   else
-    d = oab_catalogue.finder(options.metadata) if options.metadata
+    d = oab_catalogue.finder options.metadata ? options
     if not d?
       fnd = API.service.oab.find d ? options.metadata ? options # this will create a catalogue record out of whatever is provided, and also checks to see if thing is available already
       d = oab_catalogue.get fnd.catalogue
@@ -111,7 +109,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
   dep.created_date = moment(dep.createdAt, "x").format "YYYY-MM-DD HHmm.ss"
   dep.pilot = options.pilot if options.pilot # are pilot and live going to be needed for shareyourpaper?
   dep.live = options.pilot if options.live
-  dep.name = files[0].filename if files? and files.length
+  dep.name = (files[0].filename ? files[0].name) if files? and files.length
   dep.email = options.email if options.email
   dep.from = options.from if options.from
   dep.from ?= uid if uid
@@ -139,7 +137,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
       journal_title: d.metadata.journal
       journal_volume: d.metadata.volume
       journal_issue: d.metadata.issue
-      journal_page: d.metadata.page
+      journal_pages: d.metadata.page
     meta.keywords = d.metadata.keywords if _.isArray(d.metadata.keywords) and d.metadata.keywords.length and typeof d.metadata.keywords[0] is 'string'
     meta.prereserve_doi = true if API.settings.service.openaccessbutton?.zenodo?.prereserve_doi and not d.metadata.doi?
     meta['related_identifiers'] = [{relation: (if meta.version is 'AAM' or meta.version is 'preprint' then 'isPreviousVersionOf' else 'isIdenticalTo'), identifier: d.metadata.doi}] if d.metadata.doi?
@@ -154,22 +152,26 @@ API.service.oab.deposit = (d,options={},files,uid) ->
         uc ?= {}
         uc.communities = []
         uc.communities.push({identifier: ccm}) for ccm in options.community.split ','
+      uc.community = uc.community_ID if uc?.community_ID? and not uc?.community?
       if uc.community? or uc.communities?
         uc.communities ?= uc.community
         uc.communities = [uc.communities] if typeof uc.communities is 'string'
         meta['communities'] = []
         meta.communities.push(if typeof com is 'string' then {identifier: com} else com) for com in uc.communities
-    z = API.use.zenodo.deposition.create meta, up, API.settings.service.openaccessbutton?.zenodo?.token
-    if z.id
-      dep.zenodo = {}
-      dep.zenodo.id = z.id
-      dep.zenodo.url = 'https://zenodo.org/record/' + z.id
-      dep.zenodo.doi = z.metadata.prereserve_doi.doi if z.metadata?.prereserve_doi?.doi?
-      dep.zenodo.file = '' # TODO get the file URL directly - scrape if it is not provided by the zenodo deposit data
+    tk = if API.settings.dev then API.settings.service.openaccessbutton?.zenodo?.sandbox else API.settings.service.openaccessbutton?.zenodo?.token
+    if tk
+      z = API.use.zenodo.deposition.create meta, zn, tk
+      if z.id
+        dep.zenodo = {}
+        dep.zenodo.id = z.id
+        dep.zenodo.url = 'https://zenodo.org/record/' + z.id
+        dep.zenodo.doi = z.metadata.prereserve_doi.doi if z.metadata?.prereserve_doi?.doi?
+        dep.zenodo.file = z.uploaded.links.download
+      else
+        dep.error = 'Deposit to Zenodo failed'
+        try dep.error += ': ' + JSON.stringify z
     else
-      dep.error = 'Deposit to Zenodo failed'
-      try dep.error += ': ' + JSON.stringify z
-
+      dep.error = 'No Zenodo credentials available'
   dep.version = perms.file.version if perms.file?.version?
   if perms.embargo
     dep.embargo = perms.embargo
@@ -190,7 +192,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
     tos.push iacc.email ? iacc.emails[0].address # the institutional user may set a config value to use as the contact email address but for now it is the account address
 
   text = 'This is an example email that we will send to an institution or our own admins for ' + dep.type + ' deposit\n\n'
-  text += 'File called ' +  files[0].filename + ' should be attached.\n\n' if files? and files.length
+  text += 'File called ' +  (files[0].filename ? files[0].name) + ' should be attached.\n\n' if files? and files.length
   text += 'This file needs reviewed as we could not automatically judge if it is suitable for this type of deposit.\n\n' if dep.type is 'review'
   text += 'The attached file is for local deposit to the institutional repository.\n\n' if dep.type is 'forward'
   text += 'This email notifies the institution that the depositor wishes to deposit their article with the institutional repository, but we do not yet have the article - the institution should contact the depositor directly.\n\n' if dep.typ is 'dark'
@@ -207,7 +209,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
     to: tos
     subject: dep.type + ' deposit ' + dep.createdAt
     text: text
-    attachments: (if _.isArray(files) and files.length then [{filename: files[0].filename, content: files[0].data}] else undefined)
+    attachments: (if _.isArray(files) and files.length then [{filename: (files[0].filename ? files[0].name), content: files[0].data}] else undefined)
 
   # eventually this could also close any open requests for the same item, but that has not been prioritised to be done yet
   dep.permissions = perms

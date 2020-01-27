@@ -40,6 +40,7 @@ API.service.oab.permissions = (meta={}, file, url, confirmed, verbose) ->
 
   f = {acceptable: undefined, acceptance: undefined, unacceptable: undefined, version: 'unknown', licence: undefined, match: undefined}
   if file?
+    file.name ?= file.filename
     try f.name = file.name
     try f.type = if file.name? and file.name.indexOf('.') isnt -1 then file.name.substr(file.name.lastIndexOf('.')+1) else 'html'
     if file.data

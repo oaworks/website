@@ -3,6 +3,9 @@
 </head>
 <link rel="stylesheet" href="/static/oabutton_rebrand.css"> <!-- gets the new css (still also uses the old css, just overwrites where necessary) -->
 
+<script type="text/javascript" src="//static.cottagelabs.com/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+<link rel="stylesheet" href="//static.cottagelabs.com/bootstrap-datepicker/bootstrap-datepicker3.min.css">
+
 <style>
   #topnav {
     display: none;
@@ -281,15 +284,15 @@
           </p>
           <p>
             <ul>
-              <li><a href="#" class="blue">All deposits</a></li>
-              <li><a href="#" class="blue">All deposits with files</a></li>
+              <li><a target="_blank" href="#" id="all_deposits" class="blue">All deposits</a></li>
+              <li><a target="_blank" href="#" id="all_file_deposits" class="blue">All deposits with files</a></li>
             </ul>
           </p>
           <p>
 
           </p>
           <p><b>And you can get them from the following date</b></p>
-          <input type="text" class="form-control setting blue" placeholder="MM/DD/YY">
+          <input id="depositdate" type="text" class="form-control setting blue datepicker" placeholder="dd/mm/yyyy">
           <br>
 
 
@@ -967,6 +970,22 @@ jQuery(document).ready(function() {
     }
   });
 
+
+  $('.datepicker').datepicker({
+    format:'dd/mm/yyyy',
+    autoclose:true
+  });
+
+  var deposits = function(e) {
+    var addr = api + '/deposits.csv?uid=' + noddy.user.account._id + '&size=10000&fields=metadata.doi,metadata.title,deposit.type';
+    if ($(this).attr('id') === 'all_file_deposits') addr += ',deposit.zenodo.url' // should be file url once we decide that
+    if ($('#depositdate').val()) addr += '&q=deposit.createdAt:>' + new Date($('#depositdate').datepicker('getDate')).valueOf();
+    if ($(this).attr('id') === 'all_file_deposits') addr += (addr.indexOf('&q') === -1 ? '&q=' : ' AND ') + 'deposit.zenodo.url:*'; // TODO later change this to be the file URL once deposit is changed to save that
+    $(this).attr('href',addr);
+  }
+  $('body').on('click','#all_deposits',deposits);
+  $('body').on('click','#all_file_deposits',deposits);
+
   var addsubscription = function(e) {
     try {e.preventDefault(); } catch(err) {}
     if ($('.subscription').last().val() && $('.subscription_type').last().val()) {
@@ -1094,7 +1113,6 @@ jQuery(document).ready(function() {
 
   noddy.afterLogin = function() {
     $('.promptsignup').hide();
-    var uid = noddy.user.account._id;
     if ($('.stickidin').length) {
       var uid = noddy.user.account._id;
       var repstr = 'shareyourpaper({uid:"' + uid + '"';
