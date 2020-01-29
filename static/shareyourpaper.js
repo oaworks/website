@@ -321,7 +321,7 @@ var _run = function() {
               // if the file given is not a version that is allowed, show a page saying something looks wrong
               // also the backend should create a dark deposit in this case, but delay it by six hours, and cancel if received in the meantime
               var info = '<h3>Hmmm, something looks wrong</h3>';
-              info += '<p>You\’re nearly done. It looks like what you uploaded is a publisher\’s PDF which the journal prohibits legally sharing. It can only be shared on a limited basis.';
+              info += '<p>You\’re nearly done. It looks like what you uploaded is a publisher\’s PDF which the journal prohibits legally sharing. It can only be shared on a limited basis.<br><br>';
               info += 'We just need the version accepted by the journal to make your work available to everyone.</p>';
               info += '<p><a href="#" class="' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : ' btn btn-primary') : '') + '" id="oabutton_inform" style="min-width:150px;">Try uploading again</a></p>';
               info += '<p><a href="#" id="oabutton_filecorrect"><b><u>My upload was an accepted manuscript</a></u></b></p>';
@@ -445,7 +445,7 @@ var _run = function() {
       info += '<a target="_blank" href="' + avail.data.availability[0].url + '">freely available link</a>.</p>';
       info += '<h3>Give us your email to confirm deposit</h3>';
       info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="email@montana.edu" aria-label="email@montana.edu" style="box-shadow:none;"></input></p>';
-      info += '<p>We\'ll use this to send you a link. By confirming, you\'re agreeing to the <a href="https://scholarworks.montana.edu/docs/#what" target="_blank">terms and conditions</a>.</p>';
+      info += '<p>We\'ll use this to send you a link. By confirming, you\'re agreeing to the <a href="https://scholarworks.montana.edu/docs/#what" target="_blank"><u>terms and conditions</u></a>.</p>';
       info += '<a target="_blank" href="#" class="oabutton_deposit btn btn-primary" style="min-width:150px;">Confirm</a></p>';
       info += '<!--<p><a href="#" class=""><b><u>My paper isn’t actually freely available</u></b></a></p>-->';
       info += '</div>';
@@ -468,7 +468,7 @@ var _run = function() {
       }
       info += '<h3>We\'ll check it\’s legal, then promote, and preserve your work</h3>';
       info += '<p><input type="file" name="file" id="file" class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '"></p>';// \
-      info += '<p>By uploading you\'re agreeing to the <a href="https://scholarworks.montana.edu/docs/#what" target="_blank">terms and conditions</a> and to license your work CC-BY.</p>';
+      info += '<p>By uploading you\'re agreeing to the <a href="https://scholarworks.montana.edu/docs/#what" target="_blank"><u>terms and conditions</u></a> and to license your work CC-BY.</p>';
       info += '<p><a href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : ' btn btn-primary') : '') + '" id="submitfile" style="min-width:150px;">Submit deposit</a>';
       info += '</div>';
     } else {
@@ -476,13 +476,13 @@ var _run = function() {
       needmore = false;
       info += '<div>';
       info += '<h2>You can share your paper!</h2>';
-      info += '<p>We checked and unfortunately the journal won\'t let you share this paper freely with everyone. ';
-      info += 'The good news is the library can legally make your paper much easier to find, access and share by putting the publisher PDF ';
-      info += 'in ScholarWorks and we\'ll then share it on your behalf whenever it is requested.</p>';
+      info += '<p>We checked and unfortunately the journal won\'t let you share this paper freely with everyone.<br><br>';
+      info += 'The good news is the library can still legally make your paper much easier to find and access. We\'ll put the publisher PDF ';
+      info += 'in ScholarWorks and then share it on your behalf whenever it is requested.</p>';
       info += '<h3>All we need is your email</h3>';
       info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="email@montana.edu" aria-label="email@montana.edu" style="box-shadow:none;"></input></p>';
-      info += '<p>We\'ll only use this to send you a link to your paper when it is in ScholarWorks. ';
-      info += 'By submitting, you\'re agreeing to the <a href="https://scholarworks.montana.edu/docs/#what" target="_blank">terms and conditions</a>.</p>';
+      info += '<p>We\'ll only use this to send you a link to your paper when it is in ScholarWorks.<br>';
+      info += 'By submitting, you\'re agreeing to the <a href="https://scholarworks.montana.edu/docs/#what" target="_blank"><u>terms and conditions</u></a>.</p>';
       info += '<p><a target="_blank" href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Submit</a></p>';
       info += '</div>';
     }
