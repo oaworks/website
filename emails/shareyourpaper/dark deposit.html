@@ -1,46 +1,55 @@
-{{SUBJECT Dark Deposit 1579765147602}}
+{{SUBJECT Dark Deposit: {{metadata.doi}} }}
 
-<p>This is an example email that we will send to an institution or our own admins for dark deposit
+<p>Hi,</p>
 
-Author email to contact:
-joe@montana.edu
+<p>Just now you got a new deposit from:</p>
 
-METADATA:
-{
-"title": "Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL",
-"metadata": [
-"title",
-"doi",
-"author",
-"journal",
-"issn",
-"volume",
-"issue",
-"page",
-"published",
-"year"
-],
-"find": false,
-"permissions": false
-}
+{{deposit.email}}
 
-PERMISSIONS:
-{
-"permitted": false,
-"file": {
-"version": "unknown"
-}
-}
+<p>Who would like you to make a dark deposit of:</p>
 
-DEPOSIT:
-{
-"createdAt": 1579765147602,
-"created_date": "2020-01-23 0739.07",
-"email": "joe@montana.edu",
-"from": "qZooaHWRz9NLFNcgR",
-"plugin": "shareyourpaper",
-"version": "unknown",
-"type": "dark"
-}
+<p><a href ="https://doi.org/{{metadata.doi}}">{{metadata.doi}}</a></p>
 
-</p>
+<p>After you have made the deposit, we’d suggest you send an email like this.</p>
+
+<p>If you have questions, please email <a href = "mailto:joe@openaccessbutton.org">joe@openaccessbutton.org</a> (including details from this message). We will not see replies to this email.</p>
+
+<p>The key details of the deposit are below, and the full details are <a href = "https://api.openaccessbutton.org/deposit/{{deposit.id}}">here</a>.</p>
+
+<p><b>Article Metadata</b></p>
+
+{{metadata.title}}
+
+{{metadata.doi}}
+
+{{metadata.journal}}
+
+{{metadata.issn}}
+
+{{metadata.publisher}}
+
+{{metadata.published}}
+
+{{metadata.volume}}
+
+{{metadata.page}}
+
+{{metadata.issue}}
+
+{{metadata.author}}
+
+{{metadata.pmcid}}
+
+{{metadata.pmid}}
+
+<p><b>Permissions</b></p>
+
+{{permissions.can_post}}
+
+{{permissions.provenance.policy_full_text}}
+
+{{permissions.meta.record_last_updated}}
+
+<p><b>Deposit</b></p>
+
+{{deposit.email}}

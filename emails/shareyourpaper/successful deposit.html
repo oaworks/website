@@ -1,0 +1,49 @@
+{{SUBJECT Successful Deposit: {{metadata.doi}} }}
+
+<p>Hi,</p>
+
+<p>Just now you got a new deposit that you can deposit in the repository for the following paper:</p>
+
+<p><a href = “{{metadata.doi}}”>{{metadata.title}}</a></p>
+
+<p>The file is called “{{file.name}}” , you’ll find it attached and <a href =”{{deposit.ur}}”>can be found in Zenodo</a>.</p>
+
+<p>If you have questions, please email <a href = "mailto:joe@openaccessbutton.org">joe@openaccessbutton.org</a> (including details from this message). We will not see replies to this email.</p>
+
+<p>The key details of the deposit are below, and the full details are <a href = "https://api.openaccessbutton.org/deposit/{{deposit.id}}">here</a>.</p>
+
+<<Article Metadata>>
+
+<p><b>Permissions</b></p>
+
+{{permissions_oab.can_post_now_conditions.can_post_now}}
+
+{{permissions_oab.can_post_now_conditions.versions_archivable}}
+
+{{permissions_oab.can_post_now_conditions.post_print_embargo_end_calculated}}
+
+{{permissions_oab.can_post_now_conditions.archiving_locations_allowed}}
+
+{{permissions_oab.can_post_now_conditions.licences_allowed}}
+
+{{permissions_oab.can_post_now_conditions.deposit_statement_required_calculated}}
+
+{{permissions.provenance.policy_full_text}}
+
+{{permissions.meta.record_last_updated}}
+
+<p><b>Upload information</b></p>
+
+{{file.acceptable}}
+
+{{file.acceptance}}
+
+{{file.version}}
+
+{{file.licence}}
+
+<p><b>Deposit information</b></p>
+
+{{deposit.url}}
+
+{{deposit.email}}

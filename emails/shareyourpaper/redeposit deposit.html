@@ -1,64 +1,49 @@
-{{SUBJECT Redeposit Deposit 1579765147602}}
+{{SUBJECT OA Redeposit: {{metadata.doi}} }}
 
-This is an example email that we will send to an institution or our own admins for redeposit deposit
+<p>Hi,</p>
 
-Author email to contact:
-joe@montana.edu
+<p>Just now you got a request to deposit an already open access article from:</p>
 
-There is already an open URL for this article at
-http://email.mg.openaccessbutton.org/c/eJwVjjsOgzAQRE9jSuT1DyhcJCR0kXIFY6-BCDBazP1jpClmivc0wY4am8irxQouOAfQwKUAqKFun5JDp9591-pWwoMpvk11OnB33uN5jlfOaa8TTdVsvQ_BeYNRh1E40cmu0U7LCMIY06pYrXbO-WDywcRQghcV07H5my_bUV78imep30-vwDTGKCaHI0QmX4R7QKrI_hKWG7RMRZYIT3Tk51vxB9SaPZI
+{{deposit.email}}
 
-METADATA:
-{
-"url": [
-"http://email.mg.openaccessbutton.org/c/eJwtjs0KwyAQhJ8muVV2NSZ68JCW9j2M2fyURoPa9-8GCsvMwDAfO7tJ07BAuzsJEgBRIyiJKFCYuwK03fNhjTYKx6aDYxXppOhDoFKmb60pipTXdnOLl9hDv_RaGxuGDpRWOIDRVlnkeftxW61no8ZGvvhK2CkGEn8__HqBuAgpVoqVE9qetZNmYJNWsVY_3c55abN7J-J_8r4yNWUq5HPYLsQPCSc95g) AND 6010=8487 AND (9094=9094",
-"http://email.mg.openaccessbutton.org/c/eJwtjs0KwyAQhJ8muVV2NSZ68JCW9j2M2fyURoPa9-8GCsvMwDAfO7tJ07BAuzsJEgBRIyiJKFCYuwK03fNhjTYKx6aDYxXppOhDoFKmb60pipTXdnOLl9hDv_RaGxuGDpRWOIDRVlnkeftxW61no8ZGvvhK2CkGEn8__HqBuAgpVoqVE9qetZNmYJNWsVY_3c55abN7J-J_8r4yNWUq5HPYLsQPCSc95g",
-"http://email.mg.openaccessbutton.org/c/eJwVjTsOwyAQBU9jSrTLx0BBkUTJPQCvbaLEWEDuHyy9YpqZt_ioyazAshcgABA1ghSIHLm9S0Cnng9ntZV4mxR8N15OOkJK1Fr89V4OXurGdm-EtSEYO4OO4AJKrWl45JCcWuPCPn7v_WyTvE3iNbaUfKmDEDiimAe1lOlIxNHNXAlruHCSVf8uNL5r3kahVGoUatov-Q9_4Dbx"
-],
-"doi": "10.1126/science.196.4287.293",
-"title": "Ribulose bisphosphate carboxylase: a two-layered, square-shaped molecule of symmetry 422",
-"year": "1977",
-"email": [],
-"pmid": "17756097",
-"journal": "Science",
-"issn": "0036-8075",
-"author": [
-{
-"given": "T. S.",
-"family": "BAKER",
-"sequence": "first",
-"affiliation": []
-},
-{
-"given": "D.",
-"family": "EISENBERG",
-"sequence": "additional",
-"affiliation": []
-},
-{
-"given": "F.",
-"family": "EISERLING",
-"sequence": "additional",
-"affiliation": []
-}
-],
-"volume": "196",
-"issue": "4287",
-"page": "293-295",
-"published": "1977-4-15",
-"crossref_type": "journal-article",
-"publisher": "American Association for the Advancement of Science (AAAS)"
-}
+<p>Who would like you to deposit:</p>
 
-PERMISSIONS:
-undefined
+{{metadata.url}}
 
-DEPOSIT:
-{
-"createdAt": 1579084327167,
-"created_date": "2020-01-15 1032.07",
-"email": "joe@montana.edu",
-"from": "rAvobgHcvRLqczML8",
-"version": "unknown",
-"type": "redeposit"
-}
+<p>After you have made that deposit, we’d suggest you send an email like this.</p>
+
+<p>If you have questions, please email <a href = "mailto:joe@openaccessbutton.org">joe@openaccessbutton.org</a> (including details from this message). We will not see replies to this email.</p>
+
+<p>The key details of the deposit are below, and the full details are <a href = "https://api.openaccessbutton.org/deposit/{{deposit.id}}">here</a>.</p>
+
+<p><b>Article Metadata</b></p>
+
+{{metadata.title}}
+
+{{metadata.doi}}
+
+{{metadata.journal}}
+
+{{metadata.issn}}
+
+{{metadata.publisher}}
+
+{{metadata.published}}
+
+{{metadata.volume}}
+
+{{metadata.page}}
+
+{{metadata.issue}}
+
+{{metadata.author}}
+
+{{metadata.pmcid}}
+
+{{metadata.pmid}}
+
+<p><b>Deposit</b><p>
+
+{{deposit.email}}
+
+{{deposit.url}}

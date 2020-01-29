@@ -1,284 +1,89 @@
-{{SUBJECT forward deposit 1579765147602}}
+{{SUBJECT Deposit Requires Checking: {{metadata.doi}} }}
+
+<p>Hi,</p>
+
+<p>Just now you got a new deposit. It needs you to check it’s legal to deposit, and hopefully put it in the repository.</p>
+
+<p>The file is called “{{file.name}}" and you’ll find it attached. It’s for the following paper:</p>
+
+<a href = "{{metadata.doi}}">{{metadata.title}}</a>
+
+<p>We think the following versions are allowed:</p>
+
+{{permissions_oab.can_post_now_conditions.versions_archivable}}
+
+<p>Once you decide:</p>
+<ul>
+  <li>
+    If it is not legal, we’d suggest you send an email like this.
+  </li>
+  <li>
+    If it is legal, you can <a href = "https://openaccessbutton.org/deposit/{{file.checksum}}">click here</a> to instantly deposit it in Zenodo (as usual, you’ll get another email) or you can skip that and put it directly in your repository. Either way, we’d suggest you send an email like this
+  </li>.
+  <li>
+    If you’re not sure you can send it to <a href ="mailto:joe@openaccessbutton.org">joe@openaccessbutton.org</a> for a second opinion.
+  </li>
+</ul>
+
+<p>If you have questions, please email <a href = "mailto:joe@openaccessbutton.org">joe@openaccessbutton.org</a> (including details from this message). We will not see replies to this email.</p>
+
+<p>The key details of the deposit are below, and the full details are <a href = "https://api.openaccessbutton.org/deposit/{{deposit.id}}">here</a>.</p>
+
+<p><b>Article Metadata</b></p>
 
 
-This is an example email that we will send to an institution for forward deposit
+{{metadata.title}}
 
-File called Open For Whom.pdf should be attached.
+{{metadata.doi}}
 
-Author email to contact:
-joe@montana.edu
+{{metadata.journal}}
 
-METADATA:
-{
-"doi": "10.1126/scitranslmed.3008973",
-"title": "Ultrahigh dose-rate FLASH irradiation increases the differential response between normal and tumor tissue in mice.",
-"crossref_type": "journal-article",
-"author": [
-{
-"fullName": "Favaudon V",
-"firstName": "Vincent",
-"lastName": "Favaudon",
-"initials": "V",
-"affiliation": [
-{
-"name": "Institut Curie, Centre de Recherche, 91405 Orsay, France. INSERM U612, 91405 Orsay, France. vincent.favaudon@curie.fr."
-}
-],
-"given": "Vincent",
-"family": "Favaudon"
-},
-{
-"fullName": "Caplier L",
-"firstName": "Laura",
-"lastName": "Caplier",
-"initials": "L",
-"affiliation": [
-{
-"name": "Pathology Laboratory, Ecole Nationale Vétérinaire d'Alfort, Université Paris-Est, 94704 Maisons Alfort, France."
-}
-],
-"given": "Laura",
-"family": "Caplier"
-},
-{
-"fullName": "Monceau V",
-"firstName": "Virginie",
-"lastName": "Monceau",
-"initials": "V",
-"affiliation": [
-{
-"name": "Université Paris-XI, 91405 Orsay, France. INSERM U1030, Institut Gustave-Roussy, 94805 Villejuif, France."
-}
-],
-"given": "Virginie",
-"family": "Monceau"
-},
-{
-"fullName": "Pouzoulet F",
-"firstName": "Frédéric",
-"lastName": "Pouzoulet",
-"initials": "F",
-"authorId": {
-"type": "ORCID",
-"value": "0000-0003-4819-2876"
-},
-"affiliation": [
-{
-"name": "Institut Curie, Centre de Recherche, 91405 Orsay, France. INSERM U612, 91405 Orsay, France."
-}
-],
-"given": "Frédéric",
-"family": "Pouzoulet"
-},
-{
-"fullName": "Sayarath M",
-"firstName": "Mano",
-"lastName": "Sayarath",
-"initials": "M",
-"affiliation": [
-{
-"name": "Institut Curie, Centre de Recherche, 91405 Orsay, France. INSERM U612, 91405 Orsay, France."
-}
-],
-"given": "Mano",
-"family": "Sayarath"
-},
-{
-"fullName": "Fouillade C",
-"firstName": "Charles",
-"lastName": "Fouillade",
-"initials": "C",
-"affiliation": [
-{
-"name": "Institut Curie, Centre de Recherche, 91405 Orsay, France. INSERM U612, 91405 Orsay, France."
-}
-],
-"given": "Charles",
-"family": "Fouillade"
-},
-{
-"fullName": "Poupon MF",
-"firstName": "Marie-France",
-"lastName": "Poupon",
-"initials": "MF",
-"affiliation": [
-{
-"name": "Institut Curie, Centre de Recherche, 91405 Orsay, France. INSERM U612, 91405 Orsay, France."
-}
-],
-"given": "Marie-France",
-"family": "Poupon"
-},
-{
-"fullName": "Brito I",
-"firstName": "Isabel",
-"lastName": "Brito",
-"initials": "I",
-"affiliation": [
-{
-"name": "Institut Curie, Centre de Recherche, 75248 Paris 05, France. INSERM U900, 75248 Paris 05, France."
-}
-],
-"given": "Isabel",
-"family": "Brito"
-},
-{
-"fullName": "Hupé P",
-"firstName": "Philippe",
-"lastName": "Hupé",
-"initials": "P",
-"authorId": {
-"type": "ORCID",
-"value": "0000-0001-8468-3424"
-},
-"affiliation": [
-{
-"name": "Institut Curie, Centre de Recherche, 75248 Paris 05, France. INSERM U900, 75248 Paris 05, France. Mines ParisTech, 77305 Fontainebleau, France. CNRS, UMR144, 75248 Paris 05, France."
-}
-],
-"given": "Philippe",
-"family": "Hupé"
-},
-{
-"fullName": "Bourhis J",
-"firstName": "Jean",
-"lastName": "Bourhis",
-"initials": "J",
-"affiliation": [
-{
-"name": "Université Paris-XI, 91405 Orsay, France. INSERM U1030, Institut Gustave-Roussy, 94805 Villejuif, France. Radio-Oncologie/Radiothérapie, Centre Hospitalier Universitaire Vaudois, 1011 Lausanne, Switzerland."
-}
-],
-"given": "Jean",
-"family": "Bourhis"
-},
-{
-"fullName": "Hall J",
-"firstName": "Janet",
-"lastName": "Hall",
-"initials": "J",
-"affiliation": [
-{
-"name": "Institut Curie, Centre de Recherche, 91405 Orsay, France. INSERM U612, 91405 Orsay, France."
-}
-],
-"given": "Janet",
-"family": "Hall"
-},
-{
-"fullName": "Fontaine JJ",
-"firstName": "Jean-Jacques",
-"lastName": "Fontaine",
-"initials": "JJ",
-"affiliation": [
-{
-"name": "Pathology Laboratory, Ecole Nationale Vétérinaire d'Alfort, Université Paris-Est, 94704 Maisons Alfort, France."
-}
-],
-"given": "Jean-Jacques",
-"family": "Fontaine"
-},
-{
-"fullName": "Vozenin MC",
-"firstName": "Marie-Catherine",
-"lastName": "Vozenin",
-"initials": "MC",
-"authorId": {
-"type": "ORCID",
-"value": "0000-0002-2109-8073"
-},
-"affiliation": [
-{
-"name": "Université Paris-XI, 91405 Orsay, France. INSERM U1030, Institut Gustave-Roussy, 94805 Villejuif, France. Radio-Oncologie/Radiothérapie, Centre Hospitalier Universitaire Vaudois, 1011 Lausanne, Switzerland. INSERM U967, Commissariat à l'Énergie Atomique (CEA), Division des Sciences du Vivant (DSV), Institut de Radiobiologie Cellulaire et Moléculaire (IRCM), 92265 Fontenay aux Roses, France."
-}
-],
-"given": "Marie-Catherine",
-"family": "Vozenin"
-}
-],
-"journal": "Science translational medicine",
-"issue": "245",
-"volume": "6",
-"page": "245ra93",
-"issn": "1946-6234",
-"publisher": "American Association for the Advancement of Science (AAAS)",
-"year": 2014,
-"published": "2014-07-01",
-"pmid": "25031268",
-"url": [
-"https://doi.org/10.1126/scitranslmed.3008973"
-]
-}
+{{metadata.issn}}
 
-PERMISSIONS:
-{
-"sherpa": {
-"journal": {
-"jtitle": "Science Translational Medicine",
-"issn": "1946-6234",
-"zetocpub": "American Association for the Advancement of Science",
-"romeopub": "American Association for the Advancement of Science",
-"title": "Science Translational Medicine"
-},
-"publisher": {
-"sherpa_id": "3",
-"name": "American Association for the Advancement of Science",
-"alias": "",
-"homeurl": "http://www.aaas.org/",
-"url": "http://www.aaas.org/",
-"preprints": {
-"prearchiving": "can",
-"prerestrictions": []
-},
-"postprints": {
-"postarchiving": "can",
-"postrestrictions": []
-},
-"pdfversion": {
-"pdfarchiving": "cannot",
-"pdfrestrictions": []
-},
-"conditions": [
-"Pre-print may be considered prior publication",
-"Pre-print on not-for-profit preprint servers where allowed, please contact editors for clarification",
-"Cannot archive until publication",
-"Authors retain copyright",
-"On author's personal website or institutional repository",
-"Publisher's version/PDF cannot be used",
-"Must link to publisher version",
-"Set statement must accompany post-print (see policy)",
-"Published source must be acknowledged with DOI",
-"Authors covered by funding agency rules, may post author's post-print in PubMed Central or funder's designated repository after a 6 month embargo",
-"Authors covered by funding agency rules, must state on submission, for article to be released in PubMed Central or funder's designated repository after 6 months after publication."
-],
-"mandates": [],
-"copyright": [
-{
-"url": "http://www.sciencemag.org/site/feature/contribinfo/prep/lic_info.pdf",
-"text": "License Agreement"
-},
-{
-"url": "http://www.sciencemag.org/site/help/authors/pmc.xhtml",
-"text": "PMC policy"
-},
-{
-"url": "http://www.sciencemag.org/site/feature/contribinfo/faq/index.xhtml#prioronline_faq",
-"text": "Pre-print comment"
-},
-{
-"url": "http://www.sciencemag.org/site/feature/contribinfo/prep/gen_info.xhtml",
-"text": "General Information for Authors"
-}
-],
-"colour": "green",
-"sherpa_added_date": "2004-01-10 00:00:00",
-"sherpa_updated_date": "2016-04-22 13:12:10"
-},
-"colour": "green",
-"color": "green",
-"createdAt": 1575596266661,
-"created_date": "2019-12-06 0137.46",
-"_id": "Fzir8kBX6iBgddNF5"
-},
-"acceptable": true
-}
+{{metadata.publisher}}
+
+{{metadata.published}}
+
+{{metadata.volume}}
+
+{{metadata.page}}
+
+{{metadata.issue}}
+
+{{metadata.author}}
+
+{{metadata.pmcid}}
+
+{{metadata.pmid}}
+
+<p><b>Permissions</b></p>
+
+{{permissions_oab.can_post_now_conditions.can_post_now}}
+
+{{permissions_oab.can_post_now_conditions.versions_archivable}}
+
+{{permissions_oab.can_post_now_conditions.post_print_embargo_end_calculated}}
+
+{{permissions_oab.can_post_now_conditions.archiving_locations_allowed}}
+
+{{permissions_oab.can_post_now_conditions.licences_allowed}}
+
+{{permissions_oab.can_post_now_conditions.deposit_statement_required_calculated}}
+
+{{permissions.provenance.policy_full_text}}
+
+{{permissions.meta.record_last_updated}}
+
+<p><b>Upload information</b></p>
+
+{{file.acceptable}}
+
+{{file.acceptance}}
+
+{{file.match}}
+
+{{file.depositor_confirms}}
+
+<p><b>Deposit information</b></p>
+
+{{deposit.email}}
