@@ -1,0 +1,98 @@
+<head>
+  <title>Shareyourpaper.org</title>
+
+  <link rel="stylesheet" href="/static/oabutton_rebrand.css"> <!-- gets the new css (still also uses the old css, just overwrites where necessary) -->
+</head>
+
+
+<style>
+  #topnav {
+    display: none;
+  }
+  #footer {
+    display: none;
+  }
+
+  /*style things that sam added below*/
+
+  .btn-demo-white{
+    color:#428BCA !important;
+  }
+
+  h2{
+    color:#428BCA;
+  }
+
+  .footer p{
+    padding: 0;
+    margin:0;
+  }
+  .footer a{
+    color: white;
+  }
+
+  @media screen and (max-width: 768px){
+    .quote{
+      padding: 40px 30px;
+    }
+  }
+   /*sams added style above*/
+
+</style>
+
+<!-- sam starts here -->
+
+<!-- headder -->
+<div class="navy-bg">
+  <div class="center-col header">
+  <div>
+    <span><strong>Shareyourpaper.org</strong> by <a href="https://openaccessbutton.org" style="margin: 0">Open Access Button</a></span>
+  </div>
+  <div>
+    <span><a class="btn btn-demo-white notonsmallphones" href="/libraries">For Libraries</a></span>
+  </div>
+  </div>
+</div>
+
+
+  </div>
+</div>
+
+
+<div class="container-fluid">
+  <div class="row">
+
+    <div class="col-md-8 col-md-offset-2" style="text-align:justify;">
+<h2>Join the Beta</h2>
+
+<p>
+  Shareyourpaper.org is currently in Beta to ensure it's easy to set up in 30 minutes or less across a wide range of library systems, with no coding or technical expertise. That means if you want to use it, all we ask is that you let us know a bit about you first. We'll send you a set up link shortly after.
+</p>
+
+<iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeDEgStJhVn03SYuksFFTEeo7cQzC1hWqpBiR7Uavstn04PCA/viewform?embedded=true" width="100%" height="1600" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+
+    </div>
+  </div>
+</div>
+
+<!-- footer -->
+<div class="navy-bg">
+  <div class="center-col footer">
+    <div>
+      <p>Open Source • Community Controlled • Not for Profit</p>
+    </div>
+    <div style="padding: 5px 0; align-self: flex-end;">
+      <span><a href="https://openaccessbutton.org/api">API</a></span>
+      <span><a href="https://openaccessbutton.org/privacy">Privacy</a></span>
+      <span><a href="https://openaccessbutton.org/terms">Terms</a></span>
+      <span><a href="mailto:joe@openaccessbutton.org">Email</a></span>
+    </div>
+  </div>
+</div>
+
+<script>
+jQuery(document).ready(function() {
+  $('#topnav').remove();
+  $('#footer').remove();
+});
+</script>
