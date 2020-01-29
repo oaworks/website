@@ -107,8 +107,11 @@ API.service.oab.deposit = (d,options={},files,uid) ->
   d.deposit ?= []
   dep = {createdAt: Date.now()}
   dep.created_date = moment(dep.createdAt, "x").format "YYYY-MM-DD HHmm.ss"
-  dep.pilot = options.pilot if options.pilot # are pilot and live going to be needed for shareyourpaper?
-  dep.live = options.pilot if options.live
+  dep.embedded = options.embedded if options.embedded
+  if typeof dep.embedded is 'string' and (dep.embedded.indexOf('setup') isnt -1 or dep.embedded.indexOf('demo') isnt -1) and (dep.embedded.indexOf('openaccessbutton.') isnt -1 or dep.embedded.indexOf('shareyourpaper.') isnt -1 or dep.embedded.indexOf('shareyourarticle.') isnt -1)
+    options.setup = true # allows us to catch setup uses, and not send them to zenodo and not save them to the catalogue
+  dep.pilot = options.pilot if options.pilot
+  dep.live = options.live if options.live
   dep.name = (files[0].filename ? files[0].name) if files? and files.length
   dep.email = options.email if options.email
   dep.from = options.from if options.from
@@ -127,7 +130,10 @@ API.service.oab.deposit = (d,options={},files,uid) ->
         creators.push({name: a.family + (if a.given then ', ' + a.given else '')}) if a.family?
     creators = [{name:'Unknown'}] if creators.length is 0
     description = perms.statement ? (if d.metadata.doi? then 'The publisher\'s final version of this work can be found at https://doi.org/' + d.metadata.doi else '')
-    description += ' Deposited by shareyourpaper.org and openaccessbutton.org. We\'ve taken reasonable steps to ensure this content doesn\'t violate copyright, however, if you think it does you can request a takedown by emailing help@openaccessbutton.org.'
+    description = description.trim()
+    description += '.' if description.lastIndexOf('.') isnt description.length-1
+    description += ' ' if description.length
+    description += 'Deposited by shareyourpaper.org and openaccessbutton.org. We\'ve taken reasonable steps to ensure this content doesn\'t violate copyright, however, if you think it does you can request a takedown by emailing help@openaccessbutton.org.'
     meta =
       title: d.metadata.title ? 'Unknown',
       description: description.trim(),
@@ -139,8 +145,15 @@ API.service.oab.deposit = (d,options={},files,uid) ->
       journal_issue: d.metadata.issue
       journal_pages: d.metadata.page
     meta.keywords = d.metadata.keywords if _.isArray(d.metadata.keywords) and d.metadata.keywords.length and typeof d.metadata.keywords[0] is 'string'
-    meta.prereserve_doi = true if API.settings.service.openaccessbutton?.zenodo?.prereserve_doi and not d.metadata.doi?
-    meta['related_identifiers'] = [{relation: (if meta.version is 'AAM' or meta.version is 'preprint' then 'isPreviousVersionOf' else 'isIdenticalTo'), identifier: d.metadata.doi}] if d.metadata.doi?
+    if d.metadata.doi?
+      if meta.version is 'postprint' or meta.version is 'AAM' or meta.version is 'preprint'
+        # TODO test to see if putting the DOI only in here still causes zenodo to refuse it as a copy
+        meta['related_identifiers'] = [{relation: (if meta.version is 'postprint' or meta.version is 'AAM' or meta.version is 'preprint' then 'isPreviousVersionOf' else 'isIdenticalTo'), identifier: d.metadata.doi}] 
+      else
+        # TODO search zenodo first to see if doi is already in there - if so it would not be possible to save this
+        meta.doi = d.metadata.doi
+    else
+      meta.prereserve_doi = true if API.settings.service.openaccessbutton?.zenodo?.prereserve_doi
     meta['access_right'] = 'open'
     meta.license = perms.file.licence ? 'cc-by'
     if perms.embargo?
@@ -160,16 +173,23 @@ API.service.oab.deposit = (d,options={},files,uid) ->
         meta.communities.push(if typeof com is 'string' then {identifier: com} else com) for com in uc.communities
     tk = if API.settings.dev then API.settings.service.openaccessbutton?.zenodo?.sandbox else API.settings.service.openaccessbutton?.zenodo?.token
     if tk
-      z = API.use.zenodo.deposition.create meta, zn, tk
-      if z.id
+      if options.setup
         dep.zenodo = {}
-        dep.zenodo.id = z.id
-        dep.zenodo.url = 'https://zenodo.org/record/' + z.id
-        dep.zenodo.doi = z.metadata.prereserve_doi.doi if z.metadata?.prereserve_doi?.doi?
-        dep.zenodo.file = z.uploaded.links.download
+        dep.zenodo.id 'EXAMPLE'
+        dep.zenodo.url = 'https://zenodo.org/record/EXAMPLE'
+        dep.zenodo.doi = '10.1234/EXAMPLE' if meta.prereserve_doi
+        dep.zenodo.file = 'https://zenodo.org/files/EXAMPLE'
       else
-        dep.error = 'Deposit to Zenodo failed'
-        try dep.error += ': ' + JSON.stringify z
+        z = API.use.zenodo.deposition.create meta, zn, tk
+        if z.id
+          dep.zenodo = {}
+          dep.zenodo.id = z.id
+          dep.zenodo.url = 'https://zenodo.org/record/' + z.id
+          dep.zenodo.doi = z.metadata.prereserve_doi.doi if z.metadata?.prereserve_doi?.doi?
+          dep.zenodo.file = z.uploaded.links.download
+        else
+          dep.error = 'Deposit to Zenodo failed'
+          try dep.error += ': ' + JSON.stringify z
     else
       dep.error = 'No Zenodo credentials available'
   dep.version = perms.file.version if perms.file?.version?
@@ -184,7 +204,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
     dep.type = 'review'
   d.deposit.push dep
   dd = {deposit: d.deposit, permissions: perms}
-  oab_catalogue.update d._id, dd
+  oab_catalogue.update(d._id, dd) if not options.setup?
 
   tos = API.settings.service.openaccessbutton.notify.deposit ? ['mark@cottagelabs.com','joe@righttoresearch.org']
   if options.from

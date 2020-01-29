@@ -22,7 +22,7 @@ API.service.oab.permissions = (meta={}, file, url, confirmed, verbose) ->
       permitted: if meta.doi is '10.1234/oab-syp-aam' then true else false, 
       permits: if meta.doi is '10.1234/oab-syp-aam' then "postprint" else undefined,
       file: {
-        acceptable: true, acceptance: "Demo acceptance", version: "AAM", licence: "cc-by", match: true, name: "example.pdf", type: "pdf", checksum: "example-checksum"
+        acceptable: true, acceptance: "Demo acceptance", version: "postprint", licence: "cc-by", match: true, name: "example.pdf", type: "pdf", checksum: "example-checksum"
       }
     }
 
@@ -194,8 +194,7 @@ API.service.oab.permissions = (meta={}, file, url, confirmed, verbose) ->
       f.version = 'publisher pdf' if f.versioning.ve > 0
       f.version = 'postprint' if f.versioning.ve < 0
       if f.version is 'unknown' and f.type? and f.type isnt 'pdf'
-        f.versioning.override = 'Version set as AAM due to file type not being PDF and no other version being detected'
-        f.version = 'AAM'
+        f.version = 'postprint'
         
       try f.lantern = API.service.lantern.licence undefined, undefined, lowercontentsmall # check lantern for licence info
       f.licence = f.lantern.licence if f.lantern?.licence?
@@ -206,8 +205,10 @@ API.service.oab.permissions = (meta={}, file, url, confirmed, verbose) ->
         delete f.unacceptable
         if confirmed is f.checksum
           f.acceptance = 'The administrator has confirmed that this file is the version that can be shared now'
+          f.admin_confirms = true
         else
-          f.acceptance = 'The depositor has confirmed that this file is the version that can be shared now'
+          f.acceptance = 'The depositor says that this file is the version that can be shared now'
+          f.depositor_says = true
       else if f.match
         if f.type isnt 'pdf'
           f.acceptable = true
@@ -217,7 +218,7 @@ API.service.oab.permissions = (meta={}, file, url, confirmed, verbose) ->
           #  f.acceptable = true
           #  f.acceptance = 'Rick says any version of article can be posted now'
           if perms.ricks?.can_post_now_conditions?.versions_archivable? # the version we can tell it is appears to meet what Rick says can be posted
-            if f.version in perms.ricks.can_post_now_conditions.versions_archivable or f.version is 'AAM' and 'postprint' in perms.ricks.can_post_now_conditions.versions_archivable
+            if f.version in perms.ricks.can_post_now_conditions.versions_archivable or f.version is 'postprint' and 'postprint' in perms.ricks.can_post_now_conditions.versions_archivable
               f.acceptable = true
               f.acceptance = 'We believe this is a ' + f.version + ' and Rick says such versions can be shared'
             else
@@ -226,13 +227,13 @@ API.service.oab.permissions = (meta={}, file, url, confirmed, verbose) ->
           # https://github.com/OAButton/discussion/issues/1377
           if not f.acceptable and perms.sherpa?
             if perms.sherpa.color is 'green'
-              if f.version in ['preprint','postprint','AAM']
+              if f.version in ['preprint','postprint']
                 f.acceptable = true
                 f.acceptance = 'Sherpa color is ' + perms.sherpa.color + ' so ' + f.version + ' is acceptable'
               else
                 f.unacceptable = 'Sherpa color is ' + perms.sherpa.color + ' which allows only preprint or postprint but version is ' + f.version
             else if perms.sherpa.color is 'blue'
-              if f.version in ['postprint','AAM']
+              if f.version in ['postprint']
                 f.acceptable = true
                 f.acceptance = 'Sherpa color is ' + perms.sherpa.color + ' so ' + f.version + ' is acceptable'
               else

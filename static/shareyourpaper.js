@@ -390,6 +390,8 @@ var _run = function() {
           }
         });
       }
+    } else if (avail.v2.permissions.file !== undefined && avail.v2.permissions.file.acceptable) {
+      _submit_deposit(); // if the file is acceptable and can go in zenodo then we don't bother getting the email address
     } else {
       var info = '<div>';
       info += '<h3>Nearly there! We\'ll double check your paper</h3>';
