@@ -1,20 +1,20 @@
-{{SUBJECT Dark Deposit: {{metadata.doi}} }}
+{{SUBJECT Request-only Deposit: {{metadata.doi}} }}
 
 <p>Hi,</p>
 
-<p>Just now you got a new deposit from:</p>
+<p>Just now you got a new submission from:</p>
 
 {{deposit.email}}
 
-<p>Who would like you to make a dark deposit of:</p>
+<p>Who would like you to make a request-only deposit of:</p>
 
 <p><a href ="https://doi.org/{{metadata.doi}}">{{metadata.doi}}</a></p>
 
 <p>After you have made the deposit, we’d suggest you send an email like this.</p>
 
-<p>If you have questions, please email <a href = "mailto:joe@openaccessbutton.org">joe@openaccessbutton.org</a> (including details from this message). We will not see replies to this email.</p>
+<p>Do not reply to this email. If you have questions, please email <a href = "mailto:joe@openaccessbutton.org">joe@openaccessbutton.org</a> (including details from this message).</p>
 
-<p>The key details of the deposit are below, and the full details are <a href = "https://api.openaccessbutton.org/deposit/{{deposit.id}}">here</a>.</p>
+<p>The key details of the deposit are below, find more <a href = "https://api.openaccessbutton.org/deposit/{{deposit.id}}">here</a>.</p>
 
 <p><b>Article Metadata</b></p>
 
@@ -32,9 +32,9 @@
 
 {{metadata.volume}}
 
-{{metadata.page}}
-
 {{metadata.issue}}
+
+{{metadata.page}}
 
 {{metadata.author}}
 
