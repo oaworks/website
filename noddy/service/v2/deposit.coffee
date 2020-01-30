@@ -105,7 +105,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
   return 400 if not d?
 
   d.deposit ?= []
-  dep = {createdAt: Date.now()}
+  dep = {createdAt: Date.now(), zenodo: {}}
   dep.created_date = moment(dep.createdAt, "x").format "YYYY-MM-DD HHmm.ss"
   dep.embedded = options.embedded if options.embedded
   if typeof dep.embedded is 'string' and (dep.embedded.indexOf('setup') isnt -1 or dep.embedded.indexOf('demo') isnt -1) and (dep.embedded.indexOf('openaccessbutton.') isnt -1 or dep.embedded.indexOf('shareyourpaper.') isnt -1 or dep.embedded.indexOf('shareyourarticle.') isnt -1)
@@ -119,7 +119,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
   dep.plugin = options.plugin if options.plugin
 
   perms = API.service.oab.permissions d, files, undefined, options.confirmed # if confirmed is true the submitter has confirmed this is the right file. If confirmed is the checksum this is a resubmit by an admin
-  if perms.file?.acceptable
+  if perms.file?.acceptable and (options.confirmed is perms.file.checksum or not options.confirmed) # if the depositor confirms we don't deposit, we manually review - only deposit on admin confirmation
     zn = {}
     zn.content = files[0].data
     zn.name = perms.file.name
@@ -138,7 +138,6 @@ API.service.oab.deposit = (d,options={},files,uid) ->
       title: d.metadata.title ? 'Unknown',
       description: description.trim(),
       creators: creators,
-      doi: d.metadata.doi,
       version: if perms.file.version is 'preprint' then 'submittedVersion' else if perms.file.version is 'postprint' then 'acceptedVersion' else if perms.file.version is 'publisher pdf' then 'publishedVersion' else 'AAM',
       journal_title: d.metadata.journal
       journal_volume: d.metadata.volume
@@ -146,11 +145,12 @@ API.service.oab.deposit = (d,options={},files,uid) ->
       journal_pages: d.metadata.page
     meta.keywords = d.metadata.keywords if _.isArray(d.metadata.keywords) and d.metadata.keywords.length and typeof d.metadata.keywords[0] is 'string'
     if d.metadata.doi?
-      if meta.version is 'postprint' or meta.version is 'AAM' or meta.version is 'preprint'
-        # TODO test to see if putting the DOI only in here still causes zenodo to refuse it as a copy
+      in_zenodo = API.use.zenodo.records.doi d.metadata.doi
+      if in_zenodo
+        dep.zenodo.already = in_zenodo.id # we don't put it in again although we could with doi as related field - but leave for review for now
+      else if meta.version is 'postprint' or meta.version is 'AAM' or meta.version is 'preprint'
         meta['related_identifiers'] = [{relation: (if meta.version is 'postprint' or meta.version is 'AAM' or meta.version is 'preprint' then 'isPreviousVersionOf' else 'isIdenticalTo'), identifier: d.metadata.doi}] 
       else
-        # TODO search zenodo first to see if doi is already in there - if so it would not be possible to save this
         meta.doi = d.metadata.doi
     else
       meta.prereserve_doi = true if API.settings.service.openaccessbutton?.zenodo?.prereserve_doi
@@ -174,31 +174,30 @@ API.service.oab.deposit = (d,options={},files,uid) ->
     tk = if API.settings.dev then API.settings.service.openaccessbutton?.zenodo?.sandbox else API.settings.service.openaccessbutton?.zenodo?.token
     if tk
       if options.setup
-        dep.zenodo = {}
         dep.zenodo.id 'EXAMPLE'
         dep.zenodo.url = 'https://zenodo.org/record/EXAMPLE'
         dep.zenodo.doi = '10.1234/EXAMPLE' if meta.prereserve_doi
         dep.zenodo.file = 'https://zenodo.org/files/EXAMPLE'
-      else
+      else if not dep.zenodo.already
         z = API.use.zenodo.deposition.create meta, zn, tk
         if z.id
-          dep.zenodo = {}
           dep.zenodo.id = z.id
           dep.zenodo.url = 'https://zenodo.org/record/' + z.id
           dep.zenodo.doi = z.metadata.prereserve_doi.doi if z.metadata?.prereserve_doi?.doi?
-          dep.zenodo.file = z.uploaded.links.download
+          dep.zenodo.file = z.uploaded?.links?.download ? z.uploaded?.links?.download
         else
           dep.error = 'Deposit to Zenodo failed'
           try dep.error += ': ' + JSON.stringify z
     else
       dep.error = 'No Zenodo credentials available'
   dep.version = perms.file.version if perms.file?.version?
-  if perms.embargo
-    dep.embargo = perms.embargo
-    dep.type = 'embargoed'
-  else if dep.zenodo?.id
-    dep.type = 'zenodo'
-  else if options.from
+  if dep.zenodo.id
+    if perms.embargo
+      dep.embargo = perms.embargo
+      dep.type = 'embargoed'
+    else
+      dep.type = 'zenodo'
+  else if options.from and (not dep.embedded or (dep.embedded.indexOf('openaccessbutton.org') is -1 and dep.embedded.indexOf('shareyourpaper.org') is -1))
     dep.type = if options.redeposit then 'redeposit' else if files? and files.length then 'forward' else 'dark'
   else
     dep.type = 'review'
@@ -234,6 +233,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
   # eventually this could also close any open requests for the same item, but that has not been prioritised to be done yet
   dep.permissions = perms
   dep.metadata = d.metadata
+  dep.z = z if API.settings.dev and dep.zenodo.id? and dep.zenodo.id isnt 'EXAMPLE'
   return dep
 
 API.service.oab.deposit.config = (user, config) ->

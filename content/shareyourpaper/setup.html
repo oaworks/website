@@ -343,7 +343,7 @@
           </p>
 
           <p><b>To get Shareyourpaper.org to link to your community, let us know the URL.</b></p>
-          <input id="Community_ID" type="text" class="form-control setting blue" placeholder="e.g https://zenodo.org/communities/cambridge/">
+          <input id="community" type="text" class="form-control setting blue" placeholder="e.g https://zenodo.org/communities/cambridge/">
           <br>
 
           <p>
@@ -402,7 +402,7 @@
             The service is free, and you don’t need to manage or maintain anything. It’s also being actively developed.
           </p>
           <p><b>To get Shareyourpaper.org to link to your community, let us know the URL.</b></p>
-          <input id="Community_ID" type="text" class="form-control setting blue" placeholder="e.g https://zenodo.org/communities/cambridge/">
+          <input id="community" type="text" class="form-control setting blue" placeholder="e.g https://zenodo.org/communities/cambridge/">
           <br>
 
         </div>
@@ -1047,7 +1047,16 @@ jQuery(document).ready(function() {
     if (e === true || pvw || $(this).attr('preview') || $(this).hasClass('preview')) _preview = $(this).attr('preview') ? $(this).attr('preview') : (pvw ? pvw : true);
     var data = {};
     $('.setting').each(function(i, obj) {
-      if ( $(this).is(':checkbox') ) {
+      if ( $(this).attr('id') === 'community') {
+        if ( $(this).is(':visible') ) {
+          var evl = $(this).val();
+          try { 
+            evl = evl.split('communities/')[1].split('/')[0]; 
+            $(this).val(evl);
+          } catch(err) {}
+          data.community = evl;
+        }
+      } else if ( $(this).is(':checkbox') ) {
         data[$(this).attr('id')] = $(this).is(':checked');
       } else if ( $(this).hasClass('subscription') ) {
         if ($(this).val()) {

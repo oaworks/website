@@ -21,6 +21,8 @@ _finder = (metadata) ->
         finder += ' OR ' if finder isnt ''
         if tid is 'title'
           finder += 'ftitle:' + API.service.oab.ftitle(mt) + '~ OR '
+        if tid is 'doi'
+          finder += 'doi_not_in_crossref.exact:"' + mt + '" OR '
         finder += 'metadata.' + tid + (if tid is 'url' or tid is 'title' then '' else '.exact') + ':"' + mt + '"'
   return finder
 
@@ -259,6 +261,7 @@ API.service.oab.find = (options={}, metadata={}, content) ->
         cr ?= API.use.crossref.works.doi metadata.doi
         if cr is undefined
           if metadata.doi?
+            res.doi_not_in_crossref = metadata.doi
             delete options.url if options.url.indexOf('doi.org/' + metadata.doi) isnt -1
             delete metadata.doi
             delete options.doi # don't allow the user-provided data to later override if we can't validate it on crossref

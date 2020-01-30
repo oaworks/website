@@ -61,7 +61,7 @@ var _run = function() {
   if (_oab_config.pilot) {
     w += '<p><br>Notice a change? We\'re testing a simpler and faster way to deposit your articles. You can ';
     w += '<a href="mailto:' + cml + '">give feedback</a>';
-    w += ' or <a class="oldpinger" target="_blank" href="' + (_oab_config.advancedform ? _oab_config.advancedform : 'mailto:'+cml) + '">use the old form</a>.</p>';
+    w += ' or <a class="oldpinger" target="_blank" href="' + (_oab_config.old_way ? (_oab_config.old_way.indexOf('@') !== -1 ? 'mailto:' : '') + _oab_config.old_way : 'mailto:'+cml) + '">use the old way</a>.</p>';
   }
 
 
@@ -421,75 +421,97 @@ var _run = function() {
   }
 
   var inform = function() {
-    $('#oabutton_inputs').hide();
-    $('#oabutton_error').html('').hide();
-    var info = '';
-    if (avail.data.meta && avail.data.meta.article) {
-      var cit = cite(avail.data.meta.article);
-      if (cit.length < 1) {
-        if (attempts === 0) {
-          attempts = 1;
-          getmore();
-        } else if (!gotmore) {
-          fail();
+    if (avail.v2 && avail.v2.doi_not_in_crossref) {
+      $('#oabutton_input').focus();//.val('');
+      $('.oabutton_find').html('Next');
+      $('#oabutton_error').html('<p>Double check your DOI, that doesn\'t look right to us.</p>').show();
+    } else if (avail.v2 && avail.v2.metadata && avail.v2.metadata.crossref_type !== undefined && avail.v2.metadata.crossref_type !== 'journal-article') {
+      $('#oabutton_input').focus();//.val('');
+      $('.oabutton_find').html('Next');
+      var nj = '<p>That doesn\'t look like an academic journal article.';
+      var cml = _oab_config.problem_email ? _oab_config.problem_email : (_oab_config.email ? _oab_config.email : (_oab_config.adminemail ? _oab_config.adminemail : undefined));
+      if (cml) {
+        nj += ' If you want to deposit it, <a href="';
+        nj += (_oab_config.old_way ? (_oab_config.old_way.indexOf('@') !== -1 ? 'mailto:' : '') + _oab_config.old_way : 'mailto:'+cml);
+        nj += '">click here</a>';
+      }
+      nj += '.</p>';
+      $('#oabutton_error').html(nj).show();
+    } else {
+      $('#oabutton_inputs').hide();
+      $('#oabutton_error').html('').hide();
+      var info = '';
+      if (avail.data.meta && avail.data.meta.article) {
+        var cit = cite(avail.data.meta.article);
+        if (cit.length < 1) {
+          if (attempts === 0) {
+            attempts = 1;
+            getmore();
+          } else if (!gotmore) {
+            fail();
+          }
         }
       }
-    }
-    var needmore = true;
-    if (avail.data.availability && avail.data.availability.length && avail.data.availability[0].url) {
-      // if there is an oa article show a link to it
-      needmore = false;
-      info += '<div>';
-      info += '<h2>Your paper is already freely available!</h2>';
-      info += '<p>Great news, you\’re already getting the benefits of sharing your work! Your publisher or co-author have already shared it at this ';
-      info += '<a target="_blank" href="' + avail.data.availability[0].url + '">freely available link</a>.</p>';
-      info += '<h3>Give us your email to confirm deposit</h3>';
-      info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="email@montana.edu" aria-label="email@montana.edu" style="box-shadow:none;"></input></p>';
-      info += '<p>We\'ll use this to send you a link. By confirming, you\'re agreeing to the <a href="https://scholarworks.montana.edu/docs/#what" target="_blank"><u>terms and conditions</u></a>.</p>';
-      info += '<a target="_blank" href="#" class="oabutton_deposit btn btn-primary" style="min-width:150px;">Confirm</a></p>';
-      info += '<!--<p><a href="#" class=""><b><u>My paper isn’t actually freely available</u></b></a></p>-->';
-      info += '</div>';
-    } else if (avail.v2 && avail.v2.permissions && avail.v2.permissions.permitted) {
-      // can be shared, depending on permissions info
-      needmore = false;
-      info += '<div>';
-      info += '<h2>You can freely share your paper now!</h2>';
-
-      if (avail.v2.permissions.permits === 'publisher pdf') {
-        info += '<p>The library has checked and the journal encourages you to freely share the publisher pdf of your paper so colleagues and the public can freely read and cite it.</p>';
+      var needmore = true;
+      if (avail.data.availability && avail.data.availability.length && avail.data.availability[0].url) {
+        // if there is an oa article show a link to it
+        needmore = false;
+        info += '<div>';
+        info += '<h2>Your paper is already freely available!</h2>';
+        info += '<p>Great news, you\’re already getting the benefits of sharing your work! Your publisher or co-author have already shared it at this ';
+        info += '<a target="_blank" href="' + avail.data.availability[0].url + '">freely available link</a>.</p>';
+        if (_oab_config.allow_oa_deposit === false) {
+          // nothing to show, the user cannot redeposit
+        } else {
+          info += '<h3>Give us your email to confirm deposit</h3>';
+          info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="email@montana.edu" aria-label="email@montana.edu" style="box-shadow:none;"></input></p>';
+          info += '<p>We\'ll use this to send you a link. By confirming, you\'re agreeing to the <a href="https://scholarworks.montana.edu/docs/#what" target="_blank"><u>terms and conditions</u></a>.</p>';
+          info += '<a target="_blank" href="#" class="oabutton_deposit btn btn-primary" style="min-width:150px;">Confirm</a></p>';
+        }
+        info += '<!--<p><a href="#" class=""><b><u>My paper isn’t actually freely available</u></b></a></p>-->';
+        info += '</div>';
+      } else if (avail.v2 && avail.v2.permissions && avail.v2.permissions.permitted) {
+        // can be shared, depending on permissions info
+        needmore = false;
+        info += '<div>';
+        info += '<h2>You can freely share your paper now!</h2>';
+  
+        if (avail.v2.permissions.permits === 'publisher pdf') {
+          info += '<p>The library has checked and the journal encourages you to freely share the publisher pdf of your paper so colleagues and the public can freely read and cite it.</p>';
+        }
+  
+        if (avail.v2.permissions.permits !== 'publisher pdf') {
+          info += '<p>The library has checked and the journal encourages you to freely share your paper so colleagues and the public can freely read and cite it [?].</p>';
+          info += '<h3><span>&#10003;</span> Find the manuscript the journal accepted. It\’s not a PDF from the journal site</h3>';
+          info += '<p>This is the only version you\’re able to share legally. The accepted manuscript is the word file or LaTeX export you sent the publisher after peer-review and before formatting (publisher proofs).</p>';
+          info += '<h3><span>&#10003;</span> Check there aren\’t publisher logos or formatting</h3>';
+          info += '<p>It\’s normal to share accepted manuscript as the research is the same. It\’s fine to save your file as a pdf, make small edits to formatting, fix typos, remove comments, and arrange figures.</p>';
+        }
+        info += '<h3>We\'ll check it\’s legal, then promote, and preserve your work</h3>';
+        info += '<p><input type="file" name="file" id="file" class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '"></p>';// \
+        info += '<p>By uploading you\'re agreeing to the <a href="https://scholarworks.montana.edu/docs/#what" target="_blank"><u>terms and conditions</u></a> and to license your work CC-BY.</p>';
+        info += '<p><a href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : ' btn btn-primary') : '') + '" id="submitfile" style="min-width:150px;">Submit deposit</a>';
+        info += '</div>';
+      } else {
+        // can't be directly shared but can be passed to library for dark deposit
+        needmore = false;
+        info += '<div>';
+        info += '<h2>You can share your paper!</h2>';
+        info += '<p>We checked and unfortunately the journal won\'t let you share this paper freely with everyone.<br><br>';
+        info += 'The good news is the library can still legally make your paper much easier to find and access. We\'ll put the publisher PDF ';
+        info += 'in ScholarWorks and then share it on your behalf whenever it is requested.</p>';
+        info += '<h3>All we need is your email</h3>';
+        info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="email@montana.edu" aria-label="email@montana.edu" style="box-shadow:none;"></input></p>';
+        info += '<p>We\'ll only use this to send you a link to your paper when it is in ScholarWorks.<br>';
+        info += 'By submitting, you\'re agreeing to the <a href="https://scholarworks.montana.edu/docs/#what" target="_blank"><u>terms and conditions</u></a>.</p>';
+        info += '<p><a target="_blank" href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Submit</a></p>';
+        info += '</div>';
       }
-
-      if (avail.v2.permissions.permits !== 'publisher pdf') {
-        info += '<p>The library has checked and the journal encourages you to freely share your paper so colleagues and the public can freely read and cite it [?].</p>';
-        info += '<h3>Find the manuscript the journal accepted. It\’s not a PDF from the journal site</h3>';
-        info += '<p>This is the only version you\’re able to share legally. The accepted manuscript is the word file or LaTeX export you sent the publisher after peer-review and before formatting (publisher proofs).</p>';
-        info += '<h3>Check there aren\’t publisher logos or formatting</h3>';
-        info += '<p>It\’s normal to share accepted manuscript as the research is the same. It\’s fine to save your file as a pdf, make small edits to formatting, fix typos, remove comments, and arrange figures.</p>';
-      }
-      info += '<h3>We\'ll check it\’s legal, then promote, and preserve your work</h3>';
-      info += '<p><input type="file" name="file" id="file" class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '"></p>';// \
-      info += '<p>By uploading you\'re agreeing to the <a href="https://scholarworks.montana.edu/docs/#what" target="_blank"><u>terms and conditions</u></a> and to license your work CC-BY.</p>';
-      info += '<p><a href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : ' btn btn-primary') : '') + '" id="submitfile" style="min-width:150px;">Submit deposit</a>';
-      info += '</div>';
-    } else {
-      // can't be directly shared but can be passed to library for dark deposit
-      needmore = false;
-      info += '<div>';
-      info += '<h2>You can share your paper!</h2>';
-      info += '<p>We checked and unfortunately the journal won\'t let you share this paper freely with everyone.<br><br>';
-      info += 'The good news is the library can still legally make your paper much easier to find and access. We\'ll put the publisher PDF ';
-      info += 'in ScholarWorks and then share it on your behalf whenever it is requested.</p>';
-      info += '<h3>All we need is your email</h3>';
-      info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="email@montana.edu" aria-label="email@montana.edu" style="box-shadow:none;"></input></p>';
-      info += '<p>We\'ll only use this to send you a link to your paper when it is in ScholarWorks.<br>';
-      info += 'By submitting, you\'re agreeing to the <a href="https://scholarworks.montana.edu/docs/#what" target="_blank"><u>terms and conditions</u></a>.</p>';
-      info += '<p><a target="_blank" href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Submit</a></p>';
-      info += '</div>';
+      $('#oabutton_inputs').hide();
+      $('#oabutton_availability').html(info).show();
+      if ($('#oabutton_getmore').length && (needmore || (cit && cit.length === 0))) getmore();
+      if (_parameta.email && $('#oabutton_email').length) $('#oabutton_email').val(_parameta.email);//.trigger('keyup'); // should this just auto trigger as well?
     }
-    $('#oabutton_inputs').hide();
-    $('#oabutton_availability').html(info).show();
-    if ($('#oabutton_getmore').length && (needmore || (cit && cit.length === 0))) getmore();
-    if (_parameta.email && $('#oabutton_email').length) $('#oabutton_email').val(_parameta.email);//.trigger('keyup'); // should this just auto trigger as well?
   }
 
   var _doing_availability = false;
