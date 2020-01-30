@@ -69,12 +69,12 @@ API.service.oab.permissions = (meta={}, file, url, confirmed, verbose) ->
 
   if meta.doi? and not perms.ricks?
     try perms.ricks = HTTP.call('GET','https://rickscafe-api.herokuapp.com/permissions/doi/' + meta.doi).data.authoritative_permission.application
-    #perms.permitted = perms.ricks? and (perms.ricks.can_post_now is true or (perms.ricks.can_post_now_conditions?.versions_archivable and ('postprint' in perms.ricks.can_post_now_conditions.versions_archivable or 'publisher pdf' in perms.ricks.can_post_now_conditions.versions_archivable)))
-    perms.permitted = perms.ricks?.can_post_now_conditions?.versions_archivable and ('postprint' in perms.ricks.can_post_now_conditions.versions_archivable or 'publisher pdf' in perms.ricks.can_post_now_conditions.versions_archivable)
-    perms.statement = perms.ricks.can_post_now_conditions.deposit_statement_required_calculated if typeof perms.ricks?.can_post_now_conditions?.deposit_statement_required_calculated is 'string' and perms.ricks?.can_post_now_conditions?.deposit_statement_required_calculated.indexOf('cc-') isnt 0
+    #perms.permitted = perms.ricks? and (perms.ricks.can_archive is true or (perms.ricks.can_archive_conditions?.versions_archivable and ('postprint' in perms.ricks.can_archive_conditions.versions_archivable or 'publisher pdf' in perms.ricks.can_archive_conditions.versions_archivable)))
+    perms.permitted = perms.ricks?.can_archive_conditions?.versions_archivable and ('postprint' in perms.ricks.can_archive_conditions.versions_archivable or 'publisher pdf' in perms.ricks.can_archive_conditions.versions_archivable)
+    perms.statement = perms.ricks.can_archive_conditions.deposit_statement_required_calculated if typeof perms.ricks?.can_archive_conditions?.deposit_statement_required_calculated is 'string' and perms.ricks?.can_archive_conditions?.deposit_statement_required_calculated.indexOf('cc-') isnt 0
     try
       if perms.permitted
-        perms.permits = if 'publisher pdf' in perms.ricks.can_post_now_conditions.versions_archivable then 'publisher pdf' else if 'postprint' in perms.ricks.can_post_now_conditions.versions_archivable then 'postprint' else 'preprint'
+        perms.permits = if 'publisher pdf' in perms.ricks.can_archive_conditions.versions_archivable then 'publisher pdf' else if 'postprint' in perms.ricks.can_archive_conditions.versions_archivable then 'postprint' else 'preprint'
     try
       for k of perms.ricks
         if k.indexOf('embargo') isnt -1 and perms.ricks[k] and perms.permits is k.split('_embargo')[0].replace('_','').replace('publisherpdf','publisher pdf')
@@ -214,11 +214,11 @@ API.service.oab.permissions = (meta={}, file, url, confirmed, verbose) ->
           f.acceptable = true
           f.acceptance = 'File is not a PDF, therefore is acceptable'
         else #if perms.permitted
-          #if perms.ricks?.can_post_now
+          #if perms.ricks?.can_archive
           #  f.acceptable = true
           #  f.acceptance = 'Rick says any version of article can be posted now'
-          if perms.ricks?.can_post_now_conditions?.versions_archivable? # the version we can tell it is appears to meet what Rick says can be posted
-            if f.version in perms.ricks.can_post_now_conditions.versions_archivable or f.version is 'postprint' and 'postprint' in perms.ricks.can_post_now_conditions.versions_archivable
+          if perms.ricks?.can_archive_conditions?.versions_archivable? # the version we can tell it is appears to meet what Rick says can be posted
+            if f.version in perms.ricks.can_archive_conditions.versions_archivable or f.version is 'postprint' and 'postprint' in perms.ricks.can_archive_conditions.versions_archivable
               f.acceptable = true
               f.acceptance = 'We believe this is a ' + f.version + ' and Rick says such versions can be shared'
             else
@@ -264,8 +264,8 @@ API.service.oab.permissions = (meta={}, file, url, confirmed, verbose) ->
     delete f.unacceptable
 
   if f.acceptable and not f.licence?
-    if perms.ricks?.can_post_now_conditions?.deposit_statement_required_calculated? and perms.ricks.can_post_now_conditions.deposit_statement_required_calculated.indexOf('cc') is 0
-        f.licence = perms.ricks.can_post_now_conditions.deposit_statement_required_calculated
+    if perms.ricks?.can_archive_conditions?.deposit_statement_required_calculated? and perms.ricks.can_archive_conditions.deposit_statement_required_calculated.indexOf('cc') is 0
+        f.licence = perms.ricks.can_archive_conditions.deposit_statement_required_calculated
     else if perms.sherpa?.publisher?.alias? and perms.sherpa.publisher.alias.toLowerCase().indexOf('cc-') isnt -1
       f.licence = 'cc-' + perms.sherpa.publisher.alias.toLowerCase().split('cc-')[1].split(' ')[0]
 
