@@ -72,28 +72,52 @@ _avail =
       API.log 'find request blacklisted for ' + JSON.stringify opts
       return 400
     else
-      afnd = {data: {availability: [], requests: [], accepts: [], meta: {article: {}, data: {}}}}
-      afnd.data.match = opts.doi ? opts.pmid ? opts.pmc ? opts.pmcid ? opts.title ? opts.url ? opts.id ? opts.citation ? opts.q
-      afnd.v2 = API.service.oab.find opts
-      try
-        afnd.data.ill = afnd.v2.ill
-        afnd.data.meta.article = _.clone(afnd.v2.metadata) if afnd.v2.metadata?
-        afnd.data.meta.cache = afnd.v2.cached
-        afnd.data.meta.refresh = afnd.v2.refresh
-        afnd.data.meta.article.url = afnd.data.meta.article.url[0] if _.isArray afnd.data.meta.article.url
-        afnd.data.availability.push({type: 'article', url: afnd.v2.url}) if afnd.v2.url
-      try
-        finder = _finder(afnd.v2.metadata)
-        if finder isnt '' and request = oab_request.find '(' + finder + ') AND type:article'
-          rq = type: 'article', _id: request._id
-          rq.ucreated = if opts.uid and request.user?.id is opts.uid then true else false
-          rq.usupport = if opts.uid then API.service.oab.supports(request._id, opts.uid)? else false
-          afnd.data.requests.push rq
-      return afnd
+      return API.service.oab.availability opts
 API.add 'service/oab/availability', get:_avail, post:_avail
 API.add 'service/oab/availabilities', () -> return oab_find.search this
 
 
+
+# legacy wrapper
+API.service.oab.availability = (opts,v2) ->
+  afnd = {data: {availability: [], requests: [], accepts: [], meta: {article: {}, data: {}}}}
+  if opts?
+    afnd.data.match = opts.doi ? opts.pmid ? opts.pmc ? opts.pmcid ? opts.title ? opts.url ? opts.id ? opts.citation ? opts.q
+  afnd.v2 = if typeof v2 is 'object' and not _.isEmpty(v2) and v2.metadata? then v2 else if opts? then API.service.oab.find(opts) else undefined
+  if afnd.v2?
+    afnd.data.match ?= afnd.v2.metadata.doi ? afnd.v2.metadata.title ? afnd.v2.metadata.pmid ? afnd.v2.metadata.pmc ? afnd.v2.metadata.pmcid ? afnd.v2.metadata.url
+    afnd.data.match = afnd.data.match[0] if _.isArray afnd.data.match
+    try
+      afnd.data.ill = afnd.v2.ill
+      afnd.data.meta.article = _.clone(afnd.v2.metadata) if afnd.v2.metadata?
+      afnd.data.meta.cache = afnd.v2.cached
+      afnd.data.meta.refresh = afnd.v2.refresh
+      afnd.data.meta.article.url = afnd.data.meta.article.url[0] if _.isArray afnd.data.meta.article.url
+      if afnd.v2.url? and afnd.v2.found? and not afnd.data.meta.article.source?
+        for vf of afnd.v2.found
+          if vf isnt 'oabutton' and afnd.v2.found[vf] is afnd.v2.url
+            afnd.data.meta.article.source = vf
+            break
+      afnd.data.meta.article.bing = true if 'bing' in afnd.v2.checked
+      afnd.data.meta.article.reversed = true if 'reverse' in afnd.v2.checked
+      afnd.data.availability.push({type: 'article', url: afnd.v2.url}) if afnd.v2.url
+    try
+      if afnd.data.availability.length is 0 and (afnd.v2.metadata.doi or afnd.v2.metadata.title or afnd.v2.metadata.url)
+        eq = {type: 'article'}
+        if afnd.v2.metadata.doi
+          eq.doi = afnd.v2.metadata.doi
+        else if afnd.v2.metadata.title
+          eq.title = afnd.v2.metadata.title
+        else
+          eq.url = afnd.v2.metadata.url
+          eq.url = eq.url[0] if _.isArray eq.url
+        if request = oab_request.find eq
+          rq = type: 'article', _id: request._id
+          rq.ucreated = if opts.uid and request.user?.id is opts.uid then true else false
+          rq.usupport = if opts.uid then API.service.oab.supports(request._id, opts.uid)? else false
+          afnd.data.requests.push rq
+  afnd.data.accepts.push({type:'article'}) if afnd.data.availability.length is 0 and afnd.data.requests.length is 0
+  return afnd
 
 API.service.oab.metadata = (options={}, content) -> # pass-through to find that ensures the settings will get metadata rather than fail fast on find
   options.metadata ?= true
