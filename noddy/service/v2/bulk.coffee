@@ -283,12 +283,12 @@ API.add 'service/oab/job/:jid/results.csv',
 
     for r in res
       row = if r.string then JSON.parse(r.string) else if r._raw_result['API.service.oab.find']? then r._raw_result['API.service.oab.find'] else r._raw_result['API.service.oab.availability']
-      if not row.meta?
-        row = API.service.oab.availability undefined, row
       if row.data?
         for ky of row.data
           row[ky] = row.data[ky]
         delete row.data
+      if not row.meta?
+        row = API.service.oab.availability undefined, row
       csv += '\n'
       if r.args?
         ea = JSON.parse r.args

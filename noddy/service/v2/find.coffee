@@ -239,7 +239,8 @@ API.service.oab.find = (options={}, metadata={}, content) ->
 
   # special cases for instantill/shareyourpaper/other demos and exlibris - dev and live demo accounts that always return a fixed answer
   if (options.plugin is 'instantill' or options.plugin is 'shareyourpaper') and (metadata.doi is '10.1234/567890' or (metadata.doi? and metadata.doi.indexOf('10.1234/oab-syp-') is 0) or metadata.title is 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL') and options.from in ['qZooaHWRz9NLFNcgR','eZwJ83xp3oZDaec86'] 
-    res.metadata = {title: 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL', year: '2019', doi: 'https://scholarworks.iupui.edu/bitstream/handle/1805/20422/07-PAXTON.pdf?sequence=1&isAllowed=y'}
+    # https://scholarworks.iupui.edu/bitstream/handle/1805/20422/07-PAXTON.pdf?sequence=1&isAllowed=y
+    res.metadata = {title: 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL', year: '2019', doi: metadata.doi ? '10.1234/oab-syp-aam'}
     res.metadata.journal = 'Proceedings of the 16th IFLA ILDS conference: Beyond the paywall - Resource sharing in a disruptive ecosystem'
     res.metadata.author = [{given: 'Mike', family: 'Paxton'}, {given: 'Gary', family: 'Maixner III'}, {given: 'Joseph', family: 'McArthur'}, {given: 'Tina', family: 'Baich'}]
     res.ill = {openurl: ""}
@@ -262,7 +263,7 @@ API.service.oab.find = (options={}, metadata={}, content) ->
     catalogued = oab_catalogue.finder metadata
     # if user wants a total refresh, don't use any of it (we still search for it though, because will overwrite later with the fresh stuff)
     if catalogued? and res.refresh isnt 0
-      res.permissions ?= catalogued.permissions if catalogued.permissions? and (catalogued.metadata?.journal? or catalogued.metadata?.issn?)
+      #res.permissions ?= catalogued.permissions if catalogued.permissions? and (catalogued.metadata?.journal? or catalogued.metadata?.issn?)
       if 'oabutton' in res.sources
         res.checked.push('oabutton') if 'oabutton' not in res.checked
         if catalogued.url? # within or without refresh time, if we have already found it, re-use it
@@ -504,7 +505,7 @@ API.service.oab.find = (options={}, metadata={}, content) ->
   if options.url?
     metadata.url ?= []
     metadata.url.push(options.url) if options.url not in metadata.url
-  res.permissions = API.service.oab.permissions(metadata) if not res.permissions?.permitted? and options.permissions and not _.isEmpty metadata
+  res.permissions = API.service.oab.permissions(metadata) if options.permissions and not _.isEmpty(metadata) #and not res.permissions?.permitted?
   res.test = true if JSON.stringify(metadata).toLowerCase().replace(/'/g,' ').replace(/"/g,' ').indexOf(' test ') isnt -1 #or (options.embedded? and options.embedded.indexOf('openaccessbutton.org') isnt -1)
   res.metadata = metadata
   
@@ -521,7 +522,7 @@ API.service.oab.find = (options={}, metadata={}, content) ->
       upd.checked = uc if JSON.stringify(uc.sort()) isnt JSON.stringify catalogued.checked.sort()
       uf = _.extend(res.found, catalogued.found)
       upd.found = uf if not _.isEqual uf, catalogued.found
-      upd.permissions = res.permissions if res.permissions? and not _.isEqual res.permissions, catalogued.permissions
+      upd.permissions = res.permissions if res.permissions? and (not catalogued.permissions? or not _.isEqual res.permissions, catalogued.permissions)
       upd.usermetadata = res.usermetadata if res.usermetadata?
       if typeof metadata.title is 'string'
         ftm = API.service.oab.ftitle(metadata.title)

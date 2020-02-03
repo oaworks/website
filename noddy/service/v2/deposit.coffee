@@ -90,9 +90,9 @@ API.add 'service/oab/receive/:rid/:holdrefuse',
 
 
 API.service.oab.deposit = (d,options={},files,uid) ->
-  if options.metadata?.doi? and options.metadata.doi.indexOf('10.1234/oab-syp-') is 0
+  if (options.doi? and options.doi.indexOf('10.1234/oab-syp-') is 0) or (options.metadata?.doi? and options.metadata.doi.indexOf('10.1234/oab-syp-') is 0)
     dm = {demo: true}
-    dm.zenodo = {url: 'https://zenodo.org/record/DEMO'} if options.metadata.doi is '10.1234/oab-syp-aam' # without this the UI will treat it as if a wrong version was given
+    dm.zenodo = {url: 'https://zenodo.org/record/DEMO'} if options.metadata?.doi is '10.1234/oab-syp-aam' or options.doi is '10.1234/oab-syp-aam' # without this the UI will treat it as if a wrong version was given
     return dm
     
   if typeof d is 'string' # a catalogue ID

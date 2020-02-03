@@ -68,10 +68,14 @@ API.service.oab.permissions = (meta={}, file, url, confirmed, verbose) ->
     meta = API.service.oab.metadata meta, content
 
   if meta.doi? and not perms.ricks?
-    try perms.ricks = HTTP.call('GET','https://rickscafe-api.herokuapp.com/permissions/doi/' + meta.doi).data.authoritative_permission.application
-    #perms.permitted = perms.ricks? and (perms.ricks.can_archive is true or (perms.ricks.can_archive_conditions?.versions_archivable and ('postprint' in perms.ricks.can_archive_conditions.versions_archivable or 'publisher pdf' in perms.ricks.can_archive_conditions.versions_archivable)))
-    perms.permitted = perms.ricks?.can_archive_conditions?.versions_archivable and ('postprint' in perms.ricks.can_archive_conditions.versions_archivable or 'publisher pdf' in perms.ricks.can_archive_conditions.versions_archivable)
-    perms.statement = perms.ricks.can_archive_conditions.deposit_statement_required_calculated if typeof perms.ricks?.can_archive_conditions?.deposit_statement_required_calculated is 'string' and perms.ricks?.can_archive_conditions?.deposit_statement_required_calculated.indexOf('cc-') isnt 0
+    try
+      # https://rickscafe-api.herokuapp.com/permissions/doi/
+      perms.ricks = HTTP.call('GET','https://api.greenoait.org/permissions/doi/' + meta.doi).data.authoritative_permission.application
+      #perms.permitted = perms.ricks? and (perms.ricks.can_archive is true or (perms.ricks.can_archive_conditions?.versions_archivable and ('postprint' in perms.ricks.can_archive_conditions.versions_archivable or 'publisher pdf' in perms.ricks.can_archive_conditions.versions_archivable)))
+      perms.permitted = perms.ricks?.can_archive_conditions?.versions_archivable and ('postprint' in perms.ricks.can_archive_conditions.versions_archivable or 'publisher pdf' in perms.ricks.can_archive_conditions.versions_archivable)
+      perms.statement = perms.ricks.can_archive_conditions.deposit_statement_required_calculated if typeof perms.ricks?.can_archive_conditions?.deposit_statement_required_calculated is 'string' and perms.ricks?.can_archive_conditions?.deposit_statement_required_calculated.indexOf('cc-') isnt 0
+    catch
+      perms.error = 'Could not connect to Ricks'
     try
       if perms.permitted
         perms.permits = if 'publisher pdf' in perms.ricks.can_archive_conditions.versions_archivable then 'publisher pdf' else if 'postprint' in perms.ricks.can_archive_conditions.versions_archivable then 'postprint' else 'preprint'
