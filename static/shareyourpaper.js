@@ -487,18 +487,21 @@ var _run = function() {
         needmore = false;
         info += '<div>';
         info += '<h2>You can freely share your paper now!</h2>';
-  
+
         if (avail.v2.permissions.permits === 'publisher pdf') {
           info += '<p>The library has checked and the journal encourages you to freely share the publisher pdf of your paper so colleagues and the public can freely read and cite it.</p>';
         }
-  
+
         if (avail.v2.permissions.permits !== 'publisher pdf') {
           info += '<p>The library has checked and the journal encourages you to freely share your paper so colleagues and the public can freely read and cite it [?].</p>';
           info += '<h3><span>&#10003;</span> Find the manuscript the journal accepted. It\’s not a PDF from the journal site</h3>';
-          info += '<p>This is the only version you\’re able to share legally. The accepted manuscript is the word file or LaTeX export you sent the publisher after peer-review and before formatting (publisher proofs).</p>';
+          info += '<p>This is the only version you\’re able to share legally. The accepted manuscript is the word file or Latex export you sent the publisher after peer-review and before formatting (publisher proofs).</p>';
           info += '<h3><span>&#10003;</span> Check there aren\’t publisher logos or formatting</h3>';
           info += '<p>It\’s normal to share accepted manuscript as the research is the same. It\’s fine to save your file as a pdf, make small edits to formatting, fix typos, remove comments, and arrange figures.</p>';
         }
+        info += '<h3><span>&#10003;</span> Tell us who to contact</h3>';
+        '') + '" type="text" id="oabutton_email" placeholder="email@montana.edu" aria-label="email@montana.edu" style="box-shadow:none;"></input></p>';
+        info += '<p>We’ll only use this if something goes wrong.<br>';
         info += '<h3>We\'ll check it\’s legal, then promote, and preserve your work</h3>';
         info += '<p><input type="file" name="file" id="file" class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '"></p>';// \
         info += '<p>By uploading you\'re agreeing to the <a href="https://scholarworks.montana.edu/docs/#what" target="_blank"><u>terms and conditions</u></a> and to license your work CC-BY.</p>';
