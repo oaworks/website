@@ -34,7 +34,7 @@ var _config = function() {
 
 var _run = function() {
   var cml = _oab_config.problem_email ? _oab_config.problem_email : (_oab_config.email ? _oab_config.email : (_oab_config.adminemail ? _oab_config.adminemail : undefined));
-  _lib_contact = 'Please try ' + (cml ? '<a href="mailto:' + cml + '">contacting your library</a>' : 'contacting your library') + ' directly';
+  _lib_contact = 'Please try ' + (cml ? '<a href="mailto:' + cml + '"><u>contacting your library</u></a>' : 'contacting your library') + ' directly';
   if (_oab_opts.bootstrap === undefined) _oab_opts.bootstrap = 'btn btn-primary btn-iu';
   if (_oab_opts.placeholder === undefined) _oab_opts.placeholder = 'e.g. 10.1234/567890';
   if (_oab_opts.data === undefined) _oab_opts.data = false;
@@ -326,7 +326,7 @@ var _run = function() {
               info += '<p>You\’re nearly done. It looks like what you uploaded is a publisher\’s PDF which the journal prohibits legally sharing.<!-- It can only be shared on a limited basis.--><br><br>';
               info += 'We just need the version accepted by the journal to make your work available to everyone.</p>';
               info += '<p><a href="#" class="' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : ' btn btn-primary') : '') + '" id="oabutton_inform" style="min-width:150px;">Try uploading again</a></p>';
-              info += '<p><a href="#" id="oabutton_filecorrect"><b><u>My upload was an accepted manuscript</a></u></b></p>';
+              info += '<p><a href="#" id="oabutton_filecorrect"><b><u>My upload was an accepted manuscript</u></b></a></p>';
               $('#oabutton_availability').html(info).show();
             }
           } else {
