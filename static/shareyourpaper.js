@@ -406,19 +406,17 @@ var _run = function() {
       _submit_deposit(); // if the file is acceptable and can go in zenodo then we don't bother getting the email address
     } else {
       var info = '<div>';
-      info += '<h3>Nearly there! We\'ll double check your paper</h3>';
+      info += '<h3>We\'ll double check your paper</h3>';
       info += '<p>You\’ve done your part for now. We\’ll check in the next day to make sure it\’s legal to share.</p>';
+      info += '<p>Hopefully, we\’ll soon send you a link soon.';
       try {
         if (avail.v2.permissions.embargo) {
-          info += '<p>Hopefully, we\’ll soon send you a link soon. Unfortunately, the journal won\’t let us make it public until ';
+          info += '<p>Unfortunately, the journal won\’t let us make it public until ';
           info += avail.v2.permissions.embargo; // TODO how should this date be formatted
           info += ' After release, you\’ll find your paper on Scholarworks Google Scholar, Web of Science.</p>';
         }
       } catch (err) {}
-      info += '<h3>Let us know your email</h3>';
-      info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="email@montana.edu" aria-label="email@montana.edu" style="box-shadow:none;"></input></p>';
-      info += '<p>We\'ll only use this to send you a link or questions.</p>';
-      info += '<p><a target="_blank" href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Submit</a></p>';
+      info += '<p><a href="#" class="oabutton_restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>').show();
       info += '</div>';
       $('#oabutton_availability').html(info).show();
       if (_parameta.email) $('#oabutton_email').val(_parameta.email);//.trigger('keyup'); // should this just auto trigger as well?
@@ -500,7 +498,7 @@ var _run = function() {
           info += '<p>It\’s normal to share accepted manuscript as the research is the same. It\’s fine to save your file as a pdf, make small edits to formatting, fix typos, remove comments, and arrange figures.</p>';
         }
         info += '<h3><span>&#10003;</span> Tell us who to contact</h3>';
-        '') + '" type="text" id="oabutton_email" placeholder="email@montana.edu" aria-label="email@montana.edu" style="box-shadow:none;"></input></p>';
+        info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="email@montana.edu" aria-label="email@montana.edu" style="box-shadow:none;"></input></p>';
         info += '<p>We\'ll only use this if something goes wrong.<br>';
         info += '<h3>We\'ll check it\'s legal, then promote, and preserve your work</h3>';
         info += '<p><input type="file" name="file" id="file" class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '"></p>';// \
