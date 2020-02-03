@@ -501,8 +501,8 @@ var _run = function() {
         }
         info += '<h3><span>&#10003;</span> Tell us who to contact</h3>';
         '') + '" type="text" id="oabutton_email" placeholder="email@montana.edu" aria-label="email@montana.edu" style="box-shadow:none;"></input></p>';
-        info += '<p>We’ll only use this if something goes wrong.<br>';
-        info += '<h3>We\'ll check it\’s legal, then promote, and preserve your work</h3>';
+        info += '<p>We\'ll only use this if something goes wrong.<br>';
+        info += '<h3>We\'ll check it\'s legal, then promote, and preserve your work</h3>';
         info += '<p><input type="file" name="file" id="file" class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '"></p>';// \
         info += '<p>By uploading you\'re agreeing to the <a href="https://scholarworks.montana.edu/docs/#what" target="_blank"><u>terms and conditions</u></a> and to license your work CC-BY.</p>';
         info += '<p><a href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : ' btn btn-primary') : '') + '" id="submitfile" style="min-width:150px;">Submit deposit</a>';
