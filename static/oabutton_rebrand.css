@@ -639,7 +639,7 @@ div.greenbottom {
   .flex-all{
     display: flex;
     flex-flow: column;
-    /*height: 100%;*/
+    height: 100%;
   }
 
   .flex-body{
