@@ -3,8 +3,6 @@
 
   <link rel="stylesheet" href="/static/oabutton_rebrand.css"> <!-- gets the new css (still also uses the old css, just overwrites where necessary) -->
 </head>
-
-
 <style>
   #topnav {
     display: none;
@@ -37,13 +35,12 @@
     }
   }
    /*sams added style above*/
-
 </style>
 
-<!-- sam starts here -->
+<div class="flex-all">
 
 <!-- headder -->
-<div class="navy-bg">
+<div class="navy-bg flex-head">
   <div class="center-col header">
   <div>
     <span><strong>Shareyourpaper.org</strong> by <a href="https://openaccessbutton.org" style="margin: 0">Open Access Button</a></span>
@@ -59,14 +56,22 @@
 </div>
 
 <!-- pitch -->
-<div class="strapline" style="max-width:700px;">
-  <script src="https://dev.openaccessbutton.org/static/shareyourpaper.js"></script><script>shareyourpaper({uid:"JkXSRq7RffwjgHQEn",api:"https://dev.api.cottagelabs.com/service/oab"});</script>
-  <div id="shareyourpaper"></div>
+<div class="flex-body">
+  <div class="center-col">
+    <div class="pitch-half">
+      <script src="https://dev.openaccessbutton.org/static/shareyourpaper.js"></script><script>shareyourpaper({uid:"JkXSRq7RffwjgHQEn",api:"https://dev.api.cottagelabs.com/service/oab"});</script>
+      <div id="shareyourpaper"></div>
+    </div>
+    <div class="pitch-half">
+      <img src="/static/shareyourpaper-transparent-blue.png" width="100%">
+    </div>
+  </div>
 </div>
 
 
+
 <!-- footer -->
-<div class="navy-bg">
+<div class="navy-bg flex-foot">
   <div class="center-col footer">
     <div>
       <p>Open Source • Community Controlled • Not for Profit</p>
@@ -79,6 +84,8 @@
     </div>
   </div>
 </div>
+
+
 
 <script>
 jQuery(document).ready(function() {

@@ -7,6 +7,7 @@ html, body{
   font-size:1em;
   font-family: 'Inter', sans-serif;
   color:#212f3f;
+  height: 100%;
 }
 
 @supports (font-variation-settings: normal) {
@@ -633,6 +634,17 @@ div.greenbottom {
     position: absolute;
     bottom: 0;
   }*/
+
+/*flex column style*/
+  .flex-all{
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+  }
+
+  .flex-body{
+    flex: auto;
+  }
 
 @media screen and (min-width: 640px) {
   .stick-to-bottom{
