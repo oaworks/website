@@ -277,6 +277,7 @@ var _run = function() {
     // this could be just an email for a dark deposit, or a file for actual deposit
     $('.oabutton_find').html('Submitting .');
     $('.oabutton_deposit').html('Depositing .');
+    if (filecorrect) $('#oabutton_inform').html('Depositing .');
     var eml = typeof matched === 'string' ? matched : ($('#oabutton_email').length ? $('#oabutton_email').val() : _parameta.email);
     var data = {email:eml, from:_oab_opts.uid, plugin:'shareyourpaper', embedded:window.location.href, metadata: avail.data.meta.article }
     if (filecorrect) data.confirmed = true;
@@ -295,10 +296,11 @@ var _run = function() {
         cache: false,
         processData: false,
         success: function(res) {
+          if (filecorrect) $('#oabutton_inform').html('Try uploading again');
           $('.oabutton_deposit').html('Submit deposit');
           $('#oabutton_inputs').hide();
           if (flupload) {
-            if (res.error) {
+            if (res.error || (filecorrect && res.type === 'review')) {
               // if we should be able to deposit but can't, we stick to the response we already had:
               $('#oabutton_availability').html('<h3>Congrats, you\'re done!</h3><p>Check back soon to see your paper live, or we\'ll email you with issues.</p><p><a href="#" class="oabutton_restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>').show();
             } else if (res.zenodo && res.zenodo.url) {
@@ -336,7 +338,7 @@ var _run = function() {
           }
         },
         error: function(data) {
-          flupload = undefined;
+          if (filecorrect) $('#oabutton_inform').html('Try uploading again');
           $('.oabutton_deposit').html('Complete deposit');
           $('#oabutton_error').html('<p>Sorry, we were not able to deposit this paper for you. ' + _lib_contact + '</p><p><a href="#" class="oabutton_restart" style="font-weight:bold;">Try again</a></p>').show();
           pinger('Shareyourpaper_couldnt_submit_deposit');
@@ -345,9 +347,19 @@ var _run = function() {
         }
       }
       if (flupload && flupload !== true) { // it may be true for demo purposes
-        for ( var d in data ) flupload.append(d,data[d]);
-        opts.data = flupload;
-        opts.contentType = false;
+        if (opts.contentType !== false) {
+          for ( var d in data ) {
+            if (d === 'metadata') {
+              for ( var md in data[d] ) {
+                if (typeof data[d][md] === 'string' || typeof data[d][md] === 'number') flupload.append(md,data[d][md]);
+              }
+            } else {
+              flupload.append(d,data[d]);
+            }
+          }
+          opts.data = flupload;
+          opts.contentType = false;
+        }
       } else {
         opts.data = JSON.stringify(data);
         opts.contentType = 'application/json';
