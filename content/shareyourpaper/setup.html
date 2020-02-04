@@ -924,6 +924,14 @@
             We am not, but we're fans
           </p>
 
+          <p><b>
+            Turn off domain based validation?
+          </b></p>
+          <p>
+          <input id="email_domains_off" type="checkbox" class="setting blue">
+            Yes
+          </p>
+
 
         </div>
         <div class="bluebottom">
@@ -1050,8 +1058,8 @@ jQuery(document).ready(function() {
       if ( $(this).attr('id') === 'community') {
         if ( $(this).is(':visible') ) {
           var evl = $(this).val();
-          try { 
-            evl = evl.split('communities/')[1].split('/')[0]; 
+          try {
+            evl = evl.split('communities/')[1].split('/')[0];
             $(this).val(evl);
           } catch(err) {}
           data.community = evl;
