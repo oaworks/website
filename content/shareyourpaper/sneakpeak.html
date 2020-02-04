@@ -54,9 +54,22 @@
 
   .form-control{
       font-size: 1em;
-      padding: 22px 12px;
-      /*margin-top:20px;*/
+      box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      height: 46px;
+      padding-top:10px;
+      padding-bottom: 10px;
   }
+/*
+    #file{
+        padding-top:  10px;
+        padding-bottom:   35px;
+    }
+
+    #oabutton_input{
+      padding: 22px 12px;
+    }*/
 
   .form-control:focus{
     border:2px solid #428bca;
@@ -89,7 +102,7 @@
 
 <!-- pitch -->
 <div class="flex-body" style="display: flex;">
-  <div class="center-col">
+  <div class="center-col quote">
     <div class="strapline">
      
         <script src="https://dev.openaccessbutton.org/static/shareyourpaper.js"></script><script>shareyourpaper({uid:"JkXSRq7RffwjgHQEn",api:"https://dev.api.cottagelabs.com/service/oab"});</script>
