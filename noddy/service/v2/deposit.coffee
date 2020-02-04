@@ -119,7 +119,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
   dep.plugin = options.plugin if options.plugin
 
   perms = API.service.oab.permissions d, files, undefined, options.confirmed # if confirmed is true the submitter has confirmed this is the right file. If confirmed is the checksum this is a resubmit by an admin
-  if perms.file?.acceptable and (options.confirmed is perms.file.checksum or not options.confirmed) # if the depositor confirms we don't deposit, we manually review - only deposit on admin confirmation
+  if perms.file?.acceptable and ((options.confirmed? and options.confirmed is perms.file.checksum) or not options.confirmed) # if the depositor confirms we don't deposit, we manually review - only deposit on admin confirmation
     zn = {}
     zn.content = files[0].data
     zn.name = perms.file.name
@@ -210,7 +210,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
     iacc = API.accounts.retrieve options.from
     tos.push iacc.email ? iacc.emails[0].address # the institutional user may set a config value to use as the contact email address but for now it is the account address
 
-  text = 'This is an example email that we will send to an institution or our own admins for ' + dep.type + ' deposit\n\n'
+  '''text = 'This is an example email that we will send to an institution or our own admins for ' + dep.type + ' deposit\n\n'
   text += 'File called ' +  (files[0].filename ? files[0].name) + ' should be attached.\n\n' if files? and files.length
   text += 'This file needs reviewed as we could not automatically judge if it is suitable for this type of deposit.\n\n' if dep.type is 'review'
   text += 'The attached file is for local deposit to the institutional repository.\n\n' if dep.type is 'forward'
@@ -218,6 +218,8 @@ API.service.oab.deposit = (d,options={},files,uid) ->
   text += 'We have deposited this in Zenodo.\n\n' if dep.type is 'zenodo'
   text += 'We have deposited this in Zenodo under embargo until ' + perms.embargo + '\n\n' if dep.type is 'embargoed'
   text += 'Author email to contact: \n' + options.email + '\n\n' if options.email 
+  text += 'The depositor has confirmed that this file is the correct item to deposit.\n\n' if options.confirmed? and options.confirmed isnt perms.file?.checksum
+  text += 'The administrator has confirmed that this file is the correct item to deposit.\n\n' if options.confirmed? and options.confirmed is perms.file?.checksum
   text += 'There is already an open URL for this article at \n' + options.redeposit + '\n\n' if typeof options.redeposit is 'string'
   text += 'METADATA:\n' + JSON.stringify(d.metadata,undefined,2) + '\n\nPERMISSIONS:\n' + JSON.stringify(perms,undefined,2) + '\n\nDEPOSIT:\n' + JSON.stringify(dep,undefined,2)
 
@@ -228,11 +230,21 @@ API.service.oab.deposit = (d,options={},files,uid) ->
     to: tos
     subject: dep.type + ' deposit ' + dep.createdAt
     text: text
+    attachments: (if _.isArray(files) and files.length then [{filename: (files[0].filename ? files[0].name), content: files[0].data}] else undefined)'''
+
+  dep.permissions = perms
+  dep.metadata = d.metadata
+
+  tmpl = API.mail.template 'shareyourpaper/' + (if dep.type is 'embargoed' then 'zenodo' else dep.type) + '_deposit.html'
+  sub = API.service.oab.substitute tmpl.content, dep
+  API.service.oab.mail
+    from: 'deposits@openaccessbutton.org'
+    to: tos
+    subject: sub.subject ? dep.type + ' deposit ' + dep.createdAt
+    html: sub.content
     attachments: (if _.isArray(files) and files.length then [{filename: (files[0].filename ? files[0].name), content: files[0].data}] else undefined)
 
   # eventually this could also close any open requests for the same item, but that has not been prioritised to be done yet
-  dep.permissions = perms
-  dep.metadata = d.metadata
   dep.z = z if API.settings.dev and dep.zenodo.id? and dep.zenodo.id isnt 'EXAMPLE'
   return dep
 

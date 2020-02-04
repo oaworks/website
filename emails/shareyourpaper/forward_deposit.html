@@ -10,7 +10,7 @@
 
 <p>We think the following versions are allowed:</p>
 
-{{ricks.can_archive_conditions.versions_archivable}}
+{{permissions.permits}}
 
 <p>Once you decide:</p>
 <ul>
@@ -18,16 +18,14 @@
     If it is not legal, we’d suggest you send an email like this.
   </li>
   <li>
-    If it is legal, you can <a href = "https://shareyourpaper.org/{{metadata.doi}}?confirmed={{perms.file.checksum}}">click here</a> to instantly deposit it in Zenodo (as usual, you’ll get another email) or you can skip that and put it directly in your repository. Either way, we’d suggest you send an email like this.
+    If it is legal, you can <a href = "https://shareyourpaper.org/{{metadata.doi}}?confirmed={{permissions.file.checksum}}">click here</a> to instantly deposit it in Zenodo (as usual, you’ll get another email) or you can skip that and put it directly in your repository. Either way, we’d suggest you send an email like this.
   </li>
   <li>
     If you’re not sure you can send it to <a href ="mailto:joe@openaccessbutton.org">joe@openaccessbutton.org</a> for a second opinion.
   </li>
 </ul>
 
-<p>Do not reply to this email. If you have questions, please email <a href = "mailto:joe@openaccessbutton.org">joe@openaccessbutton.org</a> (including details from this message).</p>
-
-<p>The key details of the deposit are below, find more <a href = "https://api.openaccessbutton.org/deposit/{{deposit.id}}">here</a>.</p>
+<p>Do not reply to this email. If you have questions, please email <a href="mailto:joe@openaccessbutton.org">joe@openaccessbutton.org</a> (including details from this message).</p>
 
 <p><b>Article Metadata</b></p>
 
@@ -87,4 +85,4 @@
 
 <p><b>Deposit information</b></p>
 
-{{deposit.email}}
+{{email}}

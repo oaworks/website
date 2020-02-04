@@ -1,14 +1,14 @@
-{{SUBJECT Review Deposit {{metadata.doi}} }}
+{{SUBJECT Successful Deposit: {{metadata.doi}} }}
 
 <p>Hi,</p>
 
-<p>We just got an attempted submission for:</p>
+<p>Just now you got a new deposit that you can submission in the repository for the following paper:</p>
 
-{{metadata.doi}}
+<p><a href = "{{metadata.doi}}">{{metadata.title}}</a></p>
 
-<p>But it needs a review of some sort.</p>
+<p>The file is called “{{file.name}}” , you’ll find it attached and <a href ="{{zenodo.ur}}">can be found in Zenodo</a>.</p>
 
-<p>The key details of the deposit are below, find more <a href = "https://api.openaccessbutton.org/deposit/{{deposit.id}}">here</a>.</p>
+<p>Do not reply to this email. If you have questions, please email <a href = "mailto:joe@openaccessbutton.org">joe@openaccessbutton.org</a> (including details from this message).</p>
 
 <p><b>Article Metadata</b></p>
 
@@ -50,11 +50,11 @@
 
 {{ricks.can_archive_conditions.deposit_statement_required_calculated}}
 
-{{ricks.provenance.policy_full_text}}
+{{permissions.provenance.policy_full_text}}
 
 {{ricks.meta.monitoring_type}}
 
-{{ricks.meta.record_last_updated}}
+{{permissions.meta.record_last_updated}}
 
 <p><b>Upload information</b></p>
 
@@ -68,6 +68,6 @@
 
 <p><b>Deposit information</b></p>
 
-{{deposit.url}}
+{{url}}
 
-{{deposit.email}}
+{{email}}

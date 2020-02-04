@@ -300,7 +300,22 @@ var _run = function() {
           $('.oabutton_deposit').html('Submit deposit');
           $('#oabutton_inputs').hide();
           if (flupload) {
-            if (res.error || (filecorrect && res.type === 'review')) {
+            if (filecorrect && (res.zenodo === undefined || res.zenodo.url === undefined)) {
+              var info = '<div>';
+              info += '<h3>We\'ll double check your paper</h3>';
+              info += '<p>You\'ve done your part for now. We\’ll check in the next day to make sure it\’s legal to share.</p>';
+              info += '<p>Hopefully, we\’ll soon send you a link soon.';
+              try {
+                if (avail.v2.permissions.embargo) {
+                  info += '<p>Unfortunately, the journal won\'t let us make it public until ';
+                  info += avail.v2.permissions.embargo; // TODO how should this date be formatted
+                  info += ' After release, you\'ll find your paper on Scholarworks Google Scholar, Web of Science.</p>';
+                }
+              } catch (err) {}
+              info += '<p><a href="#" class="oabutton_restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>';
+              info += '</div>';
+              $('#oabutton_availability').html(info).show();
+            } else if (res.error) {
               // if we should be able to deposit but can't, we stick to the response we already had:
               $('#oabutton_availability').html('<h3>Congrats, you\'re done!</h3><p>Check back soon to see your paper live, or we\'ll email you with issues.</p><p><a href="#" class="oabutton_restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>').show();
             } else if (res.zenodo && res.zenodo.url) {
