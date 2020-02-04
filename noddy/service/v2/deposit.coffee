@@ -2,23 +2,23 @@
 import moment from 'moment'
 
 API.add 'service/oab/deposit',
-  get: 
+  get:
     authOptional: true
-    action: () -> 
+    action: () ->
       return API.service.oab.deposit undefined, this.queryParams, API.http.getFiles(this.queryParams.url), this.userId
-  post: 
+  post:
     authOptional: true
-    action: () -> 
+    action: () ->
       return API.service.oab.deposit undefined, this.bodyParams, this.request.files, this.userId
 
 API.add 'service/oab/deposit/:did',
-  get: 
+  get:
     authOptional: true
-    action: () -> 
+    action: () ->
       return API.service.oab.deposit this.urlParams.did, this.queryParams
-  post: 
+  post:
     authOptional: true
-    action: () -> 
+    action: () ->
       return API.service.oab.deposit this.urlParams.did, this.bodyParams, this.request.files
 
 API.add 'service/oab/deposits',
@@ -37,13 +37,13 @@ API.add 'service/oab/deposits',
       return oab_catalogue.search this.bodyParams, {restrict:restrict}
 
 API.add 'service/oab/deposit/config',
-  get: 
+  get:
     authOptional: true
     action: () ->
       try
         return API.service.oab.deposit.config this.queryParams.uid ? this.user._id
       return 404
-  post: 
+  post:
     authRequired: 'openaccessbutton.user'
     action: () ->
       opts = this.request.body ? {}
@@ -94,7 +94,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
     dm = {demo: true}
     dm.zenodo = {url: 'https://zenodo.org/record/DEMO'} if options.metadata?.doi is '10.1234/oab-syp-aam' or options.doi is '10.1234/oab-syp-aam' # without this the UI will treat it as if a wrong version was given
     return dm
-    
+
   if typeof d is 'string' # a catalogue ID
     d = oab_catalogue.get d
   else
@@ -133,7 +133,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
     description = description.trim()
     description += '.' if description.lastIndexOf('.') isnt description.length-1
     description += ' ' if description.length
-    description += 'Deposited by shareyourpaper.org and openaccessbutton.org. We\'ve taken reasonable steps to ensure this content doesn\'t violate copyright, however, if you think it does you can request a takedown by emailing help@openaccessbutton.org.'
+    description += '<br><br>Deposited by shareyourpaper.org and openaccessbutton.org. We\'ve taken reasonable steps to ensure this content doesn\'t violate copyright, however, if you think it does you can request a takedown by emailing help@openaccessbutton.org.'
     meta =
       title: d.metadata.title ? 'Unknown',
       description: description.trim(),
@@ -149,7 +149,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
       if in_zenodo
         dep.zenodo.already = in_zenodo.id # we don't put it in again although we could with doi as related field - but leave for review for now
       else if meta.version is 'postprint' or meta.version is 'AAM' or meta.version is 'preprint'
-        meta['related_identifiers'] = [{relation: (if meta.version is 'postprint' or meta.version is 'AAM' or meta.version is 'preprint' then 'isPreviousVersionOf' else 'isIdenticalTo'), identifier: d.metadata.doi}] 
+        meta['related_identifiers'] = [{relation: (if meta.version is 'postprint' or meta.version is 'AAM' or meta.version is 'preprint' then 'isPreviousVersionOf' else 'isIdenticalTo'), identifier: d.metadata.doi}]
       else
         meta.doi = d.metadata.doi
     else
@@ -217,7 +217,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
   text += 'This email notifies the institution that the depositor wishes to deposit their article with the institutional repository, but we do not yet have the article - the institution should contact the depositor directly.\n\n' if dep.typ is 'dark'
   text += 'We have deposited this in Zenodo.\n\n' if dep.type is 'zenodo'
   text += 'We have deposited this in Zenodo under embargo until ' + perms.embargo + '\n\n' if dep.type is 'embargoed'
-  text += 'Author email to contact: \n' + options.email + '\n\n' if options.email 
+  text += 'Author email to contact: \n' + options.email + '\n\n' if options.email
   text += 'The depositor has confirmed that this file is the correct item to deposit.\n\n' if options.confirmed? and options.confirmed isnt perms.file?.checksum
   text += 'The administrator has confirmed that this file is the correct item to deposit.\n\n' if options.confirmed? and options.confirmed is perms.file?.checksum
   text += 'There is already an open URL for this article at \n' + options.redeposit + '\n\n' if typeof options.redeposit is 'string'
@@ -336,7 +336,7 @@ API.service.oab.receive = (rid,files,url,title,description,firstname,lastname,cr
       z = API.use.zenodo.deposition.create meta, up, API.settings.service.openaccessbutton?.zenodo?.token
       r.received.zenodo = 'https://zenodo.org/record/' + z.id if z.id
       r.received.zenodo_doi = z.metadata.prereserve_doi.doi if z.metadata?.prereserve_doi?.doi?
-        
+
     oab_request.update r._id, {hold:'$DELETE',received:r.received,status:(if up.publish is false and not r.received.url? then 'moderate' else 'received')}
     API.service.oab.admin(r._id,'successful_upload') if up.publish
     API.mail.send
@@ -372,4 +372,3 @@ API.service.oab.refuse = (rid,reason) ->
   oab_request.update rid, {hold:'$DELETE',email:'$DELETE',holds:r.holds,refused:r.refused,status:r.status}
   #API.mail.send(); # inform requestee that their request has been refused
   return r
-
