@@ -235,7 +235,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
   dep.permissions = perms
   dep.metadata = d.metadata
 
-  tmpl = API.mail.template 'shareyourpaper/' + (if dep.type is 'embargoed' then 'zenodo' else dep.type) + '_deposit.html'
+  tmpl = API.mail.template (if dep.type is 'embargoed' then 'zenodo' else dep.type) + '_deposit.html'
   sub = API.service.oab.substitute tmpl.content, dep
   API.service.oab.mail
     from: 'deposits@openaccessbutton.org'
