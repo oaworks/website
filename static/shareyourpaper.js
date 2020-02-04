@@ -590,7 +590,7 @@ var _run = function() {
       }
       if (!input || !input.length) input = data.title;
       if (input === undefined || !input.length || (input.toLowerCase().indexOf('http') === -1 && input.indexOf('10.') === -1 && input.indexOf('/') === -1 && isNaN(parseInt(input.toLowerCase().replace('pmc',''))) && (input.length < 30 || input.replace(/\+/g,' ').split(' ').length < 3) ) ) {
-        $('#oabutton_error').html('<p>Sorry, we can\'t use partial titles/citations. Please provide the full title or citation, or a suitable URL or identifier.</p>').show();
+        $('#oabutton_error').html('<p>Please provide a DOI.</p>').show();
         _doing_availability = false;
         return;
       }
