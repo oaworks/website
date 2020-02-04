@@ -302,7 +302,7 @@ var _run = function() {
           if (flupload) {
             if (filecorrect && (res.zenodo === undefined || res.zenodo.url === undefined)) {
               var info = '<div>';
-              info += '<h3>We\'ll double check your paper</h3>';
+              info += '<h2>We\'ll double check your paper</h2>';
               info += '<p>You\'ve done your part for now. We\’ll check in the next day to make sure it\’s legal to share.</p>';
               info += '<p>Hopefully, we\’ll soon send you a link soon.';
               try {
@@ -317,10 +317,10 @@ var _run = function() {
               $('#oabutton_availability').html(info).show();
             } else if (res.error) {
               // if we should be able to deposit but can't, we stick to the response we already had:
-              $('#oabutton_availability').html('<h3>Congrats, you\'re done!</h3><p>Check back soon to see your paper live, or we\'ll email you with issues.</p><p><a href="#" class="oabutton_restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>').show();
+              $('#oabutton_availability').html('<h2>Congrats, you\'re done!</h2><p>Check back soon to see your paper live, or we\'ll email you with issues.</p><p><a href="#" class="oabutton_restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>').show();
             } else if (res.zenodo && res.zenodo.url) {
               // deposit was possible, show the user a congrats page with a link to the item in zenodo
-              var info = '<h3>Congrats! Your paper will be available to everyone, forever!</h3>';
+              var info = '<h2>Congrats! Your paper will be available to everyone, forever!</h2>';
               if (res.embargo) {
                 info += '<p>You\’ve done your part for now. Unfortunately, the journal won’t let us make it public until ';
                 info += res.embargo; // TODO how should this date be formatted
@@ -337,7 +337,7 @@ var _run = function() {
             } else {
               // if the file given is not a version that is allowed, show a page saying something looks wrong
               // also the backend should create a dark deposit in this case, but delay it by six hours, and cancel if received in the meantime
-              var info = '<h3>Hmmm, something looks wrong</h3>';
+              var info = '<h2>Hmmm, something looks wrong</h2>';
               info += '<p>You\’re nearly done. It looks like what you uploaded is a publisher\’s PDF which the journal prohibits legally sharing.<!-- It can only be shared on a limited basis.--><br><br>';
               info += 'We just need the version accepted by the journal to make your work available to everyone.</p>';
               info += '<p><a href="#" class="' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : ' btn btn-primary') : '') + '" id="oabutton_inform" style="min-width:150px;">Try uploading again</a></p>';
@@ -346,9 +346,9 @@ var _run = function() {
             }
           } else {
             if (res.type === 'redeposit') {
-              $('#oabutton_availability').html('<h3>Congrats, you\'re done!</h3><p>Check back soon to see your paper live, or we\'ll email you with issues.</p><p><a href="#" class="oabutton_restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>').show();
+              $('#oabutton_availability').html('<h2>Congrats, you\'re done!</h2><p>Check back soon to see your paper live, or we\'ll email you with issues.</p><p><a href="#" class="oabutton_restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>').show();
             } else {
-              $('#oabutton_availability').html('<h3>Hurray, you\'re done!</h3><p>We\'ll email you a link to your paper in ScholarWorks soon. Next time, before you publish check to see if your journal allows you to have the most impact by making your research available to everyone, for free.</p><p><a href="#" class="oabutton_restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>').show();
+              $('#oabutton_availability').html('<h2>Hurray, you\'re done!</h2><p>We\'ll email you a link to your paper in ScholarWorks soon. Next time, before you publish check to see if your journal allows you to have the most impact by making your research available to everyone, for free.</p><p><a href="#" class="oabutton_restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>').show();
             }
           }
         },
@@ -421,7 +421,7 @@ var _run = function() {
       _submit_deposit(); // if the file is acceptable and can go in zenodo then we don't bother getting the email address
     } else {
       var info = '<div>';
-      info += '<h3>We\'ll double check your paper</h3>';
+      info += '<h2>We\'ll double check your paper</h2>';
       info += '<p>You\’ve done your part for now. We\’ll check in the next day to make sure it\’s legal to share.</p>';
       info += '<p>Hopefully, we\’ll soon send you a link soon.';
       try {
