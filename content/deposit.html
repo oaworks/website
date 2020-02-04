@@ -1,24 +1,4 @@
 <script src="/static/openaccessbutton_widget.js"></script>
-<script>
-jQuery(document).ready(function() {
-  $('.tryit').bind('click',function(e) {
-    e.preventDefault();
-    $('#oabutton_url').val($(this).html());
-    setTimeout(function() {
-      $('#oabutton_find').trigger('click');
-    },500)
-  });
-  openaccessbutton_widget({uid:'oab_site',api:api});
-
-  noddy.afterLogin = function() {
-    $('.promptsignup').hide();
-    var uid = noddy.user.account._id;
-    $('.stickidin').html($('.stickidin').html().replace('openaccessbutton_widget()','openaccessbutton_widget({uid:"' + uid + '"})'));
-  }
-  noddy.login();
-});
-</script>
-
 <!-- Start of openaccessbutton Zendesk Widget script -->
 <script>/*<![CDATA[*/window.zEmbed||function(e,t){var n,o,d,i,s,a=[],r=document.createElement("iframe");window.zEmbed=function(){a.push(arguments)},window.zE=window.zE||window.zEmbed,r.src="javascript:false",r.title="",r.role="presentation",(r.frameElement||r).style.cssText="display: none",d=document.getElementsByTagName("script"),d=d[d.length-1],d.parentNode.insertBefore(r,d),i=r.contentWindow,s=i.document;try{o=s}catch(e){n=document.domain,r.src='javascript:var d=document.open();d.domain="'+n+'";void(0);',o=s}o.open()._l=function(){var o=this.createElement("script");n&&(this.domain=n),o.id="js-iframe-async",o.src=e,this.t=+new Date,this.zendeskHost=t,this.zEQueue=a,this.body.appendChild(o)},o.write('<body onload="document._l();">'),o.close()}("https://assets.zendesk.com/embeddable_framework/main.js","openaccessbutton.zendesk.com");
 /*]]>*/</script>
@@ -62,7 +42,7 @@ p {
 
 <div class="row">
 
-  <div id="maininfo" class="col-md-6 col-md-offset-3">
+  <div id="maininfo" class="col-md-8 col-md-offset-3">
 
     <script src="https://dev.openaccessbutton.org/static/shareyourpaper.js"></script><script>shareyourpaper({uid:"JkXSRq7RffwjgHQEn",api:"https://dev.api.cottagelabs.com/service/oab"});</script>
     <div id="shareyourpaper"></div>
