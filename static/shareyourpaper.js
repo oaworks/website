@@ -523,7 +523,7 @@ var _run = function() {
         }
 
         if (avail.v2.permissions.permissions.version_allowed !== 'publisher pdf') {
-          info += '<p>' + (_oab_config.not_a_library ? 'We have' : 'The library has') + ' checked and the journal encourages you to freely share your paper so colleagues and the public can freely read and cite it [?].</p>';
+          info += '<p>' + (_oab_config.not_a_library ? 'We have' : 'The library has') + ' checked and the journal encourages you to freely share your paper so colleagues and the public can freely read and cite it.</p>';
           info += '<h3><span>&#10003;</span> Find the manuscript the journal accepted. It\’s not a PDF from the journal site</h3>';
           info += '<p>This is the only version you\’re able to share legally. The accepted manuscript is the word file or Latex export you sent the publisher after peer-review and before formatting (publisher proofs).</p>';
           info += '<h3><span>&#10003;</span> Check there aren\’t publisher logos or formatting</h3>';
