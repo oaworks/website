@@ -6,11 +6,11 @@
 
 <p>The file is called “{{permissions.file.name}}" and you’ll find it attached. It’s for the following paper:</p>
 
-<a href = "{{metadata.doi}}">{{metadata.title}}</a>
+<a href = "https://doi.org/{{metadata.doi}}">{{metadata.title}}</a>
 
 <p>We think the following versions are allowed:</p>
 
-{{permissions.permits}}
+{{permissions.permissions.archiving_allowed}}
 
 <p>Once you decide:</p>
 <ul>
@@ -18,7 +18,7 @@
     If it is not legal, we’d suggest you send an email like this.
   </li>
   <li>
-    If it is legal, you can <a href = "https://shareyourpaper.org/{{metadata.doi}}?confirmed={{permissions.file.checksum}}">click here</a> to instantly deposit it in Zenodo (as usual, you’ll get another email) or you can skip that and put it directly in your repository. Either way, we’d suggest you send an email like this.
+    If it is legal, you can <!-- <a href = "https://shareyourpaper.org/{{metadata.doi}}?confirmed={{permissions.file.checksum}}">click here</a> to instantly deposit it in Zenodo (as usual, you’ll get another email) or you can skip that and -->put it directly in your repository. <!--Either way, w-->Then, we’d suggest you send an email like this.
   </li>
   <li>
     If you’re not sure you can send it to <a href ="mailto:joe@openaccessbutton.org">joe@openaccessbutton.org</a> for a second opinion.
@@ -49,37 +49,41 @@
 
 {{metadata.author}}
 
-{{metadata.pmcid}}
+<!-- {{metadata.pmcid}} -->
 
-{{metadata.pmid}}
+<!-- {{metadata.pmid}} -->
 
 <p><b>Permissions</b></p>
 
-{{ricks.can_archive_conditions.can_archive}}
+<!--{{permissions.ricks.can_archive_conditions.can_archive}}-->
 
-{{ricks.can_archive_conditions.versions_archivable}}
+<!--{{permissions.ricks.can_archive_conditions.versions_archivable}}-->
+<!-- TODO add titles -->
+{{permissions.permissions.can_archive_conditions.archiving_allowed}}
 
-{{ricks.can_archive_conditions.post_print_embargo_end_calculated}}
+{{permissions.permissions.can_archive_conditions.version_allowed}}
 
-{{ricks.can_archive_conditions.archiving_locations_allowed}}
+{{permissions.ricks.can_archive_conditions.post_print_embargo_end_calculated}}
 
-{{ricks.can_archive_conditions.licences_allowed}}
+{{permissions.ricks.can_archive_conditions.archiving_locations_allowed}}
 
-{{ricks.can_archive_conditions.deposit_statement_required_calculated}}
+{{permissions.ricks.can_archive_conditions.licences_allowed}}
 
-{{ricks.provenance.policy_full_text}}
+{{permissions.ricks.can_archive_conditions.deposit_statement_required_calculated}}
 
-{{ricks.meta.monitoring_type}}
+{{permissions.ricks.provenance.policy_full_text}}
 
-{{ricks.meta.record_last_updated}}
+{{permissions.ricks.meta.monitoring_type}}
+
+{{permissions.{ricks.meta.record_last_updated}}
 
 <p><b>Upload information</b></p>
 
-{{permissions.file.acceptable}}
+{{permissions.file.archivable}}
 
-{{permissions.file.acceptance}}
+{{permissions.file.archivable_reason}}
 
-{{permissions.file.match}}
+{{permissions.file.same_paper}}
 
 {{permissions.file.depositor_says}}
 
