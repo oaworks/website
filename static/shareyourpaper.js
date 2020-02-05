@@ -331,10 +331,10 @@ var _run = function() {
                 info += '<p>You\’ve done your part for now. Unfortunately, the journal won’t let us make it public until ';
                 info += res.embargo; // TODO how should this date be formatted
                 info += 'After release, you\'ll find your paper on Google Scholar, Web of Science, and popular tools like Unpaywall.</p>';
-                info += '<h4>Your paper will be freely available at this link:</h4>';
+                info += '<h3>Your paper will be freely available at this link:</h3>';
               } else {
                 info += '<p>You\’ll soon find your paper freely available in ' + (_oab_config.repo_name ? _oab_config.repo_name : 'ScholarWorks') + ', Google Scholar, Web of Science, and other popular tools.';
-                info += '<h4>Your paper is now freely available at this link:</h4>';
+                info += '<h3>Your paper is now freely available at this link:</h3>';
               }
               info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" style="box-shadow:none;" value="' + res.zenodo.url + '"></input></p>';
               info += '<p>You can now put the link on your website, CV, any profiles, and ResearchGate.</p>';
