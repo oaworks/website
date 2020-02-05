@@ -47,11 +47,22 @@ API.add 'service/oab/validate',
           if this.queryParams.domained and this.queryParams.domained not in ['qZooaHWRz9NLFNcgR','eZwJ83xp3oZDaec86']
             iacc = API.accounts.retrieve this.queryParams.domained
             return 'baddomain' if not iacc?
-            eml = iacc.email ? iacc.emails[0].address # may also later have a config where the allowed domains can be listed but for now just match the domain of the account holder
-            if eml.toLowerCase().indexOf(this.queryParams.email.split('@')[1].split('.')[0].toLowerCase()) is -1
+            eml = false #iacc.email ? iacc.emails[0].address # may also later have a config where the allowed domains can be listed but for now just match the domain of the account holder - only in the case where shareyourpaper config exists
+            dc = false
+            try
+              dc = API.service.oab.deposit.config iacc
+              #eml = dc.adminemail if dc.adminemail? # don't bother defaulting to the admin email
+              dc.email_domains = dc.email_domains.split(',') if dc.email_domains? and typeof dc.email_domains is 'string'
+            if dc isnt false and dc.email_domains? and _.isArray(dc.email_domains) and dc.email_domains.length > 0
+              for ed in dc.email_domains
+                if this.queryParams.email.toLowerCase().indexOf(ed.toLowerCase()) > 0
+                  return true
               return 'baddomain'
             else
-              return true
+              if typeof eml is 'string' and eml.toLowerCase().indexOf(this.queryParams.email.split('@')[1].split('.')[0].toLowerCase()) is -1
+                return 'baddomain'
+              else
+                return true
           else
             return true
         else if v.did_you_mean

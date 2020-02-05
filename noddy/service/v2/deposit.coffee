@@ -119,7 +119,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
   dep.plugin = options.plugin if options.plugin
 
   perms = API.service.oab.permissions d, files, undefined, options.confirmed # if confirmed is true the submitter has confirmed this is the right file. If confirmed is the checksum this is a resubmit by an admin
-  if perms.file?.acceptable and ((options.confirmed? and options.confirmed is perms.file.checksum) or not options.confirmed) # if the depositor confirms we don't deposit, we manually review - only deposit on admin confirmation
+  if perms.file?.archivable and ((options.confirmed? and options.confirmed is perms.file.checksum) or not options.confirmed) # if the depositor confirms we don't deposit, we manually review - only deposit on admin confirmation
     zn = {}
     zn.content = files[0].data
     zn.name = perms.file.name
@@ -129,7 +129,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
       for a in d.metadata.author
         creators.push({name: a.family + (if a.given then ', ' + a.given else '')}) if a.family?
     creators = [{name:'Unknown'}] if creators.length is 0
-    description = perms.statement ? (if d.metadata.doi? then 'The publisher\'s final version of this work can be found at https://doi.org/' + d.metadata.doi else '')
+    description = perms.permissions.required_statement ? (if d.metadata.doi? then 'The publisher\'s final version of this work can be found at https://doi.org/' + d.metadata.doi else '')
     description = description.trim()
     description += '.' if description.lastIndexOf('.') isnt description.length-1
     description += ' ' if description.length
@@ -156,9 +156,9 @@ API.service.oab.deposit = (d,options={},files,uid) ->
       meta.prereserve_doi = true if API.settings.service.openaccessbutton?.zenodo?.prereserve_doi
     meta['access_right'] = 'open'
     meta.license = perms.file.licence ? 'cc-by'
-    if perms.embargo?
+    if perms.permissions.embargo?
       meta['access_right'] = 'embargoed'
-      meta['embargo_date'] = perms.embargo # check date format required by zenodo
+      meta['embargo_date'] = perms.permissions.embargo # check date format required by zenodo
     try meta['publication_date'] = d.metadata.published if d.metadata.published? and typeof d.metadata.published is 'string'
     if dep.from and (options.community or uc = API.service.oab.deposit.config dep.from)
       if options.community
@@ -192,11 +192,9 @@ API.service.oab.deposit = (d,options={},files,uid) ->
       dep.error = 'No Zenodo credentials available'
   dep.version = perms.file.version if perms.file?.version?
   if dep.zenodo.id
-    if perms.embargo
-      dep.embargo = perms.embargo
-      dep.type = 'embargoed'
-    else
-      dep.type = 'zenodo'
+    if perms.permissions.embargo
+      dep.embargo = perms.permissions.embargo
+    dep.type = 'zenodo'
   else if options.from and (not dep.embedded or (dep.embedded.indexOf('openaccessbutton.org') is -1 and dep.embedded.indexOf('shareyourpaper.org') is -1))
     dep.type = if options.redeposit then 'redeposit' else if files? and files.length then 'forward' else 'dark'
   else
@@ -216,7 +214,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
   text += 'The attached file is for local deposit to the institutional repository.\n\n' if dep.type is 'forward'
   text += 'This email notifies the institution that the depositor wishes to deposit their article with the institutional repository, but we do not yet have the article - the institution should contact the depositor directly.\n\n' if dep.typ is 'dark'
   text += 'We have deposited this in Zenodo.\n\n' if dep.type is 'zenodo'
-  text += 'We have deposited this in Zenodo under embargo until ' + perms.embargo + '\n\n' if dep.type is 'embargoed'
+  text += 'We have deposited this in Zenodo under embargo until ' + perms.permissions.embargo + '\n\n' if dep.type is 'embargoed'
   text += 'Author email to contact: \n' + options.email + '\n\n' if options.email
   text += 'The depositor has confirmed that this file is the correct item to deposit.\n\n' if options.confirmed? and options.confirmed isnt perms.file?.checksum
   text += 'The administrator has confirmed that this file is the correct item to deposit.\n\n' if options.confirmed? and options.confirmed is perms.file?.checksum
@@ -235,7 +233,13 @@ API.service.oab.deposit = (d,options={},files,uid) ->
   dep.permissions = perms
   dep.metadata = d.metadata
 
-  tmpl = API.mail.template (if dep.type is 'embargoed' then 'zenodo' else dep.type) + '_deposit.html'
+  ed = _.clone dep
+  if dep.metaddata.author?
+    as = []
+    for author in dep.metadata.author
+      try as.push author.given + ' ' + author.family
+    dep.metadata.author = as
+  tmpl = API.mail.template dep.type + '_deposit.html'
   sub = API.service.oab.substitute tmpl.content, dep
   API.service.oab.mail
     from: 'deposits@openaccessbutton.org'
