@@ -431,11 +431,11 @@
           </p>
 
           <p><b>What is the name of your institution?</b></p>
-          <input id="repo_name" type="text" class="form-control setting blue" placeholder="e.g Montana State University">
+          <input id="institution_name" type="text" class="form-control setting blue" placeholder="e.g Montana State University">
           <br>
 
           <p><b>What is the name of your repository?</b></p>
-          <input id="ill_institution" type="text" class="form-control setting blue" placeholder="e.g Scholarworks">
+          <input id="repo_name" type="text" class="form-control setting blue" placeholder="e.g Scholarworks">
           <br>
 
           <p><b>What emails are used at your institution?</b></p>
@@ -961,17 +961,17 @@ jQuery(document).ready(function() {
   $('div.content:visible').css({'padding-top':diff+'px'});
 
   $(document).ajaxComplete(function(e,xhr) {
-    if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.availability !== undefined) {
-      _ill_response = xhr.responseJSON.data;
+    //if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.availability !== undefined) {
+      //_ill_response = xhr.responseJSON.data;
       // an availability check finished, reposition the instantill window if necessary
       /*if (($('#instantill').height() + $('#instantill').offset().top) > ($(window).height()*.95)) {
         var diff = Math.floor(($(window).height() - $('#instantill').height())/2)-20;
         if (diff < 20) diff = 20;
         $('div.content:visible').css({'padding-top':diff+'px'});
       }*/
-      $('div.content:visible').css({'padding-top':'100px'});
-      $('.oabutton_ill').off();
-    }
+      //$('div.content:visible').css({'padding-top':'100px'});
+      //$('.oabutton_ill').off();
+    //}
   });
 
 
@@ -1075,15 +1075,11 @@ jQuery(document).ready(function() {
         }
       } else if ( $(this).val() !== undefined ) {
         data[$(this).attr('id')] = $(this).val();
-        if (['ill_redirect_base_url','terms','book','other'].indexOf($(this).attr('id')) !== -1 && data[$(this).attr('id')] !== '' && data[$(this).attr('id')].indexOf('http') !== 0) {
-          data[$(this).attr('id')] = 'http://' + data[$(this).attr('id')];
-          $(this).val(data[$(this).attr('id')]);
-        }
       }
     });
 
     var opts = {
-      url: api + '/ill/config',
+      url: api + '/deposit/config',
       type:'POST',
       cache:false,
       processData:false,
@@ -1139,7 +1135,7 @@ jQuery(document).ready(function() {
       $('.email').attr('placeholder','default ' + (noddy.user.account.email ? noddy.user.account.email : noddy.user.account.emails[0].address));
     } catch(err) {}
     try {
-      uc = noddy.user.account.service.openaccessbutton.ill.config;
+      uc = noddy.user.account.service.openaccessbutton.deposit.config;
       configure();
     } catch(err) {}
     try {
@@ -1171,9 +1167,6 @@ jQuery(document).ready(function() {
         }
       });
     } catch(err) {}
-    /*if (noddy.hasRole('root')) {
-      $('#ill_config').prepend('<input style="border-color:red;" id="uid" type="text" class="form-control setting" placeholder="UID (ADMIN setting override)"><br>')
-    }*/
   }
 
   if ($('#gologin').length) $('#gologin').bind('click',function(e) {

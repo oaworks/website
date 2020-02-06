@@ -234,13 +234,13 @@ API.service.oab.deposit = (d,options={},files,uid) ->
   dep.metadata = d.metadata
 
   ed = _.clone dep
-  if dep.metaddata.author?
+  if ed.metaddata?.author?
     as = []
-    for author in dep.metadata.author
+    for author in ed.metadata.author
       try as.push author.given + ' ' + author.family
-    dep.metadata.author = as
+    ed.metadata.author = as
   tmpl = API.mail.template dep.type + '_deposit.html'
-  sub = API.service.oab.substitute tmpl.content, dep
+  sub = API.service.oab.substitute tmpl.content, ed
   API.service.oab.mail
     from: 'deposits@openaccessbutton.org'
     to: tos
