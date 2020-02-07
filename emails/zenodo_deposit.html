@@ -12,55 +12,77 @@
 
 <p><b>Article Metadata</b></p>
 
+<p>Article Title:</p>
 {{metadata.title}}
 
+<p>DOI:</p>
 {{metadata.doi}}
 
+<p>Journal Title:</p>
 {{metadata.journal}}
 
+<p>ISSN:</p>
 {{metadata.issn}}
 
+<p>Publisher:</p>
 {{metadata.publisher}}
 
+<p>Date of Publication:</p>
 {{metadata.published}}
 
+<p>Volume:</p>
 {{metadata.volume}}
 
+<p>Issue:</p>
 {{metadata.issue}}
 
+<p>Page:</p>
 {{metadata.page}}
 
+<p>Author(s):</p>
 {{metadata.author}}
 
-{{metadata.pmcid}}
+<!-- {{metadata.pmcid}} -->
 
-{{metadata.pmid}}
+<!-- {{metadata.pmid}} -->
 
 <p><b>Permissions</b></p>
 
-{{ricks.can_archive_conditions.can_archive}}
+<!--{{permissions.ricks.can_archive_conditions.can_archive}}-->
 
-{{ricks.can_archive_conditions.versions_archivable}}
+<!--{{permissions.ricks.can_archive_conditions.versions_archivable}}-->
+<p>Archiving allowed</p>
+{{permissions.permissions.can_archive_conditions.archiving_allowed}}
 
-{{ricks.can_archive_conditions.post_print_embargo_end_calculated}}
+<p>Versions allowed</p>
+{{permissions.permissions.can_archive_conditions.version_allowed}}
 
-{{ricks.can_archive_conditions.archiving_locations_allowed}}
+<p>Embargo end date</p>
+{{permissions.ricks.can_archive_conditions.post_print_embargo_end_calculated}}
 
-{{ricks.can_archive_conditions.licences_allowed}}
+<p>Archiving location permitted</p>
+{{permissions.ricks.can_archive_conditions.archiving_locations_allowed}}
 
-{{ricks.can_archive_conditions.deposit_statement_required_calculated}}
+<p>Required licence</p>
+{{permissions.ricks.can_archive_conditions.licences_allowed}}
 
-{{permissions.provenance.policy_full_text}}
+<p>Required Deposit Statement</p>
+{{permissions.ricks.can_archive_conditions.deposit_statement_required_calculated}}
 
-{{ricks.meta.monitoring_type}}
+<p>Policy Full Text:</p>
+{{permissions.ricks.provenance.policy_full_text}}
 
-{{permissions.meta.record_last_updated}}
+<p>Monitoring type:</p>
+{{permissions.ricks.meta.monitoring_type}}
+
+<p>Last updated:</p>
+{{permissions.ricks.meta.record_last_updated}}
 
 <p><b>Upload information</b></p>
 
-{{permissions.file.acceptable}}
+{{permissions.file.archivable}}
 
-{{permissions.file.acceptance}}
+{{permissions.file.archivable_reason}}
 
 {{permissions.file.version}}
 
@@ -68,6 +90,8 @@
 
 <p><b>Deposit information</b></p>
 
-{{url}}
-
+<p>Depositor Email</p>
 {{email}}
+
+<p>URL</p>
+{{url}}
