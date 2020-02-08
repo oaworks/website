@@ -60,7 +60,7 @@ var _run = function() {
   w += '<p>We\'ll gather information about your paper and find the easiest way to share it.</p>';
   w += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_input" placeholder="' + _oab_opts.placeholder + '" aria-label="' + _oab_opts.placeholder + '" style="box-shadow:none;"></input></p>\
   <p><a class="oabutton_find ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" href="#" id="oabutton_find" aria-label="Search" style="min-width:150px;">Next</a></p>';
-  w += '<p><a id="nodoi" href="mailto:' + (cml ? cml : 'help@openaccessbutton.org') + "?subject=Help%20depositing%20my%20paper&body=Hi%2C%0D%0A%0D%0AI'd%20like%20to%20deposit%3A%0D%0A%0D%0A%3C%3CPlease%20insert%20a%20full%20citation%3E%3E%0D%0A%0D%0ACan%20you%20please%20assist%20me%3F%0D%0A%0D%0AYours%20Sincerely%2C" + '"><u><b>My paper doesn\’t have a DOI</b></u></a></p>';
+  w += '<p><a id="nodoi" href="mailto:' + (cml ? cml : 'help@openaccessbutton.org') + "?subject=Help%20depositing%20my%20paper&body=Hi%2C%0D%0A%0D%0AI'd%20like%20to%20deposit%3A%0D%0A%0D%0A%3C%3CPlease%20insert%20a%20full%20citation%3E%3E%0D%0A%0D%0ACan%20you%20please%20assist%20me%3F%0D%0A%0D%0AYours%20sincerely%2C" + '"><u><b>My paper doesn\’t have a DOI</b></u></a></p>';
   w += '</div>\
 <div id="oabutton_availability"></div>\
 <div id="oabutton_error" style="display:none;"></div>';
