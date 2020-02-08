@@ -2,7 +2,7 @@
 import crypto from 'crypto'
 import moment from 'moment'
 
-API.add 'service/oab/permissions', 
+API.add 'service/oab/permissions',
   get: () ->
     return API.service.oab.permissions this.queryParams, this.queryParams.content, this.queryParams.url, this.queryParams.confirmed
   post: () ->
@@ -18,9 +18,9 @@ API.service.oab.permissions = (meta={}, file, url, confirmed) ->
   # dev and live demo accounts that always return a fixed answer
   if meta.doi? and meta.doi.indexOf('10.1234/oab-syp-') is 0 #and (meta.from is 'qZooaHWRz9NLFNcgR' or uid is 'eZwJ83xp3oZDaec86')
     return {
-      demo: true, 
+      demo: true,
       permissions: {
-        archiving_allowed: if meta.doi is '10.1234/oab-syp-aam' then true else false, 
+        archiving_allowed: if meta.doi is '10.1234/oab-syp-aam' then true else false,
         version_allowed: if meta.doi is '10.1234/oab-syp-aam' then "postprint" else undefined
       }
       file: {
@@ -29,7 +29,7 @@ API.service.oab.permissions = (meta={}, file, url, confirmed) ->
     }
 
   formats = ['doc','tex','pdf','htm','xml','txt','rtf','odf','odt','page']
-  
+
   perms = meta.permissions ? {permissions: {archiving_allowed: false, version_allowed: undefined, embargo: undefined, required_statement: undefined}, file: undefined}
   meta = meta.metadata if meta.metadata? # if passed a catalogue object
 
@@ -173,7 +173,7 @@ API.service.oab.permissions = (meta={}, file, url, confirmed) ->
       if f.same_paper_evidence.words_count is 1 and f.format is 'pdf'
         # there was likely a pdf file reading failure due to bad PDF formatting
         f.same_paper_evidence.words_count = 0
-        f.archivable_reason = 'We could not find any text in the provided PDF - it is possible the PDF is a scan in which case text is only contained within images which we do not yet extract, or some PDFs have errors in their structure which stops us being able to machine-read them'
+        f.archivable_reason = 'We could not find any text in the provided PDF. It is possible the PDF is a scan in which case text is only contained within images which we do not yet extract. Or, the PDF may have errors in it\'s structure which stops us being able to machine-read it'
 
       f.version_evidence = score: 0, strings_checked: 0, strings_matched: []
       try
@@ -206,64 +206,64 @@ API.service.oab.permissions = (meta={}, file, url, confirmed) ->
       if f.version is 'unknown' and f.format? and f.format isnt 'pdf'
         f.version = 'postprint'
       f.version_standard = if f.version is 'preprint' then 'submittedVersion' else if f.version is 'postprint' then 'acceptedVersion' else if f.version is 'publisher pdf' then 'publishedVersion' else undefined
-        
-      try 
+
+      try
         ls = API.service.lantern.licence undefined, undefined, lowercontentsmall # check lantern for licence info in the file content
         if ls?.licence?
           f.licence = ls.licence
           f.licence_evidence = {string_match: ls.match}
         f.lantern = ls
-  
+
       f.archivable = false
       if confirmed
         f.archivable = true
         if confirmed is f.checksum
-          f.archivable_reason = 'The administrator has confirmed that this file is the version that can be shared now'
+          f.archivable_reason = 'The administrator has confirmed that this file is a version that can be archived.'
           f.admin_confirms = true
         else
-          f.archivable_reason = 'The depositor says that this file is the version that can be shared now'
+          f.archivable_reason = 'The depositor says that this file is a version that can be archived'
           f.depositor_says = true
       else if f.same_paper
         if f.format isnt 'pdf'
           f.archivable = true
-          f.archivable_reason = 'File is not a PDF, therefore is archivable'
+          f.archivable_reason = 'Since the file is not a PDF, we assume it is a Postprint.'
         else
           if perms.ricks?.application?.can_archive_conditions?.versions_archivable? # the version we can tell it is appears to meet what Rick says can be posted
             if f.version in perms.ricks.application.can_archive_conditions.versions_archivable or f.version is 'postprint' and 'postprint' in perms.ricks.application.can_archive_conditions.versions_archivable
               f.archivable = true
-              f.archivable_reason = 'We believe this is a ' + f.version + ' and Rick says such versions can be shared'
+              f.archivable_reason = 'We believe this is a ' + f.version + ' and our permission system says that version can be shared'
             else
-              f.archivable_reason = 'We believe this file is a ' + f.version + ' version and Rick does not list that as an archivable format'
+              f.archivable_reason = 'We believe this file is a ' + f.version + ' version and our permission system does not list that as an archivable version'
 
           # https://github.com/OAButton/discussion/issues/1377
           if not f.archivable and perms.sherpa?
             if perms.sherpa.color is 'green'
               if f.version in ['preprint','postprint']
                 f.archivable = true
-                f.archivable_reason = 'Sherpa color is ' + perms.sherpa.color + ' so ' + f.version + ' is archivable'
+                f.archivable_reason = 'Sherpa Romeo color is ' + perms.sherpa.color + ' so ' + f.version + ' is archivable'
               else
-                f.archivable_reason = 'Sherpa color is ' + perms.sherpa.color + ' which allows only preprint or postprint but version is ' + f.version
+                f.archivable_reason = 'Sherpa Romeo color is ' + perms.sherpa.color + ' which allows only preprint or postprint but version is ' + f.version
             else if perms.sherpa.color is 'blue'
               if f.version in ['postprint']
                 f.archivable = true
-                f.archivable_reason = 'Sherpa color is ' + perms.sherpa.color + ' so ' + f.version + ' is archivable'
+                f.archivable_reason = 'Sherpa Romeo color is ' + perms.sherpa.color + ' so ' + f.version + ' is archivable'
               else
-                f.archivable_reason = 'Sherpa color is ' + perms.sherpa.color + ' which allows only postprint but version is ' + f.version
+                f.archivable_reason = 'Sherpa Romeo color is ' + perms.sherpa.color + ' which allows only postprint but version is ' + f.version
             else if perms.sherpa?.color is 'yellow'
               if f.version in ['preprint']
                 f.archivable = true
-                f.archivable_reason = 'Sherpa color is ' + perms.sherpa.color + ' so ' + f.version + ' is archivable'
+                f.archivable_reason = 'Sherpa Romeo color is ' + perms.sherpa.color + ' so ' + f.version + ' is archivable'
               else
-                f.archivable_reason = 'Sherpa color is ' + perms.sherpa.color + ' which allows only preprint but version is ' + f.version
-  
+                f.archivable_reason = 'Sherpa Romeo color is ' + perms.sherpa.color + ' which allows only preprint but version is ' + f.version
+
         if not f.archivable and f.licence? and f.licence.toLowerCase().indexOf('cc') is 0
           f.archivable = true
-          f.archivable_reason = 'Lantern indicates this file contains a ' + f.lantern.licence + ' licence statement which confirms this article can be archived'
+          f.archivable_reason = 'It appears this file contains a ' + f.lantern.licence + ' licence statement. Under this licence the article can be archived'
         if not f.archivable
-          f.archivable_reason = 'File is a pdf amd we cannot confirm via Rick or Sherpa or Lantern if it is an archivable version or not'
+          f.archivable_reason = 'We cannot confirm if it is an archivable version or not'
       else
-        f.archivable_reason ?= if not f.same_paper_evidence.words_more_than_threshold then 'File is less than 500 words, does not appear to be a full article' else if not f.same_paper_evidence.document_format then 'File is of unexpected format ' + f.format else if not meta.doi and not meta.title then 'Insufficient metadata to validate file' else 'File does not contain expected metadata such as DOI or title'
-    
+        f.archivable_reason ?= if not f.same_paper_evidence.words_more_than_threshold then 'The file is less than 500 words, and so does not appear to be a full article' else if not f.same_paper_evidence.document_format then 'File is an unexpected format ' + f.format else if not meta.doi and not meta.title then 'We have insufficient metadata to validate file is for the correct paper ' else 'File does not contain expected metadata such as DOI or title'
+
   perms.file = f if not _.isEmpty f
 
   try perms.lantern = API.service.lantern.licence('https://doi.org/' + meta.doi) if not f.licence and meta.doi? and 'doi.org' not in url
@@ -271,7 +271,7 @@ API.service.oab.permissions = (meta={}, file, url, confirmed) ->
     f.licence = perms.lantern.licence
     f.licence_evidence = {string_match: perms.lantern.match}
     f.archivable = true
-    f.archivable_reason = 'Lantern indicates that the splash page the DOI resolves to contains a ' + perms.lantern.licence + ' licence statement which confirms this article can be archived'
+    f.archivable_reason = 'We think that the splash page the DOI resolves to contains a ' + perms.lantern.licence + ' licence statement which confirms this article can be archived'
 
   if f.archivable and not f.licence?
     if perms.ricks?.application?.can_archive_conditions?.deposit_statement_required_calculated? and perms.ricks.application.can_archive_conditions.deposit_statement_required_calculated.indexOf('cc') is 0
@@ -280,7 +280,3 @@ API.service.oab.permissions = (meta={}, file, url, confirmed) ->
       f.licence = 'cc-' + perms.sherpa.publisher.alias.toLowerCase().split('cc-')[1].split(' ')[0]
 
   return perms
-
-
-
-
