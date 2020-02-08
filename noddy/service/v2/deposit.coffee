@@ -244,7 +244,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
   API.service.oab.mail
     from: 'deposits@openaccessbutton.org'
     to: tos
-    subject: (sub.subject ? dep.type + ' deposit') + ' ' + dep.createdAt
+    subject: (sub.subject ? dep.type + ' deposit')
     html: sub.content
     attachments: (if _.isArray(files) and files.length then [{filename: (files[0].filename ? files[0].name), content: files[0].data}] else undefined)
 
