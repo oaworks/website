@@ -39,11 +39,11 @@
 <p>Page:</p>
 {{metadata.page}}
 
-<p>Author(s):</p>
-{{metadata.author}}
-
 <!--<p>Abstract:</p>
 {{metadata.abstract}}-->
+
+<p>Author(s):</p>
+{{metadata.author}}
 
 <!-- {{metadata.pmcid}} -->
 
@@ -51,26 +51,26 @@
 
 <p><b>Permissions</b></p>
 
-<!--{{permissions.ricks.can_archive_conditions.can_archive}}-->
+<!--{{permissions.ricks.application.can_archive_conditions.can_archive}}-->
+<!--{{permissions.ricks.application.can_archive_conditions.versions_archivable}}-->
 
-<!--{{permissions.ricks.can_archive_conditions.versions_archivable}}-->
 <p>Archiving allowed</p>
-{{permissions.permissions.can_archive_conditions.archiving_allowed}}
+{{permissions.permissions.archiving_allowed}}
 
 <p>Versions allowed</p>
-{{permissions.permissions.can_archive_conditions.version_allowed}}
+{{permissions.permissions.version_allowed}}
 
 <p>Embargo end date</p>
-{{permissions.ricks.can_archive_conditions.post_print_embargo_end_calculated}}
+{{permissions.ricks.application.can_archive_conditions.postprint_embargo_end_calculated}}
 
 <p>Archiving location permitted</p>
-{{permissions.ricks.can_archive_conditions.archiving_locations_allowed}}
+{{permissions.ricks.application.can_archive_conditions.archiving_locations_allowed}}
 
 <p>Required licence</p>
-{{permissions.ricks.can_archive_conditions.licences_allowed}}
+{{permissions.ricks.application.can_archive_conditions.licences_required}}
 
 <p>Required Deposit Statement</p>
-{{permissions.ricks.can_archive_conditions.deposit_statement_required_calculated}}
+{{permissions.ricks.application.can_archive_conditions.deposit_statement_required_calculated}}
 
 <p>Policy Full Text:</p>
 {{permissions.ricks.provenance.policy_full_text}}
