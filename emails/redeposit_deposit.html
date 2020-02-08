@@ -4,11 +4,11 @@
 
 <p>Just now you got a request to deposit an already open access article from:</p>
 
-{{email}}<br>
+{{email}}
 
 <p>Who would like you to deposit:</p>
 
-{{metadata.doi}}<br>
+{{metadata.doi}}
 
 <p>We think the following versions are allowed:</p>
 
@@ -16,7 +16,7 @@
 
 <p>and that there is an already Open Access version here:</p>
 
-{{url}}
+{{find.url}}
 
 <p>After you have made that deposit, we’d suggest you send an email like this.</p>
 
@@ -58,7 +58,7 @@
 
 <!-- {{metadata.pmid}} -->
 
-<p><b>permissions</b><p>
+<p><b>Archiving Permissions</b><p>
 
 <!--{{permissions.ricks.application.can_archive_conditions.can_archive}}-->
 <!--{{permissions.ricks.application.can_archive_conditions.versions_archivable}}-->
@@ -70,13 +70,13 @@
 {{permissions.permissions.version_allowed}}
 
 <p>Embargo end date</p>
-{{permissions.ricks.application.can_archive_conditions.post_print_embargo_end_calculated}}
+{{permissions.ricks.application.can_archive_conditions.postprint_embargo_end_calculated}}
 
 <p>Archiving location permitted</p>
 {{permissions.ricks.application.can_archive_conditions.archiving_locations_allowed}}
 
 <p>Required licence</p>
-{{permissions.ricks.application.can_archive_conditions.licences_allowed}}
+{{permissions.ricks.application.can_archive_conditions.licences_required}}
 
 <p>Required Deposit Statement</p>
 {{permissions.ricks.application.can_archive_conditions.deposit_statement_required_calculated}}
@@ -96,4 +96,4 @@
 {{email}}
 
 <p>OA URL</p>
-{{url}}
+{{find.url}}

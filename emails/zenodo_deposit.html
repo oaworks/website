@@ -4,9 +4,9 @@
 
 <p>Just now you got a new deposit that you can submission in the repository for the following paper:</p>
 
-<p><a href = "{{metadata.doi}}">{{metadata.title}}</a></p>
+<p><a href = "https://doi.org/{{metadata.doi}}">{{metadata.title}}</a></p>
 
-<p>The file is called “{{permissions.file.name}}” , you’ll find it attached and <a href ="{{zenodo.ur}}">can be found in Zenodo</a>.</p>
+<p>The file is called “{{permissions.file.name}}” , you’ll find it attached and <a href ="{{url}}">can be found in Zenodo</a>.</p>
 
 <p>Do not reply to this email. If you have questions, please email <a href = "mailto:joe@openaccessbutton.org">joe@openaccessbutton.org</a> (including details from this message).</p>
 
@@ -101,5 +101,11 @@
 <p>Depositor Email</p>
 {{email}}
 
-<p>URL</p>
+<p>Splash page URL</p>
 {{url}}
+
+<p>Full text URL</p>
+{{file}}
+
+<p>Zenodo DOI</p>
+{{doi}}
