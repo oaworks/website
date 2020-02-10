@@ -133,7 +133,7 @@ API.service.oab.find = (options={}, metadata={}, content) ->
       if not obj[w]?
         return false
     return true
-  API.log msg: 'OAB finding academic content', level: 'debug'
+  API.log msg: 'OAB finding academic content', level: 'debug', tst: {options: options, metadata: metadata, content: content}, flush: true
   started = Date.now()
   res = {url: false}
 

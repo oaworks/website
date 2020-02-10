@@ -232,13 +232,15 @@ API.service.oab.deposit = (d,options={},files,uid) ->
 
   dep.permissions = perms
   dep.metadata = d.metadata
+  dep.url = if typeof options.redeposit is 'string' then options.redeposit else if d.url then d.url else undefined
 
   ed = _.clone dep
-  if ed.metaddata?.author?
+  if ed.metadata?.author?
     as = []
     for author in ed.metadata.author
       try as.push author.given + ' ' + author.family
     ed.metadata.author = as
+  console.log ed
   tmpl = API.mail.template dep.type + '_deposit.html'
   sub = API.service.oab.substitute tmpl.content, ed
   API.service.oab.mail
