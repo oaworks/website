@@ -123,10 +123,6 @@
 
 
   @media screen and (max-width: 768px) {
-    .quote {
-      padding: 40px 30px;
-    }
-
     .pitch {
       padding: 90px 0;
     }
@@ -218,8 +214,8 @@
       <a href="/" style="margin: 0"><strong>Open Access Button</strong></a>
     </div>
     <div>
-      <span><a href="/libraries">For Libraries</a></span>
-      <span><a href="/request">Requests</a></span>
+      <!-- <span><a href="/libraries">For Libraries</a></span>
+      <span style="padding-left:12px"><a href="/request">Requests</a></span> -->
     </div>
   </div>
 </div>
@@ -236,8 +232,12 @@
         <br><br>
         To do that we've built, in partnership with librarians, a suite of powerfully simple tools that help <a href="#deliver-articles">deliver articles</a> and <a href="#repository">fill your repository</a>. They're free, easy to use, open-source, and community-controlled tools to catalyse Open.</p>
     </div>
-    <div class="strapline" style="text-align: center;">
-      <a class="btn btn-demo-blue"
+    <div class="strapline" style="text-align: center;display: flex;flex-direction: column;align-items: center;">
+      <a style="margin:5px;" class="btn btn-demo-blue"
+        href="https://docs.google.com/forms/d/e/1FAIpQLSddhWH2_Pg_JQMCtPFqE6acURwSVQIClucOdW3loqKO0gKZxA/viewform">Get the tools</a>
+        <a style="margin:5px;" class="btn btn-hollow-blue"
+        href="https://docs.google.com/forms/d/e/1FAIpQLSddhWH2_Pg_JQMCtPFqE6acURwSVQIClucOdW3loqKO0gKZxA/viewform">How to support</a>
+        <a style="margin:5px;" class="btn btn-hollow-blue"
         href="https://docs.google.com/forms/d/e/1FAIpQLSddhWH2_Pg_JQMCtPFqE6acURwSVQIClucOdW3loqKO0gKZxA/viewform">Stay up to date</a>
     </div>
     <p style="text-align: center;">and <a href="#leadership">learn how to support our work</a></p>
@@ -265,7 +265,6 @@
 
 <!-- instantILL pitch -->
 
-<div style="border-top: solid 5px #edf8ed">
   <div class="center-col">
     <div id="deliver-articles" class="pitch">
 
@@ -279,14 +278,14 @@
       </div>
     </div>
   </div>
-</div>
+
 
 <!-- ILL tools -->
 
 <div style="background-color: #edf8ed; border-top: solid 5px #dbf1d9">
   <div class="center-col">
     <h4 style="padding:30px">
-      <a onclick="showSection(0, 'deliver-articles-more')">More Tools to Deliver Articles</a>
+      <a style="color: #46B633" onclick="showSection(0, 'deliver-articles-more')">More Tools to Deliver Articles ▼</a>
     </h4>
   </div>
 </div>
@@ -302,7 +301,7 @@
 
 -->
 
-<div style="background-color: #edf8ed; display:none;" id="deliver-articles-more">
+<div style="background-color: #edf8ed; display:none; border-bottom: solid 5px #dbf1d9" id="deliver-articles-more">
   <div class="center-col">
     <div class="tool-container">
       <div class="tool">
@@ -382,7 +381,6 @@
 <!-- repositiroy pitch -->
 
 
-<div style="border-top: solid 5px #ecf3fa">
   <div id="repository" class="center-col">
     <div class="pitch">
       <div class="pitchhalf">
@@ -395,7 +393,7 @@
       </div>
     </div>
   </div>
-</div>
+
 
 
 <!-- ILL tools -->
@@ -403,13 +401,13 @@
 <div style="background-color: #ecf3fa; border-top: solid 5px #dbe9f5">
   <div class="center-col">
     <h4 style="padding:30px">
-        <a onclick="showSection(1, 'repository-more')">More Tools to Fill your Repository</a>
+        <a onclick="showSection(1, 'repository-more')">More Tools to Fill your Repository ▼</a>
     </h4>
   </div>
 </div>
 
 
-<div style="background-color: #ecf3fa; display:none;" id="repository-more">
+<div style="background-color: #ecf3fa; display:none; border-bottom: solid 5px #dbe9f5" id="repository-more">
   <div class="center-col">
     <div class="tool-container">
       <div class="tool">
@@ -450,7 +448,7 @@
 
 <!-- ILL strapline -->
 
-<div class="navy-bg">
+<div class="navy-bg" style="padding:0">
   <div class="center-col">
     <div class="quote">
       <div>
@@ -751,7 +749,7 @@
         Help us keep building for change, not for profit, by supporting our experimental, academy friendly model.
       </p>
 
-      <img src="static/media-team.png">
+      <img src="static/media-team-big.png">
     </div>
   </div>
   <div class="center-col" style="max-width: 1024px;">
@@ -773,8 +771,9 @@
     <div>
       <p>Open Source • Community Controlled • Not for Profit</p>
     </div>
-    <div>
+    <div  style="padding: 5px 0; align-self: flex-end;">
       <span><a href="/about">About</a></span>
+      <span><a href="/request">Requests</a></span>
       <span><a href="/api">API</a></span>
       <span><a href="/feedback#bug">Bugs</a></span>
       <span><a href="https://twitter.com/OA_Button">Twitter</a></span>

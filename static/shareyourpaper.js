@@ -7,7 +7,7 @@
 
 var _oab_opts = {};
 var _oab_config = {};
-var _ops = ['doi','title','url','atitle','rft_id','journal','issn','year','author','email'];
+var _ops = ['doi','title','url','atitle','rft_id','journal','issn','year','author','email','confirmed'];
 var _parameta = {};
 var _lib_contact = undefined;
 
@@ -34,7 +34,7 @@ var _config = function() {
 
 var _run = function() {
   var cml = _oab_config.problem_email ? _oab_config.problem_email : (_oab_config.email ? _oab_config.email : (_oab_config.adminemail ? _oab_config.adminemail : undefined));
-  _lib_contact = 'Please try ' + (cml ? '<a href="mailto:' + cml + '">contacting your library</a>' : 'contacting your library') + ' directly';
+  _lib_contact = 'Please try ' + (cml ? '<a href="mailto:' + cml + '"><u>contacting your library</u></a>' : 'contacting your library') + ' directly.';
   if (_oab_opts.bootstrap === undefined) _oab_opts.bootstrap = 'btn btn-primary btn-iu';
   if (_oab_opts.placeholder === undefined) _oab_opts.placeholder = 'e.g. 10.1234/567890';
   if (_oab_opts.data === undefined) _oab_opts.data = false;
@@ -46,18 +46,30 @@ var _run = function() {
   }
   if (_oab_opts.element === undefined) _oab_opts.element = '#shareyourpaper';
   if (_oab_opts.uid === undefined) _oab_opts.uid = 'anonymous';
-  if ($(_oab_opts.element).length === 0) $('body').append('<div id="shareyourpaper"></div>');
+  if ($(_oab_opts.element).length === 0) $('body').append('<div id="' + _oab_opts.element + '"></div>');
 
   var w = '<div id="oabutton_inputs"><h2>Make your research visible and see 30% more citations</h2>';
-  w += '<p>Share your paper with help from the library in ScholarWorks. Legally, for free, in minutes. Join millions of researchers sharing their papers freely with colleagues and the public.</p>';
+  w += '<p>';
+  if (_oab_config.not_a_library) {
+    w += 'Share your paper is designed by libraries to make your paper open access, for free, wherever you publish. '
+  } else {
+    w += 'Share your paper with help from the library in ' + (_oab_config.repo_name ? _oab_config.repo_name : 'ScholarWorks') + '. '
+  }
+  w += 'Legally, for free, in minutes. Join millions of researchers sharing their papers freely with colleagues and the public.</p>';
   w += '<h3>Start by entering the DOI of your paper</h3>';
   w += '<p>We\'ll gather information about your paper and find the easiest way to share it.</p>';
   w += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_input" placeholder="' + _oab_opts.placeholder + '" aria-label="' + _oab_opts.placeholder + '" style="box-shadow:none;"></input></p>\
   <p><a class="oabutton_find ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" href="#" id="oabutton_find" aria-label="Search" style="min-width:150px;">Next</a></p>';
-  w += '<p><a id="nodoi" href="mailto:' + (cml ? cml : 'help@openaccessbutton.org') + '"><b>I don\'t have a DOI</b></a></p>';
+  w += '<p><a id="nodoi" href="mailto:' + (cml ? cml : 'help@openaccessbutton.org') + "?subject=Help%20depositing%20my%20paper&body=Hi%2C%0D%0A%0D%0AI'd%20like%20to%20deposit%3A%0D%0A%0D%0A%3C%3CPlease%20insert%20a%20full%20citation%3E%3E%0D%0A%0D%0ACan%20you%20please%20assist%20me%3F%0D%0A%0D%0AYours%20sincerely%2C" + '"><u><b>My paper doesn\’t have a DOI</b></u></a></p>';
   w += '</div>\
 <div id="oabutton_availability"></div>\
 <div id="oabutton_error" style="display:none;"></div>';
+  if (_oab_config.pilot) {
+    w += '<p><br>Notice a change? We\'re testing a simpler and faster way to deposit your articles. You can ';
+    w += '<a href="mailto:' + cml + '">give feedback</a>';
+    w += ' or <a class="oldpinger" target="_blank" href="' + (_oab_config.old_way ? (_oab_config.old_way.indexOf('@') !== -1 ? 'mailto:' : '') + _oab_config.old_way : 'mailto:'+cml) + '">use the old way</a>.</p>';
+  }
+
 
   var ws = '#oabutton_inputs {\
   position: relative;\
@@ -155,6 +167,8 @@ var _run = function() {
   var avail = undefined;
   var attempts = 0;
   var gotmore = false;
+  var filecorrect = undefined;
+  var flupload = undefined;
 
   _restart = function(e) {
     try { e.preventDefault(); } catch(err) {}
@@ -162,6 +176,8 @@ var _run = function() {
     avail = undefined;
     attempts = 0;
     gotmore = false;
+    filecorrect = undefined;
+    flupload = undefined;
     if (_oab_opts.uid) {
       $.ajax({
         type:'GET',
@@ -182,7 +198,7 @@ var _run = function() {
       var noddy_api = api.indexOf('dev.') !== -1 ? 'https://dev.api.cottagelabs.com' : 'https://api.cottagelabs.com';
       var url = noddy_api + '/ping.png?service=openaccessbutton&action=' + what + '&from=' + _oab_opts.uid;
       if (_oab_config.pilot) url += '&pilot=' + _oab_config.pilot;
-      if (_oab_config.live) url += '&pilot=' + _oab_config.live;
+      if (_oab_config.live) url += '&live=' + _oab_config.live;
       $.ajax({
         url: url
       });
@@ -213,7 +229,7 @@ var _run = function() {
       info += '<p>Year of publication (required)<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_year" type="text"></p>';
       info += '<p>Paper DOI or URL<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_doi" type="text"></p>';
       info += '<p><a href="#" class="oabutton_find ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" id="oabutton_find" style="min-width:150px;">Continue</a></p>';
-      info += '<p><a href="#" class="restart" style="font-weight:bold;">Try again</a></p>';
+      info += '<p><a href="#" class="oabutton_restart" style="font-weight:bold;">Try again</a></p>';
       info += '</div>';
       $('#oabutton_availability').html(info);
       gotmore = true;
@@ -263,13 +279,15 @@ var _run = function() {
     return c;
   }
 
-  var flupload = undefined;
   var _submit_deposit = function() {
     // this could be just an email for a dark deposit, or a file for actual deposit
     $('.oabutton_find').html('Submitting .');
     $('.oabutton_deposit').html('Depositing .');
-    var eml = typeof matched === 'string' ? matched : $('#oabutton_email').val();
+    if (filecorrect) $('#oabutton_inform').html('Depositing .');
+    var eml = typeof matched === 'string' ? matched : ($('#oabutton_email').length ? $('#oabutton_email').val() : _parameta.email);
     var data = {email:eml, from:_oab_opts.uid, plugin:'shareyourpaper', embedded:window.location.href, metadata: avail.data.meta.article }
+    if (filecorrect) data.confirmed = true;
+    if (_parameta.confirmed) data.confirmed = _parameta.confirmed;
     if (avail.v2 && avail.v2.url) data.redeposit = avail.v2.url;
     if (_oab_config.pilot) data.pilot = _oab_config.pilot;
     if (_oab_config.live) data.live = _oab_config.live;
@@ -280,29 +298,89 @@ var _run = function() {
     } else {
       var opts = {
         type:'POST',
-        url:api+'/deposit' + (avail.v2 && avail.v2.catalogue ? '/' + avail.v2.catalogue : ''),
+        url:api+'/deposit', // + (avail.v2 && avail.v2.catalogue ? '/' + avail.v2.catalogue : ''),
         cache: false,
         processData: false,
         success: function(res) {
+          if (filecorrect) $('#oabutton_inform').html('Try uploading again');
           $('.oabutton_deposit').html('Submit deposit');
+          $('#oabutton_inputs').hide();
           if (flupload) {
-            $('#oabutton_availability').html('<h3>Congrats, you\'re done!</h3><p>Check back soon to see your paper live, or we\'ll email you with issues.</p><p><a href="#" class="restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>').show();
+            if (res.zenodo.already || (filecorrect && (res.zenodo === undefined || res.zenodo.url === undefined))) {
+              var info = '<div>';
+              info += '<h2>We\'ll double check your paper</h2>';
+              info += '<p>You\'ve done your part for now. We\’ll check in the next day to make sure it\’s legal to share.</p>';
+              info += '<p>Hopefully, we\’ll soon send you a link soon.';
+              try {
+                if (avail.v2 && avail.v2.permissions && avail.v2.permissions.permissions && avail.v2.permissions.permissions.embargo) {
+                  info += '<p>Unfortunately, the journal won\'t let us make it public until ';
+                  info += avail.v2.permissions.permissions.embargo; // TODO how should this date be formatted
+                  info += ' After release, you\'ll find your paper on ' + (_oab_config.repo_name ? _oab_config.repo_name : 'ScholarWorks') + ', Google Scholar, Web of Science.</p>';
+                }
+              } catch (err) {}
+              info += '<p><a href="#" class="oabutton_restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>';
+              info += '</div>';
+              $('#oabutton_availability').html(info).show();
+            } else if (res.error) {
+              // if we should be able to deposit but can't, we stick to the response we already had:
+              $('#oabutton_availability').html('<h2>Congrats, you\'re done!</h2><p>Check back soon to see your paper live, or we\'ll email you with issues.</p><p><a href="#" class="oabutton_restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>').show();
+            } else if (res.zenodo && res.zenodo.url) {
+              // deposit was possible, show the user a congrats page with a link to the item in zenodo
+              var info = '<h2>Congrats! Your paper will be available to everyone, forever!</h2>';
+              if (res.embargo) {
+                info += '<p>You\’ve done your part for now. Unfortunately, the journal won’t let us make it public until ';
+                info += res.embargo; // TODO how should this date be formatted
+                info += 'After release, you\'ll find your paper on Google Scholar, Web of Science, and popular tools like Unpaywall.</p>';
+                info += '<h3>Your paper will be freely available at this link:</h3>';
+              } else {
+                info += '<p>You\’ll soon find your paper freely available in ' + (_oab_config.repo_name ? _oab_config.repo_name : 'ScholarWorks') + ', Google Scholar, Web of Science, and other popular tools.';
+                info += '<h3>Your paper is now freely available at this link:</h3>';
+              }
+              info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" style="box-shadow:none;" value="' + res.zenodo.url + '"></input></p>';
+              info += '<p>You can now put the link on your website, CV, any profiles, and ResearchGate.</p>';
+              info += '<p><a href="#" class="oabutton_restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>';
+              $('#oabutton_availability').html(info).show();
+            } else {
+              // if the file given is not a version that is allowed, show a page saying something looks wrong
+              // also the backend should create a dark deposit in this case, but delay it by six hours, and cancel if received in the meantime
+              var info = '<h2>Hmmm, something looks wrong</h2>';
+              info += '<p>You\’re nearly done. It looks like what you uploaded is a publisher\’s PDF which the journal prohibits legally sharing.<!-- It can only be shared on a limited basis.--><br><br>';
+              info += 'We just need the version accepted by the journal to make your work available to everyone.</p>';
+              info += '<p><a href="#" class="' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : ' btn btn-primary') : '') + '" id="oabutton_inform" style="min-width:150px;">Try uploading again</a></p>';
+              info += '<p><a href="#" id="oabutton_filecorrect"><b><u>My upload was an accepted manuscript</u></b></a></p>';
+              $('#oabutton_availability').html(info).show();
+            }
           } else {
-            $('#oabutton_availability').html('<h3>Hurray, you\'re done!</h3><p>We\'ll email you a link to your paper in ScholarWorks soon. Next time, before you publish check to see if your journal allows you to have the most impact by making your research available to everyone, for free.</p><p><a href="#" class="restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>').show();
+            if (res.type === 'redeposit') {
+              $('#oabutton_availability').html('<h2>Congrats, you\'re done!</h2><p>Check back soon to see your paper live, or we\'ll email you with issues.</p><p><a href="#" class="oabutton_restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>').show();
+            } else {
+              $('#oabutton_availability').html('<h2>Hurray, you\'re done!</h2><p>We\'ll email you a link to your paper in ' + (_oab_config.repo_name ? _oab_config.repo_name : 'ScholarWorks') + ' soon. Next time, before you publish check to see if your journal allows you to have the most impact by making your research available to everyone, for free.</p><p><a href="#" class="oabutton_restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>').show();
+            }
           }
-          flupload = undefined;
         },
         error: function(data) {
-          flupload = undefined;
+          if (filecorrect) $('#oabutton_inform').html('Try uploading again');
           $('.oabutton_deposit').html('Complete deposit');
-          $('#oabutton_error').html('<p>Sorry, we were not able to deposit this paper for you. ' + _lib_contact + '</p><p><a href="#" class="restart" style="font-weight:bold;">Try again</a></p>').show();
+          $('#oabutton_error').html('<p>Sorry, we were not able to deposit this paper for you. ' + _lib_contact + '</p><p><a href="#" class="oabutton_restart" style="font-weight:bold;">Try again</a></p>').show();
           pinger('Shareyourpaper_couldnt_submit_deposit');
+          flupload = undefined;
+          filecorrect = undefined;
         }
       }
-      if (flupload) {
-        for ( var d in data ) flupload.append(d,data[d]);
-        opts.data = flupload;
-        opts.contentType = false;
+      if (flupload && flupload !== true) { // it may be true for demo purposes
+        if (opts.contentType !== false) {
+          for ( var d in data ) {
+            if (d === 'metadata') {
+              for ( var md in data[d] ) {
+                if (typeof data[d][md] === 'string' || typeof data[d][md] === 'number') flupload.append(md,data[d][md]);
+              }
+            } else {
+              flupload.append(d,data[d]);
+            }
+          }
+          opts.data = flupload;
+          opts.contentType = false;
+        }
       } else {
         opts.data = JSON.stringify(data);
         opts.contentType = 'application/json';
@@ -345,89 +423,140 @@ var _run = function() {
           }
         });
       }
+    } else if (avail.v2.permissions.file !== undefined && avail.v2.permissions.file.archivable) {
+      _submit_deposit(); // if the file is acceptable and can go in zenodo then we don't bother getting the email address
     } else {
       var info = '<div>';
-      info += '<h3>Nearly there! We\'ll double check your paper</h3>';
-      info += '<p>We\'ll do that in the next day to make sure it\'s legal to share.</p>';
-      info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="email@montana.edu" aria-label="email@montana.edu" style="box-shadow:none;"></input></p>';
-      info += '<p>We\'ll only use this to send you a link or questions.</p>';
-      info += '<p><a target="_blank" href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Submit</a></p>';
+      info += '<h2>We\'ll double check your paper</h2>';
+      info += '<p>You\’ve done your part for now. We\’ll check in the next day to make sure it\’s legal to share.</p>';
+      info += '<p>Hopefully, we\’ll soon send you a link soon.';
+      try {
+        if (avail.v2.permissions.permissions.embargo) {
+          info += '<p>Unfortunately, the journal won\’t let us make it public until ';
+          info += avail.v2.permissions.permissions.embargo; // TODO how should this date be formatted
+          info += ' After release, you\’ll find your paper on ' + (_oab_config.repo_name ? _oab_config.repo_name : 'ScholarWorks') + ', Google Scholar, Web of Science.</p>';
+        }
+      } catch (err) {}
+      info += '<p><a href="#" class="oabutton_restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>';
       info += '</div>';
       $('#oabutton_availability').html(info).show();
       if (_parameta.email) $('#oabutton_email').val(_parameta.email);//.trigger('keyup'); // should this just auto trigger as well?
     }
   }
 
-  var forcedeposit = false;
-  var opendeposit = function(e) {
-    e.preventDefault();
-    forcedeposit = true;
-    inform();
+  _fake_deposit = function(e) { // for demos
+    try { e.preventDefault(); } catch(err) {}
+    flupload = true;
+    avail = {data: {meta: {article: {title: 'example', journal: 'example', doi: '10.1234/oab-syp-version'}}}}
+    _submit_deposit();
   }
 
   var inform = function() {
-    $('#oabutton_inputs').hide();
-    $('#oabutton_error').html('').hide();
-    var info = '';
-    if (avail.data.meta && avail.data.meta.article) {
-      var cit = cite(avail.data.meta.article);
-      if (cit.length < 1) {
-        if (attempts === 0) {
-          attempts = 1;
-          getmore();
-        } else if (!gotmore) {
-          fail();
+    if (avail.v2 && avail.v2.doi_not_in_crossref) {
+      $('#oabutton_input').focus();//.val('');
+      $('.oabutton_find').html('Next');
+      $('#oabutton_error').html('<p>Double check your DOI, that doesn\'t look right to us.</p>').show();
+    } else if (avail.v2 && avail.v2.metadata && avail.v2.metadata.crossref_type !== undefined && avail.v2.metadata.crossref_type !== 'journal-article') {
+      $('#oabutton_input').focus();//.val('');
+      $('.oabutton_find').html('Next');
+      var nj = '<p>That doesn\'t look like an academic journal article.';
+      var cml = _oab_config.problem_email ? _oab_config.problem_email : (_oab_config.email ? _oab_config.email : (_oab_config.adminemail ? _oab_config.adminemail : undefined));
+      if (cml) {
+        nj += ' If you want to deposit it, <a href="';
+        nj += (_oab_config.old_way ? (_oab_config.old_way.indexOf('@') !== -1 ? 'mailto:' : '') + _oab_config.old_way : 'mailto:'+cml);
+        nj += '">click here</a>';
+      }
+      nj += '.</p>';
+      $('#oabutton_error').html(nj).show();
+    } else {
+      $('#oabutton_inputs').hide();
+      $('#oabutton_error').html('').hide();
+      var ph = 'email@montana.edu';
+      var tcs = _oab_config.deposit_terms ? _oab_config.deposit_terms : '#';
+      if (_oab_config.email_domains !== undefined) {
+        if (typeof _oab_config.email_domains === 'string') _oab_config.email_domains = _oab_config.email_domains.split(',');
+        if (_oab_config.email_domains.length) {
+          ph = _oab_config.email_domains[0];
+          if (ph.indexOf('@') !== -1) ph = ph.split('@')[1];
+          if (ph.indexOf('//') !== -1) ph = ph.split('//')[1];
+          ph = ph.toLowerCase().replace('www.','');
         }
       }
-    }
-    var needmore = true;
-    if (!forcedeposit && avail.data.availability && avail.data.availability.length && avail.data.availability[0].url) {
-      // if there is an oa article show a link to it
-      needmore = false;
-      info += '<div>';
-      info += '<h2>Your paper is already freely available!</h2>';
-      info += '<p>Congrats, you\'re already getting the benefits of sharing your work.</p>';
-      info += '<p><a target="_blank" href="' + avail.data.availability[0].url  + '" class="' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">View paper</a></p>';
-      info += '<p><a href="#" class="oabutton_opendeposit"><b>I still want it in ScholarWorks</b></a></p>';
-      info += '</div>';
-    } else if (!forcedeposit && avail.v2 && avail.v2.permissions && avail.v2.permissions.acceptable) {
-      // can be shared, depending on permissions info that may soon be changing
-      needmore = false;
-      info += '<div>';
-      info += '<h2>You can freely share your paper now!</h2>';
-      info += '<p>To enable colleagues and the public to freely download and cite your paper the library has checked and the journal encourages you to freely share a version of the article.</p>';
-      info += '<h3>Find the version that was accepted. It\'s usually not a PDF</h3>';
-      info += '<p>This is the only version you\'re able to share legally. The accepted version, or \'post-print\', is what you sent to publisher after peer-review and acceptance but before formatting. Often, it\'s a docx or latex export, not publisher proofs.</p>';
-      info += '<h3>Check there isn\'t publisher branding or formatting</h3>';
-      info += '<p>It\'s normal to share accepted versions as the research is the same, and we\'ll link to the final published pdf for those who can pay for it. It\'s fine to make small edits to formatting, remove comments, arrange figures etc.</p>';
-      info += '<h3>We\'ll check the version, then preserve, and promote your work</h3>';
-      info += '<p>It\'s normal to share accepted versions as the research is the same. It\'s fine to make small edits to formatting, remove comments, etc.</p>';
-      info += '<p><input type="file" name="file" id="file" class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '"></p>';// \
-      info += '<p>By uploading you\'re agreeing to the <a href="https://scholarworks.montana.edu/docs/#what" target="_blank">terms and conditions</a> and to license your work CC-BY on Zenodo and ScholarWorks</p>';
-      info += '<p><a href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : ' btn btn-primary') : '') + '" id="submitfile" style="min-width:150px;">Submit deposit</a>';
-      info += '</div>';
-    } else {
-      // can't be directly shared but can be passed to library for dark deposit
-      needmore = false;
-      info += '<div>';
-      info += '<h2>You can share your paper!</h2>';
-      if (!forcedeposit) {
-        info += '<p>We checked and unfortunately the journal won\'t let you share this paper freely with everyone.';
-        info += 'The good news is the library can legally make your paper much easier to find, access and share by putting the publisher PDF ';
-        info += 'in ScholarWorks and we\'ll then share it on your behalf whenever it is requested.</p>';
+      var info = '';
+      if (avail.data.meta && avail.data.meta.article) {
+        var cit = cite(avail.data.meta.article);
+        if (cit.length < 1) {
+          if (attempts === 0) {
+            attempts = 1;
+            getmore();
+          } else if (!gotmore) {
+            fail();
+          }
+        }
       }
-      info += '<h3>All we need is your email</h3>';
-      info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="email@montana.edu" aria-label="email@montana.edu" style="box-shadow:none;"></input></p>';
-      info += '<p>We\'ll only use this to send you a link to your paper when it is in ScholarWorks. ';
-      info += 'By submitting, you\'re agreeing to the <a href="https://scholarworks.montana.edu/docs/#what" target="_blank">terms and conditions</a>.</p>';
-      info += '<p><a target="_blank" href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Submit</a></p>';
-      info += '</div>';
+      var needmore = true;
+      if (avail.data.availability && avail.data.availability.length && avail.data.availability[0].url) {
+        // if there is an oa article show a link to it
+        needmore = false;
+        info += '<div>';
+        info += '<h2>Your paper is already freely available!</h2>';
+        info += '<p>Great news, you\’re already getting the benefits of sharing your work! Your publisher or co-author have already shared it at this ';
+        info += '<a target="_blank" href="' + avail.data.availability[0].url + '">freely available link</a>.</p>';
+        if (_oab_config.allow_oa_deposit === false) {
+          // nothing to show, the user cannot redeposit
+        } else {
+          info += '<h3>Give us your email to confirm deposit</h3>';
+          info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="' + ph + '" aria-label="' + ph + '" style="box-shadow:none;"></input></p>';
+          info += '<p>We\'ll use this to send you a link. By confirming, you\'re agreeing to the <a href="' + tcs + '" target="_blank"><u>terms and conditions</u></a>.</p>';
+          info += '<p><a target="_blank" href="#" class="oabutton_deposit btn btn-primary" style="min-width:150px;">Confirm</a></p>';
+        }
+        info += '<!--<p><a href="#" class=""><b><u>My paper isn’t actually freely available</u></b></a></p>-->';
+        info += '</div>';
+      } else if (avail.v2 && avail.v2.permissions && avail.v2.permissions.permissions && avail.v2.permissions.permissions.archiving_allowed) {
+        // can be shared, depending on permissions info
+        needmore = false;
+        info += '<div>';
+        info += '<h2>You can freely share your paper now!</h2>';
+
+        if (avail.v2.permissions.permissions.version_allowed === 'publisher pdf') {
+          info += '<p>' + (_oab_config.not_a_library ? 'We have' : 'The library has') + ' checked and the journal encourages you to freely share the publisher pdf of your paper so colleagues and the public can freely read and cite it.</p>';
+        }
+
+        if (avail.v2.permissions.permissions.version_allowed !== 'publisher pdf') {
+          info += '<p>' + (_oab_config.not_a_library ? 'We have' : 'The library has') + ' checked and the journal encourages you to freely share your paper so colleagues and the public can freely read and cite it.</p>';
+          info += '<h3><span>&#10003;</span> Find the manuscript the journal accepted. It\’s not a PDF from the journal site</h3>';
+          info += '<p>This is the only version you\’re able to share legally. The accepted manuscript is the word file or Latex export you sent the publisher after peer-review and before formatting (publisher proofs).</p>';
+          info += '<h3><span>&#10003;</span> Check there aren\’t publisher logos or formatting</h3>';
+          info += '<p>It\’s normal to share accepted manuscript as the research is the same. It\’s fine to save your file as a pdf, make small edits to formatting, fix typos, remove comments, and arrange figures.</p>';
+        }
+        info += '<h3><span>&#10003;</span> Tell us who to contact</h3>';
+        info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="' + ph + '" aria-label="' + ph + '" style="box-shadow:none;"></input></p>';
+        info += '<p>We\'ll only use this if something goes wrong.<br>';
+        info += '<h3>We\'ll check it\'s legal, then promote, and preserve your work</h3>';
+        info += '<p><input type="file" name="file" id="file" class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '"></p>';// \
+        info += '<p>By uploading you\'re agreeing to the <a href="' + tcs + '" target="_blank"><u>terms and conditions</u></a> and to license your work CC-BY.</p>';
+        info += '<p><a href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : ' btn btn-primary') : '') + '" id="submitfile" style="min-width:150px;">Submit deposit</a>';
+        info += '</div>';
+      } else {
+        // can't be directly shared but can be passed to library for dark deposit
+        needmore = false;
+        info += '<div>';
+        info += '<h2>You can share your paper!</h2>';
+        info += '<p>We checked and unfortunately the journal won\'t let you share this paper freely with everyone.<br><br>';
+        info += 'The good news is the library can still legally make your paper much easier to find and access. We\'ll put the publisher PDF ';
+        info += 'in ' + (_oab_config.repo_name ? _oab_config.repo_name : 'ScholarWorks') + ' and then share it on your behalf whenever it is requested.</p>';
+        info += '<h3>All we need is your email</h3>';
+        info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="' + ph + '" aria-label="' + ph + '" style="box-shadow:none;"></input></p>';
+        info += '<p>We\'ll only use this to send you a link to your paper when it is in ' + (_oab_config.repo_name ? _oab_config.repo_name : 'ScholarWorks') + '.<br>';
+        info += 'By submitting, you\'re agreeing to the <a href="' + tcs + '" target="_blank"><u>terms and conditions</u></a>.</p>';
+        info += '<p><a target="_blank" href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Submit</a></p>';
+        info += '</div>';
+      }
+      $('#oabutton_inputs').hide();
+      $('#oabutton_availability').html(info).show();
+      if ($('#oabutton_getmore').length && (needmore || (cit && cit.length === 0))) getmore();
+      if (_parameta.email && $('#oabutton_email').length) $('#oabutton_email').val(_parameta.email);//.trigger('keyup'); // should this just auto trigger as well?
     }
-    forcedeposit = false;
-    $('#oabutton_inputs').hide();
-    $('#oabutton_availability').html(info).show();
-    if ($('#oabutton_getmore').length && (needmore || (cit && cit.length === 0))) getmore();
-    if (_parameta.email && $('#oabutton_email').length) $('#oabutton_email').val(_parameta.email);//.trigger('keyup'); // should this just auto trigger as well?
   }
 
   var _doing_availability = false;
@@ -478,7 +607,7 @@ var _run = function() {
       }
       if (!input || !input.length) input = data.title;
       if (input === undefined || !input.length || (input.toLowerCase().indexOf('http') === -1 && input.indexOf('10.') === -1 && input.indexOf('/') === -1 && isNaN(parseInt(input.toLowerCase().replace('pmc',''))) && (input.length < 30 || input.replace(/\+/g,' ').split(' ').length < 3) ) ) {
-        $('#oabutton_error').html('<p>Sorry, we can\'t use partial titles/citations. Please provide the full title or citation, or a suitable URL or identifier.</p>').show();
+        $('#oabutton_error').html('<p>Please provide a DOI.</p>').show();
         _doing_availability = false;
         return;
       }
@@ -505,6 +634,7 @@ var _run = function() {
       data.from = _oab_opts.uid;
       data.plugin = 'shareyourpaper';
       data.embedded = window.location.href;
+      data.permissions = true; // need this to get permissions checked too
       if (_oab_config.pilot) data.pilot = _oab_config.pilot;
       if (_oab_config.live) data.live = _oab_config.live;
 
@@ -534,11 +664,12 @@ var _run = function() {
 
   $(_oab_opts.element).on('keyup','#oabutton_input',availability);
   $(_oab_opts.element).on('click','.oabutton_find',availability);
-  $(_oab_opts.element).on('click','.restart',_restart);
+  $(_oab_opts.element).on('click','.oabutton_restart',_restart);
   $(_oab_opts.element).on('click','.oabutton_deposit',deposit);
   $(_oab_opts.element).on('keyup','#oabutton_email',function(e) { if (e.keyCode === 13) deposit() });
-  $(_oab_opts.element).on('click','.oabutton_opendeposit',opendeposit);
   $(_oab_opts.element).on('click','#oabutton_getmore',function(e) { e.preventDefault(); getmore(); });
+  $(_oab_opts.element).on('click','#oabutton_filecorrect',function(e) { e.preventDefault(); filecorrect = true; _submit_deposit(); });
+  $(_oab_opts.element).on('click','#oabutton_inform',function(e) { e.preventDefault(); inform(); });
 
   // could get custom _ops from the user config
   if (_oab_config.autorun !== true) {

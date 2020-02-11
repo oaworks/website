@@ -1,0 +1,576 @@
+<head>
+  <title>Open Access Button</title>
+
+  <link rel="stylesheet" href="/static/oabutton_rebrand.css">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- facebook paste -->
+  <meta property="og:image:height" content="1000">
+  <meta property="og:image:width" content="500">
+  <meta property="og:description" content="Finding free, legal, full-text articles and making research available.">
+  <meta property="og:title" content="Open Access Button">
+  <meta property="og:url" content="https://dev.openaccessbutton.org/leaders.html">
+  <meta property="og:image" content="https://dev.openaccessbutton.org/static/facebook-paste.jpg">
+
+  <!-- twitter paste -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="OA_Button">
+  <meta name="twitter:creator" content="OA_Button">
+  <meta name="twitter:title" content="Open Access Button">
+  <meta name="twitter:description" content="Finding free, legal, full-text articles and making research available.">
+  <meta name="twitter:image" content="https://dev.openaccessbutton.org/static/twitter-paste.png">
+
+  <style>
+    #topnav {
+      display: none;
+    }
+
+    #footer {
+      display: none;
+    }
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    .btn-demo-white {
+      color: #F04717;
+    }
+
+    .program {
+      color: #212f3f;
+      padding: 30px;
+    }
+
+    .programcontents {
+      text-align: left;
+      padding: 30px 0;
+    }
+
+    .program li {
+      list-style-image: none;
+    }
+
+    .program h2 {
+      margin-bottom: 30px;
+    }
+
+    /* Hide the browser's default checkbox */
+    .container input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      height: 0;
+      width: 0;
+    }
+
+    input[type="radio"],
+    input[type="checkbox"] {
+      display: none;
+    }
+
+    /* Create a custom checkbox */
+    .checkmark {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 22px;
+      width: 22px;
+      border-radius: 4px;
+      border: solid 1px white;
+      /*background-color: white;*/
+    }
+
+    .check-container {
+      display: block;
+      position: relative;
+      margin-bottom: 8px;
+      padding-left: 30px;
+      cursor: pointer;
+      font-weight: normal;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    /* On mouse-over, add a grey background color */
+    .check-container:hover input~.checkmark {
+      background-color: #ffffff80;
+    }
+
+    /* When the checkbox is checked, add a blue background */
+    .check-container input:checked~.checkmark {
+      background-color: white;
+    }
+
+    /* Create the checkmark/indicator (hidden when not checked) */
+    .checkmark:after {
+      content: "";
+      position: absolute;
+      display: none;
+    }
+
+    /* Show the checkmark when checked */
+    .check-container input:checked~.checkmark:after {
+      display: block;
+    }
+
+    /* Style the checkmark/indicator */
+    .check-container .checkmark:after {
+      left: 9px;
+      top: 5px;
+      width: 5px;
+      height: 10px;
+      border: solid #F04717;
+      border-width: 0 3px 3px 0;
+      -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+      transform: rotate(45deg);
+    }
+
+    .dropdown {
+      display: block;
+      width: 100%;
+      height: 55px;
+      color: white;
+      border: solid 1px white;
+      padding-left: 15px;
+      margin: 30px 0 0 0;
+      -webkit-appearance: none;
+      background: url(static/dropdown-triangle.png) no-repeat right;
+    }
+
+
+    @media screen and (max-width: 768px) {
+      .quote {
+        padding: 40px 30px;
+      }
+
+      .pitch {
+        padding: 90px 0;
+      }
+    }
+
+    /* ANIMATIONS */
+    .animated {
+      -webkit-animation-duration: 0.5s;
+      animation-duration: 0.5s;
+      -webkit-animation-fill-mode: both;
+      animation-fill-mode: both;
+    }
+
+    @-webkit-keyframes zoomIn {
+      from {
+        opacity: 0;
+        height: 0;
+        -webkit-transform: scale3d(0.3, 0.3, 0.3);
+        transform: scale3d(0.3, 0.3, 0.3);
+      }
+
+      50% {
+        height: 55px;
+        opacity: 1;
+      }
+    }
+
+    @keyframes zoomIn {
+      from {
+        opacity: 0;
+        height: 0;
+        -webkit-transform: scale3d(0.3, 0.3, 0.3);
+        transform: scale3d(0.3, 0.3, 0.3);
+      }
+
+      50% {
+        height: 55px;
+        opacity: 1;
+      }
+    }
+
+    .zoomIn {
+      -webkit-animation-name: zoomIn;
+      animation-name: zoomIn;
+    }
+
+    @-webkit-keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    .fadeIn {
+      -webkit-animation-name: fadeIn;
+      animation-name: fadeIn;
+    }
+  </style>
+</head>
+
+
+<!-- header -->
+
+  <div class="navy-bg">
+    <div class="center-col header">
+      <div>
+        <a href="/" style="margin: 0"><strong>Open Access Button</strong></a>
+      </div>
+      <div style="text-align: right;">
+        <span><a href="/libraries">For Libraries</a></span>
+      </div>
+    </div>
+  </div>
+
+<!-- pitch -->
+
+  <div class="center-col quote">
+    <div class="strapline">
+      <h2>Leaders</h2>
+
+      <div class="strapline">
+        <p>
+         These leading institutions and individuals have stepped up to advance open and community ownership of scholarship by financially supporting our work.
+          <br><br>
+          We’re incredibly grateful for their generous, essential support.
+      </div>
+      <div class="strapline" style="text-align: center;">
+        <a class="btn btn-demo-blue" href="#leadership">Join them</a>
+      </div>
+    </div>
+  </div>
+  </div>
+
+<!-- face cards -->
+
+
+<div class="card-holder">
+
+  <a href="https://ulib.iupui.edu/" target="_blank">
+  <div class="card-outer" style="background-color:#7A1705">
+    <div class="card-inner">
+      <div class="card" style="background-color: #7A1705">
+        <div class="card-quote"><h4>"We provide leadership support as an investment in community-owned infrastructure that improves our services, helps reduce dependency on subscriptions, and advances equitable access to information."</h4></div>
+        <p>Tina Baich<br>Senior Associate Dean for Scholarly Communication & Content Strategies</p>
+      </div>
+    </div>
+    <div class="card-inner layer-vanish" style="background-color: #7A1705"></div>
+    <div class="card-inner layer-vanish" style="background-image:url('static/tina-photo.png'); opacity: 0.5">
+    </div>
+    <div class="card-inner layer-vanish card-logo" style="background: linear-gradient(0deg, #7A1705 0%, #7A170500 35%, #7A170500 100%);">
+      <img src="static/iupui-logo-white-red.png" >
+    </div>
+  </div>
+  </a>
+
+  <a href="https://www.lib.fsu.edu/" target="_blank">
+    <div class="card-outer" style="background-color:#722d3d">
+    <div class="card-inner">
+      <div class="card" style="background-color: #722d3d">
+        <div class="card-quote"><h4>"The OAB team is developing essential tools and support to advance open for a more equitable and sustainable system of scholarly publishing. We are proud to support them."</h4></div>
+        <p>Camille Thomas<br>Scholarly Communication Librarian</p>
+      </div>
+    </div>
+    <div class="card-inner layer-vanish" style="background-color: #722d3d"></div>
+    <div class="card-inner layer-vanish" style="background-image:url('static/camille-photo.jpg'); opacity: 0.5">
+    </div>
+    <div class="card-inner layer-vanish card-logo" style="background: linear-gradient(0deg, #722d3d 0%, #722d3d00 35%, #722d3d00 100%);">
+      <img src="static/florida-logo-white-red.png" >
+    </div>
+  </div>
+  </a>
+
+  <a href="https://www.lib.montana.edu/" target="_blank">
+    <div class="card-outer" style="background-color:#0D2C6C">
+    <div class="card-inner">
+      <div class="card" style="background-color: #0D2C6C">
+        <div class="card-quote"><h4>"We're excited to finally build everything we've learned from mediated deposit into a simple tool, not a dozen workarounds, that enables every library to make self-archiving not just the right thing, but the easy thing, for every author"</h4></div>
+        <p>Leila Sterman<br>Scholarly Communication Librarian & Assistant Professor</p>
+      </div>
+    </div>
+    <div class="card-inner layer-vanish" style="background-color: #0D2C6C"></div>
+    <div class="card-inner layer-vanish" style="background-image:url('static/leila-photo.jpg'); opacity: 0.5">
+    </div>
+    <div class="card-inner layer-vanish card-logo" style="background: linear-gradient(0deg, #0D2C6C 0%, #0D2C6C00 35%, #0D2C6C00 100%);">
+      <img src="static/montana-logo-white-yellow.png">
+    </div>
+  </div>
+  </a>
+
+  <a href="https://libscie.org/" target="_blank">
+  <div class="card-outer" style="background-color:#C5C9E6">
+    <div class="card-inner">
+      <div class="card" style="background-color: #C5C9E6">
+        <div class="card-quote"><h4>"OAB provides material and immaterial support throughout the community. They've proven themselves to be one of the few stable community factors in an ever more aggressive and coopted market."</h4></div>
+        <p>Chris Hartgerink<br>Founder</p>
+      </div>
+    </div>
+    <div class="card-inner layer-vanish" style="background-color: #C5C9E6"></div>
+    <div class="card-inner layer-vanish" style="background-image:url('static/chris-photo.jpg'); opacity: 0.5">
+    </div>
+    <div class="card-inner layer-vanish card-logo" style="background: linear-gradient(0deg, #C5C9E6 0%, #C5C9E600 35%, #C5C9E600 100%);">
+      <img src="static/libsci-logo.png">
+    </div>
+  </div>
+  </a>
+
+  <a href="https://www.library.ualberta.ca/" target="_blank">
+  <div class="card-outer" style="background-color:#1B4724">
+    <div class="card-inner">
+      <div class="card" style="background-color: #1B4724">
+        <div class="card-quote"><h4>"Quote"</h4></div>
+        <p>CJ de Jong <br>Access Services Coordinator, Librarian</p>
+      </div>
+    </div>
+    <div class="card-inner layer-vanish" style="background-color: #1B4724"></div>
+    <div class="card-inner layer-vanish" style="background-image:url('static/cj-photo.jpg'); opacity: 0.5">
+    </div>
+    <div class="card-inner layer-vanish card-logo" style="background: linear-gradient(0deg, #1B4724 0%, #1B472400 35%, #1B472400 100%);">
+      <img src="static/alberta-logo-white-green.png" >
+    </div>
+  </div>
+  </a>
+
+  <a href="https://www.gold.ac.uk/library/" target="_blank">
+  <div class="card-outer" style="background-color:#BA9A61">
+
+    <div class="card-inner card-logo" style="background: linear-gradient(0deg, #BA9A61 0%, #BA9A6100 35%, #BA9A6100 100%);">
+      <img src="static/goldsmiths-logo-white.png">
+    </div>
+  </div>
+  </a>
+
+
+
+</div>
+
+
+
+<!-- Arcadia -->
+
+  <div style="background-color: #efb212">
+    <div class="center-col">
+      <div class="supportedby">
+        <div class="strapline">
+          <h4 style="text-align: center; color: white">With Foundational Support From</h4>
+          <img src="static/arcadia-logo-white.png" href="https://www.arcadiafund.org.uk/">
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- need your leadership blurb -->
+  <div class="center-col quote" id="leadership">
+    <div class="strapline">
+      <h2>We’re not going to paywall our tools.<br> So we need your leadership.</h2>
+      <p>You’ve seen our tools, now here’s the strategy. Redirect money and power in scholarly communications by reducing reliance on subscriptions so libraries have leverage to negotiate for better prices and terms with publishers in order to make a more equitable and open world. To reduce reliance on subscriptions, community owned tools have to <a href="">Deliver Articles</a> (differently) <a href="">and Fill your Repository.</a> We won’t let paying us to get in the way, it’s hard enough already, or stop libraries who can’t afford subscriptions already using our tools.
+      <br><br>
+
+      To continue our work, we need Leadership from libraries who want to join us on the cutting edge of open, or just benefit from our tools, to financially support our work.</p>
+    </div>
+  </div>
+
+<!-- leadership investment -->
+
+  <div style="background-color: #F04717; color: white;">
+    <div class="center-col quote">
+      <div class="strapline" style="max-width: 490px;">
+        <h2>Leadership Investment</h2>
+
+        <div id="tools">
+          <p><strong>What tools do you use?</strong>
+            <br>
+            We want to charge less than we save you. Share what tools you use so we can estimate it:</p>
+
+          <label class="check-container">InstantILL
+            <input onchange="onToolCheck('InstantILL')" type="checkbox" value="InstantILL">
+            <span class="checkmark"></span>
+          </label>
+          <label class="check-container">Shareyourpaper.org
+            <input onchange="onToolCheck('Shareyourpaper.org')" type="checkbox" value="Shareyourpaper.org">
+            <span class="checkmark"></span>
+          </label>
+          <label class="check-container">Permissions
+            <input onchange="onToolCheck('Permissions')" type="checkbox" value="Permissions">
+            <span class="checkmark"></span>
+          </label>
+          <label class="check-container">Open Access Button
+            <input onchange="onToolCheck('Open Access Button')" type="checkbox" value="Open Access Button">
+            <span class="checkmark"></span>
+          </label>
+          <label class="check-container">Other
+            <input onchange="onToolCheck('Other')" type="checkbox" value="Other">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+
+        <select onchange="onSizeSelect()" class="dropdown animated zoomIn" id="size" style="display:none">
+          <option value="describe">Describe your Library</option>
+          <option value="Community college">Community College</option>
+          <option value="Baccalaureate">Baccalaureate (B)</option>
+          <option value="Postgraduate">Postgraduate (M)</option>
+          <option value="Research intensive">Research-intensive (R)</option>
+          <option value="Consortia">Consortial</option>
+          <option value="International">International</option>
+        </select>
+
+        <div class="ifCheck animated fadeIn" id="price" style="display:none">
+          <h3 style="text-align: center;"><span id="calculated-price">XXXX</span> USD<br>
+            per month</h3>
+
+          <p>Paid through a yearly invoice. We won’t want to lock you in.</p>
+          <div style="text-align: center;">
+            <a id="auto-link" class="btn btn-demo-white" style="color: #F04717"
+              href="https://docs.google.com/forms/d/e/1FAIpQLScG6tdPqY3ZN2onPVYo16zxK3WEd2TBotNmmDxefqqolqfxJg/viewform?entry.1695660922=SIZE&entry.167645724=TOOL&entry.1968748516=PRICE">Invest
+              Now</a>
+          </div>
+          <p style="text-align:centre">Cost too much? Have a question? <a href="mailto:joe@openaccessbutton.org"
+              style="color:white"><b>Contact us</b></a>.</p>
+        </div>
+
+        <div class="ifCheck animated fadeIn" id="contact-consortial" style="display:none">
+          <p><b>
+              Thanks for your interest!
+            </b>
+            <br>
+            <br>
+          We don't have standard pricing for consortia yet. However, you can expect a steap discount against the individual price for an insitution.</p>
+            <div style="text-align: center;">
+            <a href="mailto:joe@openaccessbutton.org" class="btn btn-demo-white" style="color: #F04717"><b>Contact us</b></a>
+          </div>
+        </div>
+
+        <div class="ifCheck animated fadeIn" id="contact-international" style="display:none">
+          <p><b>
+              Thanks for your interest!
+            </b>
+            <br>
+            <br>
+          We don't have standard pricing for insitutions outside North America yet.</p>
+            <div style="text-align: center;">
+            <a href="mailto:joe@openaccessbutton.org" class="btn btn-demo-white" style="color: #F04717"><b>Contact us</b></a>
+          </div>
+        </div>
+
+        <script>
+          let arr = [];
+          let size = "";
+          let base = "https://docs.google.com/forms/d/e/1FAIpQLScG6tdPqY3ZN2onPVYo16zxK3WEd2TBotNmmDxefqqolqfxJg/viewform?";
+          //entry.1695660922=SIZE&entry.167645724=TOOL&entry.1968748516=PRICE
+          let tools = ['InstantILL', 'Shareyourpaper.org', 'Permissions', 'Open Access Button', 'Other'];
+          let obj = {
+            "Research intensive": [400, 400, 200, 100, 100],
+            "Postgraduate": [200, 200, 100, 50, 50],
+            "Baccalaureate":  [100, 100, 50,  25, 25],
+            "Community college":  [50, 50, 25, 12.5, 12.5]
+          };
+
+          function onToolCheck(item) {
+            let index = arr.indexOf(item);
+            if(index == -1) {
+              arr.push(item);
+            }
+            else {
+              arr.splice(index, 1);
+              if(arr.length == 0)
+              {
+                document.querySelectorAll(".ifCheck").forEach(elm => elm.style.display = "none");
+                size = "";
+              }
+            }
+            if(size)
+              onSizeSelect();
+            document.getElementById("size").style.display = arr.length ? "block" : "none";
+          }
+
+          function onSizeSelect() {
+            document.querySelectorAll(".ifCheck").forEach(elm => elm.style.display = "none");
+            size = document.getElementById("size").value;
+            if(size == "Consortia") {
+              document.getElementById("contact-consortial").style.display = "block";
+            }
+            else if(size == "International") {
+              document.getElementById("contact-international").style.display = "block";
+            }
+            else {
+              let price = getPrice();
+              let link = base + "entry.1695660922=" + size;
+              link = link + "&entry.1968748516=" + (price*12);
+              link = link + (arr.map(item => "&entry.167645724=" + item)).join('');
+              document.getElementById('auto-link').href = link;
+              document.querySelector("#calculated-price").innerHTML = price;
+              document.getElementById("price").style.display = "block";
+            }
+          }
+
+          function getPrice() {
+            let sum = 0;
+            for(let item of arr)
+            {
+              sum += obj[size][tools.indexOf(item)];
+            }
+            return sum;
+          }
+        </script>
+
+      </div>
+    </div>
+  </div>
+
+<!-- chunky about section -->
+  <div class="dark-bg">
+    <div class="center-col">
+      <h2 style="margin-top: 60px">We’re community owned, so we’re asking you to buy in</h2>
+      <div class="footer-team">
+        <p>Founded in 2013 by students frustrated by paywalls, we’ve worked since to help pioneer simple delivery of open access content in repositories, doing that in Interlibrary Loan and browser plugins, and more effective self-archiving workflows with funding from Arcadia Fund, Jisc, the Open Society Foundations, Center for Open Science, and SPARC.
+          <br><br>
+          Help us keep building for change, not for profit, by supporting our experimental, academy friendly model.
+        </p>
+
+        <img src="static/media-team-big.png">
+      </div>
+    </div>
+    <div class="center-col" style="max-width: 1024px;">
+      <p style="padding:0">As seen in:</p>
+      <div class="media">
+        <!-- <img src="static/media-sparc.png"> -->
+        <img src="static/media-nature.png">
+        <img src="static/media-sa.png">
+        <img src="static/media-guardian.png">
+        <img src="static/media-lse.png">
+        <img src="static/media-huffpost.png">
+      </div>
+    </div>
+  </div>
+
+<!-- footer -->
+  <div class="dark-bg">
+    <div class="center-col footer">
+      <div>
+        <p>Open Source • Community Controlled • Not for Profit</p>
+      </div>
+      <div style="padding: 5px 0; align-self: flex-end;">
+        <span><a href="/about">About</a></span>
+        <span><a href="/request">Requests</a></span>
+        <span><a href="/api">API</a></span>
+        <span><a href="/feedback#bug">Bugs</a></span>
+        <span><a href="https://twitter.com/OA_Button">Twitter</a></span>
+        <span><a href="/account">Account</a></span>
+      </div>
+    </div>
+  </div>

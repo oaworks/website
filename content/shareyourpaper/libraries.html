@@ -1,8 +1,9 @@
 <head>
   <title>Shareyourpaper.org</title>
+
+  <link rel="stylesheet" href="/static/oabutton_rebrand.css"> <!-- gets the new css (still also uses the old css, just overwrites where necessary) -->
 </head>
 
-<link rel="stylesheet" href="/static/oabutton_rebrand.css"> <!-- gets the new css (still also uses the old css, just overwrites where necessary) -->
 
 <style>
   #topnav {
@@ -18,7 +19,7 @@
     border:2px solid #428BCA;
   }
 
-/*  a {
+  /*  a {
     color:#428BCA;
     font-weight:normal;
   }
@@ -44,7 +45,7 @@
     padding-top: 10px;
     padding-bottom: 10px;
   }
-/*  .footer a {
+  /*  .footer a {
     color: #428BCA;
   }*/
 
@@ -96,10 +97,6 @@
 
   /*sams added style above*/
 
-  .featurebox {
-    height:450px;
-  }
-
 </style>
 
 <!-- sam starts here -->
@@ -109,7 +106,7 @@
   <div class="center-col header">
     <div><span><strong><a href="/">Shareyourpaper.org</a></strong> by <a href="https://openaccessbutton.org" style="color:white">Open Access Button</a></span></div>
     <div>
-       <a class="btn btn-demo-white" href="https://docs.google.com/forms/d/e/1FAIpQLSeDEgStJhVn03SYuksFFTEeo7cQzC1hWqpBiR7Uavstn04PCA/viewform?usp=sf_link">Get Early Access</a>
+       <a class="btn btn-demo-white notonsmallphones" href="https://docs.google.com/forms/d/e/1FAIpQLSeDEgStJhVn03SYuksFFTEeo7cQzC1hWqpBiR7Uavstn04PCA/viewform?usp=sf_link">Get Early Access</a>
     </div>
   </div>
 </div>
@@ -189,7 +186,7 @@
 </div>
 
 <!-- tagline -->
-<div class="blue-bg">
+<div class="blue-bg" style="padding:0">
 <div class="center-col quote">
   <div class="strapline">
 <h1>For change, not for profit</h1>
@@ -225,10 +222,11 @@
 
     <ul style="text-align: left; color:#428BCA;">
       <li><strong>Shareyourpaper.org:</strong> with all the features above.</li>
+      <li><strong>Coversheets</strong> we'll provide branded coversheets to help deposits look professional.</li>
       <li><strong>Better discovery:</strong> as we'll manually add metadata, even if it's custom [Coming Soon]!</li>
       <li><strong>Less work:</strong> as we’ll review tricky file deposits [Coming Soon].</li>
       <li><strong>Outreach:</strong> we’ll direct authors to your repository, and cc you, in requests to your authors [Coming Soon].</li>
-      <li><strong>Integrations:</strong> allowing direct deposit in your repository (when possible).</li>
+      <li><strong>Integrations:</strong> allowing direct deposit in your repository [Coming Soon].</li>
       <li><strong>Priority</strong> support, input, training & set up.</li>
       <li><strong>Recognition of your leadership:</strong> Thanks on our sites.</li>
       <li>Upgraded version of other Open Access Button tools.</li>
@@ -239,7 +237,7 @@
 </div>
 
 <!-- quote -->
-<div class="blue-bg">
+<div class="blue-bg" style="padding:0">
   <div class="center-col quote">
     <div class="quotetext">
     <h3>
@@ -258,13 +256,13 @@
 <div class="white-bg">
     <div class="center-col footer">
       <div>
-        <p>Open Source • Community Controlled • Not for Profit</p>
+        <p style="color: #212f3f">Open Source • Community Controlled • Not for Profit</p>
       </div>
-      <div>
-        <span><a href="https://openaccessbutton.org/api">API</a></span>
-        <span><a href="https://openaccessbutton.org/privacy">Privacy</a></span>
-        <span><a href="https://openaccessbutton.org/terms">Terms</a></span>
-        <span><a href="mailto:joe@openaccessbutton.org">Email</a></span>
-      </div>
+      <div style="padding: 5px 0; align-self: flex-end;">
+      <span><a href="https://openaccessbutton.org/api">API</a></span>
+      <span><a href="https://openaccessbutton.org/privacy">Privacy</a></span>
+      <span><a href="https://openaccessbutton.org/terms">Terms</a></span>
+      <span><a href="mailto:joe@openaccessbutton.org">Email</a></span>
+    </div>
     </div>
 </div>

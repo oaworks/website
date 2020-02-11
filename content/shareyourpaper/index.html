@@ -1,7 +1,9 @@
 <head>
   <title>Shareyourpaper.org</title>
+
+  <link rel="stylesheet" href="/static/oabutton_rebrand.css"> <!-- gets the new css (still also uses the old css, just overwrites where necessary) -->
 </head>
-<link rel="stylesheet" href="/static/oabutton_rebrand.css"> <!-- gets the new css (still also uses the old css, just overwrites where necessary) -->
+
 
 <style>
   #topnav {
@@ -47,7 +49,7 @@
     <span><strong>Shareyourpaper.org</strong> by <a href="https://openaccessbutton.org" style="margin: 0">Open Access Button</a></span>
   </div>
   <div>
-    <span><a class="btn btn-demo-white" href="/libraries">For Libraries</a></span>
+    <span><a class="btn btn-demo-white notonsmallphones" href="/libraries">For Libraries</a></span>
   </div>
   </div>
 </div>
@@ -62,9 +64,12 @@
       <h2>Make your research visible and see 30% more citations</h2>
       <p style="padding: 30px 0">like millions of researchers by sharing your article freely with colleagues and the public. Soon, we can help you do it legally, for free, in minutes.</p>
 
-      <a class="btn btn-demo-blue" style="text-align: center;" href="https://blog.openaccessbutton.org/building-shareyourpaper-org-to-make-self-archiving-the-simplest-way-to-increase-a-papers-impact-7af42b6903e1">
+      <div style="text-align: center;display: flex;flex-direction: column;align-items: center;">
+      <a class="btn btn-demo-blue" href="/libraries">For Libraries</a>
+      <a class="btn btn-hollow-blue" style="margin-top: 10px;" href="https://blog.openaccessbutton.org/building-shareyourpaper-org-to-make-self-archiving-the-simplest-way-to-increase-a-papers-impact-7af42b6903e1">
         Learn More
       </a>
+      </div>
 
     </div>
 </div>
@@ -76,7 +81,7 @@
     <div>
       <p>Open Source • Community Controlled • Not for Profit</p>
     </div>
-    <div>
+    <div style="padding: 5px 0; align-self: flex-end;">
       <span><a href="https://openaccessbutton.org/api">API</a></span>
       <span><a href="https://openaccessbutton.org/privacy">Privacy</a></span>
       <span><a href="https://openaccessbutton.org/terms">Terms</a></span>

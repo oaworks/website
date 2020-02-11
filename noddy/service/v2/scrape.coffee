@@ -21,6 +21,8 @@ API.service.oab.scrape = (url, content, doi) ->
     ud = mr.exec(decodeURIComponent(url))
     meta.doi = ud[1] if ud and ud.length > 1 and 9 < ud[1].length and ud[1].length < 45
 
+  content = content.substring(0,6000) if content.length > 6000 # we only check the first three or so pages of content (3000 chars per page estimates 500 words per page)
+  
   if not meta.doi and content
     try
       cl = content.toLowerCase()

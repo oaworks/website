@@ -186,7 +186,7 @@ API.add 'service/oab/job',
           p.refresh = 0 if this.request.body.refresh
           p.titles = this.request.body.titles ?= true
           p.bing = this.request.body.bing if this.request.body.bing?
-        job = API.job.create {refresh:this.request.body.refresh, complete:'API.service.oab.job_complete', user:this.userId, service:'openaccessbutton', function:'API.service.oab.find', name:(this.request.body.name ? "oab_find"), processes:processes}
+        job = API.job.create {refresh:this.request.body.refresh, complete:'API.service.oab.job_complete', user:this.userId, service:'openaccessbutton', function:'API.service.oab.availability', name:(this.request.body.name ? "oab_find"), processes:processes}
         API.service.oab.job_started job
         return job
 
@@ -205,7 +205,7 @@ API.add 'service/oab/job/generate/:start/:end',
           pro.sources = this.request.body.sources if this.request.body.sources?
           procs.push(pro)
         name = 'sys_requests_' + this.urlParams.start + '_' + this.urlParams.end
-        jid = API.job.create {complete:'API.service.oab.job_complete', user:this.userId, service:'openaccessbutton', function:'API.service.oab.find', name:name, processes:procs}
+        jid = API.job.create {complete:'API.service.oab.job_complete', user:this.userId, service:'openaccessbutton', function:'API.service.oab.availability', name:name, processes:procs}
         return {job:jid, count:processes.length}
       else
         return {count:0}
@@ -282,7 +282,13 @@ API.add 'service/oab/job/:jid/results.csv',
         csv = exhd + csv
 
     for r in res
-      row = if r.string then JSON.parse(r.string) else r._raw_result['API.service.oab.find']
+      row = if r.string then JSON.parse(r.string) else if r._raw_result['API.service.oab.find']? then r._raw_result['API.service.oab.find'] else r._raw_result['API.service.oab.availability']
+      if row.data?
+        for ky of row.data
+          row[ky] = row.data[ky]
+        delete row.data
+      if not row.meta?
+        row = API.service.oab.availability undefined, row
       csv += '\n'
       if r.args?
         ea = JSON.parse r.args

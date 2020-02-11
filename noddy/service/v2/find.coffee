@@ -21,6 +21,8 @@ _finder = (metadata) ->
         finder += ' OR ' if finder isnt ''
         if tid is 'title'
           finder += 'ftitle:' + API.service.oab.ftitle(mt) + '~ OR '
+        if tid is 'doi'
+          finder += 'doi_not_in_crossref.exact:"' + mt + '" OR '
         finder += 'metadata.' + tid + (if tid is 'url' or tid is 'title' then '' else '.exact') + ':"' + mt + '"'
   return finder
 
@@ -70,33 +72,56 @@ _avail =
       API.log 'find request blacklisted for ' + JSON.stringify opts
       return 400
     else
-      afnd = {data: {availability: [], requests: [], accepts: [], meta: {article: {}, data: {}}}}
-      afnd.data.match = opts.doi ? opts.pmid ? opts.pmc ? opts.pmcid ? opts.title ? opts.url ? opts.id ? opts.citation ? opts.q
-      afnd.v2 = API.service.oab.find opts
-      try
-        afnd.data.ill = afnd.v2.ill
-        afnd.data.meta.article = _.clone(afnd.v2.metadata) if afnd.v2.metadata?
-        afnd.data.meta.cache = afnd.v2.cached
-        afnd.data.meta.refresh = afnd.v2.refresh
-        afnd.data.meta.article.url = afnd.data.meta.article.url[0] if _.isArray afnd.data.meta.article.url
-        afnd.data.availability.push({type: 'article', url: afnd.v2.url}) if afnd.v2.url
-      try
-        finder = _finder(afnd.v2.metadata)
-        if finder isnt '' and request = oab_request.find '(' + finder + ') AND type:article'
-          rq = type: 'article', _id: request._id
-          rq.ucreated = if opts.uid and request.user?.id is opts.uid then true else false
-          rq.usupport = if opts.uid then API.service.oab.supports(request._id, opts.uid)? else false
-          afnd.data.requests.push rq
-      return afnd
+      return API.service.oab.availability opts
 API.add 'service/oab/availability', get:_avail, post:_avail
 API.add 'service/oab/availabilities', () -> return oab_find.search this
 
 
 
+# legacy wrapper
+API.service.oab.availability = (opts,v2) ->
+  afnd = {data: {availability: [], requests: [], accepts: [], meta: {article: {}, data: {}}}}
+  if opts?
+    afnd.data.match = opts.doi ? opts.pmid ? opts.pmc ? opts.pmcid ? opts.title ? opts.url ? opts.id ? opts.citation ? opts.q
+  afnd.v2 = if typeof v2 is 'object' and not _.isEmpty(v2) and v2.metadata? then v2 else if opts? then API.service.oab.find(opts) else undefined
+  if afnd.v2?
+    afnd.data.match ?= afnd.v2.metadata.doi ? afnd.v2.metadata.title ? afnd.v2.metadata.pmid ? afnd.v2.metadata.pmc ? afnd.v2.metadata.pmcid ? afnd.v2.metadata.url
+    afnd.data.match = afnd.data.match[0] if _.isArray afnd.data.match
+    try
+      afnd.data.ill = afnd.v2.ill
+      afnd.data.meta.article = _.clone(afnd.v2.metadata) if afnd.v2.metadata?
+      afnd.data.meta.cache = afnd.v2.cached
+      afnd.data.meta.refresh = afnd.v2.refresh
+      afnd.data.meta.article.url = afnd.data.meta.article.url[0] if _.isArray afnd.data.meta.article.url
+      if afnd.v2.url? and afnd.v2.found? and not afnd.data.meta.article.source?
+        for vf of afnd.v2.found
+          if vf isnt 'oabutton' and afnd.v2.found[vf] is afnd.v2.url
+            afnd.data.meta.article.source = vf
+            break
+      afnd.data.meta.article.bing = true if 'bing' in afnd.v2.checked
+      afnd.data.meta.article.reversed = true if 'reverse' in afnd.v2.checked
+      afnd.data.availability.push({type: 'article', url: afnd.v2.url}) if afnd.v2.url
+    try
+      if afnd.data.availability.length is 0 and (afnd.v2.metadata.doi or afnd.v2.metadata.title or afnd.v2.metadata.url)
+        eq = {type: 'article'}
+        if afnd.v2.metadata.doi
+          eq.doi = afnd.v2.metadata.doi
+        else if afnd.v2.metadata.title
+          eq.title = afnd.v2.metadata.title
+        else
+          eq.url = afnd.v2.metadata.url
+          eq.url = eq.url[0] if _.isArray eq.url
+        if request = oab_request.find eq
+          rq = type: 'article', _id: request._id
+          rq.ucreated = if opts.uid and request.user?.id is opts.uid then true else false
+          rq.usupport = if opts.uid then API.service.oab.supports(request._id, opts.uid)? else false
+          afnd.data.requests.push rq
+  afnd.data.accepts.push({type:'article'}) if afnd.data.availability.length is 0 and afnd.data.requests.length is 0
+  return afnd
+
 API.service.oab.metadata = (options={}, content) -> # pass-through to find that ensures the settings will get metadata rather than fail fast on find
   options.metadata ?= true
   options.find = false
-  options.permissions = false
   return API.service.oab.find(options, undefined, content).metadata
 
 API.service.oab.find = (options={}, metadata={}, content) ->
@@ -108,7 +133,6 @@ API.service.oab.find = (options={}, metadata={}, content) ->
       if not obj[w]?
         return false
     return true
-  API.log msg: 'OAB finding academic content', level: 'debug'
   started = Date.now()
   res = {url: false}
 
@@ -121,14 +145,11 @@ API.service.oab.find = (options={}, metadata={}, content) ->
     metadata = {}
   else if typeof metadata isnt 'object'
     metadata = {}
-  else if not metadata? and typeof options.metadata is 'object' and not _.isArray options.metadata
+  else if _.isEmpty(metadata) and typeof options.metadata is 'object' and not _.isArray options.metadata
     metadata = options.metadata
     options.metadata = true
   options.metadata = if options.metadata is true then ['title','doi','author','journal','issn','volume','issue','page','published','year'] else if _.isArray(options.metadata) then options.metadata else []
   content ?= options.dom if options.dom?
-
-  if content and _.isEmpty metadata
-    _get metadata, API.service.oab.scrape undefined, content
 
   if metadata.url
     options.url ?= metadata.url
@@ -194,6 +215,9 @@ API.service.oab.find = (options={}, metadata={}, content) ->
           metadata.title = options.citation.split('"')[0].split("'")[0].trim()
   metadata.title = metadata.title.replace(/(<([^>]+)>)/g,'').replace(/\+/g,' ').trim() if typeof metadata.title is 'string'
 
+  if content and _.isEmpty metadata
+    _get metadata, API.service.oab.scrape undefined, content
+
   options.permissions ?= false # don't get permissions by default now that the permissions check could take longer
 
   res.plugin = options.plugin if options.plugin?
@@ -212,13 +236,15 @@ API.service.oab.find = (options={}, metadata={}, content) ->
   res.wrong = options.wrong if options.wrong?
   res.found = {}
 
-  # special cases for instantill demo and exlibris - dev and live demo accounts that always return a fixed answer
-  if options.plugin is 'instantill' and (metadata.doi is '10.1234/567890' or metadata.title is 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL') and options.from in ['qZooaHWRz9NLFNcgR','eZwJ83xp3oZDaec86'] 
-    res.metadata = {title: 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL', year: '2019', doi: 'https://scholarworks.iupui.edu/bitstream/handle/1805/20422/07-PAXTON.pdf?sequence=1&isAllowed=y'}
+  # special cases for instantill/shareyourpaper/other demos and exlibris - dev and live demo accounts that always return a fixed answer
+  if (options.plugin is 'instantill' or options.plugin is 'shareyourpaper') and (metadata.doi is '10.1234/567890' or (metadata.doi? and metadata.doi.indexOf('10.1234/oab-syp-') is 0) or metadata.title is 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL') and options.from in ['qZooaHWRz9NLFNcgR','eZwJ83xp3oZDaec86'] 
+    # https://scholarworks.iupui.edu/bitstream/handle/1805/20422/07-PAXTON.pdf?sequence=1&isAllowed=y
+    res.metadata = {title: 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL', year: '2019', doi: metadata.doi ? '10.1234/oab-syp-aam'}
     res.metadata.journal = 'Proceedings of the 16th IFLA ILDS conference: Beyond the paywall - Resource sharing in a disruptive ecosystem'
     res.metadata.author = [{given: 'Mike', family: 'Paxton'}, {given: 'Gary', family: 'Maixner III'}, {given: 'Joseph', family: 'McArthur'}, {given: 'Tina', family: 'Baich'}]
     res.ill = {openurl: ""}
     res.ill.subscription = {findings:{}, uid: options.from, lookups:[], error:[], url: 'https://scholarworks.iupui.edu/bitstream/handle/1805/20422/07-PAXTON.pdf?sequence=1&isAllowed=y', demo: true}
+    res.permissions = API.service.oab.permissions(metadata) if options.permissions
     return res
   if not metadata.title and content and typeof options.url is 'string' and (options.url.indexOf('alma.exlibrisgroup.com') isnt -1 or options.url.indexOf('/exlibristest') isnt -1)
     # switch exlibris URLs for titles, which the scraper knows how to extract, because the exlibris url would always be the same
@@ -236,7 +262,7 @@ API.service.oab.find = (options={}, metadata={}, content) ->
     catalogued = oab_catalogue.finder metadata
     # if user wants a total refresh, don't use any of it (we still search for it though, because will overwrite later with the fresh stuff)
     if catalogued? and res.refresh isnt 0
-      res.permissions ?= catalogued.permissions if catalogued.permissions? and (catalogued.metadata?.journal? or catalogued.metadata?.issn?)
+      #res.permissions ?= catalogued.permissions if catalogued.permissions? and (catalogued.metadata?.journal? or catalogued.metadata?.issn?)
       if 'oabutton' in res.sources
         res.checked.push('oabutton') if 'oabutton' not in res.checked
         if catalogued.url? # within or without refresh time, if we have already found it, re-use it
@@ -257,21 +283,28 @@ API.service.oab.find = (options={}, metadata={}, content) ->
       res.checked.push('crossref') if 'crossref' not in res.checked
       try
         cr ?= API.use.crossref.works.doi metadata.doi
-        try metadata.title = cr.title[0] if cr.title.length
-        try metadata.doi = cr.DOI if cr.DOI?
-        try metadata.doi = cr.doi if cr.doi? # just in case
-        try metadata.crossref_type = cr.type
-        try metadata.author = cr.author if cr.author?
-        try metadata.journal = cr['container-title'][0] if cr['container-title'].length
-        try metadata.issue = cr.issue if cr.issue?
-        try metadata.volume = cr.volume if cr.volume?
-        try metadata.page = cr.page.toString() if cr.page?
-        try metadata.issn ?= cr.ISSN[0] if cr.ISSN?
-        #try metadata.subject = cr.subject if cr.subject? # not sure if this is present in crossref... check anyway - commented out because getting clashes with the mapping
-        try metadata.publisher = cr.publisher if cr.publisher?
-        try metadata.year ?= cr['published-print']['date-parts'][0][0] if cr['published-print']['date-parts'][0][0].length
-        try metadata.year ?= cr.created['date-time'].split('-')[0]
-        try metadata.published = if cr['published-online']?['date-parts'] and cr['published-online']['date-parts'][0].length is 3 then cr['published-online']['date-parts'][0].join('-') else if cr['published-print']?['date-parts'] and cr['published-print']?['date-parts'][0].length is 3 then cr['published-print']['date-parts'][0].join('-') else undefined
+        if cr is undefined
+          if metadata.doi?
+            res.doi_not_in_crossref = metadata.doi
+            delete options.url if options.url.indexOf('doi.org/' + metadata.doi) isnt -1
+            delete metadata.doi
+            delete options.doi # don't allow the user-provided data to later override if we can't validate it on crossref
+        else
+          try metadata.title = cr.title[0] if cr.title.length
+          try metadata.doi = cr.DOI if cr.DOI?
+          try metadata.doi = cr.doi if cr.doi? # just in case
+          try metadata.crossref_type = cr.type
+          try metadata.author = cr.author if cr.author?
+          try metadata.journal = cr['container-title'][0] if cr['container-title'].length
+          try metadata.issue = cr.issue if cr.issue?
+          try metadata.volume = cr.volume if cr.volume?
+          try metadata.page = cr.page.toString() if cr.page?
+          try metadata.issn ?= cr.ISSN[0] if cr.ISSN?
+          #try metadata.subject = cr.subject if cr.subject? # not sure if this is present in crossref... check anyway - commented out because getting clashes with the mapping
+          try metadata.publisher = cr.publisher if cr.publisher?
+          try metadata.year ?= cr['published-print']['date-parts'][0][0] if cr['published-print']['date-parts'][0][0].length
+          try metadata.year ?= cr.created['date-time'].split('-')[0]
+          try metadata.published = if cr['published-online']?['date-parts'] and cr['published-online']['date-parts'][0].length is 3 then cr['published-online']['date-parts'][0].join('-') else if cr['published-print']?['date-parts'] and cr['published-print']?['date-parts'][0].length is 3 then cr['published-print']['date-parts'][0].join('-') else undefined
     _get_formatted_crossref() if (not _got() or (res.find and not res.url)) and metadata.doi and 'crossref' in res.sources # crossref is usually fast and worth checking, even if just a find and the metadata is not strictly needed
   
     # check epmc if we don't have enough
@@ -471,7 +504,7 @@ API.service.oab.find = (options={}, metadata={}, content) ->
   if options.url?
     metadata.url ?= []
     metadata.url.push(options.url) if options.url not in metadata.url
-  res.permissions = API.service.oab.permissions(metadata) if not res.permissions? and options.permissions and not _.isEmpty metadata
+  res.permissions = API.service.oab.permissions(metadata) if options.permissions and not _.isEmpty(metadata) #and not res.permissions?.permitted?
   res.test = true if JSON.stringify(metadata).toLowerCase().replace(/'/g,' ').replace(/"/g,' ').indexOf(' test ') isnt -1 #or (options.embedded? and options.embedded.indexOf('openaccessbutton.org') isnt -1)
   res.metadata = metadata
   
@@ -488,7 +521,7 @@ API.service.oab.find = (options={}, metadata={}, content) ->
       upd.checked = uc if JSON.stringify(uc.sort()) isnt JSON.stringify catalogued.checked.sort()
       uf = _.extend(res.found, catalogued.found)
       upd.found = uf if not _.isEqual uf, catalogued.found
-      upd.permissions = res.permissions if res.permissions? and not _.isEqual res.permissions, catalogued.permissions
+      upd.permissions = res.permissions if res.permissions? and (not catalogued.permissions? or not _.isEqual res.permissions, catalogued.permissions)
       upd.usermetadata = res.usermetadata if res.usermetadata?
       if typeof metadata.title is 'string'
         ftm = API.service.oab.ftitle(metadata.title)

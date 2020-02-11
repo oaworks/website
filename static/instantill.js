@@ -220,7 +220,7 @@ var instantill_run = function() {
       var noddy_api = api.indexOf('dev.') !== -1 ? 'https://dev.api.cottagelabs.com' : 'https://api.cottagelabs.com';
       var url = noddy_api + '/ping.png?service=openaccessbutton&action=' + what + '&from=' + _oab_opts.uid;
       if (_oab_config.pilot) url += '&pilot=' + _oab_config.pilot;
-      if (_oab_config.live) url += '&pilot=' + _oab_config.live;
+      if (_oab_config.live) url += '&live=' + _oab_config.live;
       $.ajax({
         url: url
       });

@@ -10,7 +10,7 @@ var view = function(e,which) {
     $(which).show();
   } else if ($(this).attr('href') === undefined) {
     $('.section').hide();
-    if (window.location.hash && window.location.href.indexOf('/setup') !== -1) {
+    if (window.location.hash && window.location.href.indexOf('/setup') !== -1 && (window.location.hash !== '#login' || !noddy.loggedin())) {
       $(window.location.hash).show();
     } else {
       $('.section').first().show();

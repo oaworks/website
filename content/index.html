@@ -144,6 +144,12 @@
           setTimeout(function() { $('#sdsorry').remove(); }, 5000);
           return;
         }
+        if (url.toLowerCase().indexOf('researchgate') !== -1) {
+          $('#url').val('');
+          $('#url').parent().after('<div class="well" id="sdsorry" style="margin-top:5px;"><p>Sorry, ResearchGate URLs cannot be accessed via our website at the moment, we hope to fix this soon.</p></div>');
+          setTimeout(function() { $('#sdsorry').remove(); }, 5000);
+          return;
+        }
         if (url.toLowerCase().indexOf('http') === -1 && url.indexOf('10.') === -1 && url.indexOf('/') === -1 && isNaN(parseInt(url.toLowerCase().replace('pmc',''))) && (url.length < 30 || url.replace(/\+/g,' ').split(' ').length < 3) ) {
           $('#url').val('');
           $('#url').parent().after('<div class="well" id="shortsorry" style="margin-top:5px;"><p>Sorry, we can\'t match titles/citations that are too short. Please provide a longer title or citation, or a suitable URL or identifier.</p></div>');
