@@ -119,7 +119,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
   dep.plugin = options.plugin if options.plugin
 
   perms = API.service.oab.permissions d, files, undefined, options.confirmed # if confirmed is true the submitter has confirmed this is the right file. If confirmed is the checksum this is a resubmit by an admin
-  if perms.file?.archivable and ((options.confirmed? and options.confirmed is perms.file.checksum) or not options.confirmed) # if the depositor confirms we don't deposit, we manually review - only deposit on admin confirmation
+  if perms.file?.archivable and ((options.confirmed? and options.confirmed is perms.file.checksum) or not options.confirmed or (options.confirmed and API.settings.dev)) # if the depositor confirms we don't deposit, we manually review - only deposit on admin confirmation (but on dev allow it)
     zn = {}
     zn.content = files[0].data
     zn.name = perms.file.name
@@ -146,14 +146,14 @@ API.service.oab.deposit = (d,options={},files,uid) ->
     meta.keywords = d.metadata.keywords if _.isArray(d.metadata.keywords) and d.metadata.keywords.length and typeof d.metadata.keywords[0] is 'string'
     if d.metadata.doi?
       in_zenodo = API.use.zenodo.records.doi d.metadata.doi
-      if in_zenodo
+      if in_zenodo and options.confirmed isnt perms.file.checksum and not API.settings.dev
         dep.zenodo.already = in_zenodo.id # we don't put it in again although we could with doi as related field - but leave for review for now
-      else if meta.version is 'postprint' or meta.version is 'AAM' or meta.version is 'preprint'
+      else if in_zenodo
         meta['related_identifiers'] = [{relation: (if meta.version is 'postprint' or meta.version is 'AAM' or meta.version is 'preprint' then 'isPreviousVersionOf' else 'isIdenticalTo'), identifier: d.metadata.doi}]
       else
         meta.doi = d.metadata.doi
-    else
-      meta.prereserve_doi = true if API.settings.service.openaccessbutton?.zenodo?.prereserve_doi
+    else if API.settings.service.openaccessbutton?.zenodo?.prereserve_doi
+      meta.prereserve_doi = true
     meta['access_right'] = 'open'
     meta.license = perms.file.licence ? 'cc-by'
     if perms.permissions.embargo?
@@ -174,15 +174,15 @@ API.service.oab.deposit = (d,options={},files,uid) ->
     tk = if API.settings.dev then API.settings.service.openaccessbutton?.zenodo?.sandbox else API.settings.service.openaccessbutton?.zenodo?.token
     if tk
       if options.setup
-        dep.zenodo.id 'EXAMPLE'
-        dep.zenodo.url = 'https://zenodo.org/record/EXAMPLE'
+        dep.zenodo.id = 'EXAMPLE'
+        dep.zenodo.url = 'https://' + (if API.settings.dev then 'sandbox.' else '') + 'zenodo.org/record/EXAMPLE'
         dep.zenodo.doi = '10.1234/EXAMPLE' if meta.prereserve_doi
-        dep.zenodo.file = 'https://zenodo.org/files/EXAMPLE'
+        dep.zenodo.file = 'https://' + (if API.settings.dev then 'sandbox.' else '') + 'zenodo.org/files/EXAMPLE'
       else if not dep.zenodo.already
         z = API.use.zenodo.deposition.create meta, zn, tk
         if z.id
           dep.zenodo.id = z.id
-          dep.zenodo.url = 'https://zenodo.org/record/' + z.id
+          dep.zenodo.url = 'https://' + (if API.settings.dev then 'sandbox.' else '') + 'zenodo.org/record/' + z.id
           dep.zenodo.doi = z.metadata.prereserve_doi.doi if z.metadata?.prereserve_doi?.doi?
           dep.zenodo.file = z.uploaded?.links?.download ? z.uploaded?.links?.download
         else
@@ -240,7 +240,6 @@ API.service.oab.deposit = (d,options={},files,uid) ->
     for author in ed.metadata.author
       try as.push author.given + ' ' + author.family
     ed.metadata.author = as
-  console.log ed
   tmpl = API.mail.template dep.type + '_deposit.html'
   sub = API.service.oab.substitute tmpl.content, ed
   API.service.oab.mail
@@ -258,8 +257,8 @@ API.service.oab.deposit.config = (user, config) ->
   user = Users.get(user) if typeof user is 'string'
   if typeof user is 'object' and config?
     update = {}
-    for k in [] # the fields allowed in deposit config will be listed here
-      update[k] = config[k] if config[k]?
+    for k of config # the fields allowed in deposit config could be listed here, for now default to whatever is given
+      update[k] = config[k] if config[k]? and (not user.service.openaccessbutton.deposit? or not user.service.openaccessbutton.deposit.config? or config[k] isnt user.service.openaccessbutton.deposit.config[k])
     if JSON.stringify(update) isnt '{}'
       if not user.service.openaccessbutton.deposit?
         Users.update user._id, {'service.openaccessbutton.deposit': {config: update}}

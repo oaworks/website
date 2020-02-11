@@ -306,7 +306,7 @@ var _run = function() {
           $('.oabutton_deposit').html('Submit deposit');
           $('#oabutton_inputs').hide();
           if (flupload) {
-            if (filecorrect && (res.zenodo === undefined || res.zenodo.url === undefined)) {
+            if (res.zenodo.already || (filecorrect && (res.zenodo === undefined || res.zenodo.url === undefined))) {
               var info = '<div>';
               info += '<h2>We\'ll double check your paper</h2>';
               info += '<p>You\'ve done your part for now. We\’ll check in the next day to make sure it\’s legal to share.</p>';

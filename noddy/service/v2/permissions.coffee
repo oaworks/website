@@ -93,7 +93,7 @@ API.service.oab.permissions = (meta={}, file, url, confirmed) ->
       meta = API.service.oab.metadata meta, content
     if meta.issn? or meta.journal?
       try perms.sherpa = API.use.sherpa.romeo.find(if meta.issn then {issn:meta.issn} else {title:meta.journal})
-      perms.permissions.archiving_allowed ?= perms.sherpa?.color in ['green','yellow','blue']
+      perms.permissions.archiving_allowed = perms.sherpa?.color in ['green','yellow','blue']
       try
         if perms.permissions.archiving_allowed
           perms.permissions.version_allowed ?= if perms.sherpa.color is 'yellow' then 'preprint' else 'postprint'
@@ -121,11 +121,10 @@ API.service.oab.permissions = (meta={}, file, url, confirmed) ->
     if file? or url?
       f.error = file.error ? 'Could not extract any content'
   else
-    _clean = (str) -> return str.toLowerCase().replace(/[^a-z0-9\/\. ]+/g, "").replace(/\s\s+/g, ' ').trim()
+    _clean = (str) -> return str.toLowerCase().replace(/[^a-z0-9\/\.]+/g, "").replace(/\s\s+/g, ' ').trim()
 
-    try
-      lowercontentsmall = _clean(if content.length < 800000 then content else content.substring(0,400000) + content.substring(content.length-400000,content.length))
-      lowercontentstart = if lowercontentsmall.length < 100000 then lowercontentsmall else lowercontentsmall.substring(0,100000)
+    lowercontentsmall = (if content.length < 20000 then content else content.substring(0,6000) + content.substring(content.length-6000,content.length)).toLowerCase()
+    lowercontentstart = _clean(if lowercontentsmall.length < 6000 then lowercontentsmall else lowercontentsmall.substring(0,6000))
 
     f.name ?= meta.title
     try f.checksum = crypto.createHash('md5').update(content, 'utf8').digest('base64')
@@ -142,7 +141,7 @@ API.service.oab.permissions = (meta={}, file, url, confirmed) ->
       try f.same_paper_evidence.doi_match = if meta.doi and lowercontentstart.indexOf(_clean meta.doi) isnt -1 then true else false # should have the doi in it near the front
       if content and not f.same_paper_evidence.doi_match and not meta.title? and not metad
         meta = API.service.oab.metadata meta, content # get at least title again if not already tried to get it, and could not find doi in the file
-      try f.same_paper_evidence.title_match = if meta.title and lowercontentstart.replace(/ /g,'').indexOf(_clean meta.title.replace(/ /g,'')) isnt -1 then true else false
+      try f.same_paper_evidence.title_match = if meta.title and lowercontentstart.indexOf(_clean meta.title.replace(/ /g,'')) isnt -1 then true else false
       if meta.author?
         try
           authorsfound = 0
@@ -155,13 +154,14 @@ API.service.oab.permissions = (meta={}, file, url, confirmed) ->
               break
             else
               try
-                an = a.last ? a.lastname ? a.family ? a.surname ? a.name
-                for ap in an.split(',')[0].split(' ')
-                  if ap.length > 2 and lowercontentsmall.indexOf(_clean ap) isnt -1
-                    authorsfound += 1
-                    if (meta.author.length < 3 and authorsfound is 1) or (meta.author.length > 2 and authorsfound is 2)
-                      f.same_paper_evidence.author_match = true
-                      break
+                an = (a.last ? a.lastname ? a.family ? a.surname ? a.name).trim().split(',')[0].split(' ')[0]
+                af = (a.first ? a.firstname ? a.given ? a.name).trim().split(',')[0].split(' ')[0]
+                inc = lowercontentstart.indexOf _clean an
+                if an.length > 2 and af.length > 0 and inc isnt -1 and lowercontentstart.substring(inc-20,inc+an.length+20).indexOf(_clean af) isnt -1
+                  authorsfound += 1
+                  if (meta.author.length < 3 and authorsfound is 1) or (meta.author.length > 2 and authorsfound > 1)
+                    f.same_paper_evidence.author_match = true
+                    break
       if f.format?
         for ft in formats
           if f.format.indexOf(ft) isnt -1
@@ -189,10 +189,10 @@ API.service.oab.permissions = (meta={}, file, url, confirmed) ->
             matched = false
             if l.howtosearch is 'string'
               wtsc = _clean wts
-              matched = true if (l.wheretosearch is 'file' and lowercontentsmall.indexOf(wtsc) isnt -1) or (l.wheretosearch isnt 'file' and ((meta.title? and _clean(meta.title).indexOf(wtsc) isnt -1) or (f.name? and _clean(f.name).indexOf(wtsc) isnt -1)))
+              matched = if (l.wheretosearch is 'file' and _clean(lowercontentsmall).indexOf(wtsc) isnt -1) or (l.wheretosearch isnt 'file' and ((meta.title? and _clean(meta.title).indexOf(wtsc) isnt -1) or (f.name? and _clean(f.name).indexOf(wtsc) isnt -1))) then true else false
             else
-              re = new RegExp wts, 'giu'
-              matched = true if (l.wheretosearch is 'file' and lowercontentsmall.match(re) isnt null) or (l.wheretosearch isnt 'file' and ((meta.title? and meta.title.match(re) isnt null) or (f.name? and f.name.match(re) isnt null)))
+              re = new RegExp wts, 'gium'
+              matched = if (l.wheretosearch is 'file' and lowercontentsmall.match(re) isnt null) or (l.wheretosearch isnt 'file' and ((meta.title? and meta.title.match(re) isnt null) or (f.name? and f.name.match(re) isnt null))) then true else false
             if matched
               sc = l.score ? l.score_value
               if typeof sc is 'string'
@@ -279,4 +279,5 @@ API.service.oab.permissions = (meta={}, file, url, confirmed) ->
     else if perms.sherpa?.publisher?.alias? and perms.sherpa.publisher.alias.toLowerCase().indexOf('cc-') isnt -1
       f.licence = 'cc-' + perms.sherpa.publisher.alias.toLowerCase().split('cc-')[1].split(' ')[0]
 
+  perms.metadata = meta
   return perms

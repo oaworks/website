@@ -133,7 +133,6 @@ API.service.oab.find = (options={}, metadata={}, content) ->
       if not obj[w]?
         return false
     return true
-  API.log msg: 'OAB finding academic content', level: 'debug', tst: {options: options, metadata: metadata, content: content}, flush: true
   started = Date.now()
   res = {url: false}
 
@@ -151,9 +150,6 @@ API.service.oab.find = (options={}, metadata={}, content) ->
     options.metadata = true
   options.metadata = if options.metadata is true then ['title','doi','author','journal','issn','volume','issue','page','published','year'] else if _.isArray(options.metadata) then options.metadata else []
   content ?= options.dom if options.dom?
-
-  if content and _.isEmpty metadata
-    _get metadata, API.service.oab.scrape undefined, content
 
   if metadata.url
     options.url ?= metadata.url
@@ -218,6 +214,9 @@ API.service.oab.find = (options={}, metadata={}, content) ->
         else if options.citation.indexOf('"') isnt -1 or options.citation.indexOf("'") isnt -1
           metadata.title = options.citation.split('"')[0].split("'")[0].trim()
   metadata.title = metadata.title.replace(/(<([^>]+)>)/g,'').replace(/\+/g,' ').trim() if typeof metadata.title is 'string'
+
+  if content and _.isEmpty metadata
+    _get metadata, API.service.oab.scrape undefined, content
 
   options.permissions ?= false # don't get permissions by default now that the permissions check could take longer
 
