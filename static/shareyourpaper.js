@@ -471,7 +471,7 @@ var _run = function() {
     } else {
       $('#oabutton_inputs').hide();
       $('#oabutton_error').html('').hide();
-      var ph = 'email@montana.edu';
+      var ph = 'your.name@institution.edu';
       var tcs = _oab_config.deposit_terms ? _oab_config.deposit_terms : '#';
       if (_oab_config.email_domains !== undefined) {
         if (typeof _oab_config.email_domains === 'string') _oab_config.email_domains = _oab_config.email_domains.split(',');
@@ -482,6 +482,7 @@ var _run = function() {
           ph = ph.toLowerCase().replace('www.','');
         }
       }
+      if (ph === undefined || ph.length < 3) ph = 'your.name@institution.edu';
       var info = '';
       if (avail.data.meta && avail.data.meta.article) {
         var cit = cite(avail.data.meta.article);

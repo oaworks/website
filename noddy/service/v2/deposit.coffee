@@ -212,7 +212,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
   text += 'File called ' +  (files[0].filename ? files[0].name) + ' should be attached.\n\n' if files? and files.length
   text += 'This file needs reviewed as we could not automatically judge if it is suitable for this type of deposit.\n\n' if dep.type is 'review'
   text += 'The attached file is for local deposit to the institutional repository.\n\n' if dep.type is 'forward'
-  text += 'This email notifies the institution that the depositor wishes to deposit their article with the institutional repository, but we do not yet have the article - the institution should contact the depositor directly.\n\n' if dep.typ is 'dark'
+  text += 'This email notifies the institution that the depositor wishes to deposit their article with the institutional repository, but we do not yet have the article - the institution should contact the depositor directly.\n\n' if dep.type is 'dark'
   text += 'We have deposited this in Zenodo.\n\n' if dep.type is 'zenodo'
   text += 'We have deposited this in Zenodo under embargo until ' + perms.permissions.embargo + '\n\n' if dep.type is 'embargoed'
   text += 'Author email to contact: \n' + options.email + '\n\n' if options.email

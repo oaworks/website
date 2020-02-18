@@ -348,13 +348,34 @@ jQuery(document).ready(function() {
   var diff = Math.floor(($(window).height() - $('div.content:visible').height())/4);
   $('div.content:visible').css({'padding-top':diff+'px'});
 
-  /*$(document).ajaxComplete(function(e,xhr) {
-    if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.availability !== undefined) {
-      _ill_response = xhr.responseJSON.data;
-      $('div.content:visible').css({'padding-top':'100px'});
-      $('.oabutton_ill').off();
+  $(document).ajaxComplete(function(e,xhr) {
+    if (xhr && xhr.responseJSON && xhr.responseJSON.zenodo && xhr.responseJSON.zenodo.url && xhr.responseJSON.zenodo.url.indexOf('/DEMO') !== -1) {
+      if (window.location.hash && window.location.hash.indexOf('general') !== -1) {
+        view(false,'#success');
+      }
+    } else if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data && xhr.responseJSON.data.meta && xhr.responseJSON.data.meta.article && xhr.responseJSON.data.meta.article.doi === '10.1234/oab-syp-dark') {
+      if (window.location.hash && window.location.hash.indexOf('ingest') !== -1) {
+        var table = '<table class="table table-bordered" id="faketable">';
+        for ( var i in xhr.responseJSON.data.meta.article) {
+          if (i === 'author') {
+            table += '<tr><td>Author(s)</td><td><p>';
+            for (var a in xhr.responseJSON.data.meta.article.author) {
+              try {
+                if (a !== '0') append += ', ';
+                table += xhr.responseJSON.data.meta.article.author[a].given + ' ' + xhr.responseJSON.data.meta.article.author[a].family
+              } catch(err) {}
+            }
+            table += '</p></td></tr>';
+          } else {
+            try {
+              table += '<tr><td>' + i.substring(0,1).toUpperCase() + (['doi','issn'].indexOf(i.toLowerCase()) !== -1 ? i.substring(1).toUpperCase() : i.substring(1)) + '</td><td><p>' + xhr.responseJSON.data.meta.article[i] + '</p></td></tr>';
+            } catch(err) {}
+          }
+        }
+        $('div.content:visible').html(table);
+      }      
     }
-  });*/
+  });
 
   var fakedeposit = function(e) {
     e.preventDefault();

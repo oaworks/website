@@ -81,9 +81,9 @@ API.service.oab.permissions = (meta={}, file, url, confirmed) ->
       if perms.permissions.archiving_allowed
         perms.permissions.version_allowed = if 'publisher pdf' in perms.ricks.application.can_archive_conditions.versions_archivable then 'publisher pdf' else if 'postprint' in perms.ricks.application.can_archive_conditions.versions_archivable then 'postprint' else 'preprint'
     try
-      for k of perms.ricks.application
-        if k.indexOf('embargo') isnt -1 and perms.ricks.application.application[k] and perms.permissions.version_allowed is k.split('_embargo')[0].replace('_','').replace('publisherpdf','publisher pdf')
-          em = moment(perms.ricks.application[k])
+      for k of perms.ricks.application.can_archive_conditions
+        if k.indexOf('embargo') isnt -1 and perms.ricks.application.can_archive_conditions[k] and perms.permissions.version_allowed is k.split('_embargo')[0].replace('_','').replace('publisherpdf','publisher pdf')
+          em = moment(perms.ricks.application.can_archive_conditions[k])
           if em.isAfter(moment())
             perms.permissions.embargo = em.format "YYYY-MM-DD"
             break
