@@ -187,6 +187,7 @@ var _run = function() {
         }
       });
     }
+    $('#oabutton_error').html('').hide();
     $('#oabutton_availability').html('').hide();
     $('#oabutton_find').html('Next');
     $('#oabutton_input').val('');
@@ -281,6 +282,7 @@ var _run = function() {
 
   var _submit_deposit = function() {
     // this could be just an email for a dark deposit, or a file for actual deposit
+    $('#oabutton_error').html('').hide();
     $('.oabutton_find').html('Submitting .');
     $('.oabutton_deposit').html('Depositing .');
     if (filecorrect) $('#oabutton_inform').html('Depositing .');
@@ -303,7 +305,7 @@ var _run = function() {
         processData: false,
         success: function(res) {
           if (filecorrect) $('#oabutton_inform').html('Try uploading again');
-          $('.oabutton_deposit').html('Submit deposit');
+          $('.oabutton_deposit').html('Upload');
           $('#oabutton_inputs').hide();
           if (flupload) {
             if (res.zenodo.already || (filecorrect && (res.zenodo === undefined || res.zenodo.url === undefined))) {
@@ -391,11 +393,18 @@ var _run = function() {
   }
   var deposit = function(e) {
     try { e.preventDefault(); } catch (err) {}
-    $('.oabutton_deposit').html('Depositing .');
+    $('#oabutton_error').html('').hide();
     if ($('#file').length) {
-      flupload = new FormData();
-      flupload.append('file',$('#file')[0].files[0]);
+      if ($('#file')[0].files && $('#file')[0].files.length) {
+        flupload = new FormData();
+        flupload.append('file',$('#file')[0].files[0]);
+      } else {
+        $('#oabutton_error').html('<p>Whoops, you need to give us a file! Check it\'s uploaded.</p>').show();
+        $('#file').css('border-color','#f04717').focus();
+        return;
+      }
     }
+    $('.oabutton_deposit').html('Depositing .');
     if ($('#oabutton_email').length) {
       if (!$('#oabutton_email').val().length) {
         $('.oabutton_deposit').html('Complete deposit');
@@ -452,6 +461,7 @@ var _run = function() {
   }
 
   var inform = function() {
+    $('#oabutton_error').html('').hide();
     if (avail.v2 && avail.v2.doi_not_in_crossref) {
       $('#oabutton_input').focus();//.val('');
       $('.oabutton_find').html('Next');
@@ -483,6 +493,7 @@ var _run = function() {
         }
       }
       if (ph === undefined || ph.length < 3) ph = 'your.name@institution.edu';
+      if (ph.indexOf('@') === -1) ph = 'your.name@' + ph;
       var info = '';
       if (avail.data.meta && avail.data.meta.article) {
         var cit = cite(avail.data.meta.article);
@@ -536,7 +547,7 @@ var _run = function() {
         info += '<h3>We\'ll check it\'s legal, then promote, and preserve your work</h3>';
         info += '<p><input type="file" name="file" id="file" class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '"></p>';// \
         info += '<p>By uploading you\'re agreeing to the <a href="' + tcs + '" target="_blank"><u>terms and conditions</u></a> and to license your work CC-BY.</p>';
-        info += '<p><a href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : ' btn btn-primary') : '') + '" id="submitfile" style="min-width:150px;">Submit deposit</a>';
+        info += '<p><a href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : ' btn btn-primary') : '') + '" id="submitfile" style="min-width:150px;">Upload</a>';
         info += '</div>';
       } else {
         // can't be directly shared but can be passed to library for dark deposit
@@ -569,6 +580,9 @@ var _run = function() {
       if (e && $(this).attr('id') === 'oabutton_find') e.preventDefault();
       var input = $('#oabutton_input').val().trim();
       if (input.lastIndexOf('.') === input.length-1) input = input.substring(0,input.length-1);
+      if (input.indexOf('10.') === 0 && window.location.href.indexOf(input) === -1) {
+        if ('pushState' in window.history) window.history.pushState("", "find", window.location.pathname + '/' + input);
+      }
       var data = {};
       if ($('#oabutton_title').length) {
         if ($('#oabutton_title').val()) data.title = $('#oabutton_title').val();
@@ -675,6 +689,9 @@ var _run = function() {
   // could get custom _ops from the user config
   if (_oab_config.autorun !== true) {
     var searchfor = undefined;
+    if (window.location.href.split('?')[0].indexOf('/10.') !== -1 && window.location.href.split('?')[0].split('/10.')[1].indexOf('/') > 1 && window.location.href.split('?')[0].split('/10.')[1].trim().split('/').length === 2) {
+      searchfor = '10.' + window.location.href.split('?')[0].split('/10.')[1].trim('/');
+    }
     if (_oab_config.autorunparams) {
       var cp = _oab_config.autorunparams.replace(/"/g,'').replace(/'/g,'').split(',');
       for ( var o in cp) {

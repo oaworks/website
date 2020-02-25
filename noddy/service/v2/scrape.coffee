@@ -21,8 +21,11 @@ API.service.oab.scrape = (url, content, doi) ->
     ud = mr.exec(decodeURIComponent(url))
     meta.doi = ud[1] if ud and ud.length > 1 and 9 < ud[1].length and ud[1].length < 45
 
-  content = content.substring(0,6000) if content.length > 6000 # we only check the first three or so pages of content (3000 chars per page estimates 500 words per page)
-  
+  if content.indexOf('<') isnt 0 and content.length > 6000
+    content = content.substring(0,6000)  # we only check the first three or so pages of content (3000 chars per page estimates 500 words per page)
+  else if content.length > 50000
+    content = content.substring(0,50000) # but for apparently html or xml sorts of content, take more to get through all metadata
+    
   if not meta.doi and content
     try
       cl = content.toLowerCase()
@@ -58,7 +61,7 @@ API.service.oab.scrape = (url, content, doi) ->
     try
       d = API.tdm.extract
         content:content
-        matchers:['/doi[^>;]*?(?:=|:)[^>;]*?(10[.].*?\/.*?)("|\')/gi','/dx[.]doi[.]org/(10[.].*?/.*?)("| \')/gi']
+        matchers:['/doi[^>;]*?(?:=|:)[^>;]*?(10[.].*?\/.*?)("|\')/gi','/doi[.]org/(10[.].*?/.*?)("| \')/gi']
       for n in d.matches
         if not meta.doi and 9 < d.matches[n].result[1].length and d.matches[n].result[1].length < 45
           meta.doi = d.matches[n].result[1]
@@ -79,6 +82,7 @@ API.service.oab.scrape = (url, content, doi) ->
       meta.title = content.split('"citation_title" ')[1].replace(/ = /,'=').split('content="')[1].split('"')[0].trim().replace(/"/g,'')
     else if content.indexOf('<title') isnt -1
       meta.title = content.split('<title')[1].split('>')[1].split('</title')[0].trim().replace(/"/g,'')
+  meta.title = meta.title.split('|')[0].trim() if meta.title and meta.title.indexOf('|') isnt -1
 
   if not meta.year
     try

@@ -79,9 +79,9 @@ API.add 'service/oab/request/:rid',
         if not n.doi? and not r.doi? and r.url? and r.url.indexOf('10.') isnt -1 and r.url.split('10.')[1].indexOf('/') isnt -1
           n.doi = '10.' + r.url.split('10.')[1]
           r.doi = n.doi
-        if r.doi and not r.title and not n.title
+        if (r.doi or r.url) and not r.title and not n.title
           try
-            cr = API.service.oab.crossref r.doi
+            cr = if r.doi then API.service.oab.metadata(undefined, {doi: r.doi}) else API.service.oab.metadata {url: r.url}
             for c of cr
               n[c] ?= cr[c] if not r[c]?
         r.author_affiliation = n.author_affiliation if n.author_affiliation?
@@ -197,9 +197,10 @@ API.service.oab.request = (req,uacc,fast,notify=true) ->
     delete req.dom
   return false if JSON.stringify(req).indexOf('<script') isnt -1
   req.type ?= 'article'
-  req.doi = req.url if not req.doi? and req.url? and req.url.indexOf('10.') isnt -1 and req.url.split('10.')[1].indexOf('/') isnt -1
-  req.doi = '10.' + req.doi.split('10.')[1] if req.doi? and req.doi.indexOf('10.') isnt 0
   req.url = req.url[0] if _.isArray req.url
+  req.doi = req.url if not req.doi? and req.url? and req.url.indexOf('10.') isnt -1 and req.url.split('10.')[1].indexOf('/') isnt -1
+  req.doi = '10.' + req.doi.split('10.')[1].split('?')[0].split('#')[0] if req.doi? and req.doi.indexOf('10.') isnt 0
+  req.doi = decodeURIComponent(req.doi) if req.doi
   if req.url? and req.url.indexOf('eu.alma.exlibrisgroup.com') isnt -1
     req.url += (if req.url.indexOf('?') is -1 then '?' else '&') + 'oabLibris=' + Random.id()
     if req.title? and typeof req.title is 'string' and req.title.length > 0 and texist = oab_request.find {title:req.title,type:req.type}
@@ -217,7 +218,7 @@ API.service.oab.request = (req,uacc,fast,notify=true) ->
       exists.cache = true
       return exists
   return false if not req.test and API.service.oab.blacklist req.url
-  req.doi = decodeURIComponent(req.doi) if req.doi
+
   rid = if req._id and oab_request.get(req._id) then req._id else oab_request.insert {url:req.url,type:req.type,_id:req._id}
   user = if uacc then (if typeof uacc is 'string' then API.accounts.retrieve(uacc) else uacc) else undefined
   send_confirmation = false
@@ -234,50 +235,44 @@ API.service.oab.request = (req,uacc,fast,notify=true) ->
       profession: user.service?.openaccessbutton?.profile?.profession
   req.count ?= if req.story then 1 else 0
 
-  if not fast and (not req.title or not req.email)
-    meta = API.service.oab.scrape req.url, dom, req.doi
-    if meta?.email?
-      for e in meta.email
-        isauthor = false
-        if meta?.author?
-          for a in meta.author
-            isauthor = a.family and e.toLowerCase().indexOf(a.family.toLowerCase()) isnt -1
-        if isauthor and not API.service.oab.dnr(e) and API.mail.validate(e, API.settings.service?.openaccessbutton?.mail?.pubkey).is_valid
-          req.email = e
-          if req.author
-            for author in req.author
-              try
-                if req.email.toLowerCase().indexOf(author.family) isnt -1
-                  req.author_affiliation = author.affiliation[0].name
-                  break
-          break
-    else if req.author and not req.author_affiliation
-      try
-        req.author_affiliation = req.author[0].affiliation[0].name # first on the crossref list is the first author so we assume that is the author to contact
-    req.keywords ?= meta?.keywords ? []
-    req.title ?= meta?.title ? ''
-    req.doi ?= meta?.doi ? ''
-    req.author = meta?.author ? []
-    req.journal = meta?.journal ? ''
-    req.issn = meta?.issn ? ''
-    req.publisher = meta?.publisher ? ''
-    req.year = meta?.year
-    if not req.email and req.author_affiliation
-      try
-        for author in req.author
-          if author.affiliation[0].name is req.author_affiliation
-            # it would be possible to lookup ORCID here if the author has one in the crossref data, but that would only get us an email for people who make it public
-            # previous analysis showed that this is rare. So not doing it yet
-            email = API.use.hunter.email {company: req.author_affiliation, first_name: author.family, last_name: author.given}, API.settings.service.openaccessbutton.hunter.api_key
-            if email?.email?
-              req.email = email.email
-              break
-
-  if fast and req.doi and (not req.journal or not req.year or not req.title)
+  if not req.doi or not req.title or not req.email
     try
-      cr = API.service.oab.crossref req.doi
+      cr = API.service.oab.metadata {url: req.url}, {doi: req.doi}
       for c of cr
-        req[c] ?= cr[c]
+        if c is 'email'
+          for e in cr.email
+            isauthor = false
+            if cr?.author?
+              for a in cr.author
+                isauthor = a.family and e.toLowerCase().indexOf(a.family.toLowerCase()) isnt -1
+            if isauthor and not API.service.oab.dnr(e) and API.mail.validate(e, API.settings.service?.openaccessbutton?.mail?.pubkey).is_valid
+              req.email = e
+              break
+        else
+          req[c] ?= cr[c]
+  if _.isArray(req.author) and not req.author_affiliation
+    for author in req.author
+      try
+        if req.email.toLowerCase().indexOf(author.family) isnt -1
+          req.author_affiliation = author.affiliation[0].name
+          break
+  req.keywords ?= []
+  req.title ?= ''
+  req.doi ?= ''
+  req.author = []
+  req.journal = ''
+  req.issn = ''
+  req.publisher = ''
+  if not req.email and req.author_affiliation
+    try
+      for author in req.author
+        if author.affiliation[0].name is req.author_affiliation
+          # it would be possible to lookup ORCID here if the author has one in the crossref data, but that would only get us an email for people who make it public
+          # previous analysis showed that this is rare. So not doing it yet
+          email = API.use.hunter.email {company: req.author_affiliation, first_name: author.family, last_name: author.given}, API.settings.service.openaccessbutton.hunter.api_key
+          if email?.email?
+            req.email = email.email
+            break
 
   if (req.journal or req.issn) and not req.sherpa? # doing this even on fast cos we may be able to close immediately. If users say too slow now, disable this on fast again
     try req.sherpa = API.use.sherpa.romeo.find(if req.issn then {issn:req.issn} else {title:req.journal})
