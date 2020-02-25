@@ -317,7 +317,7 @@ var _run = function() {
                 if (avail.v2 && avail.v2.permissions && avail.v2.permissions.permissions && avail.v2.permissions.permissions.embargo) {
                   info += '<p>Unfortunately, the journal won\'t let us make it public until ';
                   info += avail.v2.permissions.permissions.embargo; // TODO how should this date be formatted
-                  info += ' After release, you\'ll find your paper on ' + (_oab_config.repo_name ? _oab_config.repo_name : 'ScholarWorks') + ', Google Scholar, Web of Science.</p>';
+                  info += '. After release, you\'ll find your paper on ' + (_oab_config.repo_name ? _oab_config.repo_name : 'ScholarWorks') + ', Google Scholar, Web of Science.</p>';
                 }
               } catch (err) {}
               info += '<p><a href="#" class="oabutton_restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>';
@@ -332,7 +332,7 @@ var _run = function() {
               if (res.embargo) {
                 info += '<p>You\’ve done your part for now. Unfortunately, the journal won’t let us make it public until ';
                 info += res.embargo; // TODO how should this date be formatted
-                info += 'After release, you\'ll find your paper on Google Scholar, Web of Science, and popular tools like Unpaywall.</p>';
+                info += '. After release, you\'ll find your paper on Google Scholar, Web of Science, and popular tools like Unpaywall.</p>';
                 info += '<h3>Your paper will be freely available at this link:</h3>';
               } else {
                 info += '<p>You\’ll soon find your paper freely available in ' + (_oab_config.repo_name ? _oab_config.repo_name : 'ScholarWorks') + ', Google Scholar, Web of Science, and other popular tools.';
@@ -443,7 +443,7 @@ var _run = function() {
         if (avail.v2.permissions.permissions.embargo) {
           info += '<p>Unfortunately, the journal won\’t let us make it public until ';
           info += avail.v2.permissions.permissions.embargo; // TODO how should this date be formatted
-          info += ' After release, you\’ll find your paper on ' + (_oab_config.repo_name ? _oab_config.repo_name : 'ScholarWorks') + ', Google Scholar, Web of Science.</p>';
+          info += '. After release, you\’ll find your paper on ' + (_oab_config.repo_name ? _oab_config.repo_name : 'ScholarWorks') + ', Google Scholar, Web of Science.</p>';
         }
       } catch (err) {}
       info += '<p><a href="#" class="oabutton_restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>';
