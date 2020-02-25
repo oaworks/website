@@ -6,7 +6,7 @@
 
 <p><a href = "https://doi.org/{{metadata.doi}}">{{metadata.title}}</a></p>
 
-<p>The file is called “{{permissions.file.name}}” , you’ll find it attached and <a href ="{{url}}">can be found in Zenodo</a>.</p>
+<p>The file is called “{{permissions.file.name}}”. You’ll find it attached and <a href ="{{zenodo.url}}">in Zenodo</a>.</p>
 
 <p>Do not reply to this email. If you have questions, please email <a href = "mailto:joe@openaccessbutton.org">joe@openaccessbutton.org</a> (including details from this message).</p>
 
@@ -67,7 +67,7 @@
 {{permissions.ricks.application.can_archive_conditions.archiving_locations_allowed}}
 
 <p>Required licence</p>
-{{permissions.ricks.application.can_archive_conditions.licences_required}}
+{{permissions.ricks.application.can_archive_conditions.licenses_required}}
 
 <p>Required Deposit Statement</p>
 {{permissions.ricks.application.can_archive_conditions.deposit_statement_required_calculated}}
@@ -111,4 +111,4 @@
 {{zenodo.file}}
 
 <p>Zenodo DOI</p>
-{{zenodo.doi}}
+<a href="https://doi.org/{{zenodo.doi}}">{{zenodo.doi}}</a>
