@@ -375,7 +375,7 @@ jQuery(document).ready(function() {
         if (ma.year) citation += ' ' + ma.year;
         if (ma.doi) citation += ' doi: ' + ma.doi;
         if (citation !== '') table += '<tr></td>Citation</td><td><p>' + citation + '</p></td></tr>';
-        var mp = xhr.responseJSON.data.v2.permissions;
+        var mp = xhr.responseJSON.v2.permissions;
         if (mp.permissions.version_allowed) table += '<tr><td>Archivable version</td><td><p>' + mp.permissions.version_allowed + '</p></td></tr>';
         if (mp.permissions.embargo) table += '<tr><td>Embargo date</td><td><p>' + mp.permissions.embargo + '</p></td></tr>';
         if (mp.permissions.required_statement) table += '<tr><td>Deposit statement</td><td><p>' + mp.permissions.required_statement + '</p></td></tr>';
