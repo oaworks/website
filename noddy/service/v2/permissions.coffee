@@ -141,7 +141,7 @@ API.service.oab.permissions = (meta={}, file, url, confirmed) ->
       try f.same_paper_evidence.doi_match = if meta.doi and lowercontentstart.indexOf(_clean meta.doi) isnt -1 then true else false # should have the doi in it near the front
       if content and not f.same_paper_evidence.doi_match and not meta.title? and not metad
         meta = API.service.oab.metadata undefined, meta, content # get at least title again if not already tried to get it, and could not find doi in the file
-      try f.same_paper_evidence.title_match = if meta.title and lowercontentstart.indexOf(_clean meta.title.replace(/ /g,'')) isnt -1 then true else false
+      try f.same_paper_evidence.title_match = if meta.title and lowercontentstart.replace(/\./g,'').indexOf(_clean meta.title.replace(/ /g,'').replace(/\./g,'')) isnt -1 then true else false
       if meta.author?
         try
           authorsfound = 0

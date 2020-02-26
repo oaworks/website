@@ -203,11 +203,16 @@ API.service.oab.deposit = (d,options={},files,uid) ->
   dd = {deposit: d.deposit, permissions: perms}
   oab_catalogue.update(d._id, dd) if not options.setup?
 
-  tos = API.settings.service.openaccessbutton.notify.deposit ? ['mark@cottagelabs.com','joe@righttoresearch.org']
+  tos = API.settings.service.openaccessbutton.notify.deposit ? ['mark@cottagelabs.com','joe@righttoresearch.org','natalianorori@gmail.com']
+  bcc = undefined
+  if dep.type isnt 'review'
+    bcc = tos
+    tos = []
   if options.from
     iacc = API.accounts.retrieve options.from
     tos.push iacc.email ? iacc.emails[0].address # the institutional user may set a config value to use as the contact email address but for now it is the account address
 
+    
   '''text = 'This is an example email that we will send to an institution or our own admins for ' + dep.type + ' deposit\n\n'
   text += 'File called ' +  (files[0].filename ? files[0].name) + ' should be attached.\n\n' if files? and files.length
   text += 'This file needs reviewed as we could not automatically judge if it is suitable for this type of deposit.\n\n' if dep.type is 'review'
@@ -226,6 +231,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
   API.service.oab.mail
     from: 'deposits@openaccessbutton.org'
     to: tos
+    bcc: bcc
     subject: dep.type + ' deposit ' + dep.createdAt
     text: text
     attachments: (if _.isArray(files) and files.length then [{filename: (files[0].filename ? files[0].name), content: files[0].data}] else undefined)'''
@@ -245,6 +251,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
   API.service.oab.mail
     from: 'deposits@openaccessbutton.org'
     to: tos
+    bcc: bcc
     subject: (sub.subject ? dep.type + ' deposit')
     html: sub.content
     attachments: (if _.isArray(files) and files.length then [{filename: (files[0].filename ? files[0].name), content: files[0].data}] else undefined)

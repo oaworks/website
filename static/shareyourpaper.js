@@ -163,6 +163,7 @@ var _run = function() {
   }
   $(_oab_opts.element).html(w);
 
+  var input = undefined;
   var matched = false;
   var avail = undefined;
   var attempts = 0;
@@ -172,6 +173,8 @@ var _run = function() {
 
   _restart = function(e) {
     try { e.preventDefault(); } catch(err) {}
+    if ('pushState' in window.history && input && window.location.href.indexOf(input) !== -1) window.history.pushState("", "find", (window.location.href.indexOf('/' + input) !== -1 ? window.location.pathname.replace('/' + input,'') + window.location.hash + window.location.search : (window.location.pathname + window.location.hash + window.location.search.replace('doi='+input,'')).trim('?').trim('&')));
+    input = undefined;
     matched = false;
     avail = undefined;
     attempts = 0;
@@ -308,7 +311,7 @@ var _run = function() {
           $('.oabutton_deposit').html('Upload');
           $('#oabutton_inputs').hide();
           if (flupload) {
-            if (res.zenodo.already || (filecorrect && (res.zenodo === undefined || res.zenodo.url === undefined))) {
+            if ((res.zenodo && res.zenodo.already) || (filecorrect && (res.zenodo === undefined || res.zenodo.url === undefined))) {
               var info = '<div>';
               info += '<h2>We\'ll double check your paper</h2>';
               info += '<p>You\'ve done your part for now. We\’ll check in the next day to make sure it\’s legal to share.</p>';
@@ -578,10 +581,10 @@ var _run = function() {
       _doing_availability = true;
       $('#oabutton_error').html('').hide();
       if (e && $(this).attr('id') === 'oabutton_find') e.preventDefault();
-      var input = $('#oabutton_input').val().trim();
+      input = $('#oabutton_input').val().trim();
       if (input.lastIndexOf('.') === input.length-1) input = input.substring(0,input.length-1);
       if (input.indexOf('10.') === 0 && window.location.href.indexOf(input) === -1) {
-        if ('pushState' in window.history) window.history.pushState("", "find", window.location.pathname + '/' + input);
+        if ('pushState' in window.history) window.history.pushState("", "find", (window.location.href.indexOf('shareyourpaper.org') !== -1 ? window.location.pathname + '/' + input + window.location.hash + window.location.search : window.location.pathname + window.location.hash + window.location.search + (window.location.href.indexOf('?') === -1 ? '?' : '&') + 'doi=' + input));
       }
       var data = {};
       if ($('#oabutton_title').length) {

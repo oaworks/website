@@ -129,7 +129,24 @@
           <p><b>
             2/7 Let’s see what happens if you upload the right version
           </b></p>
-          <p><u><a href="https://docs.google.com/document/d/1juM1s11x-pP1OLZhZSZOs9iCAPLq--9C/export?format=docx">Click here to get a file to use</u></a></p>
+
+          <p>
+            Note... when they upload something we'll switch to the below.. which is at #success
+          </p>
+
+          <h2>Success!</h2>
+
+          <p>
+            The file is immediately available, doesn’t that feel great?
+          </p>
+
+          <p>
+            Authors expect to be able to share their work instantly, so we automatically check their upload is legal, and if it is put it right into Zenodo to give them a link.
+          </p>
+
+          <p><b>
+            3/7 We know authors don’t always get it right though...
+          </b></p>
 
         </div>
         <div class="bluebottom">
@@ -339,24 +356,33 @@ jQuery(document).ready(function() {
     } else if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data && xhr.responseJSON.data.meta && xhr.responseJSON.data.meta.article && xhr.responseJSON.data.meta.article.doi === '10.1234/oab-syp-dark') {
       if (window.location.hash && window.location.hash.indexOf('ingest') !== -1) {
         var table = '<table class="table table-bordered" id="faketable">';
-        for ( var i in xhr.responseJSON.data.meta.article) {
-          if (i === 'author') {
-            table += '<tr><td>Author(s)</td><td><p>';
-            for (var a in xhr.responseJSON.data.meta.article.author) {
-              try {
-                if (a !== '0') append += ', ';
-                table += xhr.responseJSON.data.meta.article.author[a].given + ' ' + xhr.responseJSON.data.meta.article.author[a].family
-              } catch(err) {}
-            }
-            table += '</p></td></tr>';
-          } else {
+        var citation = '';
+        var ma = xhr.responseJSON.data.meta.article;
+        if (ma.author !== undefined) {
+          for (var a in xhr.responseJSON.data.meta.article.author) {
             try {
-              table += '<tr><td>' + i.substring(0,1).toUpperCase() + (['doi','issn'].indexOf(i.toLowerCase()) !== -1 ? i.substring(1).toUpperCase() : i.substring(1)) + '</td><td><p>' + xhr.responseJSON.data.meta.article[i] + '</p></td></tr>';
+              if (a !== '0') append += ', ';
+              citation += xhr.responseJSON.data.meta.article.author[a].given + ' ' + xhr.responseJSON.data.meta.article.author[a].family
             } catch(err) {}
           }
         }
+        if (citation !== '') citation += ' ';
+        if (ma.title !== undefined) citation += '<i>' + ma.title + '</i>';
+        if (ma.journal !== undefined) citation += ' in <b>' + ma.journal + '</b>';
+        if (ma.volume !== undefined) citation += ', vol. ' + ma.volume;
+        if (ma.issue !== undefined) citation += ', iss. ' + ma.issue;
+        if (citation !== '') citation += '.';
+        if (ma.year) citation += ' ' + ma.year;
+        if (ma.doi) citation += ' doi: ' + ma.doi;
+        if (citation !== '') table += '<tr></td>Citation</td><td><p>' + citation + '</p></td></tr>';
+        var mp = xhr.responseJSON.data.v2.permissions;
+        if (mp.permissions.version_allowed) table += '<tr><td>Archivable version</td><td><p>' + mp.permissions.version_allowed + '</p></td></tr>';
+        if (mp.permissions.embargo) table += '<tr><td>Embargo date</td><td><p>' + mp.permissions.embargo + '</p></td></tr>';
+        if (mp.permissions.required_statement) table += '<tr><td>Deposit statement</td><td><p>' + mp.permissions.required_statement + '</p></td></tr>';
+        if (mp.file.version) table += '<tr><td>Version uploaded</td><td><p>' + mp.file.version + '</p></td></tr>';
+        table += '<tr><td>Upload matches paper</td><td><p>' + (mp.file.same_paper === true ? 'Yes' : 'No')  + '</p></td></tr>';
         $('div.content:visible').html(table);
-      }
+      }      
     }
   });
 
