@@ -1076,7 +1076,10 @@ jQuery(document).ready(function() {
   var _preview = false;
   var save = function(e,pvw) {
     try { e.preventDefault(); } catch (err) {}
-    if (e === true || pvw || $(this).attr('preview') || $(this).hasClass('preview')) _preview = $(this).attr('preview') ? $(this).attr('preview') : (pvw ? pvw : true);
+    _preview = false;
+    if (e === true || pvw || $(this).attr('val') || $(this).attr('preview') || $(this).hasClass('preview')) {
+      _preview = pvw ? pvw : ($(this).attr('preview') ? $(this).attr('preview') : ($(this).attr('val') ? $(this).attr('val') : true));
+    }
     var data = {};
     $('.setting').each(function(i, obj) {
       if ( $(this).attr('id') === 'community') {
@@ -1119,10 +1122,9 @@ jQuery(document).ready(function() {
       success: function(data) {
         uc = data; // returns the updated user config
         configure();
-        if (_preview) {
+        if (_preview !== false) {
           $('.save').hide().after('<p class="saved">Saving changes! Your preview will run shortly.</p>');
-          setTimeout(function() { $('.saved').hide(); $('.save').show(); preview(undefined,_preview); }, 3000);
-          _preview = false;
+          setTimeout(function() { $('.saved').hide(); $('.save').show(); preview(undefined,_preview); _preview = false; }, 3000);
         } else {
           $('.save').hide().after('<p class="saved">Saving changes!</p>');
           setTimeout(function() { $('.saved').hide(); $('.save').show(); }, 4000);

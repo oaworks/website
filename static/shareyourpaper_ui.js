@@ -45,18 +45,15 @@ view();
 
 var preview = function(e,val) {
   try { e.preventDefault(); } catch (err) {}
-  if ($(this).hasClass('save') && val === undefined) {
-    // do nothing, the save will call this again once ready to run the preview with new values
-  } else {
+  console.log(val)
+  console.log($(this).hasClass('save'))
+  // do nothing if called with a save class, as the save will catch it and pass it on
+  if (!$(this).hasClass('save')) {
     if (typeof val !== 'string') {
-      try {
-        try {
-          if (uc.val) val = uc.val;
-        } catch(err) {
-          val = $(this).attr('val');
-        }
-      } catch(err) {
-        val = '10.1234/oab-syp-aam';
+      if (uc && uc.val) {
+        val = uc.val;
+      } else {
+        val = $(this).attr('val');
       }
     }
     if (typeof val !== 'string' || val.length < 10) val = '10.1234/oab-syp-aam';

@@ -337,6 +337,7 @@ jQuery(document).ready(function() {
     } else if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data && xhr.responseJSON.data.meta && xhr.responseJSON.data.meta.article && xhr.responseJSON.data.meta.article.doi === '10.1234/oab-syp-dark') {
       if (window.location.hash && window.location.hash.indexOf('ingest') !== -1) {
         var table = '<table class="table table-bordered" id="faketable">';
+        table += '<tr><td><b>Data given</b></td><td><b>Value</b></td></tr>';
         var citation = '';
         var ma = xhr.responseJSON.data.meta.article;
         if (ma.author !== undefined) {
@@ -357,11 +358,17 @@ jQuery(document).ready(function() {
         if (ma.doi) citation += ' doi: ' + ma.doi;
         if (citation !== '') table += '<tr><td>Citation</td><td><p>' + citation + '</p></td></tr>';
         var mp = xhr.responseJSON.v2.permissions;
-        if (mp.permissions.version_allowed) table += '<tr><td>Archivable version</td><td><p>' + mp.permissions.version_allowed + '</p></td></tr>';
+        table += '<tr><td>Version allowed</td><td>Postprint</td></tr>';
+        table += '<tr><td>Embargo date</td><td>07/13/21</td></tr>';
+        table += '<tr><td>Licence required</td>cc-by-nc-nd<td></td></tr>';
+        table += '<tr><td>Deposit statement</td><td>This is an Accepted Manuscript of an article published by Research Publisher in Journal of Science on 07/13/20, available online: <a href="http://www.tandfonline.com/10.1234/oab-syp-dark">http://www.tandfonline.com/10.1234/oab-syp-dark</a>.</td></tr>';
+        table += '<tr><td>Version uploaded</td><td>Postprint</td></tr>';
+        table += '<tr><td>Upload matches paper</td><td>Yes</td></tr>';
+        /*if (mp.permissions.version_allowed) table += '<tr><td>Archivable version</td><td><p>' + mp.permissions.version_allowed + '</p></td></tr>';
         if (mp.permissions.embargo) table += '<tr><td>Embargo date</td><td><p>' + mp.permissions.embargo + '</p></td></tr>';
         if (mp.permissions.required_statement) table += '<tr><td>Deposit statement</td><td><p>' + mp.permissions.required_statement + '</p></td></tr>';
         if (mp.file.version) table += '<tr><td>Version uploaded</td><td><p>' + mp.file.version + '</p></td></tr>';
-        table += '<tr><td>Upload matches paper</td><td><p>' + (mp.file.same_paper === true ? 'Yes' : 'No')  + '</p></td></tr>';
+        table += '<tr><td>Upload matches paper</td><td><p>' + (mp.file.same_paper === true ? 'Yes' : 'No')  + '</p></td></tr>';*/
         $('div.content:visible').html(table);
       }
     }

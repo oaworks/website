@@ -11,6 +11,17 @@ var _ops = ['doi','title','url','atitle','rft_id','journal','issn','year','autho
 var _parameta = {};
 var _lib_contact = undefined;
 
+window.strim = function(s, w) {
+  if (w === undefined) w = ' ';
+  if (typeof s !== 'string' || typeof w !== 'string') {
+    return s;
+  } else {
+    while (w.indexOf(s[0]) !== -1) s = s.substr(1);
+    while (w.indexOf(s[s.length-1]) !== -1) s = s.substr(0,s.length-1);
+    return s;
+  }
+}
+
 var _config = function() {
   jQuery(document).ready(function(){
     var api = _oab_opts.api ? _oab_opts.api : 'https://api.openaccessbutton.org';
@@ -173,7 +184,7 @@ var _run = function() {
 
   _restart = function(e) {
     try { e.preventDefault(); } catch(err) {}
-    if ('pushState' in window.history && input && window.location.href.indexOf(input) !== -1) window.history.pushState("", "find", (window.location.href.indexOf('/' + input) !== -1 ? window.location.pathname.replace('/' + input,'') + window.location.hash + window.location.search : (window.location.pathname + window.location.hash + window.location.search.replace('doi='+input,'')).trim('?').trim('&')));
+    if ('pushState' in window.history && input && window.location.href.indexOf(input) !== -1) window.history.pushState("", "find", (window.location.href.indexOf('/' + input) !== -1 ? window.location.pathname.replace('/' + input,'') + window.location.search + window.location.hash : strim(window.location.pathname + window.location.search.replace('doi='+input,''),'?#') + window.location.hash));
     input = undefined;
     matched = false;
     avail = undefined;
@@ -515,10 +526,10 @@ var _run = function() {
         needmore = false;
         info += '<div>';
         info += '<h2>Your paper is already freely available!</h2>';
-        info += '<p>Great news, you\’re already getting the benefits of sharing your work! Your publisher or co-author have already shared it at this ';
-        info += '<a target="_blank" href="' + avail.data.availability[0].url + '">freely available link</a>.</p>';
-        if (_oab_config.allow_oa_deposit === false) {
-          // nothing to show, the user cannot redeposit
+        info += '<p>Great news, you\’re already getting the benefits of sharing your work! Your publisher or co-author have already shared it.</p>';
+        info += '<p><a target="_blank" href="' + avail.data.availability[0].url + '">See free version</a>.</p>';
+        if (_oab_config.allow_oa_deposit === true) {
+          // nothing to show, the user cannot redeposit (this is stupidly backwards to the value of the named key)
         } else {
           info += '<h3>Give us your email to confirm deposit</h3>';
           info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="' + ph + '" aria-label="' + ph + '" style="box-shadow:none;"></input></p>';
@@ -584,7 +595,7 @@ var _run = function() {
       input = $('#oabutton_input').val().trim();
       if (input.lastIndexOf('.') === input.length-1) input = input.substring(0,input.length-1);
       if (input.indexOf('10.') === 0 && window.location.href.indexOf(input) === -1) {
-        if ('pushState' in window.history) window.history.pushState("", "find", (window.location.href.indexOf('shareyourpaper.org') !== -1 ? window.location.pathname + '/' + input + window.location.hash + window.location.search : window.location.pathname + window.location.hash + window.location.search + (window.location.href.indexOf('?') === -1 ? '?' : '&') + 'doi=' + input));
+        if ('pushState' in window.history) window.history.pushState("", "find", (window.location.href.indexOf('shareyourpaper.org') !== -1 ? window.location.pathname.split('/10.')[0] + '/' + input + window.location.search + window.location.hash : window.location.pathname + window.location.search.split('?doi=')[0].split('&doi=')[0] + (window.location.href.indexOf('?') === -1 ? '?' : '&') + 'doi=' + input + window.location.hash));
       }
       var data = {};
       if ($('#oabutton_title').length) {
@@ -693,7 +704,7 @@ var _run = function() {
   if (_oab_config.autorun !== true) {
     var searchfor = undefined;
     if (window.location.href.split('?')[0].indexOf('/10.') !== -1 && window.location.href.split('?')[0].split('/10.')[1].indexOf('/') > 1 && window.location.href.split('?')[0].split('/10.')[1].trim().split('/').length === 2) {
-      searchfor = '10.' + window.location.href.split('?')[0].split('/10.')[1].trim('/');
+      searchfor = strim('10.' + window.location.href.split('?')[0].split('/10.')[1],'/');
     }
     if (_oab_config.autorunparams) {
       var cp = _oab_config.autorunparams.replace(/"/g,'').replace(/'/g,'').split(',');
