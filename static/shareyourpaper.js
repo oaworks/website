@@ -434,7 +434,7 @@ var _run = function() {
               _submit_deposit();
             } else {
               if (data === 'baddomain') {
-                $('#oabutton_error').html('<p>Sorry, your email does not belong to the institutional domain. Please try again with your institutional email address.</p>').show();
+                $('#oabutton_error').html('<p>Please try again with your university email address.</p>').show();
               } else {
                 $('#oabutton_error').html('<p>Sorry, your email does not look right. ' + (data !== false ? 'Did you mean ' + data + '? ' : '') + 'Please check and try again.</p>').show();
               }
