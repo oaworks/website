@@ -81,16 +81,13 @@
 <p>Last updated:</p>
 {{permissions.ricks.meta.record_last_updated}}
 
-<p><b>Deposit information</b></p>
+<p>Upload checks</p>
 
-<p>Splash page URL:</p>
-{{zenodo.url}}
+<p>Checks passed?</p>
+{{permissions.file.archivable}}
 
-<p>Full text URL:</p>
-{{zenodo.file}}
-
-<p>Zenodo DOI:</p>
-<a href="https://doi.org/{{zenodo.doi}}">{{zenodo.doi}}</a>
+<p>Archivable reason:</p>
+{{permissions.file.archivable_reason}}
 
 <p>File version:</p>
 {{permissions.file.version}}
@@ -101,11 +98,22 @@
 <p>Same as published paper:</p>
 {{permissions.file.same_paper}}
 
+<p><b>Deposit information</b></p>
+
+<p>File name</p>
+{{permissions.file.name}}
+
+<p>Splash page URL:</p>
+{{zenodo.url}}
+
+<p>Full text URL:</p>
+{{zenodo.file}}
+
+<p>Zenodo DOI:</p>
+<a href="https://doi.org/{{zenodo.doi}}">{{zenodo.doi}}</a>
+
 <p>Depositor Email:</p>
 {{email}}
-
-<p>Archivable reason:</p>
-{{permissions.file.archivable_reason}}
 
 <p>Date & Time</p>
 {{created_date}}
