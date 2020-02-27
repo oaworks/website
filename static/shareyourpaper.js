@@ -529,7 +529,7 @@ var _run = function() {
         if (_oab_config.stop_oa_deposit === true) {
           // nothing to show, the user cannot redeposit (this is stupidly backwards to the value of the named key)
           info += '<p>Great news, you\’re already getting the benefits of sharing your work! Your publisher or co-author have already shared it.</p>';
-          info += '<p><a target="_blank" href="' + avail.data.availability[0].url + '" class="oabutton_deposit btn btn-primary" style="min-width:150px;">See free version</a></p>';
+          info += '<p><a target="_blank" href="' + avail.data.availability[0].url + '" class="btn btn-primary" style="min-width:150px;">See free version</a></p>';
         } else {
           info += '<p>Great news, you\’re already getting the benefits of sharing your work! Your publisher or co-author have already shared it ';
           info += '<a target="_blank" href="' + avail.data.availability[0].url + '">freely available link</a>.</p>';
