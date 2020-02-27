@@ -133,7 +133,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
     description = description.trim()
     description += '.' if description.lastIndexOf('.') isnt description.length-1
     description += ' ' if description.length
-    description += '<br><br>Deposited by shareyourpaper.org and openaccessbutton.org. We\'ve taken reasonable steps to ensure this content doesn\'t violate copyright, however, if you think it does you can request a takedown by emailing help@openaccessbutton.org.'
+    description += '<br><br>Deposited by shareyourpaper.org and openaccessbutton.org. We\'ve taken reasonable steps to ensure this content doesn\'t violate copyright. However, if you think it does you can request a takedown by emailing help@openaccessbutton.org.'
     meta =
       title: d.metadata.title ? 'Unknown',
       description: description.trim(),
@@ -212,7 +212,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
     iacc = API.accounts.retrieve options.from
     tos.push iacc.email ? iacc.emails[0].address # the institutional user may set a config value to use as the contact email address but for now it is the account address
 
-    
+
   '''text = 'This is an example email that we will send to an institution or our own admins for ' + dep.type + ' deposit\n\n'
   text += 'File called ' +  (files[0].filename ? files[0].name) + ' should be attached.\n\n' if files? and files.length
   text += 'This file needs reviewed as we could not automatically judge if it is suitable for this type of deposit.\n\n' if dep.type is 'review'
