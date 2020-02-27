@@ -526,11 +526,13 @@ var _run = function() {
         needmore = false;
         info += '<div>';
         info += '<h2>Your paper is already freely available!</h2>';
-        info += '<p>Great news, you\’re already getting the benefits of sharing your work! Your publisher or co-author have already shared it.</p>';
-        info += '<p><a target="_blank" href="' + avail.data.availability[0].url + '">See free version</a>.</p>';
         if (_oab_config.allow_oa_deposit === true) {
           // nothing to show, the user cannot redeposit (this is stupidly backwards to the value of the named key)
+          info += '<p>Great news, you\’re already getting the benefits of sharing your work! Your publisher or co-author have already shared it.</p>';
+          info += '<p><a target="_blank" href="' + avail.data.availability[0].url + '" class="oabutton_deposit btn btn-primary" style="min-width:150px;">See free version</a></p>';
         } else {
+          info += '<p>Great news, you\’re already getting the benefits of sharing your work! Your publisher or co-author have already shared it ';
+          info += '<a target="_blank" href="' + avail.data.availability[0].url + '">freely available link</a>.</p>';
           info += '<h3>Give us your email to confirm deposit</h3>';
           info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="' + ph + '" aria-label="' + ph + '" style="box-shadow:none;"></input></p>';
           info += '<p>We\'ll use this to send you a link. By confirming, you\'re agreeing to the <a href="' + tcs + '" target="_blank"><u>terms and conditions</u></a>.</p>';
