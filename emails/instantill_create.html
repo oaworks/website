@@ -1,13 +1,54 @@
 <p>Dear {{name}},</p>
 
-<p>One of your colleagues has requested an interlibrary loan. Their email address is:</p>
+<p>An interlibrary loan has been requested by:</p>
 
 <p>{{email}}</p>
 
 <p>The article required is:</p>
 
-{{details}}
+<p>Article Title</p>
+{{metadata.title}}
 
-<p>Please begin the ILL process and get back to {{email}} when possible.</p>
+<p>Journal Title</p>
+{{metadata.journal}}
 
-<p>Please do not respond to this email address, it is not monitored.</p>
+<p>ISSN</p>
+{{metadata.issn}}
+
+<p>Publisher</p>
+{{metadata.publisher}}
+
+<p>Volume</p>
+{{metadata.volume}}
+
+<p>Issue</p>
+{{metadata.issue}}
+
+<p>Page</p>
+{{metadata.page}}
+
+<p>Published</p>
+{{metadata.published}}
+
+<p>URL</p>
+<a href="{{url}}">{{metadata.url}}</a>
+
+<p>DOI</p>
+<a href="https://doi.org/{{doi}}">{{metadata.doi}}</a>
+
+<p>PMID</p>
+{{metadata.pmid}}
+
+<p>PMCID</p>
+{{metadata.pmcid}}
+
+<p>Author</p>
+{{metadata.author}}
+
+<p>Open access button ILL ID</p>
+{{Open access button ILL ID}}
+<!-- TODO: I do not know where the ID above comes from -->
+
+<p>Please begin the ILL process and get back to them when possible.</p>
+
+<p>Please do not respond to this email address, it is not monitored. If you have question, or see an issue, email <a href="mailto:Joe@openaccessbutton.org">Joe@openaccessbutton.org</a>.</p>
