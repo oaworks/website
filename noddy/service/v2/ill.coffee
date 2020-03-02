@@ -343,11 +343,12 @@ API.service.oab.ill.start = (opts={}) ->
             authors = '<p>Authors:<br>'
             first = true
             for a in opts[r]
-              if first
-                first = false
-              else
-                authors += ', '
-              authors += a.family + ' ' + a.given
+              if a.family
+                if first
+                  first = false
+                else
+                  authors += ', '
+                authors += a.family + (if a.given then ' ' + a.given else '')
             vars.details += authors + '</p>'
           else if ['started','ended','took'].indexOf(r) is -1
             vars.details += '<p>' + r + ':<br>' + opts[r] + '</p>'

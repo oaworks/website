@@ -135,6 +135,8 @@ API.add 'service/oab/users',
             res.hits.hits[r]._source.email = res.hits.hits[r]._source.emails[0].address
       return res
 
+API.add 'service/oab/redirect', get: () -> return API.service.oab.redirect this.queryParams.url, this.queryParams.refresh?
+
 API.add 'service/oab/status', get: () -> return API.service.oab.status()
 API.add 'service/oab/stats', get: () -> return API.service.oab.stats this.queryParams.tool
 API.add 'service/oab/stats/emails', 
@@ -489,9 +491,9 @@ API.service.oab.admin = (rid,action) ->
 # LIVE: https://docs.google.com/spreadsheets/d/1Te9zcQtBLq2Vx81JUE9R42fjptFGXY6jybXBCt85dcs/edit#gid=0
 # Develop: https://docs.google.com/spreadsheets/d/1AaY7hS0D9jtLgVsGO4cJuLn_-CzNQg0yCreC3PP3UU0/edit#gid=0
 
-API.service.oab.redirect = (url) ->
+API.service.oab.redirect = (url,refresh=false) ->
   API.log msg: 'Checking OAB open list', url: url
-  url = API.http.resolve url # will return undefined if the url doesn't resolve at all
+  url = API.http.resolve url, refresh # will return undefined if the url doesn't resolve at all
   if url
     return false if API.service.oab.blacklist(url) is true # ignore anything on the usual URL blacklist
     list = API.use.google.sheets.feed API.settings.service.openaccessbutton?.google?.sheets?.redirect, 360000

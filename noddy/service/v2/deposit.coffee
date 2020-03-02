@@ -220,7 +220,8 @@ API.service.oab.deposit = (d,options={},files,uid) ->
   if ed.metadata?.author?
     as = []
     for author in ed.metadata.author
-      try as.push author.given + ' ' + author.family
+      if author.family
+        as.push (if author.given then author.given + ' ' else '') + author.family
     ed.metadata.author = as
   tmpl = API.mail.template dep.type + '_deposit.html'
   sub = API.service.oab.substitute tmpl.content, ed
