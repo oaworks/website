@@ -362,7 +362,7 @@ API.service.oab.ill.start = (opts={}) ->
       # such as https://ambslibrary.share.worldcat.org/wms/cmnd/nd/discover/items/search?ai0id=level3&ai0type=scope&offset=1&pageSize=10&si0in=in%3A&si0qs=0021-9231&si1in=au%3A&si1op=AND&si2in=kw%3A&si2op=AND&sortDirection=descending&sortKey=librarycount&applicationId=nd&requestType=search&searchType=advancedsearch&eventSource=df-advancedsearch
       # could be provided as: (unless other params are mandatory) 
       # https://ambslibrary.share.worldcat.org/wms/cmnd/nd/discover/items/search?si0qs=0021-9231
-      if user.service?.openaccessbutton?.ill?.config?.search and (opts.issn or opts.journal)
+      if user.service?.openaccessbutton?.ill?.config?.search and user.service.openaccessbutton.ill.config.search.length and (opts.issn or opts.journal)
         if user.service.openaccessbutton.ill.config.search.indexOf('worldcat') isnt -1
           su = user.service.openaccessbutton.ill.config.search.split('?')[0] + '?ai0id=level3&ai0type=scope&offset=1&pageSize=10&si0in='
           su += if opts.issn? then 'in%3A' else 'ti%3A'
@@ -372,6 +372,7 @@ API.service.oab.ill.start = (opts={}) ->
           su = user.service.openaccessbutton.ill.config.search
           su += if opts.issn then opts.issn else opts.journal
         vars.details += '<p>Search URL:<br><a href="' + su + '">' + su + '</a></p>'
+        vars.worldcatSearchUrl = su
         
       if not opts.forwarded
         API.service.oab.mail({vars: vars, template: {filename:'instantill_create.html'}, to: eml, from: "InstantILL <InstantILL@openaccessbutton.org>", subject: "ILL request " + vars.illid})

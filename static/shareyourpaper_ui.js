@@ -40,7 +40,7 @@ var view = function(e,which) {
 	if (which && 'pushState' in window.history) window.history.pushState("", which, which);
 }
 $('body').on('click','.view',view);
-$(window).on('popstate', view);
+//$(window).on('popstate', view);
 view();
 
 var preview = function(e,val) {

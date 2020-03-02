@@ -184,7 +184,9 @@ var _run = function() {
 
   _restart = function(e) {
     try { e.preventDefault(); } catch(err) {}
-    if ('pushState' in window.history && input && window.location.href.indexOf(input) !== -1) window.history.pushState("", "find", (window.location.href.indexOf('/' + input) !== -1 ? window.location.pathname.replace('/' + input,'') + window.location.search + window.location.hash : strim(window.location.pathname + window.location.search.replace('doi='+input,''),'?#') + window.location.hash));
+    if ('pushState' in window.history && input && window.location.href.indexOf(input) !== -1) {
+      window.history.pushState("", "find", (window.location.href.indexOf('/' + input) !== -1 ? window.location.pathname.replace('/' + input,'') + window.location.search + window.location.hash : strim(window.location.pathname + window.location.search.replace('doi='+input,''),'?#') + window.location.hash));
+    }
     input = undefined;
     matched = false;
     avail = undefined;
@@ -592,13 +594,19 @@ var _run = function() {
   var _intervaled = false;
   var availability = function(e) {
     if (!_doing_availability && ($(this).attr('id') === 'oabutton_find' || e === undefined || e.keyCode === 13)) {
+      if (e !== undefined) {
+        // after a user has interacted with the page in some way, add an event listener that restarts the embed on back
+        window.addEventListener("popstate", function(popevent) {
+          _restart();
+        });
+      }
       _doing_availability = true;
       $('#oabutton_error').html('').hide();
       if (e && $(this).attr('id') === 'oabutton_find') e.preventDefault();
       input = $('#oabutton_input').val().trim();
       if (input.lastIndexOf('.') === input.length-1) input = input.substring(0,input.length-1);
-      if (input.indexOf('10.') === 0 && window.location.href.indexOf(input) === -1) {
-        if ('pushState' in window.history) window.history.pushState("", "find", (window.location.href.indexOf('shareyourpaper.org') !== -1 ? window.location.pathname.split('/10.')[0] + '/' + input + window.location.search + window.location.hash : window.location.pathname + window.location.search.split('?doi=')[0].split('&doi=')[0] + (window.location.href.indexOf('?') === -1 ? '?' : '&') + 'doi=' + input + window.location.hash));
+      if (input.indexOf('10.') === 0 && window.location.href.indexOf(input) === -1 && 'pushState' in window.history) {
+        window.history.pushState("", "find", (window.location.href.indexOf('shareyourpaper.org') !== -1 ? window.location.pathname.split('/10.')[0] + '/' + input + window.location.search + window.location.hash : window.location.pathname + window.location.search.split('?doi=')[0].split('&doi=')[0] + (window.location.href.indexOf('?') === -1 ? '?' : '&') + 'doi=' + input + window.location.hash));
       }
       var data = {};
       if ($('#oabutton_title').length) {
