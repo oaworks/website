@@ -67,7 +67,7 @@ API.service.oab.permissions = (meta={}, file, url, confirmed) ->
   metad = false
   if not meta.doi?
     metad = true
-    meta = API.service.oab.metadata meta, content
+    meta = API.service.oab.metadata undefined, meta, content
 
   if meta.doi? and not perms.ricks?
     try
@@ -81,16 +81,16 @@ API.service.oab.permissions = (meta={}, file, url, confirmed) ->
       if perms.permissions.archiving_allowed
         perms.permissions.version_allowed = if 'publisher pdf' in perms.ricks.application.can_archive_conditions.versions_archivable then 'publisher pdf' else if 'postprint' in perms.ricks.application.can_archive_conditions.versions_archivable then 'postprint' else 'preprint'
     try
-      for k of perms.ricks.application
-        if k.indexOf('embargo') isnt -1 and perms.ricks.application.application[k] and perms.permissions.version_allowed is k.split('_embargo')[0].replace('_','').replace('publisherpdf','publisher pdf')
-          em = moment(perms.ricks.application[k])
+      for k of perms.ricks.application.can_archive_conditions
+        if k.indexOf('embargo') isnt -1 and perms.ricks.application.can_archive_conditions[k] and perms.permissions.version_allowed is k.split('_embargo')[0].replace('_','').replace('publisherpdf','publisher pdf')
+          em = moment(perms.ricks.application.can_archive_conditions[k])
           if em.isAfter(moment())
             perms.permissions.embargo = em.format "YYYY-MM-DD"
             break
   if not perms.sherpa?
     if not (meta.issn? or meta.journal?) and not metad
       metad = true
-      meta = API.service.oab.metadata meta, content
+      meta = API.service.oab.metadata undefined, meta, content
     if meta.issn? or meta.journal?
       try perms.sherpa = API.use.sherpa.romeo.find(if meta.issn then {issn:meta.issn} else {title:meta.journal})
       perms.permissions.archiving_allowed = perms.sherpa?.color in ['green','yellow','blue']
@@ -110,7 +110,7 @@ API.service.oab.permissions = (meta={}, file, url, confirmed) ->
             if months isnt 0
               if not (meta.year? or meta.published?) and not metad
                 metad = true
-                meta = API.service.oab.metadata meta, content
+                meta = API.service.oab.metadata undefined, meta, content
               if (meta.year? or meta.published?) and perms.permissions.version_allowed is (if 'pre' in parts then 'preprint' else if 'post' in parts then 'postprint' else if 'publisher' in parts then 'publisher pdf' else false)
                 pp = moment(if meta.published then meta.published else meta.year + '-12-01').add months, 'months'
                 if pp.isAfter(moment())
@@ -140,8 +140,8 @@ API.service.oab.permissions = (meta={}, file, url, confirmed) ->
       try f.same_paper_evidence.words_more_than_threshold = if f.same_paper_evidence.words_count > 500 then true else false
       try f.same_paper_evidence.doi_match = if meta.doi and lowercontentstart.indexOf(_clean meta.doi) isnt -1 then true else false # should have the doi in it near the front
       if content and not f.same_paper_evidence.doi_match and not meta.title? and not metad
-        meta = API.service.oab.metadata meta, content # get at least title again if not already tried to get it, and could not find doi in the file
-      try f.same_paper_evidence.title_match = if meta.title and lowercontentstart.indexOf(_clean meta.title.replace(/ /g,'')) isnt -1 then true else false
+        meta = API.service.oab.metadata undefined, meta, content # get at least title again if not already tried to get it, and could not find doi in the file
+      try f.same_paper_evidence.title_match = if meta.title and lowercontentstart.replace(/\./g,'').indexOf(_clean meta.title.replace(/ /g,'').replace(/\./g,'')) isnt -1 then true else false
       if meta.author?
         try
           authorsfound = 0

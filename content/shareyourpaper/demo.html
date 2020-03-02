@@ -67,7 +67,7 @@
   <div class="center-col">
     <div>
       <p style="text-align:center;">
-        Shareyourpaper.org is currently in Alpha. Please <a href="" class="blue" style="color:white"><b>let us know</b></a> how setup goes.
+        Shareyourpaper.org is currently in Alpha. Please <a href="mailto:joe@openaccessbutton.org" class="blue" style="color:white"><b>let us know</b></a> how setup goes.
       </p>
     </div>
   </div>
@@ -76,42 +76,10 @@
 
 <div id="demo" class="container-fluid">
 
-  <div id="menu" class="section">
-    <div class="row">
-      <div class="col-md-6 col-md-offset-1 content">
-        <div id="shareyourpaper"></div>
-      </div>
-
-      <div class="col-md-4 col-md-offset-1 blue">
-        <div class="blueery">
-          <h2>Demo</h2>
-
-          <p>
-            This is a landing page for the demo while we're stil in testing. It has some quick links. To demo the different kinds of shareyourpaper responses and actions.
-          </p>
-          <p>Use "start demo" button below the real user facing demo coming soon:</p>
-
-          <p>
-            <ul>
-              <li>Start a redeposit with <a href="#" class="preview" val="10.1186/1758-2946-3-47">10.1186/1758-2946-3-47</a> then choose "still want it in scholarworks" to see the redeposit flow.</li>
-              <li>A DOI that shows full info about not submitting publisher PDF etc: <a href="#" class="preview" val="10.1126/scitranslmed.3008973">10.1126/scitranslmed.3008973</a></li>
-              <li>A DOI where publisher PDF would be allowed: <a href="#" class="preview" val="10.1063/1.4937158">10.1063/1.4937158</a></li>
-            </ul>
-          </p>
-
-          <div class="bluebottom">
-            <p><a class="btn btn-demo-blue view pull" href="#start">Start demo</a></p>
-
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <div id="start" class="section">
     <div class="row">
       <div class="col-md-6 col-md-offset-1 content">
-
+       <div id="shareyourpaper"></div>
       </div>
 
       <div class="col-md-4 col-md-offset-1 blue">
@@ -162,27 +130,8 @@
             2/7 Let’s see what happens if you upload the right version
           </b></p>
 
-          <p>
-            Note... when they upload something we'll switch to the below.. which is at #success
-          </p>
+          <p><u><a href="https://docs.google.com/document/d/1juM1s11x-pP1OLZhZSZOs9iCAPLq--9C/export?format=docx">Click here to get a file to use</u></a></p>
 
-          <h2>Success!</h2>
-
-          <p>
-            The file is immediately available, doesn’t that feel great?
-          </p>
-
-          <p>
-            Authors expect to be able to share their work instantly, so we automatically check their upload is legal, and if it is put it right into Zenodo to give them a link.
-          </p>
-
-          <p><b>
-            3/7 We know authors don’t always get it right though...
-          </b></p>
-
-        </div>
-        <div class="bluebottom">
-          <p><a class="btn btn-demo-blue" href="#wrong" id="fakedeposit">So... what happens?</a></p>
         </div>
       </div>
     </div>
@@ -306,7 +255,7 @@
 
         </div>
         <div class="bluebottom">
-          <p><a class="btn btn-demo-blue view preview pull reset" href="#setup">Okay!</a></p>
+          <p><a class="btn btn-demo-blue view preview pull restart" href="#setup">Okay!</a></p>
         </div>
       </div>
     </div>
@@ -380,13 +329,50 @@ jQuery(document).ready(function() {
   var diff = Math.floor(($(window).height() - $('div.content:visible').height())/4);
   $('div.content:visible').css({'padding-top':diff+'px'});
 
-  /*$(document).ajaxComplete(function(e,xhr) {
-    if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.availability !== undefined) {
-      _ill_response = xhr.responseJSON.data;
-      $('div.content:visible').css({'padding-top':'100px'});
-      $('.oabutton_ill').off();
+  $(document).ajaxComplete(function(e,xhr) {
+    if (xhr && xhr.responseJSON && xhr.responseJSON.zenodo && xhr.responseJSON.zenodo.url && xhr.responseJSON.zenodo.url.indexOf('/DEMO') !== -1) {
+      if (window.location.hash && window.location.hash.indexOf('general') !== -1) {
+        view(false,'#success');
+      }
+    } else if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data && xhr.responseJSON.data.meta && xhr.responseJSON.data.meta.article && xhr.responseJSON.data.meta.article.doi === '10.1234/oab-syp-dark') {
+      if (window.location.hash && window.location.hash.indexOf('ingest') !== -1) {
+        var table = '<table class="table table-bordered" id="faketable">';
+        table += '<tr><td><b>Data given</b></td><td><b>Value</b></td></tr>';
+        var citation = '';
+        var ma = xhr.responseJSON.data.meta.article;
+        if (ma.author !== undefined) {
+          for (var a in ma.author) {
+            try {
+              if (a !== '0') citation += ', ';
+              citation += ma.author[a].given + ' ' + ma.author[a].family
+            } catch(err) {}
+          }
+        }
+        if (citation !== '') citation += ' ';
+        if (ma.title !== undefined) citation += '<i>' + ma.title + '</i>';
+        if (ma.journal !== undefined) citation += ' in <b>' + ma.journal + '</b>';
+        if (ma.volume !== undefined) citation += ', vol. ' + ma.volume;
+        if (ma.issue !== undefined) citation += ', iss. ' + ma.issue;
+        if (citation !== '') citation += '.';
+        if (ma.year) citation += ' ' + ma.year + '. ';
+        if (ma.doi) citation += ' doi: ' + ma.doi;
+        if (citation !== '') table += '<tr><td>Citation</td><td><p>' + citation + '</p></td></tr>';
+        var mp = xhr.responseJSON.v2.permissions;
+        table += '<tr><td>Version allowed</td><td>Postprint</td></tr>';
+        table += '<tr><td>Embargo date</td><td>07/13/21</td></tr>';
+        table += '<tr><td>Licence required</td>cc-by-nc-nd<td></td></tr>';
+        table += '<tr><td>Deposit statement</td><td>This is an Accepted Manuscript of an article published by Research Publisher in Journal of Science on 07/13/20, available online: <a href="http://www.tandfonline.com/10.1234/oab-syp-dark">http://www.tandfonline.com/10.1234/oab-syp-dark</a>.</td></tr>';
+        table += '<tr><td>Version uploaded</td><td>Postprint</td></tr>';
+        table += '<tr><td>Upload matches paper</td><td>Yes</td></tr>';
+        /*if (mp.permissions.version_allowed) table += '<tr><td>Archivable version</td><td><p>' + mp.permissions.version_allowed + '</p></td></tr>';
+        if (mp.permissions.embargo) table += '<tr><td>Embargo date</td><td><p>' + mp.permissions.embargo + '</p></td></tr>';
+        if (mp.permissions.required_statement) table += '<tr><td>Deposit statement</td><td><p>' + mp.permissions.required_statement + '</p></td></tr>';
+        if (mp.file.version) table += '<tr><td>Version uploaded</td><td><p>' + mp.file.version + '</p></td></tr>';
+        table += '<tr><td>Upload matches paper</td><td><p>' + (mp.file.same_paper === true ? 'Yes' : 'No')  + '</p></td></tr>';*/
+        $('div.content:visible').html(table);
+      }
     }
-  });*/
+  });
 
   var fakedeposit = function(e) {
     e.preventDefault();
@@ -400,3 +386,5 @@ jQuery(document).ready(function() {
 
 });
 </script>
+
+<!-- the one starting qz is the dev id, and it will be used any time the domain has dev. in it. The second one beginning eZ is the live id -->

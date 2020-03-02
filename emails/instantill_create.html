@@ -1,21 +1,59 @@
-
 <p>Dear {{name}},</p>
 
-<p>(NOTE: please do not respond to this email address, it is not monitored.)</p>
-
-<p>One of your colleagues has requested an inter-library loan. Their email address is:</p>
+<p>An interlibrary loan has been requested by:</p>
 
 <p>{{email}}</p>
 
-
 <p>The article required is:</p>
 
-{{details}}
+<p><b>Article Title</b></p>
+{{title}}
 
-<p>Please begin the ILL process and get back to {{email}} when possible.</p>
+<p><b>Journal Title</b></p>
+{{journal}}
 
+<p><b>ISSN</b></p>
+{{issn}}
 
-<p>Kind Regards,</p>
-<p>Natalia</p>
-<p>Open Access Button ILL Request Manager</p>
+<p><b>Publisher</b></p>
+{{publisher}}
 
+<p><b>Volume</b></p>
+{{volume}}
+
+<p><b>Issue</b></p>
+{{issue}}
+
+<p><b>Page</b></p>
+{{page}}
+
+<p><b>Published</b></p>
+{{published}}
+
+<p><b>URL</b><br>
+<a href="{{url}}">{{url}}</a></p>
+
+<p><b>DOI</b><br>
+<a href="https://doi.org/{{doi}}">{{doi}}</a></p>
+
+<p><b>PMID</b><br>
+<a href="https://www.ncbi.nlm.nih.gov/pubmed/{{pmid}}">{{pmid}}</a>
+
+<p><b>PMCID</b></p>
+<a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC{{pmcid}}">PMC{{pmcid}}</a>
+
+<p><b>Author</b></p>
+{{author}}
+
+<p><b>InstantILL ID</b></p>
+{{illid}}
+
+<p><b>Notes</b></p>
+{{notes}}
+
+<p><b>Worldcat Search URL (if applicable)</b><br>
+<a href="{{worldcatSearchUrl}}">{{worldcatSearchUrl}}</a>
+
+<p>Please begin the ILL process and get back to them when possible.</p>
+
+<p>Please do not respond to this email address, it is not monitored. If you have question, or see an issue, email <a href="mailto:Joe@openaccessbutton.org">Joe@openaccessbutton.org</a>.</p>

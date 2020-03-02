@@ -5,7 +5,7 @@ API.add 'service/oab/deposit',
   get:
     authOptional: true
     action: () ->
-      return API.service.oab.deposit undefined, this.queryParams, API.http.getFiles(this.queryParams.url), this.userId
+      return if not this.queryParams.url then false else API.service.oab.deposit undefined, this.queryParams, API.http.getFiles(this.queryParams.url), this.userId
   post:
     authOptional: true
     action: () ->
@@ -119,7 +119,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
   dep.plugin = options.plugin if options.plugin
 
   perms = API.service.oab.permissions d, files, undefined, options.confirmed # if confirmed is true the submitter has confirmed this is the right file. If confirmed is the checksum this is a resubmit by an admin
-  if perms.file?.archivable and ((options.confirmed? and options.confirmed is perms.file.checksum) or not options.confirmed or (options.confirmed and API.settings.dev)) # if the depositor confirms we don't deposit, we manually review - only deposit on admin confirmation (but on dev allow it)
+  if perms.file?.archivable and ((options.confirmed? and options.confirmed is perms.file.checksum) or not options.confirmed) #or (options.confirmed and API.settings.dev)) # if the depositor confirms we don't deposit, we manually review - only deposit on admin confirmation (but on dev allow it)
     zn = {}
     zn.content = files[0].data
     zn.name = perms.file.name
@@ -133,7 +133,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
     description = description.trim()
     description += '.' if description.lastIndexOf('.') isnt description.length-1
     description += ' ' if description.length
-    description += '<br><br>Deposited by shareyourpaper.org and openaccessbutton.org. We\'ve taken reasonable steps to ensure this content doesn\'t violate copyright, however, if you think it does you can request a takedown by emailing help@openaccessbutton.org.'
+    description += '<br><br>Deposited by shareyourpaper.org and openaccessbutton.org. We\'ve taken reasonable steps to ensure this content doesn\'t violate copyright. However, if you think it does you can request a takedown by emailing help@openaccessbutton.org.'
     meta =
       title: d.metadata.title ? 'Unknown',
       description: description.trim(),
@@ -203,32 +203,14 @@ API.service.oab.deposit = (d,options={},files,uid) ->
   dd = {deposit: d.deposit, permissions: perms}
   oab_catalogue.update(d._id, dd) if not options.setup?
 
-  tos = API.settings.service.openaccessbutton.notify.deposit ? ['mark@cottagelabs.com','joe@righttoresearch.org']
+  tos = API.settings.service.openaccessbutton.notify.deposit ? ['mark@cottagelabs.com','joe@righttoresearch.org','natalianorori@gmail.com']
+  bcc = undefined
+  if dep.type isnt 'review'
+    bcc = tos
+    tos = []
   if options.from
     iacc = API.accounts.retrieve options.from
     tos.push iacc.email ? iacc.emails[0].address # the institutional user may set a config value to use as the contact email address but for now it is the account address
-
-  '''text = 'This is an example email that we will send to an institution or our own admins for ' + dep.type + ' deposit\n\n'
-  text += 'File called ' +  (files[0].filename ? files[0].name) + ' should be attached.\n\n' if files? and files.length
-  text += 'This file needs reviewed as we could not automatically judge if it is suitable for this type of deposit.\n\n' if dep.type is 'review'
-  text += 'The attached file is for local deposit to the institutional repository.\n\n' if dep.type is 'forward'
-  text += 'This email notifies the institution that the depositor wishes to deposit their article with the institutional repository, but we do not yet have the article - the institution should contact the depositor directly.\n\n' if dep.typ is 'dark'
-  text += 'We have deposited this in Zenodo.\n\n' if dep.type is 'zenodo'
-  text += 'We have deposited this in Zenodo under embargo until ' + perms.permissions.embargo + '\n\n' if dep.type is 'embargoed'
-  text += 'Author email to contact: \n' + options.email + '\n\n' if options.email
-  text += 'The depositor has confirmed that this file is the correct item to deposit.\n\n' if options.confirmed? and options.confirmed isnt perms.file?.checksum
-  text += 'The administrator has confirmed that this file is the correct item to deposit.\n\n' if options.confirmed? and options.confirmed is perms.file?.checksum
-  text += 'There is already an open URL for this article at \n' + options.redeposit + '\n\n' if typeof options.redeposit is 'string'
-  text += 'METADATA:\n' + JSON.stringify(d.metadata,undefined,2) + '\n\nPERMISSIONS:\n' + JSON.stringify(perms,undefined,2) + '\n\nDEPOSIT:\n' + JSON.stringify(dep,undefined,2)
-
-  # the email could have a link back to a deposit of this article with a confirmed param that is the checksum, which allows an admin override
-  # if the file given is not a version that is allowed, create a dark deposit but delay emails by six hours, and cancel if a different or confirmed version is received in the meantime
-  API.service.oab.mail
-    from: 'deposits@openaccessbutton.org'
-    to: tos
-    subject: dep.type + ' deposit ' + dep.createdAt
-    text: text
-    attachments: (if _.isArray(files) and files.length then [{filename: (files[0].filename ? files[0].name), content: files[0].data}] else undefined)'''
 
   dep.permissions = perms
   dep.metadata = d.metadata
@@ -242,12 +224,14 @@ API.service.oab.deposit = (d,options={},files,uid) ->
     ed.metadata.author = as
   tmpl = API.mail.template dep.type + '_deposit.html'
   sub = API.service.oab.substitute tmpl.content, ed
-  API.service.oab.mail
-    from: 'deposits@openaccessbutton.org'
-    to: tos
-    subject: (sub.subject ? dep.type + ' deposit')
-    html: sub.content
-    attachments: (if _.isArray(files) and files.length then [{filename: (files[0].filename ? files[0].name), content: files[0].data}] else undefined)
+  if perms.file?.archivable is true
+    API.service.oab.mail
+      from: 'deposits@openaccessbutton.org'
+      to: tos
+      bcc: bcc
+      subject: (sub.subject ? dep.type + ' deposit')
+      html: sub.content
+      attachments: (if _.isArray(files) and files.length then [{filename: (files[0].filename ? files[0].name), content: files[0].data}] else undefined)
 
   # eventually this could also close any open requests for the same item, but that has not been prioritised to be done yet
   dep.z = z if API.settings.dev and dep.zenodo.id? and dep.zenodo.id isnt 'EXAMPLE'

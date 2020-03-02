@@ -210,6 +210,7 @@ var instantill_run = function() {
         }
       });
     }
+    $('#oabutton_error').html('').hide();
     $('#oabutton_availability').html('').hide();
     $('#oabutton_input').val('');
     $('#oabutton_inputs').show();
@@ -331,6 +332,7 @@ var instantill_run = function() {
   }
 
   var _submit_ill = function() {
+    $('#oabutton_error').html('').hide();
     $('.oabutton_find').html('Submitting .');
     $('.oabutton_ill').html('Submitting .');
     var eml = typeof matched === 'string' ? matched : $('#oabutton_email').val();
@@ -390,6 +392,7 @@ var instantill_run = function() {
     }
   }
   var ill = function(e) {
+    $('#oabutton_error').html('').hide();
     $('.oabutton_ill').html('Submitting .');
     if ($(this).hasClass('oabutton_ill_email')) {
       try { e.preventDefault(); } catch (err) {}

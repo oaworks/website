@@ -39,36 +39,10 @@ API.add 'service/oab/validate',
   post: 
     authOptional:true
     action: () ->
-      if (not this.queryParams.uid and not this.userId) or not this.queryParams.email or not API.accounts.retrieve this.userId ? this.queryParams.uid
-        return undefined
+      if (this.queryParams.uid or this.userId) and API.accounts.retrieve(this.queryParams.uid ? this.userId)
+        return API.service.oab.validate this.queryParams.email, this.queryParams.domained
       else
-        v = API.mail.validate(this.queryParams.email, API.settings.service.openaccessbutton.mail.pubkey)
-        if v.is_valid
-          if this.queryParams.domained and this.queryParams.domained not in ['qZooaHWRz9NLFNcgR','eZwJ83xp3oZDaec86']
-            iacc = API.accounts.retrieve this.queryParams.domained
-            return 'baddomain' if not iacc?
-            eml = false #iacc.email ? iacc.emails[0].address # may also later have a config where the allowed domains can be listed but for now just match the domain of the account holder - only in the case where shareyourpaper config exists
-            dc = false
-            try
-              dc = API.service.oab.deposit.config iacc
-              #eml = dc.adminemail if dc.adminemail? # don't bother defaulting to the admin email
-              dc.email_domains = dc.email_domains.split(',') if dc.email_domains? and typeof dc.email_domains is 'string'
-            if dc isnt false and dc.email_domains? and _.isArray(dc.email_domains) and dc.email_domains.length > 0
-              for ed in dc.email_domains
-                if this.queryParams.email.toLowerCase().indexOf(ed.toLowerCase()) > 0
-                  return true
-              return 'baddomain'
-            else
-              if typeof eml is 'string' and eml.toLowerCase().indexOf(this.queryParams.email.split('@')[1].split('.')[0].toLowerCase()) is -1
-                return 'baddomain'
-              else
-                return true
-          else
-            return true
-        else if v.did_you_mean
-          return v.did_you_mean
-        else
-          return false
+        return undefined
 
 API.add 'service/oab/dnr',
   get:
@@ -101,43 +75,43 @@ API.add 'service/oab/dnr',
 
 API.add 'service/oab/bug',
   post: () ->
-    if this.request.body?.contact? and this.request.body.contact.length
+    if (this.request.body?.contact? and this.request.body.contact.length) or (this.request.body?.email? and API.service.oab.validate(this.request.body.email) isnt true)
       return ''
-      
-    whoto = ['help@openaccessbutton.org']
-    text = ''
-    for k of this.request.body
-      text += k + ': ' + JSON.stringify(this.request.body[k],undefined,2) + '\n\n'
-    subject = '[OAB forms]'
-    if this.request.body?.form is 'uninstall' # wrong bug general other
-      subject += ' Uninstall notice'
-    else if this.request.body?.form is 'wrong'
-      subject += ' Wrong article'
-    else if this.request.body?.form is 'bug'
-      subject += ' Bug'
-    else if this.request.body?.form is 'general'
-      subject += ' General'
     else
-      subject += ' Other'
-    subject += ' ' + Date.now()
-    try
-      if this.request.body?.form is 'wrong'
-        whoto.push 'requests@openaccessbutton.org'
-    API.mail.send {
-      service: 'openaccessbutton',
-      from: 'help@openaccessbutton.org',
-      to: whoto,
-      subject: subject,
-      text: text
-    }
-    return {
-      statusCode: 302,
-      headers: {
-        'Content-Type': 'text/plain',
-        'Location': (if API.settings.dev then 'https://dev.openaccessbutton.org' else 'https://openaccessbutton.org') + '/feedback#defaultthanks'
-      },
-      body: 'Location: ' + (if API.settings.dev then 'https://dev.openaccessbutton.org' else 'https://openaccessbutton.org') + '/feedback#defaultthanks'
-    }
+      whoto = ['help@openaccessbutton.org']
+      text = ''
+      for k of this.request.body
+        text += k + ': ' + JSON.stringify(this.request.body[k],undefined,2) + '\n\n'
+      subject = '[OAB forms]'
+      if this.request.body?.form is 'uninstall' # wrong bug general other
+        subject += ' Uninstall notice'
+      else if this.request.body?.form is 'wrong'
+        subject += ' Wrong article'
+      else if this.request.body?.form is 'bug'
+        subject += ' Bug'
+      else if this.request.body?.form is 'general'
+        subject += ' General'
+      else
+        subject += ' Other'
+      subject += ' ' + Date.now()
+      try
+        if this.request.body?.form is 'wrong'
+          whoto.push 'requests@openaccessbutton.org'
+      API.mail.send {
+        service: 'openaccessbutton',
+        from: 'help@openaccessbutton.org',
+        to: whoto,
+        subject: subject,
+        text: text
+      }
+      return {
+        statusCode: 302,
+        headers: {
+          'Content-Type': 'text/plain',
+          'Location': (if API.settings.dev then 'https://dev.openaccessbutton.org' else 'https://openaccessbutton.org') + '/feedback#defaultthanks'
+        },
+        body: 'Location: ' + (if API.settings.dev then 'https://dev.openaccessbutton.org' else 'https://openaccessbutton.org') + '/feedback#defaultthanks'
+      }
 
 API.add 'service/oab/history', () -> return oab_request.history this
 
@@ -373,6 +347,39 @@ API.service.oab.template = (template,refresh) ->
   else
     return API.mail.template {service:'openaccessbutton'}
 
+API.service.oab.validate = (email, domain) ->
+  bad = ['eric@talkwithcustomer.com']
+  if typeof email isnt 'string' or email.indexOf(',') isnt -1 or email in bad
+    return false
+  else
+    v = API.mail.validate email, API.settings.service.openaccessbutton.mail.pubkey
+    if v.is_valid
+      if domain and domain not in ['qZooaHWRz9NLFNcgR','eZwJ83xp3oZDaec86']
+        iacc = API.accounts.retrieve domain
+        return 'baddomain' if not iacc?
+        eml = false #iacc.email ? iacc.emails[0].address # may also later have a config where the allowed domains can be listed but for now just match the domain of the account holder - only in the case where shareyourpaper config exists
+        dc = false
+        try
+          dc = API.service.oab.deposit.config iacc
+          #eml = dc.adminemail if dc.adminemail? # don't bother defaulting to the admin email
+          dc.email_domains = dc.email_domains.split(',') if dc.email_domains? and typeof dc.email_domains is 'string'
+        if dc isnt false and dc.email_domains? and _.isArray(dc.email_domains) and dc.email_domains.length > 0
+          for ed in dc.email_domains
+            if email.toLowerCase().indexOf(ed.toLowerCase()) > 0
+              return true
+          return 'baddomain'
+        else
+          if typeof eml is 'string' and eml.toLowerCase().indexOf(email.split('@')[1].split('.')[0].toLowerCase()) is -1
+            return 'baddomain'
+          else
+            return true
+      else
+        return true
+    else if v.did_you_mean
+      return v.did_you_mean
+    else
+      return false
+  
 API.service.oab.vars = (vars) ->
   vars = JSON.parse JSON.stringify vars # need this in case a request is passed in as vars and later edited
   if vars?.user

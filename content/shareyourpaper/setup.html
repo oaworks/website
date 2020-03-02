@@ -70,7 +70,7 @@
   <div class="center-col">
     <div>
       <p style="text-align:center;">
-        Shareyourpaper.org is currently in Alpha. Please <a href="" class="blue" style="color:white"><b>let us know</b></a> how setup goes.
+        Shareyourpaper.org is currently in Alpha. Please <a href="mailto:joe@openaccessbutton.org" class="blue" style="color:white"><b>let us know</b></a> how setup goes.
       </p>
     </div>
   </div>
@@ -106,12 +106,12 @@
               </span> Repository</a>
             </li>
             <li>
-              <a class="blue view pull preview" val="10.1145/2908080.2908114" href="#preferences-general">
+              <a class="blue view pull preview" val="10.1016/j.phrs.2019.104618" href="#preferences-general">
                 <span class="glyphicon glyphicon-arrow-right">
               </span> Deposit Preferences</a>
             </li>
             <li>
-              <a class="blue view pull preview" val="10.1145/2908080.2908114" href="#policy">
+              <a class="blue view pull preview" val="10.1016/j.phrs.2019.104618" href="#policy">
                 <span class="glyphicon glyphicon-arrow-right">
               </span> Open Access Policy</a>
             </li>
@@ -246,9 +246,13 @@
             We will always email you whenever you get a deposit.
           </p>
 
+          <!--
+
           <p><b>Who do you want your emails to go to?</b></p>
           <input id="deposit_notifications_email" type="text" class="form-control setting blue" placeholder="default: your email">
           <br>
+
+        -->
 
           <p>
             Currently, you can’t turn these off. If you don’t want them you can put in a fake email address.
@@ -430,9 +434,13 @@
             These questions help make sure shareyourpaper.org performs how you and authors expect. There are multiple parts to this, and you’ll be able to set up your preferences for different types of deposit, metadata, and more.
           </p>
 
+          <!--
+
           <p><b>What is the name of your institution?</b></p>
           <input id="institution_name" type="text" class="form-control setting blue" placeholder="e.g Montana State University">
           <br>
+
+-->
 
           <p><b>What is the name of your repository?</b></p>
           <input id="repo_name" type="text" class="form-control setting blue" placeholder="e.g Scholarworks">
@@ -446,7 +454,7 @@
           <p><b>Where can we find the terms and conditions of usage for your repository</b></p>
           <input id="deposit_terms" type="text" class="form-control setting blue" placeholder="e.g https://scholarworks.montana.edu/docs">
           <br>
-
+          <!--
           <p><b>How do people currently do deposits?</b></p>
           <p>This can either be a link, for example to a deposit form, or an email address if you only do mediated deposit.</p>
           <input id="old_way" type="text" class="form-control setting blue" placeholder="default: your email address">
@@ -465,10 +473,15 @@
           <input id="file_review_time" type="text" class="form-control setting blue" placeholder="default: one day">
           <br>
 
+          -->
+          <!--
+
           <p><b>Where would you like us to send people if they don’t have a DOI?</b></p>
           <p>This can be a link or email. If you don't give anything, we won't show the button.</p>
           <input id="if_no_doi_go_here" type="text" class="form-control setting blue" placeholder="default: not shown">
           <br>
+
+
 
           <p><b>Where would you like us to send people if they have feedback?</b></p>
           <input id="email_for_feedback" type="text" class="form-control setting blue" placeholder="default: your email address">
@@ -483,9 +496,11 @@
           </p>
           <br>
 
+        -->
+
         </div>
         <div class="bluebottom">
-          <p><a class="btn btn-hollow-blue save pull preview" href="#">Preview & Test</a></p>
+          <p><a class="btn btn-hollow-blue save pull preview" href="#" val="10.1145/2908080.2908114">Preview & Test</a></p>
           <p><a class="btn btn-demo-blue save view pull preview" val="10.1186/1758-2946-3-47" href="#preferences-oa">Save & Continue</a></p>
           <p><a class="blue" href="/feedback#general">Feedback</a> | <a class="blue view" href="#faq">FAQ</a> | <a class="blue" href="/feedback#bug"> Report Issue</a></p>
         </div>
@@ -512,7 +527,7 @@
           </p>
 
           <p><b>
-            Turn off the ability to deposit already open access content?
+             Turn off the ability to deposit already open access content?
           </b></p>
           <p>
           <input id="allow_oa_deposit" type="checkbox" class="setting blue">
@@ -521,7 +536,7 @@
 
         </div>
         <div class="bluebottom">
-          <p><a class="btn btn-hollow-blue save pull preview" href="#">Preview & Test</a></p>
+          <p><a class="btn btn-hollow-blue save pull preview" href="#" val="10.1186/1758-2946-3-47">Preview & Test</a></p>
           <p><a class="btn btn-demo-blue save view pull preview" val="10.1063/1.4937158" href="#preferences-pdfs">Save & Continue</a></p>
           <p><a class="blue" href="/feedback#general">Feedback</a> | <a class="blue view" href="#faq">FAQ</a> | <a class="blue" href="/feedback#bug"> Report Issue</a></p>
         </div>
@@ -549,7 +564,7 @@
 
         </div>
         <div class="bluebottom">
-          <p><a class="btn btn-hollow-blue save pull preview" href="#">Preview & Test</a></p>
+          <p><a class="btn btn-hollow-blue save pull preview" href="#" val="10.1063/1.4937158">Preview & Test</a></p>
           <p><a class="btn btn-demo-blue save view pull preview" val="10.15650/hebruniocollannu.89.2018.0221" href="#preferences-dark">Save & Continue</a></p>
           <p><a class="blue" href="/feedback#general">Feedback</a> | <a class="blue view" href="#faq">FAQ</a> | <a class="blue" href="/feedback#bug"> Report Issue</a></p>
         </div>
@@ -572,6 +587,9 @@
             Request-only deposit is where publisher PDFs which can’t be shared openly are stored in the repository and only accessible on request. It's often known as dark deposit. This process allows on-request access instead of systematic distribution.
           </p>
 
+          <p>Note: When we come out of testing, we'll let you change this!</p>
+
+          <!--
           <p><b>
             When doing request only, by default we say the library handles access requests. Would you like to change that?
           </b></p>
@@ -590,10 +608,10 @@
           <input id="dark_deposit_off" type="checkbox" class="setting blue">
             Yes
           </p>
-
+        -->
         </div>
         <div class="bluebottom">
-          <p><a class="btn btn-hollow-blue save pull preview" href="#">Preview & Test</a></p>
+          <p><a class="btn btn-hollow-blue save pull preview" href="#" val="10.15650/hebruniocollannu.89.2018.0221">Preview & Test</a></p>
           <p><a class="btn btn-demo-blue save view pull restart" href="#preferences-metadata">Save & Continue</a></p>
           <p><a class="blue" href="/feedback#general">Feedback</a> | <a class="blue view" href="#faq">FAQ</a> | <a class="blue" href="/feedback#bug"> Report Issue</a></p>
         </div>
@@ -688,7 +706,7 @@
 
         </div>
         <div class="bluebottom">
-          <p><a class="btn btn-hollow-blue save pull preview" href="#">Preview & Test</a></p>
+          <!--<p><a class="btn btn-hollow-blue save pull preview" href="#">Preview & Test</a></p>-->
           <p><a class="btn btn-demo-blue save view pull" href="#embed">Save & Continue</a></p>
           <p><a class="blue" href="/feedback#general">Feedback</a> | <a class="blue view" href="#faq">FAQ</a> | <a class="blue" href="/feedback#bug"> Report Issue</a></p>
         </div>
@@ -1058,7 +1076,10 @@ jQuery(document).ready(function() {
   var _preview = false;
   var save = function(e,pvw) {
     try { e.preventDefault(); } catch (err) {}
-    if (e === true || pvw || $(this).attr('preview') || $(this).hasClass('preview')) _preview = $(this).attr('preview') ? $(this).attr('preview') : (pvw ? pvw : true);
+    _preview = false;
+    if (e === true || pvw || $(this).attr('val') || $(this).attr('preview') || $(this).hasClass('preview')) {
+      _preview = pvw ? pvw : ($(this).attr('preview') ? $(this).attr('preview') : ($(this).attr('val') ? $(this).attr('val') : true));
+    }
     var data = {};
     $('.setting').each(function(i, obj) {
       if ( $(this).attr('id') === 'community') {
@@ -1101,10 +1122,9 @@ jQuery(document).ready(function() {
       success: function(data) {
         uc = data; // returns the updated user config
         configure();
-        if (_preview) {
+        if (_preview !== false) {
           $('.save').hide().after('<p class="saved">Saving changes! Your preview will run shortly.</p>');
-          setTimeout(function() { $('.saved').hide(); $('.save').show(); preview(undefined,_preview); }, 3000);
-          _preview = false;
+          setTimeout(function() { $('.saved').hide(); $('.save').show(); preview(undefined,_preview); _preview = false; }, 3000);
         } else {
           $('.save').hide().after('<p class="saved">Saving changes!</p>');
           setTimeout(function() { $('.saved').hide(); $('.save').show(); }, 4000);
