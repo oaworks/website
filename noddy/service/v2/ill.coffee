@@ -331,8 +331,9 @@ API.service.oab.ill.start = (opts={}) ->
       for o of opts
         if o is 'metadata'
           for m of opts[o]
-            opts[m] = opts[o][m]
-            ordered.push(m) if m not in ordered
+            if m isnt 'email'
+              opts[m] = opts[o][m]
+              ordered.push(m) if m not in ordered
           delete opts.metadata
         else
           ordered.push(o) if o not in ordered
@@ -342,14 +343,18 @@ API.service.oab.ill.start = (opts={}) ->
           if r is 'author'
             authors = '<p>Authors:<br>'
             first = true
+            ats = []
             for a in opts[r]
               if a.family
                 if first
                   first = false
                 else
                   authors += ', '
-                authors += a.family + (if a.given then ' ' + a.given else '')
+                atidy = a.family + (if a.given then ' ' + a.given else '')
+                authors += atidy
+                ats.push atidy
             vars.details += authors + '</p>'
+            vars[r] = ats
           else if ['started','ended','took'].indexOf(r) is -1
             vars.details += '<p>' + r + ':<br>' + opts[r] + '</p>'
         #vars.details += '<p>' + o + ':<br>' + opts[o] + '</p>'
@@ -373,8 +378,8 @@ API.service.oab.ill.start = (opts={}) ->
           su = user.service.openaccessbutton.ill.config.search
           su += if opts.issn then opts.issn else opts.journal
         vars.details += '<p>Search URL:<br><a href="' + su + '">' + su + '</a></p>'
-        vars.worldcatSearchUrl = su
-        
+        vars.worldcatsearchurl = su
+
       if not opts.forwarded
         API.service.oab.mail({vars: vars, template: {filename:'instantill_create.html'}, to: eml, from: "InstantILL <InstantILL@openaccessbutton.org>", subject: "ILL request " + vars.illid})
       
