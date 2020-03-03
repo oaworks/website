@@ -345,12 +345,12 @@ var instantill_run = function() {
       if (!matched) matched = true;
       getmore();
     } else {
-      if (avail.data.ill && avail.data.ill.openurl && avail.data.ill.openurl.indexOf('notes') === -1 && (avail.data.ill.subscription || avail.data.availability)) {
-        if (data.notes === undefined) data.notes = '';
+      if (avail.data && avail.data.ill && avail.data.ill.subscription || avail.data.availability) {
+        typeof data.notes !== 'string' ? data.notes = '': data.notes += ' ';
         if (avail.data.ill.subscription) data.notes += 'Subscription check done, found ' + (avail.data.ill.subscription.url ? avail.data.ill.subscription.url : (avail.data.ill.subscription.journal ? 'journal' : 'nothing')) + '. ';
         if (avail.data.availability) data.notes += 'OA availability check done, found ' + (avail.data.availability.length && avail.data.availability[0].url ? avail.data.availability[0].url : 'nothing') + '. ';
       }
-      if (avail.data.ill.openurl && _oab_opts.openurl !== false && !data.email) data.forwarded = true;
+      if (avail.data && avail.data.ill && avail.data.ill.openurl && _oab_opts.openurl !== false && !data.email) data.forwarded = true;
       var illopts = {
         type:'POST',
         url:api+'/ill',
