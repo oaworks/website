@@ -73,8 +73,9 @@ API.service.oab.permissions = (meta={}, file, url, confirmed) ->
     try
       # https://rickscafe-api.herokuapp.com/permissions/doi/
       perms.ricks = HTTP.call('GET','https://api.greenoait.org/permissions/doi/' + meta.doi).data.authoritative_permission
+      console.log perms.ricks
       perms.permissions.archiving_allowed = perms.ricks?.application?.can_archive_conditions?.versions_archivable and ('postprint' in perms.ricks.application.can_archive_conditions.versions_archivable or 'publisher pdf' in perms.ricks.application.can_archive_conditions.versions_archivable)
-      perms.required_statement = perms.ricks.application.can_archive_conditions.deposit_statement_required_calculated if typeof perms.ricks?.application?.can_archive_conditions?.deposit_statement_required_calculated is 'string' and perms.ricks?.application?.can_archive_conditions?.deposit_statement_required_calculated.indexOf('cc-') isnt 0
+      perms.permissions.required_statement = perms.ricks.application.can_archive_conditions.deposit_statement_required_calculated if typeof perms.ricks?.application?.can_archive_conditions?.deposit_statement_required_calculated is 'string' and perms.ricks.application.can_archive_conditions.deposit_statement_required_calculated.indexOf('cc-') isnt 0
     catch
       perms.error = 'Could not connect to Ricks'
     try

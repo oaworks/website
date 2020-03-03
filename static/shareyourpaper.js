@@ -181,6 +181,7 @@ var _run = function() {
   var gotmore = false;
   var filecorrect = undefined;
   var flupload = undefined;
+  var _intervaled = undefined;
 
   _restart = function(e) {
     try { e.preventDefault(); } catch(err) {}
@@ -194,6 +195,10 @@ var _run = function() {
     gotmore = false;
     filecorrect = undefined;
     flupload = undefined;
+    if (_intervaled) {
+      clearInterval(_intervaled);
+      _intervaled = undefined;
+    }
     if (_oab_opts.uid) {
       $.ajax({
         type:'GET',
@@ -277,6 +282,26 @@ var _run = function() {
       } catch(err) {}
     }
   }
+  
+  var dotting = function() {
+    if (!_intervaled) {
+      _intervaled = setInterval(function() {
+        try {
+          var w = $('.oabutton_deposit').length ? $('.oabutton_deposit') : ($('.oabutton_inform').length ? $('.oabutton_inform') : $('.oabutton_find'));
+          var srch = w.first().html();
+          if (srch.indexOf('.') !== -1) {
+            var dots = srch.split('.');
+            if (dots.length >= 4) {
+              srch = srch.replace(/\./g,'').trim() + ' .';
+            } else {
+              srch += ' .';
+            }
+            w.html(srch);
+          }
+        } catch(err) {}
+      }, 800);
+    }
+  }
 
   var cite = function(meta) {
     var c = '';
@@ -301,8 +326,10 @@ var _run = function() {
     $('#oabutton_error').html('').hide();
     $('.oabutton_find').html('Submitting .');
     $('.oabutton_deposit').html('Depositing .');
-    if (filecorrect) $('#oabutton_inform').html('Depositing .');
-    var eml = typeof matched === 'string' ? matched : ($('#oabutton_email').length ? $('#oabutton_email').val() : _parameta.email);
+    if (filecorrect) $('#oabutton_inform').html('Submitting .');
+    dotting();
+    var eml = typeof matched === 'string' ? matched : ($('#oabutton_email').length && $('#oabutton_email').val() ? $('#oabutton_email').val() : _parameta.email);
+    if (eml && _parameta.email !== eml) _parameta.email = eml; // to make sure on confirmation of file suitability that we have the email address somewhere
     var data = {email:eml, from:_oab_opts.uid, plugin:'shareyourpaper', embedded:window.location.href, metadata: avail.data.meta.article }
     if (filecorrect) data.confirmed = true;
     if (_parameta.confirmed) data.confirmed = _parameta.confirmed;
@@ -320,6 +347,10 @@ var _run = function() {
         cache: false,
         processData: false,
         success: function(res) {
+          if (_intervaled) {
+            clearInterval(_intervaled);
+            _intervaled = undefined;
+          }
           if (filecorrect) $('#oabutton_inform').html('Try uploading again');
           $('.oabutton_deposit').html('Upload');
           $('#oabutton_inputs').hide();
@@ -364,7 +395,7 @@ var _run = function() {
               var info = '<h2>Hmmm, something looks wrong</h2>';
               info += '<p>You\’re nearly done. It looks like what you uploaded is a publisher\’s PDF which the journal prohibits legally sharing.<!-- It can only be shared on a limited basis.--><br><br>';
               info += 'We just need the version accepted by the journal to make your work available to everyone.</p>';
-              info += '<p><a href="#" class="' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : ' btn btn-primary') : '') + '" id="oabutton_inform" style="min-width:150px;">Try uploading again</a></p>';
+              info += '<p><a href="#" class="oabutton_inform ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" id="oabutton_inform" style="min-width:150px;">Try uploading again</a></p>';
               info += '<p><a href="#" id="oabutton_filecorrect"><b><u>My upload was an accepted manuscript</u></b></a></p>';
               $('#oabutton_availability').html(info).show();
             }
@@ -377,6 +408,10 @@ var _run = function() {
           }
         },
         error: function(data) {
+          if (_intervaled) {
+            clearInterval(_intervaled);
+            _intervaled = undefined;
+          }
           if (filecorrect) $('#oabutton_inform').html('Try uploading again');
           $('.oabutton_deposit').html('Complete deposit');
           $('#oabutton_error').html('<p>Sorry, we were not able to deposit this paper for you. ' + _lib_contact + '</p><p><a href="#" class="oabutton_restart" style="font-weight:bold;">Try again</a></p>').show();
@@ -477,6 +512,10 @@ var _run = function() {
   }
 
   var inform = function() {
+    if (_intervaled) {
+      clearInterval(_intervaled);
+      _intervaled = undefined;
+    }
     $('#oabutton_error').html('').hide();
     if (avail.v2 && avail.v2.doi_not_in_crossref) {
       $('#oabutton_input').focus();//.val('');
@@ -591,7 +630,6 @@ var _run = function() {
   }
 
   var _doing_availability = false;
-  var _intervaled = false;
   var availability = function(e) {
     if (!_doing_availability && ($(this).attr('id') === 'oabutton_find' || e === undefined || e.keyCode === 13)) {
       if (e !== undefined) {
@@ -653,24 +691,7 @@ var _run = function() {
       }
       if (!data.url) data.url = input;
       $('.oabutton_find').html('Searching .');
-      if (!_intervaled) {
-        _intervaled = true;
-        setInterval(function() {
-          try {
-            var w = $('.oabutton_deposit').length ? $('.oabutton_deposit') : $('.oabutton_find');
-            var srch = w.first().html();
-            if (srch.indexOf('.') !== -1) {
-              var dots = srch.split('.');
-              if (dots.length >= 4) {
-                srch = srch.replace(/\./g,'').trim() + ' .';
-              } else {
-                srch += ' .';
-              }
-              w.html(srch);
-            }
-          } catch(err) {}
-        }, 800);
-      }
+      dotting();
       data.from = _oab_opts.uid;
       data.plugin = 'shareyourpaper';
       data.embedded = window.location.href;
