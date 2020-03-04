@@ -239,6 +239,11 @@ var _run = function() {
 
   var getmore = function(e) {
     try { e.preventDefault(); } catch(err) {}
+    if (_intervaled) {
+      clearInterval(_intervaled);
+      _intervaled = undefined;
+    }
+    $('#oabutton_error').html('').hide();
     if (attempts > 2) {
       fail();
     } else {
@@ -603,8 +608,10 @@ var _run = function() {
         info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="' + ph + '" aria-label="' + ph + '" style="box-shadow:none;"></input></p>';
         info += '<p>We\'ll only use this if something goes wrong.<br>';
         info += '<h3>We\'ll check it\'s legal, then promote, and preserve your work</h3>';
-        info += '<p><input type="file" name="file" id="file" class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '"></p>';// \
-        info += '<p>By uploading you\'re agreeing to the <a href="' + tcs + '" target="_blank"><u>terms and conditions</u></a> and to license your work CC-BY.</p>';
+        info += '<p><input type="file" name="file" id="file" class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '"></p>';
+        info += '<p>By uploading you\'re agreeing to the <a href="' + tcs + '" target="_blank"><u>terms and conditions</u></a> and to license your work ';
+        info += avail.v2.permissions.permissions.licence_required !== undefined ? avail.v2.permissions.permissions.licence_required : 'CC-BY';
+        info += '.</p>';
         info += '<p><a href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : ' btn btn-primary') : '') + '" id="submitfile" style="min-width:150px;">Upload</a>';
         info += '</div>';
       } else {
