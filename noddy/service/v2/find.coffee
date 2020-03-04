@@ -276,7 +276,7 @@ API.service.oab.find = (options={}, metadata={}, content) ->
           res.found.oabutton = res.url
         else if catalogued.createdAt > Date.now() - res.refresh*86400000
           _get metadata, catalogued.metadata # it is in the catalogue but we don't have a link for it, and it is within refresh days old, so re-use the metadata from it
-          res.cached = true # and cause an immediate return, we don't bother looking for everything again if we already couldn't find it within a given refresh window
+          res.cached = true if _got() # and cause an immediate return, we don't bother looking for everything again if we already couldn't find it within a given refresh window
   _findoab()
   
   # TODO update requests so successful ones write the source to the catalogue - but updating requests is not priority yet, so not doing right now

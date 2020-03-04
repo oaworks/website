@@ -155,7 +155,8 @@ API.service.oab.deposit = (d,options={},files,uid) ->
     else if API.settings.service.openaccessbutton?.zenodo?.prereserve_doi
       meta.prereserve_doi = true
     meta['access_right'] = 'open'
-    meta.license = perms.file.licence ? 'cc-by'
+    meta.license = perms.permissions.licence_required ? 'cc-by'
+    meta.license += '-4.0' if meta.license.toLowerCase().indexOf('cc') is 0 and isNaN(parseInt(meta.license.substring(meta.license.length-1)))
     if perms.permissions.embargo?
       meta['access_right'] = 'embargoed'
       meta['embargo_date'] = perms.permissions.embargo # check date format required by zenodo
@@ -195,6 +196,8 @@ API.service.oab.deposit = (d,options={},files,uid) ->
     if perms.permissions.embargo
       dep.embargo = perms.permissions.embargo
     dep.type = 'zenodo'
+  else if dep.error? and dep.error.toLowerCase().indexOf('zenodo') isnt -1
+    dep.type = 'review'
   else if options.from and (not dep.embedded or (dep.embedded.indexOf('openaccessbutton.org') is -1 and dep.embedded.indexOf('shareyourpaper.org') is -1))
     dep.type = if options.redeposit then 'redeposit' else if files? and files.length then 'forward' else 'dark'
   else
@@ -225,7 +228,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
     ed.metadata.author = as
   tmpl = API.mail.template dep.type + '_deposit.html'
   sub = API.service.oab.substitute tmpl.content, ed
-  if perms.file?.archivable is true
+  if perms.file?.archivable isnt false # so when true or when undefined if no file is given
     API.service.oab.mail
       from: 'deposits@openaccessbutton.org'
       to: tos

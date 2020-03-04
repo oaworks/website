@@ -30,7 +30,7 @@ API.service.oab.permissions = (meta={}, file, url, confirmed) ->
 
   formats = ['doc','tex','pdf','htm','xml','txt','rtf','odf','odt','page']
 
-  perms = meta.permissions ? {permissions: {archiving_allowed: false, version_allowed: undefined, embargo: undefined, required_statement: undefined}, file: undefined}
+  perms = meta.permissions ? {permissions: {archiving_allowed: false, version_allowed: undefined, embargo: undefined, required_statement: undefined, licence_required: undefined}, file: undefined}
   meta = meta.metadata if meta.metadata? # if passed a catalogue object
 
   if typeof file is 'string'
@@ -74,7 +74,9 @@ API.service.oab.permissions = (meta={}, file, url, confirmed) ->
       # https://rickscafe-api.herokuapp.com/permissions/doi/
       perms.ricks = HTTP.call('GET','https://api.greenoait.org/permissions/doi/' + meta.doi).data.authoritative_permission
       perms.permissions.archiving_allowed = perms.ricks?.application?.can_archive_conditions?.versions_archivable and ('postprint' in perms.ricks.application.can_archive_conditions.versions_archivable or 'publisher pdf' in perms.ricks.application.can_archive_conditions.versions_archivable)
-      perms.required_statement = perms.ricks.application.can_archive_conditions.deposit_statement_required_calculated if typeof perms.ricks?.application?.can_archive_conditions?.deposit_statement_required_calculated is 'string' and perms.ricks?.application?.can_archive_conditions?.deposit_statement_required_calculated.indexOf('cc-') isnt 0
+      perms.permissions.required_statement = perms.ricks.application.can_archive_conditions.deposit_statement_required_calculated if typeof perms.ricks?.application?.can_archive_conditions?.deposit_statement_required_calculated is 'string' and perms.ricks.application.can_archive_conditions.deposit_statement_required_calculated.indexOf('cc-') isnt 0
+      perms.permissions.licence_required = perms.ricks.application.can_archive_conditions.licenses_required[0] if perms.ricks?.application?.can_archive_conditions?.licenses_required?
+      perms.permissions.policy_full_text = perms.ricks.provenance.policy_full_text if perms.ricks?.provenance?.policy_full_text
     catch
       perms.error = 'Could not connect to Ricks'
     try
@@ -264,8 +266,6 @@ API.service.oab.permissions = (meta={}, file, url, confirmed) ->
       else
         f.archivable_reason ?= if not f.same_paper_evidence.words_more_than_threshold then 'The file is less than 500 words, and so does not appear to be a full article' else if not f.same_paper_evidence.document_format then 'File is an unexpected format ' + f.format else if not meta.doi and not meta.title then 'We have insufficient metadata to validate file is for the correct paper ' else 'File does not contain expected metadata such as DOI or title'
 
-  perms.file = f if not _.isEmpty f
-
   try perms.lantern = API.service.lantern.licence('https://doi.org/' + meta.doi) if not f.licence and meta.doi? and 'doi.org' not in url
   if f.archivable isnt undefined and f.archivable isnt true and perms.lantern?.licence? and perms.lantern.licence.toLowerCase().indexOf('cc') is 0
     f.licence = perms.lantern.licence
@@ -279,5 +279,8 @@ API.service.oab.permissions = (meta={}, file, url, confirmed) ->
     else if perms.sherpa?.publisher?.alias? and perms.sherpa.publisher.alias.toLowerCase().indexOf('cc-') isnt -1
       f.licence = 'cc-' + perms.sherpa.publisher.alias.toLowerCase().split('cc-')[1].split(' ')[0]
 
+  perms.permissions.licence_required ?= f.licence if f.licence
+
+  perms.file = f if not _.isEmpty f
   perms.metadata = meta
   return perms

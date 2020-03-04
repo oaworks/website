@@ -181,6 +181,7 @@ var _run = function() {
   var gotmore = false;
   var filecorrect = undefined;
   var flupload = undefined;
+  var _intervaled = undefined;
 
   _restart = function(e) {
     try { e.preventDefault(); } catch(err) {}
@@ -194,6 +195,10 @@ var _run = function() {
     gotmore = false;
     filecorrect = undefined;
     flupload = undefined;
+    if (_intervaled) {
+      clearInterval(_intervaled);
+      _intervaled = undefined;
+    }
     if (_oab_opts.uid) {
       $.ajax({
         type:'GET',
@@ -234,6 +239,11 @@ var _run = function() {
 
   var getmore = function(e) {
     try { e.preventDefault(); } catch(err) {}
+    if (_intervaled) {
+      clearInterval(_intervaled);
+      _intervaled = undefined;
+    }
+    $('#oabutton_error').html('').hide();
     if (attempts > 2) {
       fail();
     } else {
@@ -278,6 +288,26 @@ var _run = function() {
     }
   }
 
+  var dotting = function() {
+    if (!_intervaled) {
+      _intervaled = setInterval(function() {
+        try {
+          var w = $('.oabutton_deposit').length ? $('.oabutton_deposit') : ($('.oabutton_inform').length ? $('.oabutton_inform') : $('.oabutton_find'));
+          var srch = w.first().html();
+          if (srch.indexOf('.') !== -1) {
+            var dots = srch.split('.');
+            if (dots.length >= 4) {
+              srch = srch.replace(/\./g,'').trim() + ' .';
+            } else {
+              srch += ' .';
+            }
+            w.html(srch);
+          }
+        } catch(err) {}
+      }, 800);
+    }
+  }
+
   var cite = function(meta) {
     var c = '';
     // if we got nothing back but what we put in, then we have not found anything suitable :(
@@ -301,8 +331,10 @@ var _run = function() {
     $('#oabutton_error').html('').hide();
     $('.oabutton_find').html('Submitting .');
     $('.oabutton_deposit').html('Depositing .');
-    if (filecorrect) $('#oabutton_inform').html('Depositing .');
-    var eml = typeof matched === 'string' ? matched : ($('#oabutton_email').length ? $('#oabutton_email').val() : _parameta.email);
+    if (filecorrect) $('#oabutton_inform').html('Submitting .');
+    dotting();
+    var eml = typeof matched === 'string' ? matched : ($('#oabutton_email').length && $('#oabutton_email').val() ? $('#oabutton_email').val() : _parameta.email);
+    if (eml && _parameta.email !== eml) _parameta.email = eml; // to make sure on confirmation of file suitability that we have the email address somewhere
     var data = {email:eml, from:_oab_opts.uid, plugin:'shareyourpaper', embedded:window.location.href, metadata: avail.data.meta.article }
     if (filecorrect) data.confirmed = true;
     if (_parameta.confirmed) data.confirmed = _parameta.confirmed;
@@ -320,6 +352,10 @@ var _run = function() {
         cache: false,
         processData: false,
         success: function(res) {
+          if (_intervaled) {
+            clearInterval(_intervaled);
+            _intervaled = undefined;
+          }
           if (filecorrect) $('#oabutton_inform').html('Try uploading again');
           $('.oabutton_deposit').html('Upload');
           $('#oabutton_inputs').hide();
@@ -327,8 +363,7 @@ var _run = function() {
             if ((res.zenodo && res.zenodo.already) || (filecorrect && (res.zenodo === undefined || res.zenodo.url === undefined))) {
               var info = '<div>';
               info += '<h2>We\'ll double check your paper</h2>';
-              info += '<p>You\'ve done your part for now. We\’ll check in the next day to make sure it\’s legal to share.</p>';
-              info += '<p>Hopefully, we\’ll soon send you a link soon.';
+              info += '<p>You\’ve done your part for now. We\’ll check in the next day to make sure it\’s legal to share. Hopefully, we\’ll soon send you a link soon.</p>';
               try {
                 if (avail.v2 && avail.v2.permissions && avail.v2.permissions.permissions && avail.v2.permissions.permissions.embargo) {
                   info += '<p>Unfortunately, the journal won\'t let us make it public until ';
@@ -364,7 +399,7 @@ var _run = function() {
               var info = '<h2>Hmmm, something looks wrong</h2>';
               info += '<p>You\’re nearly done. It looks like what you uploaded is a publisher\’s PDF which the journal prohibits legally sharing.<!-- It can only be shared on a limited basis.--><br><br>';
               info += 'We just need the version accepted by the journal to make your work available to everyone.</p>';
-              info += '<p><a href="#" class="' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : ' btn btn-primary') : '') + '" id="oabutton_inform" style="min-width:150px;">Try uploading again</a></p>';
+              info += '<p><a href="#" class="oabutton_inform ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" id="oabutton_inform" style="min-width:150px;">Try uploading again</a></p>';
               info += '<p><a href="#" id="oabutton_filecorrect"><b><u>My upload was an accepted manuscript</u></b></a></p>';
               $('#oabutton_availability').html(info).show();
             }
@@ -377,6 +412,10 @@ var _run = function() {
           }
         },
         error: function(data) {
+          if (_intervaled) {
+            clearInterval(_intervaled);
+            _intervaled = undefined;
+          }
           if (filecorrect) $('#oabutton_inform').html('Try uploading again');
           $('.oabutton_deposit').html('Complete deposit');
           $('#oabutton_error').html('<p>Sorry, we were not able to deposit this paper for you. ' + _lib_contact + '</p><p><a href="#" class="oabutton_restart" style="font-weight:bold;">Try again</a></p>').show();
@@ -453,8 +492,7 @@ var _run = function() {
     } else {
       var info = '<div>';
       info += '<h2>We\'ll double check your paper</h2>';
-      info += '<p>You\’ve done your part for now. We\’ll check in the next day to make sure it\’s legal to share.</p>';
-      info += '<p>Hopefully, we\’ll soon send you a link soon.';
+      info += '<p>You\’ve done your part for now. We\’ll check in the next day to make sure it\’s legal to share. Hopefully, we\’ll soon send you a link soon.</p>';
       try {
         if (avail.v2.permissions.permissions.embargo) {
           info += '<p>Unfortunately, the journal won\’t let us make it public until ';
@@ -477,6 +515,10 @@ var _run = function() {
   }
 
   var inform = function() {
+    if (_intervaled) {
+      clearInterval(_intervaled);
+      _intervaled = undefined;
+    }
     $('#oabutton_error').html('').hide();
     if (avail.v2 && avail.v2.doi_not_in_crossref) {
       $('#oabutton_input').focus();//.val('');
@@ -550,11 +592,11 @@ var _run = function() {
         info += '<h2>You can freely share your paper now!</h2>';
 
         if (avail.v2.permissions.permissions.version_allowed === 'publisher pdf') {
-          info += '<p>' + (_oab_config.not_a_library ? 'We have' : 'The library has') + ' checked and the journal encourages you to freely share the publisher pdf of your paper so colleagues and the public can freely read and cite it.</p>';
+          info += '<p>' + (_oab_config.not_a_library ? 'We have' : 'The library has') + ' checked and the journal encourages you to freely share the publisher pdf of {{PAPER}} so colleagues and the public can freely read and cite it.{{REFS}}</p>';
         }
 
         if (avail.v2.permissions.permissions.version_allowed !== 'publisher pdf') {
-          info += '<p>' + (_oab_config.not_a_library ? 'We have' : 'The library has') + ' checked and the journal encourages you to freely share your paper so colleagues and the public can freely read and cite it.</p>';
+          info += '<p>' + (_oab_config.not_a_library ? 'We have' : 'The library has') + ' checked and the journal encourages you to freely share {{PAPER}} so colleagues and the public can freely read and cite it.{{REFS}}</p>';
           info += '<h3><span>&#10003;</span> Find the manuscript the journal accepted. It\’s not a PDF from the journal site</h3>';
           info += '<p>This is the only version you\’re able to share legally. The accepted manuscript is the word file or Latex export you sent the publisher after peer-review and before formatting (publisher proofs).</p>';
           info += '<h3><span>&#10003;</span> Check there aren\’t publisher logos or formatting</h3>';
@@ -564,8 +606,10 @@ var _run = function() {
         info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="' + ph + '" aria-label="' + ph + '" style="box-shadow:none;"></input></p>';
         info += '<p>We\'ll only use this if something goes wrong.<br>';
         info += '<h3>We\'ll check it\'s legal, then promote, and preserve your work</h3>';
-        info += '<p><input type="file" name="file" id="file" class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '"></p>';// \
-        info += '<p>By uploading you\'re agreeing to the <a href="' + tcs + '" target="_blank"><u>terms and conditions</u></a> and to license your work CC-BY.</p>';
+        info += '<p><input type="file" name="file" id="file" class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '"></p>';
+        info += '<p>By uploading you\'re agreeing to the <a href="' + tcs + '" target="_blank"><u>terms and conditions</u></a> and to license your work ';
+        info += avail.v2.permissions.permissions.licence_required !== undefined ? avail.v2.permissions.permissions.licence_required : 'CC-BY';
+        info += '.</p>';
         info += '<p><a href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : ' btn btn-primary') : '') + '" id="submitfile" style="min-width:150px;">Upload</a>';
         info += '</div>';
       } else {
@@ -573,7 +617,7 @@ var _run = function() {
         needmore = false;
         info += '<div>';
         info += '<h2>You can share your paper!</h2>';
-        info += '<p>We checked and unfortunately the journal won\'t let you share this paper freely with everyone.<br><br>';
+        info += '<p>We checked and unfortunately the journal won\'t let you share {{PAPER}} freely with everyone.{{REFS}}<br><br>';
         info += 'The good news is the library can still legally make your paper much easier to find and access. We\'ll put the publisher PDF ';
         info += 'in ' + (_oab_config.repo_name ? _oab_config.repo_name : 'ScholarWorks') + ' and then share it on your behalf whenever it is requested.</p>';
         info += '<h3>All we need is your email</h3>';
@@ -583,6 +627,20 @@ var _run = function() {
         info += '<p><a target="_blank" href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Submit</a></p>';
         info += '</div>';
       }
+      if (Array.isArray(avail.v2.permissions.permissions.policy_full_text)) {
+        var refs = '';
+        for (var p in avail.v2.permissions.permissions.policy_full_text) {
+          refs += ' <a target="_blank" href="' + avail.v2.permissions.permissions.policy_full_text[p] + '">[' + (parseInt(p)+1) + ']</a>';
+        }
+        info = info.replace('{{REFS}}',refs);
+      } else {
+        info = info.replace('{{REFS}}','');
+      }
+      if (avail.v2.metadata && avail.v2.metadata.doi) {
+        info = info.replace('{{PAPER}}','<a target="_blank" href="https://doi.org/' + avail.v2.metadata.doi + '">your paper</a>');
+      } else {
+        info = info.replace('{{PAPER}}','your paper')
+      }
       $('#oabutton_inputs').hide();
       $('#oabutton_availability').html(info).show();
       if ($('#oabutton_getmore').length && (needmore || (cit && cit.length === 0))) getmore();
@@ -591,7 +649,6 @@ var _run = function() {
   }
 
   var _doing_availability = false;
-  var _intervaled = false;
   var availability = function(e) {
     if (!_doing_availability && ($(this).attr('id') === 'oabutton_find' || e === undefined || e.keyCode === 13)) {
       if (e !== undefined) {
@@ -653,24 +710,7 @@ var _run = function() {
       }
       if (!data.url) data.url = input;
       $('.oabutton_find').html('Searching .');
-      if (!_intervaled) {
-        _intervaled = true;
-        setInterval(function() {
-          try {
-            var w = $('.oabutton_deposit').length ? $('.oabutton_deposit') : $('.oabutton_find');
-            var srch = w.first().html();
-            if (srch.indexOf('.') !== -1) {
-              var dots = srch.split('.');
-              if (dots.length >= 4) {
-                srch = srch.replace(/\./g,'').trim() + ' .';
-              } else {
-                srch += ' .';
-              }
-              w.html(srch);
-            }
-          } catch(err) {}
-        }, 800);
-      }
+      dotting();
       data.from = _oab_opts.uid;
       data.plugin = 'shareyourpaper';
       data.embedded = window.location.href;

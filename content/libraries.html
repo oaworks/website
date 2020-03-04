@@ -123,10 +123,6 @@
 
 
   @media screen and (max-width: 768px) {
-    .quote {
-      padding: 40px 30px;
-    }
-
     .pitch {
       padding: 90px 0;
     }
@@ -197,6 +193,17 @@
     -webkit-animation-name: fadeIn;
     animation-name: fadeIn;
   }
+
+  .radioStyle {
+    display: inline-block !important; margin-bottom: 8px;
+  }
+
+  .span label {
+    display: inline-block !important;
+    font-weight: normal !important;
+    margin-bottom: 8px !important;
+    padding-left: 10px !important;
+  }
 </style>
 
 <!-- header -->
@@ -207,8 +214,8 @@
       <a href="/" style="margin: 0"><strong>Open Access Button</strong></a>
     </div>
     <div>
-<!--      <span><a href="/libraries">For Libraries</a></span>
-          <span><a href="/request">Requests</a></span>-->
+      <!-- <span><a href="/libraries">For Libraries</a></span>
+      <span style="padding-left:12px"><a href="/request">Requests</a></span> -->
     </div>
   </div>
 </div>
@@ -223,46 +230,102 @@
       <p>
         Libraries have led the charge to open up access to the scholarly literature. We help turn that leadership into leverage to reduce costs, to save staff time, to improve library services, and to open up even more content.
         <br><br>
-        To do that we've built, in partnership with librarians, a suite of powerfully simple tools that help <a href="#deliver-articles">deliver articles</a> and <a href="#repository">fill your repository</a>. They're free, easy to use, open-source, and community-controlled tools to catalyse Open.</p>
+        To do that we've built, in partnership with librarians, a suite of powerfully simple tools that help <a href="#deliver-articles">deliver articles without subscriptions</a> and make more articles open by <a href="#repository">filling your repository</a>. The tools are free, easy to use, quick to set up, open-source, community-controlled and designed to catalyse Open.</p>
     </div>
-    <div class="strapline" style="text-align: center;">
-      <a class="btn btn-demo-blue"
+    <div class="strapline" style="text-align: center;display: flex;flex-direction: column;align-items: center;">
+      <a style="margin:5px;" class="btn btn-demo-blue"
         href="https://docs.google.com/forms/d/e/1FAIpQLSddhWH2_Pg_JQMCtPFqE6acURwSVQIClucOdW3loqKO0gKZxA/viewform">Stay up to date</a>
+        <a style="margin:5px;" class="btn btn-hollow-blue"
+        href="#leadership">Support the Work</a>
     </div>
-    <p style="text-align: center;">and <a href="#leadership">learn how to support our work</a></p>
   </div>
 </div>
 </div>
 
 <!-- social proof with uni logos -->
 
-<div class="navy-bg">
-  <div class="center-col">
-    <p style="text-align: center; padding:0;">Supported by leaders at</p>
-    <div class="unilogos">
-      <!-- TODO: add links -->
-      <img class="unilogo" src="static/goldsmiths-white.png">
-      <img class="unilogo" src="static/montana-uni-white.png">
-      <img class="unilogo" src="static/iupui-logo-white.png">
-      <img class="unilogo" src="static/florida-uni-white.png">
+<div class="center-col quote" style="padding-top:0; padding-bottom: 0;">
+<p>Supported by leaders at:</p>
+</div>
+
+<div class="card-holder">
+
+  <a href="/leaders" target="_blank">
+  <div class="card-outer" style="background-color:#7A1705">
+    <div class="card-inner">
+      <div class="card" style="background-color: #7A1705">
+        <div class="card-quote"><h4>"We provide leadership support as an investment in community-owned infrastructure that improves our services, helps reduce dependency on subscriptions, and advances equitable access to information."</h4></div>
+        <p>Tina Baich<br>Senior Associate Dean for Scholarly Communication & Content Strategies</p>
+      </div>
+    </div>
+    <div class="card-inner layer-vanish" style="background-color: #7A1705"></div>
+    <div class="card-inner layer-vanish" style="background-image:url('static/tina-photo.png'); opacity: 0.5">
+    </div>
+    <div class="card-inner layer-vanish card-logo" style="background: linear-gradient(0deg, #7A1705 0%, #7A170500 35%, #7A170500 100%);">
+      <img src="static/iupui-logo-white-red.png" >
+    </div>
+  </div>
+  </a>
+
+  <a href="/leaders" target="_blank">
+    <div class="card-outer" style="background-color:#722d3d">
+    <div class="card-inner">
+      <div class="card" style="background-color: #722d3d">
+        <div class="card-quote"><h4>"The OAB team is developing essential tools and support to advance open for a more equitable and sustainable system of scholarly publishing. We are proud to support them."</h4></div>
+        <p>Camille Thomas<br>Scholarly Communication Librarian</p>
+      </div>
+    </div>
+    <div class="card-inner layer-vanish" style="background-color: #722d3d"></div>
+    <div class="card-inner layer-vanish" style="background-image:url('static/camille-photo.jpg'); opacity: 0.5">
+    </div>
+    <div class="card-inner layer-vanish card-logo" style="background: linear-gradient(0deg, #722d3d 0%, #722d3d00 35%, #722d3d00 100%);">
+      <img src="static/florida-logo-white-red.png" >
+    </div>
+  </div>
+  </a>
+
+  <a href="/leaders" target="_blank">
+    <div class="card-outer" style="background-color:#0D2C6C">
+    <div class="card-inner">
+      <div class="card" style="background-color: #0D2C6C">
+        <div class="card-quote"><h4>"We're excited to finally build everything we've learned from mediated deposit into a simple tool, not a dozen workarounds, that enables every library to make self-archiving not just the right thing, but the easy thing, for every author"</h4></div>
+        <p>Leila Sterman<br>Scholarly Communication Librarian & Assistant Professor</p>
+      </div>
+    </div>
+    <div class="card-inner layer-vanish" style="background-color: #0D2C6C"></div>
+    <div class="card-inner layer-vanish" style="background-image:url('static/leila-photo.jpg'); opacity: 0.5">
+    </div>
+    <div class="card-inner layer-vanish card-logo" style="background: linear-gradient(0deg, #0D2C6C 0%, #0D2C6C00 35%, #0D2C6C00 100%);">
+      <img src="static/montana-logo-white-yellow.png">
+    </div>
+  </div>
+  </a>
+
+  <a href="/leaders" target="_blank">
+  <div class="card-outer" style="background-color:#1B4724">
+    <div class="card-inner">
+      <div class="card" style="background-color: #1B4724">
+        <div class="card-quote"><h4>"InstantILL is key to UAL in helping our users discover Open Access material. Supporting this development at the leadership level demonstrates our strategic commitment to Open Access."</h4></div>
+        <p>CJ de Jong <br>Access Services Coordinator, Librarian</p>
+      </div>
+    </div>
+    <div class="card-inner layer-vanish" style="background-color: #1B4724"></div>
+    <div class="card-inner layer-vanish" style="background-image:url('static/cj-photo.jpg'); opacity: 0.5">
+    </div>
+    <div class="card-inner layer-vanish card-logo" style="background: linear-gradient(0deg, #1B4724 0%, #1B472400 35%, #1B472400 100%);">
+      <img src="static/alberta-logo-white-green.png" >
     </div>
   </div>
 </div>
+</a>
 
 <!-- deliver section head -->
 
-<div class="center-col quote">
-  <div id="deliver-articles" class="strapline">
-    <h2>Deliver Articles</h2>
-    <p>Provide one-click access to legal, full-text articles, wherever your users are, while reducing reliance on subscriptions by leveraging Open Access and, streamlining Interlibrary Loans.</p>
-  </div>
-</div>
 
 <!-- instantILL pitch -->
 
-<div style="border-top: solid 5px #edf8ed">
   <div class="center-col">
-    <div class="pitch">
+    <div id="deliver-articles" class="pitch">
 
       <div class="pitchhalf">
         <h3>InstantILL</h3>
@@ -274,16 +337,30 @@
       </div>
     </div>
   </div>
-</div>
+
 
 <!-- ILL tools -->
 
 <div style="background-color: #edf8ed; border-top: solid 5px #dbf1d9">
   <div class="center-col">
-    <h4 style="padding:30px">More Tools to Deliver Articles</h4>
+    <h4 style="padding:30px">
+      <a style="color: #46B633" onclick="showSection(0, 'deliver-articles-more')">More Tools to Deliver Open Articles ▼</a>
+    </h4>
   </div>
 </div>
-<div style="background-color: #edf8ed;">
+
+<!--
+
+<div class="center-col quote" style:"display:none">
+  <div class="strapline">
+    <h2>Deliver Articles</h2>
+    <p>Provide one-click access to legal, full-text articles, wherever your users are, while reducing reliance on subscriptions by leveraging Open Access and, streamlining Interlibrary Loans.</p>
+  </div>
+</div>
+
+-->
+
+<div style="background-color: #edf8ed; display:none; border-bottom: solid 5px #dbf1d9" id="deliver-articles-more">
   <div class="center-col">
     <div class="tool-container">
       <div class="tool">
@@ -345,35 +422,25 @@
   </div>
 </div>
 
-<!-- ILL strapline -->
-
-<div class="green-bg">
-  <div class="center-col">
-    <div class="quote">
-      <div>
-        <h3 style="line-height: 240%">Millions of searches for free articles<br>
-          Thousands of authors engaged<br>
-          Hundreds of libraries use & reccomend the tools</h3>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- repositoiry section head -->
 
+<!--
+
 <div class="center-col quote">
-  <div id="repository" class="strapline">
+  <div class="strapline">
     <h2>Fill your Repository</h2>
     <p>
       Make self-archiving the simplest thing researchers do to increase their impact. Drag, drop, done. That’s the deposit workflow our tools enable, whatever repository you use.</p>
   </div>
 </div>
 
+-->
+
 <!-- repositiroy pitch -->
 
 
-<div style="border-top: solid 5px #ecf3fa">
-  <div class="center-col">
+  <div id="repository" class="center-col">
     <div class="pitch">
       <div class="pitchhalf">
         <h3>shareyourpaper.org</h3>
@@ -385,17 +452,21 @@
       </div>
     </div>
   </div>
-</div>
+
 
 
 <!-- ILL tools -->
 
 <div style="background-color: #ecf3fa; border-top: solid 5px #dbe9f5">
   <div class="center-col">
-    <h4 style="padding:30px">More Tools to Fill your Repository</h4>
+    <h4 style="padding:30px">
+        <a onclick="showSection(1, 'repository-more')">More Tools to Fill your Repository ▼</a>
+    </h4>
   </div>
 </div>
-<div style="background-color: #ecf3fa;">
+
+
+<div style="background-color: #ecf3fa; display:none; border-bottom: solid 5px #dbe9f5" id="repository-more">
   <div class="center-col">
     <div class="tool-container">
       <div class="tool">
@@ -434,6 +505,22 @@
   </div>
 </div>
 
+<!-- ILL strapline -->
+
+<div class="navy-bg" style="padding:0">
+  <div class="center-col">
+    <div class="quote">
+      <div>
+        <h3 style="line-height: 240%">Millions of searches for free articles<br>
+          Thousands of authors engaged<br>
+          Hundreds of libraries use & reccomend the tools</h3>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 <!-- quote -->
 
 <!--
@@ -457,11 +544,11 @@
   <div id="leadership" class="strapline">
     <h2>We’re not going to paywall our tools.<br>So we need your leadership.</h2>
     <p>
-      You’ve seen our tools, now here’s the strategy: Redirect money and power in scholarly communications by reducing reliance on subscriptions. This will give libraries leverage to negotiate better prices and fairer terms with publishers to create a more equitable and open world.
+      You’ve seen our tools, now here’s the strategy. Build tools that reducing reliance on subscriptions so libraries have the leverage to negotiate better prices and fairer terms with publishers and can create a more equitable and open world.
       <br><br>
-      To reduce reliance on subscriptions, community owned tools have to <a href="#deliver-articles">Deliver Articles</a> and <a href="#repository">Fill your Repository</a>.
+      We help to reduce reliance on subscriptions by helping libraries <a href="deliver-articles">deliver articles without subscriptions</a> and making more articles open by <a href="#repository">filling your repository</a>.
       <br><br>
-      <strong>To continue our cutting edge work, we need your support.</strong></p>
+      <strong>To continue our cutting edge work, we need your support. <a href="/leaders">Please join others who've given their's.</a></strong></p>
      </div>
 </div>
 
@@ -542,15 +629,37 @@
         </label>
       </div>
 
-      <select onchange="onSizeSelect()" class="dropdown animated zoomIn" id="size" style="display:none">
-        <option value="describe">Describe your Library</option>
-        <option value="Community college">Community College</option>
-        <option value="Baccalaureate">Baccalaureate (B)</option>
-        <option value="Postgraduate">Postgraduate (M)</option>
-        <option value="Research intensive">Research-intensive (R)</option>
-        <option value="Consortia">Consortial</option>
-        <option value="International">International</option>
-      </select>
+      <div id="size" style="margin-top: 30px; display: none">
+        <p><strong>Describe your library</strong>
+          <br>
+          This helps us understand what an appropriate price may be.
+        </p>
+        <span>
+          <input class="radioStyle" id="radio2" type="radio" name="size" value="Community college" />
+          <label for="radio2" style="display: inline-block !important; font-weight: normal !important; margin-bottom: 8px !important; padding-left: 10px !important;">Community College</label> <br/>
+        </span>
+        <span>
+          <input class="radioStyle" id="radio3" type="radio" name="size" value="Baccalaureate" />
+          <label for="radio3" style="display: inline-block !important; font-weight: normal !important; margin-bottom: 8px !important; padding-left: 10px !important;">Baccalaureate (B)</label> <br/>
+        </span>
+        <span>
+          <input class="radioStyle" id="radio4" type="radio" name="size" value="Postgraduate" />
+          <label for="radio4" style="display: inline-block !important; font-weight: normal !important; margin-bottom: 8px !important; padding-left: 10px !important;">Postgraduate (M)</label> <br/>
+        </span>
+        <span>
+          <input class="radioStyle" id="radio5" type="radio" name="size" value="Research intensive" />
+          <label for="radio5" style="display: inline-block !important; font-weight: normal !important; margin-bottom: 8px !important; padding-left: 10px !important;">Research-intensive (R)</label> <br/>
+        </span>
+        <span>
+          <input class="radioStyle" id="radio6" type="radio" name="size" value="Consortia" />
+          <label for="radio6" style="display: inline-block !important; font-weight: normal !important; margin-bottom: 8px !important; padding-left: 10px !important;">Consortial</label> <br/>
+        </span>
+        <span>
+          <input class="radioStyle" id="radio7" type="radio" name="size" value="International" />
+          <label for="radio7" style="display: inline-block !important; font-weight: normal !important; margin-bottom: 8px !important; padding-left: 10px !important;">International</label> <br/>
+        </span>
+
+      </div>
 
       <div class="ifCheck animated fadeIn" id="price" style="display:none">
         <h3 style="text-align: center;"><span id="calculated-price">XXXX</span> USD<br>
@@ -603,6 +712,10 @@
           "Community college":	[50, 50, 25, 12.5, 12.5]
         };
 
+        document.getElementsByName('size').forEach(elm => {
+          elm.addEventListener('change', onSizeSelect)
+        })
+
         function onToolCheck(item) {
           let index = arr.indexOf(item);
           if(index == -1) {
@@ -623,7 +736,9 @@
 
         function onSizeSelect() {
           document.querySelectorAll(".ifCheck").forEach(elm => elm.style.display = "none");
-          size = document.getElementById("size").value;
+
+          size = document.querySelector('input[name="size"]:checked').value;
+
           if(size == "Consortia") {
             document.getElementById("contact-consortial").style.display = "block";
           }
@@ -649,6 +764,16 @@
           }
           return sum;
         }
+
+        let sections = [false, false];
+
+        function showSection(index, id) {
+          sections[index] = !sections[index];
+          if(sections[index])
+            document.getElementById(id).style.display = "block";
+          else
+            document.getElementById(id).style.display = "none";
+        }
       </script>
 
     </div>
@@ -657,11 +782,12 @@
 
 <!-- more uni proof, maybe replace with quote later -->
 
+<!--
+
 <div class="navy-bg">
   <div class="center-col">
     <p style="text-align: center; padding:0 30px;">Supported by leaders at</p>
     <div class="unilogos">
-      <!-- TODO: add links -->
       <img class="unilogo" src="static/goldsmiths-white.png">
       <img class="unilogo" src="static/montana-uni-white.png">
       <img class="unilogo" src="static/iupui-logo-white.png">
@@ -669,6 +795,8 @@
     </div>
   </div>
 </div>
+
+-->
 
 <!-- chunky about section -->
 <div class="dark-bg">
@@ -680,7 +808,7 @@
         Help us keep building for change, not for profit, by supporting our experimental, academy friendly model.
       </p>
 
-      <img src="static/media-team.png">
+      <img src="static/media-team-big.png">
     </div>
   </div>
   <div class="center-col" style="max-width: 1024px;">
@@ -702,7 +830,7 @@
     <div>
       <p>Open Source • Community Controlled • Not for Profit</p>
     </div>
-    <div>
+    <div  style="padding: 5px 0; align-self: flex-end;">
       <span><a href="/about">About</a></span>
       <span><a href="/request">Requests</a></span>
       <span><a href="/api">API</a></span>
