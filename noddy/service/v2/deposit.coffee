@@ -228,7 +228,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
     ed.metadata.author = as
   tmpl = API.mail.template dep.type + '_deposit.html'
   sub = API.service.oab.substitute tmpl.content, ed
-  if perms.file?.archivable is true
+  if perms.file?.archivable isnt false # so when true or when undefined if no file is given
     API.service.oab.mail
       from: 'deposits@openaccessbutton.org'
       to: tos

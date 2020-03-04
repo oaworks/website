@@ -76,6 +76,7 @@ API.service.oab.permissions = (meta={}, file, url, confirmed) ->
       perms.permissions.archiving_allowed = perms.ricks?.application?.can_archive_conditions?.versions_archivable and ('postprint' in perms.ricks.application.can_archive_conditions.versions_archivable or 'publisher pdf' in perms.ricks.application.can_archive_conditions.versions_archivable)
       perms.permissions.required_statement = perms.ricks.application.can_archive_conditions.deposit_statement_required_calculated if typeof perms.ricks?.application?.can_archive_conditions?.deposit_statement_required_calculated is 'string' and perms.ricks.application.can_archive_conditions.deposit_statement_required_calculated.indexOf('cc-') isnt 0
       perms.permissions.licence_required = perms.ricks.application.can_archive_conditions.licenses_required[0] if perms.ricks?.application?.can_archive_conditions?.licenses_required?
+      perms.permissions.policy_full_text = perms.ricks.provenance.policy_full_text if perms.ricks?.provenance?.policy_full_text
     catch
       perms.error = 'Could not connect to Ricks'
     try
