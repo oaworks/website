@@ -282,7 +282,7 @@ var _run = function() {
       } catch(err) {}
     }
   }
-  
+
   var dotting = function() {
     if (!_intervaled) {
       _intervaled = setInterval(function() {
@@ -358,8 +358,7 @@ var _run = function() {
             if ((res.zenodo && res.zenodo.already) || (filecorrect && (res.zenodo === undefined || res.zenodo.url === undefined))) {
               var info = '<div>';
               info += '<h2>We\'ll double check your paper</h2>';
-              info += '<p>You\'ve done your part for now. We\’ll check in the next day to make sure it\’s legal to share.</p>';
-              info += '<p>Hopefully, we\’ll soon send you a link soon.';
+              info += '<p>You\’ve done your part for now. We\’ll check in the next day to make sure it\’s legal to share. Hopefully, we\’ll soon send you a link soon.</p>';
               try {
                 if (avail.v2 && avail.v2.permissions && avail.v2.permissions.permissions && avail.v2.permissions.permissions.embargo) {
                   info += '<p>Unfortunately, the journal won\'t let us make it public until ';
@@ -488,8 +487,7 @@ var _run = function() {
     } else {
       var info = '<div>';
       info += '<h2>We\'ll double check your paper</h2>';
-      info += '<p>You\’ve done your part for now. We\’ll check in the next day to make sure it\’s legal to share.</p>';
-      info += '<p>Hopefully, we\’ll soon send you a link soon.';
+      info += '<p>You\’ve done your part for now. We\’ll check in the next day to make sure it\’s legal to share. Hopefully, we\’ll soon send you a link soon.</p>';
       try {
         if (avail.v2.permissions.permissions.embargo) {
           info += '<p>Unfortunately, the journal won\’t let us make it public until ';
