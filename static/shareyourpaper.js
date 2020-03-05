@@ -532,7 +532,7 @@ var _run = function() {
       if (cml) {
         nj += ' To get help with depositing, <a href="';
         nj += (_oab_config.old_way ? (_oab_config.old_way.indexOf('@') !== -1 ? 'mailto:' : '') + _oab_config.old_way : 'mailto:'+cml);
-        nj += + "'" + "?subject=Help%20depositing%20&body=Hi%2C%0D%0A%0D%0AI'd%20like%20to%20deposit%3A%0D%0A%0D%0A%3C%3CPlease%20insert%20a%20full%20citation%3E%3E%0D%0A%0D%0ACan%20you%20please%20assist%20me%3F%0D%0A%0D%0AYours%20sincerely%2C" + '"><b><u>click here</u></b></a>';
+        nj += "?subject=Help%20depositing%20&body=Hi%2C%0D%0A%0D%0AI'd%20like%20to%20deposit%3A%0D%0A%0D%0A%3C%3CPlease%20insert%20a%20full%20citation%3E%3E%0D%0A%0D%0ACan%20you%20please%20assist%20me%3F%0D%0A%0D%0AYours%20sincerely%2C" + '"><b><u>click here</u></b></a>';
       }
       nj += '.</p>';
       $('#oabutton_error').html(nj).show();
