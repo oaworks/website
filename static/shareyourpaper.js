@@ -592,11 +592,11 @@ var _run = function() {
         info += '<h2>You can freely share your paper now!</h2>';
 
         if (avail.v2.permissions.permissions.version_allowed === 'publisher pdf') {
-          info += '<p>' + (_oab_config.not_a_library ? 'We have' : 'The library has') + ' checked and the journal encourages you to freely share the publisher pdf of {{PAPER}} so colleagues and the public can freely read and cite it.{{REFS}}</p>';
+          info += '<p>' + (_oab_config.not_a_library ? 'We have' : 'The library has') + ' checked and the journal encourages you to freely share the publisher pdf of [[PAPER]] so colleagues and the public can freely read and cite it.[[REFS]]</p>';
         }
 
         if (avail.v2.permissions.permissions.version_allowed !== 'publisher pdf') {
-          info += '<p>' + (_oab_config.not_a_library ? 'We have' : 'The library has') + ' checked and the journal encourages you to freely share {{PAPER}} so colleagues and the public can freely read and cite it.{{REFS}}</p>';
+          info += '<p>' + (_oab_config.not_a_library ? 'We have' : 'The library has') + ' checked and the journal encourages you to freely share [[PAPER]] so colleagues and the public can freely read and cite it.[[REFS]]</p>';
           info += '<h3><span>&#10003;</span> Find the manuscript the journal accepted. It\’s not a PDF from the journal site</h3>';
           info += '<p>This is the only version you\’re able to share legally. The accepted manuscript is the word file or Latex export you sent the publisher after peer-review and before formatting (publisher proofs).</p>';
           info += '<h3><span>&#10003;</span> Check there aren\’t publisher logos or formatting</h3>';
@@ -617,7 +617,7 @@ var _run = function() {
         needmore = false;
         info += '<div>';
         info += '<h2>You can share your paper!</h2>';
-        info += '<p>We checked and unfortunately the journal won\'t let you share {{PAPER}} freely with everyone.{{REFS}}<br><br>';
+        info += '<p>We checked and unfortunately the journal won\'t let you share [[PAPER]] freely with everyone.[[REFS]]<br><br>';
         info += 'The good news is the library can still legally make your paper much easier to find and access. We\'ll put the publisher PDF ';
         info += 'in ' + (_oab_config.repo_name ? _oab_config.repo_name : 'ScholarWorks') + ' and then share it on your behalf whenever it is requested.</p>';
         info += '<h3>All we need is your email</h3>';
@@ -632,14 +632,14 @@ var _run = function() {
         for (var p in avail.v2.permissions.permissions.policy_full_text) {
           refs += ' <a target="_blank" href="' + avail.v2.permissions.permissions.policy_full_text[p] + '">[' + (parseInt(p)+1) + ']</a>';
         }
-        info = info.replace('{{REFS}}',refs);
+        info = info.replace('[[REFS]]',refs);
       } else {
-        info = info.replace('{{REFS}}','');
+        info = info.replace('[[REFS]]','');
       }
       if (avail.v2.metadata && avail.v2.metadata.doi) {
-        info = info.replace('{{PAPER}}','<a target="_blank" href="https://doi.org/' + avail.v2.metadata.doi + '">your paper</a>');
+        info = info.replace('[[PAPER]]','<a target="_blank" href="https://doi.org/' + avail.v2.metadata.doi + '">your paper</a>');
       } else {
-        info = info.replace('{{PAPER}}','your paper')
+        info = info.replace('[[PAPER]]','your paper')
       }
       $('#oabutton_inputs').hide();
       $('#oabutton_availability').html(info).show();
