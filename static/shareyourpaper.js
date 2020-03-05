@@ -527,12 +527,12 @@ var _run = function() {
     } else if (avail.v2 && avail.v2.metadata && avail.v2.metadata.crossref_type !== undefined && avail.v2.metadata.crossref_type !== 'journal-article') {
       $('#oabutton_input').focus();//.val('');
       $('.oabutton_find').html('Next');
-      var nj = '<p>That doesn\'t look like an academic journal article.';
+      var nj = '<p>Sorry, right now this only works with academic journal articles.';
       var cml = _oab_config.problem_email ? _oab_config.problem_email : (_oab_config.email ? _oab_config.email : (_oab_config.adminemail ? _oab_config.adminemail : undefined));
       if (cml) {
-        nj += ' If you want to deposit it, <a href="';
+        nj += ' To get help with depositing, <a href="';
         nj += (_oab_config.old_way ? (_oab_config.old_way.indexOf('@') !== -1 ? 'mailto:' : '') + _oab_config.old_way : 'mailto:'+cml);
-        nj += '">click here</a>';
+        nj +=  + "?subject=Help%20depositing%20&body=Hi%2C%0D%0A%0D%0AI'd%20like%20to%20deposit%3A%0D%0A%0D%0A%3C%3CPlease%20insert%20a%20full%20citation%3E%3E%0D%0A%0D%0ACan%20you%20please%20assist%20me%3F%0D%0A%0D%0AYours%20sincerely%2C" + '">click here</a>';
       }
       nj += '.</p>';
       $('#oabutton_error').html(nj).show();
@@ -704,7 +704,7 @@ var _run = function() {
       }
       if (!input || !input.length) input = data.title;
       if (input === undefined || !input.length || (input.toLowerCase().indexOf('http') === -1 && input.indexOf('10.') === -1 && input.indexOf('/') === -1 && isNaN(parseInt(input.toLowerCase().replace('pmc',''))) && (input.length < 30 || input.replace(/\+/g,' ').split(' ').length < 3) ) ) {
-        $('#oabutton_error').html('<p>Please provide a DOI.</p>').show();
+        $('#oabutton_error').html('<p>Please provide a DOI. If you\'re not sure what a DOI is, go <a href ="https://library.uic.edu/help/article/1966/what-is-a-doi-and-how-do-i-use-them-in-citations" target="_blank">here</a>.</p>').show();
         _doing_availability = false;
         return;
       }
