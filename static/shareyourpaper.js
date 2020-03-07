@@ -363,14 +363,7 @@ var _run = function() {
             if ((res.zenodo && res.zenodo.already) || (filecorrect && (res.zenodo === undefined || res.zenodo.url === undefined))) {
               var info = '<div>';
               info += '<h2>We\'ll double check your paper</h2>';
-              info += '<p>You\’ve done your part for now. We\’ll check in the next day to make sure it\’s legal to share. Hopefully, we\’ll soon send you a link soon.</p>';
-              try {
-                if (avail.v2 && avail.v2.permissions && avail.v2.permissions.permissions && avail.v2.permissions.permissions.embargo) {
-                  info += '<p>Unfortunately, the journal won\'t let us make it public until ';
-                  info += avail.v2.permissions.permissions.embargo; // TODO how should this date be formatted
-                  info += '. After release, you\'ll find your paper on ' + (_oab_config.repo_name ? _oab_config.repo_name : 'ScholarWorks') + ', Google Scholar, Web of Science.</p>';
-                }
-              } catch (err) {}
+              info += '<p>You\’ve done your part for now. Hopefully, we\’ll send you a link soon. First, we\’ll check in the next day to make sure it\’s legal to share.</p>';
               info += '<p><a href="#" class="oabutton_restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>';
               info += '</div>';
               $('#oabutton_availability').html(info).show();
@@ -492,14 +485,7 @@ var _run = function() {
     } else {
       var info = '<div>';
       info += '<h2>We\'ll double check your paper</h2>';
-      info += '<p>You\’ve done your part for now. We\’ll check in the next day to make sure it\’s legal to share. Hopefully, we\’ll soon send you a link soon.</p>';
-      try {
-        if (avail.v2.permissions.permissions.embargo) {
-          info += '<p>Unfortunately, the journal won\’t let us make it public until ';
-          info += avail.v2.permissions.permissions.embargo; // TODO how should this date be formatted
-          info += '. After release, you\’ll find your paper on ' + (_oab_config.repo_name ? _oab_config.repo_name : 'ScholarWorks') + ', Google Scholar, Web of Science.</p>';
-        }
-      } catch (err) {}
+      info += '<p>You\’ve done your part for now. Hopefully, we\’ll send you a link soon. First, we\’ll check in the next day to make sure it\’s legal to share.</p>';
       info += '<p><a href="#" class="oabutton_restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>';
       info += '</div>';
       $('#oabutton_availability').html(info).show();
