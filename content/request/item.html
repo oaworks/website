@@ -12,7 +12,7 @@
   }
   .navbar-nav > li > a {
     color: white;
-  }  
+  }
   .navbar-nav > li > a:hover {
     color: white;
     background-color:transparent;
@@ -100,7 +100,7 @@
     var suggestions = {
       test: 'Are you just trying out the service? A better way to learn is by reading <a href="https://blog.openaccessbutton.org/making-more-research-open-access-one-paper-at-a-time-25b95cd36c8f">this blog</a> or <a href ="mailto:joe@openaccessbutton.org">getting in touch</a>.',
       dear: 'No need to greet the author, we\'ll do that in the email! Focus your message on why you need the article.',
-      'hi ': 'No need to greet the author, we\'ll do that in the email! Focus your message on why you need the article.', // NOTE: The whitespace here is used so that "hi" as seen in "PHIL", for example, doesn't flag this. It means that "hi" will be flaged, and "hi," but not PHIL will show this message. The whitespace stands for anything, including a space, that isn't a letter. 
+      'hi ': 'No need to greet the author, we\'ll do that in the email! Focus your message on why you need the article.', // NOTE: The whitespace here is used so that "hi" as seen in "PHIL", for example, doesn't flag this. It means that "hi" will be flaged, and "hi," but not PHIL will show this message. The whitespace stands for anything, including a space, that isn't a letter.
       hello: 'No need to greet the author, we\'ll do that in the email! Focus your message on why you need the article.',
       regards: 'No need to thank the author, we\'ll do that in the email! Focus your message on why you need the article.',
       'thank you': 'No need to thank the author, we\'ll do that in the email! Focus your message on why you need the article.', // NOTE if you use more than just a simple string as an object key, it has to be in quotes
@@ -323,7 +323,7 @@ JSON.stringify(data.hits.hits[d]._source[data.hits.hits[d]._source.action])
       }
 
       if ( (rec.status !== 'closed' || rec.closed_on_create_reason === 'gt5' || rec.closed_on_update_reason === 'gt5' ) && rec.status !== 'received' && !(noddy.loggedin() && rec.user && rec.user.id && noddy.user && noddy.user.account && noddy.user.account._id === rec.user.id) ) {
-        re += '<p style="margin-top:10px;">Are you the author? Please <a style="text-decoration:underline;" class="pinger" id="shareYourWork" href="/response/' + rec.receiver + '">share your work</a> or <a class="pinger" id="contactToShareWork" style="text-decoration:underline;" href="mailto:requests@openaccessbutton.org?subject=I\'m%20the%20author%20for%20request%20' + rec._id + '&body=Hi\,%0A%0AI%20the%20author%20of%20this%20paper.%20Please%20tell%20me%20how%20I%20can%20fulfil%20this%20request." target="_blank">contact us</a>!</p>';
+        re += '<p style="margin-top:10px;">Are you the author? Please <a style="text-decoration:underline;" class="pinger" id="shareYourWork" href="/deposit?doi=/' + rec.doi + '">share your work</a> or <a class="pinger" id="contactToShareWork" style="text-decoration:underline;" href="mailto:requests@openaccessbutton.org?subject=I\'m%20the%20author%20for%20request%20' + rec._id + '&body=Hi\,%0A%0AI%20the%20author%20of%20this%20paper.%20Please%20tell%20me%20how%20I%20can%20fulfil%20this%20request." target="_blank">contact us</a>!</p>';
       }
 
       if (noddy.hasRole('openaccessbutton.admin')) {
