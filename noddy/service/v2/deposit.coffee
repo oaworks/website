@@ -246,7 +246,7 @@ API.service.oab.deposit.config = (user, config) ->
   if typeof user is 'object' and config?
     update = {}
     for k of config # the fields allowed in deposit config could be listed here, for now default to whatever is given
-      update[k] = config[k] if config[k]? and (not user.service.openaccessbutton.deposit? or not user.service.openaccessbutton.deposit.config? or config[k] isnt user.service.openaccessbutton.deposit.config[k])
+      update[k] = config[k] if config[k]?
     if JSON.stringify(update) isnt '{}'
       if not user.service.openaccessbutton.deposit?
         Users.update user._id, {'service.openaccessbutton.deposit': {config: update}}

@@ -45,8 +45,6 @@ view();
 
 var preview = function(e,val) {
   try { e.preventDefault(); } catch (err) {}
-  console.log(val)
-  console.log($(this).hasClass('save'))
   // do nothing if called with a save class, as the save will catch it and pass it on
   if (!$(this).hasClass('save')) {
     if (typeof val !== 'string') {
