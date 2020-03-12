@@ -623,7 +623,7 @@ var _run = function() {
         info = info.replace('[[REFS]]','');
       }
       if (avail.v2.metadata && avail.v2.metadata.doi) {
-        info = info.replace('[[PAPER]]','<a target="_blank" href="https://doi.org/' + avail.v2.metadata.doi + '">your paper</a>');
+        info = info.replace('[[PAPER]]','<a target="_blank" href="https://doi.org/' + avail.v2.metadata.doi + '"><u>your paper</u></a>');
       } else {
         info = info.replace('[[PAPER]]','your paper')
       }
