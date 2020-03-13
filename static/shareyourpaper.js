@@ -610,7 +610,7 @@ var _run = function() {
         info += 'in ' + (_oab_config.repo_name ? _oab_config.repo_name : 'ScholarWorks') + ' and then share it on your behalf whenever it is requested.</p>';
         info += '<h3>All we need is your email</h3>';
         info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="' + ph + '" aria-label="' + ph + '" style="box-shadow:none;"></input></p>';
-        info += '<p>We\'ll only use this to send you a link to your paper when it is in ' + (_oab_config.repo_name ? _oab_config.repo_name : 'ScholarWorks') + '.<br>';
+        info += '<p>We\'ll only use this to send you a link to your paper when it is in ' + (_oab_config.repo_name ? _oab_config.repo_name : 'ScholarWorks') + '. ';
         info += 'By submitting, you\'re agreeing to the <a href="' + tcs + '" target="_blank"><u>terms and conditions</u></a>.</p>';
         info += '<p><a target="_blank" href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Submit</a></p>';
         info += '</div>';
@@ -625,7 +625,7 @@ var _run = function() {
         info = info.replace('[[REFS]]','');
       }
       if (avail.v2.metadata && avail.v2.metadata.doi) {
-        info = info.replace('[[PAPER]]','<a target="_blank" href="https://doi.org/' + avail.v2.metadata.doi + '">your paper</a>');
+        info = info.replace('[[PAPER]]','<a target="_blank" href="https://doi.org/' + avail.v2.metadata.doi + '"><u>your paper</u></a>');
       } else {
         info = info.replace('[[PAPER]]','your paper')
       }
