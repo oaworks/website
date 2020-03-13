@@ -56,6 +56,8 @@ API.add 'service/oab/metadata',
   get: () -> return API.service.oab.metadata this.queryParams
   post: () -> return API.service.oab.metadata this.request.body
 
+#API.add 'service/oab/abbreviate/:journal', get: () -> return API.service.oab.abbreviate this.urlParams.journal
+
 
 # exists for legacy reasons, _avail should be altered to make sure the _find returns what _avail used to
 _avail =
@@ -118,6 +120,31 @@ API.service.oab.availability = (opts,v2) ->
           afnd.data.requests.push rq
   afnd.data.accepts.push({type:'article'}) if afnd.data.availability.length is 0 and afnd.data.requests.length is 0
   return afnd
+
+
+
+'''API.service.oab.abbreviate = (journal) -> TO BE CONTINUED AT LATER DATE
+  tj = {}
+  tjw = journal.split ' '
+  # https://docs.google.com/spreadsheets/d/1lMaOg1zqpAX0GZpJ_d-U9KoNRiTeTy2tLK5lSfJw7E0/edit#gid=1753325698
+  abbs = API.use.google.sheets.feed '1lMaOg1zqpAX0GZpJ_d-U9KoNRiTeTy2tLK5lSfJw7E0'
+  for abb in abbs
+    console.log abb
+    for w of tjw
+      if not tj[w]?
+        ltjw = tjw[w].toLowerCase().trim()
+        law = abb.word.toLowerCase().replace('-','').trim()
+        if abb.word.indexOf('-') is 0 and ltjw.indexOf(law) is tjw[w].length - law.length
+          tj[w] = abb.word.replace('-','')
+        else if abb.word.lastIndexOf('-') is law.length - 1 and ltjw.indexOf(law) is 0
+          tj[w] = abb.word.replace('-','')
+        else if ltjw is law
+          tj[w] = abb.word.replace('-','')
+  tjs = ''
+  for s in _.keys(tj).sort()
+    tjs += ' ' if tjs isnt ''
+    tjs += tj[s]
+  return tjs'''
 
 API.service.oab.metadata = (options={}, metadata, content) -> # pass-through to find that ensures the settings will get metadata rather than fail fast on find
   if typeof options is 'string'
@@ -301,6 +328,7 @@ API.service.oab.find = (options={}, metadata={}, content) ->
             try metadata.crossref_type = cr.type
             try metadata.author = cr.author if cr.author?
             try metadata.journal = cr['container-title'][0] if cr['container-title'].length
+            try metadata.journal_short = cr['short-container-title'][0] if cr['short-container-title'].length
             try metadata.issue = cr.issue if cr.issue?
             try metadata.volume = cr.volume if cr.volume?
             try metadata.page = cr.page.toString() if cr.page?
@@ -328,7 +356,8 @@ API.service.oab.find = (options={}, metadata={}, content) ->
               a.given = a.firstName
               a.family = a.lastName
               a.affiliation = [{name: a.affiliation}] if a.affiliation
-          try metadata.journal ?= cr.journalInfo.journal.title if cr.journalInfo.journal.title?
+          try metadata.journal ?= cr.journalInfo.journal.title if cr.journalInfo.journal?.title?
+          try metadata.journal_short ?= cr.journalInfo.journal.isoAbbreviation if cr.journalInfo.journal?.isoAbbreviation?
           try metadata.issue = cr.journalInfo.issue if cr.journalInfo.issue?
           try metadata.volume = cr.journalInfo.volume if cr.journalInfo.volume?
           try metadata.page = cr.pageInfo.toString() if cr.pageInfo?
@@ -461,11 +490,15 @@ API.service.oab.find = (options={}, metadata={}, content) ->
       res.usermetadata ?= catalogued?.usermetadata ? {}
       res.usermetadata[uo] ?= []
       res.usermetadata[uo].push {previous: metadata[uo], provided: options[uo], uid: options.uid, createdAt: Date.now()}
-      metadata[uo] = options[uo] 
+      metadata[uo] = options[uo]
+      delete metadata['journal_short'] if uo is 'journal'
   for key in ['title','journal'] # tidy some metadata
     if typeof metadata[key] is 'string' and metadata[key].charAt(0).toUpperCase() isnt metadata[key].charAt(0)
       try metadata[key] = metadata[key].charAt(0).toUpperCase() + metadata[key].slice(1)
 
+  #if metadata.journal? and not metadata.journal_short?
+  #  metadata.journal_short = API.service.oab.abbreviate metadata.journal
+    
   # re-check the catalogue if we now have more metadata than we did at the initial search, so we can combine results rather than making dups
   metadata.url ?= options.url if options.url?
   if not catalogued?

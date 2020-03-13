@@ -177,6 +177,7 @@ var _run = function() {
   var input = undefined;
   var matched = false;
   var avail = undefined;
+  var jn = 'the journal';
   var attempts = 0;
   var gotmore = false;
   var filecorrect = undefined;
@@ -191,6 +192,7 @@ var _run = function() {
     input = undefined;
     matched = false;
     avail = undefined;
+    jn = 'the journal';
     attempts = 0;
     gotmore = false;
     filecorrect = undefined;
@@ -374,7 +376,7 @@ var _run = function() {
               // deposit was possible, show the user a congrats page with a link to the item in zenodo
               var info = '<h2>Congrats! Your paper will be available to everyone, forever!</h2>';
               if (res.embargo) {
-                info += '<p>You\’ve done your part for now. Unfortunately, the journal won’t let us make it public until ';
+                info += '<p>You\’ve done your part for now. Unfortunately, ' + jn + ' won’t let us make it public until ';
                 info += res.embargo; // TODO how should this date be formatted
                 info += '. After release, you\’ll find your paper on ' + (_oab_config.repo_name ? _oab_config.repo_name : 'ScholarWorks') + ', Google Scholar, Web of Science.</p>';
                 info += '<h3>Your paper will be freely available at this link:</h3>';
@@ -390,8 +392,8 @@ var _run = function() {
               // if the file given is not a version that is allowed, show a page saying something looks wrong
               // also the backend should create a dark deposit in this case, but delay it by six hours, and cancel if received in the meantime
               var info = '<h2>Hmmm, something looks wrong</h2>';
-              info += '<p>You\’re nearly done. It looks like what you uploaded is a publisher\’s PDF which the journal prohibits legally sharing.<!-- It can only be shared on a limited basis.--><br><br>';
-              info += 'We just need the version accepted by the journal to make your work available to everyone.</p>';
+              info += '<p>You\’re nearly done. It looks like what you uploaded is a publisher\’s PDF which ' + jn + ' prohibits legally sharing.<!-- It can only be shared on a limited basis.--><br><br>';
+              info += 'We just need the version accepted by ' + jn + ' to make your work available to everyone.</p>';
               info += '<p><a href="#" class="oabutton_inform ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" id="oabutton_inform" style="min-width:150px;">Try uploading again</a></p>';
               info += '<p><a href="#" id="oabutton_filecorrect"><b><u>My upload was an accepted manuscript</u></b></a></p>';
               $('#oabutton_availability').html(info).show();
@@ -578,12 +580,12 @@ var _run = function() {
         info += '<h2>You can freely share your paper now!</h2>';
 
         if (avail.v2.permissions.permissions.version_allowed === 'publisher pdf') {
-          info += '<p>' + (_oab_config.not_a_library ? 'We have' : 'The library has') + ' checked and the journal encourages you to freely share the publisher pdf of [[PAPER]] so colleagues and the public can freely read and cite it.[[REFS]]</p>';
+          info += '<p>' + (_oab_config.not_a_library ? 'We have' : 'The library has') + ' checked and ' + jn + ' encourages you to freely share the publisher pdf of [[PAPER]] so colleagues and the public can freely read and cite it.[[REFS]]</p>';
         }
 
         if (avail.v2.permissions.permissions.version_allowed !== 'publisher pdf') {
-          info += '<p>' + (_oab_config.not_a_library ? 'We have' : 'The library has') + ' checked and the journal encourages you to freely share [[PAPER]] so colleagues and the public can freely read and cite it.[[REFS]]</p>';
-          info += '<h3><span>&#10003;</span> Find the manuscript the journal accepted. It\’s not a PDF from the journal site</h3>';
+          info += '<p>' + (_oab_config.not_a_library ? 'We have' : 'The library has') + ' checked and ' + jn + ' encourages you to freely share [[PAPER]] so colleagues and the public can freely read and cite it.[[REFS]]</p>';
+          info += '<h3><span>&#10003;</span> Find the manuscript ' + jn + ' accepted. It\’s not a PDF from the journal site</h3>';
           info += '<p>This is the only version you\’re able to share legally. The accepted manuscript is the word file or Latex export you sent the publisher after peer-review and before formatting (publisher proofs).</p>';
           info += '<h3><span>&#10003;</span> Check there aren\’t publisher logos or formatting</h3>';
           info += '<p>It\’s normal to share accepted manuscript as the research is the same. It\’s fine to save your file as a pdf, make small edits to formatting, fix typos, remove comments, and arrange figures.</p>';
@@ -603,7 +605,7 @@ var _run = function() {
         needmore = false;
         info += '<div>';
         info += '<h2>You can share your paper!</h2>';
-        info += '<p>We checked and unfortunately the journal won\'t let you share [[PAPER]] freely with everyone.[[REFS]]<br><br>';
+        info += '<p>We checked and unfortunately ' + jn + ' won\'t let you share [[PAPER]] freely with everyone.[[REFS]]<br><br>';
         info += 'The good news is the library can still legally make your paper much easier to find and access. We\'ll put the publisher PDF ';
         info += 'in ' + (_oab_config.repo_name ? _oab_config.repo_name : 'ScholarWorks') + ' and then share it on your behalf whenever it is requested.</p>';
         info += '<h3>All we need is your email</h3>';
@@ -715,6 +717,7 @@ var _run = function() {
         success: function(data) {
           _doing_availability = false;
           avail = data;
+          if (avail.v2 && avail.v2.metadata && avail.v2.metadata.journal_short) jn = avail.v2.metadata.journal_short;
           $('#oabutton_input').val('');
           inform();
         },
