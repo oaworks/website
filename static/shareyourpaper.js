@@ -377,7 +377,7 @@ var _run = function() {
               var info = '<h2>Congrats! Your paper will be available to everyone, forever!</h2>';
               if (res.embargo) {
                 info += '<p>You\’ve done your part for now. Unfortunately, ' + jn + ' won’t let us make it public until ';
-                info += res.embargo; // TODO how should this date be formatted
+                info += res.embargo_UI ? res.embargo_UI : res.embargo;
                 info += '. After release, you\’ll find your paper on ' + (_oab_config.repo_name ? _oab_config.repo_name : 'ScholarWorks') + ', Google Scholar, Web of Science.</p>';
                 info += '<h3>Your paper will be freely available at this link:</h3>';
               } else {
@@ -528,7 +528,8 @@ var _run = function() {
       $('#oabutton_inputs').hide();
       $('#oabutton_error').html('').hide();
       var ph = 'your.name@institution.edu';
-      var tcs = _oab_config.deposit_terms ? _oab_config.deposit_terms : '#';
+      var tcs = 'terms <a href="' + (_oab_opts.site ? _oab_opts.site : 'https://openaccessbutton.org') + '/terms" target="_blank">[1]</a>';
+      if (_oab_config.deposit_terms) tcs += ' <a href="' + _oab_config.deposit_terms + '" target="_blank">[2]</a>';
       if (_oab_config.email_domains !== undefined) {
         if (typeof _oab_config.email_domains === 'string') _oab_config.email_domains = _oab_config.email_domains.split(',');
         if (_oab_config.email_domains.length) {
@@ -568,7 +569,7 @@ var _run = function() {
           info += '<a target="_blank" href="' + avail.data.availability[0].url + '"><u>freely available link</u></a>.</p>';
           info += '<h3>Give us your email to confirm deposit</h3>';
           info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="' + ph + '" aria-label="' + ph + '" style="box-shadow:none;"></input></p>';
-          info += '<p>We\'ll use this to send you a link. By confirming, you\'re agreeing to the <a href="' + tcs + '" target="_blank"><u>terms and conditions</u></a>.</p>';
+          info += '<p>We\'ll use this to send you a link. By confirming, you\'re agreeing to the ' + tcs + '.</p>';
           info += '<p><a target="_blank" href="#" class="oabutton_deposit btn btn-primary" style="min-width:150px;">Confirm</a></p>';
         }
         info += '<!--<p><a href="#" class=""><b><u>My paper isn’t actually freely available</u></b></a></p>-->';
@@ -595,7 +596,7 @@ var _run = function() {
         info += '<p>We\'ll only use this if something goes wrong.<br>';
         info += '<h3>We\'ll check it\'s legal, then promote, and preserve your work</h3>';
         info += '<p><input type="file" name="file" id="file" class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '"></p>';
-        info += '<p>By uploading you\'re agreeing to the <a href="' + tcs + '" target="_blank"><u>terms and conditions</u></a> and to license your work ';
+        info += '<p>By uploading you\'re agreeing to the ' + tcs + ' and to license your work ';
         info += avail.v2.permissions.permissions.licence_required !== undefined ? avail.v2.permissions.permissions.licence_required : 'CC-BY';
         info += '.</p>';
         info += '<p><a href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : ' btn btn-primary') : '') + '" id="submitfile" style="min-width:150px;">Upload</a>';
@@ -611,7 +612,7 @@ var _run = function() {
         info += '<h3>All we need is your email</h3>';
         info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="' + ph + '" aria-label="' + ph + '" style="box-shadow:none;"></input></p>';
         info += '<p>We\'ll only use this to send you a link to your paper when it is in ' + (_oab_config.repo_name ? _oab_config.repo_name : 'ScholarWorks') + '. ';
-        info += 'By submitting, you\'re agreeing to the <a href="' + tcs + '" target="_blank"><u>terms and conditions</u></a>.</p>';
+        info += 'By submitting, you\'re agreeing to the ' + tcs + '.</p>';
         info += '<p><a target="_blank" href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Submit</a></p>';
         info += '</div>';
       }

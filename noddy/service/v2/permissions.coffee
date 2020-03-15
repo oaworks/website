@@ -73,7 +73,7 @@ API.service.oab.permissions = (meta={}, file, url, confirmed) ->
     try
       # https://rickscafe-api.herokuapp.com/permissions/doi/
       perms.ricks = HTTP.call('GET','https://api.greenoait.org/permissions/doi/' + meta.doi).data.authoritative_permission
-      perms.permissions.archiving_allowed = perms.ricks?.application?.can_archive_conditions?.versions_archivable and ('postprint' in perms.ricks.application.can_archive_conditions.versions_archivable or 'publisher pdf' in perms.ricks.application.can_archive_conditions.versions_archivable)
+      perms.permissions.archiving_allowed = perms.ricks?.application?.can_archive_conditions?.versions_archivable? and ('postprint' in perms.ricks.application.can_archive_conditions.versions_archivable or 'publisher pdf' in perms.ricks.application.can_archive_conditions.versions_archivable)
       perms.permissions.required_statement = perms.ricks.application.can_archive_conditions.deposit_statement_required_calculated if typeof perms.ricks?.application?.can_archive_conditions?.deposit_statement_required_calculated is 'string' and perms.ricks.application.can_archive_conditions.deposit_statement_required_calculated.indexOf('cc-') isnt 0
       perms.permissions.licence_required = perms.ricks.application.can_archive_conditions.licenses_required[0] if perms.ricks?.application?.can_archive_conditions?.licenses_required?
       perms.permissions.policy_full_text = perms.ricks.provenance.policy_full_text if perms.ricks?.provenance?.policy_full_text
@@ -95,7 +95,7 @@ API.service.oab.permissions = (meta={}, file, url, confirmed) ->
       meta = API.service.oab.metadata undefined, meta, content
     if meta.issn? or meta.journal?
       try perms.sherpa = API.use.sherpa.romeo.find(if meta.issn then {issn:meta.issn} else {title:meta.journal})
-      perms.permissions.archiving_allowed = perms.sherpa?.color in ['green','yellow','blue']
+      perms.permissions.archiving_allowed ?= perms.sherpa?.color in ['green','yellow','blue']
       try
         if perms.permissions.archiving_allowed
           perms.permissions.version_allowed ?= if perms.sherpa.color is 'yellow' then 'preprint' else 'postprint'
@@ -262,7 +262,10 @@ API.service.oab.permissions = (meta={}, file, url, confirmed) ->
           f.archivable = true
           f.archivable_reason = 'It appears this file contains a ' + f.lantern.licence + ' licence statement. Under this licence the article can be archived'
         if not f.archivable
-          f.archivable_reason = 'We cannot confirm if it is an archivable version or not'
+          if f.version is 'publisher pdf'
+            f.archivable_reason = 'The file given is a Publisher PDF, and only postprints are allowed'
+          else
+            f.archivable_reason = 'We cannot confirm if it is an archivable version or not'
       else
         f.archivable_reason ?= if not f.same_paper_evidence.words_more_than_threshold then 'The file is less than 500 words, and so does not appear to be a full article' else if not f.same_paper_evidence.document_format then 'File is an unexpected format ' + f.format else if not meta.doi and not meta.title then 'We have insufficient metadata to validate file is for the correct paper ' else 'File does not contain expected metadata such as DOI or title'
 

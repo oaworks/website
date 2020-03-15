@@ -26,7 +26,8 @@ API.add 'service/oab/deposits',
   get:
     authOptional: true
     action: () ->
-      restrict = if this.userId or this.queryParams.uid then [{term:{'deposit.from':this.queryParams.uid ? this.userId}}] else [{exists:{field:'deposit.type'}}]
+      restrict = [{exists:{field:'deposit.type'}}]
+      restrict.push({term:{'deposit.from.exact':(this.queryParams.uid ? this.userId)}}) if this.userId or this.queryParams.uid
       delete this.queryParams.uid if this.queryParams.uid?
       return oab_catalogue.search this.queryParams, {restrict:restrict}
   post:
@@ -138,7 +139,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
       title: d.metadata.title ? 'Unknown',
       description: description.trim(),
       creators: creators,
-      version: if perms.file.version is 'preprint' then 'submittedVersion' else if perms.file.version is 'postprint' then 'acceptedVersion' else if perms.file.version is 'publisher pdf' then 'publishedVersion' else 'AAM',
+      version: if perms.file.version is 'preprint' then 'Submitted Version' else if perms.file.version is 'postprint' then 'Accepted Version' else if perms.file.version is 'publisher pdf' then 'Published Version' else 'Accepted Version',
       journal_title: d.metadata.journal
       journal_volume: d.metadata.volume
       journal_issue: d.metadata.issue
@@ -239,6 +240,9 @@ API.service.oab.deposit = (d,options={},files,uid) ->
 
   # eventually this could also close any open requests for the same item, but that has not been prioritised to be done yet
   dep.z = z if API.settings.dev and dep.zenodo.id? and dep.zenodo.id isnt 'EXAMPLE'
+  
+  if dep.embargo
+    try dep.embargo_UI = moment(dep.embargo).format "Do MMMM YYYY"
   return dep
 
 API.service.oab.deposit.config = (user, config) ->
