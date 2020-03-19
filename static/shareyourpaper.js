@@ -774,6 +774,12 @@ var _run = function() {
 };
 
 var shareyourpaper = function(opts) {
+  var doconfig = true;
+  if (opts.config !== undefined) {
+    _oab_config = opts.config;
+    delete opts.config;
+    doconfig = false;
+  }
   _oab_opts = opts;
   if (window.jQuery === undefined) {
     var site = _oab_opts.site ? _oab_opts.site : 'https://openaccessbutton.org';
@@ -782,9 +788,11 @@ var shareyourpaper = function(opts) {
     var jqTag = document.createElement('script');
     jqTag.type = 'text/javascript';
     jqTag.src = site + '/static/jquery-1.10.2.min.js';
-    jqTag.onload = _config;
+    jqTag.onload = doconfig ? _config : _run;
     headTag.appendChild(jqTag);
+  } else if (doconfig) {
+    _config();
   } else {
-     _config();
+    _run();
   }
 }

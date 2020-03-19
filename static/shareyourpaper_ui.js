@@ -1,5 +1,6 @@
 
 var uc = undefined;
+_preview = false;
 
 var view = function(e,which) {
   var evented = true;

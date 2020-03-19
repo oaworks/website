@@ -11,16 +11,6 @@ API.add 'service/oab/deposit',
     action: () ->
       return API.service.oab.deposit undefined, this.bodyParams, this.request.files, this.userId
 
-API.add 'service/oab/deposit/:did',
-  get:
-    authOptional: true
-    action: () ->
-      return API.service.oab.deposit this.urlParams.did, this.queryParams
-  post:
-    authOptional: true
-    action: () ->
-      return API.service.oab.deposit this.urlParams.did, this.bodyParams, this.request.files
-
 API.add 'service/oab/deposits',
   csv: true
   get:
@@ -29,7 +19,30 @@ API.add 'service/oab/deposits',
       restrict = [{exists:{field:'deposit.type'}}]
       restrict.push({term:{'deposit.from.exact':(this.queryParams.uid ? this.userId)}}) if this.userId or this.queryParams.uid
       delete this.queryParams.uid if this.queryParams.uid?
-      return oab_catalogue.search this.queryParams, {restrict:restrict}
+      fields = []
+      if this.request.url.indexOf('.csv') isnt -1
+        this.queryParams.size ?= 10000
+        this.queryParams.sort ?= 'createdAt:asc'
+        if this.queryParams.fields
+          fields = this.queryParams.fields.split ','
+          delete this.queryParams.fields
+      res = oab_catalogue.search this.queryParams, {restrict:restrict}
+      if this.request.url.indexOf('.csv') isnt -1
+        re = []
+        for r in res.hits.hits
+          dr = r._source
+          for d in dr.deposit
+            red = doi: dr.metadata.doi, title: dr.metadata.title, type: d.type
+            for f in fields
+              if f not in ['metadata.doi','metadata.title','deposit.type']
+                if f.indexOf('deposit.') is 0
+                  tn = f.replace('deposit.','')
+                  red[tn] = d[tn]
+                else
+                  red[f] = API.collection._dot dr, f
+            re.push red
+        res = re
+      return res
   post:
     authOptional: true
     action: () ->

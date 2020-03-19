@@ -1020,7 +1020,7 @@ jQuery(document).ready(function() {
   });
 
   var deposits = function(e) {
-    var addr = api + '/deposits.csv?uid=' + noddy.user.account._id + '&size=10000&fields=metadata.doi,metadata.title,deposit.type';
+    var addr = api + '/deposits.csv?uid=' + noddy.user.account._id;
     if ($(this).attr('id') === 'all_file_deposits') addr += ',deposit.zenodo.url' // should be file url once we decide that
     if ($('#depositdate').val()) addr += '&q=deposit.createdAt:>' + new Date($('#depositdate').datepicker('getDate')).valueOf();
     if ($(this).attr('id') === 'all_file_deposits') addr += (addr.indexOf('&q') === -1 ? '&q=' : ' AND ') + 'deposit.zenodo.url:*'; // TODO later change this to be the file URL once deposit is changed to save that
@@ -1081,7 +1081,6 @@ jQuery(document).ready(function() {
     }
   }
 
-  var _preview = false;
   var save = function(e,pvw) {
     try { e.preventDefault(); } catch (err) {}
     _preview = false;
