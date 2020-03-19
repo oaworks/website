@@ -393,7 +393,7 @@ var _run = function() {
               // also the backend should create a dark deposit in this case, but delay it by six hours, and cancel if received in the meantime
               var info = '<h2>Hmmm, something looks wrong</h2>';
               info += '<p>You\’re nearly done. It looks like what you uploaded is a publisher\’s PDF which ' + jn + ' prohibits legally sharing.<!-- It can only be shared on a limited basis.--><br><br>';
-              info += 'We just need the version accepted by ' + jn + ' to make your work available to everyone.</p>';
+              info += 'We just need the version accepted by the journal to make your work available to everyone.</p>';
               info += '<p><a href="#" class="oabutton_inform ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" id="oabutton_inform" style="min-width:150px;">Try uploading again</a></p>';
               info += '<p><a href="#" id="oabutton_filecorrect"><b><u>My upload was an accepted manuscript</u></b></a></p>';
               $('#oabutton_availability').html(info).show();
@@ -586,7 +586,7 @@ var _run = function() {
 
         if (avail.v2.permissions.permissions.version_allowed !== 'publisher pdf') {
           info += '<p>' + (_oab_config.not_a_library ? 'We have' : 'The library has') + ' checked and ' + jn + ' encourages you to freely share [[PAPER]] so colleagues and the public can freely read and cite it.[[REFS]]</p>';
-          info += '<h3><span>&#10003;</span> Find the manuscript ' + jn + ' accepted. It\’s not a PDF from the journal site</h3>';
+          info += '<h3><span>&#10003;</span> Find the manuscript the journal accepted. It\’s not a PDF from the journal site</h3>';
           info += '<p>This is the only version you\’re able to share legally. The accepted manuscript is the word file or Latex export you sent the publisher after peer-review and before formatting (publisher proofs).</p>';
           info += '<h3><span>&#10003;</span> Check there aren\’t publisher logos or formatting</h3>';
           info += '<p>It\’s normal to share accepted manuscript as the research is the same. It\’s fine to save your file as a pdf, make small edits to formatting, fix typos, remove comments, and arrange figures.</p>';
