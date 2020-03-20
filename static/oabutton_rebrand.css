@@ -202,7 +202,7 @@ div.greenbottom {
    display: flex;
    justify-content: flex-end;
    flex-direction: column;
-   height: 100%; 
+   height: 100%;
   }
 
   .card-outer:hover .layer-vanish{
@@ -222,8 +222,8 @@ div.greenbottom {
     color: white;
   }
   .card-quote{
-    display: flex; 
-    height: 100%; 
+    display: flex;
+    height: 100%;
     align-items: center;
   }
 
@@ -234,8 +234,8 @@ div.greenbottom {
   }
 
   .card-logo{
-    display: flex; 
-    height: 100%; 
+    display: flex;
+    height: 100%;
     align-items: flex-end;
     justify-content: center;
   }
@@ -704,7 +704,7 @@ div.greenbottom {
     .supportedby{
     padding: 0 20px 40px 20px;
     }
-    
+
     .supportedby img{
     padding-top: 40px;
     }
@@ -773,5 +773,16 @@ div.greenbottom {
 @media screen and (max-width: 450px){
   .notonsmallphones{
     display: none;
+  }
+}
+.onlyonsmallphones{
+  {
+    display: none;
+  }
+
+/*only on small phones*/
+@media screen and (max-width: 450px){
+  .onlyonsmallphones{
+    display: block;
   }
 }

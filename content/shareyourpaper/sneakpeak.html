@@ -11,6 +11,16 @@
     display: none;
   }
 
+  .syp-close {
+    float: right;
+    font-size: 44px;
+    font-weight: bold;
+    line-height: 1;
+    color: #428BCA;
+    text-shadow: 0 1px 0 #fff;
+    filter: alpha(opacity=20);
+}
+
   /*style things that sam added below*/
 
   .btn-demo-white{
@@ -89,7 +99,7 @@
 <div class="navy-bg flex-head">
   <div class="center-col header">
   <div>
-    <span><strong>Shareyourpaper.org</strong> by <a href="https://openaccessbutton.org" style="margin: 0">Open Access Button</a></span>
+    <span><strong>Shareyourpaper.org</strong> <a href="https://openaccessbutton.org" style="margin: 0" class="notonsmallphones">by Open Access Button</a></span>
   </div>
   <div>
     <span><a class="btn btn-demo-white notonsmallphones" href="/libraries">For Libraries</a></span>
@@ -107,8 +117,42 @@
 
       <!-- 996 is joe@openaccessbutton.org live id. 4WD is the same email on dev. -->
 
-        <script src="/static/shareyourpaper.js"></script><script>shareyourpaper({uid:(api.indexOf('dev.') !== -1 ? '4WDY6njiatg3FZMJm' : '996wFY3oTTkNonqnt'),api:api});</script>
-        <div id="shareyourpaper"></div>
+      <script src="/static/shareyourpaper.js"></script><script>shareyourpaper({uid:(api.indexOf('dev.') !== -1 ? '4WDY6njiatg3FZMJm' : '996wFY3oTTkNonqnt'),api:api});</script>
+      <div id="shareyourpaper"></div>
+
+      <div id="about" style="display:none;">
+
+        <a class="syp-close learnmore" href="#">&times;</a>
+
+        <h2>About</h2>
+
+        <p>Shareyourpaper.org is the simplest way to legally make your paper freely available on sites like
+        Google Scholar and Web of Science to get a citation bump.</p>
+
+        <p>If the DOI give you a paywalled paper: <a href="https://doi.org/10.1126/scitranslmed.3008973">doi.org/10.1126/scitranslmed.3008973</a></p>
+        <p>We help you free it: <a href="https://shareyourpaper.org/10.1126/scitranslmed.3008973">shareyourpaper.org/10.1126/scitranslmed.3008973</a></p>
+
+        <p>We're experts, and designed this with libraries. Your library can even get a special version just for your institution!</p>
+
+        <h2>How it works</h2>
+
+        <p>Shareyourpaper.org is open source and built by an academia-owned non-profit to make it easy, fast, and
+        safe to freely share your paper. We're funded by leading libraries and foundations, so we won't sell your
+        work, your data, or send you endless emails.</p>
+
+        <p>Behind the scenes, shareyourpaper.org works by gathering up information about your paper from the journal,
+        checking copyright details, and seeing if it's already freely available. We then figure out the simplest
+        way you can share it, guide you through it, and double check what you share is okay. Then it gets put
+        in a general repository that preserves your work, and makes it discoverable. Neat, right?</p>
+
+        <p>Our main data sources are Crossref, Microsoft Academic, Unpaywall, Europe PMC, and Open Access Button's Permissions Database.
+        All work is stored in Zenodo.</p>
+
+        <p>It's all powered by a free and open API you can use to build even cooler stuff.</p>
+
+        <p>If you find questions or see a problem, email us at hello@openaccessbutton.org.</p>
+
+      </div>
 
     </div>
   </div>
@@ -123,10 +167,7 @@
       <p>Open Source • Community Controlled • Not for Profit</p>
     </div>
     <div style="padding: 5px 0; align-self: flex-end;">
-      <span><a href="https://openaccessbutton.org/api">API</a></span>
-      <span><a href="https://openaccessbutton.org/privacy">Privacy</a></span>
-      <span><a href="https://openaccessbutton.org/terms">Terms</a></span>
-      <span><a href="mailto:joe@openaccessbutton.org">Email</a></span>
+      <p><a href="/libraries" class="onlyonsmallphones"><u>For Libraries</u> •</a></u> <u><a href="https://openaccessbutton.org/api">API</a></u> • <u><a href="https://openaccessbutton.org/privacy">Privacy</a></u> • <u><a href="https://openaccessbutton.org/terms">Terms</a></u> • <u><a href="mailto:joe@openaccessbutton.org">Email</a></u></>
     </div>
   </div>
 </div>
@@ -138,5 +179,17 @@
 jQuery(document).ready(function() {
   $('#topnav').remove();
   $('#footer').remove();
+
+  $(document).ajaxComplete(function(e,xhr) {
+    if ( $('#nodoi').length ) {
+      var rep = 'Try an example <a href="#" id="runexample">doi.org/10.1126/scitranslmed.3008973</a> or <a href="#" class="learnmore">learn more</a>.';
+      $('#nodoi').replaceWith(rep);
+      $('#runexample').on('click',function(e) { e.preventDefault(); $('#oabutton_input').val('10.1126/scitranslmed.3008973'); $('#oabutton_find').trigger('click'); });
+      $('.learnmore').on('click',function(e) { e.preventDefault(); $('#shareyourpaper').toggle(); $('#about').toggle(); });
+    }
+  });
+
+
+
 });
 </script>

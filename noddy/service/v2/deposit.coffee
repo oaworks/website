@@ -11,30 +11,64 @@ API.add 'service/oab/deposit',
     action: () ->
       return API.service.oab.deposit undefined, this.bodyParams, this.request.files, this.userId
 
-API.add 'service/oab/deposit/:did',
-  get:
-    authOptional: true
-    action: () ->
-      return API.service.oab.deposit this.urlParams.did, this.queryParams
-  post:
-    authOptional: true
-    action: () ->
-      return API.service.oab.deposit this.urlParams.did, this.bodyParams, this.request.files
+_deposits = (params,uid,deposited) ->
+  restrict = [{exists:{field:'deposit.type'}}]
+  restrict.push({term:{'deposit.from.exact':(params.uid ? uid)}}) if uid or params.uid
+  restrict.push({exists:{field:'deposit.zenodo.url'}}) if deposited
+  delete params.uid if params.uid?
+  params.size ?= 10000
+  params.sort ?= 'createdAt:asc'
+  fields = []
+  if params.fields
+    fields = params.fields.split ','
+    delete params.fields
+  res = oab_catalogue.search params, {restrict:restrict}
+  re = []
+  for r in res.hits.hits
+    dr = r._source
+    for d in dr.deposit
+      if ((not uid? and not params.uid?) or d.from is params.uid or d.from is uid) and (not deposited or d.zenodo?.file?)
+        red = doi: dr.metadata.doi, title: dr.metadata.title, type: d.type, createdAt: d.createdAt
+        already = false
+        if deposited
+          red.file = d.zenodo.file
+          for ad in re
+            if ad.doi is red.doi and ad.file is red.file
+              already = true
+              break
+        if not already
+          for f in fields
+            if f not in ['metadata.doi','metadata.title','deposit.type','deposit.createdAt']
+              if f.indexOf('deposit.') is 0
+                tn = f.replace('deposit.','')
+                red[tn] = d[tn]
+              else
+                red[f] = API.collection._dot dr, f
+          re.push red
+  if params.sort is 'createdAt:asc'
+    re = _.sortBy re, 'createdAt'
+  if 'deposit.createdAt' not in fields
+    for dr in re
+      delete dr.createdAt
+  return re
 
 API.add 'service/oab/deposits',
   csv: true
   get:
     authOptional: true
-    action: () ->
-      restrict = if this.userId or this.queryParams.uid then [{term:{'deposit.from':this.queryParams.uid ? this.userId}}] else [{exists:{field:'deposit.type'}}]
-      delete this.queryParams.uid if this.queryParams.uid?
-      return oab_catalogue.search this.queryParams, {restrict:restrict}
+    action: () -> return _deposits this.queryParams, this.userId
   post:
     authOptional: true
     action: () ->
-      restrict = if this.userId or this.queryParams.uid then [{term:{'deposit.from':this.queryParams.uid ? this.userId}}] else [{exists:{field:'deposit.type'}}]
+      restrict = [{exists:{field:'deposit.type'}}]
+      restrict.push({term:{'deposit.from.exact':(this.queryParams.uid ? this.userId)}}) if this.userId or this.queryParams.uid
       delete this.queryParams.uid if this.queryParams.uid?
       return oab_catalogue.search this.bodyParams, {restrict:restrict}
+API.add 'service/oab/deposited',
+  csv: true
+  get:
+    authOptional: true
+    action: () -> return _deposits this.queryParams, this.userId, true
 
 API.add 'service/oab/deposit/config',
   get:
@@ -138,7 +172,7 @@ API.service.oab.deposit = (d,options={},files,uid) ->
       title: d.metadata.title ? 'Unknown',
       description: description.trim(),
       creators: creators,
-      version: if perms.file.version is 'preprint' then 'submittedVersion' else if perms.file.version is 'postprint' then 'acceptedVersion' else if perms.file.version is 'publisher pdf' then 'publishedVersion' else 'AAM',
+      version: if perms.file.version is 'preprint' then 'Submitted Version' else if perms.file.version is 'postprint' then 'Accepted Version' else if perms.file.version is 'publisher pdf' then 'Published Version' else 'Accepted Version',
       journal_title: d.metadata.journal
       journal_volume: d.metadata.volume
       journal_issue: d.metadata.issue
@@ -239,6 +273,9 @@ API.service.oab.deposit = (d,options={},files,uid) ->
 
   # eventually this could also close any open requests for the same item, but that has not been prioritised to be done yet
   dep.z = z if API.settings.dev and dep.zenodo.id? and dep.zenodo.id isnt 'EXAMPLE'
+  
+  if dep.embargo
+    try dep.embargo_UI = moment(dep.embargo).format "Do MMMM YYYY"
   return dep
 
 API.service.oab.deposit.config = (user, config) ->

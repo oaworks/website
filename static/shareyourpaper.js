@@ -184,8 +184,10 @@ var _run = function() {
   var flupload = undefined;
   var _intervaled = undefined;
 
-  _restart = function(e) {
+  var _restart_val = undefined;
+  _restart = function(e,val) {
     try { e.preventDefault(); } catch(err) {}
+    if (val) _restart_val = val;
     if ('pushState' in window.history && input && window.location.href.indexOf(input) !== -1) {
       window.history.pushState("", "find", (window.location.href.indexOf('/' + input) !== -1 ? window.location.pathname.replace('/' + input,'') + window.location.search + window.location.hash : strim(window.location.pathname + window.location.search.replace('doi='+input,''),'?#') + window.location.hash));
     }
@@ -201,20 +203,25 @@ var _run = function() {
       clearInterval(_intervaled);
       _intervaled = undefined;
     }
+    $('#oabutton_error').html('').hide();
+    $('#oabutton_availability').html('').hide();
+    $('#oabutton_find').html('Next');
+    $('#oabutton_input').val('');
+    $('#oabutton_inputs').show();
     if (_oab_opts.uid) {
       $.ajax({
         type:'GET',
         url:api+'/deposit/config?uid='+_oab_opts.uid,
         success: function(data) {
           _oab_config = data;
+          if (_restart_val) {
+            $('#oabutton_input').val(_restart_val);
+            setTimeout(function() { $('#oabutton_find').trigger('click'); },300);
+            _restart_val = undefined
+          }
         }
       });
     }
-    $('#oabutton_error').html('').hide();
-    $('#oabutton_availability').html('').hide();
-    $('#oabutton_find').html('Next');
-    $('#oabutton_input').val('');
-    $('#oabutton_inputs').show();
   }
 
   var pinger = function(what) {
@@ -377,7 +384,7 @@ var _run = function() {
               var info = '<h2>Congrats! Your paper will be available to everyone, forever!</h2>';
               if (res.embargo) {
                 info += '<p>You\’ve done your part for now. Unfortunately, ' + jn + ' won’t let us make it public until ';
-                info += res.embargo; // TODO how should this date be formatted
+                info += res.embargo_UI ? res.embargo_UI : res.embargo;
                 info += '. After release, you\’ll find your paper on ' + (_oab_config.repo_name ? _oab_config.repo_name : 'ScholarWorks') + ', Google Scholar, Web of Science.</p>';
                 info += '<h3>Your paper will be freely available at this link:</h3>';
               } else {
@@ -393,7 +400,7 @@ var _run = function() {
               // also the backend should create a dark deposit in this case, but delay it by six hours, and cancel if received in the meantime
               var info = '<h2>Hmmm, something looks wrong</h2>';
               info += '<p>You\’re nearly done. It looks like what you uploaded is a publisher\’s PDF which ' + jn + ' prohibits legally sharing.<!-- It can only be shared on a limited basis.--><br><br>';
-              info += 'We just need the version accepted by ' + jn + ' to make your work available to everyone.</p>';
+              info += 'We just need the version accepted by the journal to make your work available to everyone.</p>';
               info += '<p><a href="#" class="oabutton_inform ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" id="oabutton_inform" style="min-width:150px;">Try uploading again</a></p>';
               info += '<p><a href="#" id="oabutton_filecorrect"><b><u>My upload was an accepted manuscript</u></b></a></p>';
               $('#oabutton_availability').html(info).show();
@@ -528,7 +535,8 @@ var _run = function() {
       $('#oabutton_inputs').hide();
       $('#oabutton_error').html('').hide();
       var ph = 'your.name@institution.edu';
-      var tcs = _oab_config.deposit_terms ? _oab_config.deposit_terms : '#';
+      var tcs = 'terms <a href="' + (_oab_opts.site ? _oab_opts.site : 'https://openaccessbutton.org') + '/terms" target="_blank">[1]</a>';
+      if (_oab_config.deposit_terms) tcs += ' <a href="' + _oab_config.deposit_terms + '" target="_blank">[2]</a>';
       if (_oab_config.email_domains !== undefined) {
         if (typeof _oab_config.email_domains === 'string') _oab_config.email_domains = _oab_config.email_domains.split(',');
         if (_oab_config.email_domains.length) {
@@ -568,7 +576,7 @@ var _run = function() {
           info += '<a target="_blank" href="' + avail.data.availability[0].url + '"><u>freely available link</u></a>.</p>';
           info += '<h3>Give us your email to confirm deposit</h3>';
           info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="' + ph + '" aria-label="' + ph + '" style="box-shadow:none;"></input></p>';
-          info += '<p>We\'ll use this to send you a link. By confirming, you\'re agreeing to the <a href="' + tcs + '" target="_blank"><u>terms and conditions</u></a>.</p>';
+          info += '<p>We\'ll use this to send you a link. By confirming, you\'re agreeing to the ' + tcs + '.</p>';
           info += '<p><a target="_blank" href="#" class="oabutton_deposit btn btn-primary" style="min-width:150px;">Confirm</a></p>';
         }
         info += '<!--<p><a href="#" class=""><b><u>My paper isn’t actually freely available</u></b></a></p>-->';
@@ -585,7 +593,7 @@ var _run = function() {
 
         if (avail.v2.permissions.permissions.version_allowed !== 'publisher pdf') {
           info += '<p>' + (_oab_config.not_a_library ? 'We have' : 'The library has') + ' checked and ' + jn + ' encourages you to freely share [[PAPER]] so colleagues and the public can freely read and cite it.[[REFS]]</p>';
-          info += '<h3><span>&#10003;</span> Find the manuscript ' + jn + ' accepted. It\’s not a PDF from the journal site</h3>';
+          info += '<h3><span>&#10003;</span> Find the manuscript the journal accepted. It\’s not a PDF from the journal site</h3>';
           info += '<p>This is the only version you\’re able to share legally. The accepted manuscript is the word file or Latex export you sent the publisher after peer-review and before formatting (publisher proofs).</p>';
           info += '<h3><span>&#10003;</span> Check there aren\’t publisher logos or formatting</h3>';
           info += '<p>It\’s normal to share accepted manuscript as the research is the same. It\’s fine to save your file as a pdf, make small edits to formatting, fix typos, remove comments, and arrange figures.</p>';
@@ -595,7 +603,7 @@ var _run = function() {
         info += '<p>We\'ll only use this if something goes wrong.<br>';
         info += '<h3>We\'ll check it\'s legal, then promote, and preserve your work</h3>';
         info += '<p><input type="file" name="file" id="file" class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '"></p>';
-        info += '<p>By uploading you\'re agreeing to the <a href="' + tcs + '" target="_blank"><u>terms and conditions</u></a> and to license your work ';
+        info += '<p>By uploading you\'re agreeing to the ' + tcs + ' and to license your work ';
         info += avail.v2.permissions.permissions.licence_required !== undefined ? avail.v2.permissions.permissions.licence_required : 'CC-BY';
         info += '.</p>';
         info += '<p><a href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : ' btn btn-primary') : '') + '" id="submitfile" style="min-width:150px;">Upload</a>';
@@ -611,7 +619,7 @@ var _run = function() {
         info += '<h3>All we need is your email</h3>';
         info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="' + ph + '" aria-label="' + ph + '" style="box-shadow:none;"></input></p>';
         info += '<p>We\'ll only use this to send you a link to your paper when it is in ' + (_oab_config.repo_name ? _oab_config.repo_name : 'ScholarWorks') + '. ';
-        info += 'By submitting, you\'re agreeing to the <a href="' + tcs + '" target="_blank"><u>terms and conditions</u></a>.</p>';
+        info += 'By submitting, you\'re agreeing to the ' + tcs + '.</p>';
         info += '<p><a target="_blank" href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Submit</a></p>';
         info += '</div>';
       }
@@ -773,6 +781,12 @@ var _run = function() {
 };
 
 var shareyourpaper = function(opts) {
+  var doconfig = true;
+  if (opts.config !== undefined) {
+    _oab_config = opts.config;
+    delete opts.config;
+    doconfig = false;
+  }
   _oab_opts = opts;
   if (window.jQuery === undefined) {
     var site = _oab_opts.site ? _oab_opts.site : 'https://openaccessbutton.org';
@@ -781,9 +795,11 @@ var shareyourpaper = function(opts) {
     var jqTag = document.createElement('script');
     jqTag.type = 'text/javascript';
     jqTag.src = site + '/static/jquery-1.10.2.min.js';
-    jqTag.onload = _config;
+    jqTag.onload = doconfig ? _config : _run;
     headTag.appendChild(jqTag);
+  } else if (doconfig) {
+    _config();
   } else {
-     _config();
+    _run();
   }
 }
