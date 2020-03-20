@@ -775,6 +775,10 @@ div.greenbottom {
     display: none;
   }
 }
+.onlyonsmallphones{
+  {
+    display: none;
+  }
 
 /*only on small phones*/
 @media screen and (max-width: 450px){
