@@ -129,8 +129,8 @@
         <p>Shareyourpaper.org is the simplest way to legally make your paper freely available on sites like
         Google Scholar and Web of Science to get a citation bump.</p>
 
-        <p>If the DOI give you a paywalled paper: <a href="https://doi.org/10.1126/scitranslmed.3008973">doi.org/10.1038/ng.3260</a></p>
-        <p>We help you free it: <a href="https://shareyourpaper.org/10.1038/ng.3260">shareyourpaper.org/10.1038/ng.3260</a></p>
+        <p>If the DOI give you a paywalled paper: <a href="https://doi.org/10.1126/scitranslmed.3008973">doi.org/10.1126/scitranslmed.3008973</a></p>
+        <p>We help you free it: <a href="https://shareyourpaper.org/10.1126/scitranslmed.3008973">shareyourpaper.org/10.1126/scitranslmed.3008973</a></p>
 
         <p>We're experts, and designed this with libraries. Your library can even get a special version just for your institution!</p>
 
@@ -187,7 +187,7 @@ jQuery(document).ready(function() {
     if ( $('#nodoi').length ) {
       var rep = 'Try an example <a href="#" id="runexample">doi.org/10.1126/scitranslmed.3008973</a> or <a href="#" class="learnmore">learn more</a>.';
       $('#nodoi').replaceWith(rep);
-      $('#runexample').on('click',function(e) { e.preventDefault(); $('#oabutton_input').val('10.1038/ng.3260'); $('#oabutton_find').trigger('click'); });
+      $('#runexample').on('click',function(e) { e.preventDefault(); $('#oabutton_input').val('10.1126/scitranslmed.3008973'); $('#oabutton_find').trigger('click'); });
       $('.learnmore').on('click',function(e) { e.preventDefault(); $('#shareyourpaper').toggle(); $('#about').toggle(); });
     }
   });
