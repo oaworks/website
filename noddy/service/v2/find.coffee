@@ -153,7 +153,10 @@ API.service.oab.metadata = (options={}, metadata, content) -> # pass-through to 
   options.find = false
   return API.service.oab.find(options, metadata, content).metadata
 
-API.service.oab.find = (options={}, metadata={}, content) ->
+API.service.oab.find = (options={}, metadata={}, content, crossref, europepmc) ->
+  started = Date.now()
+  res = {url: false, checked: []}
+
   _get = (metadata, info) ->
     for i of info
       metadata[i] ?= info[i] if info[i]
@@ -162,8 +165,87 @@ API.service.oab.find = (options={}, metadata={}, content) ->
       if not obj[w]?
         return false
     return true
-  started = Date.now()
-  res = {url: false}
+
+  _get_formatted_crossref = (cr) ->
+    if cr? or ((not _got() or (res.find and not res.url)) and 'crossref' in res.sources and metadata.doi)
+      res.checked.push('crossref') if 'crossref' not in res.checked
+      try
+        cr ?= API.use.crossref.works.doi metadata.doi
+        if cr is undefined
+          if metadata.doi?
+            res.doi_not_in_crossref = metadata.doi
+            delete options.url if options.url.indexOf('doi.org/' + metadata.doi) isnt -1
+            delete metadata.doi
+            delete options.doi # don't allow the user-provided data to later override if we can't validate it on crossref
+        else
+          try metadata.title = cr.title[0] if cr.title.length
+          try metadata.doi = cr.DOI if cr.DOI?
+          try metadata.doi = cr.doi if cr.doi? # just in case
+          try metadata.crossref_type = cr.type
+          try metadata.author = cr.author if cr.author?
+          try metadata.journal = cr['container-title'][0] if cr['container-title'].length
+          try metadata.journal_short = cr['short-container-title'][0] if cr['short-container-title'].length
+          try metadata.issue = cr.issue if cr.issue?
+          try metadata.volume = cr.volume if cr.volume?
+          try metadata.page = cr.page.toString() if cr.page?
+          try metadata.issn ?= cr.ISSN[0] if cr.ISSN?
+          #try metadata.subject = cr.subject if cr.subject? # not sure if this is present in crossref... check anyway - commented out because getting clashes with the mapping
+          try metadata.publisher = cr.publisher if cr.publisher?
+          try metadata.year ?= cr['published-print']['date-parts'][0][0]
+          try metadata.year ?= cr.created['date-time'].split('-')[0]
+          try metadata.published = if cr['published-online']?['date-parts'] and cr['published-online']['date-parts'][0].length is 3 then cr['published-online']['date-parts'][0].join('-') else if cr['published-print']?['date-parts'] and cr['published-print']?['date-parts'][0].length is 3 then cr['published-print']['date-parts'][0].join('-') else undefined
+          try metadata.abstract = API.convert.html2txt(cr.abstract) if cr.abstract?
+          if cr.license?
+            for l in cr.license
+              if typeof l.URL is 'string' and l.URL.indexOf('creativecommons') isnt -1
+                metadata.licence = l.URL
+                res.url = 'https://doi.org/' + metadata.doi
+                res.found.crossref = res.url
+                break
+
+  _get_reversed_crossref = () ->
+    if (not _got() or (res.find and not res.url)) and 'reverse' in res.sources and not metadata.doi? and metadata.title? and metadata.title.length > 8 and metadata.title.split(' ').length > 2 and not options.reversed?
+      check = API.use.crossref.reverse metadata.title
+      if check?.data?.doi and check.data.title? and check.data.title.length <= metadata.title.length*1.2 and check.data.title.length >= metadata.title.length*.8 and metadata.title.toLowerCase().replace(/ /g,'').indexOf(check.data.title.toLowerCase().replace(' ','').replace(' ','').replace(' ','').split(' ')[0]) isnt -1
+        metadata.doi = check.data.doi
+        metadata.title = check.data.title
+        _get_formatted_crossref(check.original.message) if check.original?.message?
+      res.checked.push 'reverse'
+
+  _get_formatted_europepmc = (cr) ->
+    if (not _got() or (res.find and not res.url)) and 'epmc' in res.sources and (metadata.doi or metadata.pmid or metadata.pmcid or metadata.title or cr?)      
+      res.checked.push('epmc') if 'epmc' not in res.checked
+      try
+        cr ?= if metadata.doi then API.use.europepmc.doi(metadata.doi) else if metadata.title then API.use.europepmc.title(metadata.title) else if metadata.pmid then API.use.europepmc.pmid(metadata.pmid) else API.use.europepmc.pmc metadata.pmcid
+        try metadata.pmcid = cr.pmcid if cr.pmcid?
+        try metadata.title = cr.title if cr.title?
+        try metadata.doi = cr.doi if cr.doi?
+        try metadata.pmid = cr.pmid if cr.pmid?
+        try
+          metadata.author = cr.authorList.author
+          for a in metadata.author
+            a.given = a.firstName
+            a.family = a.lastName
+            a.affiliation = [{name: a.affiliation}] if a.affiliation
+        try metadata.journal ?= cr.journalInfo.journal.title if cr.journalInfo.journal?.title?
+        try metadata.journal_short ?= cr.journalInfo.journal.isoAbbreviation if cr.journalInfo.journal?.isoAbbreviation?
+        try metadata.issue = cr.journalInfo.issue if cr.journalInfo.issue?
+        try metadata.volume = cr.journalInfo.volume if cr.journalInfo.volume?
+        try metadata.page = cr.pageInfo.toString() if cr.pageInfo?
+        try metadata.issn = cr.journalInfo.journal.issn if cr.journalInfo.journal.issn?
+        #try metadata.subject = cr.subject if cr.subject? # not sure if epmc has subject
+        #try metadata.publisher = cr.publisher #epmc does not appear to have publisher
+        try metadata.year ?= cr.journalInfo.yearOfPublication if cr.journalInfo.yearOfPublication?
+        try metadata.year ?= cr.journalInfo.printPublicationDate.split('-')[0]
+        try 
+          metadata.published ?= if cr.journalInfo.printPublicationDate.indexOf('-') isnt -1 then cr.journalInfo.printPublicationDate else if cr.electronicPublicationDate then cr.electronicPublicationDate else undefined
+          delete metadata.published if metadata.published.split('-').length isnt 3
+        try metadata.abstract = API.convert.html2txt(cr.abstractText) if cr.abstractText?
+        if cr.license?
+          metadata.licence = cr.license.trim().replace(/ /g,'-')
+        if cr.url
+          res.url = cr.url
+          res.found.epmc = res.url
 
   if typeof options is 'string'
     metadata = options
@@ -186,7 +268,9 @@ API.service.oab.find = (options={}, metadata={}, content) ->
     options.id = metadata.id
     delete metadata.id
   options.url = options.url[0] if _.isArray options.url
-  res.checked = []
+
+  try _get_formatted_crossref(crossref) if typeof crossref is 'object'
+  try _get_formatted_europepmc(europepmc) if typeof europepmc is 'object'
 
   metadata.doi ?= options.doi.replace('doi:','').replace('doi.org/','').trim() if typeof options.doi is 'string'
   metadata.title ?= options.title.trim() if typeof options.title is 'string'
@@ -310,79 +394,10 @@ API.service.oab.find = (options={}, metadata={}, content) ->
 
   if not res.cached
     # check crossref for metadata if we don't have enough, but do already have a doi
-    _get_formatted_crossref = (cr) ->
-      if cr? or ((not _got() or (res.find and not res.url)) and 'crossref' in res.sources and metadata.doi)
-        res.checked.push('crossref') if 'crossref' not in res.checked
-        try
-          cr ?= API.use.crossref.works.doi metadata.doi
-          if cr is undefined
-            if metadata.doi?
-              res.doi_not_in_crossref = metadata.doi
-              delete options.url if options.url.indexOf('doi.org/' + metadata.doi) isnt -1
-              delete metadata.doi
-              delete options.doi # don't allow the user-provided data to later override if we can't validate it on crossref
-          else
-            try metadata.title = cr.title[0] if cr.title.length
-            try metadata.doi = cr.DOI if cr.DOI?
-            try metadata.doi = cr.doi if cr.doi? # just in case
-            try metadata.crossref_type = cr.type
-            try metadata.author = cr.author if cr.author?
-            try metadata.journal = cr['container-title'][0] if cr['container-title'].length
-            try metadata.journal_short = cr['short-container-title'][0] if cr['short-container-title'].length
-            try metadata.issue = cr.issue if cr.issue?
-            try metadata.volume = cr.volume if cr.volume?
-            try metadata.page = cr.page.toString() if cr.page?
-            try metadata.issn ?= cr.ISSN[0] if cr.ISSN?
-            #try metadata.subject = cr.subject if cr.subject? # not sure if this is present in crossref... check anyway - commented out because getting clashes with the mapping
-            try metadata.publisher = cr.publisher if cr.publisher?
-            try metadata.year ?= cr['published-print']['date-parts'][0][0]
-            try metadata.year ?= cr.created['date-time'].split('-')[0]
-            try metadata.published = if cr['published-online']?['date-parts'] and cr['published-online']['date-parts'][0].length is 3 then cr['published-online']['date-parts'][0].join('-') else if cr['published-print']?['date-parts'] and cr['published-print']?['date-parts'][0].length is 3 then cr['published-print']['date-parts'][0].join('-') else undefined
     _get_formatted_crossref()
-  
     # check epmc if we don't have enough
-    _get_formatted_europepmc = () ->
-      if (not _got() or (res.find and not res.url)) and 'epmc' in res.sources and (metadata.doi or metadata.pmid or metadata.pmcid or metadata.title)      
-        res.checked.push('epmc') if 'epmc' not in res.checked
-        try
-          cr = if metadata.doi then API.use.europepmc.doi(metadata.doi) else if metadata.title then API.use.europepmc.title(metadata.title) else if metadata.pmid then API.use.europepmc.pmid(metadata.pmid) else API.use.europepmc.pmc metadata.pmcid
-          try metadata.pmcid = cr.pmcid if cr.pmcid?
-          try metadata.title = cr.title if cr.title?
-          try metadata.doi = cr.doi if cr.doi?
-          try metadata.pmid = cr.pmid if cr.pmid?
-          try
-            metadata.author = cr.authorList.author
-            for a in metadata.author
-              a.given = a.firstName
-              a.family = a.lastName
-              a.affiliation = [{name: a.affiliation}] if a.affiliation
-          try metadata.journal ?= cr.journalInfo.journal.title if cr.journalInfo.journal?.title?
-          try metadata.journal_short ?= cr.journalInfo.journal.isoAbbreviation if cr.journalInfo.journal?.isoAbbreviation?
-          try metadata.issue = cr.journalInfo.issue if cr.journalInfo.issue?
-          try metadata.volume = cr.journalInfo.volume if cr.journalInfo.volume?
-          try metadata.page = cr.pageInfo.toString() if cr.pageInfo?
-          try metadata.issn = cr.journalInfo.journal.issn if cr.journalInfo.journal.issn?
-          #try metadata.subject = cr.subject if cr.subject? # not sure if epmc has subject
-          #try metadata.publisher = cr.publisher #epmc does not appear to have publisher
-          try metadata.year ?= cr.journalInfo.yearOfPublication if cr.journalInfo.yearOfPublication?
-          try metadata.year ?= cr.journalInfo.printPublicationDate.split('-')[0]
-          try 
-            metadata.published ?= if cr.journalInfo.printPublicationDate.indexOf('-') isnt -1 then cr.journalInfo.printPublicationDate else if cr.electronicPublicationDate then cr.electronicPublicationDate else undefined
-            delete metadata.published if metadata.published.split('-').length isnt 3
-          if cr.url
-            res.url = cr.url
-            res.found.epmc = res.url
     _get_formatted_europepmc()
-  
     # if no doi but do have title, try to reverse match it with crossref
-    _get_reversed_crossref = () ->
-      if (not _got() or (res.find and not res.url)) and 'reverse' in res.sources and not metadata.doi? and metadata.title? and metadata.title.length > 8 and metadata.title.split(' ').length > 2 and not options.reversed?
-        check = API.use.crossref.reverse metadata.title
-        if check?.data?.doi and check.data.title? and check.data.title.length <= metadata.title.length*1.2 and check.data.title.length >= metadata.title.length*.8 and metadata.title.toLowerCase().replace(/ /g,'').indexOf(check.data.title.toLowerCase().replace(' ','').replace(' ','').replace(' ','').split(' ')[0]) isnt -1
-          metadata.doi = check.data.doi
-          metadata.title = check.data.title
-          _get_formatted_crossref(check.original.message) if check.original?.message?
-        res.checked.push 'reverse'
     _get_reversed_crossref()
   
     # if still no doi, but do have title or pmid or pmc, and don't have a URL or some provided page content, try to find a URL via bing

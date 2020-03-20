@@ -63,9 +63,7 @@ var preview = function(e,val) {
     } else if (!$('#shareyourpaper').is(':visible')) {
       view(undefined,'#demo');
     }
-    _restart();
-    $('#oabutton_input').val(val);
-    setTimeout(function() { $('#oabutton_find').trigger('click'); },300);
+    _restart(undefined,val);
   }
 }
 $('body').on('click','.preview',preview);

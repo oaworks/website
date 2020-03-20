@@ -184,8 +184,10 @@ var _run = function() {
   var flupload = undefined;
   var _intervaled = undefined;
 
-  _restart = function(e) {
+  var _restart_val = undefined;
+  _restart = function(e,val) {
     try { e.preventDefault(); } catch(err) {}
+    if (val) _restart_val = val;
     if ('pushState' in window.history && input && window.location.href.indexOf(input) !== -1) {
       window.history.pushState("", "find", (window.location.href.indexOf('/' + input) !== -1 ? window.location.pathname.replace('/' + input,'') + window.location.search + window.location.hash : strim(window.location.pathname + window.location.search.replace('doi='+input,''),'?#') + window.location.hash));
     }
@@ -201,20 +203,25 @@ var _run = function() {
       clearInterval(_intervaled);
       _intervaled = undefined;
     }
+    $('#oabutton_error').html('').hide();
+    $('#oabutton_availability').html('').hide();
+    $('#oabutton_find').html('Next');
+    $('#oabutton_input').val('');
+    $('#oabutton_inputs').show();
     if (_oab_opts.uid) {
       $.ajax({
         type:'GET',
         url:api+'/deposit/config?uid='+_oab_opts.uid,
         success: function(data) {
           _oab_config = data;
+          if (_restart_val) {
+            $('#oabutton_input').val(_restart_val);
+            setTimeout(function() { $('#oabutton_find').trigger('click'); },300);
+            _restart_val = undefined
+          }
         }
       });
     }
-    $('#oabutton_error').html('').hide();
-    $('#oabutton_availability').html('').hide();
-    $('#oabutton_find').html('Next');
-    $('#oabutton_input').val('');
-    $('#oabutton_inputs').show();
   }
 
   var pinger = function(what) {
