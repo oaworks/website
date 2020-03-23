@@ -347,7 +347,7 @@ var _run = function() {
     var data = {email:eml, from:_oab_opts.uid, plugin:'shareyourpaper', embedded:window.location.href, metadata: avail.data.meta.article }
     if (filecorrect) data.confirmed = true;
     if (_parameta.confirmed) data.confirmed = _parameta.confirmed;
-    if (avail.v2 && avail.v2.url) data.redeposit = avail.v2.url;
+    if (avail.v2 && avail.v2.open) data.redeposit = avail.v2.open;
     if (_oab_config.pilot) data.pilot = _oab_config.pilot;
     if (_oab_config.live) data.live = _oab_config.live;
     if (!data.metadata.title || !data.metadata.journal) {

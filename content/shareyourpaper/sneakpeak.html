@@ -180,12 +180,33 @@ jQuery(document).ready(function() {
   $('#topnav').remove();
   $('#footer').remove();
 
+  var evadd = true;
   $(document).ajaxComplete(function(e,xhr) {
     if ( $('#nodoi').length ) {
       var rep = 'Try an example <a href="#" id="runexample">doi.org/10.1126/scitranslmed.3008973</a> or <a href="#" class="learnmore">learn more</a>.';
       $('#nodoi').replaceWith(rep);
       $('#runexample').on('click',function(e) { e.preventDefault(); $('#oabutton_input').val('10.1126/scitranslmed.3008973'); $('#oabutton_find').trigger('click'); });
-      $('.learnmore').on('click',function(e) { e.preventDefault(); $('#shareyourpaper').toggle(); $('#about').toggle(); });
+      $('.learnmore').on('click',function(e) { 
+        e.preventDefault(); 
+        $('#shareyourpaper').toggle(); 
+        $('#about').toggle();
+        if (evadd) {
+          evadd = false;
+          window.addEventListener("popstate", function(popevent) {
+            if (window.location.hash.indexOf('about') === -1 && $('#about').is(':visible')) {
+              $('#shareyourpaper').toggle(); 
+              $('#about').toggle();
+            }
+          });
+        }
+        if ('pushState' in window.history) {
+          if ($('#about').is(':visible')) {
+            window.history.pushState("", "about", '#about');
+          } else {
+            window.history.pushState("", document.title, window.location.pathname);
+          }
+        }
+      });
     }
   });
 
