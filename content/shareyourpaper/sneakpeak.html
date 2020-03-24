@@ -34,6 +34,7 @@
   }
 
   h3{
+    color: #428BCA;
     font-size:  18px;
     font-weight: bold;
     margin-top: 30px;
@@ -187,7 +188,7 @@ jQuery(document).ready(function() {
   var evadd = true;
   $(document).ajaxComplete(function(e,xhr) {
     if ( $('#nodoi').length ) {
-      var rep = 'Try an example <a href="#" id="runexample">doi.org/10.1126/scitranslmed.3008973</a> or <a href="#" class="learnmore">learn more</a>.';
+      var rep = 'Try an example <a href="#" id="runexample"><u>10.1126/scitranslmed.3008973</u></a> or <a href="#" class="learnmore"><u>learn more</u></a>.';
       $('#nodoi').replaceWith(rep);
       $('#runexample').on('click',function(e) { e.preventDefault(); $('#oabutton_input').val('10.1126/scitranslmed.3008973'); $('#oabutton_find').trigger('click'); });
       $('.learnmore').on('click',function(e) {
