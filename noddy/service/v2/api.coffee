@@ -68,7 +68,7 @@ API.add 'service/oab/dnr',
     refuse = if not this.queryParams.refuse? or this.queryParams.refuse in ['false',false] then false else true
     return if e then API.service.oab.dnr(e,true,refuse) else 400
   delete:
-    roleRequired: 'openaccessbutton.admin'
+    authRequired: 'openaccessbutton.admin'
     action: () ->
       oab_dnr.remove({email:this.queryParams.email}) if this.queryParams.email
       return {}

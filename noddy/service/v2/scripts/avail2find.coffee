@@ -17,10 +17,10 @@ API.add 'service/oab/scripts/avail2find',
         processed += 1
         if find_saves.length is 1000
           console.log processed
-          oab_find.insert find_saves, undefined, undefined, undefined, undefined, undefined, dev
+          oab_find.insert find_saves, undefined, undefined, undefined, dev
           find_saves = []
         if catalogue_saves.length is 1000
-          oab_catalogue.insert catalogue_saves, undefined, undefined, undefined, undefined, undefined, dev
+          oab_catalogue.insert catalogue_saves, undefined, undefined, undefined, dev
           catalogue_saves = []
         if catalogue_updates.length is 1000
           oab_catalogue.bulk catalogue_updates, 'update', undefined, undefined, dev
@@ -123,9 +123,9 @@ API.add 'service/oab/scripts/avail2find',
       #actioned = oab_availability.each '*', undefined, process, undefined, undefined, undefined, dev
       
       if find_saves.length
-        oab_find.insert find_saves, undefined, undefined, undefined, undefined, undefined, dev
+        oab_find.insert find_saves, undefined, undefined, undefined, dev
       if catalogue_saves.length
-        oab_catalogue.insert catalogue_saves, undefined, undefined, undefined, undefined, undefined, dev
+        oab_catalogue.insert catalogue_saves, undefined, undefined, undefined, dev
       if catalogue_updates.length
         oab_catalogue.bulk catalogue_updates, 'update', undefined, undefined, dev
 

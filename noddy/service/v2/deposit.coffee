@@ -11,14 +11,14 @@ API.add 'service/oab/deposit',
     action: () ->
       return API.service.oab.deposit undefined, this.bodyParams, this.request.files, this.userId
 
-_deposits = (params,uid,deposited,csv) ->
+_deposits = (params,uid,deposited) ->
   restrict = [{exists:{field:'deposit.type'}}]
   restrict.push({term:{'deposit.from.exact':(params.uid ? uid)}}) if uid or params.uid
   restrict.push({exists:{field:'deposit.zenodo.url'}}) if deposited
   delete params.uid if params.uid?
   params.size ?= 10000
   params.sort ?= 'createdAt:asc'
-  fields = if csv then [] else ['metadata','permissions.permissions','permissions.ricks','permissions.file','deposit','url']
+  fields = []
   if params.fields
     fields = params.fields.split ','
     delete params.fields
@@ -28,10 +28,10 @@ _deposits = (params,uid,deposited,csv) ->
     dr = r._source
     for d in dr.deposit
       if ((not uid? and not params.uid?) or d.from is params.uid or d.from is uid) and (not deposited or d.zenodo?.file?)
-        red = if csv then {doi: dr.metadata.doi, title: dr.metadata.title, type: d.type, createdAt: d.createdAt} else {}
+        red = doi: dr.metadata.doi, title: dr.metadata.title, type: d.type, createdAt: d.createdAt
         already = false
         if deposited
-          red.file = d.zenodo.file if csv
+          red.file = d.zenodo.file
           for ad in re
             if ad.doi is red.doi and ad.file is red.file
               already = true
@@ -39,10 +39,11 @@ _deposits = (params,uid,deposited,csv) ->
         if not already
           for f in fields
             if f not in ['metadata.doi','metadata.title','deposit.type','deposit.createdAt']
-              if f is 'deposit'
-                red[f] = d
+              if f.indexOf('deposit.') is 0
+                tn = f.replace('deposit.','')
+                red[tn] = d[tn]
               else
-                red[f] = API.collection.dot dr, f
+                red[f] = API.collection._dot dr, f
           re.push red
   if params.sort is 'createdAt:asc'
     re = _.sortBy re, 'createdAt'
@@ -55,7 +56,7 @@ API.add 'service/oab/deposits',
   csv: true
   get:
     authOptional: true
-    action: () -> return _deposits this.queryParams, this.userId, undefined, this.request.url.indexOf('.csv') isnt -1
+    action: () -> return _deposits this.queryParams, this.userId
   post:
     authOptional: true
     action: () ->
@@ -67,7 +68,7 @@ API.add 'service/oab/deposited',
   csv: true
   get:
     authOptional: true
-    action: () -> return _deposits this.queryParams, this.userId, true, this.request.url.indexOf('.csv') isnt -1
+    action: () -> return _deposits this.queryParams, this.userId, true
 
 API.add 'service/oab/deposit/config',
   get:
@@ -283,7 +284,6 @@ API.service.oab.deposit.config = (user, config) ->
     update = {}
     for k of config # the fields allowed in deposit config could be listed here, for now default to whatever is given
       update[k] = config[k] if config[k]?
-      try update[k] = update[k].split('communities/')[1].split('/')[0] if k is 'community' and update[k].indexOf('/') isnt -1
     if JSON.stringify(update) isnt '{}'
       if not user.service.openaccessbutton.deposit?
         Users.update user._id, {'service.openaccessbutton.deposit': {config: update}}
