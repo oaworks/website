@@ -279,8 +279,8 @@ API.service.oab.find = (options={}, metadata={}, content, sources={}) ->
   res.all = options.all ? false
   res.parallel = options.parallel ? true
   res.find = options.find ? true
-  # other possible sources are ['base','dissemin','share','core','openaire','bing']
-  res.sources = options.sources ? ['oabutton','crossref','epmc','reverse','scrape','oadoi','figshare','doaj']
+  # other possible sources are ['base','dissemin','share','core','openaire','bing','fighsare']
+  res.sources = options.sources ? ['oabutton','crossref','epmc','reverse','scrape','oadoi','doaj']
   res.sources.push('bing') if options.plugin in ['widget','oasheet'] or options.from in ['illiad','clio'] or (options.url? and options.url.indexOf('alma.exlibrisgroup.com') isnt -1)
   options.refresh = if options.refresh is 'true' then true else if options.refresh is 'false' then false else options.refresh
   try res.refresh = if options.refresh is false then 30 else if options.refresh is true then 0 else parseInt options.refresh
@@ -321,7 +321,7 @@ API.service.oab.find = (options={}, metadata={}, content, sources={}) ->
     catalogued = oab_catalogue.finder metadata
     # if user wants a total refresh, don't use any of it (we still search for it though, because will overwrite later with the fresh stuff)
     if catalogued? and res.refresh isnt 0
-      #res.permissions ?= catalogued.permissions if catalogued.permissions? and (catalogued.metadata?.journal? or catalogued.metadata?.issn?)
+      res.permissions ?= catalogued.permissions if catalogued.permissions?.permissions? and (catalogued.metadata?.journal? or catalogued.metadata?.issn?)
       if 'oabutton' in res.sources
         res.checked.push('oabutton') if 'oabutton' not in res.checked
         if catalogued.url? # within or without refresh time, if we have already found it, re-use it
@@ -385,7 +385,7 @@ API.service.oab.find = (options={}, metadata={}, content, sources={}) ->
     delete metadata.title if metadata.title? and (metadata.title is 404 or metadata.title.indexOf('404') is 0)
   
     # all sources that have not yet been checked, that could find us an article, are now checked in parallel
-    # by this point, by default, it would be oadoi, figshare, doaj
+    # by this point, by default, it would be oadoi, doaj
     if (not _got() or (res.find and not res.open)) and (metadata.doi or metadata.title)
       did = 0
       _run = (src, which) ->
@@ -504,7 +504,7 @@ API.service.oab.find = (options={}, metadata={}, content, sources={}) ->
   if res.open
     metadata.url ?= []
     metadata.url.push(res.open) if res.open not in metadata.url
-  res.permissions = API.service.oab.permissions(metadata) if options.permissions and not _.isEmpty(metadata) #and not res.permissions?.permitted?
+  res.permissions ?= API.service.oab.permissions(metadata) if options.permissions and not _.isEmpty(metadata)
   res.test = true if JSON.stringify(metadata).toLowerCase().replace(/'/g,' ').replace(/"/g,' ').indexOf(' test ') isnt -1 #or (options.embedded? and options.embedded.indexOf('openaccessbutton.org') isnt -1)
   res.metadata = metadata
   

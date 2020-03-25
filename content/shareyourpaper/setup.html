@@ -1098,6 +1098,9 @@ jQuery(document).ready(function() {
           $('.subscription').last().val(url);
           $('.subscription_type').last().val(type);
         }
+      } else if (k === 'community') {
+        // deal with annoying multiple community ID fields
+        $('input').each(function(i, obj) { if ( $(this).attr('id') === 'community') { $(this).val(uc[k]); } });
       } else if (k !== 'subscription_type') {
         $('#'+k).val(uc[k]);
       }
@@ -1111,14 +1114,15 @@ jQuery(document).ready(function() {
       _preview = pvw ? pvw : ($(this).attr('preview') ? $(this).attr('preview') : ($(this).attr('val') ? $(this).attr('val') : true));
     }
     var data = {};
+    if (uc.community) data.community = uc.community; // deal with multiple community id annoyances that we should not have
     $('.setting').each(function(i, obj) {
       if ( $(this).attr('id') === 'community') {
-        if ( $(this).is(':visible') ) {
-          var evl = $(this).val();
-          try {
-            evl = evl.split('communities/')[1].split('/')[0];
-            $(this).val(evl);
-          } catch(err) {}
+        var evl = $(this).val();
+        try {
+          if (evl.indexOf('/') !== -1) evl = evl.split('communities/')[1].split('/')[0];
+        } catch(err) {}
+        if ( (uc.community !== undefined && evl !== uc.community) || (uc.community === undefined && evl !== '') ) {
+          $('input').each(function(i, obj) { if ( $(this).attr('id') === 'community') { $(this).val(evl); } });
           data.community = evl;
         }
       } else if ( $(this).is(':checkbox') ) {

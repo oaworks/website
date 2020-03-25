@@ -72,7 +72,12 @@ API.service.oab.permissions = (meta={}, file, url, confirmed) ->
   if meta.doi? and not perms.ricks?
     try
       # https://rickscafe-api.herokuapp.com/permissions/doi/
-      perms.ricks = HTTP.call('GET','https://api.greenoait.org/permissions/doi/' + meta.doi).data.authoritative_permission
+      try cached = API.http.cache meta.doi, 'ricks_permissions'
+      if cached and typeof cached is 'object' and cached.application?
+        perms.ricks = cached
+      else
+        perms.ricks = HTTP.call('GET','https://api.greenoait.org/permissions/doi/' + meta.doi).data.authoritative_permission
+        try API.http.cache(meta.doi, 'ricks_permissions', perms.ricks) if perms.ricks?.application?
       perms.permissions.archiving_allowed = perms.ricks?.application?.can_archive_conditions?.versions_archivable? and ('postprint' in perms.ricks.application.can_archive_conditions.versions_archivable or 'publisher pdf' in perms.ricks.application.can_archive_conditions.versions_archivable)
       perms.permissions.required_statement = perms.ricks.application.can_archive_conditions.deposit_statement_required_calculated if typeof perms.ricks?.application?.can_archive_conditions?.deposit_statement_required_calculated is 'string' and perms.ricks.application.can_archive_conditions.deposit_statement_required_calculated.indexOf('cc-') isnt 0
       perms.permissions.licence_required = perms.ricks.application.can_archive_conditions.licenses_required[0] if perms.ricks?.application?.can_archive_conditions?.licenses_required?
@@ -89,7 +94,7 @@ API.service.oab.permissions = (meta={}, file, url, confirmed) ->
           if em.isAfter(moment())
             perms.permissions.embargo = em.format "YYYY-MM-DD"
             break
-  if not perms.sherpa?
+  if false and not perms.sherpa? # sherpa is turned off now - could use it as a fallback if ever ricks does not respond (but may need to update sherpa to their new api spec)
     if not (meta.issn? or meta.journal?) and not metad
       metad = true
       meta = API.service.oab.metadata undefined, meta, content
