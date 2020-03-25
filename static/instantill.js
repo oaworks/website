@@ -194,26 +194,37 @@ var instantill_run = function() {
   var clickwrong = false;
   var gotmore = false;
 
-  _instantill_restart = function(e) {
+  var _restart_val = undefined
+  _instantill_restart = function(e,val) {
     try { e.preventDefault(); } catch(err) {}
+    if (val) _restart_val = val;
     matched = false;
     avail = undefined;
     attempts = 0;
     clickwrong = false;
     gotmore = false;
+    if (_intervaled) {
+      clearInterval(_intervaled);
+      _intervaled = undefined;
+    }
+    $('#oabutton_error').html('').hide();
+    $('#oabutton_availability').html('').hide();
+    $('#oabutton_input').val('');
+    $('#oabutton_inputs').show();
     if (_oab_opts.uid) {
       $.ajax({
         type:'GET',
         url:api+'/ill/config?uid='+_oab_opts.uid,
         success: function(data) {
           _oab_config = data;
+          if (_restart_val) {
+            $('#oabutton_input').val(_restart_val);
+            setTimeout(function() { $('#oabutton_find').trigger('click'); },300);
+            _restart_val = undefined;
+          }
         }
       });
     }
-    $('#oabutton_error').html('').hide();
-    $('#oabutton_availability').html('').hide();
-    $('#oabutton_input').val('');
-    $('#oabutton_inputs').show();
   }
 
   var illpinger = function(what) {

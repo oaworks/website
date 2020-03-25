@@ -102,7 +102,10 @@ API.service.oab.availability = (opts,v2) ->
             break
       afnd.data.meta.article.bing = true if 'bing' in afnd.v2.checked
       afnd.data.meta.article.reversed = true if 'reverse' in afnd.v2.checked
-      afnd.data.availability.push({type: 'article', url: afnd.v2.url}) if afnd.v2.url
+      if afnd.v2.url
+        afnd.data.availability.push({type: 'article', url: afnd.v2.url})
+      else if afnd.v2.open
+        afnd.data.availability.push({type: 'article', url: afnd.v2.open})
     try
       if afnd.data.availability.length is 0 and (afnd.v2.metadata.doi or afnd.v2.metadata.title or afnd.v2.metadata.url)
         eq = {type: 'article'}
@@ -153,7 +156,7 @@ API.service.oab.metadata = (options={}, metadata, content) -> # pass-through to 
   options.find = false
   return API.service.oab.find(options, metadata, content).metadata
 
-API.service.oab.find = (options={}, metadata={}, content, crossref, europepmc) ->
+API.service.oab.find = (options={}, metadata={}, content, sources={}) ->
   started = Date.now()
   res = {url: false, checked: []}
 
@@ -166,86 +169,30 @@ API.service.oab.find = (options={}, metadata={}, content, crossref, europepmc) -
         return false
     return true
 
-  _get_formatted_crossref = (cr) ->
-    if cr? or ((not _got() or (res.find and not res.url)) and 'crossref' in res.sources and metadata.doi)
+  _get_formatted_crossref = (cr,r) ->
+    if cr? or ((not _got() or (res.find and not res.url)) and 'crossref' in res.sources and (metadata.doi or r))
       res.checked.push('crossref') if 'crossref' not in res.checked
-      try
-        cr ?= API.use.crossref.works.doi metadata.doi
-        if cr is undefined
-          if metadata.doi?
-            res.doi_not_in_crossref = metadata.doi
-            delete options.url if options.url.indexOf('doi.org/' + metadata.doi) isnt -1
-            delete metadata.doi
-            delete options.doi # don't allow the user-provided data to later override if we can't validate it on crossref
-        else
-          try metadata.title = cr.title[0] if cr.title.length
-          try metadata.doi = cr.DOI if cr.DOI?
-          try metadata.doi = cr.doi if cr.doi? # just in case
-          try metadata.crossref_type = cr.type
-          try metadata.author = cr.author if cr.author?
-          try metadata.journal = cr['container-title'][0] if cr['container-title'].length
-          try metadata.journal_short = cr['short-container-title'][0] if cr['short-container-title'].length
-          try metadata.issue = cr.issue if cr.issue?
-          try metadata.volume = cr.volume if cr.volume?
-          try metadata.page = cr.page.toString() if cr.page?
-          try metadata.issn ?= cr.ISSN[0] if cr.ISSN?
-          #try metadata.subject = cr.subject if cr.subject? # not sure if this is present in crossref... check anyway - commented out because getting clashes with the mapping
-          try metadata.publisher = cr.publisher if cr.publisher?
-          try metadata.year ?= cr['published-print']['date-parts'][0][0]
-          try metadata.year ?= cr.created['date-time'].split('-')[0]
-          try metadata.published = if cr['published-online']?['date-parts'] and cr['published-online']['date-parts'][0].length is 3 then cr['published-online']['date-parts'][0].join('-') else if cr['published-print']?['date-parts'] and cr['published-print']?['date-parts'][0].length is 3 then cr['published-print']['date-parts'][0].join('-') else undefined
-          try metadata.abstract = API.convert.html2txt(cr.abstract) if cr.abstract?
-          if cr.license?
-            for l in cr.license
-              if typeof l.URL is 'string' and l.URL.indexOf('creativecommons') isnt -1
-                metadata.licence = l.URL
-                res.url = 'https://doi.org/' + metadata.doi
-                res.found.crossref = res.url
-                break
-
+      try metadata = API.use.crossref.works.format cr, metadata
+      if not metadata.crossref_type and metadata.doi?
+        res.doi_not_in_crossref = metadata.doi
+        delete options.url if options.url.indexOf('doi.org/' + metadata.doi) isnt -1
+        delete metadata.doi
+        delete options.doi # don't allow the user-provided data to later override if we can't validate it on crossref
+      if metadata.licence? and metadata.licence.indexOf('creativecommons') isnt -1
+        res.url = 'https://doi.org/' + metadata.doi
+        res.open = res.url
+        res.found.crossref = res.url
   _get_reversed_crossref = () ->
     if (not _got() or (res.find and not res.url)) and 'reverse' in res.sources and not metadata.doi? and metadata.title? and metadata.title.length > 8 and metadata.title.split(' ').length > 2 and not options.reversed?
-      check = API.use.crossref.reverse metadata.title
-      if check?.data?.doi and check.data.title? and check.data.title.length <= metadata.title.length*1.2 and check.data.title.length >= metadata.title.length*.8 and metadata.title.toLowerCase().replace(/ /g,'').indexOf(check.data.title.toLowerCase().replace(' ','').replace(' ','').replace(' ','').split(' ')[0]) isnt -1
-        metadata.doi = check.data.doi
-        metadata.title = check.data.title
-        _get_formatted_crossref(check.original.message) if check.original?.message?
-      res.checked.push 'reverse'
-
+      res.checked.push('reverse') if 'reverse' not in res.checked
+      _get_formatted_crossref undefined, true
   _get_formatted_europepmc = (cr) ->
     if (not _got() or (res.find and not res.url)) and 'epmc' in res.sources and (metadata.doi or metadata.pmid or metadata.pmcid or metadata.title or cr?)      
       res.checked.push('epmc') if 'epmc' not in res.checked
-      try
-        cr ?= if metadata.doi then API.use.europepmc.doi(metadata.doi) else if metadata.title then API.use.europepmc.title(metadata.title) else if metadata.pmid then API.use.europepmc.pmid(metadata.pmid) else API.use.europepmc.pmc metadata.pmcid
-        try metadata.pmcid = cr.pmcid if cr.pmcid?
-        try metadata.title = cr.title if cr.title?
-        try metadata.doi = cr.doi if cr.doi?
-        try metadata.pmid = cr.pmid if cr.pmid?
-        try
-          metadata.author = cr.authorList.author
-          for a in metadata.author
-            a.given = a.firstName
-            a.family = a.lastName
-            a.affiliation = [{name: a.affiliation}] if a.affiliation
-        try metadata.journal ?= cr.journalInfo.journal.title if cr.journalInfo.journal?.title?
-        try metadata.journal_short ?= cr.journalInfo.journal.isoAbbreviation if cr.journalInfo.journal?.isoAbbreviation?
-        try metadata.issue = cr.journalInfo.issue if cr.journalInfo.issue?
-        try metadata.volume = cr.journalInfo.volume if cr.journalInfo.volume?
-        try metadata.page = cr.pageInfo.toString() if cr.pageInfo?
-        try metadata.issn = cr.journalInfo.journal.issn if cr.journalInfo.journal.issn?
-        #try metadata.subject = cr.subject if cr.subject? # not sure if epmc has subject
-        #try metadata.publisher = cr.publisher #epmc does not appear to have publisher
-        try metadata.year ?= cr.journalInfo.yearOfPublication if cr.journalInfo.yearOfPublication?
-        try metadata.year ?= cr.journalInfo.printPublicationDate.split('-')[0]
-        try 
-          metadata.published ?= if cr.journalInfo.printPublicationDate.indexOf('-') isnt -1 then cr.journalInfo.printPublicationDate else if cr.electronicPublicationDate then cr.electronicPublicationDate else undefined
-          delete metadata.published if metadata.published.split('-').length isnt 3
-        try metadata.abstract = API.convert.html2txt(cr.abstractText) if cr.abstractText?
-        if cr.license?
-          metadata.licence = cr.license.trim().replace(/ /g,'-')
-        if cr.url
-          res.url = cr.url
-          res.found.epmc = res.url
+      metadata = API.use.europepmc.format cr, metadata
+      if metadata.url or metadata.open
+        res.url = metadata.url ? metadata.open
+        res.found.epmc = res.url
 
   if typeof options is 'string'
     metadata = options
@@ -269,8 +216,9 @@ API.service.oab.find = (options={}, metadata={}, content, crossref, europepmc) -
     delete metadata.id
   options.url = options.url[0] if _.isArray options.url
 
-  try _get_formatted_crossref(crossref) if typeof crossref is 'object'
-  try _get_formatted_europepmc(europepmc) if typeof europepmc is 'object'
+  for src of sources
+    try _get_formatted_crossref(sources[src]) if src is 'crossref'
+    try _get_formatted_europepmc(sources[src]) if src is 'europepmc'
 
   metadata.doi ?= options.doi.replace('doi:','').replace('doi.org/','').trim() if typeof options.doi is 'string'
   metadata.title ?= options.title.trim() if typeof options.title is 'string'
@@ -335,8 +283,8 @@ API.service.oab.find = (options={}, metadata={}, content, crossref, europepmc) -
   res.all = options.all ? false
   res.parallel = options.parallel ? true
   res.find = options.find ? true
-  # other possible sources are ['base','dissemin','share','core','openaire','bing']
-  res.sources = options.sources ? ['oabutton','crossref','epmc','reverse','scrape','oadoi','figshare','doaj']
+  # other possible sources are ['base','dissemin','share','core','openaire','bing','fighsare']
+  res.sources = options.sources ? ['oabutton','crossref','epmc','reverse','scrape','oadoi','doaj']
   res.sources.push('bing') if options.plugin in ['widget','oasheet'] or options.from in ['illiad','clio'] or (options.url? and options.url.indexOf('alma.exlibrisgroup.com') isnt -1)
   options.refresh = if options.refresh is 'true' then true else if options.refresh is 'false' then false else options.refresh
   try res.refresh = if options.refresh is false then 30 else if options.refresh is true then 0 else parseInt options.refresh
@@ -377,13 +325,14 @@ API.service.oab.find = (options={}, metadata={}, content, crossref, europepmc) -
     catalogued = oab_catalogue.finder metadata
     # if user wants a total refresh, don't use any of it (we still search for it though, because will overwrite later with the fresh stuff)
     if catalogued? and res.refresh isnt 0
-      #res.permissions ?= catalogued.permissions if catalogued.permissions? and (catalogued.metadata?.journal? or catalogued.metadata?.issn?)
+      res.permissions ?= catalogued.permissions if catalogued.permissions?.permissions? and (catalogued.metadata?.journal? or catalogued.metadata?.issn?)
       if 'oabutton' in res.sources
         res.checked.push('oabutton') if 'oabutton' not in res.checked
         if catalogued.url? # within or without refresh time, if we have already found it, re-use it
           _get metadata, catalogued.metadata
           res.cached = true if _got() # no need for further finding if we have the url and all necessary metadata
           res.url = catalogued.url
+          res.open = res.url
           res.found.oabutton = res.url
         else if catalogued.createdAt > Date.now() - res.refresh*86400000
           _get metadata, catalogued.metadata # it is in the catalogue but we don't have a link for it, and it is within refresh days old, so re-use the metadata from it
@@ -441,7 +390,7 @@ API.service.oab.find = (options={}, metadata={}, content, crossref, europepmc) -
     delete metadata.title if metadata.title? and (metadata.title is 404 or metadata.title.indexOf('404') is 0)
   
     # all sources that have not yet been checked, that could find us an article, are now checked in parallel
-    # by this point, by default, it would be oadoi, figshare, doaj
+    # by this point, by default, it would be oadoi, doaj
     if (not _got() or (res.find and not res.url)) and (metadata.doi or metadata.title)
       did = 0
       _run = (src, which) ->
@@ -451,15 +400,19 @@ API.service.oab.find = (options={}, metadata={}, content, crossref, europepmc) -
             rs = if src is 'doaj' then API.use[src].articles[which](metadata[which]) else if src is 'epmc' then API.use.europepmc[which](metadata[which]) else API.use[src][which] metadata[which]
             res.checked.push(src) if src not in res.checked
             mt = rs.title ? rs.dctitle ? rs.bibjson?.title ? rs.metadata?['oaf:result']?.title?.$
-            if rs?.url and (which isnt 'title' or (mt and mt.length <= metadata.title.length*1.2 and mt.length >= metadata.title.length*.8 and metadata.title.toLowerCase().replace(/ /g,'').indexOf(mt.toLowerCase().replace(' ','').replace(' ','').replace(' ','').split(' ')[0]) isnt -1))
+            if (rs?.url or rs?.open) and (which isnt 'title' or (mt and mt.length <= metadata.title.length*1.2 and mt.length >= metadata.title.length*.8 and metadata.title.toLowerCase().replace(/ /g,'').indexOf(mt.toLowerCase().replace(' ','').replace(' ','').replace(' ','').split(' ')[0]) isnt -1))
               if rs.redirect isnt false
-                res.url = if rs.redirect then rs.redirect else rs.url
+                res.redirect = if rs.redirect then rs.redirect else if rs.open then rs.open else rs.url
+                res.url = res.redirect
+                res.open = res.url
                 res.found[src] ?= res.url
+              metadata.licence ?= rs.licence
               metadata.licence ?= rs.best_oa_location?.license if rs.best_oa_location?.license
               metadata.title ?= mt if mt?
+              metadata.year ?= rs.year if rs.year?
               metadata.pmid ?= rs.pmid if rs.pmid?
-              metadata.journal ?= if rs.journalInfo?.journal?.title? then rs.journalInfo.journal.title.split('(')[0].trim() else if rs.journal?.title? then rs.journal.title.split('(')[0].trim() else undefined
-              metadata.issn ?= if rs.journalInfo?.journal?.issn? then rs.journalInfo.journal.issn else if rs.journal?.issn? then rs.journal.issn else undefined
+              metadata.journal ?= if rs.journalInfo?.journal?.title? then rs.journalInfo.journal.title.split('(')[0].trim() else if rs.journal?.title? then rs.journal.title.split('(')[0].trim() else if typeof rs.journal is 'string' then rs.journal else undefined
+              metadata.issn ?= if rs.journalInfo?.journal?.issn? then rs.journalInfo.journal.issn else if rs.journal?.issn? then rs.journal.issn else if typeof rs.issn is 'string' then rs.issn else undefined
         did += 1
 
       _prl = (src, which) -> Meteor.setTimeout (() -> _run src, which), 10
@@ -554,7 +507,10 @@ API.service.oab.find = (options={}, metadata={}, content, crossref, europepmc) -
   if options.url?
     metadata.url ?= []
     metadata.url.push(options.url) if options.url not in metadata.url
-  res.permissions = API.service.oab.permissions(metadata) if options.permissions and not _.isEmpty(metadata) #and not res.permissions?.permitted?
+  if res.url
+    metadata.url ?= []
+    metadata.url.push(res.url) if res.url not in metadata.url
+  res.permissions ?= API.service.oab.permissions(metadata) if options.permissions and not _.isEmpty(metadata)
   res.test = true if JSON.stringify(metadata).toLowerCase().replace(/'/g,' ').replace(/"/g,' ').indexOf(' test ') isnt -1 #or (options.embedded? and options.embedded.indexOf('openaccessbutton.org') isnt -1)
   res.metadata = metadata
   
@@ -565,6 +521,7 @@ API.service.oab.find = (options={}, metadata={}, content, crossref, europepmc) -
     if catalogued?
       upd = {}
       upd.url = res.url if res.url? and res.url isnt catalogued.url
+      upd.open = res.open if res.open? and res.open isnt catalogued.open
       upd.metadata = metadata if not _.isEqual metadata, catalogued.metadata
       upd.sources = _.union(res.sources, catalogued.sources) if JSON.stringify(res.sources.sort()) isnt JSON.stringify catalogued.sources.sort()
       uc = _.union res.checked, catalogued.checked
@@ -580,6 +537,7 @@ API.service.oab.find = (options={}, metadata={}, content, crossref, europepmc) -
       res.catalogue = catalogued._id
     else
       fl = 
+        open: res.open
         url: res.url
         metadata: metadata
         sources: res.sources
