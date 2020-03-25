@@ -1,7 +1,7 @@
 <head>
   <title>Shareyourpaper.org</title>
-
   <link rel="stylesheet" href="/static/oabutton_rebrand.css"> <!-- gets the new css (still also uses the old css, just overwrites where necessary) -->
+  <script src="/static/shareyourpaper.js"></script>
 </head>
 <style>
   #topnav {
@@ -121,8 +121,7 @@
       <!--<script src="/static/shareyourpaper.js"></script>
       <script>shareyourpaper({uid:(api.indexOf('dev.') !== -1 ? '4WDY6njiatg3FZMJm' : '996wFY3oTTkNonqnt'),api:api});</script>
       -->
-      <script src="/static/shareyourpaper.js"></script>
-      <script>shareyourpaper({uid:"4WDY6njiatg3FZMJm",api:"https://dev.api.cottagelabs.com/service/oab",config:{"depositdate":"","repo_name":"Zenodo","deposit_terms":"","allow_oa_deposit":true,"ROR_ID":"","high_performance":true,"live":true,"pilot":false,"activate_try_it_and_learn_more":false,"not_a_library":true}});</script>
+
       <div id="shareyourpaper"></div>
 
       <div id="about" style="display:none;">
@@ -184,6 +183,8 @@
 jQuery(document).ready(function() {
   $('#topnav').remove();
   $('#footer').remove();
+
+  shareyourpaper({uid:"4WDY6njiatg3FZMJm",api:"https://dev.api.cottagelabs.com/service/oab",config:{"depositdate":"","repo_name":"Zenodo","deposit_terms":"","allow_oa_deposit":true,"ROR_ID":"","high_performance":true,"live":true,"pilot":false,"activate_try_it_and_learn_more":false,"not_a_library":true}});
 
   var evadd = true;
   $(document).ajaxComplete(function(e,xhr) {
