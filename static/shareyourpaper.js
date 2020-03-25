@@ -178,7 +178,6 @@ var _run = function() {
   var matched = false;
   var avail = undefined;
   var jn = 'the journal';
-  var cml = undefined;
   var attempts = 0;
   var gotmore = false;
   var filecorrect = undefined;
@@ -196,7 +195,6 @@ var _run = function() {
     matched = false;
     avail = undefined;
     jn = 'the journal';
-    cml = undefined
     attempts = 0;
     gotmore = false;
     filecorrect = undefined;
@@ -219,7 +217,7 @@ var _run = function() {
           if (_restart_val) {
             $('#oabutton_input').val(_restart_val);
             setTimeout(function() { $('#oabutton_find').trigger('click'); },300);
-            _restart_val = undefined;
+            _restart_val = undefined
           }
         }
       });
@@ -349,7 +347,7 @@ var _run = function() {
     var data = {email:eml, from:_oab_opts.uid, plugin:'shareyourpaper', embedded:window.location.href, metadata: avail.data.meta.article }
     if (filecorrect) data.confirmed = true;
     if (_parameta.confirmed) data.confirmed = _parameta.confirmed;
-    if (avail.v2 && avail.v2.open) data.redeposit = avail.v2.open;
+    if (avail.v2 && avail.v2.url) data.redeposit = avail.v2.url;
     if (_oab_config.pilot) data.pilot = _oab_config.pilot;
     if (_oab_config.live) data.live = _oab_config.live;
     if (!data.metadata.title || !data.metadata.journal) {
@@ -374,7 +372,7 @@ var _run = function() {
             if ((res.zenodo && res.zenodo.already) || (filecorrect && (res.zenodo === undefined || res.zenodo.url === undefined))) {
               var info = '<div>';
               info += '<h2>We\'ll double check your paper</h2>';
-              info += '<p>You\'ve done your part for now. Hopefully, we\'ll send you a link soon. First, we\'ll check in the next day to make sure it\'s legal to share.</p>';
+              info += '<p>You\’ve done your part for now. Hopefully, we\’ll send you a link soon. First, we\’ll check in the next day to make sure it\’s legal to share.</p>';
               info += '<p><a href="#" class="oabutton_restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>';
               info += '</div>';
               $('#oabutton_availability').html(info).show();
@@ -511,45 +509,6 @@ var _run = function() {
     _submit_deposit();
   }
 
-  var reviewemail = function(e) {
-    var doi = avail && avail.v2 && avail.v2.metadata && avail.v2.metadata.doi ? avail.v2.metadata.doi : '';
-    var title = avail && avail.v2 && avail.v2.metadata && avail.v2.metadata.title ? avail.v2.metadata.title : (doi ? doi : 'Untitled paper');
-    var journal = avail && avail.v2 && avail.v2.metadata && avail.v2.metadata.journal ? 'published in "' + avail.v2.metadata.journal + '"' : '';
-    var eml = 'mailto:' + (_oab_config.deposit_help ? _oab_config.deposit_help : cml) + '?subject=Request%20to%20self%20archive%20' + doi + '&body=';
-    var body = 'To whom it may concern,<br><br>';
-    body += 'I am writing to request permission to deposit the full text of my paper "<a href="https://doi.org/' + doi + '">' + title + '</a>" ' + journal + '<br><br>';
-    body += 'I would like to archive the final pdf. If that is not possible, I would like to archive the accepted manuscript. Ideally, I would like to do so immediately but will respect a reasonable embargo if requested.<br><br>'
-    if (_oab_config.repo_name) {
-      body += 'I plan to deposit it into "';
-      if (_oab_config.repo_link) body += '<a href="' + _oab_config.repo_link + '">';
-      body += _oab_config.repo_name;
-      if (_oab_config.repo_link) body += '</a>"';
-      body += ', a not-for-profit, digital, publicly accessible repository for scholarly work created for researchers at <<Institution name>>. It helps make research available to a wider audience, get citations for the original article, and assure its long-term preservation. The deposit will include a complete citation of the published version, and a link to it.<br><br>';
-    }
-    body += 'Thank you for your attention and I look forward to hearing from you.';
-    eml += encodeURIComponent(body);
-    $(this).attr('href',eml);
-
-    var info = '<div>';
-    info += '<h2>You\'ve done your part</h2>';
-    info += '<p>All that\'s left to do is wait. Once the journal gives you permission to share, come back and we\'ll help you finish the job.</p>';
-    info += '<p><a href="#" class="oabutton_restart ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Do another</a></p>';
-    info += '</div>';
-    $('#oabutton_availability').html(info);
-  }
-  var permissionemail = function(e) {
-    var doi = avail && avail.v2 && avail.v2.metadata && avail.v2.metadata.doi ? avail.v2.metadata.doi : '';
-    var title = avail && avail.v2 && avail.v2.metadata && avail.v2.metadata.title ? avail.v2.metadata.title : (doi ? doi : 'Untitled paper');
-    var eml = 'mailto:' + (_oab_config.deposit_help ? _oab_config.deposit_help : cml) + '?subject=Permission%20Given%20to%20Deposit%20' + doi + '&body=';
-    var body = 'To whom it may concern,<br><br>';
-    body += 'Attached is written confirmation of permission I\'ve been given to deposit, and the permitted version of my paper: <br><br>';
-    body += '<a href="https://doi.org/' + doi + '">' + title + '</a> <br><br>';
-    body += 'Can you please deposit it into the repository on my behalf? <br><br>';
-    body += 'Sincerely, ';
-    eml += encodeURIComponent(body);
-    $(this).attr('href',eml);
-  }
-
   var inform = function() {
     if (_intervaled) {
       clearInterval(_intervaled);
@@ -564,7 +523,7 @@ var _run = function() {
       $('#oabutton_input').focus();//.val('');
       $('.oabutton_find').html('Next');
       var nj = '<p>Sorry, right now this only works with academic journal articles.';
-      cml = _oab_config.problem_email ? _oab_config.problem_email : (_oab_config.email ? _oab_config.email : (_oab_config.adminemail ? _oab_config.adminemail : undefined));
+      var cml = _oab_config.problem_email ? _oab_config.problem_email : (_oab_config.email ? _oab_config.email : (_oab_config.adminemail ? _oab_config.adminemail : undefined));
       if (cml) {
         nj += ' To get help with depositing, <a href="';
         nj += (_oab_config.old_way ? (_oab_config.old_way.indexOf('@') !== -1 ? 'mailto:' : '') + _oab_config.old_way : 'mailto:'+cml);
@@ -648,15 +607,6 @@ var _run = function() {
         info += avail.v2.permissions.permissions.licence_required !== undefined ? avail.v2.permissions.permissions.licence_required : 'CC-BY';
         info += '.</p>';
         info += '<p><a href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : ' btn btn-primary') : '') + '" id="submitfile" style="min-width:150px;">Upload</a>';
-        info += '</div>';
-      } else if (_oab_config.dark_deposit_off) {
-        // can't be shared and dark deposit is off
-        info += '<div>';
-        info += '<h2>You may share your paper if you ask the journal</h2>';
-        info += '<p>Unlike most, ' + jn + ' requires that you ask them before you share your paper freely. ';
-        info += 'It only takes a moment as the library can find out who to contact and has drafted an email for you.</p>';
-        info += '<p><a target="_blank" id="oabutton_reviewemail" href="#" class="' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Review Email</a></p>';
-        info += '<p><a target="_blank" id="oabutton_permissionemail" href="#"><u>I\'ve got permission now!</u></a></p>';
         info += '</div>';
       } else {
         // can't be directly shared but can be passed to library for dark deposit
@@ -797,8 +747,6 @@ var _run = function() {
   $(_oab_opts.element).on('click','#oabutton_getmore',function(e) { e.preventDefault(); getmore(); });
   $(_oab_opts.element).on('click','#oabutton_filecorrect',function(e) { e.preventDefault(); filecorrect = true; _submit_deposit(); });
   $(_oab_opts.element).on('click','#oabutton_inform',function(e) { e.preventDefault(); inform(); });
-  $(_oab_opts.element).on('click','#oabutton_reviewemail',function(e) { reviewemail(); });
-  $(_oab_opts.element).on('click','#oabutton_permissionemail',function(e) { permissionemail(); });
 
   // could get custom _ops from the user config
   if (_oab_config.autorun !== true) {
@@ -836,6 +784,7 @@ var shareyourpaper = function(opts) {
   var doconfig = true;
   if (opts.config !== undefined) {
     _oab_config = opts.config;
+    delete opts.config;
     doconfig = false;
   }
   _oab_opts = opts;
@@ -846,11 +795,7 @@ var shareyourpaper = function(opts) {
     var jqTag = document.createElement('script');
     jqTag.type = 'text/javascript';
     jqTag.src = site + '/static/jquery-1.10.2.min.js';
-    if (doconfig) {
-      jqTag.onload = _config;
-    } else {
-      jqTag.onload = _run;
-    }
+    jqTag.onload = doconfig ? _config : _run;
     headTag.appendChild(jqTag);
   } else if (doconfig) {
     _config();
