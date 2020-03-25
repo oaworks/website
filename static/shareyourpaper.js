@@ -656,7 +656,7 @@ var _run = function() {
         info += '<p>Unlike most, ' + jn + ' requires that you ask them before you share your paper freely. ';
         info += 'It only takes a moment as the library can find out who to contact and has drafted an email for you.</p>';
         info += '<p><a target="_blank" id="oabutton_reviewemail" href="#" class="' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Review Email</a></p>';
-        info += '<p><a target="_blank" id="oabutton_permissionemail" href="#">I\'ve got permission now!</a></p>';
+        info += '<p><a target="_blank" id="oabutton_permissionemail" href="#"><u>I\'ve got permission now!</u></a></p>';
         info += '</div>';
       } else {
         // can't be directly shared but can be passed to library for dark deposit
