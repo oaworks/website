@@ -1,0 +1,360 @@
+<div class="strap strap-compact" style="background-image:url(/static/book.jpg);background-color:transparent;min-height:500px;background-size:100% 100%;background-repeat:no-repeat;padding-top:10%;margin-top:-80px;" id="topstrap">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2 intro">
+        <!--<div class="alert alert-info hidden-xs hidden-sm" id="release" style="margin-top:-80px;">
+          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+          <p>Welcome to our improved site!<br>If you have any feedback or notice an issue, <a href="/feedback#general">let us know</a></p>
+        </div>-->
+        <div class="row">
+          <div class="col-xs-12 visible-xs" style="height:60px;"></div>
+          <div class="col-md-3 col-md-offset-2 col-xs-5">
+            <img src="/static/icon_OAB.png" id="mainicon" alt="">
+          </div>
+          <div class="col-md-7 col-xs-7">
+            <h1 style="font-size:3em;margin-top:5px;" class="hidden-xs hidden-sm">Avoid<br>Paywalls,<br> Request<br>Research.</h1>
+            <h1 style="font-size:2em;margin-top:5px;" class="visible-xs visible-sm">Avoid<br>Paywalls,<br> Request<br>Research.</h1>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <h3 style="font-size:1.3em;">Free, legal research articles delivered instantly or automatically requested from authors.</h3>
+          </div>
+        </div>
+        <div class="input-group">
+          <textarea id="url" class="form-control" style="min-height:40px;height:40px;font-size:1.1em;" placeholder="Enter an article URL, DOI, PMID, PMC ID, Title, or Citation" aria-label="Enter an article URL, DOI, PMID, PMC ID, Title, or Citation to find an Open Access article"></textarea>
+          <div class="input-group-btn">
+            <a class="btn btn-action btn-block" href="#" id="find" style="min-height:40px;height:40px;font-size:1.1em;padding:7px 10px 5px 10px;" aria-label="search"><i class="glyphicon glyphicon-search"></i></a>
+          </div>
+        </div>
+        <div class="row">
+          <!--
+          <div class="col-md-4" style="text-align:center;">
+            <a id="getfromaccount" style="text-decoration:underline;" href="/account">Get the extension</a>
+            <a style="text-decoration:underline;display:none;" class="chromeinstall" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">Get the extension</a>
+          </div>
+        -->
+          <div class="col-md-6" style="text-align:center;">
+            <a href="#" class="show" what="examples" style="text-decoration:underline;">Try it now</a>
+          </div>
+          <div class="col-md-6" style="text-align:center;">
+            <a href="#" class="show" what="howitworks" style="text-decoration:underline;">How it works</a>
+          </div>
+        </div>
+
+        <div id="getpluginsetc"></div>
+      </div>
+
+      <div class="col-md-8 col-md-offset-2" id="availability" style="display:none;text-align:center;min-height:400px;">
+      </div>
+
+      <div class="col-md-4 col-md-offset-4" id="loading" style="display:none;min-height:400px;">
+        <img id="loading" style="height:100%;width:100%;" src="/static/spin_orange.svg">
+        <p style="text-align:center">Searching <a href="/about#sources" target="_blank">thousands of repositories for access</a>!</p><p style="text-align:center">Give us a moment.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="strap strap-white intro shower" id="examples" style="border-top:2px solid #212f3f;display:none;">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2" style="font-size:1.2em;">
+<h1>Examples</h1>
+        <p>
+          Get around this paywall in a flash:<br><br>
+          DOI: <a class="example" href="#">10.1126/science.196.4287.293</a><br>
+          URL: <a class="example" href="#">http://science.sciencemag.org/content/196/4287/293/tab-pdf</a><br>
+          PMC (Pubmed Central) ID: <a class="example" href="#">PMC4167664</a><br>
+          Pubmed ID: <a class="example" href="#">17756097</a><br>
+          Title: <a class="example" href="#">Ribulose bisphosphate carboxylase: a two-layered, square-shaped molecule of symmetry 422</a><br>
+          Citation: <a class="example" href="#">Baker, T. S., Eisenberg, D., & Eiserling, F. (1977). Ribulose Bisphosphate Carboxylase: A Two-Layered, Square-Shaped Molecule of Symmetry 422. Science, 196(4287), 293-295. doi:10.1126/science.196.4287.293</a><br>
+          or try your favourite citation format (Harvard, Bibtex, etc).
+        </p>
+        <p>
+          Check out some of our <a href="/request">latest requests</a>.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="strap strap-white intro shower" id="howitworks" style="border-top:2px solid #212f3f;display:none;">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2" style="font-size:1.2em;">
+
+    <h2>Finding Available Research</h2>
+    <p>Give us a scholarly paper and we’ll search thousands of sources with millions of articles to link you to free, legal, full text articles instantly. </p>
+    <h2>Requesting Research</h2>
+    <p>If we can’t get you access, we’ll start a request for you. We request articles from authors, and guide them on making the work available to you and everyone who needs it.</p>
+
+    <p>You can do this from our website, browser extensions, <a href="/libraries">tools for libraries</a> or our <a href="/api">API</a>. Take your pick or <a href="/about">learn more.</a></p>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  jQuery(document).ready(function() {
+    if ( $(window).width() <= 800 ) $('#mainicon').css({height:'140px','margin-left':'20px'});
+    if (navigator.userAgent.match(/chrome/i) && !navigator.userAgent.match(/edge/i)) {
+      $('#getfromaccount').hide();
+      $('.chromeinstall').show();
+    }
+    $('#topnav').css('background-color','transparent');
+    var th;
+    $('.show').bind('click',function(e) {
+      e.preventDefault();
+      if (th === undefined) th = $('#topstrap').css('height');
+      if ( $('#'+$(this).attr('what')).is(':visible') ) {
+        $('#topstrap').css('height',th);
+        $('#'+$(this).attr('what')).hide();
+      } else {
+        $('.shower').hide();
+        $('#topstrap').css('height','');
+        $('#'+$(this).attr('what')).show();
+      }
+    });
+    if ( $(window).width() >= 1000 && ( $('#topstrap').offset().top + $('#topstrap').height() + $('#footer').height() < $(window).height() ) ) {
+      var height = $(window).height() - $('#footer').height() + 40;
+      $('#topstrap').css('height',height+'px');
+    }
+    var example = function(e) {
+      if (e) e.preventDefault();
+      if (th) $('#topstrap').css('height',th);
+      $('#url').val($(this).html()).trigger('keyup');
+      setTimeout(function() { $('#find').trigger('click'); }, 400);
+    }
+    $('.example').bind('click',example);
+    noddy.login();
+    var url = undefined;
+    var availability = function(e) {
+      if ($(this).attr('id') === 'find' || e === undefined || e.keyCode === 13) {
+        if (e && $(this).attr('id') === 'find') e.preventDefault();
+        url = $('#url').val().trim();
+        if (!url.length) {
+          $('#url').css('border-color','#f04717').focus();
+          return;
+        }
+        if (url.toLowerCase().indexOf('sciencedirect') !== -1) {
+          $('#url').val('');
+          $('#url').parent().after('<div class="well" id="sdsorry" style="margin-top:5px;"><p>Sorry, ScienceDirect URLs cannot be accessed via our website. You can use the DOI (which can be found on ScienceDirect articles) or our plugin.</p></div>');
+          setTimeout(function() { $('#sdsorry').remove(); }, 5000);
+          return;
+        }
+        if (url.toLowerCase().indexOf('researchgate') !== -1) {
+          $('#url').val('');
+          $('#url').parent().after('<div class="well" id="sdsorry" style="margin-top:5px;"><p>Sorry, ResearchGate URLs cannot be accessed via our website at the moment, we hope to fix this soon.</p></div>');
+          setTimeout(function() { $('#sdsorry').remove(); }, 5000);
+          return;
+        }
+        if (url.toLowerCase().indexOf('http') === -1 && url.indexOf('10.') === -1 && url.indexOf('/') === -1 && isNaN(parseInt(url.toLowerCase().replace('pmc',''))) && (url.length < 30 || url.replace(/\+/g,' ').split(' ').length < 3) ) {
+          $('#url').val('');
+          $('#url').parent().after('<div class="well" id="shortsorry" style="margin-top:5px;"><p>Sorry, we can\'t match titles/citations that are too short. Please provide a longer title or citation, or a suitable URL or identifier.</p></div>');
+          setTimeout(function() { $('#shortsorry').remove(); }, 5000);
+          return;
+        }
+        try {
+          window.history.pushState("", "find", window.location.search);
+          var change = function(state) {
+            if (state === null) {
+              $('#loading').hide();
+              $('#availability').hide();
+              $('#url').val('');
+              $('.intro').show();
+              $('#examples').hide();
+              $('#howitworks').hide();
+            } else {
+            }
+          }
+          $(window).on("popstate", function(e) {
+            change(e.originalEvent.state);
+          });
+        } catch(err) {}
+        if (url.lastIndexOf('.') === url.length-1) url = url.substring(0,url.length-1);
+        $('.intro').hide();
+        $('#loading').show();
+        var lurl = api+'/availability?plugin=website&'
+        if (window.location.search.indexOf('refresh=') !== -1) lurl += 'refresh=' + window.location.search.split('refresh=')[1].split('&')[0] + '&';
+        if (window.location.search.indexOf('from=') !== -1) lurl += 'from=' + window.location.search.split('from=')[1].split('&')[0] + '&';
+        if (window.location.search.indexOf('uid=') !== -1) lurl += 'uid=' + window.location.search.split('uid=')[1].split('&')[0] + '&';
+        lurl += 'url='+encodeURIComponent(url)
+        var opts = {
+          type:'GET',
+          url:lurl,
+          success: function(data) {
+            $('#loading').hide();
+            $('#availability').show();
+            var has = {};
+            if (data.data.availability.length > 0) {
+              for ( var a in data.data.availability ) {
+                has[data.data.availability[a].type] = {url:data.data.availability[a].url};
+              }
+            }
+            if (data.data.requests.length > 0) {
+              for ( var r in data.data.requests ) {
+                if (!has[data.data.requests[r].type]) has[data.data.requests[r].type] = {id:data.data.requests[r]._id,ucreated:data.data.requests[r].ucreated,usupport:data.data.requests[r].usupport};
+              }
+            }
+            if (JSON.stringify(has) === '{}') {
+              // find out if we have something from which a request can really be created
+              // if usable, try to create via the API then redirect to the created request
+              // if no title or author email a new extract will be triggered so this will be slow - so try to avoid that if possible
+              if (data.data.meta.article.title || data.data.meta.article.doi || data.data.meta.article.url) {
+                var dr = {};
+                try { dr.title = data.data.meta.article.title; } catch(err) {}
+                try { dr.doi = data.data.meta.article.doi; } catch(err) {}
+                try { dr.url = data.data.meta.article.url; } catch(err) {}
+                var opts = {
+                  type:'POST',
+                  url: api+'/request?fast=true',
+                  cache:false,
+                  processData:false,
+                  contentType: 'application/json',
+                  dataType: 'json',
+                  data: JSON.stringify(dr),
+                  success: function(resp) {
+                    window.location = '/request/' + resp.data._id;
+                  },
+                  error: function() {
+                    window.location = '/request?url=' + encodeURIComponent(url);
+                  }
+                }
+                try { if (noddy.apikey) opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", noddy.apikey); } } catch(err) {}
+                $.ajax(opts);
+              } else {
+                $('#availability').html('<p>Sorry, we couldn\'t find anything for <b>' + url + '</b>.</p><p>Matching titles and citations can be tricky. Please find a URL, DOI, PMID or PMCID and <a href="/">try again</a>.</p>');
+              }
+            } else if (has.article && !has.data) {
+              var availability = '';
+              if (has.article.id) {
+                availability += '<p style="color:#212f3f;padding-top:50px;">';
+                if (has.article.ucreated) {
+                  availability += 'You already created a request for this article <a class="btn btn-action" href="/request/' + has.article.id + '">View the request</a></p>';
+                } else if (has.article.usupport) {
+                  availability += 'You already support a request for this article <a class="btn btn-action" href="/request/' + has.article.id + '">View the request</a></p>';
+                } else {
+                  availability += 'Someone has requested access to the article <a class="btn btn-action" href="/request/' + has.article.id + '?support=true">Notify me</a></p>';
+                }
+              } else {
+                availability += '<h2 style="color:#212f3f;">This article is freely available!</h2>';
+                availability += '<p"><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + has.article.url + '</a></p>';
+                availability += '<p>Not what you were expecting? <a target="_blank" href ="/feedback#wrong?searched=' + encodeURIComponent(url) + '&given=' + encodeURIComponent(has.article.url) + '">Report an error</a>.</p>';
+                availability += '<p> You can <a href="/request?url=' + encodeURIComponent(url) + '">request it from the author</a> if it isn\'t available.</p>';
+      	      }
+              if (false) { // data disabled for now (window.location.search.indexOf('data=false') === -1) {
+                availability += '<p style="color:#212f3f;padding-top:50px;">';
+                availability += 'Want the data supporting the article? ';
+                availability += '<a class="btn btn-action" href="/request?type=data&url=' + encodeURIComponent(url) + '">Request it from the author</a></p>';
+              }
+              $('#availability').html(availability);
+            } else if (!has.article && has.data) {
+              var availability = '<h2 style="color:#212f3f;">This article is not available</h2>';
+              availability += '<h3 style="text-align:center;"><a class="btn btn-action" href="/request?url=' + encodeURIComponent(url) + '">Start a request</a></h3>';
+              if (window.location.search.indexOf('data=false') === -1) {
+                availability += '<p style="color:#212f3f;padding-top:50px;">';
+                if (has.data.id) {
+                  if (has.data.ucreated) {
+                    availability += 'You already created a request for data for this article <a class="btn btn-action" href="/request/' + has.data.id + '">View the request';
+                  } else if (has.data.usupport) {
+                    availability += 'You already support a request for data for this article <a class="btn btn-action" href="/request/' + has.data.id + '">View the request';
+                  } else {
+                    availability += 'Someone has requested access to the data. <a class="btn btn-action" href="/request/' + has.data.id + '?support=true">Notify me';
+                  }
+	              } else {
+                  availability += 'Someone has requested access to the data. <a class="btn btn-action" href="/request/' + has.data.id + '?support=true">Notify me';
+		            }
+		            availability += '</a></p>';
+              }
+              $('#availability').html(availability);
+            } else if (has.article && has.data) {
+              if (has.article.id && has.data.id) {
+                window.location = '/request/' + has.article.id;
+              } else {
+                var availability = '<h2 style="color:#212f3f;">';
+                if (has.article.url) {
+                  availability += 'This article is freely available!</h2>';
+                  availability += '<h><a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.article.url + '">' + has.article.url;
+                  availability += '<p>Not what you were expecting? <a target="_blank" href ="/feedback#wrong?searched=' + encodeURIComponent(url) + '&given=' + encodeURIComponent(has.article.url) + '">Report an error</a>.</p>';
+                  availability += '<p> You can <a href="/request?url=' + encodeURIComponent(url) + '">request it from the author</a> if it isn\'t available.</p>';
+		            }
+                if (has.article.id) {
+                  if (has.article.ucreated) {
+                    availability += 'You already created a request for this article <a class="btn btn-action" href="/request/' + has.article.id + '">View the request';
+                  } else if (has.article.usupport) {
+                    availability += 'You already support a request for this article <a class="btn btn-action" href="/request/' + has.article.id + '">View the request';
+                  } else {
+                    availability += 'Someone has requested access to the article. <a class="btn btn-action" href="/request/' + has.article.id + '?support=true">Notify me';
+                  }
+                }
+                availability += '</a></h3>';
+                if (window.location.search.indexOf('data=false') === -1) {
+                  availability += '<p style="color:#212f3f;text-align:center;padding-top:50px;">';
+                  if (has.data.url) {
+                    availability += 'And there is data available for this article:</p><p style="text-align:center;">';
+                    availability += '<a style="word-wrap:break-word;overflow-wrap:break-word;" target="_blank" href="' + has.data.url + '">' + has.data.url;
+                  }
+                  if (has.data.id) {
+                    if (has.data.ucreated) {
+                      availability += 'You already created a request for data for this article <a class="btn btn-action" href="/request/' + has.data.id + '">View the request';
+                    } else if (has.data.usupport) {
+                      availability += 'You already support a request for data for this article <a class="btn btn-action" href="/request/' + has.data.id + '">View the request';
+                    } else {
+                      availability += 'Someone has requested access to the data. <a class="btn btn-action" href="/request/' + has.data.id + '?support=true">Notify me';
+                    }
+                  }
+                  availability += '</a></p>';
+          	  	}
+          	  	$('#availability').html(availability);
+              }
+            }
+          },
+          error: function() {
+            $('#loading').hide();
+            $('#loading').after('<p>Sorry, something went wrong. <a href = "/feedback#bug">Can you let us know?</a></p>');
+          }
+        };
+        if (noddy.apikey) {
+          opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", noddy.apikey); };
+          opts.type = 'POST';
+          opts.url = api+'/availability';
+          opts.cache = false;
+          opts.processData = false;
+          opts.contentType = 'application/json';
+          opts.dataType = 'json';
+          var pq = {url:url,plugin:'website'}
+          if (window.location.search.indexOf('refresh=') !== -1) pq.refresh = window.location.search.split('refresh=')[1].split('&')[0];
+          if (window.location.search.indexOf('from=') !== -1) pq.from = window.location.search.split('from=')[1].split('&')[0];
+          if (window.location.search.indexOf('uid=') !== -1) pq.uid = window.location.search.split('uid=')[1].split('&')[0];
+          opts.data = JSON.stringify(pq);
+        }
+        $.ajax(opts);
+      } else {
+        if ( $('#url').val().length > 70 ) {
+          var ht = 30 * (Math.floor($('#url').val().length / 70)+1);
+          $('#url').css('min-height',ht+'px');
+          $('#find').css('min-height',ht+'px');
+        }
+      }
+    }
+    $('#url').bind('keyup',availability);
+    $('#find').bind('click',availability);
+    var id;
+    if (window.location.href.indexOf('url=') !== -1) id = decodeURIComponent(window.location.href.split('url=')[1].split('&')[0]);
+    if (window.location.href.indexOf('doi=') !== -1) id = decodeURIComponent(window.location.href.split('doi=')[1].split('&')[0]);
+    if (window.location.href.indexOf('pmid=') !== -1) id = decodeURIComponent(window.location.href.split('pmid=')[1].split('&')[0]);
+    if (window.location.href.indexOf('pmc=') !== -1) id = decodeURIComponent(window.location.href.split('pmc=')[1].split('&')[0]);
+    if (window.location.href.indexOf('pmcid=') !== -1) id = decodeURIComponent(window.location.href.split('pmcid=')[1].split('&')[0]);
+    if (window.location.href.indexOf('title=') !== -1) id = decodeURIComponent(window.location.href.split('title=')[1].split('&')[0]);
+    if (window.location.href.indexOf('citation=') !== -1) id = decodeURIComponent(window.location.href.split('citation=')[1].split('&')[0]);
+    if (window.location.href.indexOf('identifier=') !== -1) id = decodeURIComponent(window.location.href.split('identifier=')[1].split('&')[0]);
+    if (window.location.href.indexOf('ident=') !== -1) id = decodeURIComponent(window.location.href.split('ident=')[1].split('&')[0]);
+    if (window.location.href.replace('uid=','').indexOf('id=') !== -1) id = decodeURIComponent(window.location.href.replace('uid=','').split('id=')[1].split('&')[0]);
+    if (id) {
+      $('#url').val(id).trigger('keyup');
+      availability();
+    }
+  });
+</script>
