@@ -3,12 +3,30 @@
   
 .strapline {
   width: 100%;
+  max-width: 768px;
   text-align: center;
 }
 
 .glyphicon-download{
   color: #428bca;
-  font-size: 40px;
+  font-size: 47px;
+}
+.glyphicon-text{
+  display: flex; 
+  flex-direction: column; 
+  align-content: center;
+  text-align: left;
+  padding-left: 20px;
+}
+
+@media screen and (max-width: 450px){
+  #mainicon{
+    width: 100px;
+    height: auto;
+  }
+  h1{
+    font-size: 36px;
+  }
 }
 
 </style>
@@ -50,7 +68,7 @@
 
 
     <!-- new download bit -->
-    <div class="strapline">
+    <div class="strapline" style="padding: 20px 0">
       <div style="display: flex; justify-content: center;">
         <!-- icon -->
         <div>
@@ -60,8 +78,8 @@
         </div>
         
         <!-- text -->
-        <div style="display: flex; flex-direction: column; align-content: center;">
-          <p>Always have the button by your side, no account needed.</p>
+        <div class="glyphicon-text">
+          <p >Always have the button by your side, no account needed.</p>
           <a target="_blank" href="https://addons.mozilla.org/en-US/firefox/addon/openaccessbutton/">
             Get the Firefox browser extension, no sign up required.
           </a>
