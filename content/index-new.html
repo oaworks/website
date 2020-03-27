@@ -22,19 +22,24 @@
     text-align: left;
     padding-left: 20px;
   }
-    h1{
-      font-size:3em; 
-      margin: 0 0 0 20px; 
-      text-align: left;
-    }
+  h1{
+    font-size:3em; 
+    margin: 0 0 0 20px; 
+    text-align: left;
+  }
 
-    #topstrap{
-      height: 100%;
-    }
+  #topstrap{
+    height: 100%;
+    padding-top: 75px;
+  }
+
+  #middlestuff.div{
+    padding:20px 0;
+  }
 
   /*small phones*/
   @media screen and (max-width: 450px){
-    #mainicon{
+    .oabicon{
       width: 100px;
       height: auto;
     }
@@ -44,7 +49,13 @@
     #topstrap{
       height: 900px;
       background-size: cover;
+      padding-top: 0;
     }
+
+    #middlestuff > div{
+      padding:20px 0;
+    }
+
   }
 
 </style>
@@ -53,11 +64,11 @@
 
 <!-- the new one -->
 <div class="center-col quote">
-  <div class="strapline">
+  <div class="strapline" id="middlestuff">
 
      <!-- icon and head text -->
     <div style=" display: flex; justify-content:center;">
-      <img src="/static/icon_OAB.png" id="mainicon" alt="">
+      <img src="/static/icon_OAB.png" class="oabicon" alt="">
       <h1> Avoid <br> Paywalls, <br> Request <br> Research. </h1>
     </div>
 
