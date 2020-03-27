@@ -34,8 +34,16 @@
     margin-top: 0 !important;
   }
 
+  #middlestuff{
+    display: flex;
+  }
+
   #middlestuff.div{
     padding:20px 0;
+  }
+
+  #availability p{
+    padding: 10px 0;
   }
 
   /*small phones*/
@@ -67,7 +75,7 @@
 <div class="center-col quote">
   <div class="strapline" id="middlestuff">
 
-    <div class="intro" style="display: none;">
+    <div class="intro" style="">
        <!-- icon and head text -->
       <div style=" display: flex; justify-content:center;">
         <img src="/static/icon_OAB.png" class="oabicon" alt="">
@@ -115,7 +123,7 @@
     </div>
     
     <!-- search results -->
-    <div class="col-md-8 col-md-offset-2" id="availability" style="display:none;text-align:center;min-height:400px;">
+    <div id="availability">
     </div>
 
     <!-- loading -->
