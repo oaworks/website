@@ -48,6 +48,10 @@
     text-align: center;
   }
 
+  #loading p{
+    padding: 5px 0;
+  }
+
   /*small phones*/
   @media screen and (max-width: 450px){
     .oabicon{
@@ -129,7 +133,7 @@
     </div>
 
     <!-- loading -->
-    <div class="col-md-4 col-md-offset-4" id="loading" style="display:none;min-height:400px;">
+    <div id="loading" style="display:none;">
       <img id="loading" style="height:100%;width:100%;" src="/static/spin_orange.svg">
       <p style="text-align:center">Searching <a href="/about#sources" target="_blank">thousands of repositories for access</a>!</p><p style="text-align:center">Give us a moment.</p>
     </div>
