@@ -1,7 +1,14 @@
 <link rel="stylesheet" href="/static/oabutton_rebrand.css">
 <style type="text/css">
   
-
+.logo-container {
+    width: auto;
+    height: 100%;
+    background-image: url(/static/icon_OAB.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+}​
 
 </style>
 
@@ -14,10 +21,13 @@
 <div class="center-col quote">
   <div class="strapline">
 
-    <div style=" display: flex; align-content: center;">
-      <img src="/static/icon_OAB.png" id="mainicon" alt="">
+    <div style=" display: flex; justify-content:center;">
+      <div >
+      </div>
 
-      <h1> Avoid <br> Paywalls, <br> Request <br> Research. </h1>
+      <div class="logo-container"></div>
+
+      <h1 style="font-size:3em;"> Avoid <br> Paywalls, <br> Request <br> Research. </h1>
     </div>
 
 
@@ -31,12 +41,16 @@
       </div>
     </div>
 
-    <div class="strapline">
-      <a href="#" class="show btn btn-demo-blue" what="examples" style="text-decoration:underline;">Try it now</a>
+    <!-- try it now buttons -->
+    <div class="strapline" style="text-align: center;display: flex;flex-direction: column;align-items: center;">
+      <a href="#" class="show btn btn-demo-blue" what="examples" style="margin:5px;">Try it now</a>
 
-      <a href="#" class="show btn btn-hollow-blue" what="howitworks" style="text-decoration:underline;">How it works</a>
+      <a href="#" class="show btn btn-hollow-blue" what="howitworks" style="margin:5px;">How it works</a>
     </div>
 
+    <!-- that download link -->
+    <div id="getpluginsetc"></div>
+ 
   </div>
 </div>
 
