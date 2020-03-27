@@ -51,9 +51,9 @@ var preview = function(e,val) {
     if (typeof val !== 'string') {
       try {
         try {
-          if (uc.val) val = uc.val;
-        } catch(err) {
           val = $(this).attr('val');
+        } catch(err) {
+          if (uc && uc.val) val = uc.val;
         }
       } catch(err) {
         val = '10.1145/2908080.2908114';
