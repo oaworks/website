@@ -511,7 +511,7 @@ var _run = function() {
     _submit_deposit();
   }
 
-  var reviewemail = function(e) {
+  var reviewemail = function() {
     var doi = avail && avail.v2 && avail.v2.metadata && avail.v2.metadata.doi ? avail.v2.metadata.doi : '';
     var title = avail && avail.v2 && avail.v2.metadata && avail.v2.metadata.title ? avail.v2.metadata.title : (doi ? doi : 'Untitled paper');
     var journal = avail && avail.v2 && avail.v2.metadata && avail.v2.metadata.journal ? 'published in "' + avail.v2.metadata.journal + '"' : '';
@@ -528,7 +528,7 @@ var _run = function() {
     }
     body += 'Thank you for your attention and I look forward to hearing from you.';
     eml += encodeURIComponent(body);
-    $(this).attr('href',eml);
+    $('#oabutton_reviewemail').attr('href',eml);
 
     var info = '<div>';
     info += '<h2>You\'ve done your part</h2>';
@@ -537,7 +537,7 @@ var _run = function() {
     info += '</div>';
     $('#oabutton_availability').html(info);
   }
-  var permissionemail = function(e) {
+  var permissionemail = function() {
     var doi = avail && avail.v2 && avail.v2.metadata && avail.v2.metadata.doi ? avail.v2.metadata.doi : '';
     var title = avail && avail.v2 && avail.v2.metadata && avail.v2.metadata.title ? avail.v2.metadata.title : (doi ? doi : 'Untitled paper');
     var eml = 'mailto:' + (_oab_config.deposit_help ? _oab_config.deposit_help : cml) + '?subject=Permission%20Given%20to%20Deposit%20' + doi + '&body=';
@@ -547,7 +547,7 @@ var _run = function() {
     body += 'Can you please deposit it into the repository on my behalf? <br><br>';
     body += 'Sincerely, ';
     eml += encodeURIComponent(body);
-    $(this).attr('href',eml);
+    $('#oabutton_permissionemail').attr('href',eml);
   }
 
   var inform = function() {
@@ -689,6 +689,10 @@ var _run = function() {
       }
       $('#oabutton_inputs').hide();
       $('#oabutton_availability').html(info).show();
+      if ($('#oabutton_permissionemail').length) {
+        permissionemail();
+        reviewemail();
+      }
       if ($('#oabutton_getmore').length && (needmore || (cit && cit.length === 0))) getmore();
       if (_parameta.email && $('#oabutton_email').length) $('#oabutton_email').val(_parameta.email);//.trigger('keyup'); // should this just auto trigger as well?
     }
@@ -797,8 +801,6 @@ var _run = function() {
   $(_oab_opts.element).on('click','#oabutton_getmore',function(e) { e.preventDefault(); getmore(); });
   $(_oab_opts.element).on('click','#oabutton_filecorrect',function(e) { e.preventDefault(); filecorrect = true; _submit_deposit(); });
   $(_oab_opts.element).on('click','#oabutton_inform',function(e) { e.preventDefault(); inform(); });
-  $(_oab_opts.element).on('click','#oabutton_reviewemail',function(e) { reviewemail(); });
-  $(_oab_opts.element).on('click','#oabutton_permissionemail',function(e) { permissionemail(); });
 
   // could get custom _ops from the user config
   if (_oab_config.autorun !== true) {
