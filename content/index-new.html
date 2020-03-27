@@ -1,53 +1,64 @@
 <link rel="stylesheet" href="/static/oabutton_rebrand.css">
 <style type="text/css">
   
-.strapline {
-  width: 100%;
-  max-width: 680px;
-  text-align: center;
-}
+  #footer {
+    display: none;
+  }
 
-.glyphicon-download{
-  color: #428bca;
-  font-size: 47px;
-}
-.glyphicon-text{
-  display: flex; 
-  flex-direction: column; 
-  align-content: center;
-  text-align: left;
-  padding-left: 20px;
-}
-  h1{
-    font-size:3em; 
-    margin: 0 0 0 20px; 
+  .strapline {
+    width: 100%;
+    max-width: 680px;
+    text-align: center;
+  }
+
+  .glyphicon-download{
+    color: #428bca;
+    font-size: 47px;
+  }
+  .glyphicon-text{
+    display: flex; 
+    flex-direction: column; 
+    align-content: center;
     text-align: left;
+    padding-left: 20px;
   }
+    h1{
+      font-size:3em; 
+      margin: 0 0 0 20px; 
+      text-align: left;
+    }
 
-@media screen and (max-width: 450px){
-  #mainicon{
-    width: 100px;
-    height: auto;
+    #topstrap{
+      height: 100%;
+    }
+
+  /*small phones*/
+  @media screen and (max-width: 450px){
+    #mainicon{
+      width: 100px;
+      height: auto;
+    }
+    h1{
+      font-size: 36px;
+    }
+    #topstrap{
+      height: 900px;
+      background-size: cover;
+    }
   }
-  h1{
-    font-size: 36px;
-  }
-}
 
 </style>
 
 <div class="strap strap-compact" style="background-image:url(/static/book.jpg);background-color:transparent;min-height:500px;background-size:100% 100%;background-repeat:no-repeat;padding-top:10%;margin-top:-80px;" id="topstrap">
 
-  <!-- the new one -->
+<!-- the new one -->
 <div class="center-col quote">
   <div class="strapline">
 
+     <!-- icon and head text -->
     <div style=" display: flex; justify-content:center;">
-
       <img src="/static/icon_OAB.png" id="mainicon" alt="">
-
       <h1> Avoid <br> Paywalls, <br> Request <br> Research. </h1>
-
     </div>
 
 
@@ -92,14 +103,14 @@
 
 
 
-    
+
   </div>
 </div>
 
 
 </div>
 
-
+<!-- prompts in hidden boxes -->
 <div class="strap strap-white intro shower" id="examples" style="border-top:2px solid #212f3f;display:none;">
   <div class="container-fluid">
     <div class="row">
@@ -123,7 +134,7 @@
   </div>
 </div>
 
-
+<!-- prompts in hidden boxes -->
 <div class="strap strap-white intro shower" id="howitworks" style="border-top:2px solid #212f3f;display:none;">
   <div class="container-fluid">
     <div class="row">
@@ -140,6 +151,24 @@
     </div>
   </div>
 </div>
+
+<!-- footer -->
+<div class="dark-bg">
+  <div class="center-col footer">
+    <div>
+      <p>Proudly non-profit • <a href="https://github.com/oabutton">Open source</a> • Library-aligned</p>
+    </div>
+    <div  style="padding: 5px 0; align-self: flex-end;">
+      <span><a href="/about">About</a></span>
+      <span><a href="/request">Requests</a></span>
+      <span><a href="/api">API</a></span>
+      <span><a href="/feedback#bug">Bugs</a></span>
+      <span><a href="https://twitter.com/OA_Button">Twitter</a></span>
+      <span><a href="/account">Account</a></span>
+    </div>
+  </div>
+</div>
+
 
 <!-- javascript -->
 <script>
