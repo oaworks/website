@@ -18,7 +18,7 @@ _deposits = (params,uid,deposited,csv) ->
   delete params.uid if params.uid?
   params.size ?= 10000
   params.sort ?= 'createdAt:asc'
-  fields = if csv then [] else ['metadata','permissions.permissions','permissions.ricks','permissions.file','deposit','url']
+  fields = ['metadata','permissions.permissions','permissions.ricks','permissions.file','deposit','url']
   if params.fields
     fields = params.fields.split ','
     delete params.fields
@@ -26,12 +26,15 @@ _deposits = (params,uid,deposited,csv) ->
   re = []
   for r in res.hits.hits
     dr = r._source
+    if csv and dr.metadata?.author?
+      for a of dr.metadata.author
+        dr.metadata.author[a] = if dr.metadata.author[a].name then dr.metadata.author[a].name else if dr.metadata.author[a].given and dr.metadata.author[a].family then dr.metadata.author[a].given + ' ' + dr.metadata.author[a].family else ''
     for d in dr.deposit
       if ((not uid? and not params.uid?) or d.from is params.uid or d.from is uid) and (not deposited or d.zenodo?.file?)
-        red = if csv then {doi: dr.metadata.doi, title: dr.metadata.title, type: d.type, createdAt: d.createdAt} else {}
+        red = {doi: dr.metadata.doi, title: dr.metadata.title, type: d.type, createdAt: d.createdAt}
         already = false
         if deposited
-          red.file = d.zenodo.file if csv
+          red.file = d.zenodo.file
           for ad in re
             if ad.doi is red.doi and ad.file is red.file
               already = true
@@ -49,6 +52,9 @@ _deposits = (params,uid,deposited,csv) ->
   if 'deposit.createdAt' not in fields
     for dr in re
       delete dr.createdAt
+  if csv
+    for f of re
+      re[f] = API.collection.flatten re[f]
   return re
 
 API.add 'service/oab/deposits',

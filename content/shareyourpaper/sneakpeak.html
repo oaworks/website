@@ -187,36 +187,44 @@ jQuery(document).ready(function() {
   shareyourpaper({uid:"4WDY6njiatg3FZMJm",api:"https://dev.api.cottagelabs.com/service/oab",config:{"depositdate":"","repo_name":"Zenodo","deposit_terms":"","allow_oa_deposit":true,"ROR_ID":"","high_performance":true,"live":true,"pilot":false,"activate_try_it_and_learn_more":false,"not_a_library":true}});
 
   var evadd = true;
-  $(document).ajaxComplete(function(e,xhr) {
-    if ( $('#nodoi').length ) {
-      var rep = 'Try an example <a href="#" id="runexample"><u>10.1126/scitranslmed.3008973</u></a> or <a href="#" class="learnmore"><u>learn more</u></a>.';
-      $('#nodoi').replaceWith(rep);
-      $('#runexample').on('click',function(e) { e.preventDefault(); $('#oabutton_input').val('10.1126/scitranslmed.3008973'); $('#oabutton_find').trigger('click'); });
-      $('.learnmore').on('click',function(e) {
-        e.preventDefault();
-        $('#shareyourpaper').toggle();
-        $('#about').toggle();
-        if (evadd) {
-          evadd = false;
-          window.addEventListener("popstate", function(popevent) {
-            if (window.location.hash.indexOf('about') === -1 && $('#about').is(':visible')) {
-              $('#shareyourpaper').toggle();
-              $('#about').toggle();
-            }
-          });
-        }
-        if ('pushState' in window.history) {
-          if ($('#about').is(':visible')) {
-            window.history.pushState("", "about", '#about');
-          } else {
-            window.history.pushState("", document.title, window.location.pathname);
+
+  var learnmore = function() {
+    var rep = 'Try an example <a href="#" id="runexample"><u>10.1126/scitranslmed.3008973</u></a> or <a href="#" class="learnmore"><u>learn more</u></a>.';
+    $('#nodoi').replaceWith(rep);
+    $('#runexample').on('click',function(e) { e.preventDefault(); $('#oabutton_input').val('10.1126/scitranslmed.3008973'); $('#oabutton_find').trigger('click'); });
+    $('.learnmore').on('click',function(e) {
+      e.preventDefault();
+      $('#shareyourpaper').toggle();
+      $('#about').toggle();
+      if (evadd) {
+        evadd = false;
+        window.addEventListener("popstate", function(popevent) {
+          if (window.location.hash.indexOf('about') === -1 && $('#about').is(':visible')) {
+            $('#shareyourpaper').toggle();
+            $('#about').toggle();
           }
+        });
+      }
+      if ('pushState' in window.history) {
+        if ($('#about').is(':visible')) {
+          window.history.pushState("", "about", '#about');
+        } else {
+          window.history.pushState("", document.title, window.location.pathname);
         }
-      });
+      }
+    });
+  }
+  
+  var waiting = function(selector, callback) {
+    if ($(selector).length) {
+      callback();
+    } else {
+      setTimeout(function() {
+        waiting(selector, callback);
+      }, 300);
     }
-  });
-
-
+  };
+  waiting('#nodoi', learnmore);
 
 });
 </script>
