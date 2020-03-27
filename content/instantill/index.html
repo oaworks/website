@@ -2,6 +2,10 @@
   <title>InstantILL</title>
   <link rel="stylesheet" href="/static/oabutton_rebrand.css"> <!-- gets the new css (still also uses the old css, just overwrites where necessary) -->
   <meta name="description" content="InstantILL instantly delivers papers your patrons need from your holdings, Open Access and simplifies your ILL process to save you and your patrons money and time. It’s free, open source, community owned and easily set up in minutes." />
+
+  <script src="/static/instantill.js"></script>
+  <script src="/static/instantill_ui.js"></script>
+
 </head>
 
 <style>
@@ -597,8 +601,6 @@ That way the view will change, the preview will run, and if the preview is not v
 into the view you have changed to.
 -->
 
-<script src="/static/instantill.js"></script>
-
 <script>
 jQuery(document).ready(function() {
   $('#topnav').remove();
@@ -606,7 +608,6 @@ jQuery(document).ready(function() {
 });
 </script>
 <!-- mark+instantilldemo@cottagelabs.com is the email for the demo account on dev. Joe has access to this. -->
-<script src="/static/instantill_ui.js"></script>
 <script>
 jQuery(document).ready(function() {
   instantill({uid:(api.indexOf('dev.') !== -1 ? 'qZooaHWRz9NLFNcgR' : 'eZwJ83xp3oZDaec86'), api:api, css: false}); // change this uid to the demo account uid once it has been created
