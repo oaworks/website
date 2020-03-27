@@ -50,9 +50,9 @@ var preview = function(e,val) {
   if (!$(this).hasClass('save')) {
     if (typeof val !== 'string') {
       if (uc && uc.val) {
-        val = uc.val;
-      } else {
         val = $(this).attr('val');
+      } else {
+        if (uc && uc.val) val = uc.val;
       }
     }
     if (typeof val !== 'string' || val.length < 10) val = '10.1234/oab-syp-aam';

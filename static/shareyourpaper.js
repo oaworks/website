@@ -511,25 +511,7 @@ var _run = function() {
     _submit_deposit();
   }
 
-  var reviewemail = function() {
-    var doi = avail && avail.v2 && avail.v2.metadata && avail.v2.metadata.doi ? avail.v2.metadata.doi : '';
-    var title = avail && avail.v2 && avail.v2.metadata && avail.v2.metadata.title ? avail.v2.metadata.title : (doi ? doi : 'Untitled paper');
-    var journal = avail && avail.v2 && avail.v2.metadata && avail.v2.metadata.journal ? 'published in "' + avail.v2.metadata.journal + '"' : '';
-    var eml = 'mailto:' + (_oab_config.deposit_help ? _oab_config.deposit_help : cml) + '?subject=Request%20to%20self%20archive%20' + doi + '&body=';
-    var body = 'To whom it may concern,<br><br>';
-    body += 'I am writing to request permission to deposit the full text of my paper "<a href="https://doi.org/' + doi + '">' + title + '</a>" ' + journal + '<br><br>';
-    body += 'I would like to archive the final pdf. If that is not possible, I would like to archive the accepted manuscript. Ideally, I would like to do so immediately but will respect a reasonable embargo if requested.<br><br>'
-    if (_oab_config.repo_name) {
-      body += 'I plan to deposit it into "';
-      if (_oab_config.repo_link) body += '<a href="' + _oab_config.repo_link + '">';
-      body += _oab_config.repo_name;
-      if (_oab_config.repo_link) body += '</a>"';
-      body += ', a not-for-profit, digital, publicly accessible repository for scholarly work created for researchers at <<Institution name>>. It helps make research available to a wider audience, get citations for the original article, and assure its long-term preservation. The deposit will include a complete citation of the published version, and a link to it.<br><br>';
-    }
-    body += 'Thank you for your attention and I look forward to hearing from you.';
-    eml += encodeURIComponent(body);
-    $('#oabutton_reviewemail').attr('href',eml);
-
+  var clickreviewemail = function() {
     var info = '<div>';
     info += '<h2>You\'ve done your part</h2>';
     info += '<p>All that\'s left to do is wait. Once the journal gives you permission to share, come back and we\'ll help you finish the job.</p>';
@@ -537,14 +519,35 @@ var _run = function() {
     info += '</div>';
     $('#oabutton_availability').html(info);
   }
+  var reviewemail = function() {
+    if (cml === undefined) cml = _oab_config.problem_email ? _oab_config.problem_email : (_oab_config.email ? _oab_config.email : (_oab_config.adminemail ? _oab_config.adminemail : undefined));
+    var doi = avail && avail.v2 && avail.v2.metadata && avail.v2.metadata.doi ? avail.v2.metadata.doi : '';
+    var title = avail && avail.v2 && avail.v2.metadata && avail.v2.metadata.title ? avail.v2.metadata.title : (doi ? doi : 'Untitled paper');
+    var journal = avail && avail.v2 && avail.v2.metadata && avail.v2.metadata.journal ? 'published in "' + avail.v2.metadata.journal + '"' : '';
+    var eml = 'mailto:' + (_oab_config.deposit_help ? _oab_config.deposit_help : cml) + '?subject=Request%20to%20self%20archive%20' + doi + '&body=';
+    var body = 'To whom it may concern,\n\n';
+    body += 'I am writing to request permission to deposit the full text of my paper "<a href="https://doi.org/' + doi + '">' + title + '</a>" ' + journal + '\n\n';
+    body += 'I would like to archive the final pdf. If that is not possible, I would like to archive the accepted manuscript. Ideally, I would like to do so immediately but will respect a reasonable embargo if requested.\n\n'
+    if (_oab_config.repo_name) {
+      body += 'I plan to deposit it into "';
+      if (_oab_config.repo_link) body += '<a href="' + _oab_config.repo_link + '">';
+      body += _oab_config.repo_name;
+      if (_oab_config.repo_link) body += '</a>';
+      body += '", a not-for-profit, digital, publicly accessible repository for scholarly work created for researchers ' + (_oab_config.institution_name ? 'at ' + _oab_config.institution_name : '') + '. It helps make research available to a wider audience, get citations for the original article, and assure its long-term preservation. The deposit will include a complete citation of the published version, and a link to it.\n\n';
+    }
+    body += 'Thank you for your attention and I look forward to hearing from you.';
+    eml += encodeURIComponent(body);
+    $('#oabutton_reviewemail').attr('href',eml);
+  }
   var permissionemail = function() {
+    if (cml === undefined) cml = _oab_config.problem_email ? _oab_config.problem_email : (_oab_config.email ? _oab_config.email : (_oab_config.adminemail ? _oab_config.adminemail : undefined));
     var doi = avail && avail.v2 && avail.v2.metadata && avail.v2.metadata.doi ? avail.v2.metadata.doi : '';
     var title = avail && avail.v2 && avail.v2.metadata && avail.v2.metadata.title ? avail.v2.metadata.title : (doi ? doi : 'Untitled paper');
     var eml = 'mailto:' + (_oab_config.deposit_help ? _oab_config.deposit_help : cml) + '?subject=Permission%20Given%20to%20Deposit%20' + doi + '&body=';
-    var body = 'To whom it may concern,<br><br>';
-    body += 'Attached is written confirmation of permission I\'ve been given to deposit, and the permitted version of my paper: <br><br>';
-    body += '<a href="https://doi.org/' + doi + '">' + title + '</a> <br><br>';
-    body += 'Can you please deposit it into the repository on my behalf? <br><br>';
+    var body = 'To whom it may concern,\n\n';
+    body += 'Attached is written confirmation of permission I\'ve been given to deposit, and the permitted version of my paper: \n\n';
+    body += '<a href="https://doi.org/' + doi + '">' + title + '</a> \n\n';
+    body += 'Can you please deposit it into the repository on my behalf? \n\n';
     body += 'Sincerely, ';
     eml += encodeURIComponent(body);
     $('#oabutton_permissionemail').attr('href',eml);
@@ -801,6 +804,7 @@ var _run = function() {
   $(_oab_opts.element).on('click','#oabutton_getmore',function(e) { e.preventDefault(); getmore(); });
   $(_oab_opts.element).on('click','#oabutton_filecorrect',function(e) { e.preventDefault(); filecorrect = true; _submit_deposit(); });
   $(_oab_opts.element).on('click','#oabutton_inform',function(e) { e.preventDefault(); inform(); });
+  $(_oab_opts.element).on('click','#oabutton_reviewemail',function(e) { clickreviewemail(); });
 
   // could get custom _ops from the user config
   if (_oab_config.autorun !== true) {
