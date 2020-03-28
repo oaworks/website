@@ -1,66 +1,272 @@
-<div class="strap strap-compact" style="background-image:url(/static/book.jpg);background-color:transparent;min-height:500px;background-size:100% 100%;background-repeat:no-repeat;padding-top:10%;margin-top:-80px;" id="topstrap">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-8 col-md-offset-2 intro">
-        <!--<div class="alert alert-info hidden-xs hidden-sm" id="release" style="margin-top:-80px;">
-          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-          <p>Welcome to our improved site!<br>If you have any feedback or notice an issue, <a href="/feedback#general">let us know</a></p>
-        </div>-->
-        <div class="row">
-          <div class="col-xs-12 visible-xs" style="height:60px;"></div>
-          <div class="col-md-3 col-md-offset-2 col-xs-5">
-            <img src="/static/icon_OAB.png" id="mainicon" alt="">
-          </div>
-          <div class="col-md-7 col-xs-7">
-            <h1 style="font-size:3em;margin-top:5px;" class="hidden-xs hidden-sm">Avoid<br>Paywalls,<br> Request<br>Research.</h1>
-            <h1 style="font-size:2em;margin-top:5px;" class="visible-xs visible-sm">Avoid<br>Paywalls,<br> Request<br>Research.</h1>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <h3 style="font-size:1.3em;">Free, legal research articles delivered instantly or automatically requested from authors.</h3>
-          </div>
-        </div>
-        <div class="input-group">
-          <textarea id="url" class="form-control" style="min-height:40px;height:40px;font-size:1.1em;" placeholder="Enter an article URL, DOI, PMID, PMC ID, Title, or Citation" aria-label="Enter an article URL, DOI, PMID, PMC ID, Title, or Citation to find an Open Access article"></textarea>
-          <div class="input-group-btn">
-            <a class="btn btn-action btn-block" href="#" id="find" style="min-height:40px;height:40px;font-size:1.1em;padding:7px 10px 5px 10px;" aria-label="search"><i class="glyphicon glyphicon-search"></i></a>
-          </div>
-        </div>
-        <div class="row">
-          <!--
-          <div class="col-md-4" style="text-align:center;">
-            <a id="getfromaccount" style="text-decoration:underline;" href="/account">Get the extension</a>
-            <a style="text-decoration:underline;display:none;" class="chromeinstall" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">Get the extension</a>
-          </div>
-        -->
-          <div class="col-md-6" style="text-align:center;">
-            <a href="#" class="show" what="examples" style="text-decoration:underline;">Try it now</a>
-          </div>
-          <div class="col-md-6" style="text-align:center;">
-            <a href="#" class="show" what="howitworks" style="text-decoration:underline;">How it works</a>
-          </div>
-        </div>
+<head>
+  <!-- Primary Meta Tags -->
+<title>Open Access Button</title>
+<meta name="title" content="Open Access Button">
+<meta name="description" content="Free, legal research articles delivered instantly or automatically requested from authors.">
 
-        <div id="getpluginsetc"></div>
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="/">
+<meta property="og:title" content="Open Access Button">
+<meta property="og:description" content="Free, legal research articles delivered instantly or automatically requested from authors.">
+<meta property="og:image" content="/static/twitter-paste.png">
+<meta property="og:image:width" content="1000">
+<meta property="og:image:height" content="500">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:secure_url" content="/static/twitter-paste.png">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="/">
+<meta property="twitter:title" content="Open Access Button">
+<meta property="twitter:description" content="Free, legal research articles delivered instantly or automatically requested from authors.">
+<meta property="twitter:image" content="/static/twitter-paste.png">
+
+  <!-- chrome install -->
+    <div class="strapline" id ="install_chrome" style="padding: 25px 0; display: none;">
+        <div style="display: flex; justify-content: center;">
+          <!-- icon -->
+          <div>
+            <a target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">
+              <i class="glyphicon glyphicon-download" role="”none”"></i>
+            </a>
+          </div>
+
+          <!-- text -->
+          <div class="glyphicon-text">
+            <p style="padding: 0; margin: 0">Always have the button by your side, no account needed.</p>
+            <a target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">
+              Get the Chrome browser extension, no sign up required.
+            </a>
+          </div>
+        </div>
       </div>
 
-      <div class="col-md-8 col-md-offset-2" id="availability" style="display:none;text-align:center;min-height:400px;">
-      </div>
+  <!-- firefox install -->
+    <div class="strapline" id ="install_firefox" style="padding: 25px 0; display: none;">
+      <div style="display: flex; justify-content: center;">
+        <!-- icon -->
+        <div>
+          <a target="_blank" href="https://addons.mozilla.org/en-US/firefox/addon/openaccessbutton/">
+            <i class="glyphicon glyphicon-download" role="”none”"></i>
+          </a>
+        </div>
 
-      <div class="col-md-4 col-md-offset-4" id="loading" style="display:none;min-height:400px;">
-        <img id="loading" style="height:100%;width:100%;" src="/static/spin_orange.svg">
-        <p style="text-align:center">Searching <a href="/about#sources" target="_blank">thousands of repositories for access</a>!</p><p style="text-align:center">Give us a moment.</p>
+        <!-- text -->
+        <div class="glyphicon-text">
+          <p style="padding: 0; margin: 0">Always have the button by your side, no account needed.</p>
+          <a target="_blank" href="https://addons.mozilla.org/en-US/firefox/addon/openaccessbutton/">
+            Get the Firefox browser extension, no sign up required.
+          </a>
+        </div>
       </div>
     </div>
+
+  <!-- bookmark install -->
+   <div class="strapline" id ="install_bookmarklet" style="padding: 25px 0; display: none;">
+      <div style="display: flex; justify-content: center;">
+        <!-- icon -->
+        <div>
+          <a target="_blank" href="#">
+            <i class="glyphicon glyphicon-download" role="”none”"></i>
+          </a>
+        </div>
+
+        <!-- text -->
+        <div class="glyphicon-text">
+          <p style="padding: 0; margin: 0">Always have the button by your side, no account needed.</p>
+          <a target="_blank" href="#">Get the browser bookmarklet</a>
+        </div>
+      </div>
+    </div>
+
+  <!-- safari install -->
+    <div class="modal fade" id="install_bookmarklet_safari" tabindex="-1" role="dialog" aria-labelledby="alphaLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="alphaLabel">Getting Started on Safari</h4>
+          </div>
+          <div class="modal-body">
+            <p>
+              <a class="btn btn-action btn-block" style="width:50%; text-align:center" href="javascript:document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','{{site_url}}/static/bookmarklet/includer.js?r='+Math.random());" style="background-color:#ccc;padding:5px;border-radius:3px;">Open Access Button</a>
+            </p>
+            <ol>
+            <li> Make sure your bookmarks bar is showing. If not, you can click View, and select "Show Bookmarks Bar."</li>
+            <li> Drag the Button above to your bookmarks bar.</li>
+            <img src = "/static/safari_install.gif" style = "width: 100%;border:1px solid #212f3f;margin:10px;" >
+            <li> If there is a pop-up, click yes.</li>
+            <li> You're done! The Button is ready to click when you next need it.</li>
+            <li> <a href="/instructions">Give the button a try, or read the instructions</a></li>
+            </ol>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+</head>
+
+<link rel="stylesheet" href="/static/oabutton_rebrand.css">
+<style type="text/css">
+
+  body{
+    background-image: url(/static/book.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    /*min-height: 0px !important;*/
+  }
+/*
+  .center-col{
+    min-height: 90%;
+  }*/
+  body{
+    min-height: 100vh;
+  }
+
+  #footer {
+    display: none;
+  }
+
+  .strapline {
+    width: 100%;
+    max-width: 680px;
+    text-align: center;
+  }
+
+  .glyphicon-download{
+    color: #428bca;
+    font-size: 47px;
+  }
+  .glyphicon-text{
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    text-align: left;
+    padding-left: 20px;
+  }
+  h1{
+    font-size:3em;
+    margin: 0 0 0 20px;
+    text-align: left;
+  }
+
+  #topstrap{
+    height: 80px !important;
+    background-image: none !important;
+    min-height: 80px !important;
+    padding-top: 75px !important;
+    margin-top: 0 !important;
+  }
+
+  #middlestuff{
+    display: flex;
+    justify-content: center;
+  }
+
+  #middlestuff.div{
+    padding:20px 0;
+  }
+
+  #getpluginsetc{
+    padding:0 10px 90px 10px;
+  }
+
+  #availability .btn{
+    margin-top: 25px;
+  }
+
+  #availability p{
+    padding: 5px 0;
+    text-align: center;
+  }
+
+  #loading p{
+    padding: 5px 0;
+  }
+
+  #topstrap{
+    height: 900px;
+    background-size: cover !important;
+    padding-top: 0 !important;
+  }
+
+  /*small phones*/
+  @media screen and (max-width: 450px){
+    .oabicon{
+      width: 100px;
+      height: auto;
+    }
+    h1{
+      font-size: 36px;
+    }
+
+
+    #middlestuff > div{
+      padding:10px 0;
+    }
+
+  }
+
+</style>
+
+<!-- the weird header -->
+<div class="strap strap-compact" style="background-image:url(/static/book.jpg);background-color:transparent;min-height:500px;background-size:100% 100%;background-repeat:no-repeat;padding-top:10%;margin-top:-80px;" id="topstrap">
+</div>
+
+<!-- the new content -->
+<div class="center-col quote" style="padding: 30px 5px 0 5px; min-height: 62vh">
+  <div class="strapline" id="middlestuff">
+
+    <div class="intro">
+       <!-- icon and head text -->
+      <div style=" display: flex; justify-content:center;">
+        <img src="/static/icon_OAB.png" class="oabicon" alt="">
+        <h1> Avoid <br> Paywalls, <br> Request <br> Research. </h1>
+      </div>
+
+      <h3>Free, legal research articles delivered instantly or automatically requested from authors.</h3>
+
+      <!-- search box -->
+      <div class="input-group" style="margin: 25px 0;">
+        <textarea id="url" class="form-control" style="min-height:40px;height:40px;font-size:1.1em;" placeholder="Enter an article URL, DOI, PMID, PMC ID, Title, or Citation" aria-label="Enter an article URL, DOI, PMID, PMC ID, Title, or Citation to find an Open Access article"></textarea>
+        <div class="input-group-btn">
+          <a class="btn btn-action btn-block" href="#" id="find" style="min-height:40px;height:40px;font-size:1.1em;padding:7px 10px 5px 10px;" aria-label="search"><i class="glyphicon glyphicon-search"></i></a>
+        </div>
+      </div>
+
+      <!-- try it now buttons -->
+      <div class="strapline" style="text-align: center;display: flex;flex-direction: column;align-items: center; padding-bottom: 30px">
+        <a href="#" class="show btn btn-demo-blue" what="examples" style="margin:5px;">Try it now</a>
+
+        <a href="#" class="show btn btn-hollow-blue" what="howitworks" style="margin:5px;">How it works</a>
+      </div>
+
+    </div>
+
+    <!-- search results -->
+    <div id="availability">
+    </div>
+
+    <!-- loading -->
+    <div id="loading" style="display:none;">
+      <img id="loading" style="height:100%;width:100%;" src="/static/spin_orange.svg">
+      <p style="text-align:center">Searching <a href="/about#sources" target="_blank">thousands of repositories for access</a>!</p><p style="text-align:center">Give us a moment.</p>
+    </div>
+
   </div>
 </div>
 
+<!-- prompts in hidden boxes -->
 <div class="strap strap-white intro shower" id="examples" style="border-top:2px solid #212f3f;display:none;">
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-8 col-md-offset-2" style="font-size:1.2em;">
-<h1>Examples</h1>
+        <h1>Examples</h1>
         <p>
           Get around this paywall in a flash:<br><br>
           DOI: <a class="example" href="#">10.1126/science.196.4287.293</a><br>
@@ -78,6 +284,8 @@
     </div>
   </div>
 </div>
+
+<!-- prompts in hidden boxes -->
 <div class="strap strap-white intro shower" id="howitworks" style="border-top:2px solid #212f3f;display:none;">
   <div class="container-fluid">
     <div class="row">
@@ -95,7 +303,29 @@
   </div>
 </div>
 
+<!-- old download bit -->
+<div id="getpluginsetc"></div>
 
+
+<!-- footer -->
+<div class="dark-bg">
+  <div class="center-col footer">
+    <div>
+      <p>Proudly non-profit • <a href="https://github.com/oabutton">Open source</a> • Library-aligned</p>
+    </div>
+    <div>
+      <span><a href="/about">About</a></span>
+      <span><a href="/request">Requests</a></span>
+      <span><a href="/api">API</a></span>
+      <span><a href="/feedback#bug">Bugs</a></span>
+      <span><a href="https://twitter.com/OA_Button">Twitter</a></span>
+      <span><a href="/account">Account</a></span>
+    </div>
+  </div>
+</div>
+
+
+<!-- javascript -->
 <script>
   jQuery(document).ready(function() {
     if ( $(window).width() <= 800 ) $('#mainicon').css({height:'140px','margin-left':'20px'});
