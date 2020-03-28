@@ -49,11 +49,10 @@ var preview = function(e,val) {
   // do nothing if called with a save class, as the save will catch it and pass it on
   if (!$(this).hasClass('save')) {
     if (typeof val !== 'string') {
-      if (uc && uc.val) {
+      try {
         val = $(this).attr('val');
-      } else {
-        if (uc && uc.val) val = uc.val;
-      }
+        if (!val && uc && uc.val) val = uc.val;
+      } catch(err) {}
     }
     if (typeof val !== 'string' || val.length < 10) val = '10.1234/oab-syp-aam';
     if ($(this).hasClass('view')) {
