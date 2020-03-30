@@ -503,7 +503,7 @@ API.service.oab.find = (options={}, metadata={}, content) ->
       metadata.url.push(cu) if cu not in metadata.url
   metadata.url.push(options.url) if options.url? and options.url not in metadata.url
   metadata.url.push(res.url) if res.url? and res.url not in metadata.url
-  res.permissions ?= API.service.oab.permissions(metadata) if options.permissions and not _.isEmpty(metadata)
+  res.permissions ?= API.service.oab.permissions(metadata,undefined,undefined,undefined,options.from) if options.permissions and not _.isEmpty(metadata)
   res.test = true if JSON.stringify(metadata).toLowerCase().replace(/'/g,' ').replace(/"/g,' ').indexOf(' test ') isnt -1 #or (options.embedded? and options.embedded.indexOf('openaccessbutton.org') isnt -1)
   res.metadata = metadata
   

@@ -4,13 +4,13 @@ import moment from 'moment'
 
 API.add 'service/oab/permissions',
   get: () ->
-    return API.service.oab.permissions this.queryParams, this.queryParams.content, this.queryParams.url, this.queryParams.confirmed
+    return API.service.oab.permissions this.queryParams, this.queryParams.content, this.queryParams.url, this.queryParams.confirmed, this.queryParams.uid
   post: () ->
     return API.service.oab.permissions this.queryParams, this.request.files ? this.request.body, undefined, this.queryParams.confirmed ? this.bodyParams?.confirmed
 
 API.add 'service/oab/permissions/:doi/:doi2', get: () -> return API.service.oab.permissions doi: this.urlParams.doi + '/' + this.urlParams.doi2
 
-API.service.oab.permissions = (meta={}, file, url, confirmed) ->
+API.service.oab.permissions = (meta={}, file, url, confirmed, uid) ->
   # example files / URLs
   # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3206455
   # https://static.cottagelabs.com/obstm.pdf
@@ -76,7 +76,10 @@ API.service.oab.permissions = (meta={}, file, url, confirmed) ->
       if cached and typeof cached is 'object' and cached.application?
         perms.ricks = cached
       else
-        perms.ricks = HTTP.call('GET','https://api.greenoait.org/permissions/doi/' + meta.doi).data.authoritative_permission
+        ru = 'https://api.greenoait.org/permissions/doi/' + meta.doi
+        if uid and uc = API.service.deposit.config(uid)
+          ru += '?affiliation=' + uc.ROR_ID if uc.ROR_ID
+        perms.ricks = HTTP.call('GET',ru).data.authoritative_permission
         try API.http.cache(meta.doi, 'ricks_permissions', perms.ricks) if perms.ricks?.application?
       perms.permissions.archiving_allowed = perms.ricks?.application?.can_archive_conditions?.versions_archivable? and ('postprint' in perms.ricks.application.can_archive_conditions.versions_archivable or 'publisher pdf' in perms.ricks.application.can_archive_conditions.versions_archivable)
       perms.permissions.required_statement = perms.ricks.application.can_archive_conditions.deposit_statement_required_calculated if typeof perms.ricks?.application?.can_archive_conditions?.deposit_statement_required_calculated is 'string' and perms.ricks.application.can_archive_conditions.deposit_statement_required_calculated.indexOf('cc-') isnt 0

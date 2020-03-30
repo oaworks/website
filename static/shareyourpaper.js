@@ -526,7 +526,7 @@ var _run = function() {
     if (cml === undefined) cml = _oab_config.problem_email ? _oab_config.problem_email : (_oab_config.email ? _oab_config.email : (_oab_config.adminemail ? _oab_config.adminemail : undefined));
     var mt, cc;
     try { 
-      mt = avail.v2.permissions.ricks.application.can_archive_conditions.permission_required.contact;
+      mt = avail.v2.permissions.ricks.application.can_archive_conditions.permission_required_contact;
       cc = _oab_config.deposit_help ? _oab_config.deposit_help : cml;
     } catch (err) {
       mt = _oab_config.deposit_help ? _oab_config.deposit_help : cml;
@@ -556,7 +556,7 @@ var _run = function() {
     var title = avail && avail.v2 && avail.v2.metadata && avail.v2.metadata.title ? avail.v2.metadata.title : (doi ? doi : 'Untitled paper');
     var eml = 'mailto:' + (_oab_config.deposit_help ? _oab_config.deposit_help : cml) + '?subject=Permission%20Given%20to%20Deposit%20' + doi + '&body=';
     var body = 'To whom it may concern,\n\n';
-    body += 'Attached is written confirmation of permission I\'ve been given to deposit, and the permitted version of my paper: \n\n';
+    body += 'Attached is written confirmation of permission I\'ve been given to deposit, and the permitted version of my paper: ';
     body += '"' + title + '" \n\n';
     body += 'Can you please deposit it into the repository on my behalf? \n\n';
     body += 'Sincerely, ';

@@ -422,7 +422,7 @@
           <p><input id="val" type="text" class="form-control setting green" placeholder="e.g 10.1234/567890"></p>
         </div>
         <div class="greenbottom">
-          <p><a class="btn btn-hollow-green save pull preview" href="#">Preview & Test</a></p>
+          <p><a class="btn btn-hollow-green save pull preview specialval" href="#">Preview & Test</a></p>
           <p><a class="btn btn-demo-green save view pull" href="#embed">Save & Continue</a></p>
           <p><a class="green" href="/feedback#general">Feedback</a> | <a class="green view" href="#faq">FAQ</a> | <a class="green" href="/feedback#bug"> Report Issue</a></p>
         </div>
@@ -1099,8 +1099,10 @@ jQuery(document).ready(function() {
   }
 
   var _preview = false;
+  var _specialval = false;
   var save = function(e,pvw) {
     try { e.preventDefault(); } catch (err) {}
+    try { if ( $(this).hasClass('specialval') ) _specialval = uc.val } catch(err) {}
     if (e === true || pvw || $(this).attr('preview') || $(this).hasClass('preview')) _preview = $(this).attr('preview') ? $(this).attr('preview') : (pvw ? pvw : true);
     var data = {};
     $('.setting').each(function(i, obj) {
@@ -1141,8 +1143,13 @@ jQuery(document).ready(function() {
         configure();
         if (_preview) {
           $('.save').hide().after('<p class="saved">Saving changes! Your preview will run shortly.</p>');
-          setTimeout(function() { $('.saved').hide(); $('.save').show(); preview(undefined,_preview); }, 3000);
-          _preview = false;
+          setTimeout(function() { 
+            $('.saved').hide(); 
+            $('.save').show(); 
+            preview(undefined,_preview,_specialval); 
+            _preview = false;
+            _specialval = false;
+          }, 3000);
         } else {
           $('.save').hide().after('<p class="saved">Saving changes!</p>');
           setTimeout(function() { $('.saved').hide(); $('.save').show(); }, 4000);
