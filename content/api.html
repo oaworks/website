@@ -283,7 +283,32 @@ curl -X POST "{{api}}/ill" -d '{"doi": "10.1126/science.196.4287.293", "url": "h
                     Accepts "uid" as a parameter to filter results to your version of shareyourpaper.org.
                   </p>
                   <p id="deposited">
-                    Get a "uid" by <a href="/account?next=/api#deposited">logging in</a> and <a href="https:shareyourpaper.org/setup">setting up Shareyourpaper.org</a></a>.
+                    Get a "uid" by <a href="/account?next=/api#deposited">logging in</a> and <a href="https://shareyourpaper.org/setup">setting up Shareyourpaper.org</a></a>.
+                  </p>
+                  <p>
+                    Add .csv to the end of the URL to get a CSV.
+                  </p>
+
+                  <h2 id="deposits">
+                    /deposits
+                  </h2>
+                  <p>
+                    Show all deposits of any kind and their metadata
+                  </p>
+                  <hr>
+                  <h3>
+                    GET.
+                  </h3>
+                  <p>
+
+                    Example: <a id="depositsexample" href="{{api}}/deposits" class="api" target="_blank">[JSON]</a> <a id="depositedexample" href="{{api}}/deposits.csv" class="api">[CSV]</a>
+
+                  </p>
+                  <p>
+                    Accepts "uid" as a parameter to filter results to your version of shareyourpaper.org.
+                  </p>
+                  <p id="deposited">
+                    Get a "uid" by <a href="/account?next=/api#deposits">logging in</a> and <a href="https://shareyourpaper.org/setup">setting up Shareyourpaper.org</a></a>.
                   </p>
                   <p>
                     Add .csv to the end of the URL to get a CSV.
