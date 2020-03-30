@@ -282,7 +282,7 @@ curl -X POST "{{api}}/ill" -d '{"doi": "10.1126/science.196.4287.293", "url": "h
                   <p>
                     Accepts "uid" as a parameter to filter results to your version of shareyourpaper.org.
                   </p>
-                  <p id="deposited">
+                  <p id="depositeduid">
                     Get a "uid" by <a href="/account?next=/api#deposited">logging in</a> and <a href="https://shareyourpaper.org/setup">setting up Shareyourpaper.org</a></a>.
                   </p>
                   <p>
@@ -307,7 +307,7 @@ curl -X POST "{{api}}/ill" -d '{"doi": "10.1126/science.196.4287.293", "url": "h
                   <p>
                     Accepts "uid" as a parameter to filter results to your version of shareyourpaper.org.
                   </p>
-                  <p id="deposited">
+                  <p id="yourdeposits">
                     Get a "uid" by <a href="/account?next=/api#deposits">logging in</a> and <a href="https://shareyourpaper.org/setup">setting up Shareyourpaper.org</a></a>.
                   </p>
                   <p>
@@ -393,7 +393,7 @@ curl -X POST "{{api}}/ill" -d '{"doi": "10.1126/science.196.4287.293"}' -H "Cont
       if (noddy.apikey) {
         $('#apikey').html('Your API key is <code>' + noddy.apikey + '</code>' +'. Include this in either a URL param called "apikey" or a header called "x-apikey".');
         $('#instantill').html('Institutions are specified by passing a code in "uid"; yours is <code>' + noddy.user.account._id + '</code>. You can alter the response through setting up InstantILL with your details.');
-        $('#depositedexample').html('Yours is <code>' + noddy.user.account._id + '</code>. It is included in the example above.');
+        $('#yourdeposits').html('Yours is <code>' + noddy.user.account._id + '</code>. It is included in the example above.');
         $('.auth').each(function() { $(this).attr('href',$(this).attr('href')+'?apikey='+noddy.apikey); });
         $('.apikey').html(noddy.apikey);
         $('.yourid').html(noddy.user.account._id);
