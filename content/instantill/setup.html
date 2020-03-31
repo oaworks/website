@@ -115,7 +115,7 @@
                 <span class="glyphicon glyphicon-arrow-right"></span> Support InstantILL</a>
               </li>
               <li>
-                <a class="green view pull preview" val="10.1145/2908080.2908114" href="#analytics">
+                <a class="green view pull" href="#analytics">
                 <span class="glyphicon glyphicon-arrow-right"></span> View Analytics</a>
               </li>
             </ul>
@@ -1143,10 +1143,10 @@ jQuery(document).ready(function() {
         configure();
         if (_preview) {
           $('.save').hide().after('<p class="saved">Saving changes! Your preview will run shortly.</p>');
-          setTimeout(function() { 
-            $('.saved').hide(); 
-            $('.save').show(); 
-            preview(undefined,_preview,_specialval); 
+          setTimeout(function() {
+            $('.saved').hide();
+            $('.save').show();
+            preview(undefined,_preview,_specialval);
             _preview = false;
             _specialval = false;
           }, 3000);
