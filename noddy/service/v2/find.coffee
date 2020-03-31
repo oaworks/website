@@ -279,7 +279,7 @@ API.service.oab.find = (options={}, metadata={}, content) ->
   # other possible sources are ['base','dissemin','share','core','openaire','bing','fighsare']
   res.sources = options.sources ? ['oabutton','crossref','epmc','reverse','scrape','oadoi','doaj']
   ou = if typeof options.url is 'string' then options.url else if _.isArray(options.url) then options.url[0] else undefined
-  res.sources.push('bing') if options.plugin in ['widget','oasheet'] or options.from in ['illiad','clio'] or (options.url? and options.url.indexOf('alma.exlibrisgroup.com') isnt -1)
+  res.sources.push('bing') if options.plugin in ['widget','oasheet'] or options.from in ['illiad','clio'] or (ou? and ou.indexOf('alma.exlibrisgroup.com') isnt -1)
   options.refresh = if options.refresh is 'true' then true else if options.refresh is 'false' then false else options.refresh
   try res.refresh = if options.refresh is false then 30 else if options.refresh is true then 0 else parseInt options.refresh
   res.refresh = 30 if typeof res.refresh isnt 'number' or isNaN res.refresh
