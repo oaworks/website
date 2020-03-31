@@ -43,7 +43,8 @@ var view = function(e,which) {
 }
 $('body').on('click','.view',view);
 $(window).on('popstate', view);
-setTimeout(function() { $('#demo').show(); },2000);
+view();
+setTimeout(function() { $('#demo').show();}, 2000);
 
 var preview = function(e,val,specialval) {
   try { if ($(this).hasClass('specialval') && specialval === undefined) specialval = uc.val; } catch(err) {}
