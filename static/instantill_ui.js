@@ -28,6 +28,8 @@ var view = function(e,which) {
     which = '#' + $('.section:visible').first().attr('id');
   }
   if (($(this).hasClass('pull') || !evented) && $('#instantill','.section:visible').length !== 1) $('#instantill').appendTo($('.content','.section:visible'));
+  if ($(this).hasClass('restart')) _instantill_restart();
+  
   /*if ($('div.content:visible').offset().top > $(window).height()) {
     var pad = Math.floor(($('div.green').height() - $('#instantill').height())/2);
     $('div.content:visible').css({'padding-top':pad+'px'});
@@ -41,7 +43,7 @@ var view = function(e,which) {
 }
 $('body').on('click','.view',view);
 $(window).on('popstate', view);
-view();
+setTimeout(function() { $('#demo').show(); },2000);
 
 var preview = function(e,val,specialval) {
   try { if ($(this).hasClass('specialval') && specialval === undefined) specialval = uc.val; } catch(err) {}
