@@ -1,0 +1,331 @@
+<head>
+  <title>Shareyourpaper.org</title>
+</head>
+<link rel="stylesheet" href="/static/oabutton_rebrand.css"> <!-- gets the new css (still also uses the old css, just overwrites where necessary) -->
+
+<style>
+  #topnav {
+    display: none;
+  }
+  #footer {
+    display: none;
+  }
+
+  .form-control {
+    color:#428BCA;
+    border:2px solid #428BCA;
+  }
+
+  a {
+    color:#428BCA;
+    font-weight:normal;
+  }
+  a:hover {
+    color:#428BCA;
+  }
+
+  .btn-hollow-blue:hover {
+    color: #ECF3FA;
+  }
+
+  p{
+    padding:0;
+    margin: 10px 0;
+  }
+
+  h2{
+    text-align: left;
+  }
+
+  .alert-new {
+    width: 100%;
+    padding: 10px;
+    background-color: #428BCA;
+    color: white;
+    text-align: center !important;
+  }
+  .btn-primary {
+    background-color:#428BCA;
+    border-color:#428BCA;
+    border-radius:0px;
+    color:#ffffff;
+    width:49%;
+    font-weight:bold;
+    padding-top:10px;
+    padding-bottom:10px;
+  }
+  .btn-primary:hover {
+    background-color:#428BCA;
+    border-color:#428BCA;
+    color:#ffffff;
+  }
+
+</style>
+
+<!--
+<div class="alert-new">
+  <div class="center-col">
+    <div>
+      <p style="text-align:center;">
+        Shareyourpaper.org is currently in Alpha. Please <a href="mailto:joe@openaccessbutton.org" class="blue" style="color:white"><b>let us know</b></a> how setup goes.
+      </p>
+    </div>
+  </div>
+</div>
+-->
+
+<div id="demo" class="container-fluid">
+
+  <div id="demo" class="section">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-1 content">
+        <div id="instantill"></div>
+      </div>
+
+      <div class="col-md-4 col-md-offset-1 green">
+        <div class="greenery">
+          <h2><span class=""></span> Try it now</h2>
+
+          <p>
+            This is a demo of InstantILL, it works just like it would on your website, placed wherever you normally have your ILL form and blending in with your brand.
+          </p>
+          <p><b>
+            Let us show you InstantILL's main features!
+          </b></p>
+
+          <p><a class="btn btn-hollow btn-block view preview pinger" id=instantill_demo_start href="#part2" val="10.1234/567890">Try InstantILL</a></p>
+        </div>
+
+        <div class="greenbottom">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="part2" class="section">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-1 content">
+        <!-- demo will be moved to here to show response-->
+      </div>
+
+      <div class="col-md-4 col-md-offset-1 green">
+        <div class="greenery">
+          <h2>Hurrah, thanks for trying InstantILL!</h2>
+          <p>
+            You just put a DOI into InstantILL, and as you can see, if you’re subscribed to the article InstantILL goes straight to full to the PDF.
+          </p>
+          <p>
+            InstantILL knows the electronic resources you subscribe to using your link resolver, and we provide a direct to PDF link for the user to access through your proxy. Off campus, they’ll be nudged to login as normal.
+          </p>
+          <p><b>
+            2/6. Let’s try an article title!
+          </b></p>
+
+          <p><a class="btn btn-hollow-green btn-block view preview pinger" id=instantill_demo_oa href="#part3" val="Factors associated with mental distress among undergraduate students in northern Tanzania">Show me!</a></p>
+
+        </div>
+        <div class="greenbottom">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="part3" class="section">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-1 content">
+        <!-- demo will be moved to here to show response-->
+      </div>
+
+      <div class="col-md-4 col-md-offset-1 green">
+        <div class="greenery">
+          <h2>We found it freely!</h2>
+          <p>
+            You just put an article title into InstantILL, and we found a version that's Open Access, so you can instantly go straight to the full text.
+          </p>
+          <p>
+            We built Open Access into the heart of InstantILL because patrons want to access content instantly, and often 20% of ILLs can be found free, saving you money and time. We’ve been pioneers in Open Access delivery, and the content comes from legal sources.
+          </p>
+          <p><b>
+            3/6. Now, hit 'Complete Request’ to see how easy it is to make a request
+          </b></p>
+        </div>
+        <div class="greenbottom">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="fakeill" class="section">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-1 content">
+    <!--    <p>UNIVERSITY OF YOU INTERLIBRARY LOAN FORM</p>  -->
+        <table class="table table-bordered" id="fakeilltable">
+        </table>
+        <!-- <p><a class="btn btn-demo" href="#part4">Continue demo!</a></p>-->
+      </div>
+
+      <div class="col-md-4 col-md-offset-1 green">
+        <div class="greenery">
+          <h2>Request made!</h2>
+          <p>
+            No more completing long forms! We’ll autocomplete them using the meta-data you see, which we’re showing instead of your completed ILL form since this is a demo.
+          </p>
+          <p>
+            InstantILL point’s to your existing ILL form (or, sends you an email), where you handle authentication and submission into your existing systems. We just focus on making sure you don’t need to do anything before sending for fulfilment.
+          </p>
+          <p>
+
+          </p>
+          <p><b>
+            4/6. InstantILL also integrates into your workflows. Let’s try to check the link resolver
+          </b></p>
+          <p><a class="btn btn-hollow-green btn-block view preview pinger" id=instantill_demo_LR   href="#part5" val="10.1126/science.196.4287.293">Find it</a></p>
+        </div>
+        <div class="greenbottom">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="part5" class="section">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-1 content">
+        <!-- demo will be moved to here to show response-->
+      </div>
+
+      <div class="col-md-4 col-md-offset-1 green">
+        <div class="greenery">
+          <h2>Link, Resolved!</h2>
+          <p>
+            InstantILL can integrate with your existing tools, from library search, to link resolvers, and your ILL page.
+          </p>
+          <p>
+            You can link to, or embed, InstantILL on pages and using OpenURL we’ll make sure patrons don’t need to enter what they need so you can InstantILL in 'request a copy' and ‘get it now’ buttons, or in link resolvers.
+          </p>
+          <p><b>
+            5. Finally, see what it takes to set InstantILL up!:
+          </b></p>
+          <p><a class="btn btn-hollow-green btn-block view preview pinger" id=instantill_demo_setup href="#part6" val="">Show me!</a></p>
+        </div>
+        <div class="greenbottom">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="part6" class="section">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-1 content">
+        <!-- demo will be moved to here to show response-->
+      </div>
+
+      <div class="col-md-4 col-md-offset-1 green">
+        <div class="greenery">
+          <h2>Only three simple steps</h2>
+          <p>
+            Set up yourself, in 30 minutes today, by:
+          </p>
+          <ul>
+            <li>Telling us your ILL form link (or, email address)</li>
+            <li>Telling us your link resolver URL</li>
+            <li>Add a line of code to your website</li>
+          </ul>
+          <p>
+            No coding, special systems knowledge, or contract signing required. Of course, you can tweak dozens of settings, including how to handle other items, so everything works just right.
+          </p>
+          <p>Now you understand InstantILL, you can keep testing InstantILL here, or...</p>
+          <p><b>
+            6/6: Try InstantILL yourself, with your systems
+          </b></p>
+          <p><a class="btn btn-demo-green btn-block pinger" id=instantill_demo_install href="/beta">Install Now!</a></p>
+          <p><!--and, get a <a href="#tour" class="green">guided tour</a> and <a href="#examples" class="green">see how others use it</a>--> or <a href="mailto:joe@openaccessbutton.org">contact us</a>. </p>
+        </div>
+        <div class="greenbottom">
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+
+<script src="/static/instantill.js"></script>
+
+<script>
+jQuery(document).ready(function() {
+  $('#topnav').remove();
+  $('#footer').remove();
+});
+</script>
+
+<script src="/static/instantill_ui.js"></script>
+
+<script>
+jQuery(document).ready(function() {
+
+  if ($('#demo').height() < $(window).height()) $('#demo').css({'min-height':$(window).height()+'px'});
+  $('div.blue').css({'min-height':$(window).height()+'px'});
+  var diff = Math.floor(($(window).height() - $('div.content:visible').height())/4);
+  $('div.content:visible').css({'padding-top':diff+'px'});
+
+  $(document).ajaxComplete(function(e,xhr) {
+    if (xhr && xhr.responseJSON && xhr.responseJSON.zenodo && xhr.responseJSON.zenodo.url && xhr.responseJSON.zenodo.url.indexOf('/DEMO') !== -1) {
+      if (window.location.hash && window.location.hash.indexOf('general') !== -1) {
+        view(false,'#success');
+      }
+    } else if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data && xhr.responseJSON.data.meta && xhr.responseJSON.data.meta.article && xhr.responseJSON.data.meta.article.doi === '10.1234/oab-syp-dark') {
+      if (window.location.hash && window.location.hash.indexOf('ingest') !== -1) {
+        var table = '<table class="table table-bordered" id="faketable">';
+        table += '<tr><td><b>Data given</b></td><td><b>Value</b></td></tr>';
+        var citation = '';
+        var ma = xhr.responseJSON.data.meta.article;
+        if (ma.author !== undefined) {
+          for (var a in ma.author) {
+            try {
+              if (a !== '0') citation += ', ';
+              citation += ma.author[a].given + ' ' + ma.author[a].family
+            } catch(err) {}
+          }
+        }
+        if (citation !== '') citation += ' ';
+        if (ma.title !== undefined) citation += '<i>' + ma.title + '</i>';
+        if (ma.journal !== undefined) citation += ' in <b>' + ma.journal + '</b>';
+        if (ma.volume !== undefined) citation += ', vol. ' + ma.volume;
+        if (ma.issue !== undefined) citation += ', iss. ' + ma.issue;
+        if (citation !== '') citation += '.';
+        if (ma.year) citation += ' ' + ma.year + '. ';
+        if (ma.doi) citation += ' doi: ' + ma.doi;
+        if (citation !== '') table += '<tr><td>Citation</td><td><p>' + citation + '</p></td></tr>';
+        var mp = xhr.responseJSON.v2.permissions;
+        table += '<tr><td>Version allowed</td><td>Postprint</td></tr>';
+        table += '<tr><td>Embargo date</td><td>07/13/21</td></tr>';
+        table += '<tr><td>Licence required</td><td>cc-by-nc-nd</td></tr>';
+        table += '<tr><td>Deposit statement</td><td>This is an Accepted Manuscript of an article published by Research Publisher in Journal of Science on 07/13/20, available online: <a href="http://www.tandfonline.com/10.1234/oab-syp-dark">http://www.tandfonline.com/10.1234/oab-syp-dark</a>.</td></tr>';
+        table += '<tr><td>Version uploaded</td><td>Postprint</td></tr>';
+        table += '<tr><td>Upload matches paper</td><td>Yes</td></tr>';
+        /*if (mp.permissions.version_allowed) table += '<tr><td>Archivable version</td><td><p>' + mp.permissions.version_allowed + '</p></td></tr>';
+        if (mp.permissions.embargo) table += '<tr><td>Embargo date</td><td><p>' + mp.permissions.embargo + '</p></td></tr>';
+        if (mp.permissions.required_statement) table += '<tr><td>Deposit statement</td><td><p>' + mp.permissions.required_statement + '</p></td></tr>';
+        if (mp.file.version) table += '<tr><td>Version uploaded</td><td><p>' + mp.file.version + '</p></td></tr>';
+        table += '<tr><td>Upload matches paper</td><td><p>' + (mp.file.same_paper === true ? 'Yes' : 'No')  + '</p></td></tr>';*/
+        $('div.content:visible').html(table);
+      }
+    }
+  });
+
+  var fakedeposit = function(e) {
+    e.preventDefault();
+    view(undefined,'#wrong');
+    _restart();
+    setTimeout(function() { _fake_deposit(); },300);
+  }
+  $('#fakedeposit').bind('click',fakedeposit);
+
+  shareyourpaper({uid:(api.indexOf('dev.') !== -1 ? 'qZooaHWRz9NLFNcgR' : 'eZwJ83xp3oZDaec86'), api:api, css: false});
+
+});
+</script>
+
+<!-- the one starting qz is the dev id, and it will be used any time the domain has dev. in it. The second one beginning eZ is the live id -->
