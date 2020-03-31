@@ -2,6 +2,10 @@
   <title>InstantILL</title>
   <link rel="stylesheet" href="/static/oabutton_rebrand.css"> <!-- gets the new css (still also uses the old css, just overwrites where necessary) -->
   <meta name="description" content="InstantILL instantly delivers papers your patrons need from your holdings, Open Access and simplifies your ILL process to save you and your patrons money and time. It’s free, open source, community owned and easily set up in minutes." />
+
+  <script src="/static/instantill.js"></script>
+  <script src="/static/instantill_ui.js"></script>
+
 </head>
 
 <style>
@@ -138,6 +142,7 @@
 </style>
 
 <!--
+
 <div class="alert-new">
   <div class="center-col">
     <div>
@@ -147,6 +152,7 @@
     </div>
   </div>
 </div>
+
 -->
 
 <!-- sam starts here -->
@@ -156,7 +162,7 @@
   <div class="center-col header">
     <div><span><strong><a href="/">InstantILL</a></strong> by <a href="https://openaccessbutton.org" style="color:white">Open Access Button</a></span></div>
     <div>
-       <a class="btn btn-demo-white" href="/beta">Install Now</a>
+       <a class="btn btn-demo-white" href="/setup">Install Now</a>
     </div>
   </div>
 </div>
@@ -168,7 +174,7 @@
       <h2>A powerfully simple library tool to deliver papers.</h2>
       <p style="padding: 30px 0">InstantILL instantly delivers papers your patrons need from your holdings, Open Access and simplifies your ILL process to save you and your patrons money and time. It’s free, open source, community owned and easily set up in minutes.</p>
       <a class="btn btn-demo-green" href="#demo">Try it now</a>
-      <!-- TODO: fix this -->
+      <p style="text-align:center"><a href="/updates" class="green"><b><u>Stay up to date</b></u></a></p>
     </div>
     <div class="pitchhalf">
       <img width="100%" src="/static/Instant-ILL-transparent-green.png">
@@ -225,8 +231,7 @@
 </div>
 
 <!-- the demo section-->
-<div id="demo" class="container-fluid">
-
+<div class="container-fluid">
   <div id="demo" class="section">
     <div class="row">
       <div class="col-md-6 col-md-offset-1 content">
@@ -388,7 +393,7 @@
           <p><b>
             6/6: Try InstantILL yourself, with your systems
           </b></p>
-          <p><a class="btn btn-demo-green btn-block pinger" id=instantill_demo_install href="/beta">Install Now!</a></p>
+          <p><a class="btn btn-demo-green btn-block pinger" id=instantill_demo_install href="/setup">Install Now!</a></p>
           <p><!--and, get a <a href="#tour" class="green">guided tour</a> and <a href="#examples" class="green">see how others use it</a>--> or <a href="mailto:joe@openaccessbutton.org">contact us</a>. </p>
         </div>
         <div class="greenbottom">
@@ -490,7 +495,7 @@
     <div class="programcontents">
     <h2>Essential</h2>
     <p style="text-align: center; padding: 0;"><strong>Free, Forever</strong></p>
-    <a class="btn btn-hollow-green" href="/beta">Install now</a>
+    <a class="btn btn-hollow-green" href="/setup">Install now</a>
 
     <ul style="text-align: left;">
       <li>
@@ -560,34 +565,40 @@
 
 
 <!-- functions you can trigger:
+
 Put a div with ID "instantill" in the place where you want the instantill demo to show up. Note this can only appear in one place at a time.
+
 The page tries to execute a login on page load.
 If it succeeds it will try to replace the content of any element on the page with the "yourid" class with the user ID.
 It will also try to replace "but only you" in the content of any element with the "onlyyou" class with "but only you (USERNAME)".
 And it will look for any section with the class "yourid" and will replace any text that contains instantill() with the instantill({SETTINGS})
 suitable for the logged in user (their user ID).
+
 It will then go through any ILL config present for the logged in user, and for every value, it will look for an element on the page with the matching ID,
 and it will place the value of that config item as the value of the element (note as described below for saving, such elements should also have the "setting" class).
 (if it is a boolean value the element should be a checkbox, and it will be checked or not depending on boolean value).
+
 Any button with the "view" class will cause the UI view to change between divs with the "section" class.
 The "view" class button goes to the next "section" div by default. If you also give the button the "previous" class it goes to the previous one.
 If the "view" button has an href that is longer than 1 then the href value is assumed to be the ID of the div to show, or a classname for a set of things to show.
 Any execution of a "view" button first hides all "section" divs then shows the previous or next or defined things.
+
 If you want the section that you switch to with the "view" button to show the #instantill demo in it, you
 can add the "pull" class to the button. Then, once the view has switched to the specified section, the #instantill
 demo div will be appended to the content section of the currently visible section.
+
 Any button ("button" or "a" link tag) that has the "save" class will trigger a save
 A save will look for any element with the "setting" class and will take the value of that element and try to use it as the config value corresponding to the ID of that element.
 If the save button also has an attr called "preview" then it can be set to true to trigger an instantill preview run with a default value
 If preview attr is set but is some value other than true, then the value of the preview attr will be used in the instantill box
+
 Any button with the "preview" class will trigger the instantill box with a trial value. The value should be specified on the button
 in an attr called "val" or else the html content of the button will be used as the value.
+
 NOTE: if you want the view to change when a preview is triggered, put the view class BEFORE the preview class.
 That way the view will change, the preview will run, and if the preview is not visible it will be pulled forward
 into the view you have changed to.
 -->
-
-<script src="/static/instantill.js"></script>
 
 <script>
 jQuery(document).ready(function() {
@@ -596,7 +607,6 @@ jQuery(document).ready(function() {
 });
 </script>
 <!-- mark+instantilldemo@cottagelabs.com is the email for the demo account on dev. Joe has access to this. -->
-<script src="/static/instantill_ui.js"></script>
 <script>
 jQuery(document).ready(function() {
   instantill({uid:(api.indexOf('dev.') !== -1 ? 'qZooaHWRz9NLFNcgR' : 'eZwJ83xp3oZDaec86'), api:api, css: false}); // change this uid to the demo account uid once it has been created
