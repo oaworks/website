@@ -213,12 +213,7 @@ API.service.oab.find = (options={}, metadata={}, content) ->
     delete metadata.id
   options.url = options.url[0] if _.isArray options.url
 
-<<<<<<< HEAD
-  try _get_formatted_crossref(crossref) if typeof crossref is 'object'
-  try _get_formatted_europepmc(europepmc) if typeof europepmc is 'object'
 
-=======
->>>>>>> origin/develop
   metadata.doi ?= options.doi.replace('doi:','').replace('doi.org/','').trim() if typeof options.doi is 'string'
   metadata.title ?= options.title.trim() if typeof options.title is 'string'
   metadata.pmid ?= options.pmid if options.pmid
