@@ -150,7 +150,11 @@ API.service.oab.deposit = (d,options={},files,uid) ->
   if typeof dep.embedded is 'string' and (dep.embedded.indexOf('setup') isnt -1 or dep.embedded.indexOf('demo') isnt -1) and (dep.embedded.indexOf('openaccessbutton.') isnt -1 or dep.embedded.indexOf('shareyourpaper.') isnt -1 or dep.embedded.indexOf('shareyourarticle.') isnt -1)
     options.setup = true # allows us to catch setup uses, and not send them to zenodo and not save them to the catalogue
   dep.pilot = options.pilot if options.pilot
+  if typeof dep.pilot is 'boolean' # catch possible old erros with live/pilot values
+    dep.pilot = if dep.pilot is true then Date.now() else undefined
   dep.live = options.live if options.live
+  if typeof dep.live is 'boolean'
+    dep.live = if dep.live is true then Date.now() else undefined
   dep.name = (files[0].filename ? files[0].name) if files? and files.length
   dep.email = options.email if options.email
   dep.from = options.from if options.from
@@ -286,10 +290,14 @@ API.service.oab.deposit = (d,options={},files,uid) ->
 API.service.oab.deposit.config = (user, config) ->
   user = Users.get(user) if typeof user is 'string'
   if typeof user is 'object' and config?
+    uc = user.service?.openaccessbutton?.ill?.config ? {}
     update = {}
-    for k of config # the fields allowed in deposit config could be listed here, for now default to whatever is given
-      update[k] = config[k] if config[k]?
-      try update[k] = update[k].split('communities/')[1].split('/')[0] if k is 'community' and update[k].indexOf('/') isnt -1
+    for k in ['depositdate','community','institution_name','repo_name','email_domains','deposit_terms','old_way','deposit_help','email_for_manual_review','file_review_time','if_no_doi_go_here','email_for_feedback','sayarticle','allow_oa_deposit','library_handles_dark_deposit_requests','dark_deposit_off','ROR_ID','high_performance','live','pilot','activate_try_it_and_learn_more','not_a_library']
+      if k in ['pilot','live']
+        update[k] = if config[k] is true and not uc[k] then Date.now() else '$DELETE'
+      else
+        update[k] = config[k] if config[k]?
+        try update[k] = update[k].split('communities/')[1].split('/')[0] if k is 'community' and update[k].indexOf('/') isnt -1
     if JSON.stringify(update) isnt '{}'
       if not user.service.openaccessbutton.deposit?
         Users.update user._id, {'service.openaccessbutton.deposit': {config: update}}

@@ -58,6 +58,8 @@ API.add 'service/oab/scripts/avail2find',
           res.checked.push(rec.source.article) if rec.source.article not in res.checked
         for nm in ['exlibris','test','from','plugin','uid','username','email','all','find','embedded','pilot','live','wrong']
           res[nm] = rec[nm] if rec[nm]?
+          if nm in ['pilot','live'] and typeof res[nm] is 'boolean'
+            res[nm] = if res[nm] is true then Date.now() else undefined
         res.find ?= true
         res.ill = rec.ill if rec.ill?
         

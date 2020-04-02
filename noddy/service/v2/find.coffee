@@ -6,10 +6,10 @@ import unidecode from 'unidecode'
 #oab_catalogue.remove '*'
 
 API.service.oab.ftitle = (title) ->
-  # a useful way to show a title (or other string) as one long string with no weird characters, and no words shorter than 2 chars, for easier fuzzy matching
+  # a useful way to show a title (or other string) as one long string with no weird characters
   ft = ''
   for tp in unidecode(title.toLowerCase()).replace(/[^a-z0-9 ]/g,'').replace(/ +/g,' ').split(' ')
-    ft += tp if tp.length > 2
+    ft += tp
   return ft
 
 _finder = (metadata) ->
@@ -285,7 +285,11 @@ API.service.oab.find = (options={}, metadata={}, content) ->
   res.refresh = 30 if typeof res.refresh isnt 'number' or isNaN res.refresh
   res.embedded ?= options.embedded if options.embedded?
   res.pilot = options.pilot if options.pilot? # instantill and shareyourpaper can state if they are live or pilot, and if wrong item supplied
+  if typeof res.pilot is 'boolean' # catch possible old erros with live/pilot values
+    res.pilot = if res.pilot is true then Date.now() else undefined
   res.live = options.live if options.live?
+  if typeof res.live is 'boolean'
+    res.live = if res.live is true then Date.now() else undefined
   res.wrong = options.wrong if options.wrong?
   res.found = {}
 
