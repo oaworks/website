@@ -9,13 +9,23 @@
   <link href="/static/favicon.ico" rel="icon" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
 
   <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/gknkbkaapnhpmkcgkmdekdffgcddoiel">
-<!-- code for release banners -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.min.css" />
-  <!--[if lt IE 9]>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.ie.min.css" />
-  <![endif]-->
+  
+  <!-- facebook meta -->
+  <meta property="og:url" content="https://openaccessbutton.org" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Open Access Button" />
+  <meta property="og:description" content="Free, legal research articles delivered instantly or automatically requested from authors." />
+  <meta property="og:image" content="http://www.openaccessbutton.org/static/twitter-paste.png" />
+
+  <!-- twitter meta -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Open Access Button">
+  <meta name="twitter:site" content="@OA_Button">
+  <meta name="twitter:description" content="Free, legal research articles delivered instantly or automatically requested from authors">
+  <meta name="twitter:image" content="http://www.openaccessbutton.org/static/twitter-paste.png" />
 
   <script>
   var api = '{{api}}';
@@ -90,166 +100,3 @@
   });
   </script>
 </head>
-
-<!--
-
-<div class="row" id="install_mobile" style="display:none;">
-  <div class="col-md-2 col-md-offset-1">
-    <p style="font-size:40px;line-height:10px;color:#398bc5;text-align:center;">
-      <a style="margin-top:5px;" target="_blank" href="/fb_chat">
-        <img src="/static/chat.svg" width="45px">
-      </a>
-    </p>
-  </div>
-  <div class="col-md-8">
-    <p style="text-align:center; margin-top:5px;">
-      Always have the button by your side, no account needed.<br>
-      <a style="margin-top:5px;" target="_blank" href="/fb_chat">
-        Chat with OABotton
-      </a>
-    </p>
-  </div>
-</div>
-
--->
-
-<div class="row" id="install_chrome" style="display:none;">
-  <div class="col-md-2 col-md-offset-1">
-    <p style="font-size:40px;line-height:10px;color:#398bc5;text-align:center;">
-      <a style="margin-top:5px;" class="chromeinstall" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">
-        <i class="glyphicon glyphicon-download" role=”none”></i>
-      </a>
-    </p>
-  </div>
-  <div class="col-md-8">
-    <p style="text-align:center; margin-top:5px;">
-      Always have the button by your side, no account needed.<br>
-      <a style="margin-top:5px;" class="chromeinstall" target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">
-        Get the Chrome browser extension in one click.
-      </a>
-    </p>
-  </div>
-</div>
-
-<div class="row" id="install_firefox" style="display:none;">
-  <div class="col-md-2 col-md-offset-1">
-    <p style="font-size:40px;line-height:10px;color:#398bc5;text-align:center;">
-      <a style="margin-top:5px;" target="_blank" href="https://addons.mozilla.org/en-US/firefox/addon/openaccessbutton/">
-        <i class="glyphicon glyphicon-download" role=”none”></i>
-      </a>
-    </p>
-  </div>
-  <div class="col-md-8">
-    <p style="text-align:center; margin-top:5px;">
-      Always have the button by your side, no account needed.<br>
-      <a style="margin-top:5px;" target="_blank" href="https://addons.mozilla.org/en-US/firefox/addon/openaccessbutton/">
-        Get the Firefox browser extension, no sign up required.
-      </a>
-    </p>
-  </div>
-</div>
-
-<div class="row" id="install_bookmarklet" style="display:none;">
-  <div class="col-md-2 col-md-offset-1">
-    <p style="font-size:40px;line-height:10px;color:#398bc5;text-align:center;">
-      <a class="bookmarklet_install_target" data-toggle="modal" data-target="#alpha" style="margin-top:5px;" href="#">
-        <i class="glyphicon glyphicon-download" role=”none”></i>
-      </a>
-    </p>
-  </div>
-  <div class="col-md-8">
-    <p style="text-align:center; margin-top:5px;">
-      Always have the button by your side, no account needed.<br>
-      <a class="bookmarklet_install_target" data-toggle="modal" data-target="#alpha" style="margin-top:5px;" href="#">
-        Get the browser bookmarklet
-      </a>
-    </p>
-  </div>
-</div>
-
-<div class="modal fade" id="install_bookmarklet_safari" tabindex="-1" role="dialog" aria-labelledby="alphaLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="alphaLabel">Getting Started on Safari</h4>
-      </div>
-      <div class="modal-body">
-        <p>
-          <a class="btn btn-action btn-block" style="width:50%; text-align:center" href="javascript:document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','{{site_url}}/static/bookmarklet/includer.js?r='+Math.random());" style="background-color:#ccc;padding:5px;border-radius:3px;">Open Access Button</a>
-        </p>
-        <ol>
-        <li> Make sure your bookmarks bar is showing. If not, you can click View, and select "Show Bookmarks Bar."</li>
-        <li> Drag the Button above to your bookmarks bar.</li>
-        <img src = "/static/safari_install.gif" style = "width: 100%;border:1px solid #212f3f;margin:10px;" >
-        <li> If there is a pop-up, click yes.</li>
-        <li> You're done! The Button is ready to click when you next need it.</li>
-        <li> <a href="/instructions">Give the button a try, or read the instructions</a></li>
-        </ol>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!--
-<div class="modal fade" id="install_bookmarklet_edge" tabindex="-1" role="dialog" aria-labelledby="alphaLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="alphaLabel">Getting Started on Edge</h4>
-      </div>
-      <div class="modal-body">
-        <p>
-          <a class="bookmarklet_link" href="javascript:document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','{{site_url}}/static/bookmarklet/includer.js?r='+Math.random());" style="background-color:#ccc;padding:5px;border-radius:3px;">Open Access Button</a>
-        </p>
-        <p>TODO INSTRUCTIONS FOR BOOKMARKLET INSTALL ON EDGE</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
--->
-<!--
-<div class="modal fade" id="install_bookmarklet_ie" tabindex="-1" role="dialog" aria-labelledby="alphaLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="alphaLabel">Getting Started on Internet Explorer</h4>
-      </div>
-      <div class="modal-body">
-        <p style="text-align: center;">
-          <a class="btn btn-action btn-block" style="width:50%;" href="javascript:document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','{{site_url}}/static/bookmarklet/includer.js?r='+Math.random());" style="background-color:#ccc;padding:5px;border-radius:3px;">Open Access Button</a>
-        </p>
-        <ol>
-        <li> Make sure your Favorites bar is showing. If not, you can <a href="https://support.microsoft.com/en-in/instantanswers/cb97447c-a200-476f-a241-cd3958144d02/see-your-favorites-bar">right-click at the top of the browser window</a>, and select "Favorites bar."</li>
-        <li> Drag the Button above to your bookmarks bar.</li>
-        <img src = "/static/ie_install.gif" style = "width: 100%;border:1px solid #212f3f;margin:10px;">
-        <li> Click yes on the pop-up.</li>
-        <li> You're done! The Button is ready to click when you next need it.</li>
-        <li> <a href="/instructions">Give the button a try, or read the instructions</a></li>
-        </ol>
-
-        <h3>If that doesn't work:</h3>
-        <ol>
-        <li> Right click on the Button.</li>
-        <li> Click "Add to favourites...."</li>
-        <li> Choose "Favorites bar" as the folder.</li>
-        <img src = "/static/ie_alternative_install_1.png" style = "width: 100%;border:1px solid #212f3f;margin:10px;">
-        <li> Click "Okay."</li>
-        <li> You're done! The Button is ready to click when you next need it.</li>
-        <li> <a href="/instructions">Give the button a try, or read the instructions</a></li>
-        </ol>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
--->

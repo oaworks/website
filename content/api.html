@@ -239,34 +239,79 @@ curl -X POST "{{api}}/request" -d '{"doi": "10.1126/science.196.4287.293"}' -H "
 
 
                   <h2 id="deposit">
-                    /deposit [coming soon]
+                    /deposit
                   </h2>
                   <p>
-                    Accepts files to facilitate self-archiving papers.
+                    Accepts files to facilitate self-archiving papers in Zenodo.
                   </p>
                   <hr>
                   <h3>
                     POST
                   </h3>
+                  <p>
+                    <a class="api example" target="_blank" href="#post_deposit">
+                      Example
+                    </a>
+                  </p>
+<pre id="post_deposit" class="example">
+curl -X POST "{{api}}/ill" -d '{"doi": "10.1126/science.196.4287.293", "url": "https://urltofileforupload.pdf"}' -H "Content-Type: application/json"</pre>
 
                   <p>
-                    Include at least a DOI and a file. The file will be checked to ensure it’s the correct version and deposited to Zenodo. You’ll get back a deposit ID.
+                    Include at least a DOI and a file, or a URL to a file. The file will be checked to ensure it’s the legal version (e.g postprint / submitted version) and deposited to Zenodo. We’ll pick up relevant metadata while checking, or you can pass your own.
                   </p>
 
-                  <!-- GET INFO FOR DEPOSIT -->
+                  <p>
+                    You’ll get back a deposit object, you can view typical objects <a href="{{api}}/deposits">here</a>.
+                  </p>
 
-                  <h2 id="deposit_id">
-                    /deposit/:id [coming soon]
+                  <h2 id="deposited">
+                    /deposited
                   </h2>
                   <p>
-                    Tells you the status of a deposit.
+                    Shows unique files deposited and their metadata for ingest into institutional repositories
                   </p>
                   <hr>
                   <h3>
-                    GET
+                    GET.
                   </h3>
                   <p>
-                    Metadata fields returned are all optional, except DOIs.
+
+                    Example: <a id="depositedexample" href="{{api}}/deposited" class="api" target="_blank">[JSON]</a> <a id="depositedexample" href="{{api}}/deposited.csv" class="api">[CSV]</a>
+
+                  </p>
+                  <p>
+                    Accepts "uid" as a parameter to filter results to your version of shareyourpaper.org.
+                  </p>
+                  <p id="depositeduid">
+                    Get a "uid" by <a href="/account?next=/api#deposited">logging in</a> and <a href="https://shareyourpaper.org/setup">setting up Shareyourpaper.org</a></a>.
+                  </p>
+                  <p>
+                    Add .csv to the end of the URL to get a CSV.
+                  </p>
+
+                  <h2 id="deposits">
+                    /deposits
+                  </h2>
+                  <p>
+                    Show all deposits of any kind and their metadata
+                  </p>
+                  <hr>
+                  <h3>
+                    GET.
+                  </h3>
+                  <p>
+
+                    Example: <a id="depositsexample" href="{{api}}/deposits" class="api" target="_blank">[JSON]</a> <a id="depositedexample" href="{{api}}/deposits.csv" class="api">[CSV]</a>
+
+                  </p>
+                  <p>
+                    Accepts "uid" as a parameter to filter results to your version of shareyourpaper.org.
+                  </p>
+                  <p id="depositeduid">
+                    Get a "uid" by <a href="/account?next=/api#deposits">logging in</a> and <a href="https://shareyourpaper.org/setup">setting up Shareyourpaper.org</a></a>.
+                  </p>
+                  <p>
+                    Add .csv to the end of the URL to get a CSV.
                   </p>
 
                   <!-- MAKE ILL -->
@@ -348,6 +393,7 @@ curl -X POST "{{api}}/ill" -d '{"doi": "10.1126/science.196.4287.293"}' -H "Cont
       if (noddy.apikey) {
         $('#apikey').html('Your API key is <code>' + noddy.apikey + '</code>' +'. Include this in either a URL param called "apikey" or a header called "x-apikey".');
         $('#instantill').html('Institutions are specified by passing a code in "uid"; yours is <code>' + noddy.user.account._id + '</code>. You can alter the response through setting up InstantILL with your details.');
+        $('#yourdeposits').html('Yours is <code>' + noddy.user.account._id + '</code>. It is included in the example above.');
         $('.auth').each(function() { $(this).attr('href',$(this).attr('href')+'?apikey='+noddy.apikey); });
         $('.apikey').html(noddy.apikey);
         $('.yourid').html(noddy.user.account._id);

@@ -56,7 +56,7 @@
     color:#428BCA;
   }
 
-  #instantill h2{
+  #shareyourpaper h2{
     color:#212F3F;
   }
 
@@ -84,7 +84,7 @@
   }
 
   #demo{
-    border-top: solid 5px #edf8ed;
+    border-top: solid 5px #428BCA;
   }
 
   #demo p{
@@ -107,7 +107,7 @@
   <div class="center-col header">
     <div><span><strong><a href="/">Shareyourpaper.org</a></strong> by <a href="https://openaccessbutton.org" style="color:white">Open Access Button</a></span></div>
     <div>
-       <a class="btn btn-demo-white notonsmallphones" href="https://docs.google.com/forms/d/e/1FAIpQLSeDEgStJhVn03SYuksFFTEeo7cQzC1hWqpBiR7Uavstn04PCA/viewform?usp=sf_link">Get Early Access</a>
+       <a class="btn btn-demo-white notonsmallphones" href="/setup">Install Now</a>
     </div>
   </div>
 </div>
@@ -120,8 +120,8 @@
       <p style="padding: 30px 0">
         Sharing should be simple. We make sure that deposit into your repository means only dragging and dropping a paper by automatically doing all the hard work for depositors. It’ll be free, open source, community owned and easily set up in minutes.
         </p>
-      <a class="btn btn-demo-blue" href="https://docs.google.com/forms/d/e/1FAIpQLSeDEgStJhVn03SYuksFFTEeo7cQzC1hWqpBiR7Uavstn04PCA/viewform">Get Early Access</a>
-      <p style="text-align:center">And <b><a href="https://openaccessbutton.org/libraries#repository">Get Tools to Fill your Repository Today</a></b></p>
+      <a class="btn btn-demo-blue" href="/demo">Try it now</a>
+      <p style="text-align:center"><b><a href="/updates">Stay up to date</a></b></p>
     </div>
     <div class="pitchhalf">
       <img width="100%" src="/static/shareyourpaper-transparent-blue.png">
@@ -267,3 +267,71 @@
     </div>
     </div>
 </div>
+
+<script>
+jQuery(document).ready(function() {
+
+  if ($('#demo').height() < $(window).height()) $('#demo').css({'min-height':$(window).height()+'px'});
+  $('div.blue').css({'min-height':$(window).height()+'px'});
+  var diff = Math.floor(($(window).height() - $('div.content:visible').height())/4);
+  $('div.content:visible').css({'padding-top':diff+'px'});
+
+  $(document).ajaxComplete(function(e,xhr) {
+    if (xhr && xhr.responseJSON && xhr.responseJSON.zenodo && xhr.responseJSON.zenodo.url && xhr.responseJSON.zenodo.url.indexOf('/DEMO') !== -1) {
+      if (window.location.hash && window.location.hash.indexOf('general') !== -1) {
+        view(false,'#success');
+      }
+    } else if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data && xhr.responseJSON.data.meta && xhr.responseJSON.data.meta.article && xhr.responseJSON.data.meta.article.doi === '10.1234/oab-syp-dark') {
+      if (window.location.hash && window.location.hash.indexOf('ingest') !== -1) {
+        var table = '<table class="table table-bordered" id="faketable">';
+        table += '<tr><td><b>Data given</b></td><td><b>Value</b></td></tr>';
+        var citation = '';
+        var ma = xhr.responseJSON.data.meta.article;
+        if (ma.author !== undefined) {
+          for (var a in ma.author) {
+            try {
+              if (a !== '0') citation += ', ';
+              citation += ma.author[a].given + ' ' + ma.author[a].family
+            } catch(err) {}
+          }
+        }
+        if (citation !== '') citation += ' ';
+        if (ma.title !== undefined) citation += '<i>' + ma.title + '</i>';
+        if (ma.journal !== undefined) citation += ' in <b>' + ma.journal + '</b>';
+        if (ma.volume !== undefined) citation += ', vol. ' + ma.volume;
+        if (ma.issue !== undefined) citation += ', iss. ' + ma.issue;
+        if (citation !== '') citation += '.';
+        if (ma.year) citation += ' ' + ma.year + '. ';
+        if (ma.doi) citation += ' doi: ' + ma.doi;
+        if (citation !== '') table += '<tr><td>Citation</td><td><p>' + citation + '</p></td></tr>';
+        var mp = xhr.responseJSON.v2.permissions;
+        table += '<tr><td>Version allowed</td><td>Postprint</td></tr>';
+        table += '<tr><td>Embargo date</td><td>07/13/21</td></tr>';
+        table += '<tr><td>Licence required</td><td>cc-by-nc-nd</td></tr>';
+        table += '<tr><td>Deposit statement</td><td>This is an Accepted Manuscript of an article published by Research Publisher in Journal of Science on 07/13/20, available online: <a href="http://www.tandfonline.com/10.1234/oab-syp-dark">http://www.tandfonline.com/10.1234/oab-syp-dark</a>.</td></tr>';
+        table += '<tr><td>Version uploaded</td><td>Postprint</td></tr>';
+        table += '<tr><td>Upload matches paper</td><td>Yes</td></tr>';
+        /*if (mp.permissions.version_allowed) table += '<tr><td>Archivable version</td><td><p>' + mp.permissions.version_allowed + '</p></td></tr>';
+        if (mp.permissions.embargo) table += '<tr><td>Embargo date</td><td><p>' + mp.permissions.embargo + '</p></td></tr>';
+        if (mp.permissions.required_statement) table += '<tr><td>Deposit statement</td><td><p>' + mp.permissions.required_statement + '</p></td></tr>';
+        if (mp.file.version) table += '<tr><td>Version uploaded</td><td><p>' + mp.file.version + '</p></td></tr>';
+        table += '<tr><td>Upload matches paper</td><td><p>' + (mp.file.same_paper === true ? 'Yes' : 'No')  + '</p></td></tr>';*/
+        $('div.content:visible').html(table);
+      }
+    }
+  });
+
+  var fakedeposit = function(e) {
+    e.preventDefault();
+    view(undefined,'#wrong');
+    _restart();
+    setTimeout(function() { _fake_deposit(); },300);
+  }
+  $('#fakedeposit').bind('click',fakedeposit);
+
+  shareyourpaper({uid:(api.indexOf('dev.') !== -1 ? 'qZooaHWRz9NLFNcgR' : 'eZwJ83xp3oZDaec86'), api:api, css: false});
+
+});
+</script>
+
+<!-- the one starting qz is the dev id, and it will be used any time the domain has dev. in it. The second one beginning eZ is the live id -->

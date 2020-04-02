@@ -15,6 +15,7 @@ noddy.getCookie = function(cname) {
 
 noddy.setCookie = function(name, values, options) {
   options = options || {};
+  if (!options.samesite) options.samesite = (options.secure ? 'None' : 'Lax');
   var text = name + '=';
   if (values) {
     if (!options.raw) values = encodeURIComponent(JSON.stringify(values));
@@ -36,6 +37,8 @@ noddy.setCookie = function(name, values, options) {
   } else {
     text += '; path=/';
   }
+  // samesite
+  if (options.samesite) text += '; sameSite=' + options.samesite;
   // secure
   if (options.secure) text += '; secure';
   // httponly

@@ -1,13 +1,10 @@
-
-@import url('https://rsms.me/inter/inter.css');
-
 html, body{
   margin:0;
   padding:0;
   font-size:1em;
   font-family: 'Inter', sans-serif;
   color:#212f3f;
-  height: 100%;
+  min-height: 100%;
 }
 
 @supports (font-variation-settings: normal) {
@@ -610,6 +607,7 @@ div.greenbottom {
   }
   .footer p{
     margin: 0 6px;
+    padding:0;
   }
 
   .footer-team{
@@ -639,7 +637,7 @@ div.greenbottom {
   .flex-all{
     display: flex;
     flex-flow: column;
-    height: 100%;
+    min-height: 100vh;
   }
 
   .flex-body{

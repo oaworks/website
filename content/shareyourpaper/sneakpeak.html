@@ -91,9 +91,34 @@
     }
   }
    /*sams added style above*/
+
+   .alert-new {
+     width: 100%;
+     padding-top: 10px;
+     padding-left: 10px;
+     padding-right: 10px;
+     background-color: white;
+     text-align: center;
+   }
+
+   .alert-new p{
+     padding: 0;
+   }
+
 </style>
 
 <div class="flex-all">
+
+
+  <div class="alert-new">
+    <div class="center-col">
+      <div>
+        <p style="text-align:center">
+          We're in Beta. Please <a href="mailto:joe@openaccessbutton.org" class="blue"><b>let us know</b></a> your feedback.
+        </p>
+      </div>
+    </div>
+  </div>
 
 <!-- headder -->
 <div class="navy-bg flex-head">
@@ -108,8 +133,6 @@
 </div>
 
 
-
-
 <!-- pitch -->
 <div class="flex-body" style="display: flex;">
   <div class="center-col quote">
@@ -117,7 +140,10 @@
 
       <!-- 996 is joe@openaccessbutton.org live id. 4WD is the same email on dev. -->
 
-      <script src="/static/shareyourpaper.js"></script><script>shareyourpaper({uid:(api.indexOf('dev.') !== -1 ? '4WDY6njiatg3FZMJm' : '996wFY3oTTkNonqnt'),api:api});</script>
+      <!--<script src="/static/shareyourpaper.js"></script>
+      <script>shareyourpaper({uid:(api.indexOf('dev.') !== -1 ? '4WDY6njiatg3FZMJm' : '996wFY3oTTkNonqnt'),api:api});</script>
+      -->
+
       <div id="shareyourpaper"></div>
 
       <div id="about" style="display:none;">
@@ -180,16 +206,47 @@ jQuery(document).ready(function() {
   $('#topnav').remove();
   $('#footer').remove();
 
-  $(document).ajaxComplete(function(e,xhr) {
-    if ( $('#nodoi').length ) {
-      var rep = 'Try an example <a href="#" id="runexample">doi.org/10.1126/scitranslmed.3008973</a> or <a href="#" class="learnmore">learn more</a>.';
-      $('#nodoi').replaceWith(rep);
-      $('#runexample').on('click',function(e) { e.preventDefault(); $('#oabutton_input').val('10.1126/scitranslmed.3008973'); $('#oabutton_find').trigger('click'); });
-      $('.learnmore').on('click',function(e) { e.preventDefault(); $('#shareyourpaper').toggle(); $('#about').toggle(); });
+  shareyourpaper({uid:"4WDY6njiatg3FZMJm",api:"https://dev.api.cottagelabs.com/service/oab",config:{"depositdate":"","repo_name":"Zenodo","deposit_terms":"","allow_oa_deposit":true,"dark_deposit_off":true,"ROR_ID":"","high_performance":true,"live":true,"pilot":false,"activate_try_it_and_learn_more":false,"not_a_library":true}});
+
+  var evadd = true;
+
+  var learnmore = function() {
+    var rep = 'Try an example <a href="#" id="runexample"><u>10.1126/scitranslmed.3008973</u></a> or <a href="#" class="learnmore"><u>learn more</u></a>.';
+    $('#nodoi').replaceWith(rep);
+    $('#runexample').on('click',function(e) { e.preventDefault(); $('#oabutton_input').val('10.1126/scitranslmed.3008973'); $('#oabutton_find').trigger('click'); });
+    $('.learnmore').on('click',function(e) {
+      e.preventDefault();
+      $('#shareyourpaper').toggle();
+      $('#about').toggle();
+      if (evadd) {
+        evadd = false;
+        window.addEventListener("popstate", function(popevent) {
+          if (window.location.hash.indexOf('about') === -1 && $('#about').is(':visible')) {
+            $('#shareyourpaper').toggle();
+            $('#about').toggle();
+          }
+        });
+      }
+      if ('pushState' in window.history) {
+        if ($('#about').is(':visible')) {
+          window.history.pushState("", "about", '#about');
+        } else {
+          window.history.pushState("", document.title, window.location.pathname);
+        }
+      }
+    });
+  }
+
+  var waiting = function(selector, callback) {
+    if ($(selector).length) {
+      callback();
+    } else {
+      setTimeout(function() {
+        waiting(selector, callback);
+      }, 300);
     }
-  });
-
-
+  };
+  waiting('#nodoi', learnmore);
 
 });
 </script>

@@ -410,8 +410,9 @@ API.service.oab.ill.config = (user, config) ->
   # tested it and set values as below defaults, but also noted that it has year and month boxes, but these do not correspond to year and month params, or date params
   user = Users.get(user) if typeof user is 'string'
   if config?
+    uc = user.service?.openaccessbutton?.ill?.config ? {}
     update = {}
-    for k in ['ill_institution','ill_redirect_base_url','ill_redirect_params','method','sid','title','doi','pmid','pmcid','author','journal','issn','volume','issue','page','published','year','terms','book','other','cost','time','email','problem_email','subscription','subscription_type','search','autorun','autorunparams','intropara','norequests','noillifoa','noillifsub','saypaper']
+    for k in ['ill_institution','ill_redirect_base_url','ill_redirect_params','method','sid','title','doi','pmid','pmcid','author','journal','issn','volume','issue','page','published','year','terms','book','other','cost','time','email','problem_email','subscription','subscription_type','val','search','autorun','autorunparams','intropara','norequests','noillifoa','noillifsub','saypaper','pilot','live']
       if k is 'ill_redirect_base_url' and config[k]?
         if config[k].indexOf('illiad.dll') isnt -1 and config[k].toLowerCase().indexOf('action=') is -1
           config[k] = config[k].split('?')[0]
@@ -422,7 +423,10 @@ API.service.oab.ill.config = (user, config) ->
         else if config[k].indexOf('relais') isnt -1 and config[k].toLowerCase().indexOf('genre=') is -1
           config[k] = config[k].split('?')[0]
           config[k] += '?genre=article'
-      update[k] = config[k] if config[k]?
+      if k in ['pilot','live']
+        update[k] = if config[k] is true and not uc[k] then Date.now() else '$DELETE'
+      else
+        update[k] = config[k] if config[k]?
     if JSON.stringify(update) isnt '{}'
       if not user.service.openaccessbutton.ill?
         Users.update user._id, {'service.openaccessbutton.ill': {config: update}}

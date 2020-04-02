@@ -28,6 +28,8 @@ var view = function(e,which) {
     which = '#' + $('.section:visible').first().attr('id');
   }
   if (($(this).hasClass('pull') || !evented) && $('#instantill','.section:visible').length !== 1) $('#instantill').appendTo($('.content','.section:visible'));
+  if ($(this).hasClass('restart')) _instantill_restart();
+  
   /*if ($('div.content:visible').offset().top > $(window).height()) {
     var pad = Math.floor(($('div.green').height() - $('#instantill').height())/2);
     $('div.content:visible').css({'padding-top':pad+'px'});
@@ -42,24 +44,17 @@ var view = function(e,which) {
 $('body').on('click','.view',view);
 $(window).on('popstate', view);
 view();
+setTimeout(function() { $('#demo').show();}, 2000);
 
-var preview = function(e,val) {
+var preview = function(e,val,specialval) {
+  try { if ($(this).hasClass('specialval') && specialval === undefined) specialval = uc.val; } catch(err) {}
   try { e.preventDefault(); } catch (err) {}
   if ($(this).hasClass('save') && val === undefined) {
     // do nothing, the save will call this again once ready to run the preview with new values
   } else {
-    if (typeof val !== 'string') {
-      try {
-        try {
-          if (uc.val) val = uc.val;
-        } catch(err) {
-          val = $(this).attr('val');
-        }
-      } catch(err) {
-        val = '10.1145/2908080.2908114';
-      }
-    }
+    if (typeof val !== 'string') val = $(this).attr('val');
     if (typeof val !== 'string' || val.length < 10) val = '10.1145/2908080.2908114';
+    if (specialval) val = specialval;
     if ($(this).hasClass('view')) {
       if ($('#instantill','.section:visible').length !== 1) {
         $('#instantill').appendTo($('.content','.section:visible'));
