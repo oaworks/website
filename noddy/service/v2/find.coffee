@@ -297,14 +297,15 @@ API.service.oab.find = (options={}, metadata={}, content) ->
   API.log msg: 'OAB finding academic content', level: 'debug', metadata: JSON.stringify metadata
 
   # special cases for instantill/shareyourpaper/other demos - dev and live demo accounts that always return a fixed answer
-  if (options.plugin is 'instantill' or options.plugin is 'shareyourpaper') and (metadata.doi is '10.1234/567890' or (metadata.doi? and metadata.doi.indexOf('10.1234/oab-syp-') is 0) or metadata.title is 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL') and options.from in ['qZooaHWRz9NLFNcgR','eZwJ83xp3oZDaec86'] 
+  demodoi = metadata.doi is '10.1234/567890' or (metadata.doi? and metadata.doi.indexOf('10.1234/oab-syp-') is 0)
+  if (options.plugin is 'instantill' or options.plugin is 'shareyourpaper') and (demodoi or metadata.title is 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL') and options.from in ['qZooaHWRz9NLFNcgR','eZwJ83xp3oZDaec86'] 
     # https://scholarworks.iupui.edu/bitstream/handle/1805/20422/07-PAXTON.pdf?sequence=1&isAllowed=y
     res.metadata = {title: 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL', year: '2019', doi: metadata.doi ? '10.1234/oab-syp-aam'}
     res.metadata.journal = 'Proceedings of the 16th IFLA ILDS conference: Beyond the paywall - Resource sharing in a disruptive ecosystem'
     res.metadata.author = [{given: 'Mike', family: 'Paxton'}, {given: 'Gary', family: 'Maixner III'}, {given: 'Joseph', family: 'McArthur'}, {given: 'Tina', family: 'Baich'}]
     res.ill = {openurl: ""}
     res.ill.subscription = {findings:{}, uid: options.from, lookups:[], error:[], url: 'https://scholarworks.iupui.edu/bitstream/handle/1805/20422/07-PAXTON.pdf?sequence=1&isAllowed=y', demo: true}
-    res.permissions = API.service.oab.permissions(metadata) if options.permissions
+    res.permissions = API.service.oab.permissions(metadata) if options.permissions and metadata.doi and not demodoi
     return res
     
   if not metadata.title and content and typeof options.url is 'string' and (options.url.indexOf('alma.exlibrisgroup.com') isnt -1 or options.url.indexOf('/exlibristest') isnt -1)
@@ -324,21 +325,21 @@ API.service.oab.find = (options={}, metadata={}, content) ->
     # if user wants a total refresh, don't use any of it (we still search for it though, because will overwrite later with the fresh stuff)
     delete catalogued.found.oabutton if catalogued?.found?.oabutton? # fix for mistakenly cached things, we now won't record as found in OAB, just show as cached response
     if catalogued? and res.refresh isnt 0
-      #res.permissions ?= catalogued.permissions if catalogued.permissions? and (catalogued.metadata?.journal? or catalogued.metadata?.issn?)
+      res.permissions ?= catalogued.permissions if catalogued.permissions?.permissions? and not catalogued.permissions?.error? and (catalogued.metadata?.journal? or catalogued.metadata?.issn?)
       if 'oabutton' in res.sources
         res.checked.push('oabutton') if 'oabutton' not in res.checked
         if catalogued.url? # within or without refresh time, if we have already found it, re-use it
           _get metadata, catalogued.metadata
-          res.cached = true if _got() # no need for further finding if we have the url and all necessary metadata
+          res.cached = true # no need for further finding if we have the url and all necessary metadata
           res.url = catalogued.url
         else if catalogued.createdAt > Date.now() - res.refresh*86400000
           _get metadata, catalogued.metadata # it is in the catalogue but we don't have a link for it, and it is within refresh days old, so re-use the metadata from it
-          res.cached = true if _got() # and cause an immediate return, we don't bother looking for everything again if we already couldn't find it within a given refresh window
+          res.cached = true # and cause an immediate return, we don't bother looking for everything again if we already couldn't find it within a given refresh window
   _findoab()
 
   # TODO update requests so successful ones write the source to the catalogue - but updating requests is not priority yet, so not doing right now
 
-  if not res.cached
+  if not res.cached or not _got() or options.permissions and not res.permissions?
     # check crossref for metadata if we don't have enough, but do already have a doi
     _get_formatted_crossref()
     # check epmc if we don't have enough
@@ -522,7 +523,7 @@ API.service.oab.find = (options={}, metadata={}, content) ->
       upd.checked = uc if JSON.stringify(uc.sort()) isnt JSON.stringify catalogued.checked.sort()
       uf = _.extend(res.found, catalogued.found)
       upd.found = uf if not _.isEqual uf, catalogued.found
-      upd.permissions = res.permissions if res.permissions? and (not catalogued.permissions? or not _.isEqual res.permissions, catalogued.permissions)
+      upd.permissions = res.permissions if res.permissions? and (not catalogued.permissions? or not _.isEqual res.permissions, catalogued.permissions) and not res.permissions.error?
       upd.usermetadata = res.usermetadata if res.usermetadata?
       if typeof metadata.title is 'string'
         ftm = API.service.oab.ftitle(metadata.title)
@@ -536,7 +537,7 @@ API.service.oab.find = (options={}, metadata={}, content) ->
         sources: res.sources
         checked: res.checked
         found: res.found
-        permissions: res.permissions
+        permissions: res.permissions if res.permissions? and not res.permissions.error?
       fl.ftitle = API.service.oab.ftitle(metadata.title) if typeof metadata.title is 'string'
       fl.usermetadata = res.usermetadata if res.usermetadata?
       res.catalogue = oab_catalogue.insert fl
