@@ -79,7 +79,11 @@ API.service.oab.permissions = (meta={}, file, url, confirmed, uid) ->
         ru = 'https://api.greenoait.org/permissions/doi/' + meta.doi
         if uid and uc = API.service.deposit.config(uid)
           ru += '?affiliation=' + uc.ROR_ID if uc.ROR_ID
-        perms.ricks = HTTP.call('GET',ru).data.authoritative_permission
+        API.log 'Permissions check connecting to Ricks for ' + ru
+        try
+          perms.ricks = HTTP.call('GET',ru).data.authoritative_permission
+        catch
+          API.log 'Permissions check connection to Ricks failed for ' + meta.doi
         try API.http.cache(meta.doi, 'ricks_permissions', perms.ricks) if perms.ricks?.application?
       perms.permissions.archiving_allowed = perms.ricks?.application?.can_archive_conditions?.versions_archivable? and ('postprint' in perms.ricks.application.can_archive_conditions.versions_archivable or 'publisher pdf' in perms.ricks.application.can_archive_conditions.versions_archivable)
       perms.permissions.required_statement = perms.ricks.application.can_archive_conditions.deposit_statement_required_calculated if typeof perms.ricks?.application?.can_archive_conditions?.deposit_statement_required_calculated is 'string' and perms.ricks.application.can_archive_conditions.deposit_statement_required_calculated.indexOf('cc-') isnt 0
