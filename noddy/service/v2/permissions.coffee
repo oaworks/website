@@ -79,6 +79,7 @@ API.service.oab.permissions = (meta={}, file, url, confirmed, uid) ->
         ru = 'https://api.greenoait.org/permissions/doi/' + meta.doi
         if uid and uc = API.service.deposit.config(uid)
           ru += '?affiliation=' + uc.ROR_ID if uc.ROR_ID
+        API.log 'Permissions check connecting to Ricks for ' + ru
         try
           perms.ricks = HTTP.call('GET',ru).data.authoritative_permission
         catch
