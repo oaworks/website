@@ -212,8 +212,12 @@
                 Manually: bulk upload</a>
             </li>
             <li>
-              <a class="blue view pull" href="#programatically">
-                Programmatically: OAI-PMH or API</a>
+              <a class="blue view pull" href="#oai-pmh">
+                Programmatically: OAI-PMH</a>
+            </li>
+            <li>
+              <a class="blue view pull" href="#api">
+                Programmatically: API</a>
             </li>
             <li>
               <a class="blue view pull" href="#no-repo">
@@ -312,7 +316,7 @@
   </div>
 </div>
 
-  <div id="programatically" class="section">
+  <div id="oai-pmh" class="section">
     <div class="row">
       <div class="col-md-6 col-md-offset-1 content">
 
@@ -322,24 +326,6 @@
         <div class="blueery">
           <p><a class="blue view pull" href="#repository"><span class="glyphicon glyphicon-arrow-left"></span>  Go to Menu</a></p>
           <h2>Programmatically: OAI-PMH or API</h2>
-
-          <p>
-            We have two ways to support programmatic ingestion of files.
-          </p>
-
-          <p><b>APIs</b></p>
-
-          <p>
-            Every shareyourpaper.org account comes with an API that developers and the very curious can use to see all the activity. Yours is:
-          </p>
-          <p>
-            <!-- TODO: MARK, PUT THE PERSONAL LINK HERE -->
-          </p>
-          <p>
-            This can be used to automatically ingest content that comes through your account. You can learn how to use it in our <a href="https://openaccessbutton.org/api" class="blue">developer documentation</a>.
-          </p>
-
-          <p><b>OAI-PMH feeds</b></p>
 
           <p>
             Your repository may already support automatic ingestion of content from OAI-PMH feeds. If so, here’s how to generate one from your shareyourpaper.org account.
@@ -635,6 +621,7 @@
           <p><b>
             Would you like to turn off dark deposit?
           </b></p>
+
           <p>
             Please note. We recommend against this, as it allows authors to always make their work more available. If you turn it off, the tool will suggest they request permissions from the journal.
           </p>
@@ -1075,6 +1062,14 @@ jQuery(document).ready(function() {
   $('body').on('change','.subscription',guesssubscription);
 
   var configure = function() {
+    if ($('.stickidin').length) {
+      var uid = noddy.user.account._id;
+      var repstr = 'shareyourpaper({uid:"' + uid + '"';
+      if (api.indexOf('dev.') !== -1) repstr += ',api:"' + api + '"';
+      if (uc.high_performance) repstr += ',config:' + JSON.stringify(uc);
+      repstr += '})';
+      $('.stickidin').html($('.stickidin').html().replace('shareyourpaper()',repstr));
+    }
     for (var k in uc) {
       if (k === 'pilot' || k === 'live') {
         $('#'+k).prop('checked', uc[k]);
@@ -1098,6 +1093,9 @@ jQuery(document).ready(function() {
           $('.subscription').last().val(url);
           $('.subscription_type').last().val(type);
         }
+      } else if (k === 'community') {
+        // deal with annoying multiple community ID fields
+        $('input').each(function(i, obj) { if ( $(this).attr('id') === 'community') { $(this).val(uc[k]); } });
       } else if (k !== 'subscription_type') {
         $('#'+k).val(uc[k]);
       }
@@ -1111,14 +1109,15 @@ jQuery(document).ready(function() {
       _preview = pvw ? pvw : ($(this).attr('preview') ? $(this).attr('preview') : ($(this).attr('val') ? $(this).attr('val') : true));
     }
     var data = {};
+    if (uc.community) data.community = uc.community; // deal with multiple community id annoyances that we should not have
     $('.setting').each(function(i, obj) {
       if ( $(this).attr('id') === 'community') {
-        if ( $(this).is(':visible') ) {
-          var evl = $(this).val();
-          try {
-            evl = evl.split('communities/')[1].split('/')[0];
-            $(this).val(evl);
-          } catch(err) {}
+        var evl = $(this).val();
+        try {
+          if (evl.indexOf('/') !== -1) evl = evl.split('communities/')[1].split('/')[0];
+        } catch(err) {}
+        if ( (uc.community !== undefined && evl !== uc.community) || (uc.community === undefined && evl !== '') ) {
+          $('input').each(function(i, obj) { if ( $(this).attr('id') === 'community') { $(this).val(evl); } });
           data.community = evl;
         }
       } else if ( $(this).is(':checkbox') ) {
@@ -1185,20 +1184,16 @@ jQuery(document).ready(function() {
 
   noddy.afterLogin = function() {
     $('.promptsignup').hide();
-    if ($('.stickidin').length) {
-      var uid = noddy.user.account._id;
-      var repstr = 'shareyourpaper({uid:"' + uid + '"';
-      if (api.indexOf('dev.') !== -1) repstr += ',api:"' + api + '"';
-      repstr += '})';
-      $('.stickidin').html($('.stickidin').html().replace('shareyourpaper()',repstr));
-    }
+    var uid = noddy.user.account._id;
+    try {
+      uc = noddy.user.account.service.openaccessbutton.deposit.config;
+    } catch(err) {}
     if ($('.onlyyou').length) $('.onlyyou').html($('.onlyyou').html().replace('but only you ','but only you (' + noddy.user.account.profile.firstname + ') '));
     shareyourpaper({uid:uid, api:api, css: false});
     try {
       $('.email').attr('placeholder','default ' + (noddy.user.account.email ? noddy.user.account.email : noddy.user.account.emails[0].address));
     } catch(err) {}
     try {
-      uc = noddy.user.account.service.openaccessbutton.deposit.config;
       configure();
     } catch(err) {}
     try {

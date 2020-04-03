@@ -62,9 +62,7 @@ var preview = function(e,val,specialval) {
     } else if (!$('#instantill').is(':visible')) {
       view(undefined,'#demo');
     }
-    _instantill_restart();
-    $('#oabutton_input').val(val);
-    setTimeout(function() { $('#oabutton_find').trigger('click'); },300);
+    _instantill_restart(undefined,val);
   }
 }
 $('body').on('click','.preview',preview);
