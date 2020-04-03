@@ -4,7 +4,7 @@ html, body{
   font-size:1em;
   font-family: 'Inter', sans-serif;
   color:#212f3f;
-  /*min-height: 100vh;*/
+  min-height: 100vh !important;
 }
 
 @supports (font-variation-settings: normal) {
