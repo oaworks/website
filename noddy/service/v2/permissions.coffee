@@ -293,5 +293,4 @@ API.service.oab.permissions = (meta={}, file, url, confirmed, uid) ->
   perms.permissions.licence_required ?= f.licence if f.licence
 
   perms.file = f if not _.isEmpty f
-  perms.metadata = meta
   return perms
