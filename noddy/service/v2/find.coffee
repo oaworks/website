@@ -180,14 +180,14 @@ API.service.oab.find = (options={}, metadata={}, content) ->
           delete metadata.doi
           delete options.doi # don't allow the user-provided data to later override if we can't validate it on crossref
         else
-          metadata = crs
+          _get metadata, crs
       if metadata.licence? and metadata.licence.indexOf('creativecommons') isnt -1
         res.url = 'https://doi.org/' + metadata.doi
         res.found.crossref = res.url
   _get_formatted_europepmc = () ->
     if (not _got() or (res.find and not res.url)) and 'epmc' in res.sources and (metadata.doi or metadata.pmid or metadata.pmcid or metadata.title)      
       res.checked.push('epmc') if 'epmc' not in res.checked
-      metadata = API.use.europepmc.format undefined, metadata
+      _get metadata, API.use.europepmc.format undefined, metadata
       if metadata.url
         res.url = metadata.url
         res.found.epmc = res.url
