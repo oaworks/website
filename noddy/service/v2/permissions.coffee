@@ -78,7 +78,7 @@ API.service.oab.permissions = (meta={}, file, url, confirmed, uid) ->
         API.log 'Permissions check found in Ricks cache for ' + meta.doi
     if not perms.ricks?
       ru = 'https://api.greenoait.org/permissions/doi/' + meta.doi
-      if uid and uc = API.service.deposit.config(uid)
+      if uid and uc = API.service.oab.deposit.config(uid)
         ru += '?affiliation=' + uc.ROR_ID if uc.ROR_ID
       API.log 'Permissions check connecting to Ricks for ' + ru
       try
