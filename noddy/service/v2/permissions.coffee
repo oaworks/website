@@ -30,7 +30,7 @@ API.service.oab.permissions = (meta={}, file, url, confirmed, uid) ->
 
   formats = ['doc','tex','pdf','htm','xml','txt','rtf','odf','odt','page']
 
-  perms = meta.permissions ? {permissions: {archiving_allowed: false, version_allowed: undefined, embargo: undefined, required_statement: undefined, licence_required: undefined}, file: undefined}
+  perms = {permissions: {archiving_allowed: false, version_allowed: undefined, embargo: undefined, required_statement: undefined, licence_required: undefined}, file: undefined}
   meta = meta.metadata if meta.metadata? # if passed a catalogue object
 
   if typeof file is 'string'
@@ -72,25 +72,26 @@ API.service.oab.permissions = (meta={}, file, url, confirmed, uid) ->
   if meta.doi? and not perms.ricks?
     try
       # https://rickscafe-api.herokuapp.com/permissions/doi/
-      try cached = API.http.cache meta.doi, 'ricks_permissions'
+      cached = API.http.cache meta.doi, 'ricks_permissions'
       if cached and typeof cached is 'object' and cached.application?
         perms.ricks = cached
-      else
-        ru = 'https://api.greenoait.org/permissions/doi/' + meta.doi
-        if uid and uc = API.service.deposit.config(uid)
-          ru += '?affiliation=' + uc.ROR_ID if uc.ROR_ID
-        API.log 'Permissions check connecting to Ricks for ' + ru
-        try
-          perms.ricks = HTTP.call('GET',ru).data.authoritative_permission
-        catch
-          API.log 'Permissions check connection to Ricks failed for ' + meta.doi
+        API.log 'Permissions check found in Ricks cache for ' + meta.doi
+    if not perms.ricks?
+      ru = 'https://api.greenoait.org/permissions/doi/' + meta.doi
+      if uid and uc = API.service.deposit.config(uid)
+        ru += '?affiliation=' + uc.ROR_ID if uc.ROR_ID
+      API.log 'Permissions check connecting to Ricks for ' + ru
+      try
+        perms.ricks = HTTP.call('GET',ru).data.authoritative_permission
         try API.http.cache(meta.doi, 'ricks_permissions', perms.ricks) if perms.ricks?.application?
+      catch
+        API.log 'Permissions check connection to Ricks failed for ' + meta.doi
+        perms.error = 'Could not connect to Ricks'
+    try
       perms.permissions.archiving_allowed = perms.ricks?.application?.can_archive_conditions?.versions_archivable? and ('postprint' in perms.ricks.application.can_archive_conditions.versions_archivable or 'publisher pdf' in perms.ricks.application.can_archive_conditions.versions_archivable)
       perms.permissions.required_statement = perms.ricks.application.can_archive_conditions.deposit_statement_required_calculated if typeof perms.ricks?.application?.can_archive_conditions?.deposit_statement_required_calculated is 'string' and perms.ricks.application.can_archive_conditions.deposit_statement_required_calculated.indexOf('cc-') isnt 0
       perms.permissions.licence_required = perms.ricks.application.can_archive_conditions.licenses_required[0] if perms.ricks?.application?.can_archive_conditions?.licenses_required?
       perms.permissions.policy_full_text = perms.ricks.provenance.policy_full_text if perms.ricks?.provenance?.policy_full_text
-    catch
-      perms.error = 'Could not connect to Ricks'
     try
       if perms.permissions.archiving_allowed
         perms.permissions.version_allowed = if 'publisher pdf' in perms.ricks.application.can_archive_conditions.versions_archivable then 'publisher pdf' else if 'postprint' in perms.ricks.application.can_archive_conditions.versions_archivable then 'postprint' else 'preprint'
