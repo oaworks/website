@@ -103,7 +103,8 @@ API.service.oab.availability = (opts,v2) ->
             break
       afnd.data.meta.article.bing = true if 'bing' in afnd.v2.checked
       afnd.data.meta.article.reversed = true if 'reverse' in afnd.v2.checked
-      afnd.data.availability.push({type: 'article', url: afnd.v2.url}) if afnd.v2.url
+      if afnd.v2.url
+        afnd.data.availability.push({type: 'article', url: afnd.v2.url})
     try
       if afnd.data.availability.length is 0 and (afnd.v2.metadata.doi or afnd.v2.metadata.title or afnd.v2.metadata.url)
         eq = {type: 'article'}
@@ -213,7 +214,6 @@ API.service.oab.find = (options={}, metadata={}, content) ->
     options.id = metadata.id
     delete metadata.id
   options.url = options.url[0] if _.isArray options.url
-
 
   metadata.doi ?= options.doi.replace('doi:','').replace('doi.org/','').trim() if typeof options.doi is 'string'
   metadata.title ?= options.title.trim() if typeof options.title is 'string'
@@ -390,7 +390,7 @@ API.service.oab.find = (options={}, metadata={}, content) ->
     delete metadata.title if metadata.title? and (metadata.title is 404 or metadata.title.indexOf('404') is 0)
   
     # all sources that have not yet been checked, that could find us an article, are now checked in parallel
-    # by this point, by default, it would be oadoi, figshare, doaj
+    # by this point, by default, it would be oadoi, doaj
     if (not _got() or (res.find and not res.url)) and (metadata.doi or metadata.title)
       did = 0
       _run = (src, which) ->
@@ -405,11 +405,13 @@ API.service.oab.find = (options={}, metadata={}, content) ->
                 res.redirect = if rs.redirect then rs.redirect else rs.url
                 res.url = res.redirect
                 res.found[src] ?= res.url
+              metadata.licence ?= rs.licence
               metadata.licence ?= rs.best_oa_location?.license if rs.best_oa_location?.license
               metadata.title ?= mt if mt?
+              metadata.year ?= rs.year if rs.year?
               metadata.pmid ?= rs.pmid if rs.pmid?
-              metadata.journal ?= if rs.journalInfo?.journal?.title? then rs.journalInfo.journal.title.split('(')[0].trim() else if rs.journal?.title? then rs.journal.title.split('(')[0].trim() else undefined
-              metadata.issn ?= if rs.journalInfo?.journal?.issn? then rs.journalInfo.journal.issn else if rs.journal?.issn? then rs.journal.issn else undefined
+              metadata.journal ?= if rs.journalInfo?.journal?.title? then rs.journalInfo.journal.title.split('(')[0].trim() else if rs.journal?.title? then rs.journal.title.split('(')[0].trim() else if typeof rs.journal is 'string' then rs.journal else undefined
+              metadata.issn ?= if rs.journalInfo?.journal?.issn? then rs.journalInfo.journal.issn else if rs.journal?.issn? then rs.journal.issn else if typeof rs.issn is 'string' then rs.issn else undefined
         did += 1
 
       _prl = (src, which) -> Meteor.setTimeout (() -> _run src, which), 10

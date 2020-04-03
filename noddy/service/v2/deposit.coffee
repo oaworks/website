@@ -11,7 +11,7 @@ API.add 'service/oab/deposit',
     action: () ->
       return API.service.oab.deposit undefined, this.bodyParams, this.request.files, this.userId
 
-_deposits = (params,uid,deposited) ->
+_deposits = (params,uid,deposited,csv) ->
   restrict = [{exists:{field:'deposit.type'}}]
   restrict.push({term:{'deposit.from.exact':(params.uid ? uid)}}) if uid or params.uid
   restrict.push({exists:{field:'deposit.zenodo.url'}}) if deposited
@@ -42,11 +42,10 @@ _deposits = (params,uid,deposited) ->
         if not already
           for f in fields
             if f not in ['metadata.doi','metadata.title','deposit.type','deposit.createdAt']
-              if f.indexOf('deposit.') is 0
-                tn = f.replace('deposit.','')
-                red[tn] = d[tn]
+              if f is 'deposit'
+                red[f] = d
               else
-                red[f] = API.collection._dot dr, f
+                red[f] = API.collection.dot dr, f
           re.push red
   if params.sort is 'createdAt:asc'
     re = _.sortBy re, 'createdAt'
@@ -62,7 +61,7 @@ API.add 'service/oab/deposits',
   csv: true
   get:
     authOptional: true
-    action: () -> return _deposits this.queryParams, this.userId
+    action: () -> return _deposits this.queryParams, this.userId, undefined, this.request.url.indexOf('.csv') isnt -1
   post:
     authOptional: true
     action: () ->
@@ -74,7 +73,7 @@ API.add 'service/oab/deposited',
   csv: true
   get:
     authOptional: true
-    action: () -> return _deposits this.queryParams, this.userId, true
+    action: () -> return _deposits this.queryParams, this.userId, true, this.request.url.indexOf('.csv') isnt -1
 
 API.add 'service/oab/deposit/config',
   get:

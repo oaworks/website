@@ -97,7 +97,7 @@ API.service.oab.permissions = (meta={}, file, url, confirmed, uid) ->
           if em.isAfter(moment())
             perms.permissions.embargo = em.format "YYYY-MM-DD"
             break
-  if not perms.sherpa?
+  if false and not perms.sherpa? # sherpa is turned off now - could use it as a fallback if ever ricks does not respond (but may need to update sherpa to their new api spec)
     if not (meta.issn? or meta.journal?) and not metad
       metad = true
       meta = API.service.oab.metadata undefined, meta, content
