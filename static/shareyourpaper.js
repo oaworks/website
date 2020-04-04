@@ -401,7 +401,7 @@ var _run = function() {
               // if the file given is not a version that is allowed, show a page saying something looks wrong
               // also the backend should create a dark deposit in this case, but delay it by six hours, and cancel if received in the meantime
               var info = '<h2>Hmmm, something looks wrong</h2>';
-              info += '<p>You\’re nearly done. It looks like what you uploaded is a publisher\’s PDF which ' + jn + ' prohibits legally sharing.<!-- It can only be shared on a limited basis.--><br><br>';
+              info += '<p>You\’re nearly done. It looks like what you uploaded is a publisher\’s PDF which your journal prohibits legally sharing.<!-- It can only be shared on a limited basis.--><br><br>';
               info += 'We just need the version accepted by the journal to make your work available to everyone.</p>';
               info += '<p><a href="#" class="oabutton_inform ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" id="oabutton_inform" style="min-width:150px;">Try uploading again</a></p>';
               info += '<p><a href="#" id="oabutton_filecorrect"><b><u>My upload was an accepted manuscript</u></b></a></p>';
@@ -525,7 +525,7 @@ var _run = function() {
     var journal = avail && avail.v2 && avail.v2.metadata && avail.v2.metadata.journal ? 'published in "' + avail.v2.metadata.journal + '"' : '';
     if (cml === undefined) cml = _oab_config.problem_email ? _oab_config.problem_email : (_oab_config.email ? _oab_config.email : (_oab_config.adminemail ? _oab_config.adminemail : undefined));
     var mt, cc;
-    try { 
+    try {
       mt = avail.v2.permissions.ricks.application.can_archive_conditions.permission_required_contact;
       cc = _oab_config.deposit_help ? _oab_config.deposit_help : cml;
     } catch (err) {
@@ -533,7 +533,7 @@ var _run = function() {
     }
     if (mt === undefined) {
       mt = _oab_config.deposit_help ? _oab_config.deposit_help : cml;
-      cc = undefined;      
+      cc = undefined;
     }
     var eml = 'mailto:' + mt + '?'
     if (cc) eml += 'cc=' + cc + '&';
@@ -668,7 +668,7 @@ var _run = function() {
         info += '<div>';
         info += '<h2>You may share your paper if you ask the journal</h2>';
         info += '<p>Unlike most, ' + jn + ' requires that you ask them before you share your paper freely. ';
-        info += 'It only takes a moment as the library can find out who to contact and has drafted an email for you.</p>';
+        info += 'Asking only takes a moment as we find out who to contact and have drafted an email for you.</p>';
         info += '<p><a target="_blank" id="oabutton_reviewemail" href="#" class="' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Review Email</a></p>';
         info += '<p><a target="_blank" id="oabutton_permissionemail" href="#"><u>I\'ve got permission now!</u></a></p>';
         info += '</div>';
