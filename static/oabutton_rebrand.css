@@ -4,7 +4,7 @@ html, body{
   font-size:1em;
   font-family: 'Inter', sans-serif;
   color:#212f3f;
-  min-height: 100%;
+  min-height: 100vh !important;
 }
 
 @supports (font-variation-settings: normal) {
@@ -37,17 +37,17 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-weight:bold;
+  font-weight:400;
 }
 
 ul.arrowed {
-  margin-top:15px;
-  margin-bottom:25px;
+  margin-top:0px;
+  margin-bottom:20px;
   list-style: none;
   padding-left: 15px;
 }
 ul.arrowed li {
-  margin-bottom:15px;
+  margin-bottom:5px;
 }
 
 .glyphicon-arrow-right{
