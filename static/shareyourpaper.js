@@ -62,11 +62,11 @@ var _run = function() {
   var w = '<div id="oabutton_inputs"><h2>Make your research visible and see 30% more citations</h2>';
   w += '<p>';
   if (_oab_config.not_a_library) {
-    w += 'Share your paper helps you to make your paper open access, for free, wherever you publish. '
+    w += 'We can help you make your paper Open Access, for free, wherever you publish. It\'s legal and takes just minutes. '
   } else {
-    w += 'Share your paper with help from the library in ' + (_oab_config.repo_name ? _oab_config.repo_name : 'ScholarWorks') + '. '
+    w += 'Share your paper with help from the library in ' + (_oab_config.repo_name ? _oab_config.repo_name : 'ScholarWorks') + '. Legally, for free, in minutes. '
   }
-  w += 'Legally, for free, in minutes. Join millions of researchers sharing their papers freely with colleagues and the public.</p>';
+  w += 'Join millions of researchers sharing their papers freely with colleagues and the public.</p>';
   w += '<h3>Start by entering the DOI of your paper</h3>';
   w += '<p>We\'ll gather information about your paper and find the easiest way to share it.</p>';
   w += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_input" placeholder="' + _oab_opts.placeholder + '" aria-label="' + _oab_opts.placeholder + '" style="box-shadow:none;"></input></p>\
