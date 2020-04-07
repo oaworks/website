@@ -727,7 +727,7 @@ var _run = function() {
       input = $('#oabutton_input').val().trim();
       if (input.lastIndexOf('.') === input.length-1) input = input.substring(0,input.length-1);
       if (input.indexOf('10.') === 0 && window.location.href.indexOf(input) === -1 && 'pushState' in window.history) {
-        window.history.pushState("", "find", (window.location.href.indexOf('shareyourpaper.org') !== -1 ? window.location.pathname.split('/10.')[0] + '/' + input + window.location.search + window.location.hash : window.location.pathname + window.location.search.split('?doi=')[0].split('&doi=')[0] + (window.location.href.indexOf('?') === -1 ? '?' : '&') + 'doi=' + input + window.location.hash));
+        window.history.pushState("", "find", (window.location.href.indexOf('shareyourpaper.org') !== -1 ? window.location.pathname.split('/10.')[0] + input + window.location.search + window.location.hash : window.location.pathname + window.location.search.split('?doi=')[0].split('&doi=')[0] + (window.location.href.indexOf('?') === -1 ? '?' : '&') + 'doi=' + input + window.location.hash));
       }
       var data = {};
       if ($('#oabutton_title').length) {
