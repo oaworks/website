@@ -62,7 +62,7 @@ var _run = function() {
   var w = '<div id="oabutton_inputs"><h2>Make your research visible and see 30% more citations</h2>';
   w += '<p>';
   if (_oab_config.not_a_library) {
-    w += 'Share your paper is designed by libraries to make your paper open access, for free, wherever you publish. '
+    w += 'Share your paper helps you to make your paper open access, for free, wherever you publish. '
   } else {
     w += 'Share your paper with help from the library in ' + (_oab_config.repo_name ? _oab_config.repo_name : 'ScholarWorks') + '. '
   }
