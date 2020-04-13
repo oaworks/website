@@ -254,7 +254,7 @@ curl -X POST "{{api}}/request" -d '{"doi": "10.1126/science.196.4287.293"}' -H "
                     </a>
                   </p>
 <pre id="post_deposit" class="example">
-curl -X POST "{{api}}/ill" -d '{"doi": "10.1126/science.196.4287.293", "url": "https://urltofileforupload.pdf"}' -H "Content-Type: application/json"</pre>
+curl -X POST "{{api}}/deposit" -d '{"doi": "10.1126/science.196.4287.293", "url": "https://urltofileforupload.pdf"}' -H "Content-Type: application/json"</pre>
 
                   <p>
                     Include at least a DOI and a file, or a URL to a file. The file will be checked to ensure it’s the legal version (e.g postprint / submitted version) and deposited to Zenodo. We’ll pick up relevant metadata while checking, or you can pass your own.
@@ -282,7 +282,7 @@ curl -X POST "{{api}}/ill" -d '{"doi": "10.1126/science.196.4287.293", "url": "h
                   <p>
                     Accepts "uid" as a parameter to filter results to your version of shareyourpaper.org.
                   </p>
-                  <p id="depositeduid">
+                  <p class="depositeduid">
                     Get a "uid" by <a href="/account?next=/api#deposited">logging in</a> and <a href="https://shareyourpaper.org/setup">setting up Shareyourpaper.org</a></a>.
                   </p>
                   <p>
@@ -307,7 +307,7 @@ curl -X POST "{{api}}/ill" -d '{"doi": "10.1126/science.196.4287.293", "url": "h
                   <p>
                     Accepts "uid" as a parameter to filter results to your version of shareyourpaper.org.
                   </p>
-                  <p id="depositeduid">
+                  <p class="depositeduid">
                     Get a "uid" by <a href="/account?next=/api#deposits">logging in</a> and <a href="https://shareyourpaper.org/setup">setting up Shareyourpaper.org</a></a>.
                   </p>
                   <p>
@@ -397,6 +397,7 @@ curl -X POST "{{api}}/ill" -d '{"doi": "10.1126/science.196.4287.293"}' -H "Cont
         $('.auth').each(function() { $(this).attr('href',$(this).attr('href')+'?apikey='+noddy.apikey); });
         $('.apikey').html(noddy.apikey);
         $('.yourid').html(noddy.user.account._id);
+        $('.depositeduid').html('Your uid is ' + noddy.user.account._id);
         $('pre.example').each(function() { if ($(this).html().indexOf('curl -H ') === -1) $(this).html($(this).html().replace('curl ',  'curl -H "x-apikey: ' + noddy.apikey + '" ')); });
         $('a.api').each(function() { if ($(this).attr('href').indexOf('apikey=') === -1 && $(this).attr('href').indexOf('#') !== 0) $(this).attr('href',$(this).attr('href')+($(this).attr('href').indexOf('?') !== -1 ? '&' : '?')+'apikey='+noddy.apikey); });
       } else {
