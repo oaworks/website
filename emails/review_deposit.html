@@ -7,9 +7,13 @@
 
 <p>It came from:</p>
 
-<p>{{embedded}} with ID: {{from}}</p>
+<p>{{embedded}} with uid: {{from}}</p>
 
 <p>But it needs a review of some sort.</p>
+
+<p>We think the following versions are allowed:</p>
+
+{{permissions.permissions.version_allowed}}
 
 <p>If it's okay, you can deposit it into Zenodo by <a href = "{{embedded}}&confirmed={{permissions.file.checksum}}&email={{email}}">clicking here</a> and then uploading the file from this email.</p>
 
@@ -159,3 +163,6 @@
 
 <p>Error</p>
 {{error}}
+
+<p>Full Deposit API Record(s)</p>
+<a href="https://api.openaccessbutton.org/deposits?q=doi:{{metadata.doi}}&uid={{from}}">See Here</a>

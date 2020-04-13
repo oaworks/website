@@ -659,7 +659,13 @@ var _run = function() {
         info += '<h3>We\'ll check it\'s legal, then promote, and preserve your work</h3>';
         info += '<p><input type="file" name="file" id="file" class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '"></p>';
         info += '<p>By uploading you\'re agreeing to the ' + tcs + ' and to license your work ';
-        info += avail.v2.permissions.permissions.licence_required !== undefined ? avail.v2.permissions.permissions.licence_required : 'CC-BY';
+        if (typeof avail.v2.permissions.permissions.licence_required === 'string' && avail.v2.permissions.permissions.licence_required.indexOf('other-') === 0) {
+          info += 'under the publisher\'s terms.[[REFS]]';
+        } else if (avail.v2.permissions.permissions.licence_required !== undefined) {
+          info += avail.v2.permissions.permissions.licence_required;
+        } else {
+          info += 'CC-BY';
+        }
         info += '.</p>';
         info += '<p><a href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : ' btn btn-primary') : '') + '" id="submitfile" style="min-width:150px;">Upload</a>';
         info += '</div>';
@@ -692,14 +698,14 @@ var _run = function() {
         for (var p in avail.v2.permissions.permissions.policy_full_text) {
           refs += ' <a target="_blank" href="' + avail.v2.permissions.permissions.policy_full_text[p] + '">[' + (parseInt(p)+1) + ']</a>';
         }
-        info = info.replace('[[REFS]]',refs);
+        info = info.replace(/\[\[REFS\]\]/g,refs);
       } else {
-        info = info.replace('[[REFS]]','');
+        info = info.replace(/\[\[REFS\]\]/g,'');
       }
       if (avail.v2.metadata && avail.v2.metadata.doi) {
-        info = info.replace('[[PAPER]]','<a target="_blank" href="https://doi.org/' + avail.v2.metadata.doi + '"><u>your paper</u></a>');
+        info = info.replace(/\[\[PAPER\]\]/g,'<a target="_blank" href="https://doi.org/' + avail.v2.metadata.doi + '"><u>your paper</u></a>');
       } else {
-        info = info.replace('[[PAPER]]','your paper')
+        info = info.replace(/\[\[PAPER\]\]/g,'your paper')
       }
       $('#oabutton_inputs').hide();
       $('#oabutton_availability').html(info).show();
