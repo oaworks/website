@@ -349,7 +349,7 @@ var _run = function() {
     var data = {email:eml, from:_oab_opts.uid, plugin:'shareyourpaper', embedded:window.location.href, metadata: avail.data.meta.article }
     if (filecorrect) data.confirmed = true;
     if (_parameta.confirmed) data.confirmed = _parameta.confirmed;
-    if (avail.v2 && avail.v2.open) data.redeposit = avail.v2.open;
+    if (avail.v2 && avail.v2.url) data.redeposit = typeof avail.v2.url === 'string' ? avail.v2.url : avail.v2.url[0];
     if (_oab_config.pilot) data.pilot = _oab_config.pilot;
     if (_oab_config.live) data.live = _oab_config.live;
     if (!data.metadata.title || !data.metadata.journal) {
@@ -653,7 +653,7 @@ var _run = function() {
           info += '<h3><span>&#10003;</span> Check there aren\’t publisher logos or formatting</h3>';
           info += '<p>It\’s normal to share accepted manuscripts as the research is the same. It\’s fine to save your file as a pdf, make small edits to formatting, fix typos, remove comments, and arrange figures.</p>';
         }
-        info += '<h3><span>&#10003;</span> Tell us who to contact</h3>';
+        info += '<h3><span>&#10003;</span> Tell us your email</h3>';
         info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="' + ph + '" aria-label="' + ph + '" style="box-shadow:none;"></input></p>';
         info += '<p>We\'ll only use this if something goes wrong.<br>';
         info += '<h3>We\'ll check it\'s legal, then promote, and preserve your work</h3>';
