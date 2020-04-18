@@ -63,7 +63,7 @@ var instantill_run = function() {
   <p><a class="oabutton_find ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" href="#" id="oabutton_find" aria-label="Search" style="min-width:150px;">Find ' + pora + '</a></p>';
   if (_oab_config.book || _oab_config.other) {
     w += '<p>Need ';
-    if (_oab_config.book) w += 'a <a href="' + _oab_config.book + '"><b>book</b></a>';
+    if (_oab_config.book) w += 'a <a href="' + _oab_config.book + '"><b>book chapter</b></a>';
     if (_oab_config.other) w += (_oab_config.book ? ' or ' : ' ') + '<a href="' + _oab_config.other + '"><b>something else</b></a>';
     w += '?</p>';
   }
