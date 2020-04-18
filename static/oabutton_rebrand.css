@@ -451,6 +451,13 @@ div.greenbottom {
     padding-left:20px;
   }
 
+  .featurebox p{
+    width:80%;
+    margin: auto;
+    margin-top:30px;
+    padding-left:20px;
+  }
+
 /*programs(basic or leadership)*/
 
   .programs{
