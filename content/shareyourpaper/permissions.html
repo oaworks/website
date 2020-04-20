@@ -93,10 +93,10 @@
     margin-top:0;
     text-align: center;
   }
-
+ 
   @media screen and (min-width: 769px){
-    #learnmore .featurebox{
-      width: 33%;
+  /*  #learnmore .featurebox{
+      width: 33%;*/
     }
   }
 
@@ -124,7 +124,7 @@
         <!-- TODO: en mass? -->
         <!-- sam - what do you mean? -->
         </p>
-
+ 
       <a class="btn btn-demo-blue" href="#tools">See the Tools</a>
       <p style="text-align:center"><b><a href="#learnmore">Learn more</a></b></p>
     </div>
@@ -140,7 +140,7 @@
   <div class="center-col">
     <p style="text-align: center; padding:0;">Built in Partnership with librarians and:</p>
     <div class="unilogos" style="display: flex !important">
-      <img class="unilogo" style="width: 50%;" src="/static/ourresearch-logo-white.png">
+      <img class="unilogo" style="width: 50%;" src="/static/ourresearch-logo.png">
     </div>
   </div>
 </div>
@@ -203,86 +203,86 @@
 
 
 
-<div class="blue-bg" style="background-color: #ECF3FA">
-  <div class="center-col quote">
-    <div class="strapline">
+<div id="learnmore"> 
 
-      <h2>How it works</h2>
+  <div class="blue-bg" style="background-color: #ECF3FA; flex: 1 0 460px">
+      <div class="strapline">
+        
+        <h2>How it works</h2>
 
-      <p style="color:#212f3f;">
-        Our goal is to build a system to give an authoritative answer to the question: How can this be self-archived? We want to provide one clear answer for every article, taking into account everything from publisher policies, through institutional open access policies and individual article licencing. Then, we wanted it to be checked daily and cheap to run. A tough task.
-        <br>
-        <br>
-        There are three important parts to solving that.
-        <br>
-        <br>
-        First, a database that details permissions given by 20,000 journals, 250 publishers, 80 universities, several funders and governments. We detail what permissions are granted by policies (structured for use by machines and people), when to apply them, and their source.
-        <br>
-        <br>
-        Second, the permissions checking system then understands, gathers critical contextual information, and applies these on a per-article or journal basis, taking into account author affiliation, publication date, publication venue, contractual agreements, and more.
-        <br>
-        <br>
-        Finally, we provide a variety of user interfaces that make checking fast and easy.
+        <p style="color:#212f3f;">
+          Our goal is to build a system to give an authoritative answer to the question: How can this be self-archived? We want to provide one clear answer for every article, taking into account everything from publisher policies, through institutional open access policies and individual article licencing. Then, we wanted it to be checked daily and cheap to run. A tough task.
+          <br>
+          <br>
+          There are three important parts to solving that.
+          <br>
+          <br>
+          First, a database that details permissions given by 20,000 journals, 250 publishers, 80 universities, several funders and governments. We detail what permissions are granted by policies (structured for use by machines and people), when to apply them, and their source.
+          <br>
+          <br>
+          Second, the permissions checking system then understands, gathers critical contextual information, and applies these on a per-article or journal basis, taking into account author affiliation, publication date, publication venue, contractual agreements, and more.
+          <br>
+          <br>
+          Finally, we provide a variety of user interfaces that make checking fast and easy.
+        </p>
+
+      </div>
+  </div>
+
+
+
+
+
+  <div class="center-col features">
+
+    <div class="featurebox">
+      <!-- TODO: plz sam, help these look a little less janky -->
+      <h2>Free & Open</h2>
+      <p>
+        Our code and data are free and open. So you can check them, reuse them, and build on them.
       </p>
-
     </div>
-  </div>
-</div>
 
+    <div class="featurebox">
+      <h2>It's all here</h2>
+      <p>
+        Deposit statements <span>&#10003;</span><br> Required license <span>&#10003;</span><br> Embargo periods <span>&#10003;</span><br> Full text policy links <span>&#10003;</span><br>And everything else you need <span>&#10003;</span>
+      </p>
+    </div>
 
+     <div class="featurebox">
+      <h2>Checked daily, archived, and manually curated</h2>
+      <p>
+        We check every policy every day (almost) to ensure it's up to date. If you contribute, we'll review your contribution within 24 hours. Everythings archived so you're never left wondering.
+      </p>
+    </div>
 
+    <div class="featurebox">
+      <h2>More than just publisher policies</h2>
+      <!-- <h2>Not just publisher policies, answers</h2> -->
+      <p>
+        We take into account institutional policies, copyright differences, and open access licences. This means we take everything into account that can affect if an article can be archived.
+      </p>
+    </div>
 
+    <div class="featurebox">
+      <h2>85+% of papers covered</h2>
+      <p>
+        We're working towards 100% everyday. We cover every Open Access paper, 300 major publishers and their journals, and 100 institional and copyright policies.
+      </p>
+    </div>
 
-<div id="learnmore" class="center-col features">
+    <div class="featurebox">
+      <h2>Not Just policies, answers</h2>
+      <p>
+        Give us a DOI and we'll customize permissions information with per-paper embargo dates, deposit statements, and more factoring in author affilitation, open access status, and more. We think of it like "Article Level Permissions"
+      </p>
+    </div>
 
-  <div class="featurebox">
-    <!-- TODO: plz sam, help these look a little less janky -->
-    <h2>Free & Open</h2>
-    <p>
-      Our code and data are free and open. So you can check them, reuse them, and build on them.
-    </p>
-  </div>
-
-  <div class="featurebox">
-    <h2>It's all here</h2>
-    <p>
-      Deposit statements <span>&#10003;</span><br> Required license <span>&#10003;</span><br> Embargo periods <span>&#10003;</span><br> Full text policy links <span>&#10003;</span><br>And everything else you need <span>&#10003;</span>
-    </p>
-  </div>
-
-   <div class="featurebox">
-    <h2>Checked daily, archived, and manually curated</h2>
-    <p>
-      We check every policy every day (almost) to ensure it's up to date. If you contribute, we'll review your contribution within 24 hours. Everythings archived so you're never left wondering.
-    </p>
-  </div>
-
-  <div class="featurebox">
-    <h2>More than just publisher policies</h2>
-    <!-- <h2>Not just publisher policies, answers</h2> -->
-    <p>
-      We take into account institutional policies, copyright differences, and open access licences. This means we take everything into account that can affect if an article can be archived.
-    </p>
-  </div>
-
-  <div class="featurebox">
-    <h2>85+% of papers covered</h2>
-    <p>
-      We're working towards 100% everyday. We cover every Open Access paper, 300 major publishers and their journals, and 100 institional and copyright policies.
-    </p>
   </div>
 
-  <div class="featurebox">
-    <h2>Not just policies, answers</h2>
-    <p>
-      Give us a DOI and we'll customize permissions information with per-paper embargo dates, deposit statements, and more factoring in author affilitation, open access status, and more. We think of it like "Article Level Permissions"
-    </p>
-  </div>
 
 </div>
-
-
-
 
 
 

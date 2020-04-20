@@ -460,6 +460,11 @@ div.greenbottom {
     padding-left:20px;
   }
 
+  #learnmore{
+    display: flex;
+    flex-direction: row;
+  }
+
 /*programs(basic or leadership)*/
 
   .programs{
@@ -715,7 +720,9 @@ div.greenbottom {
     .supportedby img{
     padding-top: 40px;
     }
-
+      #learnmore{
+      flex-direction: column;
+    }
     .featurebox{
       width:100%;
       height: auto;
