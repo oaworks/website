@@ -291,12 +291,10 @@ var instantill_run = function() {
       info += '<p>' + porac + ' DOI or URL<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_doi" type="text" placeholder="e.g 10.1126/scitranslmed.3008973"></p>';
       info += '<p><a href="#" class="oabutton_find ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" id="oabutton_find" style="min-width:150px;">Continue</a></p>';
       info += '<p><a href="#" class="restart" style="font-weight:bold;">Try again</a>';
-      if (_oab_config.advancedform) {
-        w += 'or <a href="' + _oab_config.advancedform + '">use advanced form</a>';
-      }
-      info += '</p>';
-
-
+      // if (_oab_config.advancedform) {
+      //  w += ' or <a href="' + _oab_config.advancedform + '">use advanced form</a>';
+      //}
+      info += 'or <a href="' + _oab_config.advancedform + '">use advanced form</a></p>';
       info += '</div>';
       $('#oabutton_availability').html(info);
       $('.oabutton_find').html('Find ' + pora);
