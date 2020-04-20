@@ -293,6 +293,7 @@ var instantill_run = function() {
       info += '<p><a href="#" class="restart" style="font-weight:bold;">Try again</a>';
       if (_oab_config.advancedform) {
         w += 'or <a href="' + _oab_config.advancedform + '">use advanced form</a>';
+      }
       info += '</p>';
 
 
