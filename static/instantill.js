@@ -294,7 +294,7 @@ var instantill_run = function() {
       // if (_oab_config.advancedform) {
       //  w += ' or <a href="' + _oab_config.advancedform + '">use advanced form</a>';
       //}
-      info += 'or <a href="' + _oab_config.advancedform + '">use advanced form</a></p>';
+      info += '</p>';
       info += '</div>';
       $('#oabutton_availability').html(info);
       $('.oabutton_find').html('Find ' + pora);
