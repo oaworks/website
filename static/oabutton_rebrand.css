@@ -38,6 +38,7 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   font-weight:400;
+  font-family: 'Inter', sans-serif;
 }
 
 ul.arrowed {
@@ -347,6 +348,7 @@ div.greenbottom {
     width:100%;
     max-width: 245px;
     font-weight: bold;
+    font-size: 1em;
     padding: 10px 30px;
     border-radius: 0px;
   }
@@ -449,6 +451,18 @@ div.greenbottom {
     margin: auto;
     margin-top:30px;
     padding-left:20px;
+  }
+
+  .featurebox p{
+    width:80%;
+    margin: auto;
+    margin-top:30px;
+    padding-left:20px;
+  }
+
+  #learnmore{
+    display: flex;
+    flex-direction: row;
   }
 
 /*programs(basic or leadership)*/
@@ -706,7 +720,9 @@ div.greenbottom {
     .supportedby img{
     padding-top: 40px;
     }
-
+      #learnmore{
+      flex-direction: column;
+    }
     .featurebox{
       width:100%;
       height: auto;

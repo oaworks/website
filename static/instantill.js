@@ -63,7 +63,7 @@ var instantill_run = function() {
   <p><a class="oabutton_find ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" href="#" id="oabutton_find" aria-label="Search" style="min-width:150px;">Find ' + pora + '</a></p>';
   if (_oab_config.book || _oab_config.other) {
     w += '<p>Need ';
-    if (_oab_config.book) w += 'a <a href="' + _oab_config.book + '"><b>book</b></a>';
+    if (_oab_config.book) w += 'a <a href="' + _oab_config.book + '"><b>book chapter</b></a>';
     if (_oab_config.other) w += (_oab_config.book ? ' or ' : ' ') + '<a href="' + _oab_config.other + '"><b>something else</b></a>';
     w += '?</p>';
   }
@@ -348,7 +348,8 @@ var instantill_run = function() {
     $('.oabutton_ill').html('Submitting .');
     var eml = typeof matched === 'string' ? matched : $('#oabutton_email').val();
     var data = {url:avail.data.match, email:eml, from:_oab_opts.uid, plugin:'instantill', embedded:window.location.href, metadata: avail.data.meta.article };
-    if (gotmore) data.notes = 'The user provided some metadata. ';
+    var nfield = _oab_config.notes ? _oab_config.notes : 'notes';
+    if (gotmore) data[nfield] = 'The user provided some metadata. ';
     if (_oab_config.pilot) data.pilot = _oab_config.pilot;
     if (_oab_config.live) data.live = _oab_config.live;
     if (!data.metadata.title || !data.metadata.journal || !data.metadata.year) {
@@ -357,9 +358,9 @@ var instantill_run = function() {
       getmore();
     } else {
       if (avail.data && avail.data.ill && avail.data.ill.subscription || avail.data.availability) {
-        typeof data.notes !== 'string' ? data.notes = '': data.notes += ' ';
-        if (avail.data.ill.subscription) data.notes += 'Subscription check done, found ' + (avail.data.ill.subscription.url ? avail.data.ill.subscription.url : (avail.data.ill.subscription.journal ? 'journal' : 'nothing')) + '. ';
-        if (avail.data.availability) data.notes += 'OA availability check done, found ' + (avail.data.availability.length && avail.data.availability[0].url ? avail.data.availability[0].url : 'nothing') + '. ';
+        typeof data[nfield] !== 'string' ? data[nfield] = '': data[nfield] += ' ';
+        if (avail.data.ill.subscription) data[nfield] += 'Subscription check done, found ' + (avail.data.ill.subscription.url ? avail.data.ill.subscription.url : (avail.data.ill.subscription.journal ? 'journal' : 'nothing')) + '. ';
+        if (avail.data.availability) data[nfield] += 'OA availability check done, found ' + (avail.data.availability.length && avail.data.availability[0].url ? avail.data.availability[0].url : 'nothing') + '. ';
       }
       if (avail.data && avail.data.ill && avail.data.ill.openurl && _oab_opts.openurl !== false && !data.email) data.forwarded = true;
       var illopts = {
@@ -509,9 +510,10 @@ var instantill_run = function() {
       info += '<div>';
       info += '<h3><br>Ask the library to digitally send you the published full-text via Interlibrary Loan</h3>';
       info += '<p>It ' + (_oab_config.cost ? 'costs ' + _oab_config.cost : 'is free to you,') + ' and we\'ll usually email the link within ' + (_oab_config.time ? _oab_config.time : '24 hours') + '.<br></p>';
+      var nfield = _oab_config.notes ? _oab_config.notes : 'notes';
       if (avail.data.ill.openurl && _oab_opts.openurl !== false) {
-        if (avail.data.ill.openurl.indexOf('notes') === -1) {
-          avail.data.ill.openurl += '&notes=';
+        if (avail.data.ill.openurl.indexOf(nfield) === -1) {
+          avail.data.ill.openurl += '&' + nfield + '=';
           if (avail.data.ill.subscription) avail.data.ill.openurl += 'Subscription check done, found ' + (avail.data.ill.subscription.url ? avail.data.ill.subscription.url : (avail.data.ill.subscription.journal ? 'journal' : 'nothing')) + '. ';
           if (avail.data.availability) avail.data.ill.openurl += 'OA availability check done, found ' + (avail.data.availability.length && avail.data.availability[0].url ? avail.data.availability[0].url : 'nothing') + '. ';
         }
