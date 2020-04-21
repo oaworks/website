@@ -540,7 +540,6 @@ var instantill_run = function() {
   var _intervaled = false;
   var availability = function(e) {
     if (!_doing_availability && ($(this).attr('id') === 'oabutton_find' || e === undefined || e.keyCode === 13)) {
-      _doing_availability = true;
       $('#oabutton_error').html('').hide();
       if (e && $(this).attr('id') === 'oabutton_find') e.preventDefault();
       var input = $('#oabutton_input').val().trim();
@@ -562,6 +561,7 @@ var instantill_run = function() {
           return;
         }
       }
+      _doing_availability = true;
       if (JSON.stringify(_parameta) !== '{}') {
         for ( var p in _parameta) {
           if (!data.title && ['title','atitle'].indexOf(p) !== -1) data.title = _parameta[p];
