@@ -291,10 +291,7 @@ var instantill_run = function() {
       info += '<p>' + porac + ' DOI or URL<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_doi" type="text" placeholder="e.g 10.1126/scitranslmed.3008973"></p>';
       info += '<p><a href="#" class="oabutton_find ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" id="oabutton_find" style="min-width:150px;">Continue</a></p>';
       info += '<p><a href="#" class="restart" style="font-weight:bold;">Try again</a>';
-      // Aim of below is to show 'or use advanced form' when an advanced form is provided. Should be on the same line as 'try again'
-      // if (_oab_config.advancedform) {
-      //  w += ' or <a href="' + _oab_config.advancedform + '">use advanced form</a>';
-      //}
+      if (_oab_config.advancedform) info += ' or <a href="' + _oab_config.advancedform + '">use advanced form</a>';
       info += '</p>';
       info += '</div>';
       $('#oabutton_availability').html(info);
