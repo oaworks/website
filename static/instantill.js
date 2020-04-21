@@ -284,13 +284,15 @@ var instantill_run = function() {
       attempts += 1;
       var info = '<div>';
       info += '<h2>Sorry we didn\'t find that!</h2><p>Please provide or amend the ' + pora + ' details.</p>';
-      info += '<p>' + porac + ' title (required)<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_title" type="text"></p>';
+      info += '<p>' + porac + ' title (required)<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_title" type="text" placeholder="e.g The State of OA: A large-scale analysis of Open Access"></p>';
       //info += '<p>Author(s)<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_author" type="text"></p>';
-      info += '<p>Journal title (required)<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_journal" type="text"></p>';
-      info += '<p>Year of publication (required)<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_year" type="text"></p>';
-      info += '<p>' + porac + ' DOI or URL<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_doi" type="text"></p>';
+      info += '<p>Journal title (required)<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_journal" type="text" placeholder="e.g. Nature"></p>';
+      info += '<p>Year of publication (required)<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_year" type="text" placeholder="e.g 1992"></p>';
+      info += '<p>' + porac + ' DOI or URL<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_doi" type="text" placeholder="e.g 10.1126/scitranslmed.3008973"></p>';
       info += '<p><a href="#" class="oabutton_find ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" id="oabutton_find" style="min-width:150px;">Continue</a></p>';
-      info += '<p><a href="#" class="restart" style="font-weight:bold;">Try again</a></p>';
+      info += '<p><a href="#" class="restart" style="font-weight:bold;">Try again</a>';
+      if (_oab_config.advancedform) info += ' or <a href="' + _oab_config.advancedform + '">use advanced form</a>';
+      info += '</p>';
       info += '</div>';
       $('#oabutton_availability').html(info);
       $('.oabutton_find').html('Find ' + pora);
@@ -538,7 +540,6 @@ var instantill_run = function() {
   var _intervaled = false;
   var availability = function(e) {
     if (!_doing_availability && ($(this).attr('id') === 'oabutton_find' || e === undefined || e.keyCode === 13)) {
-      _doing_availability = true;
       $('#oabutton_error').html('').hide();
       if (e && $(this).attr('id') === 'oabutton_find') e.preventDefault();
       var input = $('#oabutton_input').val().trim();
@@ -560,6 +561,7 @@ var instantill_run = function() {
           return;
         }
       }
+      _doing_availability = true;
       if (JSON.stringify(_parameta) !== '{}') {
         for ( var p in _parameta) {
           if (!data.title && ['title','atitle'].indexOf(p) !== -1) data.title = _parameta[p];
