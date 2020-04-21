@@ -589,7 +589,7 @@ var instantill_run = function() {
       }
       if (!input || !input.length) input = data.title;
       if (input === undefined || !input.length || (input.toLowerCase().indexOf('http') === -1 && input.indexOf('10.') === -1 && input.indexOf('/') === -1 && isNaN(parseInt(input.toLowerCase().replace('pmc',''))) && (input.length < 30 || input.replace(/\+/g,' ').split(' ').length < 3) ) ) {
-        $('#oabutton_error').html('<p><span>&#10060;</span>Sorry please provide the full title, citation, or something else.</p>').show();
+        $('#oabutton_error').html('<p><span>&#10060;</span> Sorry please provide the full title, citation, or something else.</p>').show();
         _doing_availability = false;
         return;
       }
