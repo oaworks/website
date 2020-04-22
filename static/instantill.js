@@ -56,7 +56,7 @@ var instantill_run = function() {
 
   var w = '<h2 id="oabutton_request" style="display:none;">Request ' + (pora === 'article' ? 'an' : 'a') + ' ' + pora + '</h2><div id="oabutton_inputs">';
   if (_oab_config.intropara !== true) {
-    w += '<p>If you need ' + (pora === 'article' ? 'an' : 'a') + ' ' + pora + ' ' + (_oab_config.book ? 'or book ' : '') + 'you can request it from any library in the world through Interlibrary loan. \
+    w += '<p>If you need ' + (pora === 'article' ? 'an' : 'a') + ' ' + pora + ' ' + 'you can request it from any library in the world through Interlibrary loan. \
     <br>Start by entering a full ' + pora + ' title, DOI or URL:<br></p>';
   }
   w += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_input" placeholder="' + _oab_opts.placeholder + '" aria-label="' + _oab_opts.placeholder + '" style="box-shadow:none;"></input></p>\
