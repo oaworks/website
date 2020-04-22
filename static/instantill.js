@@ -57,7 +57,7 @@ var instantill_run = function() {
   var w = '<h2 id="oabutton_request" style="display:none;">Request ' + (pora === 'article' ? 'an' : 'a') + ' ' + pora + '</h2><div id="oabutton_inputs">';
   if (_oab_config.intropara !== true) {
     w += '<p>If you need ' + (pora === 'article' ? 'an' : 'a') + ' ' + pora + ' ' + (_oab_config.book ? 'or book ' : '') + 'you can request it from any library in the world through Interlibrary loan. \
-    <br>Start by entering a full ' + pora + ' title, citation, DOI or URL:<br></p>';
+    <br>Start by entering a full ' + pora + ' title, DOI or URL:<br></p>';
   }
   w += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_input" placeholder="' + _oab_opts.placeholder + '" aria-label="' + _oab_opts.placeholder + '" style="box-shadow:none;"></input></p>\
   <p><a class="oabutton_find ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" href="#" id="oabutton_find" aria-label="Search" style="min-width:150px;">Find ' + pora + '</a></p>';
@@ -70,7 +70,7 @@ var instantill_run = function() {
   if (_oab_config.advancedform || _oab_config.viewaccount || _oab_config.illinfo) {
     w += '<p>Or ';
     if (_oab_config.advancedform) {
-      w += '<a href="' + _oab_config.advancedform + '">use advanced form</a>';
+      w += '<a href="' + _oab_config.advancedform + '">use full request form</a>';
       if (_oab_config.viewaccount && _oab_config.illinfo) {
         w += ', '
       } else if (_oab_config.viewaccount || _oab_config.illinfo) {
@@ -291,7 +291,7 @@ var instantill_run = function() {
       info += '<p>' + porac + ' DOI or URL<br><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" id="oabutton_doi" type="text" placeholder="e.g 10.1126/scitranslmed.3008973"></p>';
       info += '<p><a href="#" class="oabutton_find ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" id="oabutton_find" style="min-width:150px;">Continue</a></p>';
       info += '<p><a href="#" class="restart" style="font-weight:bold;">Try again</a>';
-      if (_oab_config.advancedform) info += ' or <a href="' + _oab_config.advancedform + '">use advanced form</a>';
+      if (_oab_config.advancedform) info += ' or <a href="' + _oab_config.advancedform + '">use full request form</a>';
       info += '</p>';
       info += '</div>';
       $('#oabutton_availability').html(info);
@@ -589,7 +589,7 @@ var instantill_run = function() {
       }
       if (!input || !input.length) input = data.title;
       if (input === undefined || !input.length || (input.toLowerCase().indexOf('http') === -1 && input.indexOf('10.') === -1 && input.indexOf('/') === -1 && isNaN(parseInt(input.toLowerCase().replace('pmc',''))) && (input.length < 30 || input.replace(/\+/g,' ').split(' ').length < 3) ) ) {
-        $('#oabutton_error').html('<p>Sorry, we can\'t use partial titles/citations. Please provide the full title/citation, or something else.</p>').show();
+        $('#oabutton_error').html('<p><span>&#10060;</span> Sorry please provide the full title, citation, or something else.</p>').show();
         _doing_availability = false;
         return;
       }
