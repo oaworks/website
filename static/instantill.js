@@ -443,6 +443,25 @@ var instantill_run = function() {
   }
 
   var inform = function() {
+    if (avail && avail.v2 && avail.v2.metadata && avail.v2.metadata.crossref_type) {
+      var ct = avail.v2.metadata.crossref_type;
+      if (['journal-article','proceedings-article','posted-content'].indexOf(ct) === -1) {
+        var err = '<p>';
+        if (['book-section','book-part','book-chapter'].indexOf(ct) !== -1) {
+          err += 'Please make your request through our ';
+          if (_oab_config.book) {
+            err += '<a href="' + _oab_config.book + '">book form</a>';
+          } else {
+            err += 'book form';
+          }
+        } else {
+          err += 'We can only process academic journal articles, please use another form.';
+        }
+        $('.oabutton_find').html('Find ' + pora);
+        $('#oabutton_error').html(err + '</p>').show();
+        return;
+      }
+    }
     $('#oabutton_inputs').hide();
     $('#oabutton_error').html('').hide();
     var info = '';
@@ -561,7 +580,6 @@ var instantill_run = function() {
           return;
         }
       }
-      _doing_availability = true;
       if (JSON.stringify(_parameta) !== '{}') {
         for ( var p in _parameta) {
           if (!data.title && ['title','atitle'].indexOf(p) !== -1) data.title = _parameta[p];
@@ -588,11 +606,19 @@ var instantill_run = function() {
         delete data.doi;
       }
       if (!input || !input.length) input = data.title;
-      if (input === undefined || !input.length || (input.toLowerCase().indexOf('http') === -1 && input.indexOf('10.') === -1 && input.indexOf('/') === -1 && isNaN(parseInt(input.toLowerCase().replace('pmc',''))) && (input.length < 30 || input.replace(/\+/g,' ').split(' ').length < 3) ) ) {
+      if (input !== undefined && input.toLowerCase().indexOf('http') === -1 && input.indexOf('10.') === -1 && input.indexOf('/') === -1 && isNaN(parseInt(input.toLowerCase().replace('pmc',''))) && (input.length < 30 || input.replace(/\+/g,' ').split(' ').length < 3) ) {
+        // go straight to long form
+        if (attempts === 0) { // on the next submission it will just be allowed
+          $('#oabutton_inputs').hide();
+          attempts = 2;
+          getmore();
+          return;
+        }
+      } else if (input === undefined || !input.length) {
         $('#oabutton_error').html('<p><span>&#10060;</span> Sorry please provide the full title, citation, or something else.</p>').show();
-        _doing_availability = false;
         return;
       }
+      _doing_availability = true;
       if (!data.url) data.url = input;
       $('.oabutton_find').html('Searching .');
       if (!_intervaled) {
