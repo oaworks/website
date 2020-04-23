@@ -193,6 +193,7 @@ var instantill_run = function() {
   var attempts = 0;
   var clickwrong = false;
   var gotmore = false;
+  var allow_with_short_title = false;
 
   var _restart_val = undefined
   _instantill_restart = function(e,val) {
@@ -203,6 +204,7 @@ var instantill_run = function() {
     attempts = 0;
     clickwrong = false;
     gotmore = false;
+    allow_with_short_title = false;
     if (_intervaled) {
       clearInterval(_intervaled);
       _intervaled = undefined;
@@ -494,7 +496,7 @@ var instantill_run = function() {
     var needmore = true;
     var hassub = false;
     var hasoa = false;
-    if (avail.data.ill.subscription && (avail.data.ill.subscription.journal || avail.data.ill.subscription.url)) {
+    if (!allow_with_short_title && avail.data.ill.subscription && (avail.data.ill.subscription.journal || avail.data.ill.subscription.url)) {
       needmore = false;
       hassub = true;
       // if there is a subscribed version available show a link to it
@@ -507,7 +509,7 @@ var instantill_run = function() {
       }
       info += '</div>';
     } else {
-      if (avail.data.availability && avail.data.availability.length && avail.data.availability[0].url) {
+      if (!allow_with_short_title && avail.data.availability && avail.data.availability.length && avail.data.availability[0].url) {
         needmore = false;
         hasoa = true;
         // else if there is an oa article show a link to it
@@ -609,6 +611,7 @@ var instantill_run = function() {
       if (input !== undefined && input.toLowerCase().indexOf('http') === -1 && input.indexOf('10.') === -1 && input.indexOf('/') === -1 && isNaN(parseInt(input.toLowerCase().replace('pmc',''))) && (input.length < 30 || input.replace(/\+/g,' ').split(' ').length < 3) ) {
         // go straight to long form
         if (attempts === 0) { // on the next submission it will just be allowed
+          allow_with_short_title = true;
           $('#oabutton_inputs').hide();
           attempts = 2;
           getmore();
