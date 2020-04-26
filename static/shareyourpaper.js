@@ -627,8 +627,8 @@ var _run = function() {
           info += '<p><a target="_blank" href="' + avail.data.availability[0].url + '" class="btn btn-primary" style="min-width:150px;">See free version</a></p>';
           info += '<p><b><u><a href="#" class="oabutton_restart">Do another</a></u></b></p>';
         } else {
-          info += '<p>Great news, you\’re already getting the benefits of sharing your work! Your publisher or co-author have already shared it ';
-          info += '<a target="_blank" href="' + avail.data.availability[0].url + '"><u>freely available link</u></a>.</p>';
+          info += '<p>Great news, you\’re already getting the benefits of sharing your work! Your publisher or co-author have already shared a ';
+          info += '<a target="_blank" href="' + avail.data.availability[0].url + '"><u>freely available copy</u></a>.</p>';
           info += '<h3>Give us your email to confirm deposit</h3>';
           info += '<p><input class="oabutton_form' + (_oab_opts.bootstrap !== false ? ' form-control' : '') + '" type="text" id="oabutton_email" placeholder="' + ph + '" aria-label="' + ph + '" style="box-shadow:none;"></input></p>';
           info += '<p>We\'ll use this to send you a link. By confirming, you\'re agreeing to the ' + tcs + '.</p>';
