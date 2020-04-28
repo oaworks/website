@@ -5,7 +5,6 @@
   <meta name="description" content="Sharing should be simple. We make sure that deposit into your repository means only dragging and dropping a paper by automatically doing all the hard work for depositors." />
 </head>
 
-
 <style>
   #topnav {
     display: none;
@@ -120,12 +119,10 @@
     <div class="pitchhalf">
       <h2>Know everything needed to legally self-archive a paper in seconds</h2>
       <p style="padding: 30px 0">
-        We hand craft publisher, institional, and copyright policies that affect self-archiving in institutional repositories, check them daily, and cross-reference them with paper metadata. For 85+% of papers our free and open tools can tell you which versions can be shared, on exactly what date, under what license and deposit statement.
-        <!-- TODO: en mass? -->
-        <!-- sam - what do you mean? -->
+        We handcraft publisher & institutional policies and laws that affect self-archiving in institutional repositories, check them daily, and cross-reference them with manuscript metadata. For 85+% of papers our free and open tools can tell you which versions can be shared, on exactly what date, under what license and deposit statement.
         </p>
 
-      <a class="btn btn-demo-blue" href="#tools">See the Tools</a>
+      <a class="btn btn-demo-blue" href="#tools">Get the Tools</a>
       <p style="text-align:center"><b><a href="#learnmore">Learn more</a></b></p>
     </div>
     <div class="pitchhalf">
@@ -140,7 +137,9 @@
   <div class="center-col">
     <p style="text-align: center; padding:0;">Built in partnership with librarians and:</p>
     <div class="unilogos" style="display: flex !important">
-      <img class="unilogo" style="width: 50%;" src="/static/ourresearch-logo-white.png" href="https://ourresearch.org/">
+      <a href="https://ourresearch.org/">
+      <img class="unilogo" style="width: 50%;" src="/static/ourresearch-logo-white.png">
+      </a>
     </div>
   </div>
 </div>
@@ -152,15 +151,17 @@
       Use our lightening fast, simple API. Just send us a DOI, journal, publisher or affiliation you want checked. No signup required.
       <br>
       <br>
-      <a class="btn btn-demo-blue" href="/">View API Docs</a>
-      <br><p style="padding: 0"><b><a href="https://rickscafe-api.herokuapp.com/permissions/doi/10.1186/s12888-019-2120-9" target="_blank">Try Example</a></b></p>
+      <a class="btn btn-demo-blue" href="/about#docs">View API Docs</a>
+      <br>
+      <p style="padding: 0"><b><a href="https://rickscafe-api.herokuapp.com/permissions/doi/10.1186/s12888-019-2120-9" target="_blank">Try Example</a></b>
+      </p>
     </p>
 
   </div>
   <div class="featurebox">
     <h2>For Librarians</h2>
     <p>
-      Check one, or thousands, at a time, with our bulk checking spreadsheet. Just copy and paste what you're interested in, and get detailed information in the heart of your workflow.
+      Check one, or thousands, of DOIs at a time, with our bulk checking spreadsheet. Just copy and paste what you're interested in, and get detailed information in the heart of your workflow.
       <br>
       <br>
       <a class="btn btn-demo-blue" href="/">Get Bulk Checker</a>
@@ -173,7 +174,7 @@
       Let us worry about the details of how to share, and just deposit your paper.
       <br>
       <br>
-      <a class="btn btn-demo-blue" href="/">Shareyourpaper.org</a>
+      <a class="btn btn-demo-blue" href="https://shareyourpaper.org">Shareyourpaper.org</a>
     </p>
 
   </div>
@@ -184,7 +185,9 @@
       <br>
       <br>
       <a class="btn btn-demo-blue" href="https://docs.google.com/spreadsheets/d/1nvsAcDQnnIXI1LmzPHA8d4KGNO1PZZF-iMQE7AZaN2s/export?format=csv">Get the Data</a>
-      <br><p style="padding: 0"><b><a href="https://rickscafe-api.herokuapp.com/permissions/doi/10.1186/s12888-019-2120-9" target="_blank">Update the Data</a></b></p>
+      <br>
+      <p style="padding: 0"><b><a href="/about#contribute" target="_blank">Add / update a policy</a></b>
+      </p>
     </p>
   </div>
 </div>
@@ -220,7 +223,7 @@
           First, a database that details permissions given by 20,000 journals, 250 publishers, 80 universities, several funders and governments. We detail what permissions are granted by policies (structured for use by machines and people), when to apply them, and their source.
           <br>
           <br>
-          Second, the permissions checking system then understands, gathers critical contextual information, and applies these on a per-article or journal basis, taking into account author affiliation, publication date, publication venue, contractual agreements, and more.
+          Second, the permissions checking system understands, gathers critical contextual information, and applies these on a per-article or journal basis, taking into account author affiliation, publication date, publication venue, contractual agreements, and more.
           <br>
           <br>
           Finally, we provide a variety of user interfaces that make checking fast and easy.
@@ -230,13 +233,9 @@
   </div>
 
 
-
-
-
   <div class="center-col features">
 
     <div class="featurebox">
-      <!-- TODO: plz sam, help these look a little less janky -->
       <h2>Free & Open</h2>
       <p>
         Our code and data are free and open. So you can check them, reuse them, and build on them.
@@ -251,14 +250,14 @@
     </div>
 
      <div class="featurebox">
-      <h2>Checked daily, archived, and manually curated</h2>
+      <h2>Checked daily, archived, and expertly curated</h2>
       <p>
         We check every policy every day (almost) to ensure it's up to date. If you contribute, we'll review your contribution within 24 hours. Everythings archived so you're never left wondering.
       </p>
     </div>
 
     <div class="featurebox">
-      <h2>More than just publisher policies</h2>
+      <h2>More than publisher policies</h2>
       <!-- <h2>Not just publisher policies, answers</h2> -->
       <p>
         We take into account institutional policies, copyright differences, and open access licences. This means we take everything into account that can affect if an article can be archived.
@@ -273,7 +272,7 @@
     </div>
 
     <div class="featurebox">
-      <h2>Not Just policies, answers</h2>
+      <h2>Not just policies, answers</h2>
       <p>
         Give us a DOI and we'll customize permissions information with per-paper embargo dates, deposit statements, and more factoring in author affilitation, open access status, and more. We think of it like "Article Level Permissions"
       </p>
@@ -284,40 +283,19 @@
 
 </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- tagline -->
 <div class="blue-bg" style="padding:0">
-<div class="center-col quote">
-  <div class="strapline">
-<h1>For change, not for profit</h1>
-  <p>
-    We built Shareyourpaper.org Permissions as an experiment to build an open system that made permissions checking simple, fast, and clear for authors and librarians.
-    <br>
-    <br>
-    It’s open, so anyone can use it, but we need your leadership to sustain it.
-  </p>
-</div>
-</div>
+  <div class="center-col quote">
+    <div class="strapline">
+      <h1>For change, not for profit</h1>
+      <p>
+        We built Shareyourpaper.org Permissions as an experiment to build an open system that made permissions checking simple, fast, and clear for authors and librarians.
+        <br>
+        <br>
+        It’s open, so anyone can use it, but we need your leadership to sustain it.
+      </p>
+    </div>
+  </div>
 </div>
 
 <!-- programs -->
