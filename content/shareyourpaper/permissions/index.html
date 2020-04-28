@@ -214,19 +214,28 @@
         <h2>How it works</h2>
 
         <p style="color:#212f3f;">
-          Our goal is to build a system to give an authoritative answer to the question: How can this be self-archived? We want to provide one clear answer for every article, taking into account everything from publisher policies, through institutional open access policies and individual article licencing. Then, we wanted it to be checked daily and cheap to run. A tough task.
+          Our goal is to answer “How can this paper be self-archived in an institutional repository?”.
           <br>
           <br>
-          There are three important parts to solving that.
+          After years of doing permissions checking by hand, we knew to answer that we needed three things. First, to know about the specific paper, e.g where and when was it published? Second, to find and understand the policies around it, for example the publisher self-archiving policy. Third, a bunch of time to find the above, double check the policies, and figure out exact embargos, deposit statements and more.
           <br>
           <br>
-          First, a database that details permissions given by 20,000 journals, 250 publishers, 80 universities, several funders and governments. We detail what permissions are granted by policies (structured for use by machines and people), when to apply them, and their source.
+          With shareyourpaper.org we aimed to automate all those steps, and provide a simple but complete answer to the question. However, the approach is the same.
           <br>
           <br>
-          Second, the permissions checking system understands, gathers critical contextual information, and applies these on a per-article or journal basis, taking into account author affiliation, publication date, publication venue, contractual agreements, and more.
+          First, we track down paper metadata from Crossref, Unpaywall, and Microsoft Academic. This can tell us when and where the paper was published, if it was OA, what it’s license is. We can also often tell where authors were affiliated or who funded the paper.
           <br>
           <br>
-          Finally, we provide a variety of user interfaces that make checking fast and easy.
+          Second, we use those details to find relevant policies in our database. We handcrafted a database from the ground up to do this. It includes publisher self-archiving policies, of course. However, it also includes institutional open access policies and laws where they affect self-archiving. Each of these was designed to be fully machine readable, automatically monitored daily, and archived when there is a revision. This helps us be confident that the database is up to date.
+          <br>
+          <br>
+          Third, we combine all the above information. This means we can find the exact embargo using the published date and embargo length, complete the deposit statement using citation information, set the version based on an institutional policy or law, and more. If there are multiple ways to deposit, we’ll try and choose the easiest for authors.
+          <br>
+          <br>
+          The final step is to provide a variety of user interfaces that make checking fast and easy.
+          <br>
+          <br>
+          Experts actively maintain the code and data in the open, accept contributions to both, and plan to continue adding features and policies.
         </p>
 
       </div>
@@ -289,10 +298,10 @@
     <div class="strapline">
       <h1>For change, not for profit</h1>
       <p>
-        We built Shareyourpaper.org Permissions as an experiment to build an open system that made permissions checking simple, fast, and clear for authors and librarians.
-        <br>
-        <br>
-        It’s open, so anyone can use it, but we need your leadership to sustain it.
+          We built Shareyourpaper.org Permissions as an experiment to build an open system that made permissions checking simple, fast, and clear for authors and librarians.
+          <br>
+          <br>
+          It’s open, so anyone can use it, but we need your leadership to sustain it.
       </p>
     </div>
   </div>
