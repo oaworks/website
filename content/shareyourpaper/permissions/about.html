@@ -40,7 +40,11 @@
   }
 
   .p {
-    line-height: 1.5
+    line-height: 1.5;
+  }
+
+  .li {
+    line-height: 1.5;
   }
 
 </style>
@@ -65,6 +69,7 @@
       </h1>
       <p>
         Jump to:
+      </p>
         <ul>
           <li><a href="#api" class="blue">API Docs</a></li>
           <li><a href="#schema" class="blue">Schema</a></li>
@@ -76,8 +81,6 @@
           <li><a href="#disclaimer" class="blue">Disclaimer</a></li>
           <li><a href="#contact" class="blue">Contact</a></li>
         </ul>
-      </p>
-
 
       <h1 id="api">API Docs</h1>
       <p>
@@ -88,12 +91,55 @@
         You don’t need to authenticate to use the API, but if you’re going to rely on it we recommend joining the mailing list to get updates.
 
         Support available from Joe@openaccessbutton.org.
-        
+
         <h2>permissions.shareyourpaper.org</h2>
         <i>Base URL, nothing interesting here</i>
 
         <h2>/:doi</h2>
         <i>Returns permissions information specific to that paper, alongside relevant policies so you can decide your own answers.</i>
+
+        <h2>/:doi?affiliation=:ror-id</h2>
+        <i>Return permissions information as above, but with the stated institutional policy in effect.</i>
+
+        <h2>/journals</h2>
+        <i>Returns all journal policies available from our database</i>
+
+        <h2>/journals/:issn</h2>
+        <i>Returns the journal policy you want from our database</i>
+
+        <p>Some examples:</p>
+        <li>Nature</li>
+        <li>Science</li>
+        <li>Wiley</li>
+
+        <p>Many journals are only indexed at the publisher level.</p>
+
+        <h2>/publishers</h2>
+        <i>Returns all publisher policies available from our database</i>
+
+        <h2>/publishers/:crossref-name</h2>
+        <i>Returns the publisher policy you want from our database</i>
+
+        <p>Some examples:</p>
+        <li>Elsevier (major publisher)</li>
+        <li>Sage (major publisher)</li>
+        <li>Wiley (major publisher)</li>
+        <li>XYZ (request only policy)</li>
+        <li>ZYX (publisher pdf deposit allowed)</li>
+        <li>YZX (preprints only)</li>
+
+        <p>Currently only non-OA publishers are included.</p>
+
+        <h2>/affiliations/</h2>
+        <i>Returns all affiliations that have self-archiving rules attached from our database</i>
+        
+        <h2>/affiliations/:ror-id</h2>
+        <i>Returns policies associated with the affiliation you want from our database</i>
+
+        <p>Some Examples:</p>
+        <li>MIT. Here an OA policy is in effect.</li>
+        <li>Example US government policy. Here law allows self-archiving.</li>
+        <li>Example French Institute. Here the law allows self-archiving.</li>
 
 
       </p>
