@@ -113,9 +113,10 @@
         <ul>
           <li><a href="#api" class="blue">API Docs</a></li>
           <li><a href="#schema" class="blue">Schema</a></li>
+          <li><a href="#contributing" class="blue">Contributing</a></li>
           <li><a href="#data" class="blue">Data Download</a></li>
           <li><a href="#code" class="blue">Code</a></li>
-          <li><a href="#contribution" class="blue">Contribution</a></li>
+          <li><a href="#roadmap" class="blue">Roadmaps</a></li>
           <li><a href="#howitworks" class="blue">How it works</a></li>
           <li><a href="#disclaimer" class="blue">Disclaimer</a></li>
           <li><a href="#contact" class="blue">Contact</a></li>
@@ -125,6 +126,22 @@
 
       <h1 id="#api">API Docs</h1>
       <p>
+
+        Our free REST JSON API provides programmatic access to the Shareyourpaper.org Permissions.
+
+        The API gives responses as shown in the Schema, however, most fields should be straightforward to understand without it.
+
+        You don’t need to authenticate to use the API, but if you’re going to rely on it we recommend joining the mailing list to get updates.
+
+        Support available from Joe@openaccessbutton.org.
+
+        <h2>permissions.shareyourpaper.org</h2>
+        <i>Base URL, nothing interesting here</i>
+
+        <h2>/:doi</h2>
+        <i>Returns permissions information specific to that paper, alongside relevant policies so you can decide your own answers.</i>
+
+
       </p>
 
       <h1 id="#schema">Schema</h1>
@@ -132,28 +149,59 @@
         Coming Soon!
       </p>
 
+      <h1 id="#contributing">Contributing</h1>
+      <p>
+        Thanks so much for making it this far! There are three major ways we need the community to help, but before you do please <a href="https://docs.google.com/forms/d/e/1FAIpQLSfHEYlQYogYhdS7nXajM68cd2pMbKwJSahcr-NP9vVL-dzzYA/viewform">let us know who you are</a>:
+        <ul>
+        <li>Contribute individual policies: If you find we don’t have a policy you know, you can contribute it. You’ll be able to see it instantly, and we’ll review it shortly after. <a href="https://docs.google.com/forms/d/e/1FAIpQLSd0_nEfBN142m-oW7t1AzVJVhh09LeYMEJsooNLIOFYpA6Byw/viewform?usp=sf_link">Do it now</a>.</li>
+        <li>Review policies: When new policies are submitted, they need to be reviewed by one other person for verification. But, policies also change, so we ensure all policies are archived when submitted and automatically monitor important policies for changes, with others are manually reviewed by the community regularly. We’d like your support, so there is a feed of policies that need review, and a way to review them here: Coming Soon.</li>
+        <li>Contribute in bulk: If you have a list of policies locally you think we could use, we’d love to work with you to include them. Get in touch.</li>
+        </ul>
+        We’ll accept contributions from anyone; however, we’ll ask you to <a href="https://docs.google.com/forms/d/e/1FAIpQLSfHEYlQYogYhdS7nXajM68cd2pMbKwJSahcr-NP9vVL-dzzYA/viewform">identify who you are</a> and source your information. We recommend contributing only if you are intimately familiar with what you’re contributing to, e.g. you’re a trained scholarly communications practitioner (or trained by one) or a journal editor / publisher.
+
+        Your contribution will be licensed openly, CC-0, and attributed to you. At any point, you can get your contribution back by downloading the data.
+      </p>
+
       <h1 id="#data">Data Download</h1>
       <p>
+        You can download the live dataset <a href="https://docs.google.com/spreadsheets/d/1nvsAcDQnnIXI1LmzPHA8d4KGNO1PZZF-iMQE7AZaN2s/export?format=csv">here</a>. Occasionally, we upload a copy to Zenodo to ensure the dataset is archived and citable, you can find those <a href="TODO">here</a>.
       </p>
 
       <h1 id="#code">Code</h1>
       <p>
+        The backend code driving the API’s can be found on Github <a href="https://github.com/ourresearch/rickscafe-api">here</a>. This will soon be moved alongside other <a href="https://github.com/OAButton">shareyourpaper.org code</a>.
+
+        The database is managed in a Google Sheet, and has no interesting code, just raw data that you can download. You’re welcome to use the Google Sheet code and formulas currently used for the bulk checker as you wish.
       </p>
 
-      <h1 id="#contribution">Contribution</h1>
+      <h1 id="#roadmap">Roadmap</h1>
       <p>
+        We have lots of plans. Some of the highlights include:
+        <ul>
+          <li>Getting to 100% coverage of publisher policies for journal articles. We’re slowly working down the list of publishers and exploring a data-driven approach to doing this.</li>
+          <li>Interfaces that allow authors and libraries to get more information on a one-by-by basis in Shareyourpaper.org.</li>
+          <li>Improve data coverage for conference proceedings and preprints.</li>
+          <li>Consider expanding the data schema for where you can post, and provide terms for deposit in subject repositories and author websites.</li>
+          <li>Streamline querying if you don’t have a DOI, or have a Datacite DOI.</li>
+        </ul>
+        At any point, you can see what we’re up to using our <a href="https://github.com/OAButton/discussion/labels/1.%20permissions">Github issues</a>.
+
+        If you have requests, <a href="mailto:joe@openaccessbutton.org">let us know</a>.
       </p>
 
       <h1 id="#howitworks">How it works</h1>
       <p>
+        Information on how it works can be found <a href="/permissions#howitworks">here on the homepage</a>, and more specifics, e.g the schema can be found on this page. If you’d like to know more, <a href="mailto:joe@openaccessbutton.org">send us a question</a> and we’ll happily get back to you asap.
       </p>
 
       <h1 id="#disclaimer">Disclaimer</h1>
       <p>
+        All data and information provided on this site is for informational purposes only. While New Venture Fund and its Scholarly Publishing and Academic Research Coalition ("SPARC") project have used their best efforts to ensure that the information provided on this site is accurate and complete, they make no legal representations as to the accuracy, completeness, suitability or validity of any data or information on this site and will not be liable for any errors or omissions in this data and information or for any losses, injuries or damages arising from its display or use. All information is provided on an as-is basis. The Open Access Button is an initiative of the Scholarly Publishing and Academic Research Coalition ("SPARC"), a project of the New Venture Fund.
       </p>
 
       <h1 id="#contact">Contact</h1>
       <p>
+        We never thought we’d say this, but we love talking about permissions checking! If you’d like to chat, <a href="mailto:joe@openaccessbutton.org">reach out</a>.
       </p>
 
     </div>
