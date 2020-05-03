@@ -50,6 +50,8 @@
 
   .ul {
     line-height: 1.5;
+    padding-top: 30px;
+    padding-bottom: 30px;
   }
 
 </style>
@@ -140,57 +142,97 @@
         <br>
         Support available from <a href="mailto:Joe@openaccessbutton.org">Joe@openaccessbutton.org</a>.
 
-        <h2><a href="https://permissions.shareyourpaper.org">permissions.shareyourpaper.org</a></h2>
+        <h2>
+          <a href="https://permissions.shareyourpaper.org">
+            permissions.shareyourpaper.org
+          </a>
+        </h2>
         <!-- TODO: link these -->
         <i>Base URL, nothing interesting here</i>
 
-        <h2>/:doi</h2>
+        <h2>
+          <a href="https://permissions.shareyourpaper.org/doi/">
+            /:doi
+          </a>
+        </h2>
         <i>Returns permissions information specific to that paper, alongside relevant policies so you can decide your own answers.</i>
 
-        <h2>/:doi?affiliation=:ror-id</h2>
-        <i>Return permissions information as above, but with the stated institutional policy in effect.</i>
+        <h2>
+          <a href="https://permissions.shareyourpaper.org/doi/your/doi??affiliation=:rorid">
+            /:doi?affiliation=:ROR ID
+          </a>
+        </h2>
+        <i>Return permissions information as above, but with the stated institutional policy in effect. Affiliations are specified <a href="https://ror.org/">ROR IDs</a>.</i>
 
-        <h2>/journals</h2>
+        <h2>
+          <a href="https://permissions.shareyourpaper.org/journals/">
+            /journals
+          </a>
+        </h2>
         <i>Returns all journal policies available from our database</i>
 
-        <h2>/journals/:issn</h2>
+        <h2>
+          <a href="https://permissions.shareyourpaper.org/journals/issn-issn">
+            /journals/:issn
+          </a>
+        </h2>
         <i>Returns the journal policy you want from our database</i>
 
         <p>Examples:</p>
-        <li>Nature</li>
-        <li>Science</li>
-        <li>Wiley</li>
-
+        <ul>
+          <li>Nature</li>
+          <li>Science</li>
+          <li>Wiley</li>
+        </ul>
         <p>Many journals are indexed at the publisher level.</p>
 
-        <h2>/publishers</h2>
+        <h2>
+          <a href="https://permissions.shareyourpaper.org/publishers">
+          /publishers
+          </a>
+        </h2>
         <i>Returns all publisher policies available from our database</i>
 
-        <h2>/publishers/:crossref-name</h2>
+        <h2>
+          <a href="https://permissions.shareyourpaper.org/publishers/crossref-name">
+            /publishers/:crossref-name
+          </a>
+        </h2>
         <i>Returns the publisher policy you want from our database</i>
 
         <p>Examples:</p>
-        <li>Elsevier (major publisher)</li>
-        <li>Sage (major publisher)</li>
-        <li>Wiley (major publisher)</li>
-        <li>XYZ (request only policy)</li>
-        <li>ZYX (publisher pdf deposit allowed)</li>
-        <li>YZX (preprints only)</li>
+        <ul>
+          <li>Elsevier (major publisher)</li>
+          <li>Sage (major publisher)</li>
+          <li>Wiley (major publisher)</li>
+          <li>XYZ (request only policy)</li>
+          <li>ZYX (publisher pdf deposit allowed)</li>
+          <li>YZX (preprints only)</li>
+        </ul>
 
         <p>Currently only non-OA publishers are included.</p>
 
-        <h2>/affiliations/</h2>
+        <h2>
+          <a href="https://permissions.shareyourpaper.org/publishers/affiliations">
+            /affiliations/
+          </a>
+        </h2>
         <i>Returns all affiliations that have self-archiving rules attached from our database</i>
 
-        <h2>/affiliations/:ror-id</h2>
+        <h2>
+          <a href="https://permissions.shareyourpaper.org/publishers/affiliations/ror-id">
+            /affiliations/:ror-id
+          </a>
+        </h2>
         <i>Returns policies associated with the affiliation you want from our database</i>
 
         <p>Examples:</p>
         <!-- TODO: link these examples -->
-        <li>MIT. Here an OA policy is in effect.</li>
-        <li>Example US government policy. Here law allows self-archiving.</li>
-        <li>Example French Institute. Here the law allows self-archiving.</li>
-
+        <ul>
+          <li>MIT. Here an OA policy is in effect.</li>
+          <li>Example US government policy. Here law allows self-archiving.</li>
+          <li>Example French Institute. Here the law allows self-archiving.</li>
+        </ul>
 
       </p>
 
