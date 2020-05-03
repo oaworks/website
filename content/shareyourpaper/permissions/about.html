@@ -245,28 +245,40 @@
 
       <h1 id="schema">Schema</h1>
       <p>
-        Coming Soon!
+        <b>Background</b>
+        <br>
+        <br>
+        Our schema and database do not directly track policies. We track permissions. Said another way, one line in our database doesn’t equate to a policy. One line is one permission. For us, a ‘permission’ is one way that self-archiving has been permitted by an institution. A policy may contain many permissions, and our database aims to capture them in a machine usable format. For example, a policy may give permission to self archiving a postprint in an institutional repository after 12 months with a certain statement and license. This is one permission. The same policy may also say you can self-archive on your personal website, immediately, without a statement or license. To describe the whole policy in a machine readable format is difficult. To describe the individual permissions in a machine readable format, and surface the appropriate permission at the appropriate time is easier. Currently, we focus on permissions to self-archive a postprint in an institutional repository.
+        <br>
+        <br>
+        We have a shared data schema across our database and APIs, although some elements are only present in one part or the other. The schema is subject to change, both as we change it, and at short notice when publishers change their policy. In either case, efforts will be made to avoid breaking changes.
+        <br>
+        <br>
+        The API responses, and data within it, come in a few major sections. First, at the highest level, are permissions, as discussed above. The API details an ‘authoritative_permission’, which is our best attempt at identifying an accurate and advantageous permission. We generate a response that is specific to the DOI in question in these cases. We also provide ‘all_permissions’ which details all the available permissions in their raw form. Each permission has a schema as detailed below.
+        <br>
+        <br>
+        <b>Schema</b>
       </p>
 
-      <p>
+      <!--<p>
         <table style="width:100%">
-  <tr>
-    <th>Firstname</th>
-    <th>Lastname</th>
-    <th>Age</th>
-  </tr>
-  <tr>
-    <td>Jill</td>
-    <td>Smith</td>
-    <td>50</td>
-  </tr>
-  <tr>
-    <td>Eve</td>
-    <td>Jackson</td>
-    <td>94</td>
-  </tr>
-</table>
-      </p>
+          <tr>
+            <th>Firstname</th>
+            <th>Lastname</th>
+            <th>Age</th>
+          </tr>
+          <tr>
+            <td>Jill</td>
+            <td>Smith</td>
+            <td>50</td>
+          </tr>
+          <tr>
+            <td>Eve</td>
+            <td>Jackson</td>
+            <td>94</td>
+          </tr>
+        </table>
+      </p>-->
 
       <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vT8_QNuTRINuIL5B7KrhETh3epQdeP5Hzpet_nDk78UvA7vOUuUoj0H6qfcSmDMF7MGY8_6UJ5tgRv9/pubhtml?gid=1588149813&amp;single=true&amp;widget=true&amp;headers=false" style="height:600px;width;100%"></iframe>
 
