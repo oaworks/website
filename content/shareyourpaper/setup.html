@@ -1244,7 +1244,9 @@ jQuery(document).ready(function() {
     var uid = noddy.user.account._id;
     try {
       uc = noddy.user.account.service.openaccessbutton.deposit.config;
-    } catch(err) {}
+    } catch(err) {
+      uc = {};
+    }
     if ($('.onlyyou').length) $('.onlyyou').html($('.onlyyou').html().replace('but only you ','but only you (' + noddy.user.account.profile.firstname + ') '));
     shareyourpaper({uid:uid, api:api, css: false});
     try {
