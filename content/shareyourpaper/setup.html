@@ -220,6 +220,10 @@
                 Programmatically: API</a>
             </li>
             <li>
+              <a class="blue view pull" href="#direct">
+                Programmatically: Direct Deposit (Coming Soon)</a>
+            </li>
+            <li>
               <a class="blue view pull" href="#no-repo">
                 I don’t have an institutional repository</a>
             </li>
@@ -325,7 +329,7 @@
       <div class="col-md-4 col-md-offset-1 blue">
         <div class="blueery">
           <p><a class="blue view pull" href="#repository"><span class="glyphicon glyphicon-arrow-left"></span>  Go to Menu</a></p>
-          <h2>Programmatically: OAI-PMH or API</h2>
+          <h2>Programmatically: OAI-PMH</h2>
 
           <p>
             Your repository may already support automatic ingestion of content from OAI-PMH feeds. If so, here’s how to generate one from your shareyourpaper.org account.
@@ -335,9 +339,9 @@
             Go to <a href="https://zenodo.org/communities" class="blue">Zenodo</a> and set up a community. These can be used to generate OAI-PMH feeds from the content we’re putting in Zenodo.
           </p>
 
+          <!--<p>Go <a href="#community-input" class="blue">here</a> to finish set up by sharing your community url.</p>-->
           <p><b>To get Shareyourpaper.org to link to your community, let us know the URL.</b></p>
-          <input id="community" type="text" class="form-control setting blue" placeholder="e.g https://zenodo.org/communities/cambridge/">
-          <br>
+          <input id="community" type="text" class="form-control setting blue" placeholder="e.g https://zenodo.org/communities/cambridge/"><br>
 
           <p>
             Your OAI-PMH feed can be found on the community homepage and can take a <a href="https://developers.zenodo.org/#oai-pmh" class="blue">number of formats</a>.
@@ -373,6 +377,33 @@
 
           <p>
             This can be used to automatically ingest content that comes through your account. You can learn how to use it in our <a href="https://openaccessbutton.org/api" class="blue">developer documentation</a>.
+          </p>
+
+        </div>
+        <div class="bluebottom">
+          <p><a class="btn btn-demo-blue save view pull" href="#repository">Save & Continue</a></p>
+          <p><a class="blue" href="/feedback#general">Feedback</a> | <a class="blue view" href="#faq">FAQ</a> | <a class="blue" href="/feedback#bug"> Report Issue</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="direct" class="section">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-1 content">
+
+      </div>
+
+      <div class="col-md-4 col-md-offset-1 blue">
+        <div class="blueery">
+          <p><a class="blue view pull" href="#repository"><span class="glyphicon glyphicon-arrow-left"></span>  Go to Menu</a></p>
+          <h2>Programmatically: Direct Deposit (Coming Soon)</h2>
+
+          <p>
+            We plan to use SWORD to enable direct deposits into your repository, witout putting them in Zenodo, while still hopefully still providing an instant link to authors.
+          </p>
+          <p>
+            Since setting this up for your repository will take work on our part, we can only provide this to libraries who support our work through our leadership tier. To find our more, go <a href="https://shareyourpaper.org/leadership">here</a>.
           </p>
 
         </div>
@@ -421,9 +452,11 @@
           <p>
             The service is free, and you don’t need to manage or maintain anything. Zenodo is actively developing this to be more powerful.
           </p>
-          <p><b>To get Shareyourpaper.org to link to your community, let us know the URL.</b></p>
-          <input id="community" type="text" class="form-control setting blue" placeholder="e.g https://zenodo.org/communities/cambridge/">
-          <br>
+          <!--
+          <p>Go <a href="#community-input" class="blue">here</a> to finish set up by sharing your community url.</p>
+          -->
+        <p><b>To get Shareyourpaper.org to link to your community, let us know the URL.</b></p>
+        <input id="community" type="text" class="form-control setting blue" placeholder="e.g https://zenodo.org/communities/cambridge/"><br>
 
         </div>
         <div class="bluebottom">
@@ -434,6 +467,30 @@
     </div>
   </div>
 
+<!--
+  <div id="community-input" class="section">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-1 content">
+
+      </div>
+
+      <div class="col-md-4 col-md-offset-1 blue">
+        <div class="blueery">
+          <p><a class="blue view pull" href="#repository"><span class="glyphicon glyphicon-arrow-left"></span>  Go to Menu</a></p>
+          <h2>Link to your Zenodo Community</h2>
+
+          <p><b>To get Shareyourpaper.org to link to your community, let us know the URL.</b></p>
+          <input id="community" type="text" class="form-control setting blue" placeholder="e.g https://zenodo.org/communities/cambridge/"><br>
+
+        </div>
+        <div class="bluebottom">
+          <p><a class="btn btn-demo-blue save view pull" href="#repository">Save & Continue</a></p>
+          <p><a class="blue" href="/feedback#general">Feedback</a> | <a class="blue view" href="#faq">FAQ</a> | <a class="blue" href="/feedback#bug"> Report Issue</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+-->
 
   <div id="preferences-general" class="section">
     <div class="row">
@@ -1030,8 +1087,7 @@ jQuery(document).ready(function() {
   });
 
   var deposits = function(e) {
-    var addr = api + '/deposits.csv?uid=' + noddy.user.account._id;
-    if ($(this).attr('id') === 'all_file_deposits') addr += ',deposit.zenodo.url' // should be file url once we decide that
+    var addr = api + '/deposited.csv?uid=' + noddy.user.account._id;
     if ($('#depositdate').val()) addr += '&q=deposit.createdAt:>' + new Date($('#depositdate').datepicker('getDate')).valueOf();
     if ($(this).attr('id') === 'all_file_deposits') addr += (addr.indexOf('&q') === -1 ? '&q=' : ' AND ') + 'deposit.zenodo.url:*'; // TODO later change this to be the file URL once deposit is changed to save that
     $(this).attr('href',addr);
@@ -1187,7 +1243,9 @@ jQuery(document).ready(function() {
     var uid = noddy.user.account._id;
     try {
       uc = noddy.user.account.service.openaccessbutton.deposit.config;
-    } catch(err) {}
+    } catch(err) {
+      uc = {};
+    }
     if ($('.onlyyou').length) $('.onlyyou').html($('.onlyyou').html().replace('but only you ','but only you (' + noddy.user.account.profile.firstname + ') '));
     shareyourpaper({uid:uid, api:api, css: false});
     try {

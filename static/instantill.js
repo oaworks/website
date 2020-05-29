@@ -351,7 +351,7 @@ var instantill_run = function() {
     $('.oabutton_find').html('Submitting .');
     $('.oabutton_ill').html('Submitting .');
     var eml = typeof matched === 'string' ? matched : $('#oabutton_email').val();
-    var data = {url:avail.data.match, email:eml, from:_oab_opts.uid, plugin:'instantill', embedded:window.location.href, metadata: avail.data.meta.article };
+    var data = {match:avail.data.match, email:eml, from:_oab_opts.uid, plugin:'instantill', embedded:window.location.href, metadata: avail.data.meta.article };
     var nfield = _oab_config.notes ? _oab_config.notes : 'notes';
     if (gotmore) data[nfield] = 'The user provided some metadata. ';
     if (_oab_config.pilot) data.pilot = _oab_config.pilot;
@@ -581,6 +581,7 @@ var instantill_run = function() {
           $('#oabutton_error').html('<p>Please complete all required fields</p>').show();
           return;
         }
+        data.usermetadata = true;
       }
       if (JSON.stringify(_parameta) !== '{}') {
         for ( var p in _parameta) {
