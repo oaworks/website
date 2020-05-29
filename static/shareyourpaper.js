@@ -523,7 +523,7 @@ var _run = function() {
     var doi = avail && avail.v2 && avail.v2.metadata && avail.v2.metadata.doi ? avail.v2.metadata.doi : '';
     var title = avail && avail.v2 && avail.v2.metadata && avail.v2.metadata.title ? avail.v2.metadata.title : (doi ? doi : 'Untitled paper');
     var journal = avail && avail.v2 && avail.v2.metadata && avail.v2.metadata.journal ? 'published in "' + avail.v2.metadata.journal + '"' : '';
-    if (cml === undefined) cml = _oab_config.problem_email ? _oab_config.problem_email : (_oab_config.email ? _oab_config.email : (_oab_config.adminemail ? _oab_config.adminemail : undefined));
+    if (cml === undefined) cml = _oab_config.problem_email ? _oab_config.problem_email : (_oab_config.email ? _oab_config.email : (_oab_config.adminemail ? _oab_config.adminemail : ''));
     var mt, cc;
     try {
       mt = avail.v2.permissions.ricks.application.can_archive_conditions.permission_required_contact;
@@ -551,7 +551,7 @@ var _run = function() {
     $('#oabutton_reviewemail').attr('href',eml);
   }
   var permissionemail = function() {
-    if (cml === undefined) cml = _oab_config.problem_email ? _oab_config.problem_email : (_oab_config.email ? _oab_config.email : (_oab_config.adminemail ? _oab_config.adminemail : undefined));
+    if (cml === undefined) cml = _oab_config.problem_email ? _oab_config.problem_email : (_oab_config.email ? _oab_config.email : (_oab_config.adminemail ? _oab_config.adminemail : ''));
     var doi = avail && avail.v2 && avail.v2.metadata && avail.v2.metadata.doi ? avail.v2.metadata.doi : '';
     var title = avail && avail.v2 && avail.v2.metadata && avail.v2.metadata.title ? avail.v2.metadata.title : (doi ? doi : 'Untitled paper');
     var eml = 'mailto:' + (_oab_config.deposit_help ? _oab_config.deposit_help : cml) + '?subject=Permission%20Given%20to%20Deposit%20' + doi + '&body=';
@@ -826,7 +826,7 @@ var _run = function() {
   // could get custom _ops from the user config
   if (_oab_config.autorun !== true) {
     var searchfor = undefined;
-    if (window.location.href.split('?')[0].indexOf('/10.') !== -1 && window.location.href.split('?')[0].split('/10.')[1].indexOf('/') > 1 && window.location.href.split('?')[0].split('/10.')[1].trim().split('/').length === 2) {
+    if (window.location.href.split('?')[0].indexOf('/10.') !== -1 && window.location.href.split('?')[0].split('/10.')[1].indexOf('/') > 1 && window.location.href.split('?')[0].split('/10.')[1].trim().split('/').length > 1) {
       searchfor = strim('10.' + window.location.href.split('?')[0].split('/10.')[1],'/');
     }
     if (_oab_config.autorunparams) {
