@@ -1,123 +1,19 @@
-
-<style>
-
-.innercolumns {
-width:100%;
-padding:10px;
-overflow: hidden;
-}
-
-.img {
-    display: block;
-    margin: auto;
-}
-
-.btn {
-  padding:10px 15px;
-  font-size:16px;
-  }
-
-</style>
-
-<!--
-<div class="alert alert-info" style="display:solid;">
-  <p style="text-align:center">
-    This service is functional and in testing with early adopters but unfinished, and unannounced. Please don't share this page. To be notified when it is released, <a href="/libraries">sign up now</a>.
-  </p>
-</div>
--->
-
 <div class="container-fluid">
-  <div class="col-lg-12">
-    <h1 style="font-size:2.4em; text-align:center;">Automatic Permissions Checker</h1>
-  </div>
-
   <div class="row">
+    <div class="col-md-8 col-md-offset-2" style="text-align:justify;">
 
-    <div class="col-lg-12">
-      <p style="text-align:center;">
-        <img src="/static/permissions-transparent.png" alt="" style="width:100%;max-width:768px" class="responsive">
+      <h1 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">Hold on...</h1>
+
+      <p>
+        This page has moved. You should be redirected, but if not, click here to <a href="/feedback">report a bug</a>
       </p>
-    </div>
-  </div>
-
-  <div class="row" style="padding-left: 5%;padding-right: 5%">
-
-    <div class="col-lg-7 col-sm-6">
-
-          <p style="text-align: auto;line-height: 2;">
-            These tools aim to make permission checking faster, easier, and clearer so that you can unlock the power of mediated deposit and more easily manage your repository. In this prototype, powered by open, community-editable, machine-readable data, we allow librarians to do permission checking on 100s of articles or journals in seconds and, for each one, to receive embargos, completed deposit statements, metadata, open access availability, and more. We cover 20,000 journals, 250 publishers, 80 university policies, several funders, and even authors’ negotiated contracts or waivers. We hope to get your feedback as we move from prototypes, to full APIs and tools for authors.
-          </p>
-
-      </div>
-
-      <div class="col-lg-5 col-sm-6">
-
-        <p style="text-align: center;">
-          <a href="https://docs.google.com/spreadsheets/d/1hU9s9nx03SdvCcrEW2IFXQtTDcYxJfAGpndqcQZRS98/copy" target="_blank">
-            <button id="permissions_app" class="pinger btn btn-action" style="width:70%;">
-              Use it (V1.6)
-            </button>
-          </a>
-        </p>
-        <p style="text-align: center;">
-          or
-          <i>
-            <a href="https://blog.openaccessbutton.org/6534dd71c98b">learn more</a>
-          </i>
-          and
-          <i>
-           <a href="https://docs.google.com/document/d/1pEzKwsAZxs7uRT6DtH9mEChfd2jGCT3Yfjs3bHIe-hE/edit?usp=sharing" target="_blank" id="permissions_background">how it works</a>
-         </i>
-        </p>
-        <p style="text-align: center;">
-          <a href="https://docs.google.com/document/d/1pEzKwsAZxs7uRT6DtH9mEChfd2jGCT3Yfjs3bHIe-hE/edit#heading=h.8je259om2qax" target="_blank">
-            <button id="permissions_Contribute" class="pinger btn btn-action" style="width:70%;">
-              Contribute
-            </button>
-          </a>
-        </p>
-        <i>
-        <p style="text-align: center;">
-          download
-           <a rel="license" href="https://creativecommons.org/publicdomain/zero/1.0/">CC-0</a>
-           <a href="https://docs.google.com/spreadsheets/d/1XYydXYOv29Omda0aZbpSCQzclFTNk5_f8FrAJoAbnJ4/export?format=csv" target="_blank" id="permissions_ViewData"> data</a> and <a href="https://docs.google.com/spreadsheets/d/1EEjKETZWvJPN9qUvYWoE2U-8TcnHV3ZyyH0AoyBruXI/edit?usp=sharing" target="_blank">schema</a>
-        </p>
-      </i>
-        <p style="text-align: center;">
-          <a href="https://docs.google.com/forms/d/e/1FAIpQLScaF9_dzAtHERxcaHZ4nDRo_x3RD-NLUp6apeONDWvsaRuoGA/viewform?usp=sf_link" target="_blank">
-            <button class="pinger btn btn-action" style="width:70%;">
-              Get Updates
-            </button>
-          </a>
-        </p>
-        <p style="text-align: center;">
-          <a href="https://docs.google.com/forms/d/e/1FAIpQLScoXHpUL3rzl4mzb8C3DQPf4yiiEYdB4CLfC2wsc4UVcsd2uw/viewform?usp=sf_link" target="_blank">
-            <button class="pinger btn btn-action" style="width:70%;">
-              Give Feedback
-            </button>
-          </a>
-        </p>
-
 
     </div>
   </div>
-
-<div class="row">
-    <div class="col-lg-12">
-      <!-- This adds some padding -->
-      <p style="padding-bottom:100px"></p>
-    </div>
 </div>
-
-  </div>
-
-</div>
-
-<!-- Code to pull in alpha release banner -->
-<div w3-include-html="/static/alpha.html"></div>
-<script src="https://www.w3schools.com/lib/w3.js"></script>
 
 <script>
-w3.includeHTML();
+  jQuery(document).ready(function() {
+    window.location = 'https://shareyourpaper.org/permissions';
+  });
 </script>
