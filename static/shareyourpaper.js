@@ -47,7 +47,7 @@ var _run = function() {
   var cml = _oab_config.problem_email ? _oab_config.problem_email : (_oab_config.email ? _oab_config.email : (_oab_config.adminemail ? _oab_config.adminemail : undefined));
   _lib_contact = 'Please try ' + (cml ? '<a href="mailto:' + cml + '"><u>contacting your library</u></a>' : 'contacting your library') + ' directly.';
   if (_oab_opts.bootstrap === undefined) _oab_opts.bootstrap = 'btn btn-primary btn-iu';
-  if (_oab_opts.placeholder === undefined) _oab_opts.placeholder = 'e.g. 10.1234/567890';
+  if (_oab_opts.placeholder === undefined) _oab_opts.placeholder = 'e.g. 10.1126/scitranslmed.3001922';
   if (_oab_opts.data === undefined) _oab_opts.data = false;
   var api = _oab_opts.api ? _oab_opts.api : 'https://api.openaccessbutton.org';
   var site = _oab_opts.site ? _oab_opts.site : 'https://openaccessbutton.org';
