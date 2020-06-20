@@ -684,7 +684,7 @@ var instantill_run = function() {
   if (_oab_config.autorun !== true) {
     var searchfor = undefined;
     if (_oab_config.autorunparams) {
-      var cp = _oab_config.autorunparams.replace(/"/g,'').replace(/'/g,'').split(',');
+      var cp = typeof _oab_config.autorunparams === 'string' ? _oab_config.autorunparams.replace(/"/g,'').replace(/'/g,'').split(',') : _oab_config.autorunparams;
       for ( var o in cp) {
         var eq = undefined;
         var op = cp[o].trim();
