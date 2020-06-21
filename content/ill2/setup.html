@@ -68,29 +68,11 @@
   <div id="setup" class="row full">
     <div class="col-md-6 col-md-offset-1 content">
       <div style="display:none;" id="embed_code">
-        <p>Copy all the code in the box below, and paste it in the HTML of the web page where you want to create your embed.</p>
         <div class="well">
 &lt;script src="{{site_url}}/static/embed/oab_embed.js"&gt;&lt;/script&gt;<br>
 &lt;script&gt;instantill(<span class="user_id"></span>, config: <span id="_oab_config"></span>);&lt;/script&gt;<br>
 &lt;div id="instantill"&gt;&lt;/div&gt;
         </div>
-        <p>You can control where the search widget gets displayed by moving:</p>
-        <pre>
-&lt;div id="instantill"&gt;&lt;/div&gt;</pre>
-        <p>You can also use the embed without providing your config, in which case it will be retrieved from our API each time
-        your page loads - note, this makes things easier to manage when you change your config because you won't have to copy/paste
-        new code, but it makes the embed slower to work, which is not so good for your users.</p>
-        <p>Here's the code without your config:</p>
-        <div class="well">
-&lt;script src="{{site_url}}/static/embed/oab_embed.js"&gt;&lt;/script&gt;<br>
-&lt;script&gt;instantill(<span class="user_id"></span>);&lt;/script&gt;<br>
-&lt;div id="instantill"&gt;&lt;/div&gt;
-        </div>
-        <p>We automatically insert a small amount of css along with the embed - you can override that by setting
-        <b>css: false</b>. We also use bootstrap class names as a fallback option, these are <b>btn btn-primary</b>
-        on buttons, and <b>form-control</b> on input elements. You can have these removed by setting <b>bootstrap: false</b>.</p>
-        <p>If you remove our css and remove bootstrap, you can write your own css styles into your page for the embed to follow.
-        The class names we use are <b>_oab_button</b> for buttons and <b>_oab_form</b> for input elements.</p>
       </div>
       <div id="instantill"></div>
     </div>
@@ -380,12 +362,6 @@
 
         <p><a class="get_embed btn btn-primary btn-block" href="#">Get your embed code</a></p>
 
-        <p>First, include the following in the source code (HTML) of your page:</p>
-        <div class="well">
-&lt;script src="{{site_url}}/static/embed/oab_embed.js"&gt;&lt;/script&gt;<br>
-&lt;script&gt;instantill(<span class="user_id"></span>, config: <span id="_oab_config"></span>);&lt;/script&gt;<br>
-&lt;div id="instantill"&gt;&lt;/div&gt;
-        </div>
         <p>You can control where the search widget gets displayed by moving:</p>
         <pre>
 &lt;div id="instantill"&gt;&lt;/div&gt;</pre>
