@@ -82,29 +82,11 @@
   <div id="setup" class="row full">
     <div class="col-md-6 col-md-offset-1 content">
       <div style="display:none;" id="embed_code">
-        <p>Copy all the code in the box below, and paste it in the HTML of the web page where you want to create your embed.</p>
         <div class="well">
 &lt;script src="{{site_url}}/static/embed/oab_embed.js"&gt;&lt;/script&gt;<br>
 &lt;script&gt;shareyourpaper(<span class="user_id"></span>, config: <span id="_oab_config"></span>);&lt;/script&gt;<br>
 &lt;div id="shareyourpaper"&gt;&lt;/div&gt;
         </div>
-        <p>You can control where the search widget gets displayed by moving:</p>
-        <pre>
-&lt;div id="shareyourpaper"&gt;&lt;/div&gt;</pre>
-        <p>You can also use the embed without providing your config, in which case it will be retrieved from our API each time 
-        your page loads - note, this makes things easier to manage when you change your config because you won't have to copy/paste 
-        new code, but it makes the embed slower to work, which is not so good for your users.</p>
-        <p>Here's the code without your config:</p>
-        <div class="well">
-&lt;script src="{{site_url}}/static/embed/oab_embed.js"&gt;&lt;/script&gt;<br>
-&lt;script&gt;shareyourpaper(<span class="user_id"></span>);&lt;/script&gt;<br>
-&lt;div id="shareyourpaper"&gt;&lt;/div&gt;
-        </div>
-        <p>We automatically insert a small amount of css along with the embed - you can override that by setting 
-        <b>css: false</b>. We also use bootstrap class names as a fallback option, these are <b>btn btn-primary</b> 
-        on buttons, and <b>form-control</b> on input elements. You can have these removed by setting <b>bootstrap: false</b>.</p>
-        <p>If you remove our css and remove bootstrap, you can write your own css styles into your page for the embed to follow. 
-        The class names we use are <b>_oab_button</b> for buttons and <b>_oab_form</b> for input elements.</p>
       </div>
       <div id="shareyourpaper"></div>
     </div>
@@ -112,15 +94,20 @@
     <div class="settings col-md-4 col-md-offset-1 blue">
       <div id="loginorurl" style="display:none;" class="greenery">
         <div class="noddyLogin">
-          <p>If you've used ShareYourPaper before, enter your email or the URL of the page where you installed it, so we can retrieve your config:</p>
-          <input type="text" class="form-control" id="noddyEmail" placeholder="Email or URL">
+          <h2>Let’s get you logged in!</h2>
+          <p></p>
+          <input type="text" class="form-control" id="noddyEmail" placeholder="Enter your Email Address">
+          <p>
+            By using Shareyourpaper.org for Libraries you agree to the Open Access Button <a href="/privacy">privacy policy</a> and <a href="/terms">terms of service</a>.
+          </p>
+          <p><a class="btn btn-demo-green view" href="#">Login</a></p>
         </div>
         <div class="noddyToken" style="display:none;">
-          <p>Check your email for a login token, then enter it below:</p>
-          <input type="text" class="form-control" id="noddyToken" placeholder="Check your email, enter your login code">
+          <h2>Go check your email!</h2>
+          <p>Click the link or use the code to login.</p>
+          <input type="text" class="form-control" id="noddyToken" placeholder="Enter your login code">
         </div>
       </div>
-      <div id="maingetembed" class="blueery"><p><a class="get_embed btn btn-demo-blue" href="#">Get your embed code</a></p></div>
 
       <div id="menu" class="section blueery">
         <h2>Let’s get you set up!</h2>
@@ -476,12 +463,51 @@
           Shareyourpaper.org can be integrated onto any webpage on your website, and blend in with your brand.
         </p>
         <p>
-          To do that you can follow these simple instructions or send these to your developers:
+          To do that you can follow these simple instructions yourself or send them to your developers:
+        </p>
+
+        <p>
+          First, include the following in the source code (HTML) of your page:
         </p>
 
         <a class="get_embed btn btn-demo-blue" href="#">Get your embed code</a>
 
-        <p>You should now be good to go!</p>
+        <p>You can control where the search widget gets displayed by moving:</p>
+        <pre>
+&lt;div id="shareyourpaper"&gt;&lt;/div&gt;</pre>
+
+        <p>You should now be good to go! If not, review our <a href="#embed-advanced" class="view green">advanced settings</a>.</p>
+
+      </div>
+
+      <div id="embed-advanced" class="section skip greenery">
+        <p><a class="green view" href="#menu"><span class="glyphicon glyphicon-arrow-left"></span>  Go to Menu</a></p>
+        <h2>Website &amp; Brand: Advanced</h2>
+
+        <p>
+          If you don’t think it’s styled correctly, a developer can help you. If you have one, great, if not <a href="mailto:joe@openaccessbutton.org" class="light">reach out</a>.
+        </p>
+
+        <p>
+          We include a small amount of CSS with InstantILL to make it look nice. You can override that:
+        </p>
+        <p>
+        <input id="css" type="checkbox" class="setting green">
+          Override
+        </p>
+
+        <p>
+          We also use Bootstrap class names as a fallback option, these are btn btn-primary on buttons, and form-control on input elements. You can override that too:
+        </p>
+        <p>
+        <input id="bootstrap" type="checkbox" class="setting green">
+          Override
+        </p>
+
+        <p>
+          If you remove our css and remove bootstrap, you can write your own css styles into your page for the embed to follow. The class names we use are _oab_button for buttons and _oab_form for input elements.
+        </p>
+
       </div>
 
       <div id="rollout" class="section blueery">
@@ -490,7 +516,7 @@
         <p>
           Once you're all set up, and you know it's working, it's time to put Shareyourpaper.org in patron's hands.
         </p>
-  
+
         <p><b>
           Have you rolled it out?
         </b></p>
@@ -501,7 +527,7 @@
         <input id="live" type="checkbox" class="setting blue">
           Yes
         </p>
-  
+
         <p><b>
           Activate pilot mode?
         </b></p>
@@ -512,7 +538,7 @@
         <input id="pilot" type="checkbox" class="setting blue">
           Yes
         </p>
-  
+
         <p><b>
           Can others contact you to find out about Shareyourpaper.org?
         </b></p>
@@ -619,7 +645,7 @@
 <script src="/static/embed/oab_embed.js"></script>
 <script>
 _oab = shareyourpaper({api: api, css: false});
-// uid:(api.indexOf('dev.') !== -1 ? 'qZooaHWRz9NLFNcgR' : 'eZwJ83xp3oZDaec86'), 
+// uid:(api.indexOf('dev.') !== -1 ? 'qZooaHWRz9NLFNcgR' : 'eZwJ83xp3oZDaec86'),
 
 jQuery(document).ready(function() {
 
@@ -636,7 +662,7 @@ jQuery(document).ready(function() {
   }
   $('body').on('click','#all_deposits',deposits);
   $('body').on('click','#all_file_deposits',deposits);
-  
+
 });
 </script>
 <script src="/static/embed/oab_embed_ui.js"></script>
