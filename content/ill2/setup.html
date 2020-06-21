@@ -375,16 +375,22 @@
         </p>
 
         <p>
-          To do that you can follow these simple instructions or send these to your developers:
+          To do that you can follow these simple instructions yourself or send them to your developers:
         </p>
 
         <p><a class="get_embed btn btn-primary btn-block" href="#">Get your embed code</a></p>
 
-        <p>
-          If you don’t think it’s styled correctly, a developer can help you. If you have one, great, if not <a href="mailto:joe@openaccessbutton.org" class="light">reach out</a>.
-        </p>
+        <p>First, include the following in the source code (HTML) of your page:</p>
+        <div class="well">
+&lt;script src="{{site_url}}/static/embed/oab_embed.js"&gt;&lt;/script&gt;<br>
+&lt;script&gt;instantill(<span class="user_id"></span>, config: <span id="_oab_config"></span>);&lt;/script&gt;<br>
+&lt;div id="instantill"&gt;&lt;/div&gt;
+        </div>
+        <p>You can control where the search widget gets displayed by moving:</p>
+        <pre>
+&lt;div id="instantill"&gt;&lt;/div&gt;</pre>
 
-        <p>You should now be good to go!</p>
+        <p>You should now be good to go! If not, review our <a href="#embed-advanced" class="view green">advanced settings</a>.</p>
 
         <h3>We suggest:</h3>
         <ul>
@@ -392,6 +398,36 @@
           <li>Not mentioning 'InstantILL' to patrons</li>
           <li>Not putting anything above InstantILL (except a page title)</li>
         </ul>
+
+      </div>
+
+      <div id="embed-advanced" class="section skip greenery">
+        <p><a class="green view" href="#menu"><span class="glyphicon glyphicon-arrow-left"></span>  Go to Menu</a></p>
+        <h2>Website &amp; Brand: Advanced</h2>
+
+        <p>
+          If you don’t think it’s styled correctly, a developer can help you. If you have one, great, if not <a href="mailto:joe@openaccessbutton.org" class="light">reach out</a>.
+        </p>
+
+        <p>
+          We include a small amount of CSS with InstantILL to make it look nice. You can override that:
+        </p>
+        <p>
+        <input id="css" type="checkbox" class="setting green">
+          Override
+        </p>
+
+        <p>
+          We also use Bootstrap class names as a fallback option, these are btn btn-primary on buttons, and form-control on input elements. You can override that too:
+        </p>
+        <p>
+        <input id="bootstrap" type="checkbox" class="setting green">
+          Override
+        </p>
+
+        <p>
+          If you remove our css and remove bootstrap, you can write your own css styles into your page for the embed to follow. The class names we use are _oab_button for buttons and _oab_form for input elements.
+        </p>
 
       </div>
 
