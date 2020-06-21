@@ -268,12 +268,14 @@ noddy.token = function(e) {
   try { noddy.removeCookie(noddy.cookie); } catch(err) {}
   $('.noddyLoading').show();
   $('.noddyMessage').html('');
-  if (noddy.user.email === undefined) noddy.user.email = $('#noddyEmail').val();
+  if (noddy.user.email === undefined && $('#noddyEmail').length && $('#noddyEmail').val() && $('#noddyEmail').val().indexOf('@') !== -1) noddy.user.email = $('#noddyEmail').val();
   if (!noddy.user.email) {
     // TODO add a mailgun email verification step - if not verified, bounce back to the user to fix and try again
     $('#noddyEmail').css('border-color','#f04717').focus();
     return;
   }
+  $('.noddyLogin').hide();
+  $('.noddyToken').show();
   $('#noddyToken').attr('placeholder','Delivering to ' + noddy.user.email);
   var opts = {
     type:'POST',
@@ -510,9 +512,14 @@ noddy.login = function(e) {
       $('#noddyOauthFacebook').attr('href',frl).unbind('click').bind('click',function() { noddy.setCookie('noauth',{state:state,service:'facebook'},{expires:1}); });
     }
 
+    if ( window.location.hash.replace('#','').length === noddy.hashlength ) {
+      noddy.user.hash = window.location.hash.replace('#','');
+      try { if ('pushState' in window.history) { window.history.pushState("", "token", window.location.pathname + window.location.search); } } catch(err) {}
+    }
+
     $('.noddyMessage').html('');
     var progress = noddy.getCookie('noddyprogress');
-    if (progress && !$('#noddyToken').val()) {
+    if (progress && !$('#noddyToken').val() && !noddy.user.hash) {
       noddy.tokenSuccess();
     } else {
       noddy.removeCookie('noddyprogress');
@@ -533,10 +540,6 @@ noddy.login = function(e) {
         noddy.user.login = 'error';
         noddy.failureCallback(data,'login');
       }
-    }
-    if ( window.location.hash.replace('#','').length === noddy.hashlength ) {
-      noddy.user.hash = window.location.hash.replace('#','');
-      try { if ('pushState' in window.history) { window.history.pushState("", "token", window.location.pathname + window.location.search); } } catch(err) {}
     }
     var data = {
       email: noddy.user.email,

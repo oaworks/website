@@ -72,17 +72,17 @@ var view = function(e) {
     }
     if (which === '#') {
       $('.section').first().show();
-      which += $('.section').first().attr('id');
+      which = false;
     }
   }
-  if ($(which).hasClass('full')) {
+  if (which && $(which).hasClass('full')) {
     $('.full').not(which).hide();
+  	if ('pushState' in window.history) window.history.pushState("", which, which);
   } else {
     $('.full').not('#setup').hide();
     $('#setup').show();
   }
   try { if (($('#instantill').length && !$('#instantill').is(':visible')) || ($('#shareyourpaper').length && !$('#shareyourpaper').is(':visible'))) get_code(); } catch(err) {}
-	if ('pushState' in window.history) window.history.pushState("", (which ? which : document.title), (which ? which : window.location.pathname + window.location.search));
   scrollTo(0,0);
 }
 $('body').on('click', '.view', view);
@@ -199,8 +199,39 @@ jQuery(document).ready(function() {
   var diff = Math.floor(($(window).height() - $('div.content:visible').height())/4);
   $('div.content:visible').css({'padding-top':diff+'px'});
 
+  var loginorurl = function(e) {
+    if (e.keyCode === 13) {
+      var vl = $(this).val();
+      if (vl.indexOf('@') === -1) {
+        e.preventDefault();
+        $('#loginorurl').hide();
+        // given a url, check if it has been used by syp/ill depending on which _oab.plugin is in use
+        // if it has, try to get the config that came in with it, and setup the page with it if found
+        try {
+          $.ajax({
+            url: api + '/' + (_oab.plugin === 'instantill' ? 'ill' : 'deposit') + '/config?url=' + vl,
+            type: 'GET',
+            success: function(ufg) {
+              configure(ufg);
+              _oab.configure(ufg);
+              $('#maingetembed').show();
+            },
+            error: function() {
+              $('#_oab_error').html('<p>Sorry, we couldn\'t find a pre-existing config for you.</p>').show();
+              setTimeout(function() { $('#_oab_error').hide(); }, 3000);
+            }
+          });
+        } catch(err) {}
+      } else {
+        noddy.token();
+      }
+    }
+  }
+  $('body').on('keyup', '#noddyEmail', loginorurl);
+
   noddy.afterLogin = function() {
     $('#loginorurl').hide();
+    $('#maingetembed').show();
     if ($('.user_id').length) $('.user_id').html('uid: "' + noddy.user.account._id + '"');
     // alter to account for which plugin is in use
     var cfg = false;
@@ -267,9 +298,12 @@ jQuery(document).ready(function() {
     }
   };
   noddy.nologin = function() {
-    $('#loginorurl').show();
-    // if a url is put into loginorurl, get config from queries received from that url if possible, or can try direct from the url too...
-    configure(_oab.config);
+    if (JSON.stringify(_oab.config) === '{}') {
+      $('#maingetembed').hide();
+      $('#loginorurl').show();
+    } else {
+      configure(_oab.config);
+    }
   }
   if (window.location.href.indexOf('/setup') !== -1) noddy.login(); // login current user on setup page, if possible, but not on other demo pages
 });

@@ -26,6 +26,8 @@ _oab = (opts) ->
   _L.append('body', '<div id="' + this.element + '"></div>') if not _L.gebi this.element
   _L.html this.element, ''
 
+  if window.location.search.indexOf('local=') isnt -1
+    this.local = false
   if window.location.search.indexOf('config=') isnt -1
     try this.config = JSON.parse window.location.search.split('config=')[1].split('&')[0].split('#')[0]
   if window.location.search.indexOf('config.') isnt -1
@@ -41,9 +43,9 @@ _oab = (opts) ->
   this.configure()
 
   if not this.config.autorun # stupidly, true means don't run it...
-    this.config.autorunparams ?= ['doi','title','url','atitle','rft_id','journal','issn','year','author','confirmed'] # confirmed here is extra to the ill ones, used to confirm the file has been confirmed
-    this.config.autorunparams = this.config.autorunparams.replace(/"/g,'').replace(/'/g,'').split(',') if typeof this.config.autorunparams is 'string'
-    for o in this.config.autorunparams
+    ap = this.config.autorunparams ? ['doi','title','url','atitle','rft_id','journal','issn','year','author','confirmed'] # confirmed here is extra to the ill ones, used to confirm the file has been confirmed
+    ap = ap.replace(/"/g,'').replace(/'/g,'').split(',') if typeof ap is 'string'
+    for o in ap
       o = o.split('=')[0].trim()
       eq = o.split('=')[1].trim() if o.indexOf('=') isnt -1
       this.data[eq ? o] = decodeURIComponent(window.location.search.replace('?','&').split('&'+o+'=')[1].split('&')[0].replace(/\+/g,' ')) if (window.location.search.replace('?','&').indexOf('&'+o+'=') isnt -1)
@@ -249,7 +251,7 @@ _oab.prototype.metadata = (submitafter) -> # only used by instantill
 _oab.prototype.openurl = () -> # only used by instantill
   _L.post(
     api+'/ill/openurl?uid='+this.uid + (if this.data.usermetadata then '&usermetadata=true' else '')
-    this.f.metadata # TODO need to be able to pass the config as well
+    (if this.uid then this.f.metadata else {metadata: this.f.metadata, config: this.config})
     (res) => window.location = res
     (data) =>
       try
@@ -299,6 +301,7 @@ _oab.prototype.deposit = (e) -> # only used by shareyourpaper
     # this could be just an email for a dark deposit, or a file for actual deposit
     # if the file is acceptable and can go in zenodo then we don't bother getting the email address
     data = {from: this.uid, plugin: this.plugin, embedded:window.location.href, metadata: this.f?.metadata }
+    data.config = this.config
     data.email = this.data.email if this.data?.email
     data.confirmed = this.confirmed if this.confirmed
     data.redeposit = this.f.url if typeof this.f?.url is 'string'
@@ -817,10 +820,11 @@ _oab.prototype.configure = (key, val, build, demo) ->
     key = true
   if (key is true or not key?) and not val? and JSON.stringify(this.config) is '{}'
     try
-      lc = JSON.parse localStorage.getItem '_oab_config_' + this.plugin
-      if typeof lc is 'object' and lc isnt null
-        this.config = lc 
-        console.log 'Config retrieved from local storage'
+      if this.local isnt false # can be disabled if desired, by setting local to false at setup or in url param
+        lc = JSON.parse localStorage.getItem '_oab_config_' + this.plugin
+        if typeof lc is 'object' and lc isnt null
+          this.config = lc 
+          console.log 'Config retrieved from local storage'
     if this.uid and this.uid isnt 'anonymous' and JSON.stringify(this.config) is '{}' # should a remote call always be made to check for superseded config if one is not provided at startup?
       _L.jx this.api + '/' + (if this.plugin is 'instantill' then 'ill' else 'deposit') + '/config?uid='+this.uid, undefined, (res) => console.log('Config retrieved from API'); this.configure(res)
   if typeof key is 'object'
