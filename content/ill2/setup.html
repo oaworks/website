@@ -67,13 +67,6 @@
 
   <div id="setup" class="row full">
     <div class="col-md-6 col-md-offset-1 content">
-      <div style="display:none;" id="embed_code">
-        <div class="well">
-&lt;script src="{{site_url}}/static/embed/oab_embed.js"&gt;&lt;/script&gt;<br>
-&lt;script&gt;instantill(<span class="user_id"></span>, config: <span id="_oab_config"></span>);&lt;/script&gt;<br>
-&lt;div id="instantill"&gt;&lt;/div&gt;
-        </div>
-      </div>
       <div id="instantill"></div>
     </div>
 
@@ -365,7 +358,15 @@
           First, include the following in the source code (HTML) of your page:
         </p>
 
-        <p><a class="get_embed btn btn-primary btn-block" href="#">Get your embed code</a></p>
+        <!--<p><a class="get_embed btn btn-primary btn-block" href="#">Get your embed code</a></p>-->
+        <div id="embed_code">
+          <div class="well">
+&lt;script src="{{site_url}}/static/embed/oab_embed.js"&gt;&lt;/script&gt;<br>
+&lt;script&gt;instantill(<span class="user_id"></span>, config: <span id="_oab_config"></span>);&lt;/script&gt;<br>
+&lt;div id="instantill"&gt;&lt;/div&gt;
+          </div>
+        </div>
+
 
         <p>You can control where the search widget gets displayed by moving:</p>
         <pre>

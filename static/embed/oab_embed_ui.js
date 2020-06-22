@@ -83,7 +83,7 @@ var view = function(e) {
     $('#setup').show();
   }
   try { if (($('#instantill').length && !$('#instantill').is(':visible')) || ($('#shareyourpaper').length && !$('#shareyourpaper').is(':visible'))) get_code(); } catch(err) {}
-  scrollTo(0,0);
+  //scrollTo(0,0);
 }
 $('body').on('click', '.view', view);
 $(window).on('popstate', view);
@@ -181,14 +181,14 @@ $('body').on('click','.save',save);
 
 var preview = function(e) {
   e.preventDefault();
-  scrollTo(0,0);
+  //scrollTo(0,0);
   save(undefined, $(this).attr('val') ? $(this).attr('val') : (_oab.plugin === 'instantill' ? '10.1145/2908080.2908114' : '10.1234/oab-syp-aam'));
 }
 $('body').on('click', '.preview', preview);
 
 var restart = function(e) {
   e.preventDefault();
-  scrollTo(0,0);
+  //scrollTo(0,0);
   _oab.restart();
 }
 $('body').on('click', '.restart', restart);

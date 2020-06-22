@@ -81,13 +81,6 @@
 
   <div id="setup" class="row full">
     <div class="col-md-6 col-md-offset-1 content">
-      <div style="display:none;" id="embed_code">
-        <div class="well">
-&lt;script src="{{site_url}}/static/embed/oab_embed.js"&gt;&lt;/script&gt;<br>
-&lt;script&gt;shareyourpaper(<span class="user_id"></span>, config: <span id="_oab_config"></span>);&lt;/script&gt;<br>
-&lt;div id="shareyourpaper"&gt;&lt;/div&gt;
-        </div>
-      </div>
       <div id="shareyourpaper"></div>
     </div>
 
@@ -470,7 +463,14 @@
           First, include the following in the source code (HTML) of your page:
         </p>
 
-        <a class="get_embed btn btn-demo-blue" href="#">Get your embed code</a>
+        <!--<a class="get_embed btn btn-demo-blue" href="#">Get your embed code</a>-->
+        <div id="embed_code">
+          <div class="well">
+&lt;script src="{{site_url}}/static/embed/oab_embed.js"&gt;&lt;/script&gt;<br>
+&lt;script&gt;shareyourpaper(<span class="user_id"></span>, config: <span id="_oab_config"></span>);&lt;/script&gt;<br>
+&lt;div id="shareyourpaper"&gt;&lt;/div&gt;
+          </div>
+        </div>
 
         <p>You can control where the search widget gets displayed by moving:</p>
         <pre>
