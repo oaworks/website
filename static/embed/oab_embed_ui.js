@@ -7,21 +7,9 @@ var get_code = function(e) {
 }
 $('body').on('click','.get_embed',get_code);
 
-var firstview = true;
-var fv = function() {
-  firstview = false;
-  $('#previewer').show();
-  $('#startsave').html('Save & Continue');
-  if ($('#startsave').hasClass('btn-hollow-green')) {
-    $('#startsave').removeClass('btn-hollow-green').addClass('btn-demo-green').addClass('save');
-  } else {
-    $('#startsave').removeClass('btn-hollow-blue').addClass('btn-demo-blue').addClass('save');
-  }
-}
 var view = function(e) {
   try {
     e.preventDefault();
-    if (firstview) fv()
   } catch(err) {}
   var which = typeof e === 'string' ? e : false;
   if (typeof e === 'string') {
@@ -31,7 +19,6 @@ var view = function(e) {
   } else if ($(this).attr('href') === undefined) {
     $('.section').hide();
     if (window.location.hash && window.location.href.indexOf('/setup') !== -1 && $(window.location.hash).length) {
-      if (firstview) fv()
       which = window.location.hash;
       $(which).show();
     } else {
@@ -75,8 +62,21 @@ var view = function(e) {
       which = false;
     }
   }
-  if (which && $(which).hasClass('full')) {
-    $('.full').not(which).hide();
+  if (which && which !== '#menu') {
+    $('#previewer').show();
+    $('#startsave').html('Save & Continue');
+    if ($('#startsave').hasClass('btn-hollow-green')) {
+      $('#startsave').removeClass('btn-hollow-green').addClass('btn-demo-green').addClass('save');
+    } else {
+      $('#startsave').removeClass('btn-hollow-blue').addClass('btn-demo-blue').addClass('save');
+    }
+  } else {
+    $('#previewer').hide();
+    $('#startsave').html('Get started');
+    $('#setup').show();
+  }
+  if (which) {
+    if ($(which).hasClass('full')) $('.full').not(which).hide();
   	if ('pushState' in window.history) window.history.pushState("", which, which);
   } else {
     $('.full').not('#setup').hide();

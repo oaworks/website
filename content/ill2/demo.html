@@ -1,0 +1,558 @@
+
+<head>
+  <title>InstantILL</title>
+  <link rel="stylesheet" href="/static/oabutton_rebrand.css"> <!-- gets the new css (still also uses the old css, just overwrites where necessary) -->
+  <meta name="description" content="InstantILL instantly delivers papers your patrons need from your holdings, Open Access and simplifies your ILL process to save you and your patrons money and time. It’s free, open source, community owned and easily set up in minutes." />
+</head>
+
+<style>
+  #topnav {
+    display: none;
+  }
+  #footer {
+    display: none;
+  }
+
+  .form-control {
+    /*background-color:#edf8ed;*/
+    color:#46b633;
+    border:2px solid #46b633;
+  }
+
+  /*  a {
+    color:#46b633;
+    font-weight:normal;
+  }
+  a:hover {
+    color:#46b633;
+  }*/
+
+  .btn-hollow {
+    border-color: #46b633;
+    border-width: 2px;
+    border-radius: 0px;
+    color: #46b633;
+    font-weight: bold;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .btn-hollow:hover {
+    border-color: #46b633;
+    border-width: 2px;
+    border-radius: 0px;
+    color: white;
+    font-weight: bold;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  /*  .footer a {
+    color: #46B633;
+  }*/
+
+  /*style things that sam added below (for this page)*/
+
+  h2{
+    color:#46B633;
+  }
+
+  #instantill h2{
+    color:#212F3F;
+  }
+
+  .btn-demo-white{
+    color:#46B633 !important;
+  }
+
+  .strapline{
+    text-align: center;
+  }
+
+  .footer{
+    color: #46B633 !important;
+    padding: 0;
+  }
+  .footer a{
+    color: #46B633;
+  }
+  .footer a:hover{
+    color:#608891;
+  }
+  .footer p{
+    padding:0;
+    margin:0;
+  }
+
+  #demo{
+    border-top: solid 5px #edf8ed;
+  }
+
+  #demo p{
+      padding: 5px 0;
+  }
+
+  #demo a{
+      color: #46B633;
+  }
+
+  #demo .btn-hollow-green:hover {
+    border-color: #46b633;
+    border-width: 2px;
+    border-radius: 0px;
+    color: white;
+    font-weight: bold;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  #demo .btn-demo-green {
+    color: white;
+  }
+
+  a.btn-iu {
+      color: #ffffff !important;
+  }
+
+  #demo btn-primary{
+      color: white;
+  }
+
+  #demo h2{
+    color: #212f3f;
+    text-align: left;
+  }
+
+  div.green{
+    min-height: 900px;
+  }
+
+  /*sams added style above*/
+
+  .alert-new {
+    width: 100%;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: white;
+    text-align: center;
+  }
+
+</style>
+
+<!--
+<div class="alert-new">
+  <div class="center-col">
+    <div>
+      <p style="text-align:center">
+        Welcome to InstantILL's new website! <a href="https://docs.google.com/forms/d/e/1FAIpQLSdw0txy5UyfHaBXhCwSB0we-56p82fMFnV6zkcSEIxS_Cu_5w/viewform?usp=sf_link" class="green">We'd love to know what you think</a>.
+      </p>
+    </div>
+  </div>
+</div>
+-->
+
+<!-- sam starts here -->
+
+<!-- header -->
+<div class="green-bg">
+  <div class="center-col header">
+    <div><span><strong><a href="/">InstantILL</a></strong> by <a href="https://openaccessbutton.org" style="color:white">Open Access Button</a></span></div>
+    <div>
+       <a class="btn btn-demo-white" href="/setup">Install Now</a>
+    </div>
+  </div>
+</div>
+
+<!-- pitch -->
+<div class="center-col">
+  <div class="pitch">
+    <div class="pitchhalf">
+      <h2>A powerfully simple library tool to deliver papers.</h2>
+      <p style="padding: 30px 0">InstantILL instantly delivers papers your patrons need from your holdings, Open Access and simplifies your ILL process to save you and your patrons money and time. It’s free, open source, community owned and easily set up in minutes.</p>
+      <a class="btn btn-demo-green" href="/setup">Try it now</a>
+      <p style="text-align:center"><a href="/updates" class="green"><b><u>Stay up to date</b></u></a></p>
+    </div>
+    <div class="pitchhalf">
+      <img width="100%" src="/static/Instant-ILL-transparent-green.png">
+    </div>
+  </div>
+</div>
+
+<!-- Leadership groups -->
+<div class="green-bg">
+  <div class="center-col">
+    <p style="text-align: center; padding:0;">Supported by leaders at</p>
+    <div class="unilogos">
+      <!-- TODO: add links -->
+      <img class="unilogo" src="/static/goldsmiths-white.png">
+      <img class="unilogo" src="/static/montana-uni-white.png">
+      <img class="unilogo" src="/static/iupui-logo-white.png">
+      <img class="unilogo" src="/static/florida-uni-white.png">
+    </div>
+  </div>
+</div>
+
+<!-- feature blocks -->
+<div class="center-col features">
+  <div class="featurebox">
+    <h2>Saves Money</h2>
+    <ul>
+      <li><strong>Instantly delivers 25% of papers</strong> that are Open Access or you’ve subscribed to.</li>
+      <li><strong>Reduce ILL delivery time and staff time</strong> as requests arrive with complete metadata, and all checks completed</li>
+    </ul>
+  </div>
+  <div class="featurebox">
+    <h2>Improve Services</h2>
+    <ul>
+      <li><strong>No long forms</strong> for patrons to submit to your existing ILL system. Just one box.</li>
+      <li><strong>Simple, mobile friendly interface</strong> seamlessly embeds into your website, workflow, and brand</li>
+      <li><strong>Coming soon</strong> is purchase on demand, link resolver functionality / streamlined redirects, and compatible browser plugin.</li>
+    </ul>
+  </div>
+   <div class="featurebox">
+    <h2>Advances Mission</h2>
+    <ul>
+      <li><strong>Creates a cheaper ILL system</strong> by automatically working with authors to freely share their research Open Access</li>
+      <li><strong>Patron privacy protected</strong>: Use your systems for authentication whenever possible</li>
+    </ul>
+  </div>
+  <div class="featurebox">
+    <h2>Easy to Install & Maintain</h2>
+    <ul>
+      <li><strong>Easy set-up and maintenance</strong> with no migrations, no tech team, and no upgrades required</li>
+      <li><strong>One click pilot</strong> to help you quickly get started, and see how it goes.</li>
+      <li><strong>Works with the systems you already use</strong>: WMS & Serial Solutions, ILLiad, Relais ILL, Tipasa, SFX and more. Coming soon: EBSCO Full Text Finder, Primo & ALMA.</li>
+    </ul>
+  </div>
+</div>
+
+
+<div id="demo "class="container-fluid">
+  <div id="setup" class="row full">
+    <div class="col-md-6 col-md-offset-1 content">
+      <table class="table table-bordered" id="fakeilltable" style="display:none;">
+      </table>
+
+      <div id="instantill"></div>
+    </div>
+    
+    <div class="settings col-md-4 col-md-offset-1 green">
+      <div class="section greenery">
+        <h2><span class=""></span> Try it now</h2>
+        <p>
+          This is a demo of InstantILL, it works just like it would on your website, placed wherever you normally have your ILL form and blending in with your brand.
+        </p>
+        <p><b>
+          Let us show you InstantILL's main features!
+        </b></p>
+        <p><a class="btn btn-hollow btn-block view preview pinger" id="instantill_demo_start" href="#part2" val="10.1234/567890">Try InstantILL</a></p>
+      </div>
+
+      <div id="part2" class="section greenery">
+        <h2>Hurrah, thanks for trying InstantILL!</h2>
+        <p>
+          You just put a DOI into InstantILL, and as you can see, if you’re subscribed to the article InstantILL goes straight to full to the PDF.
+        </p>
+        <p>
+          InstantILL knows the electronic resources you subscribe to using your link resolver, and we provide a direct to PDF link for the user to access through your proxy. Off campus, they’ll be nudged to login as normal.
+        </p>
+        <p><b>
+          2/6. Let’s try an article title!
+        </b></p>
+
+        <p><a class="btn btn-hollow-green btn-block view preview pinger" id="instantill_demo_oa" href="#part3" val="Factors associated with mental distress among undergraduate students in northern Tanzania">Show me!</a></p>
+      </div>
+      
+      <div id="part3" class="section greenery">
+        <h2>We found it freely!</h2>
+        <p>
+          You just put an article title into InstantILL, and we found a version that's Open Access, so you can instantly go straight to the full text.
+        </p>
+        <p>
+          We built Open Access into the heart of InstantILL because patrons want to access content instantly, and often 20% of ILLs can be found free, saving you money and time. We’ve been pioneers in Open Access delivery, and the content comes from legal sources.
+        </p>
+        <p><b>
+          3/6. Now, hit 'Complete Request’ to see how easy it is to make a request
+        </b></p>
+      </div>
+
+      <div id="fakeill" class="section greenery">
+        <h2>Request made!</h2>
+        <p>
+          No more completing long forms! We’ll autocomplete them using the meta-data you see, which we’re showing instead of your completed ILL form since this is a demo.
+        </p>
+        <p>
+          InstantILL point’s to your existing ILL form (or, sends you an email), where you handle authentication and submission into your existing systems. We just focus on making sure you don’t need to do anything before sending for fulfilment.
+        </p>
+        <p>
+
+        </p>
+        <p><b>
+          4/6. InstantILL also integrates into your workflows. Let’s try to check the link resolver
+        </b></p>
+        <p><a class="btn btn-hollow-green btn-block view preview pinger" id="instantill_demo_LR"   href="#part5" val="10.1126/science.196.4287.293">Find it</a></p>
+      </div>
+
+      <div id="part5" class="section greenery">
+        <h2>Link, Resolved!</h2>
+        <p>
+          InstantILL can integrate with your existing tools, from library search, to link resolvers, and your ILL page.
+        </p>
+        <p>
+          You can link to, or embed, InstantILL on pages and using OpenURL we’ll make sure patrons don’t need to enter what they need so you can InstantILL in 'request a copy' and ‘get it now’ buttons, or in link resolvers.
+        </p>
+        <p><b>
+          5. Finally, see what it takes to set InstantILL up!:
+        </b></p>
+        <p><a class="btn btn-hollow-green btn-block view preview pinger" id=instantill_demo_setup href="#part6" val="">Show me!</a></p>
+      </div>
+
+      <div id="part6" class="section greenery">
+        <h2>Only three simple steps</h2>
+        <p>
+          Set up yourself, in 30 minutes today, by:
+        </p>
+        <ul>
+          <li>Telling us your ILL form link (or, email address)</li>
+          <li>Telling us your link resolver URL</li>
+          <li>Add a line of code to your website</li>
+        </ul>
+        <p>
+          No coding, special systems knowledge, or contract signing required. Of course, you can tweak dozens of settings, including how to handle other items, so everything works just right.
+        </p>
+        <p>Now you understand InstantILL, you can keep testing InstantILL here, or...</p>
+        <p><b>
+          6/6: Try InstantILL yourself, with your systems
+        </b></p>
+        <p><a class="btn btn-demo-green btn-block pinger" id=instantill_demo_install href="/setup">Install Now!</a></p>
+        <p><!--and, get a <a href="#tour" class="green">guided tour</a> and <a href="#examples" class="green">see how others use it</a>--> or <a href="mailto:joe@openaccessbutton.org">contact us</a>. </p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- GUIDED TOUR -->
+  <div id="tour" class="row section full">
+    <div class="col-md-6 col-md-offset-1 content">
+
+      <!-- JOE, what goes here? -->
+
+        <!--
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/1xyvk68iWqU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        -->
+    </div>
+
+    <div class="col-md-4 col-md-offset-1 green">
+      <div class="greenery">
+        <p><a class="green view previous" href="#demo"><span class="glyphicon glyphicon-arrow-left"></span>  Go back</a></p>
+        <h2>Schedule a demo`</h2>
+
+        <p>
+          Want to speak with someone before you move ahead? No problem!
+        </p>
+        <p>
+          <a class="btn btn-hollow-green btn-block" href="https://doodle.com/joemcarthur">Let's find a time</a>
+        </p>
+
+      </div>
+      <div class="greenbottom">
+
+      </div>
+    </div>
+  </div>
+
+  <!-- EXAMPLES OF PEOPLE USING IT -->
+
+  <div id="examples" class="row section full">
+    <div class="col-md-6 col-md-offset-1 content">
+
+      <!-- JOE, what goes here? -->
+
+    </div>
+
+    <div class="col-md-4 col-md-offset-1 green">
+      <div class="greenery">
+        <p><a class="green view" href="#demo"><span class="glyphicon glyphicon-arrow-left"></span>  Go back</a></p>
+        <h2>Ask how others use InstantILL</h2>
+
+        <p>
+          The following colleagues have kindly agreed to share their experience on request. They’re happy to let you know how InstantILL works for them.
+        </p>
+
+        <p>
+          Please be respectful of their generosity by ensuring you've read the website, checked the FAQ, and direct any technical questions to us before emailing.
+        </p>
+
+        <p>
+          <ul>
+            <li>
+              Tina Baich & Mike Paxton, IUPUI. <a href="https://ulib.iupui.edu/services/ILL" target="_blank">See their set up</a>.
+            </li>
+          </ul>
+        </p>
+
+      </div>
+      <div class="greenbottom">
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- tagline -->
+  <div class="green-bg" style="padding:0">
+   <div class="center-col quote">
+    <div class="strapline">
+   <h1>For change, not for profit</h1>
+    <p>
+      We’re building a world where — regardless of a campus’ subscription access — there is a simple, community-owned, one-stop shop to get free, fast, and legal access. It’s free so anyone can use it, but we need your support to sustain it.
+    </p>
+  </div>
+  </div>
+  </div>
+
+<!-- programs -->
+<div class="programs center-col">
+  <div class="program-green">
+    <div class="programcontents">
+    <h2>Essential</h2>
+    <p style="text-align: center; padding: 0;"><strong>Free, Forever</strong></p>
+    <a class="btn btn-hollow-green" href="/setup">Install now</a>
+
+    <ul style="text-align: left;">
+      <li>
+        <strong>InstantILL:</strong> with all the features above.
+      </li>
+    </ul>
+  </div>
+</div>
+  <div class="program-green" style="background-color: #F7FCF7">
+    <div class="programcontents">
+    <h2>Leadership</h2>
+    <p style="text-align: center; padding: 0;"><strong>Flexible pricing, flexible length.</strong></p>
+
+    <a class="btn btn-demo-green" href="https://openaccessbutton.org/libraries#leadership">Learn More</a>
+
+    <ul style="text-align: left;">
+      <li><strong>InstantILL:</strong> with all the features above.</li>
+      <li><strong>Analytics:</strong> simple summaries of how InstantILL is performing.</li>
+      <li><strong>Investment:</strong> Ensure InstantILL can be sustained and improved.</li>
+      <li><strong>Priority support:</strong> 18 hour response time 24/7 from our Director.</li>
+      <li><strong>Priority training & set up:</strong> Proactive training, and help getting set up.</li>
+      <li><strong>Priority input:</strong> Guide the direction of InstantILL and our tools.</li>
+      <li><strong>Recognition of your leadership:</strong> Thanks on our sites.</li>
+      <li>Upgraded version of other Open Access Button tools.</li>
+
+    </ul>
+  </div>
+</div>
+</div>
+
+
+<!-- quote -->
+<div class="green-bg" style="padding:0">
+  <div class="center-col quote">
+    <div class="quotetext">
+    <h3>
+      "We provide leadership support as an investment in community-owned infrastructure that improves our services, helps reduce dependency on subscriptions, and advances equitable access to information."
+    </h3>
+    <p>
+      Tina Baich, Senior Associate Dean for Scholarly Communication & Content Strategies at IUPUI University Library.
+    </p>
+    </div>
+    <img class="profilephoto" src="/static/tina-photo.png">
+  </div>
+</div>
+
+
+
+
+<!-- footer -->
+<div class="white-bg">
+  <div class="center-col footer">
+    <div>
+      <p style="color: #212f3f">Open Source • Community Controlled • Not for Profit</p>
+    </div>
+    <div style="padding: 5px 0; align-self: flex-end;">
+      <span><a href="https://openaccessbutton.org/api">API</a></span>
+      <span><a href="https://openaccessbutton.org/privacy">Privacy</a></span>
+      <span><a href="https://openaccessbutton.org/terms">Terms</a></span>
+      <span><a href="mailto:joe@openaccessbutton.org">Email</a></span>
+    </div>
+  </div>
+</div>
+
+
+
+
+<script src="/static/embed/oab_embed.js"></script>
+<script>
+_oab = instantill({uid:(api.indexOf('dev.') !== -1 ? 'qZooaHWRz9NLFNcgR' : 'eZwJ83xp3oZDaec86'), api:api, css: false});
+
+jQuery(document).ready(function() {
+  
+  var _ill_response = undefined;
+  var fakeill = function(e) {
+    if (e) e.preventDefault();
+    $('#fakeilltable').html('');
+    try {
+      if (_ill_response.meta.article === undefined || JSON.stringify(_ill_response.meta.article) === '{}') {
+        _ill_response.meta.article = {
+          title: 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL',
+          journal: 'Proceedings of the 16th IFLA ILDS conference: Beyond the paywall - Resource sharing in a disruptive ecosystem',
+          author: [
+            {given: 'Mike', family: 'Paxton'},
+            {given: 'Gary', family: 'Maixner III'},
+            {given: 'Joseph', family: 'McArthur'},
+            {given: 'Tina', family: 'Baich'}
+          ],
+          year: '2019'
+        };
+      }
+    } catch(err) {}
+    try {
+      for ( var i in _ill_response.meta.article) {
+        if (['started','ended','took','cache','redirect','source'].indexOf(i) === -1) {
+          if (i === 'author') {
+            var append = '<tr><td>Author(s)</td><td><p>';
+            for (var a in _ill_response.meta.article.author) {
+              try {
+                if (a !== '0') append += ', ';
+                append += _ill_response.meta.article.author[a].given + ' ' + _ill_response.meta.article.author[a].family
+              } catch(err) {}
+            }
+            $('#fakeilltable').append(append + '</p></td></tr>');
+          } else {
+            try {
+              $('#fakeilltable').append('<tr><td>' + i.substring(0,1).toUpperCase() + (['doi','issn'].indexOf(i.toLowerCase()) !== -1 ? i.substring(1).toUpperCase() : i.substring(1)) + '</td><td><p>' + _ill_response.meta.article[i] + '</p></td></tr>');
+            } catch(err) {}
+          }
+        }
+      }
+    } catch(err) {}
+    if (($('#fakeill').height() + $('#fakeill').offset().top) > $(window).height()) {
+      var diff = Math.floor(($(window).height() - $('#fakeill').height())/2)-20;
+      if (diff < 20) diff = 20;
+      $('#fakeill').children('div.content').css({'padding-top':diff+'px'});
+    }
+    view(true,'#fakeill');
+  }
+
+  $(document).ajaxComplete(function(e,xhr) {
+    if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.availability !== undefined) {
+      _ill_response = xhr.responseJSON.data;
+      // an availability check finished, reposition the instantill window if necessary
+      //console.log($('div.content:visible').height())
+      //console.log($('div.green:visible').height())
+      if ($('div.content:visible').height() > $('div.green:visible').height()) {
+        var diff = Math.floor(($('div.content:visible').height() - $('div.green:visible').height())/1.5) + parseInt($('div.content:visible').css('padding-top').replace('px',''));
+        $('div.green:visible').css({'min-height':diff+'px'});
+      }
+      $(_oab_opts.element).off('click','.oabutton_ill');
+      $('body').on('click','.oabutton_ill',fakeill);
+    }
+  });
+
+});
+</script>
+<script src="/static/embed/oab_embed_ui.js"></script>
