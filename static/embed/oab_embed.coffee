@@ -360,7 +360,7 @@ _oab.prototype.section = (section) ->
 
 _oab.prototype.submit = (e) -> # only used by instantill
   try e.preventDefault()
-  if (not this.f?.ill?.openurl or this.openurl is false) and not this.data.email and _L.gebi '#_oab_email'
+  if not this.f?.ill?.openurl and not this.data.email and _L.gebi '#_oab_email'
     this.validate()
   else if JSON.stringify(this.f) is '{}' or (not this.f.metadata?.title or not this.f.metadata?.journal or not this.f.metadata?.year)
     if this.submit_after_metadata
@@ -390,12 +390,16 @@ _oab.prototype.submit = (e) -> # only used by instantill
         data[nfield] += 'OA availability check done, found ' + (this.f.url ? 'nothing') + '. '
     if this.f?.ill?.openurl and this.openurl isnt false and not data.email
       data.forwarded = true
-    _L.post(
-      api+'/ill'
-      data
-      (res) => this.done res
-      () => this.done false
-    )
+    if this.openurl is 'demo'
+      console.log 'Not POSTing ILL and not forwarding to ' + this.f.ill.openurl + ' for demo purposes'
+      console.log data
+    else
+      _L.post(
+        api+'/ill'
+        data
+        (res) => this.done res
+        () => this.done false
+      )
 
 _oab.prototype.validate = () ->
   if this.f.ill?.terms and not _L.checked '#_oab_read_terms'
@@ -444,7 +448,7 @@ _oab.prototype.openurl = () -> # only used by instantill
     (res) => window.location = res
     (data) =>
       try
-        window.location = this.f.ill.openurl
+        window.location = data
       catch err
         this.done undefined, 'instantill_openurl_couldnt_create_ill'
   )
@@ -1099,12 +1103,11 @@ _oab.prototype.configure = (key, val, build, demo) ->
         _L.html '#_oab_advanced_account_info', ''
         _L.hide '#_oab_advancedform'
 
-    # can all listeners attempt to bind regardless of plugin type?
     # would be better to make _L handle the bind so that this.find works rather than having to wrap it in a function that passes context
     _L.listen 'enter', '#_oab_input', (e) => this.find(e)
     _L.listen 'enter', '#_oab_email', (e) => this.validate(e)
     _L.listen 'click', '._oab_find', (e) => this.find(e)
-    _L.listen 'click', '._oab_submit', (e) => this.submit(e) # would be deposit for syp
+    _L.listen 'click', '._oab_submit', (e) => this.submit(e)
     _L.listen 'click', '._oab_restart', (e) => this.restart(e)
     _L.listen 'click', '._oab_ping', (e) => this.ping(_L.get e.target, 'message')
     _L.listen 'click', '._oab_wrong', (e) => 

@@ -303,7 +303,7 @@
         <p><b>
           5. Finally, see what it takes to set InstantILL up!:
         </b></p>
-        <p><a class="btn btn-hollow-green btn-block view preview pinger" id=instantill_demo_setup href="#part6" val="">Show me!</a></p>
+        <p><a class="btn btn-hollow-green btn-block view pinger" id=instantill_demo_setup href="#part6" val="">Show me!</a></p>
       </div>
 
       <div id="part6" class="section greenery">
@@ -487,65 +487,47 @@
 
 <script src="/static/embed/oab_embed.js"></script>
 <script>
-
-var loaded = function(xhr) {
+var loaded = function() {
   $('#faketable').hide();
   $('#instantill').show();
-  var js = false;
-  try { js = JSON.parse(xhr.response); } catch(err) {}
-  if (false) {
+}
+_oab = instantill({uid:(api.indexOf('dev.') !== -1 ? 'qZooaHWRz9NLFNcgR' : 'eZwJ83xp3oZDaec86'), api:api, css: false, loaded: loaded, openurl: 'demo'});
+
+jQuery(document).ready(function() {
+  var fakeill = function(e) {
+    e.preventDefault();
+    console.log('Faking ILL');
+    var defm = {
+      title: 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL',
+      journal: 'Proceedings of the 16th IFLA ILDS conference: Beyond the paywall - Resource sharing in a disruptive ecosystem',
+      author: [
+        {given: 'Mike', family: 'Paxton'},
+        {given: 'Gary', family: 'Maixner III'},
+        {given: 'Joseph', family: 'McArthur'},
+        {given: 'Tina', family: 'Baich'}
+      ],
+      year: '2019'
+    };
+    var meta = _oab.f  !== undefined && _oab.f.metadata !== undefined ? _oab.f.metadata : defm;
     var table = '<table class="table table-bordered" id="faketable">';
+    for ( var i in meta) {
+      if (i === 'author') {
+        table += '<tr><td>Author(s)</td><td><p>';
+        for (var a in meta.author) {
+          if (a !== '0') table += ', ';
+          table += meta.author[a].given + ' ' + meta.author[a].family;
+        }
+        table += '</p></td></tr>';
+      } else {
+        table += '<tr><td>' + i.substring(0,1).toUpperCase() + (['doi','issn'].indexOf(i.toLowerCase()) !== -1 ? i.substring(1).toUpperCase() : i.substring(1)) + '</td><td><p>' + meta[i] + '</p></td></tr>';
+      }
+    }
     table += '</table>';
     view('#fakeill');
     $('#instantill').hide();
     $('#instantill').after(table);
   }
-}
-_oab = instantill({uid:(api.indexOf('dev.') !== -1 ? 'qZooaHWRz9NLFNcgR' : 'eZwJ83xp3oZDaec86'), api:api, css: false, loaded: loaded});
-
-jQuery(document).ready(function() {
-  
-  var _ill_response = undefined;
-  var fakeill = function(e) {
-    if (e) e.preventDefault();
-    $('#fakeilltable').html('');
-    try {
-      if (_ill_response.meta.article === undefined || JSON.stringify(_ill_response.meta.article) === '{}') {
-        _ill_response.meta.article = {
-          title: 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL',
-          journal: 'Proceedings of the 16th IFLA ILDS conference: Beyond the paywall - Resource sharing in a disruptive ecosystem',
-          author: [
-            {given: 'Mike', family: 'Paxton'},
-            {given: 'Gary', family: 'Maixner III'},
-            {given: 'Joseph', family: 'McArthur'},
-            {given: 'Tina', family: 'Baich'}
-          ],
-          year: '2019'
-        };
-      }
-    } catch(err) {}
-    try {
-      for ( var i in _ill_response.meta.article) {
-        if (['started','ended','took','cache','redirect','source'].indexOf(i) === -1) {
-          if (i === 'author') {
-            var append = '<tr><td>Author(s)</td><td><p>';
-            for (var a in _ill_response.meta.article.author) {
-              try {
-                if (a !== '0') append += ', ';
-                append += _ill_response.meta.article.author[a].given + ' ' + _ill_response.meta.article.author[a].family
-              } catch(err) {}
-            }
-            $('#fakeilltable').append(append + '</p></td></tr>');
-          } else {
-            try {
-              $('#fakeilltable').append('<tr><td>' + i.substring(0,1).toUpperCase() + (['doi','issn'].indexOf(i.toLowerCase()) !== -1 ? i.substring(1).toUpperCase() : i.substring(1)) + '</td><td><p>' + _ill_response.meta.article[i] + '</p></td></tr>');
-            } catch(err) {}
-          }
-        }
-      }
-    } catch(err) {}
-  }
-
+  $('body').on('click','._oab_submit',fakeill);
 });
 </script>
 <script src="/static/embed/oab_embed_ui.js"></script>
