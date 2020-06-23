@@ -232,7 +232,7 @@ jQuery(document).ready(function() {
   noddy.afterLogin = function() {
     $('#loginorurl').hide();
     $('#maingetembed').show();
-    if ($('.user_id').length) $('.user_id').html('uid: "' + noddy.user.account._id + '"');
+    if ($('.user_id').length) $('.user_id').html('uid: "' + noddy.user.account._id + '", ');
     // alter to account for which plugin is in use
     var cfg = false;
     if (noddy.user.account.service && noddy.user.account.service.openaccessbutton) {

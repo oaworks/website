@@ -360,7 +360,7 @@ _oab.prototype.section = (section) ->
 
 _oab.prototype.submit = (e) -> # only used by instantill
   try e.preventDefault()
-  if not this.data.email and _L.gebi '#_oab_email'
+  if (not this.f?.ill?.openurl or this.openurl is false) and not this.data.email and _L.gebi '#_oab_email'
     this.validate()
   else if JSON.stringify(this.f) is '{}' or (not this.f.metadata?.title or not this.f.metadata?.journal or not this.f.metadata?.year)
     if this.submit_after_metadata
