@@ -298,9 +298,10 @@ jQuery(document).ready(function() {
     }
   };
   noddy.nologin = function() {
+    $('#loginorurl').show(); // changed plans to always ask for login for now
     if (JSON.stringify(_oab.config) === '{}') {
       $('#maingetembed').hide();
-      $('#loginorurl').show();
+      //$('#loginorurl').show();
     } else {
       configure(_oab.config);
     }
