@@ -340,7 +340,7 @@ _oab.prototype.ping = (what) ->
     if what.indexOf(this.plugin) is -1
       what = '_' + what if not what.startsWith '_'
       what = this.plugin + what
-    url = if api.indexOf('dev.') isnt -1 then 'https://dev.api.cottagelabs.com' else 'https://api.cottagelabs.com'
+    url = if this.api.indexOf('dev.') isnt -1 then 'https://dev.api.cottagelabs.com' else 'https://api.cottagelabs.com'
     url += '/ping.png?service=openaccessbutton&action=' + what + '&from=' + this.uid
     url += '&pilot=' + this.config.pilot if this.config.pilot
     url += '&live=' + this.config.live if this.config.live
@@ -397,7 +397,7 @@ _oab.prototype.submit = (e) -> # only used by instantill
       console.log data
     else
       _L.post(
-        api+'/ill'
+        this.api+'/ill'
         data
         (res) => this.done res
         () => this.done false
@@ -415,7 +415,7 @@ _oab.prototype.validate = () ->
     else
       this.loading()
       _L.post(
-        api + '/validate?uid=' + this.uid + '&email=' + email
+        this.api + '/validate?uid=' + this.uid + '&email=' + email
         this.config
         (res) =>
           this.loading false
@@ -444,7 +444,7 @@ _oab.prototype.metadata = (submitafter) -> # only used by instantill
 
 _oab.prototype.openurl = () -> # only used by instantill
   _L.post(
-    api+'/ill/openurl?uid='+this.uid + (if this.data.usermetadata then '&usermetadata=true' else '')
+    this.api+'/ill/openurl?uid='+this.uid + (if this.data.usermetadata then '&usermetadata=true' else '')
     (if this.uid then this.f.metadata else {metadata: this.f.metadata, config: this.config})
     (res) => window.location = res
     (data) =>
@@ -511,7 +511,7 @@ _oab.prototype.deposit = (e) -> # only used by shareyourpaper
       data = this.file
 
     _L.post(
-      api+'/deposit', # + (this.f.catalogue ? '')
+      this.api+'/deposit', # + (this.f.catalogue ? '')
       data
       (res) =>
         this.loading false
@@ -660,13 +660,13 @@ _oab.prototype.findings = (data) -> # only used by instantill
     data.live = this.config.live if this.config.live
     if this.f.ill?.subscription?.url
       data.resolved = 'subscription'
-      _L.post(api+'/ill', data, (() => window.location = this.f.ill.subscription.url), (() => window.location = this.f.ill.subscription.url))
+      _L.post(this.api+'/ill', data, (() => window.location = this.f.ill.subscription.url), (() => window.location = this.f.ill.subscription.url))
     else if this.f.url
       data.resolved = 'open'
-      _L.post(api+'/ill', data, (() => window.location = this.f.url), (() => window.location = this.f.url))
+      _L.post(this.api+'/ill', data, (() => window.location = this.f.url), (() => window.location = this.f.url))
     else if this.f.ill?.openurl
       data.resolved = 'library'
-      _L.post(api+'/ill', data, (() => window.location = this.f.ill.openurl), (() => window.location = this.f.ill.openurl))
+      _L.post(this.api+'/ill', data, (() => window.location = this.f.ill.openurl), (() => window.location = this.f.ill.openurl))
 
   _L.show '#_oab_findings'
   if this.f.ill?.error
