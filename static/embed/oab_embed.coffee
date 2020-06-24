@@ -605,8 +605,7 @@ _oab.prototype.permissions = (data) -> # only used by shareyourpaper
         _L.show '._oab_oa_deposit'
     else if this.f?.permissions?.permissions?.archiving_allowed
       # can be shared, depending on permissions info
-      # hide #_oab_not_pdf if version_allowed isnt publisher pdf
-      # config ._oab_library by (if this.config.not_a_library then 'We have'
+      _L.hide('#_oab_not_pdf') if this.f?.permissions?.permissions?.version_allowed is 'publisher pdf'
       if typeof this.f?.permissions?.permissions?.licence_required is 'string' and this.permissions.permissions.licence_required.indexOf('other-') is 0
         _L.html '#_oab_licence', 'under the publisher\'s terms.' + refs
       else
@@ -1076,6 +1075,7 @@ _oab.prototype.configure = (key, val, build, demo) ->
       if this.cml()? and el = _L.gebi '_oab_nodoi'
         el.setAttribute 'href', el.getAttribute('href').replace('help@openaccessbutton.org', this.cml())
       if not this.config.not_a_library
+        _L.html '._oab_library', 'We have'
         _L.html '#_oab_lib_info', 'Share your paper with help from the library in ' + (this.config.repo_name ? 'ScholarWorks') + '. Legally, for free, in minutes. '
 
     else if this.plugin is 'instantill'
