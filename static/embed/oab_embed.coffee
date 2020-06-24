@@ -247,7 +247,7 @@ _oab = (opts) ->
     this.panel window.location.search.split('panel=')[1].split('&')[0].split('#')[0]
   if window.location.search.indexOf('section=') isnt -1
     this.section window.location.search.split('section=')[1].split('&')[0].split('#')[0]
-  this.find() if this.data.doi or this.data.title or this.data.url
+  this.find() if this.data.doi or (this.plugin is 'instantill' and (this.data.title or this.data.url))
   return this
 
 
@@ -758,8 +758,12 @@ _oab.prototype.find = (e) ->
       else
         this.data.id = val
 
-  if not this.data.doi and not this.data.url and not this.data.pmid and not this.data.pmcid and not this.data.title and not this.data.id
-    _L.show '#_oab_error', '<p><span>&#10060;</span> Sorry please provide the full DOI' + if this.plugin is 'instantill' then ', title, citation, PMID or PMC ID.</p>' else '</p>'
+  if not this.data.doi and (this.plugin is 'shareyourpaper' or (not this.data.url and not this.data.pmid and not this.data.pmcid and not this.data.title and not this.data.id))
+    if this.plugin is 'shareyourpaper'
+      delete this.data.title
+      delete this.data.url
+      delete this.data.id
+    _L.show '#_oab_error', '<p><span>&#10060;</span> Sorry please provide ' + if this.plugin is 'instantill' then 'the full DOI, title, citation, PMID or PMC ID.</p>' else 'a valid DOI.</p>'
   else
     this.state() # should this just be part of loading?
     this.loading()
