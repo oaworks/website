@@ -5,6 +5,7 @@
   <meta name="description" content="InstantILL instantly delivers papers your patrons need from your holdings, Open Access and simplifies your ILL process to save you and your patrons money and time. It’s free, open source, community owned and easily set up in minutes." />
 </head>
 
+
 <style>
   #topnav {
     display: none;
@@ -14,132 +15,57 @@
   }
 
   .form-control {
-    /*background-color:#edf8ed;*/
-    color:#46b633;
-    border:2px solid #46b633;
+    color:#428BCA;
+    border:2px solid #428BCA;
   }
 
-  /*  a {
-    color:#46b633;
+  a {
+    color:#428BCA;
     font-weight:normal;
   }
   a:hover {
-    color:#46b633;
-  }*/
-
-  .btn-hollow {
-    border-color: #46b633;
-    border-width: 2px;
-    border-radius: 0px;
-    color: #46b633;
-    font-weight: bold;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    color:#428BCA;
   }
-  .btn-hollow:hover {
-    border-color: #46b633;
-    border-width: 2px;
-    border-radius: 0px;
-    color: white;
-    font-weight: bold;
-    padding-top: 10px;
-    padding-bottom: 10px;
-  }
-  /*  .footer a {
-    color: #46B633;
-  }*/
 
-  /*style things that sam added below (for this page)*/
+  .btn-hollow-blue:hover {
+    color: #ECF3FA;
+  }
+
+  p{
+    padding:0;
+    margin: 10px 0;
+  }
 
   h2{
-    color:#46B633;
-  }
-
-  #instantill h2{
-    color:#212F3F;
-  }
-
-  .btn-demo-white{
-    color:#46B633 !important;
-  }
-
-  .strapline{
-    text-align: center;
-  }
-
-  .footer{
-    color: #46B633 !important;
-    padding: 0;
-  }
-  .footer a{
-    color: #46B633;
-  }
-  .footer a:hover{
-    color:#608891;
-  }
-  .footer p{
-    padding:0;
-    margin:0;
-  }
-
-  #demo{
-    border-top: solid 5px #edf8ed;
-  }
-
-  #demo p{
-      padding: 5px 0;
-  }
-
-  #demo a{
-      color: #46B633;
-  }
-
-  #demo .btn-hollow-green:hover {
-    border-color: #46b633;
-    border-width: 2px;
-    border-radius: 0px;
-    color: white;
-    font-weight: bold;
-    padding-top: 10px;
-    padding-bottom: 10px;
-  }
-
-  #demo .btn-demo-green {
-    color: white;
-  }
-
-  a.btn-iu {
-      color: #ffffff !important;
-  }
-
-  #demo btn-primary{
-      color: white;
-  }
-
-  #demo h2{
-    color: #212f3f;
     text-align: left;
   }
 
-  div.green{
-    min-height: 900px;
-  }
-
-  /*sams added style above*/
-
   .alert-new {
     width: 100%;
-    padding-top: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
-    background-color: white;
-    text-align: center;
+    padding: 10px;
+    background-color: #428BCA;
+    color: white;
+    text-align: center !important;
+  }
+  .btn-primary {
+    background-color:#428BCA;
+    border-color:#428BCA;
+    border-radius:0px;
+    color:#ffffff;
+    width:49%;
+    font-weight:bold;
+    padding-top:10px;
+    padding-bottom:10px;
+  }
+  .btn-primary:hover {
+    background-color:#428BCA;
+    border-color:#428BCA;
+    color:#ffffff;
   }
 
 </style>
 
-
-<div id="demo "class="container-fluid">
+<div id="demo" class="container-fluid">
   <div id="setup" class="row full">
     <div class="col-md-6 col-md-offset-1 content">
       <table class="table table-bordered" id="fakeilltable" style="display:none;">
@@ -147,7 +73,7 @@
 
       <div id="instantill"></div>
     </div>
-    
+
     <div class="settings col-md-4 col-md-offset-1 green">
       <div class="section greenery">
         <h2><span class=""></span> Try it now</h2>
@@ -174,7 +100,7 @@
 
         <p><a class="btn btn-hollow-green btn-block view preview pinger" id="instantill_demo_oa" href="#part3" val="Factors associated with mental distress among undergraduate students in northern Tanzania">Show me!</a></p>
       </div>
-      
+
       <div id="part3" class="section greenery">
         <h2>We found it freely!</h2>
         <p>
