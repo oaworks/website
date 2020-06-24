@@ -28,11 +28,13 @@ _L.listen = (action, els, fn) ->
       wfn = (e) -> fn(e) if e.keyCode is 13
     else
       wfn = fn
-    el = _L.clone el # gets rid of all listeners so we don't end up with dups - but note, gets rid of ALL. TODO use a wrapper to manage these independently
-    el.addEventListener action, (e) -> wfn(e)
+    #el = _L.clone el # gets rid of all listeners so we don't end up with dups - but note, gets rid of ALL. TODO use a wrapper to manage these independently
+    if not _L.has el, 'listen_'+action
+      _L.class el, 'listen_'+action
+      el.addEventListener action, (e) -> wfn(e)
 _L.show = (els, html, append) ->
   _L.each els, (el) -> 
-    if html
+    if typeof html is 'string'
       el.innerHTML = (if append then el.innerHTML else '') + html
     was = _L.get el, '_L_display'
     was = 'block' if typeof was isnt 'string' or was is 'none' # TODO should be inline in which cases...
@@ -196,7 +198,7 @@ _oab = (opts) ->
   this.api ?= if window.location.host.indexOf('dev.openaccessbutton.org') isnt -1 then 'https://dev.api.cottagelabs.com/service/oab' else 'https://api.openaccessbutton.org'
   this.plugin ?= 'instantill' # has to be defined at startup, as either instantill or shareyourpaper
   this.element ?= '#' + this.plugin
-  this.pushstate ?= false # if true, the embed will try to add page state changes to the browser state manager
+  this.pushstate ?= true # if true, the embed will try to add page state changes to the browser state manager
   this.config ?= {}
   this.data ?= {} # the data obj to send to backend
   this.f ?= {} # the result of the find/ill/permission request to the backend
@@ -313,7 +315,7 @@ _oab.prototype.restart = (e, val) ->
   this.configure()
   if val
     _L.set '#_oab_input', val
-    if 'pushState' in window.history and window.location.href.indexOf(val) isnt -1
+    if this.pushstate and 'pushState' in window.history and window.location.href.indexOf(val) isnt -1
       window.history.pushState "", "find", (if window.location.href.indexOf('/' + val) isnt -1 then window.location.pathname.replace('/' + val,'') + window.location.search + window.location.hash else window.location.pathname + window.location.search.replace('doi='+input,'') + window.location.hash)
     this.find()
   else
@@ -431,13 +433,12 @@ _oab.prototype.validate = () ->
 
 _oab.prototype.metadata = (submitafter) -> # only used by instantill
   # in the case of syp this should reset to the first page again, as the metadata form is not yet available on syp
-  # also use the doi_not_in_crossref to show a msg on the front page
   for m in ['title','year','journal','doi']
     if this.f.metadata[m]?
       _L.set '#_oab_'+m, this.f.metadata[m].split('(')[0].trim()
-  if this.f?.doi_not_in_crossref
-    _L.html '#_oab_bad_doi', this.f.doi_not_in_crossref
-    _L.show '#_oab_doi_not_in_crossref'
+  #if this.f?.doi_not_in_crossref
+  #  _L.html '#_oab_bad_doi', this.f.doi_not_in_crossref
+  #  _L.show '#_oab_doi_not_in_crossref'
   _L.hide '._oab_panel'
   _L.show '#_oab_metadata'
 
@@ -783,7 +784,7 @@ _oab.css = '
   width: 100%;
   height: 34px;
   padding: 6px 12px;
-  font-size: 16px;
+  font-size: 1.1em;
   line-height: 1.428571429;
   color: #555555;
   vertical-align: middle;
@@ -802,7 +803,7 @@ _oab.css = '
   height:34px;
   padding: 6px 3px;
   margin-bottom: 0;
-  font-size: 14px;
+  font-size: 1.2em;
   font-weight: normal;
   line-height: 1.428571429;
   text-align: center;

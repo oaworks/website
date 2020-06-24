@@ -28,11 +28,13 @@ _L.listen = (action, els, fn) ->
       wfn = (e) -> fn(e) if e.keyCode is 13
     else
       wfn = fn
-    el = _L.clone el # gets rid of all listeners so we don't end up with dups - but note, gets rid of ALL. TODO use a wrapper to manage these independently
-    el.addEventListener action, (e) -> wfn(e)
+    #el = _L.clone el # gets rid of all listeners so we don't end up with dups - but note, gets rid of ALL. TODO use a wrapper to manage these independently
+    if not _L.has el, 'listen_'+action
+      _L.class el, 'listen_'+action
+      el.addEventListener action, (e) -> wfn(e)
 _L.show = (els, html, append) ->
   _L.each els, (el) -> 
-    if html
+    if typeof html is 'string'
       el.innerHTML = (if append then el.innerHTML else '') + html
     was = _L.get el, '_L_display'
     was = 'block' if typeof was isnt 'string' or was is 'none' # TODO should be inline in which cases...
@@ -64,7 +66,7 @@ _L.checked = (els) ->
 _L.html = (els, html, append, show) ->
   rs = []
   _L.each els, (el) -> 
-    if html
+    if typeof html is 'string'
       el.innerHTML = (if append then el.innerHTML else '') + html
     rs.push el.innerHTML
     _L.show(el) if show
