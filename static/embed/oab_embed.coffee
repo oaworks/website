@@ -552,7 +552,7 @@ _oab.prototype.permissions = (data) -> # only used by shareyourpaper
   this.f = data if data?
   this.loading false
   if this.f?.doi_not_in_crossref
-    _L.show '#_oab_error', '<p>This DOI does not appear to be in Crossref. Please try another.</p>'
+    _L.show '#_oab_error', '<p>Double check your DOI, that doesn\'t look right to us.</p>'
     _L.gebi('_oab_input').focus()
   else if this.f?.metadata?.crossref_type? and this.f.metadata.crossref_type not in ['journal-article', 'proceedings-article']
     _L.gebi('_oab_input').focus()
