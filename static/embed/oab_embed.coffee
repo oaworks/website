@@ -146,7 +146,8 @@ _L.jx = (route, q, success, error, api, method, data, headers) ->
     else
       try
         success JSON.parse(xhr.response), xhr
-      catch
+      catch err
+        console.log err
         try
           success xhr
         catch
@@ -444,7 +445,7 @@ _oab.prototype.metadata = (submitafter) -> # only used by instantill
 
 _oab.prototype.openurl = () -> # only used by instantill
   _L.post(
-    this.api+'/ill/openurl?uid='+this.uid + (if this.data.usermetadata then '&usermetadata=true' else '')
+    this.api+'/ill/openurl?' + (if this.uid then 'uid='+this.uid+'&' else '') + (if this.data.usermetadata then 'usermetadata=true&' else '')
     (if this.uid then this.f.metadata else {metadata: this.f.metadata, config: this.config})
     (res) => window.location = res
     (data) =>
@@ -456,7 +457,7 @@ _oab.prototype.openurl = () -> # only used by instantill
 
 _oab.prototype.done = (res, msg) ->
   this.loading false
-  if this.f.ill?.openurl and this.openurl isnt false #and not this.data.email - this will be different for syp
+  if this.f.ill?.openurl and this.openurl isnt false
     if this.submit_after_metadata
       this.openurl()
     else
@@ -482,7 +483,7 @@ _oab.prototype.deposit = (e) -> # only used by shareyourpaper
   if not this.data.email and _L.gebi '#_oab_email'
     this.validate()
   else
-    if fl = _L.gebi '_oab_file' # what is appropriate decision here now
+    if not this.f?.url? and fl = _L.gebi '_oab_file'
       if fl.files? and fl.files.length
         this.file = new FormData()
         this.file.append 'file', fl.files[0]
@@ -603,33 +604,38 @@ _oab.prototype.permissions = (data) -> # only used by shareyourpaper
         _L.show '._oab_oa'
       else
         _L.show '._oab_oa_deposit'
-    else if this.f?.permissions?.permissions?.archiving_allowed
-      # can be shared, depending on permissions info
-      _L.hide('#_oab_not_pdf') if this.f?.permissions?.permissions?.version_allowed is 'publisher pdf'
-      if typeof this.f?.permissions?.permissions?.licence_required is 'string' and this.permissions.permissions.licence_required.indexOf('other-') is 0
-        _L.html '#_oab_licence', 'under the publisher\'s terms.' + refs
+    else if this.f?.permissions?.permissions?.archiving_allowed or this.config.dark_deposit_off
+      if this.config.dark_deposit_off or this.f.permissions?.ricks?.application?.can_archive_conditions?.permission_required
+        # permission must be requested first
+        rm = 'mailto:' + (this.f.permissions?.ricks?.application?.can_archive_conditions?.permission_required_contact ? this.config.deposit_help ? this.cml()) + '?'
+        rm += 'cc=' + (this.config.deposit_help ? this.cml()) + '&' if this.f.permissions?.ricks?.application?.can_archive_conditions?.permission_required_contact
+        rm += 'subject=Request%20to%20self%20archive%20' + (this.f.metadata?.doi ? '') + '&body=';
+        rm += encodeURIComponent 'To whom it may concern,\n\n'
+        rm += encodeURIComponent 'I am writing to request permission to deposit the full text of my paper "' + (this.f.metadata?.title ? this.f.metadata?.doi ? 'Untitled paper') + '" '
+        rm += encodeURIComponent 'published in "' + this.f.metadata.journal + '"' if this.f.metadata?.journal
+        rm += encodeURIComponent '\n\nI would like to archive the final pdf. If that is not possible, I would like to archive the accepted manuscript. Ideally, I would like to do so immediately but will respect a reasonable embargo if requested.\n\n'
+        if this.config.repo_name
+          rm += encodeURIComponent 'I plan to deposit it into "' + this.config.repo_name + '", a not-for-profit, digital, publicly accessible repository for scholarly work created for researchers ' + (if this.config.institution_name then 'at ' + this.config.institution_name else '') + '. It helps make research available to a wider audience, get citations for the original article, and assure its long-term preservation. The deposit will include a complete citation of the published version, and a link to it.\n\n'
+        rm += encodeURIComponent 'Thank you for your attention and I look forward to hearing from you.'
+        _L.set '#_oab_reviewemail', 'href', rm
+        # or to confirm permission has been received
+        pm = 'mailto:' + (this.config.deposit_help ? this.cml()) + '?subject=Permission%20Given%20to%20Deposit%20' + (this.f.metadata?.doi ? '') + '&body='
+        pm += encodeURIComponent 'To whom it may concern,\n\nAttached is written confirmation of permission I\'ve been given to deposit, and the permitted version of my paper: '
+        pm += encodeURIComponent '"' + (this.f.metadata?.title ? this.f.metadata?.doi ? 'Untitled paper') + '" \n\nCan you please deposit it into the repository on my behalf? \n\nSincerely, '
+        _L.set '#_oab_permissionemail', 'href', pm
+        _L.show '._oab_permission_required'
       else
-        _L.html '#_oab_licence', this.f.permissions.permissions.licence_required ? 'CC-BY'
-      _L.show '._oab_archivable'
-    else if this.config.dark_deposit_off
+        # can be shared, depending on permissions info
+        _L.hide('#_oab_not_pdf') if this.f?.permissions?.permissions?.version_allowed is 'publisher pdf'
+        if typeof this.f?.permissions?.permissions?.licence_required is 'string' and this.f.permissions.permissions.licence_required.indexOf('other-') is 0
+          _L.html '#_oab_licence', 'under the publisher\'s terms.' + refs
+        else
+          _L.html '#_oab_licence', this.f?.permissions?.permissions?.licence_required ? 'CC-BY'
+        _L.show '._oab_archivable'
+    #else if this.config.dark_deposit_off
       # can't be shared and dark deposit is off - ask user to review a permission email to journal
-      rm = 'mailto:' + (this.f.permissions?.ricks?.application?.can_archive_conditions?.permission_required_contact ? this.config.deposit_help ? this.cml()) + '?'
-      rm += 'cc=' + (this.config.deposit_help ? this.cml()) + '&' if this.f.permissions?.ricks?.application?.can_archive_conditions?.permission_required_contact
-      rm += 'subject=Request%20to%20self%20archive%20' + (this.f.metadata?.doi ? '') + '&body=';
-      rm += encodeURIComponent 'To whom it may concern,\n\n'
-      rm += encodeURIComponent 'I am writing to request permission to deposit the full text of my paper "' + (this.f.metadata?.title ? this.f.metadata?.doi ? 'Untitled paper') + '" '
-      rm += encodeURIComponent 'published in "' + this.f.metadata.journal + '"' if this.f.metadata?.journal
-      rm += encodeURIComponent '\n\nI would like to archive the final pdf. If that is not possible, I would like to archive the accepted manuscript. Ideally, I would like to do so immediately but will respect a reasonable embargo if requested.\n\n'
-      if this.config.repo_name
-        rm += encodeURIComponent 'I plan to deposit it into "' + this.config.repo_name + '", a not-for-profit, digital, publicly accessible repository for scholarly work created for researchers ' + (if this.config.institution_name then 'at ' + this.config.institution_name else '') + '. It helps make research available to a wider audience, get citations for the original article, and assure its long-term preservation. The deposit will include a complete citation of the published version, and a link to it.\n\n'
-      rm += encodeURIComponent 'Thank you for your attention and I look forward to hearing from you.'
-      _L.set '#_oab_reviewemail', 'href', rm
-      # or to confirm permission has been received
-      pm = 'mailto:' + (this.config.deposit_help ? this.cml()) + '?subject=Permission%20Given%20to%20Deposit%20' + (this.f.metadata?.doi ? '') + '&body='
-      pm += encodeURIComponent 'To whom it may concern,\n\nAttached is written confirmation of permission I\'ve been given to deposit, and the permitted version of my paper: '
-      pm += encodeURIComponent '"' + (this.f.metadata?.title ? this.f.metadata?.doi ? 'Untitled paper') + '" \n\nCan you please deposit it into the repository on my behalf? \n\nSincerely, '
-      _L.set '#_oab_permissionemail', 'href', pm
-      _L.show '._oab_dark_deposit_off'
+      # so far this uses the permission required route... checking if that is right
+      #_L.show '._oab_dark_deposit_off'
     else
       # can't be directly shared but can be passed to library for dark deposit
       _L.show '._oab_dark_deposit'
@@ -750,13 +756,15 @@ _oab.prototype.find = (e) ->
         this.data.url = val
         this.data.doi = '10.' + val.split('10.')[1]
       else if val.indexOf('10.') isnt -1
-        this.data.doi = val.replace('doi:','')
+        this.data.doi = '10.' + val.replace('doi:','').split('10.')[1]
       else if val.indexOf('http') is 0
         this.data.url = val
       else if val.indexOf(' ') isnt -1
         this.data.title = val
       else
         this.data.id = val
+  else if this.data.doi or this.data.title or this.data.url or this.data.id
+    _L.set '#_oab_input', this.data.doi ? this.data.title ? this.data.url ? this.data.id
 
   if not this.data.doi and (this.plugin is 'shareyourpaper' or (not this.data.url and not this.data.pmid and not this.data.pmcid and not this.data.title and not this.data.id))
     if this.plugin is 'shareyourpaper'
@@ -902,7 +910,7 @@ _oab.shareyourpaper_template = '
 </div>
 
 <div class="_oab_panel" id="_oab_permissions" style="display:none;">
-  <div class="_oab_section" id="_oab_oa">
+  <div class="_oab_section _oab_oa">
     <h2>Your paper is already freely available!</h2>
     <p>Great news, you\'re already getting the benefits of sharing your work! Your publisher or co-author have already shared it.</p>
     <p><a target="_blank" href="#" class="_oab_oa_url _oab_button" style="min-width:150px;">See free version</a></p>
@@ -910,6 +918,7 @@ _oab.shareyourpaper_template = '
   </div>
 
   <div class="_oab_section _oab_oa_deposit">
+    <h2>Your paper is already freely available!</h2>
     <p>Great news, you\'re already getting the benefits of sharing your work! Your publisher or co-author have already shared a <a class="_oab_oa_url" target="_blank" href="#"><u>freely available copy</u></a>.</p>
     <h3 class="_oab_section _oab_get_email">Give us your email to confirm deposit</h3>
   </div>
@@ -926,7 +935,7 @@ _oab.shareyourpaper_template = '
     <h3 class="_oab_section _oab_get_email"><span>&#10003;</span> Tell us your email</h3>
   </div>
 
-  <div class="_oab_section _oab_dark_deposit_off">
+  <div class="_oab_section _oab_permission_required">
     <h2>You may share your paper if you ask the journal</h2>
     <p>Unlike most, <span class="_oab_journal">the journal</span> requires that you ask them before you share your paper freely. 
     Asking only takes a moment as we find out who to contact and have drafted an email for you.</p>
@@ -943,7 +952,7 @@ _oab.shareyourpaper_template = '
 
   <div class="_oab_section _oab_get_email">
     <p><input class="_oab_form" type="text" id="_oab_email" placeholder="" aria-label="Enter your email" style="box-shadow:none;"></input></p>
-    <p class="_oab_section _oab_oa_deposit">We\'ll use this to send you a link. By deposit, you\'re agreeing to the <span class="_oab_terms">terms</span>.</p>
+    <p class="_oab_section _oab_oa_deposit">We\'ll use this to send you a link. By depositing, you\'re agreeing to the <span class="_oab_terms">terms</span>.</p>
     <p class="_oab_section _oab_archivable">We\'ll only use this if something goes wrong.<br>
     <p class="_oab_section _oab_dark_deposit">We\'ll only use this to send you a link to your paper when it is in <span class="_oab_repo">ScholarWorks</span>. By depositing, you\'re agreeing to the <span class="_oab_terms">terms</span>.</p>
   </div>
@@ -955,7 +964,6 @@ _oab.shareyourpaper_template = '
   </div>
   
   <div class="_oab_section _oab_oa_deposit _oab_archivable _oab_dark_deposit">
-    <!-- Confirm for oab_oa_deposit. Upload for oab_archivable. Submit for oab_dark_deposit -->
     <p><a target="_blank" href="#" class="_oab_deposit _oab_button _oab_loading" style="min-width:150px;">Deposit</a></p>
   </div>
 </div>

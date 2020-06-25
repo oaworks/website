@@ -199,6 +199,8 @@ jQuery(document).ready(function() {
   var diff = Math.floor(($(window).height() - $('div.content:visible').height())/4);
   $('div.content:visible').css({'padding-top':diff+'px'});
 
+  if (api.indexOf('dev.') !== -1) $('.dev_api').html("api: 'https://dev.api.cottagelabs.com/service/oab', ");
+
   var loginorurl = function(e) {
     if (e.keyCode === 13) {
       var vl = $(this).val();

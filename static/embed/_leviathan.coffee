@@ -146,7 +146,8 @@ _L.jx = (route, q, success, error, api, method, data, headers) ->
     else
       try
         success JSON.parse(xhr.response), xhr
-      catch
+      catch err
+        console.log err
         try
           success xhr
         catch
