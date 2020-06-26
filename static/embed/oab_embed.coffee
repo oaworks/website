@@ -210,7 +210,6 @@ _oab = (opts) ->
   this._loading = false # tracks when loads are occurring
   this.submit_after_metadata = false # used by instantill to track if metadata has been provided by user
   this.file = false # used by syp to store the file for sending to backend
-  this.first = true # used below in find to track first user interaction - may be obsoleted or better replaced with alternative approach though
 
   _L.loaded = this.loaded if this.loaded? # if this is set to a function, it will be passed to _leviathan loaded, which gets run after every ajax call completes
 
@@ -249,6 +248,7 @@ _oab = (opts) ->
   if window.location.search.indexOf('section=') isnt -1
     this.section window.location.search.split('section=')[1].split('&')[0].split('#')[0]
   this.find() if this.data.doi or (this.plugin is 'instantill' and (this.data.title or this.data.url))
+  window.addEventListener "popstate", (pe) => this.state(pe)
   return this
 
 
@@ -288,19 +288,20 @@ _oab.prototype.loading = (load) ->
 _oab.prototype.state = (pop) ->
   if this.pushstate
     try
-      if pop?
-        # what to do with the pop event? for now just triggers a restart if uses tries to go back
-        this.restart()
-      else
+      u = window.location.pathname
+      if not pop?
         if window.location.href.indexOf('shareyourpaper.org') isnt -1 and this.data.doi?
           u = window.location.pathname.split('/10.')[0] + '/' + this.data.doi + window.location.search + window.location.hash
-        else if (this.data.doi? or this.data.title? or this.data.url?) and window.location.href.indexOf('/setup') is -1 and window.location.href.indexOf('/demo') is -1
-          k = if this.data.doi then 'doi' else if this.data.title then 'title' else 'url'
-          u = window.location.pathname
-          u += window.location.search.split('?' + k + '=')[0].split('&' + k + '=')[0]
-          u += if u.indexOf('?') is -1 then '?' else '&'
-          u += k + '=' + this.data[k] + window.location.hash
-        window.history.pushState "", "find", u
+        else if window.location.href.indexOf('/setup') is -1 and window.location.href.indexOf('/demo') is -1
+          if this.data.doi? or this.data.title? or this.data.url?
+            k = if this.data.doi then 'doi' else if this.data.title then 'title' else 'url'
+            u += window.location.search.split('?' + k + '=')[0].split('&' + k + '=')[0]
+            u += if u.indexOf('?') is -1 then '?' else '&'
+            u += k + '=' + this.data[k] + window.location.hash
+      window.history.pushState "", (if pop? then "search" else "find"), u
+      if pop?
+        # what to do with the pop event? for now just triggers a restart if user tries to go back
+        this.restart()
 
 _oab.prototype.restart = (e, val) ->
   try e.preventDefault()
@@ -313,8 +314,6 @@ _oab.prototype.restart = (e, val) ->
   this.configure()
   if val
     _L.set '#_oab_input', val
-    if this.pushstate and 'pushState' in window.history and window.location.href.indexOf(val) isnt -1
-      window.history.pushState "", "find", (if window.location.href.indexOf('/' + val) isnt -1 then window.location.pathname.replace('/' + val,'') + window.location.search + window.location.hash else window.location.pathname + window.location.search.replace('doi='+input,'') + window.location.hash)
     this.find()
   else
     _L.set '#_oab_input', ''
@@ -478,15 +477,14 @@ _oab.prototype.deposit = (e) -> # only used by shareyourpaper
   try e.preventDefault()
   if not this.data.email and _L.gebi '#_oab_email'
     this.validate()
-  else
-    if not this.f?.url? and fl = _L.gebi '_oab_file'
-      if fl.files? and fl.files.length
-        this.file = new FormData()
-        this.file.append 'file', fl.files[0]
-      else
-        _L.show '#_oab_error', '<p>Whoops, you need to give us a file! Check it\'s uploaded.</p>'
-        _L.css fl, 'border-color','#f04717'
-        return
+  else if fl = _L.gebi '_oab_file'
+    if fl.files? and fl.files.length
+      this.file = new FormData()
+      this.file.append 'file', fl.files[0]
+    else if not this.f?.url? and not this.f?.permissions?.permissions?.archiving_allowed and not this.config.dark_deposit_off
+      _L.show '#_oab_error', '<p>Whoops, you need to give us a file! Check it\'s uploaded.</p>'
+      _L.css fl, 'border-color','#f04717'
+      return
   
     this.loading()
     # this could be just an email for a dark deposit, or a file for actual deposit
@@ -549,6 +547,7 @@ _oab.prototype.permissions = (data) -> # only used by shareyourpaper
   this.f = data if data?
   this.loading false
   if this.f?.doi_not_in_crossref
+    this.f = {}
     _L.show '#_oab_error', '<p>Double check your DOI, that doesn\'t look right to us.</p>'
     _L.gebi('_oab_input').focus()
   else if this.f?.metadata?.crossref_type? and this.f.metadata.crossref_type not in ['journal-article', 'proceedings-article']
@@ -557,7 +556,7 @@ _oab.prototype.permissions = (data) -> # only used by shareyourpaper
     if this.cml()
       nj += ' To get help with depositing, <a href="'
       nj += if this.config.old_way then (if this.config.old_way.indexOf('@') isnt -1 then 'mailto:' else '') + this.config.old_way else 'mailto:' + this.cml()
-      nj += "?subject=Help%20depositing%20&body=Hi%2C%0D%0A%0D%0AI'd%20like%20to%20deposit%3A%0D%0A%0D%0A%3C%3CPlease%20insert%20a%20full%20citation%3E%3E%0D%0A%0D%0ACan%20you%20please%20assist%20me%3F%0D%0A%0D%0AYours%20sincerely%2C" + '"><b><u>click here</u></b></a>'
+      nj += "?subject=Help%20depositing%20&body=Hi%2C%0D%0A%0D%0AI'd%20like%20to%20deposit%3A%0D%0A%0D%0A%3C%3CPlease%20insert%20a%20full%20citation%3E%3E%0D%0A%0D%0ACan%20you%20please%20assist%20me%3F%0D%0A%0D%0AYours%20sincerely%2C" + '">click here</a>'
     _L.show '#_oab_error', nj + '.</p>'
   else if not this.f?.metadata?.title?
     _L.show '#_oab_error', '<h3>Unknown paper</h3><p>Sorry, we cannot find this paper or sufficient metadata. ' + this.contact() + '</p>'
@@ -597,6 +596,7 @@ _oab.prototype.permissions = (data) -> # only used by shareyourpaper
       # it is already OA, depending on settings can deposit another copy
       _L.set '._oab_oa_url', 'href', this.f.url
       if this.config.allow_oa_deposit # when true, they can't...
+        _L.hide '._oab_get_email'
         _L.show '._oab_oa'
       else
         _L.show '._oab_oa_deposit'
@@ -619,6 +619,7 @@ _oab.prototype.permissions = (data) -> # only used by shareyourpaper
         pm += encodeURIComponent 'To whom it may concern,\n\nAttached is written confirmation of permission I\'ve been given to deposit, and the permitted version of my paper: '
         pm += encodeURIComponent '"' + (this.f.metadata?.title ? this.f.metadata?.doi ? 'Untitled paper') + '" \n\nCan you please deposit it into the repository on my behalf? \n\nSincerely, '
         _L.set '#_oab_permissionemail', 'href', pm
+        _L.hide '._oab_get_email'
         _L.show '._oab_permission_required'
       else
         # can be shared, depending on permissions info
@@ -630,6 +631,7 @@ _oab.prototype.permissions = (data) -> # only used by shareyourpaper
         _L.show '._oab_archivable'
     else
       # can't be directly shared but can be passed to library for dark deposit
+      _L.hide '#_oab_file'
       _L.show '._oab_dark_deposit'
 
 _oab.prototype.findings = (data) -> # only used by instantill
@@ -714,11 +716,7 @@ _oab.prototype.findings = (data) -> # only used by instantill
     this.metadata()
 
 _oab.prototype.find = (e) ->
-  try
-    e.preventDefault()
-    if this.first
-      this.first = false # or should just bind this from the start? previously was not bound because waits for first user interaction...
-      window.addEventListener "popstate", (pe) -> this.state(pe)
+  try e.preventDefault()
   if JSON.stringify(this.f) isnt '{}'
     for k in ['title','journal','year','doi']
       if v = _L.get '#_oab_' + k
@@ -767,7 +765,7 @@ _oab.prototype.find = (e) ->
       delete this.data.id
     _L.show '#_oab_error', '<p><span>&#10060;</span> Sorry please provide ' + if this.plugin is 'instantill' then 'the full DOI, title, citation, PMID or PMC ID.</p>' else 'a valid DOI.</p>'
   else
-    this.state() # should this just be part of loading?
+    this.state()
     this.loading()
     this.data.config = this.config
     this.data.from ?= this.uid
@@ -844,7 +842,7 @@ _oab.instantill_template = '
 
 <div class="_oab_panel" id="_oab_findings" style="display:none;">
   <div id="_oab_citation"><h2>A title</h2><p><b>And citation string, OR demo title OR Unknown <span class="_oab_paper">article</span> and refer to library</b></p></div>
-  <p><a class="_oab_wrong" href="#"><b>This is not the <span class="_oab_paper">article</span> I searched</b></a></p>
+  <p><a class="_oab_wrong" href="#">This is not the <span class="_oab_paper">article</span> I searched</a></p>
   <div class="_oab_section" id="_oab_sub_available">
     <h3>We have an online copy instantly available</h3>
     <p>You should be able to access it on the publisher\'s website.</p>
@@ -901,7 +899,7 @@ _oab.shareyourpaper_template = '
   <p>We\'ll gather information about your paper and find the easiest way to share it.</p>
   <p><input class="_oab_form" type="text" id="_oab_input" placeholder="e.g. 10.1126/scitranslmed.3001922" aria-label="Enter a search term" style="box-shadow:none;"></input></p>
   <p><a class="_oab_find _oab_button _oab_loading" href="#" id="_oab_find" aria-label="Search" style="min-width:150px;">Next</a></p>
-  <p><a id="_oab_nodoi" href="mailto:help@openaccessbutton.org?subject=Help%20depositing%20my%20paper&body=Hi%2C%0D%0A%0D%0AI\'d%20like%20to%20deposit%3A%0D%0A%0D%0A%3C%3CPlease%20insert%20a%20full%20citation%3E%3E%0D%0A%0D%0ACan%20you%20please%20assist%20me%3F%0D%0A%0D%0AYours%20sincerely%2C"><u><b>My paper doesn\'t have a DOI</b></u></a></p>
+  <p><a id="_oab_nodoi" href="mailto:help@openaccessbutton.org?subject=Help%20depositing%20my%20paper&body=Hi%2C%0D%0A%0D%0AI\'d%20like%20to%20deposit%3A%0D%0A%0D%0A%3C%3CPlease%20insert%20a%20full%20citation%3E%3E%0D%0A%0D%0ACan%20you%20please%20assist%20me%3F%0D%0A%0D%0AYours%20sincerely%2C">My paper doesn\'t have a DOI</a></p>
 </div>
 
 <div class="_oab_panel" id="_oab_permissions" style="display:none;">
@@ -909,15 +907,23 @@ _oab.shareyourpaper_template = '
     <h2>Your paper is already freely available!</h2>
     <p>Great news, you\'re already getting the benefits of sharing your work! Your publisher or co-author have already shared it.</p>
     <p><a target="_blank" href="#" class="_oab_oa_url _oab_button" style="min-width:150px;">See free version</a></p>
-    <p><b><u><a href="#" class="_oab_restart">Do another</a></u></b></p>
+    <p><a href="#" class="_oab_restart">Do another</a></p>
   </div>
+
+  <div class="_oab_section _oab_permission_required">
+    <h2>You may share your paper if you ask the journal</h2>
+    <p>Unlike most, <span class="_oab_journal">the journal</span> requires that you ask them before you share your paper freely. 
+    Asking only takes a moment as we find out who to contact and have drafted an email for you.</p>
+    <p><a target="_blank" id="_oab_reviewemail" href="#" class="_oab_button" style="min-width:150px;">Review Email</a></p>
+    <p><a target="_blank" id="_oab_permissionemail" href="#">I\'ve got permission now!</a></p>
+  </div>  
 
   <div class="_oab_section _oab_oa_deposit">
     <h2>Your paper is already freely available!</h2>
     <p>Great news, you\'re already getting the benefits of sharing your work! Your publisher or co-author have already shared a <a class="_oab_oa_url" target="_blank" href="#"><u>freely available copy</u></a>.</p>
     <h3 class="_oab_section _oab_get_email">Give us your email to confirm deposit</h3>
   </div>
-  
+
   <div class="_oab_section _oab_archivable">
     <h2>You can freely share your paper now!</h2>
     <p><span class="_oab_library">The library has</span> checked and <span class="_oab_journal">the journal</span> encourages you to freely share <span class="_oab_your_paper">your paper</span> so colleagues and the public can freely read and cite it. <span class="_oab_refs"></span></p>
@@ -929,14 +935,6 @@ _oab.shareyourpaper_template = '
     </div>
     <h3 class="_oab_section _oab_get_email"><span>&#10003;</span> Tell us your email</h3>
   </div>
-
-  <div class="_oab_section _oab_permission_required">
-    <h2>You may share your paper if you ask the journal</h2>
-    <p>Unlike most, <span class="_oab_journal">the journal</span> requires that you ask them before you share your paper freely. 
-    Asking only takes a moment as we find out who to contact and have drafted an email for you.</p>
-    <p><a target="_blank" id="_oab_reviewemail" href="#" class="_oab_button" style="min-width:150px;">Review Email</a></p>
-    <p><a target="_blank" id="_oab_permissionemail" href="#"><u>I\'ve got permission now!</u></a></p>
-  </div>  
 
   <div class="_oab_section _oab_dark_deposit">
     <h2>You can share your paper!</h2>
@@ -969,7 +967,7 @@ _oab.shareyourpaper_template = '
     <p>You\'re nearly done. It looks like what you uploaded is a publisher\'s PDF which your journal prohibits legally sharing.<!-- It can only be shared on a limited basis.--><br><br>
     We just need the version accepted by the journal to make your work available to everyone.</p>
     <p><a href="#" class="_oab_reload _oab_button" style="min-width:150px;">Try uploading again</a></p>
-    <p><a href="#" class="_oab_confirm"><b><u>My upload was an accepted manuscript</u></b></a></p>
+    <p><a href="#" class="_oab_confirm">My upload was an accepted manuscript</a></p>
   </div>
 
   <div class="_oab_done" id="_oab_check">
@@ -1004,7 +1002,7 @@ _oab.shareyourpaper_template = '
     <p>All that\'s left to do is wait. Once the journal gives you permission to share, come back and we\'ll help you finish the job.</p>
   </div>
   
-  <p><a href="#" class="_oab_restart _oab_button" id="_oab_done_restart">Do another</a></p>
+  <p><a href="#" class="_oab_restart" id="_oab_done_restart">Do another</a></p>
 </div>
 <div id="_oab_error"></div>
 <div id="_oab_pilot"></div>'
@@ -1068,11 +1066,11 @@ _oab.prototype.configure = (key, val, build, demo) ->
         el.innerHTML = (if cs is 'a paper' then 'an article' else if cs is 'paper' then 'article' else 'Article')
     if this.config.pilot
       pilot = '<p><br>Notice a change? We\'re testing a simpler and faster way to ' + (if this.plugin is 'instantill' then 'get' else 'deposit') + ' your ' + (if this.config.saypaper then 'paper' else 'article') + (if this.plugin is 'instantill' then '' else 's') + '. You can '
-      pilot += '<a href="mailto:' + this.cml() + '"><u>give feedback</u></a> or '
+      pilot += '<a href="mailto:' + this.cml() + '">give feedback</a> or '
       if this.plugin is 'instantill'
         pilot += '<a class="_oab_ping" message="instantill_use_the_old_form" target="_blank" href="' + (if this.config.advancedform then this.config.advancedform else if this.config.ill_redirect_base_url then this.config.ill_redirect_base_url else 'mailto:'+this.cml()) + '">use the old form</a>.</p>'
       else
-        pilot += '<a class="_oab_ping" message="shareyourpaper_use_the_old_form" target="_blank" href="' + (if this.config.old_way then (if this.config.old_way.indexOf('@') isnt -1 then 'mailto:' else '') + this.config.old_way else 'mailto:' + this.cml()) + '"><u>use the old way</u></a>.</p>'
+        pilot += '<a class="_oab_ping" message="shareyourpaper_use_the_old_form" target="_blank" href="' + (if this.config.old_way then (if this.config.old_way.indexOf('@') isnt -1 then 'mailto:' else '') + this.config.old_way else 'mailto:' + this.cml()) + '">use the old way</a>.</p>'
       _L.html '#_oab_pilot', pilot
     else
       _L.html '#_oab_pilot', ''
@@ -1088,8 +1086,8 @@ _oab.prototype.configure = (key, val, build, demo) ->
     else if this.plugin is 'instantill'
       if this.config.book or this.config.other
         boro = '<p>Need '
-        boro += 'a <a href="' + this.config.book + '"><b>book chapter</b></a>' if this.config.book
-        boro +=  (if this.config.book then ' or ' else ' ') + '<a href="' + this.config.other + '"><b>something else</b></a>' if this.config.other
+        boro += 'a <a href="' + this.config.book + '">book chapter</a>' if this.config.book
+        boro +=  (if this.config.book then ' or ' else ' ') + '<a href="' + this.config.other + '">something else</a>' if this.config.other
         _L.html '#_oab_book_or_other', boro + '?</p>'
       else
         _L.html '#_oab_book_or_other', ''
