@@ -209,7 +209,6 @@ _oab = (opts) ->
 
   this._loading = false # tracks when loads are occurring
   this.submit_after_metadata = false # used by instantill to track if metadata has been provided by user
-  this.confirmed = false # used by syp to track if user has confirmed file type
   this.file = false # used by syp to store the file for sending to backend
   this.first = true # used below in find to track first user interaction - may be obsoleted or better replaced with alternative approach though
 
@@ -235,7 +234,8 @@ _oab = (opts) ->
   this.configure()
 
   if not this.config.autorun # stupidly, true means don't run it...
-    ap = this.config.autorunparams ? ['doi','title','url','atitle','rft_id','journal','issn','year','author','confirmed'] # confirmed here is extra to the ill ones, used to confirm the file has been confirmed
+    ap = this.config.autorunparams ? ['doi','title','url','atitle','rft_id','journal','issn','year','author']
+    ap.push('confirmed') if 'confirmed' not in ap # confirmed here is extra to the ill ones, used to confirm the file has been confirmed
     ap = ap.replace(/"/g,'').replace(/'/g,'').split(',') if typeof ap is 'string'
     for o in ap
       o = o.split('=')[0].trim()
@@ -250,8 +250,6 @@ _oab = (opts) ->
     this.section window.location.search.split('section=')[1].split('&')[0].split('#')[0]
   this.find() if this.data.doi or (this.plugin is 'instantill' and (this.data.title or this.data.url))
   return this
-
-
 
 
 
@@ -294,9 +292,9 @@ _oab.prototype.state = (pop) ->
         # what to do with the pop event? for now just triggers a restart if uses tries to go back
         this.restart()
       else
-        if window.location.href.indexOf('shareyourpaper.org') isnt -1 and this.data?.doi?
+        if window.location.href.indexOf('shareyourpaper.org') isnt -1 and this.data.doi?
           u = window.location.pathname.split('/10.')[0] + '/' + this.data.doi + window.location.search + window.location.hash
-        else if (this.data?.doi? or this.data?.title? or this.data?.url?) and window.location.href.indexOf('/setup') is -1 and window.location.href.indexOf('/demo') is -1
+        else if (this.data.doi? or this.data.title? or this.data.url?) and window.location.href.indexOf('/setup') is -1 and window.location.href.indexOf('/demo') is -1
           k = if this.data.doi then 'doi' else if this.data.title then 'title' else 'url'
           u = window.location.pathname
           u += window.location.search.split('?' + k + '=')[0].split('&' + k + '=')[0]
@@ -309,7 +307,6 @@ _oab.prototype.restart = (e, val) ->
   this.data = {}
   this.f = {}
   this.loading false
-  this.confirmed = false
   this.file = false
   _L.hide '._oab_panel'
   _L.show '#_oab_inputs'
@@ -433,10 +430,9 @@ _oab.prototype.validate = () ->
       )
 
 _oab.prototype.metadata = (submitafter) -> # only used by instantill
-  # in the case of syp this should reset to the first page again, as the metadata form is not yet available on syp
   for m in ['title','year','journal','doi']
-    if this.f.metadata[m]?
-      _L.set '#_oab_'+m, this.f.metadata[m].split('(')[0].trim()
+    if this.f?.metadata?[m]? or this.data[m]?
+      _L.set '#_oab_'+m, (this.f.metadata ? this.data)[m].split('(')[0].trim()
   #if this.f?.doi_not_in_crossref
   #  _L.html '#_oab_bad_doi', this.f.doi_not_in_crossref
   #  _L.show '#_oab_doi_not_in_crossref'
@@ -497,8 +493,8 @@ _oab.prototype.deposit = (e) -> # only used by shareyourpaper
     # if the file is acceptable and can go in zenodo then we don't bother getting the email address
     data = {from: this.uid, plugin: this.plugin, embedded:window.location.href, metadata: this.f?.metadata }
     data.config = this.config
-    data.email = this.data.email if this.data?.email
-    data.confirmed = this.confirmed if this.confirmed
+    data.email = this.data.email if this.data.email
+    data.confirmed = this.data.confirmed if this.data.confirmed
     data.redeposit = this.f.url if typeof this.f?.url is 'string'
     data.pilot = this.config.pilot if this.config.pilot
     data.live = this.config.live if this.config.live
@@ -517,7 +513,7 @@ _oab.prototype.deposit = (e) -> # only used by shareyourpaper
       (res) =>
         this.loading false
         if this.file
-          if res.zenodo?.already or (this.confirmed and not res.zenodo?.url) #or not this.f?.permissions?.file?.archivable
+          if res.zenodo?.already or (this.data.confirmed and not res.zenodo?.url) #or not this.f?.permissions?.file?.archivable
             this.done 'check'
           else if res.error
             # if we should be able to deposit but can't, we stick to the positive response and the file will be manually checked
@@ -545,7 +541,7 @@ _oab.prototype.deposit = (e) -> # only used by shareyourpaper
           this.done 'success'
       () =>
         this.loading false
-        _L.show '#_oab_error', '<p>Sorry, we were not able to deposit this paper for you. ' + this.contact() + '</p><p><a href="#" class="_oab_restart" style="font-weight:bold;">Try again</a></p>'
+        _L.show '#_oab_error', '<p>Sorry, we were not able to deposit this paper for you. ' + this.contact() + '</p><p><a href="#" class="_oab_restart">Try again</a></p>'
         this.ping('shareyourpaper_couldnt_submit_deposit')
     )
 
@@ -632,10 +628,6 @@ _oab.prototype.permissions = (data) -> # only used by shareyourpaper
         else
           _L.html '#_oab_licence', this.f?.permissions?.permissions?.licence_required ? 'CC-BY'
         _L.show '._oab_archivable'
-    #else if this.config.dark_deposit_off
-      # can't be shared and dark deposit is off - ask user to review a permission email to journal
-      # so far this uses the permission required route... checking if that is right
-      #_L.show '._oab_dark_deposit_off'
     else
       # can't be directly shared but can be passed to library for dark deposit
       _L.show '._oab_dark_deposit'
@@ -703,7 +695,7 @@ _oab.prototype.findings = (data) -> # only used by instantill
       _L.show '#_oab_oa_available'
     if this.f.ill and this.ill isnt false and not ((this.config.noillifsub and hassub) or (this.config.noillifoa and hasoa))
       _L.html '#_oab_cost_time', '<p>It ' + (if this.config.cost then 'costs ' + this.config.cost else 'is free to you,') + ' and we\'ll usually email the link within ' + (this.config.time ? '24 hours') + '.<br></p>'
-      if not this.data?.email
+      if not this.data.email
         if this.f.ill.openurl and this.openurl isnt false
           _L.hide '#_oab_collect_email'
         else
@@ -754,19 +746,21 @@ _oab.prototype.find = (e) ->
     if val.length
       if val.indexOf('doi.org/') isnt -1
         this.data.url = val
-        this.data.doi = '10.' + val.split('10.')[1]
+        this.data.doi = '10.' + val.split('10.')[1].split(' ')[0]
       else if val.indexOf('10.') isnt -1
-        this.data.doi = '10.' + val.replace('doi:','').split('10.')[1]
-      else if val.indexOf('http') is 0
+        this.data.doi = '10.' + val.split('10.')[1].split(' ')[0]
+      else if val.indexOf('http') is 0 or val.indexOf('www.') isnt -1
         this.data.url = val
-      else if val.indexOf(' ') isnt -1
-        this.data.title = val
-      else
+      else if val.toLowerCase().replace('pmc','').replace('pmid','').replace(':','').replace(/[0-9]/g,'').length is 0
         this.data.id = val
+      else
+        this.data.title = val
   else if this.data.doi or this.data.title or this.data.url or this.data.id
     _L.set '#_oab_input', this.data.doi ? this.data.title ? this.data.url ? this.data.id
 
-  if not this.data.doi and (this.plugin is 'shareyourpaper' or (not this.data.url and not this.data.pmid and not this.data.pmcid and not this.data.title and not this.data.id))
+  if this.plugin is 'instantill' and not this.data.doi and this.data.title and this.data.title.length < 30 and this.data.title.split(' ').length < 3
+    this.metadata() # need more metadata for short titles
+  else if not this.data.doi and (this.plugin is 'shareyourpaper' or (not this.data.url and not this.data.pmid and not this.data.pmcid and not this.data.title and not this.data.id))
     if this.plugin is 'shareyourpaper'
       delete this.data.title
       delete this.data.url
@@ -795,7 +789,7 @@ _oab.css = '
   width: 100%;
   height: 34px;
   padding: 6px 12px;
-  font-size: 1.1em;
+  font-size: 1em;
   line-height: 1.428571429;
   color: #555555;
   vertical-align: middle;
@@ -814,9 +808,10 @@ _oab.css = '
   height:34px;
   padding: 6px 3px;
   margin-bottom: 0;
-  font-size: 1.2em;
+  font-size: 1em;
   font-weight: normal;
   line-height: 1.428571429;
+  text-decoration: none;
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
@@ -849,7 +844,7 @@ _oab.instantill_template = '
 
 <div class="_oab_panel" id="_oab_findings" style="display:none;">
   <div id="_oab_citation"><h2>A title</h2><p><b>And citation string, OR demo title OR Unknown <span class="_oab_paper">article</span> and refer to library</b></p></div>
-  <p><a class="_oab_wrong" href="#"><b>This is not the <span class="_oab_paper">article</span> I searched.</b></a></p>
+  <p><a class="_oab_wrong" href="#"><b>This is not the <span class="_oab_paper">article</span> I searched</b></a></p>
   <div class="_oab_section" id="_oab_sub_available">
     <h3>We have an online copy instantly available</h3>
     <p>You should be able to access it on the publisher\'s website.</p>
@@ -881,7 +876,7 @@ _oab.instantill_template = '
   <p><span class="_oab_paper">Article</span> DOI or URL<br><input class="_oab_form" id="_oab_doi" type="text" placeholder="e.g 10.1126/scitranslmed.3008973"></p>
   <p><a href="#" class="_oab_find _oab_button _oab_loading _oab_continue" style="min-width:150px;">Continue</a></p>
   <p>
-    <a href="#" class="_oab_restart" style="font-weight:bold;">Try again</a>
+    <a href="#" class="_oab_restart">Try again</a>
     <span id="_oab_advancedform" style="display:none;"></span>
   </p>
 </div>
@@ -892,7 +887,7 @@ _oab.instantill_template = '
     <p>And confirmation code and tell we will email soon - OR sorry we could not create an ILL, and refer back to library if possible.</p>
     <p>"Do another" link below would change to "Try again" in event of sorry.</p>
   </div>
-  <p><a href="#" class="_oab_restart" id="_oab_done_restart" style="font-weight:bold;">Do another</a></p>
+  <p><a href="#" class="_oab_restart" id="_oab_done_restart">Do another</a></p>
 </div>
 <div id="_oab_error"></div>
 <div id="_oab_pilot"></div>'
@@ -1009,7 +1004,7 @@ _oab.shareyourpaper_template = '
     <p>All that\'s left to do is wait. Once the journal gives you permission to share, come back and we\'ll help you finish the job.</p>
   </div>
   
-  <p><a href="#" class="_oab_restart _oab_button" id="_oab_done_restart" style="font-weight:bold;">Do another</a></p>
+  <p><a href="#" class="_oab_restart _oab_button" id="_oab_done_restart">Do another</a></p>
 </div>
 <div id="_oab_error"></div>
 <div id="_oab_pilot"></div>'
@@ -1131,7 +1126,7 @@ _oab.prototype.configure = (key, val, build, demo) ->
       e.preventDefault()
       this.file = false
       this.permissions()
-    _L.listen 'click', '._oab_confirm', (e) => e.preventDefault(); this.confirmed = true; this.deposit()
+    _L.listen 'click', '._oab_confirm', (e) => e.preventDefault(); this.data.confirmed = true; this.deposit()
     _L.listen 'click','#_oab_reviewemail', (e) => this.done 'review'
     _L.listen 'click','._oab_deposit', (e) => this.deposit(e)
   

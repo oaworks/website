@@ -162,7 +162,7 @@ var save = function(e, preview) {
   if (preview) {
     _oab.configure(data, undefined, undefined, preview);
   } else {
-    var configured = _oab.configure(data);
+    var configured = _oab.configure(data, undefined, undefined, $('.section:visible').first().attr('save'));
     if (noddy.apikey) {
       $.ajax({
         url: api + '/' + (_oab.plugin === 'instantill' ? 'ill' : 'deposit') + '/config',
@@ -182,7 +182,7 @@ $('body').on('click','.save',save);
 var preview = function(e) {
   e.preventDefault();
   //scrollTo(0,0);
-  save(undefined, $(this).attr('val') ? $(this).attr('val') : (_oab.plugin === 'instantill' ? '10.1145/2908080.2908114' : '10.1234/oab-syp-aam'));
+  save(undefined, $('.section:visible').first().attr('preview') ? $('.section:visible').first().attr('preview') : ($(this).attr('val') ? $(this).attr('val') : (_oab.plugin === 'instantill' ? '10.1145/2908080.2908114' : '10.1126/scitranslmed.3001922')));
 }
 $('body').on('click', '.preview', preview);
 
