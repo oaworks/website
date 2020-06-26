@@ -846,18 +846,18 @@ _oab.instantill_template = '
   <div class="_oab_section" id="_oab_sub_available">
     <h3>We have an online copy instantly available</h3>
     <p>You should be able to access it on the publisher\'s website.</p>
-    <p><a target="_blank" id="_oab_sub_url" href="#"><b>Open <span class="_oab_paper">article</span> in a new tab</b></a></p>
+    <p><a target="_blank" id="_oab_sub_url" href="#">Open <span class="_oab_paper">article</span> in a new tab</a></p>
   </div>
   <div class="_oab_section" id="_oab_oa_available">
     <h3><br>There is a free, instantly accessible copy online</h3>
     <p>It may not be the final published version and may lack graphs or figures making it unsuitable for citations.</p>
-    <p><a id="_oab_url" target="_blank" href="#"><b>Open <span class="_oab_paper">article</span> in a new tab</b></a></p>
+    <p><a id="_oab_url" target="_blank" href="#">Open <span class="_oab_paper">article</span> in a new tab</a></p>
   </div>
   <div class="_oab_section" id="_oab_ask_library">
     <h3><br>Ask the library to digitally send you the published full-text via Interlibrary Loan</h3>
     <div id="_oab_cost_time"><p>It is free to you, and we\'ll usually email the link within 24 hours.<br></p></div>
     <div id="_oab_collect_email">
-      <p id="_oab_terms_note"><input type="checkbox" id="_oab_read_terms"> I have read the <a id="_oab_terms_link" target="_blank" href="#"><b>terms and conditions</b></a></p>
+      <p id="_oab_terms_note"><input type="checkbox" id="_oab_read_terms"> I have read the <a id="_oab_terms_link" target="_blank" href="#">terms and conditions</a></p>
       <p><input placeholder="Your university email address" id="_oab_email" type="text" class="_oab_form"></p>
     </div>
     <p><a class="_oab_submit _oab_button _oab_loading" href="#" style="min-width:150px;">Complete request</a></p>
@@ -920,7 +920,7 @@ _oab.shareyourpaper_template = '
 
   <div class="_oab_section _oab_oa_deposit">
     <h2>Your paper is already freely available!</h2>
-    <p>Great news, you\'re already getting the benefits of sharing your work! Your publisher or co-author have already shared a <a class="_oab_oa_url" target="_blank" href="#"><u>freely available copy</u></a>.</p>
+    <p>Great news, you\'re already getting the benefits of sharing your work! Your publisher or co-author have already shared a <a class="_oab_oa_url" target="_blank" href="#">freely available copy</a>.</p>
     <h3 class="_oab_section _oab_get_email">Give us your email to confirm deposit</h3>
   </div>
 
