@@ -204,9 +204,8 @@ _oab = (opts) ->
   this.data ?= {} # the data obj to send to backend
   this.f ?= {} # the result of the find/ill/permission request to the backend
   this.template ?= _oab[this.plugin + '_template'] # template or css can be passed in or are as defined below
+  
   this.css ?= _oab.css
-  this.bootstrap ?= true # if true then bootstrap classes will be added to buttons and form elements
-
   this._loading = false # tracks when loads are occurring
   this.submit_after_metadata = false # used by instantill to track if metadata has been provided by user
   this.file = false # used by syp to store the file for sending to backend
@@ -1047,6 +1046,12 @@ _oab.prototype.configure = (key, val, build, demo) ->
   if this.bootstrap isnt false and this.config.bootstrap is true
     this.bootstrap = false
     build = true
+  if not this.bootstrap? and not this.css
+    # if bootstrap css is already present on the page, and bootstrap value is not set,
+    # and css has not been set either, then use bootstrap
+    _L.append 'body', '<div class="btn" id="_oab_bootstrap_test" style="display:none;"></div>'
+    this.bootstrap = _L.css('#_oab_bootstrap_test', 'height') not in ['','0px']
+    #_L.remove '_#oab_bootstrap_test'
   if build isnt false
     this.element ?= '#' + this.plugin
     _L.remove '#_oab_css'
