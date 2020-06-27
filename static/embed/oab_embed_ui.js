@@ -160,9 +160,9 @@ var save = function(e, preview) {
   });
 
   if (preview) {
-    _oab.configure(data, undefined, undefined, preview);
+    _oab.configure(data, true, undefined, preview);
   } else {
-    var configured = _oab.configure(data, undefined, undefined, $('.section:visible').first().attr('save'));
+    var configured = _oab.configure(data, true, undefined, $('.section:visible').first().attr('save'));
     if (noddy.apikey) {
       $.ajax({
         url: api + '/' + (_oab.plugin === 'instantill' ? 'ill' : 'deposit') + '/config',
@@ -199,7 +199,11 @@ jQuery(document).ready(function() {
   var diff = Math.floor(($(window).height() - $('div.content:visible').height())/4);
   $('div.content:visible').css({'padding-top':diff+'px'});
 
-  if (api.indexOf('dev.') !== -1) $('.dev_api').html("api: 'https://dev.api.cottagelabs.com/service/oab', ");
+  if (api.indexOf('dev.') !== -1) {
+    $('.dev_api').html("api: 'https://dev.api.cottagelabs.com/service/oab', ");
+  } else {
+    $('.site_url').html(_oab.plugin === 'instantill' ? 'https://instantill.org/embed.js' : 'https://shareyourpaper.org/embed.js');
+  }
 
   var loginorurl = function(e) {
     if (e.keyCode === 13) {

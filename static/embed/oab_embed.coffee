@@ -233,7 +233,7 @@ _oab = (opts) ->
   this.configure()
 
   if not this.config.autorun # stupidly, true means don't run it...
-    ap = this.config.autorunparams ? ['doi','title','url','atitle','rft_id','journal','issn','year','author']
+    ap = if typeof this.config.autorunparams is 'string' then this.config.autorunparams.split(',') else if typeof this.config.autorunparams is 'object' then this.config.autorunparams else ['doi','title','url','atitle','rft_id','journal','issn','year','author']
     ap.push('confirmed') if 'confirmed' not in ap # confirmed here is extra to the ill ones, used to confirm the file has been confirmed
     ap = ap.replace(/"/g,'').replace(/'/g,'').split(',') if typeof ap is 'string'
     for o in ap
@@ -625,9 +625,9 @@ _oab.prototype.permissions = (data) -> # only used by shareyourpaper
         # can be shared, depending on permissions info
         _L.hide('#_oab_not_pdf') if this.f?.permissions?.permissions?.version_allowed is 'publisher pdf'
         if typeof this.f?.permissions?.permissions?.licence_required is 'string' and this.f.permissions.permissions.licence_required.indexOf('other-') is 0
-          _L.html '#_oab_licence', 'under the publisher\'s terms.' + refs
+          _L.html '._oab_licence', 'under the publisher terms' + refs
         else
-          _L.html '#_oab_licence', this.f?.permissions?.permissions?.licence_required ? 'CC-BY'
+          _L.html '._oab_licence', this.f?.permissions?.permissions?.licence_required ? 'CC-BY'
         _L.show '._oab_archivable'
     else
       # can't be directly shared but can be passed to library for dark deposit
@@ -674,14 +674,14 @@ _oab.prototype.findings = (data) -> # only used by instantill
   if this.f.metadata?.title? or this.f.ill?.subscription?.demo
     citation = '<h2>' + (if this.f.ill?.subscription?.demo then '<Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL' else this.f.metadata.title) + '</h2>'
     if this.f.metadata.year or this.f.metadata.journal or this.f.metadata.volume or this.f.metadata.issue
-      citation += '<p><b style="color:#666;">'
+      citation += '<p><i>'
       citation += (this.f.metadata.year ? '') + (if this.f.metadata.journal or this.f.metadata.volume or this.f.metadata.issue then ', ' else '') if this.f.metadata.year
       if this.f.metadata.journal
         citation += this.f.metadata.journal
       else
         citation += 'vol. ' + this.f.metadata.volume if this.f.metadata.volume
         citation += (if this.f.metadata.volume then ', ' else '') + 'issue ' + this.f.metadata.issue if this.f.metadata.issue
-      citation += '</b></p>'
+      citation += '</i></p>'
     _L.html '#_oab_citation', citation
 
     hassub = false
@@ -953,7 +953,7 @@ _oab.shareyourpaper_template = '
   <div class="_oab_section _oab_archivable">
     <h3>We\'ll check it\'s legal, then promote, and preserve your work</h3>
     <p><input type="file" name="file" id="_oab_file" class="_oab_form"></p>
-    <p>By depositing you\'re agreeing to the <span class="_oab_terms">terms</span> and to license your work <span id="_oab_licence">CC-BY</span>.</p>
+    <p>By depositing you\'re agreeing to the <span class="_oab_terms">terms</span> and to license your work <span class="_oab_licence">CC-BY</span>.</p>
   </div>
   
   <div class="_oab_section _oab_oa_deposit _oab_archivable _oab_dark_deposit">
@@ -1015,8 +1015,8 @@ _oab.prototype.configure = (key, val, build, demo) ->
     try key = JSON.parse key
   if typeof key is 'string' and not val? and (not this.uid? or this.uid is 'anonymous')
     this.uid = key
-    key = true
-  if (key is true or not key?) and not val? and JSON.stringify(this.config) is '{}'
+    key = undefined
+  if ((typeof key is 'string' and val?) or (not key? and not val?)) and JSON.stringify(this.config) is '{}'
     try
       if this.local isnt false # can be disabled if desired, by setting local to false at setup or in url param
         lc = JSON.parse localStorage.getItem '_oab_config_' + this.plugin
@@ -1024,20 +1024,23 @@ _oab.prototype.configure = (key, val, build, demo) ->
           this.config = lc 
           console.log 'Config retrieved from local storage'
     if this.uid and this.uid isnt 'anonymous' and JSON.stringify(this.config) is '{}' # should a remote call always be made to check for superseded config if one is not provided at startup?
-      _L.jx this.api + '/' + (if this.plugin is 'instantill' then 'ill' else 'deposit') + '/config?uid='+this.uid, undefined, (res) => console.log('Config retrieved from API'); this.configure(res)
+      _L.jx this.api + '/' + (if this.plugin is 'instantill' then 'ill' else 'deposit') + '/config?uid='+this.uid, undefined, (res) => 
+        this.configure res
+        console.log 'Config retrieved from API'
   if typeof key is 'object'
     this.uid = val if typeof val is 'string'
     for d of key
-      if not this.config[d]? or this.config[d] isnt key[d]
+      if not this.config[d]? or (this.config[d] isnt key[d] and val is true) # val true allows overwrite present values
         build = true if build isnt false
         this.config[d] = if key[d] is 'true' then true else if key[d] is 'false' then false else key[d]
   else if key? and val?
     this.config[key] = if val is 'true' then true else if val is 'false' then false else val
-  for k of this.config
-    # is it safe to ignore certain configs if they default empty or false?
-    delete this.config[k] if not this.config[k]? or this.config[k] is false or ((typeof this.config[k] is 'string' or Array.isArray(this.config[k])) and this.config[k].length is 0)
+  # make a "writable" config without unecessary params, such as those setting false etc
+  # keep separate from this.config so that additional calls to configure take account of false if they do exist though
+  for k of wc = JSON.parse JSON.stringify this.config
+    delete wc[k] if not wc[k]? or wc[k] is false or ((typeof wc[k] is 'string' or Array.isArray(wc[k])) and wc[k].length is 0)
   try
-    localStorage.setItem('_oab_config_' + this.plugin, JSON.stringify this.config) if JSON.stringify(this.config) isnt '{}'
+    localStorage.setItem('_oab_config_' + this.plugin, JSON.stringify wc) if JSON.stringify(wc) isnt '{}'
   if this.css isnt false and this.config.css is true
     this.css = false
     build = true
@@ -1047,14 +1050,15 @@ _oab.prototype.configure = (key, val, build, demo) ->
   if build isnt false
     this.element ?= '#' + this.plugin
     _L.remove '#_oab_css'
-    if typeof this.css is 'string' and this.css isnt 'false'
-      this.css = '<style id="_oab_css">' + this.css + '</style>' if not this.css.startsWith '<style>'
-      _L.append this.element, this.css
-    else if this.bootstrap is true
+    if this.bootstrap is true
       this.template = this.template.replace(/_oab_button/g,'_oab_button btn btn-primary').replace(/_oab_form/g,'_oab_form form-control')
-    else if this.bootstrap is false and this.template.indexOf('btn-primary') isnt -1
-      this.template = this.template.replace(/ btn btn-primary/g,'').replace(/ form-control/g,'')
-      _L.remove(this.element) if _L.gebi this.element
+    else
+      if this.bootstrap is false and this.template.indexOf('btn-primary') isnt -1
+        this.template = this.template.replace(/ btn btn-primary/g,'').replace(/ form-control/g,'')
+        _L.remove(this.element) if _L.gebi this.element
+      if typeof this.css is 'string' and this.css isnt 'false'
+        this.css = '<style id="_oab_css">' + this.css + '</style>' if not this.css.startsWith '<style>'
+        _L.append this.element, this.css
     if not _L.gebi '_oab_inputs'
       _L.append this.element, this.template
     _L.each '._oab_paper', (el) =>
@@ -1129,9 +1133,9 @@ _oab.prototype.configure = (key, val, build, demo) ->
     _L.listen 'click','._oab_deposit', (e) => this.deposit(e)
   
   if el = _L.gebi '_oab_config'
-    el.innerHTML = JSON.stringify this.config, '', 2
+    el.innerHTML = JSON.stringify wc, '', 2
   this.demo(undefined, demo) if demo
-  return this.config
+  return wc
 
 @shareyourpaper = (opts) -> opts ?= {}; opts.plugin = 'shareyourpaper'; return new _oab(opts);
 @instantill = (opts) -> opts ?= {}; opts.plugin = 'instantill'; return new _oab(opts);
