@@ -96,24 +96,18 @@ _L.has = (el, cls) ->
   else
     return if el.getAttribute(cls) then true else false
 _L.css = (els, key, val) ->
-  rs = []
   _L.each els, (el) ->
-    s = _L.get el, 'style'
-    s ?= ''
+    s = _L.get(el, 'style') ? ''
     style = {}
     for p in s.split ';'
       ps = p.split ':'
       style[ps[0].trim()] = ps[1].trim() if ps.length is 2
-    if not key? or style[key]?
-      rs.push if key? then style[key] else style
     style[key] = val if val?
     ss = ''
     for k of style
       ss += ';' if ss isnt ''
       ss += k + ':' + style[k]
     _L.set el, 'style', ss
-  if not val?
-    return if rs.length is 1 then rs[0] else rs
 _L.clone = (el, children) ->
   if children
     n = el.cloneNode true
@@ -192,8 +186,7 @@ _L.dot = (obj, key, value, del) ->
 
 
 _oab = (opts) ->
-  opts ?= {}
-  # other useful values to pass in: openurl or ill will disable those features for instantill if set to false
+  opts ?= {} # can pass nosubmit true here as well, to control demo output, stopping submit from POSTing
   this[o] = opts[o] for o of opts
   this.uid ?= 'anonymous'
   this.api ?= if window.location.host.indexOf('dev.openaccessbutton.org') isnt -1 then 'https://dev.api.cottagelabs.com/service/oab' else 'https://api.openaccessbutton.org'
@@ -205,6 +198,7 @@ _oab = (opts) ->
   this.f ?= {} # the result of the find/ill/permission request to the backend
   this.template ?= _oab[this.plugin + '_template'] # template or css can be passed in or are as defined below
   
+  this.bootstrap ?= true
   this.css ?= _oab.css
   this._loading = false # tracks when loads are occurring
   this.submit_after_metadata = false # used by instantill to track if metadata has been provided by user
@@ -358,7 +352,7 @@ _oab.prototype.section = (section) ->
 
 _oab.prototype.submit = (e) -> # only used by instantill
   try e.preventDefault()
-  if not this.f?.ill?.openurl and not this.data.email and _L.gebi '#_oab_email'
+  if not this.openurl() and not this.data.email and _L.gebi '#_oab_email'
     this.validate()
   else if JSON.stringify(this.f) is '{}' or (not this.f.metadata?.title or not this.f.metadata?.journal or not this.f.metadata?.year)
     if this.submit_after_metadata
@@ -380,16 +374,17 @@ _oab.prototype.submit = (e) -> # only used by instantill
     data[nfield] = 'The user provided some metadata. ' if this.data.usermetadata
     data.pilot = this.config.pilot if this.config.pilot
     data.live = this.config.live if this.config.live
-    if this.f?.ill?.subscription or this.f?.availability
+    if this.f?.ill?.subscription or this.f?.url
       if typeof data[nfield] isnt 'string' then data[nfield] = '' else data[nfield] += ' '
       if this.f.ill?.subscription
         data[nfield] += 'Subscription check done, found ' + (this.f.ill.subscription.url ? (if this.f.ill.subscription.journal then 'journal' else 'nothing')) + '. '
       if this.f.metadata?
         data[nfield] += 'OA availability check done, found ' + (this.f.url ? 'nothing') + '. '
-    if this.f?.ill?.openurl and this.openurl isnt false and not data.email
+    ou = this.openurl()
+    if ou and not data.email
       data.forwarded = true
-    if this.openurl is 'demo'
-      console.log 'Not POSTing ILL and not forwarding to ' + this.f.ill.openurl + ' for demo purposes'
+    if this.nosubmit is true
+      console.log 'Not POSTing ILL and not forwarding to ' + ou + ' for demo purposes'
       console.log data
     else
       _L.post(
@@ -400,7 +395,7 @@ _oab.prototype.submit = (e) -> # only used by instantill
       )
 
 _oab.prototype.validate = () ->
-  if this.f.ill?.terms and not _L.checked '#_oab_read_terms'
+  if this.config.terms and not _L.checked '#_oab_read_terms' # instantill terms
     _L.show '#_oab_error', '<p>Please agree to the terms first.</p>'
   else
     email = (_L.get('#_oab_email') ? '').trim()
@@ -438,24 +433,48 @@ _oab.prototype.metadata = (submitafter) -> # only used by instantill
   _L.show '#_oab_metadata'
 
 _oab.prototype.openurl = () -> # only used by instantill
-  _L.post(
-    this.api+'/ill/openurl?' + (if this.uid then 'uid='+this.uid+'&' else '') + (if this.data.usermetadata then 'usermetadata=true&' else '')
-    (if this.uid then this.f.metadata else {metadata: this.f.metadata, config: this.config})
-    (res) => window.location = res
-    (data) =>
-      try
-        window.location = data
-      catch err
-        this.done undefined, 'instantill_openurl_couldnt_create_ill'
-  )
+  if this.f.ill?.openurl
+    return this.f.ill.openurl
+  else if not this.config.ill_redirect_base_url
+    return ''
+  else
+    config = JSON.parse JSON.stringify this.config
+    config.sid ?= 'sid'
+    config.title ?= 'atitle' # this is what iupui needs (title is also acceptable, but would clash with using title for journal title, which we set below, as iupui do that
+    config.doi ?= 'rft_id' # don't know yet what this should be
+    config.author ?= 'aulast' # author should actually be au, but aulast works even if contains the whole author, using aufirst just concatenates
+    config.journal ?= 'title' # this is what iupui needs
+    config.page ?= 'pages' # iupui uses the spage and epage for start and end pages, but pages is allowed in openurl, check if this will work for iupui
+    config.published ?= 'date' # this is what iupui needs, but in format 1991-07-01 - date format may be a problem
+    config.year ?= 'rft.year' # this is what IUPUI uses
+    url = config.ill_redirect_base_url
+    url += if url.indexOf('?') is -1 then '?' else '&'
+    url += config.ill_redirect_params.replace('?','') + '&' if config.ill_redirect_params
+    url += config.sid + '=InstantILL&'
+    for k of this.f.metadata ? {}
+      v = false
+      if k is 'author'
+        if typeof this.f.metadata.author is 'string'
+          v = this.f.metadata.author
+        else if Array.isArray this.f.metadata.author
+          v = ''
+          for author in this.f.metadata.author
+            try
+              v += ', ' if v.length
+              v += if typeof author is 'string' then author else if typeof author is 'object' and author.family then (author.family + if author.given then ', ' + author.given else '') else JSON.stringify author
+      else if k in ['doi','pmid','pmc','pmcid','url','journal','title','year','issn','volume','issue','page','crossref_type','publisher','published','notes']
+        v = this.f.metadata[k]
+      url += (config[k] ? k) + '=' + encodeURIComponent(v) + '&' if v
+    notes = if this.data.usermetadata then 'The user provided some metadata. ' else ''
+    notes += 'Subscription check done, found ' + (this.f.ill.subscription.url ? (if this.f.ill.subscription.journal then 'journal' else 'nothing')) + '. ' if this.f.ill?.subscription
+    notes += 'OA availability check done, found ' + (this.f.url ? 'nothing') + '. ' if this.f.metadata?
+    url += '&' + (config.notes ? 'notes') + '=' + notes if notes
+    return url.replace '/&&/g', '&'
 
 _oab.prototype.done = (res, msg) ->
   this.loading false
-  if this.f.ill?.openurl and this.openurl isnt false
-    if this.submit_after_metadata
-      this.openurl()
-    else
-      window.location = this.f.ill.openurl
+  if ou = this.openurl()
+    window.location = ou
   else
     _L.hide '._oab_panel'
     _L.hide '._oab_done'
@@ -538,7 +557,7 @@ _oab.prototype.deposit = (e) -> # only used by shareyourpaper
           this.done 'success'
       () =>
         this.loading false
-        _L.show '#_oab_error', '<p>Sorry, we were not able to deposit this paper for you. ' + this.contact() + '</p><p><a href="#" class="_oab_restart">Try again</a></p>'
+        _L.show '#_oab_error', '<p>Sorry, we were not able to deposit this paper for you. ' + this.contact() + '</p><p><a href="#" class="_oab_restart"><b>Try again</b></a></p>'
         this.ping('shareyourpaper_couldnt_submit_deposit')
     )
 
@@ -599,35 +618,34 @@ _oab.prototype.permissions = (data) -> # only used by shareyourpaper
         _L.show '._oab_oa'
       else
         _L.show '._oab_oa_deposit'
-    else if this.f?.permissions?.permissions?.archiving_allowed or this.config.dark_deposit_off
-      if this.config.dark_deposit_off or this.f.permissions?.ricks?.application?.can_archive_conditions?.permission_required
-        # permission must be requested first
-        rm = 'mailto:' + (this.f.permissions?.ricks?.application?.can_archive_conditions?.permission_required_contact ? this.config.deposit_help ? this.cml()) + '?'
-        rm += 'cc=' + (this.config.deposit_help ? this.cml()) + '&' if this.f.permissions?.ricks?.application?.can_archive_conditions?.permission_required_contact
-        rm += 'subject=Request%20to%20self%20archive%20' + (this.f.metadata?.doi ? '') + '&body=';
-        rm += encodeURIComponent 'To whom it may concern,\n\n'
-        rm += encodeURIComponent 'I am writing to request permission to deposit the full text of my paper "' + (this.f.metadata?.title ? this.f.metadata?.doi ? 'Untitled paper') + '" '
-        rm += encodeURIComponent 'published in "' + this.f.metadata.journal + '"' if this.f.metadata?.journal
-        rm += encodeURIComponent '\n\nI would like to archive the final pdf. If that is not possible, I would like to archive the accepted manuscript. Ideally, I would like to do so immediately but will respect a reasonable embargo if requested.\n\n'
-        if this.config.repo_name
-          rm += encodeURIComponent 'I plan to deposit it into "' + this.config.repo_name + '", a not-for-profit, digital, publicly accessible repository for scholarly work created for researchers ' + (if this.config.institution_name then 'at ' + this.config.institution_name else '') + '. It helps make research available to a wider audience, get citations for the original article, and assure its long-term preservation. The deposit will include a complete citation of the published version, and a link to it.\n\n'
-        rm += encodeURIComponent 'Thank you for your attention and I look forward to hearing from you.'
-        _L.set '#_oab_reviewemail', 'href', rm
-        # or to confirm permission has been received
-        pm = 'mailto:' + (this.config.deposit_help ? this.cml()) + '?subject=Permission%20Given%20to%20Deposit%20' + (this.f.metadata?.doi ? '') + '&body='
-        pm += encodeURIComponent 'To whom it may concern,\n\nAttached is written confirmation of permission I\'ve been given to deposit, and the permitted version of my paper: '
-        pm += encodeURIComponent '"' + (this.f.metadata?.title ? this.f.metadata?.doi ? 'Untitled paper') + '" \n\nCan you please deposit it into the repository on my behalf? \n\nSincerely, '
-        _L.set '#_oab_permissionemail', 'href', pm
-        _L.hide '._oab_get_email'
-        _L.show '._oab_permission_required'
+    else if this.f?.permissions?.permissions?.archiving_allowed
+      # can be shared, depending on permissions info
+      _L.hide('#_oab_not_pdf') if this.f?.permissions?.permissions?.version_allowed is 'publisher pdf'
+      if typeof this.f?.permissions?.permissions?.licence_required is 'string' and this.f.permissions.permissions.licence_required.indexOf('other-') is 0
+        _L.html '._oab_licence', 'under the publisher terms' + refs
       else
-        # can be shared, depending on permissions info
-        _L.hide('#_oab_not_pdf') if this.f?.permissions?.permissions?.version_allowed is 'publisher pdf'
-        if typeof this.f?.permissions?.permissions?.licence_required is 'string' and this.f.permissions.permissions.licence_required.indexOf('other-') is 0
-          _L.html '._oab_licence', 'under the publisher terms' + refs
-        else
-          _L.html '._oab_licence', this.f?.permissions?.permissions?.licence_required ? 'CC-BY'
-        _L.show '._oab_archivable'
+        _L.html '._oab_licence', this.f?.permissions?.permissions?.licence_required ? 'CC-BY'
+      _L.show '._oab_archivable'
+    else if this.config.dark_deposit_off
+      # permission must be requested first
+      rm = 'mailto:' + (this.f.permissions?.ricks?.application?.can_archive_conditions?.permission_required_contact ? this.config.deposit_help ? this.cml()) + '?'
+      rm += 'cc=' + (this.config.deposit_help ? this.cml()) + '&' if this.f.permissions?.ricks?.application?.can_archive_conditions?.permission_required_contact
+      rm += 'subject=Request%20to%20self%20archive%20' + (this.f.metadata?.doi ? '') + '&body=';
+      rm += encodeURIComponent 'To whom it may concern,\n\n'
+      rm += encodeURIComponent 'I am writing to request permission to deposit the full text of my paper "' + (this.f.metadata?.title ? this.f.metadata?.doi ? 'Untitled paper') + '" '
+      rm += encodeURIComponent 'published in "' + this.f.metadata.journal + '"' if this.f.metadata?.journal
+      rm += encodeURIComponent '\n\nI would like to archive the final pdf. If that is not possible, I would like to archive the accepted manuscript. Ideally, I would like to do so immediately but will respect a reasonable embargo if requested.\n\n'
+      if this.config.repo_name
+        rm += encodeURIComponent 'I plan to deposit it into "' + this.config.repo_name + '", a not-for-profit, digital, publicly accessible repository for scholarly work created for researchers ' + (if this.config.institution_name then 'at ' + this.config.institution_name else '') + '. It helps make research available to a wider audience, get citations for the original article, and assure its long-term preservation. The deposit will include a complete citation of the published version, and a link to it.\n\n'
+      rm += encodeURIComponent 'Thank you for your attention and I look forward to hearing from you.'
+      _L.set '#_oab_reviewemail', 'href', rm
+      # or to confirm permission has been received
+      pm = 'mailto:' + (this.config.deposit_help ? this.cml()) + '?subject=Permission%20Given%20to%20Deposit%20' + (this.f.metadata?.doi ? '') + '&body='
+      pm += encodeURIComponent 'To whom it may concern,\n\nAttached is written confirmation of permission I\'ve been given to deposit, and the permitted version of my paper: '
+      pm += encodeURIComponent '"' + (this.f.metadata?.title ? this.f.metadata?.doi ? 'Untitled paper') + '" \n\nCan you please deposit it into the repository on my behalf? \n\nSincerely, '
+      _L.set '#_oab_permissionemail', 'href', pm
+      _L.hide '._oab_get_email'
+      _L.show '._oab_permission_required'
     else
       # can't be directly shared but can be passed to library for dark deposit
       _L.hide '#_oab_file'
@@ -659,13 +677,16 @@ _oab.prototype.findings = (data) -> # only used by instantill
     data.live = this.config.live if this.config.live
     if this.f.ill?.subscription?.url
       data.resolved = 'subscription'
+      data.url = this.f.ill.subscription.url
       _L.post(this.api+'/ill', data, (() => window.location = this.f.ill.subscription.url), (() => window.location = this.f.ill.subscription.url))
     else if this.f.url
       data.resolved = 'open'
+      data.url = this.f.url
       _L.post(this.api+'/ill', data, (() => window.location = this.f.url), (() => window.location = this.f.url))
-    else if this.f.ill?.openurl
+    else if ou = this.openurl()
       data.resolved = 'library'
-      _L.post(this.api+'/ill', data, (() => window.location = this.f.ill.openurl), (() => window.location = this.f.ill.openurl))
+      data.url = ou
+      _L.post(this.api+'/ill', data, (() => window.location = this.openurl()), (() => window.location = this.openurl()))
 
   _L.show '#_oab_findings'
   if this.f.ill?.error
@@ -694,15 +715,15 @@ _oab.prototype.findings = (data) -> # only used by instantill
       hasoa = true
       _L.set '#_oab_url', 'href', this.f.url
       _L.show '#_oab_oa_available'
-    if this.f.ill and this.ill isnt false and not ((this.config.noillifsub and hassub) or (this.config.noillifoa and hasoa))
+    if this.f.ill? and not ((this.config.noillifsub and hassub) or (this.config.noillifoa and hasoa))
       _L.html '#_oab_cost_time', '<p>It ' + (if this.config.cost then 'costs ' + this.config.cost else 'is free to you,') + ' and we\'ll usually email the link within ' + (this.config.time ? '24 hours') + '.<br></p>'
       if not this.data.email
-        if this.f.ill.openurl and this.openurl isnt false
+        if this.openurl()
           _L.hide '#_oab_collect_email'
         else
-          if this.f.ill.terms
+          if this.config.terms
             _L.show '#_oab_terms_note'
-            _L.set '#_oab_terms_link', 'href', this.f.ill.terms
+            _L.set '#_oab_terms_link', 'href', this.config.terms
           else
             _L.hide '#_oab_terms_note'
       _L.show '#_oab_ask_library'
@@ -841,16 +862,16 @@ _oab.instantill_template = '
 
 <div class="_oab_panel" id="_oab_findings" style="display:none;">
   <div id="_oab_citation"><h2>A title</h2><p><b>And citation string, OR demo title OR Unknown <span class="_oab_paper">article</span> and refer to library</b></p></div>
-  <p><a class="_oab_wrong" href="#">This is not the <span class="_oab_paper">article</span> I searched</a></p>
+  <p><a class="_oab_wrong" href="#"><b>This is not the <span class="_oab_paper">article</span> I searched</b></a></p>
   <div class="_oab_section" id="_oab_sub_available">
     <h3>We have an online copy instantly available</h3>
     <p>You should be able to access it on the publisher\'s website.</p>
-    <p><a target="_blank" id="_oab_sub_url" href="#">Open <span class="_oab_paper">article</span> in a new tab</a></p>
+    <p><a target="_blank" id="_oab_sub_url" href="#"><b>Open <span class="_oab_paper">article</span> in a new tab</b></a></p>
   </div>
   <div class="_oab_section" id="_oab_oa_available">
     <h3><br>There is a free, instantly accessible copy online</h3>
     <p>It may not be the final published version and may lack graphs or figures making it unsuitable for citations.</p>
-    <p><a id="_oab_url" target="_blank" href="#">Open <span class="_oab_paper">article</span> in a new tab</a></p>
+    <p><a id="_oab_url" target="_blank" href="#"><b>Open <span class="_oab_paper">article</span> in a new tab</b></a></p>
   </div>
   <div class="_oab_section" id="_oab_ask_library">
     <h3><br>Ask the library to digitally send you the published full-text via Interlibrary Loan</h3>
@@ -873,7 +894,7 @@ _oab.instantill_template = '
   <p><span class="_oab_paper">Article</span> DOI or URL<br><input class="_oab_form" id="_oab_doi" type="text" placeholder="e.g 10.1126/scitranslmed.3008973"></p>
   <p><a href="#" class="_oab_find _oab_button _oab_loading _oab_continue" style="min-width:150px;">Continue</a></p>
   <p>
-    <a href="#" class="_oab_restart">Try again</a>
+    <a href="#" class="_oab_restart"><b>Try again</b></a>
     <span id="_oab_advancedform" style="display:none;"></span>
   </p>
 </div>
@@ -882,9 +903,8 @@ _oab.instantill_template = '
   <div id="_oab_done_header">
     <h2>Thanks! Your request has been received.</h2>
     <p>And confirmation code and tell we will email soon - OR sorry we could not create an ILL, and refer back to library if possible.</p>
-    <p>"Do another" link below would change to "Try again" in event of sorry.</p>
   </div>
-  <p><a href="#" class="_oab_restart" id="_oab_done_restart">Do another</a></p>
+  <p><a href="#" class="_oab_restart _oab_button" id="_oab_done_restart">Do another</a></p>
 </div>
 <div id="_oab_error"></div>
 <div id="_oab_pilot"></div>'
@@ -898,7 +918,7 @@ _oab.shareyourpaper_template = '
   <p>We\'ll gather information about your paper and find the easiest way to share it.</p>
   <p><input class="_oab_form" type="text" id="_oab_input" placeholder="e.g. 10.1126/scitranslmed.3001922" aria-label="Enter a search term" style="box-shadow:none;"></input></p>
   <p><a class="_oab_find _oab_button _oab_loading" href="#" id="_oab_find" aria-label="Search" style="min-width:150px;">Next</a></p>
-  <p><a id="_oab_nodoi" href="mailto:help@openaccessbutton.org?subject=Help%20depositing%20my%20paper&body=Hi%2C%0D%0A%0D%0AI\'d%20like%20to%20deposit%3A%0D%0A%0D%0A%3C%3CPlease%20insert%20a%20full%20citation%3E%3E%0D%0A%0D%0ACan%20you%20please%20assist%20me%3F%0D%0A%0D%0AYours%20sincerely%2C">My paper doesn\'t have a DOI</a></p>
+  <p><a id="_oab_nodoi" href="mailto:help@openaccessbutton.org?subject=Help%20depositing%20my%20paper&body=Hi%2C%0D%0A%0D%0AI\'d%20like%20to%20deposit%3A%0D%0A%0D%0A%3C%3CPlease%20insert%20a%20full%20citation%3E%3E%0D%0A%0D%0ACan%20you%20please%20assist%20me%3F%0D%0A%0D%0AYours%20sincerely%2C"><b>My paper doesn\'t have a DOI</b></a></p>
 </div>
 
 <div class="_oab_panel" id="_oab_permissions" style="display:none;">
@@ -906,7 +926,7 @@ _oab.shareyourpaper_template = '
     <h2>Your paper is already freely available!</h2>
     <p>Great news, you\'re already getting the benefits of sharing your work! Your publisher or co-author have already shared it.</p>
     <p><a target="_blank" href="#" class="_oab_oa_url _oab_button" style="min-width:150px;">See free version</a></p>
-    <p><a href="#" class="_oab_restart">Do another</a></p>
+    <p><a href="#" class="_oab_restart"><b>Do another</b></a></p>
   </div>
 
   <div class="_oab_section _oab_permission_required">
@@ -914,7 +934,7 @@ _oab.shareyourpaper_template = '
     <p>Unlike most, <span class="_oab_journal">the journal</span> requires that you ask them before you share your paper freely. 
     Asking only takes a moment as we find out who to contact and have drafted an email for you.</p>
     <p><a target="_blank" id="_oab_reviewemail" href="#" class="_oab_button" style="min-width:150px;">Review Email</a></p>
-    <p><a target="_blank" id="_oab_permissionemail" href="#">I\'ve got permission now!</a></p>
+    <p><a target="_blank" id="_oab_permissionemail" href="#"><b>I\'ve got permission now!</b></a></p>
   </div>  
 
   <div class="_oab_section _oab_oa_deposit">
@@ -966,7 +986,7 @@ _oab.shareyourpaper_template = '
     <p>You\'re nearly done. It looks like what you uploaded is a publisher\'s PDF which your journal prohibits legally sharing.<!-- It can only be shared on a limited basis.--><br><br>
     We just need the version accepted by the journal to make your work available to everyone.</p>
     <p><a href="#" class="_oab_reload _oab_button" style="min-width:150px;">Try uploading again</a></p>
-    <p><a href="#" class="_oab_confirm">My upload was an accepted manuscript</a></p>
+    <p><a href="#" class="_oab_confirm"><b>My upload was an accepted manuscript</b></a></p>
   </div>
 
   <div class="_oab_done" id="_oab_check">
@@ -1001,7 +1021,7 @@ _oab.shareyourpaper_template = '
     <p>All that\'s left to do is wait. Once the journal gives you permission to share, come back and we\'ll help you finish the job.</p>
   </div>
   
-  <p><a href="#" class="_oab_restart" id="_oab_done_restart">Do another</a></p>
+  <p><a href="#" class="_oab_restart _oab_button" id="_oab_done_restart">Do another</a></p>
 </div>
 <div id="_oab_error"></div>
 <div id="_oab_pilot"></div>'
@@ -1046,12 +1066,12 @@ _oab.prototype.configure = (key, val, build, demo) ->
   if this.bootstrap isnt false and this.config.bootstrap is true
     this.bootstrap = false
     build = true
-  if not this.bootstrap? and not this.css
+  if this.bootstrap isnt false
     # if bootstrap css is already present on the page, and bootstrap value is not set,
     # and css has not been set either, then use bootstrap
-    _L.append 'body', '<div class="btn" id="_oab_bootstrap_test" style="display:none;"></div>'
-    this.bootstrap = _L.css('#_oab_bootstrap_test', 'height') not in ['','0px']
-    #_L.remove '_#oab_bootstrap_test'
+    _L.append 'body', '<div class="btn" id="_oab_bootstrap_test" style="visibility:hidden;"></div>'
+    this.bootstrap = _L.gebi('#_oab_bootstrap_test').offsetHeight isnt 0
+    _L.remove '_#oab_bootstrap_test'
   if build isnt false
     this.element ?= '#' + this.plugin
     _L.remove '#_oab_css'
@@ -1062,7 +1082,7 @@ _oab.prototype.configure = (key, val, build, demo) ->
         this.template = this.template.replace(/ btn btn-primary/g,'').replace(/ form-control/g,'')
         _L.remove(this.element) if _L.gebi this.element
       if typeof this.css is 'string' and this.css isnt 'false'
-        this.css = '<style id="_oab_css">' + this.css + '</style>' if not this.css.startsWith '<style>'
+        this.css = '<div id="_oab_css"><style>' + this.css + '</style></div>' if not this.css.startsWith '<style>'
         _L.append this.element, this.css
     if not _L.gebi '_oab_inputs'
       _L.append this.element, this.template

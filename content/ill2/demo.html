@@ -248,7 +248,7 @@ var loaded = function() {
   $('#faketable').hide();
   $('#instantill').show();
 }
-_oab = instantill({uid:(api.indexOf('dev.') !== -1 ? 'qZooaHWRz9NLFNcgR' : 'eZwJ83xp3oZDaec86'), api:api, css: false, loaded: loaded, openurl: 'demo', pushstate: false});
+_oab = instantill({uid:(api.indexOf('dev.') !== -1 ? 'qZooaHWRz9NLFNcgR' : 'eZwJ83xp3oZDaec86'), api:api, css: false, loaded: loaded, nosubmit: true, local: false, pushstate: false});
 
 jQuery(document).ready(function() {
   var fakeill = function(e) {
