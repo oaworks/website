@@ -128,7 +128,7 @@
         <p><b>
           4/6. InstantILL also integrates into your workflows. Let’s try to check the link resolver
         </b></p>
-        <p><a class="btn btn-hollow-green btn-block view preview pinger" id="instantill_demo_LR"   href="#part5" val="10.1126/science.196.4287.293">Find it</a></p>
+        <p><a class="btn btn-hollow-green btn-block view preview pinger removefaketable" id="instantill_demo_LR"   href="#part5" val="10.1126/science.196.4287.293">Find it</a></p>
       </div>
 
       <div id="part5" class="section greenery">
@@ -248,7 +248,7 @@ var loaded = function() {
   $('#faketable').hide();
   $('#instantill').show();
 }
-_oab = instantill({uid:(api.indexOf('dev.') !== -1 ? 'qZooaHWRz9NLFNcgR' : 'eZwJ83xp3oZDaec86'), api:api, css: false, loaded: loaded, nosubmit: true, local: false, pushstate: false});
+_oab = instantill({uid:(api.indexOf('dev.') !== -1 ? 'qZooaHWRz9NLFNcgR' : 'eZwJ83xp3oZDaec86'), api:api, css: false, loaded: loaded, demo: true, local: false, pushstate: false});
 
 jQuery(document).ready(function() {
   var fakeill = function(e) {
@@ -285,6 +285,12 @@ jQuery(document).ready(function() {
     $('#instantill').after(table);
   }
   $('body').on('click','._oab_submit',fakeill);
+
+  $('body').on('click', '.removefaketable', function(e) {
+    $('#faketable').hide();
+    $('#instantill').show();
+  });
+
 });
 </script>
 <script src="/static/embed/oab_embed_ui.js"></script>

@@ -94,7 +94,7 @@
           Let us show you Shareyourpaper.org’s main features for libraries!
         </b></p>
 
-        <p><a class="btn btn-demo-blue view preview" href="#general">Try it</a></p>
+        <p><a class="btn btn-demo-blue view preview" val="10.1234/oab-syp-aam" href="#general">Try it</a></p>
       </div>
 
       <div id="general" class="section blueery">
@@ -233,7 +233,7 @@ var loaded = function(xhr) {
   $('#shareyourpaper').show();
   var js = false;
   try { js = JSON.parse(xhr.response); } catch(err) {}
-  if (js !== false && js.zenodo && js.zenodo.url && js.zenodo.url.indexOf('/DEMO') !== -1) {
+  if (js !== false && js.zenodo !== undefined && js.zenodo.url.indexOf('/DEMO') !== -1) {
     if (window.location.hash && window.location.hash.indexOf('general') !== -1) {
       view('#success');
     }
@@ -280,7 +280,7 @@ _oab = shareyourpaper({uid:(api.indexOf('dev.') !== -1 ? 'qZooaHWRz9NLFNcgR' : '
 // the one starting qz is the dev id, and it will be used any time the domain has dev. in it. The second one beginning eZ is the live id
 
 $('body').on('click', '#fakedeposit', function(e) {
-  _oab.demo(e, 'deposit');
+  _oab.show(e, 'deposit');
   view('#wrong');
 });
 

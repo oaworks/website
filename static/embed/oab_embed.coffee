@@ -66,7 +66,7 @@ _L.checked = (els) ->
 _L.html = (els, html, append, show) ->
   rs = []
   _L.each els, (el) -> 
-    if html
+    if typeof html is 'string'
       el.innerHTML = (if append then el.innerHTML else '') + html
     rs.push el.innerHTML
     _L.show(el) if show
@@ -186,7 +186,7 @@ _L.dot = (obj, key, value, del) ->
 
 
 _oab = (opts) ->
-  opts ?= {} # can pass nosubmit true here as well, to control demo output, stopping submit from POSTing
+  opts ?= {} # can pass demo true here as well, to control demo output, stopping submit from POSTing
   this[o] = opts[o] for o of opts
   this.uid ?= 'anonymous'
   this.api ?= if window.location.host.indexOf('dev.openaccessbutton.org') isnt -1 then 'https://dev.api.cottagelabs.com/service/oab' else 'https://api.openaccessbutton.org'
@@ -205,9 +205,6 @@ _oab = (opts) ->
   this.file = false # used by syp to store the file for sending to backend
 
   _L.loaded = this.loaded if this.loaded? # if this is set to a function, it will be passed to _leviathan loaded, which gets run after every ajax call completes
-
-  _L.append('body', '<div id="' + this.element + '"></div>') if not _L.gebi this.element
-  _L.html this.element, ''
 
   if window.location.search.indexOf('local=') isnt -1
     this.local = false
@@ -263,12 +260,15 @@ _oab.prototype.loading = (load) ->
         el.innerHTML = 'Deposit'
       else if _L.has el, '_oab_find'
         el.innerHTML = 'Next'
+      else if _L.has el, '_oab_confirm'
+        el.innerHTML = '<b>My upload was an accepted manuscript</b>'
       else
         el.innerHTML = 'Find ' + if this.config.saypaper then 'paper' else 'article' # this would only happen on instantill, as "Next" above is the default for syp
   else
     _L.html '._oab_find', 'Searching .'
     _L.html '._oab_submit', 'Submitting .'
     _L.html '._oab_deposit', 'Depositing .'
+    _L.html '._oab_confirm', 'Depositing .'
     this._loading = setInterval (() ->
       for button in _L.gebc '._oab_loading'
         dots = button.innerHTML.split '.'
@@ -311,7 +311,7 @@ _oab.prototype.restart = (e, val) ->
   else
     _L.set '#_oab_input', ''
     
-_oab.prototype.demo = (e, val, panel, section) ->
+_oab.prototype.show = (e, val, panel, section) ->
   try e.preventDefault()
   # useful for demo/test, just does a restart but uses the config demo val if one is present
   if val
@@ -383,7 +383,7 @@ _oab.prototype.submit = (e) -> # only used by instantill
     ou = this.openurl()
     if ou and not data.email
       data.forwarded = true
-    if this.nosubmit is true
+    if this.demo is true
       console.log 'Not POSTing ILL and not forwarding to ' + ou + ' for demo purposes'
       console.log data
     else
@@ -480,7 +480,10 @@ _oab.prototype.done = (res, msg) ->
     _L.hide '._oab_done'
     if typeof res is 'string' and _L.gebi '_oab_' + res
       _L.show '#_oab_' + res # various done states for shareyourpaper
-      _L.hide('#_oab_done_restart') if res is 'confirm'
+      if res is 'confirm'
+        _L.hide '#_oab_done_restart'
+      else
+        _L.show '#_oab_done_restart'
     else if res
       _L.html '#_oab_done_header', '<h3>Thanks! Your request has been received</h3><p>Your confirmation code is: ' + res + ', this will not be emailed to you. The ' + (if this.config.saypaper then 'paper' else 'article') + ' will be sent to ' + this.data.email + ' as soon as possible.</p>'
     else # only instantill falls through to here
@@ -495,15 +498,15 @@ _oab.prototype.deposit = (e) -> # only used by shareyourpaper
   try e.preventDefault()
   if not this.data.email and _L.gebi '#_oab_email'
     this.validate()
-  else if fl = _L.gebi '_oab_file'
-    if fl.files? and fl.files.length
+  else
+    fl = _L.gebi '#_oab_file'
+    if fl? and fl.files? and fl.files.length
       this.file = new FormData()
       this.file.append 'file', fl.files[0]
-    else if not this.f?.url? and not this.f?.permissions?.permissions?.archiving_allowed and not this.config.dark_deposit_off
+    else if this.f?.url? or this.f?.permissions?.permissions?.archiving_allowed
       _L.show '#_oab_error', '<p>Whoops, you need to give us a file! Check it\'s uploaded.</p>'
-      _L.css fl, 'border-color','#f04717'
+      _L.css '#_oab_file', 'border-color','#f04717'
       return
-  
     this.loading()
     # this could be just an email for a dark deposit, or a file for actual deposit
     # if the file is acceptable and can go in zenodo then we don't bother getting the email address
@@ -692,7 +695,7 @@ _oab.prototype.findings = (data) -> # only used by instantill
   if this.f.ill?.error
     _L.show '#_oab_error', '<p>Please note, we encountered errors querying the following subscription services: ' + this.f.ill.error.join(', ') + '</p>'
   if this.f.metadata?.title? or this.f.ill?.subscription?.demo
-    citation = '<h2>' + (if this.f.ill?.subscription?.demo then '<Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL' else this.f.metadata.title) + '</h2>'
+    citation = '<h2>' + (if this.f.ill?.subscription?.demo then 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL' else this.f.metadata.title) + '</h2>'
     if this.f.metadata.year or this.f.metadata.journal or this.f.metadata.volume or this.f.metadata.issue
       citation += '<p><i>'
       citation += (this.f.metadata.year ? '') + (if this.f.metadata.journal or this.f.metadata.volume or this.f.metadata.issue then ', ' else '') if this.f.metadata.year
@@ -783,7 +786,14 @@ _oab.prototype.find = (e) ->
       delete this.data.title
       delete this.data.url
       delete this.data.id
-    _L.show '#_oab_error', '<p><span>&#10060;</span> Sorry please provide ' + if this.plugin is 'instantill' then 'the full DOI, title, citation, PMID or PMC ID.</p>' else 'a valid DOI.</p>'
+      _L.show '#_oab_error', '<p>Please provide a DOI. If you\'re not sure what a DOI is, go <a href="https://library.uic.edu/help/article/1966/what-is-a-doi-and-how-do-i-use-them-in-citations" target="_blank">here</a>.</p>'
+    else
+      _L.show '#_oab_error', '<p><span>&#10060;</span> Sorry please provide the full DOI, title, citation, PMID or PMC ID.</p>'
+  else if this.data.doi and this.plugin is 'shareyourpaper' and (this.data.doi.indexOf('10') isnt 0 or this.data.doi.indexOf('/') is -1 or this.data.doi.indexOf('.') is -1 or this.data.doi.length < 8)
+    delete this.data.doi
+    _L.set '#_oab_input', ''
+    _L.gebi('_oab_input').focus()
+    _L.show '#_oab_error', '<p>Please provide a DOI. If you\'re not sure what a DOI is, go <a href="https://library.uic.edu/help/article/1966/what-is-a-doi-and-how-do-i-use-them-in-citations" target="_blank">here</a>.</p>'
   else
     this.state()
     this.loading()
@@ -976,7 +986,7 @@ _oab.shareyourpaper_template = '
   </div>
   
   <div class="_oab_section _oab_oa_deposit _oab_archivable _oab_dark_deposit">
-    <p><a target="_blank" href="#" class="_oab_deposit _oab_button _oab_loading" style="min-width:150px;">Deposit</a></p>
+    <p><a href="#" class="_oab_deposit _oab_button _oab_loading" style="min-width:150px;">Deposit</a></p>
   </div>
 </div>
 
@@ -986,7 +996,7 @@ _oab.shareyourpaper_template = '
     <p>You\'re nearly done. It looks like what you uploaded is a publisher\'s PDF which your journal prohibits legally sharing.<!-- It can only be shared on a limited basis.--><br><br>
     We just need the version accepted by the journal to make your work available to everyone.</p>
     <p><a href="#" class="_oab_reload _oab_button" style="min-width:150px;">Try uploading again</a></p>
-    <p><a href="#" class="_oab_confirm"><b>My upload was an accepted manuscript</b></a></p>
+    <p><a href="#" class="_oab_confirm _oab_loading"><b>My upload was an accepted manuscript</b></a></p>
   </div>
 
   <div class="_oab_done" id="_oab_check">
@@ -1040,12 +1050,14 @@ _oab.prototype.configure = (key, val, build, demo) ->
       if this.local isnt false # can be disabled if desired, by setting local to false at setup or in url param
         lc = JSON.parse localStorage.getItem '_oab_config_' + this.plugin
         if typeof lc is 'object' and lc isnt null
-          this.config = lc 
           console.log 'Config retrieved from local storage'
+          this.config = lc 
     if this.uid and this.uid isnt 'anonymous' and JSON.stringify(this.config) is '{}' # should a remote call always be made to check for superseded config if one is not provided at startup?
       _L.jx this.api + '/' + (if this.plugin is 'instantill' then 'ill' else 'deposit') + '/config?uid='+this.uid, undefined, (res) => 
-        this.configure res
         console.log 'Config retrieved from API'
+        this.configure res
+      if this.local is false
+        return # stop here, once the retrieve from remote works, the rest will run
   if typeof key is 'object'
     this.uid = val if typeof val is 'string'
     for d of key
@@ -1073,19 +1085,19 @@ _oab.prototype.configure = (key, val, build, demo) ->
     this.bootstrap = _L.gebi('#_oab_bootstrap_test').offsetHeight isnt 0
     _L.remove '_#oab_bootstrap_test'
   if build isnt false
+    console.log 'Building embed'
     this.element ?= '#' + this.plugin
-    _L.remove '#_oab_css'
+    _L.append('body', '<div id="' + this.element + '"></div>') if not _L.gebi this.element
+    _L.html this.element, ''
     if this.bootstrap is true
       this.template = this.template.replace(/_oab_button/g,'_oab_button btn btn-primary').replace(/_oab_form/g,'_oab_form form-control')
     else
       if this.bootstrap is false and this.template.indexOf('btn-primary') isnt -1
         this.template = this.template.replace(/ btn btn-primary/g,'').replace(/ form-control/g,'')
-        _L.remove(this.element) if _L.gebi this.element
       if typeof this.css is 'string' and this.css isnt 'false'
         this.css = '<div id="_oab_css"><style>' + this.css + '</style></div>' if not this.css.startsWith '<style>'
         _L.append this.element, this.css
-    if not _L.gebi '_oab_inputs'
-      _L.append this.element, this.template
+    _L.append this.element, this.template
     _L.each '._oab_paper', (el) =>
       cs = el.innerHTML
       if this.config.saypaper
@@ -1159,7 +1171,7 @@ _oab.prototype.configure = (key, val, build, demo) ->
   
   if el = _L.gebi '_oab_config'
     el.innerHTML = JSON.stringify wc, '', 2
-  this.demo(undefined, demo) if demo
+  this.show(undefined, demo) if demo
   return wc
 
 @shareyourpaper = (opts) -> opts ?= {}; opts.plugin = 'shareyourpaper'; return new _oab(opts);
