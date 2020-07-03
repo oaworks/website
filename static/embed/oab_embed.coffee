@@ -20,7 +20,7 @@ _L.each = (elems, key, val) ->
   if elems?
     for elem in elems
       if elem?
-        if typeof key is 'function' then key(elem) else _L.set elem key, val
+        if typeof key is 'function' then key(elem) else _L.set elem, key, val
 _L.listen = (action, els, fn) ->
   _L.each els, (el) -> 
     if action is 'enter'
@@ -311,20 +311,6 @@ _oab.prototype.restart = (e, val) ->
   else
     _L.set '#_oab_input', ''
     
-_oab.prototype.show = (e, val, panel, section) ->
-  try e.preventDefault()
-  # useful for demo/test, just does a restart but uses the config demo val if one is present
-  if val
-    if val is 'deposit'
-      # trigger a fake deposit for syp demo
-      this.f = {metadata: {title: 'example', journal: 'example', doi: '10.1234/oab-syp-version'}}
-      this.deposit()
-    else
-      val = this.config.val if typeof val isnt 'string' or (this.plugin is 'instantill' and typeof this.config.val is 'string')
-      this.restart undefined, val
-  this.panel(panel) if panel?
-  this.section(section) if section?
-
 _oab.prototype.ping = (what) ->
   try
     if what.indexOf(this.plugin) is -1
@@ -490,7 +476,7 @@ _oab.prototype.done = (res, msg) ->
       _L.html '#_oab_done_header', '<h3>Sorry, we were not able to create an Interlibrary Loan request for you.</h3><p>' + this.contact() + '</p>'
       _L.html '#_oab_done_restart', 'Try again'
       this.ping msg ? 'instantill_couldnt_submit_ill'
-      setTimeout this.restart, 6000
+      setTimeout (() => this.restart()), 6000
     _L.show '#_oab_done'
   this.after() if typeof this.after is 'function'
 
@@ -734,7 +720,7 @@ _oab.prototype.findings = (data) -> # only used by instantill
   else if this.data.usermetadata
     _L.html '#_oab_citation', '<h3>Unknown ' + (if this.config.saypaper then 'paper' else 'article') + '</h3><p>Sorry, we can\'t find this ' + (if this.config.saypaper then 'paper' else 'article') + ' or sufficient metadata. ' + this.contact() + '</p>'
     this.ping 'shareyourpaper_unknown_article'
-    setTimeout this.restart, 6000
+    setTimeout (() => this.restart()), 6000
   else
     this.metadata()
 
@@ -1031,7 +1017,7 @@ _oab.shareyourpaper_template = '
     <p>All that\'s left to do is wait. Once the journal gives you permission to share, come back and we\'ll help you finish the job.</p>
   </div>
   
-  <p><a href="#" class="_oab_restart _oab_button" id="_oab_done_restart">Do another</a></p>
+  <div><p><a href="#" class="_oab_restart _oab_button" id="_oab_done_restart">Do another</a></p></div>
 </div>
 <div id="_oab_error"></div>
 <div id="_oab_pilot"></div>'
@@ -1039,7 +1025,8 @@ _oab.shareyourpaper_template = '
 # can pass in a key/value pair, or key can be a config object, in which case val can optionally be a user ID string, 
 # or key can be a user ID string and val must be empty, or key and val can both be empty and config will attempt 
 # to be retrieved from setup, or localstorage and/or from the API if a user ID is available from setup
-_oab.prototype.configure = (key, val, build, demo) ->
+_oab.prototype.configure = (key, val, build, preview) ->
+  console.log preview
   if typeof key is 'string' and not val? and key.startsWith '{'
     try key = JSON.parse key
   if typeof key is 'string' and not val? and (not this.uid? or this.uid is 'anonymous')
@@ -1078,25 +1065,24 @@ _oab.prototype.configure = (key, val, build, demo) ->
   if this.bootstrap isnt false and this.config.bootstrap is true
     this.bootstrap = false
     build = true
-  if this.bootstrap isnt false
-    # if bootstrap css is already present on the page, and bootstrap value is not set,
-    # and css has not been set either, then use bootstrap
-    _L.append 'body', '<div class="btn" id="_oab_bootstrap_test" style="visibility:hidden;"></div>'
-    this.bootstrap = _L.gebi('#_oab_bootstrap_test').offsetHeight isnt 0
-    _L.remove '_#oab_bootstrap_test'
   if build isnt false
     console.log 'Building embed'
     this.element ?= '#' + this.plugin
     _L.append('body', '<div id="' + this.element + '"></div>') if not _L.gebi this.element
     _L.html this.element, ''
+    if not this.bootstrap?
+      # if bootstrap css is already present on the page, and bootstrap value is not set,
+      # and css has not been set either, then use bootstrap
+      _L.append this.element, '<div class="btn" id="_oab_bootstrap_test" style="visibility:hidden;"></div>'
+      this.bootstrap = _L.gebi('#_oab_bootstrap_test').offsetHeight isnt 0
+      _L.remove '_#oab_bootstrap_test'
     if this.bootstrap is true
       this.template = this.template.replace(/_oab_button/g,'_oab_button btn btn-primary').replace(/_oab_form/g,'_oab_form form-control')
-    else
-      if this.bootstrap is false and this.template.indexOf('btn-primary') isnt -1
-        this.template = this.template.replace(/ btn btn-primary/g,'').replace(/ form-control/g,'')
-      if typeof this.css is 'string' and this.css isnt 'false'
-        this.css = '<div id="_oab_css"><style>' + this.css + '</style></div>' if not this.css.startsWith '<style>'
-        _L.append this.element, this.css
+    else if this.template.indexOf('btn-primary') isnt -1
+      this.template = this.template.replace(/ btn btn-primary/g,'').replace(/ form-control/g,'')
+    if typeof this.css is 'string' and this.css isnt 'false' and this.bootstrap isnt true
+      this.css = '<div id="_oab_css"><style>' + this.css + '</style></div>' if not this.css.startsWith '<style>'
+      _L.append this.element, this.css
     _L.append this.element, this.template
     _L.each '._oab_paper', (el) =>
       cs = el.innerHTML
@@ -1122,8 +1108,8 @@ _oab.prototype.configure = (key, val, build, demo) ->
         el.setAttribute 'href', el.getAttribute('href').replace('help@openaccessbutton.org', this.cml())
       if not this.config.not_a_library
         _L.html '._oab_library', 'We have'
+      else
         _L.html '#_oab_lib_info', 'Share your paper with help from the library in ' + (this.config.repo_name ? 'ScholarWorks') + '. Legally, for free, in minutes. '
-
     else if this.plugin is 'instantill'
       if this.config.book or this.config.other
         boro = '<p>Need '
@@ -1132,6 +1118,8 @@ _oab.prototype.configure = (key, val, build, demo) ->
         _L.html '#_oab_book_or_other', boro + '?</p>'
       else
         _L.html '#_oab_book_or_other', ''
+      if this.config.intropara # if this is true then there should be no intro paragraph showing
+        _L.hide '#_oab_intro'
       if this.config.advancedform or this.config.viewaccount or this.config.illinfo
         aai = '<p>Or '
         if this.config.advancedform
@@ -1171,7 +1159,16 @@ _oab.prototype.configure = (key, val, build, demo) ->
   
   if el = _L.gebi '_oab_config'
     el.innerHTML = JSON.stringify wc, '', 2
-  this.show(undefined, demo) if demo
+  if preview
+    preview = this.config.val if typeof preview isnt 'string' or (typeof this.config.val is 'string' and this.config.val.length)
+    this.data = {}
+    this.f = {}
+    this.loading false
+    this.file = false
+    _L.hide '._oab_panel'
+    _L.show '#_oab_inputs'
+    _L.set '#_oab_input', preview
+    setTimeout (() => this.find()), 1
   return wc
 
 @shareyourpaper = (opts) -> opts ?= {}; opts.plugin = 'shareyourpaper'; return new _oab(opts);

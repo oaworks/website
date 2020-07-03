@@ -89,76 +89,81 @@ $('body').on('click', '.view', view);
 $(window).on('popstate', view);
 view();
 
-var configure = function(uc) {
-  for (var k in uc) {
-    if ((k === 'pilot' || k === 'live') && uc[k] !== '$DELETE') {
-      $('#'+k).prop('checked', uc[k]);
-    } else if (typeof uc[k] === 'boolean') {
-      $('#'+k).prop('checked', uc[k] === true);
-    } else if (k === 'subscription') {
-      if (typeof uc.subscription === 'string') uc.subscription = uc.subscription.split(',');
-      for ( var s in uc.subscription) {
-        if (parseInt(s) !== 0) addsubscription();
-        if (typeof uc.subscription[s] === 'object') {
-          var url = uc.subscription[s].url;
-          var type = uc.subscription[s].type;
-        } else {
-          url = uc.subscription[s];
-          try {
-            type = uc.subscription_type[s];
-          } catch(err) {
-            type = 'unknown';
+var settings = function(uc) {
+  if (typeof uc === 'object') {
+    for (var k in uc) {
+      if ((k === 'pilot' || k === 'live') && uc[k] !== '$DELETE') {
+        $('#'+k).prop('checked', uc[k]);
+      } else if (typeof uc[k] === 'boolean') {
+        $('#'+k).prop('checked', uc[k] === true);
+      } else if (k === 'subscription') {
+        if (typeof uc.subscription === 'string') uc.subscription = uc.subscription.split(',');
+        for ( var s in uc.subscription) {
+          if (parseInt(s) !== 0) addsubscription();
+          if (typeof uc.subscription[s] === 'object') {
+            var url = uc.subscription[s].url;
+            var type = uc.subscription[s].type;
+          } else {
+            url = uc.subscription[s];
+            try {
+              type = uc.subscription_type[s];
+            } catch(err) {
+              type = 'unknown';
+            }
           }
+          $('.subscription').last().val(url);
+          $('.subscription_type').last().val(type);
         }
-        $('.subscription').last().val(url);
-        $('.subscription_type').last().val(type);
+      } else if (k !== 'subscription_type' && uc[k]) {
+        $('#'+k).val(uc[k]);
       }
-    } else if (k !== 'subscription_type' && uc[k]) {
-      $('#'+k).val(uc[k]);
     }
   }
 };
-configure(_oab.config);
+settings(_oab.config);
 
 var save = function(e, preview) {
   try { e.preventDefault(); } catch (err) {}
   var data = {};
   if (_oab.config && _oab.config.community) data.community = _oab.config.community; // deal with multiple community id annoyances that we should not have
   $('.setting').each(function(i, obj) {
-    if ( $(this).attr('id') === 'community') {
-      var evl = $(this).val();
-      try {
-        if (evl.indexOf('/') !== -1) evl = evl.split('communities/')[1].split('/')[0];
-      } catch(err) {}
-      if ( _oab.config && ((_oab.config.community !== undefined && evl !== _oab.config.community) || (_oab.config.community === undefined && evl !== '') ) ) {
-        $('input').each(function(i, obj) { if ( $(this).attr('id') === 'community') { $(this).val(evl); } });
-        data.community = evl;
-      }
-    } else if ( $(this).is(':checkbox') ) {
-      data[$(this).attr('id')] = $(this).is(':checked');
-    } else if ( $(this).hasClass('subscription') ) {
-      if ($(this).val()) {
-        if (data.subscription === undefined) data.subscription = [];
-        data.subscription.push($(this).val());
-      } else if ($('.subscription').length > 1) {
-        $(this).remove();
-      }
-    } else if ( $(this).hasClass('subscription_type') ) {
-      if ($(this).val()) {
-        if (data['subscription_type'] === undefined) data['subscription_type'] = [];
-        data['subscription_type'].push($(this).val());
-      } else if ($('.subscription_type').length > 1) {
-        $(this).remove();
-      }
-    } else if ( $(this).val() !== undefined ) {
-      data[$(this).attr('id')] = $(this).val();
-      if (['ill_redirect_base_url','terms','book','other'].indexOf($(this).attr('id')) !== -1 && data[$(this).attr('id')] !== '' && data[$(this).attr('id')].indexOf('http') !== 0) {
-        data[$(this).attr('id')] = 'http://' + data[$(this).attr('id')];
-        $(this).val(data[$(this).attr('id')]);
+    if ($(this).attr('id') && $(this).val() !== undefined) {
+      if ( $(this).attr('id') === 'community') {
+        var evl = $(this).val();
+        try {
+          if (evl.indexOf('/') !== -1) evl = evl.split('communities/')[1].split('/')[0];
+        } catch(err) {}
+        if ( _oab.config && ((_oab.config.community !== undefined && evl !== _oab.config.community) || (_oab.config.community === undefined && evl !== '') ) ) {
+          $('input').each(function(i, obj) { if ( $(this).attr('id') === 'community') { $(this).val(evl); } });
+          data.community = evl;
+        }
+      } else if ( $(this).is(':checkbox') ) {
+        data[$(this).attr('id')] = $(this).is(':checked');
+      } else if ( $(this).hasClass('subscription') ) {
+        if ($(this).val()) {
+          if (data.subscription === undefined) data.subscription = [];
+          data.subscription.push($(this).val());
+        } else if ($('.subscription').length > 1) {
+          $(this).remove();
+        }
+      } else if ( $(this).hasClass('subscription_type') ) {
+        if ($(this).val()) {
+          if (data['subscription_type'] === undefined) data['subscription_type'] = [];
+          data['subscription_type'].push($(this).val());
+        } else if ($('.subscription_type').length > 1) {
+          $(this).remove();
+        }
+      } else {
+        data[$(this).attr('id')] = $(this).val();
+        if (['ill_redirect_base_url','terms','book','other'].indexOf($(this).attr('id')) !== -1 && data[$(this).attr('id')] !== '' && data[$(this).attr('id')].indexOf('http') !== 0) {
+          data[$(this).attr('id')] = 'http://' + data[$(this).attr('id')];
+          $(this).val(data[$(this).attr('id')]);
+        }
       }
     }
   });
 
+  settings(data);
   if (preview) {
     _oab.configure(data, true, undefined, preview);
   } else {
@@ -218,7 +223,7 @@ jQuery(document).ready(function() {
             url: api + '/' + (_oab.plugin === 'instantill' ? 'ill' : 'deposit') + '/config?url=' + vl,
             type: 'GET',
             success: function(ufg) {
-              configure(ufg);
+              settings(ufg);
               _oab.configure(ufg);
               $('#maingetembed').show();
             },
@@ -251,7 +256,7 @@ jQuery(document).ready(function() {
     if (cfg) {
       if (!cfg.email) cfg.email = noddy.user.email ? noddy.user.email : noddy.user.emails[0].address;
       _oab.configure(cfg, noddy.user.account._id);
-      configure(cfg);
+      settings(cfg);
     } else {
       _oab.configure(noddy.user.account._id);
     }
@@ -309,7 +314,7 @@ jQuery(document).ready(function() {
       $('#maingetembed').hide();
       //$('#loginorurl').show();
     } else {
-      configure(_oab.config);
+      settings(_oab.config);
     }
   }
   if (window.location.href.indexOf('/setup') !== -1) noddy.login(); // login current user on setup page, if possible, but not on other demo pages
