@@ -36,13 +36,13 @@ _L.show = (els, html, append) ->
   _L.each els, (el) -> 
     if typeof html is 'string'
       el.innerHTML = (if append then el.innerHTML else '') + html
-    was = _L.get el, '_L_display'
-    was = 'block' if typeof was isnt 'string' or was is 'none' # TODO should be inline in which cases...
+    was = _L.get el, '_l_display'
+    was = (if el.tagName is 'DIV' then 'block' else 'inline') if typeof was isnt 'string' or was is 'none' # TODO should be inline in which cases...
     el.style.display = was
 _L.hide = (els) ->
   _L.each els, (el) -> 
     if el.style.display isnt 'none'
-      _L.set el, '_L_display', el.style.display
+      _L.set el, '_l_display', el.style.display
     el.style.display = 'none'
 _L.get = (els, attr) ->
   res = undefined
@@ -198,7 +198,6 @@ _oab = (opts) ->
   this.f ?= {} # the result of the find/ill/permission request to the backend
   this.template ?= _oab[this.plugin + '_template'] # template or css can be passed in or are as defined below
   
-  this.bootstrap ?= true
   this.css ?= _oab.css
   this._loading = false # tracks when loads are occurring
   this.submit_after_metadata = false # used by instantill to track if metadata has been provided by user
@@ -224,7 +223,6 @@ _oab = (opts) ->
 
   if not this.config.autorun # stupidly, true means don't run it...
     ap = if typeof this.config.autorunparams is 'string' then this.config.autorunparams.split(',') else if typeof this.config.autorunparams is 'object' then this.config.autorunparams else ['doi','title','url','atitle','rft_id','journal','issn','year','author']
-    ap.push('confirmed') if 'confirmed' not in ap # confirmed here is extra to the ill ones, used to confirm the file has been confirmed
     ap = ap.replace(/"/g,'').replace(/'/g,'').split(',') if typeof ap is 'string'
     for o in ap
       o = o.split('=')[0].trim()
@@ -233,6 +231,8 @@ _oab = (opts) ->
   if window.location.search.indexOf('email=') isnt -1
     this.data.email = window.location.search.split('email=')[1].split('&')[0].split('#')[0]
     _L.remove '#_oab_collect_email'
+  if window.location.search.indexOf('confirmed=') isnt -1
+    this.data.confirmed = window.location.search.split('confirmed=')[1].split('&')[0].split('#')[0]
   if window.location.search.indexOf('panel=') isnt -1
     this.panel window.location.search.split('panel=')[1].split('&')[0].split('#')[0]
   if window.location.search.indexOf('section=') isnt -1
@@ -297,7 +297,8 @@ _oab.prototype.state = (pop) ->
         this.restart()
 
 _oab.prototype.restart = (e, val) ->
-  try e.preventDefault()
+  if e.target.id isnt'_oab_permissionemail'
+    try e.preventDefault()
   this.data = {}
   this.f = {}
   this.loading false
@@ -489,7 +490,7 @@ _oab.prototype.deposit = (e) -> # only used by shareyourpaper
     if fl? and fl.files? and fl.files.length
       this.file = new FormData()
       this.file.append 'file', fl.files[0]
-    else if this.f?.url? or this.f?.permissions?.permissions?.archiving_allowed
+    else if this.file isnt true # can be set to true when dark deposit is being followed - no file required. Or a demo may set it to true
       _L.show '#_oab_error', '<p>Whoops, you need to give us a file! Check it\'s uploaded.</p>'
       _L.css '#_oab_file', 'border-color','#f04717'
       return
@@ -503,7 +504,7 @@ _oab.prototype.deposit = (e) -> # only used by shareyourpaper
     data.redeposit = this.f.url if typeof this.f?.url is 'string'
     data.pilot = this.config.pilot if this.config.pilot
     data.live = this.config.live if this.config.live
-    if this.file
+    if typeof this.file isnt 'boolean'
       for d of data
         if d is 'metadata'
           for md of data[d]
@@ -517,7 +518,7 @@ _oab.prototype.deposit = (e) -> # only used by shareyourpaper
       data
       (res) =>
         this.loading false
-        if this.file
+        if typeof this.file isnt 'boolean'
           if res.zenodo?.already or (this.data.confirmed and not res.zenodo?.url) #or not this.f?.permissions?.file?.archivable
             this.done 'check'
           else if res.error
@@ -606,6 +607,7 @@ _oab.prototype.permissions = (data) -> # only used by shareyourpaper
         _L.hide '._oab_get_email'
         _L.show '._oab_oa'
       else
+        this.file = true # no file required for oa deposit...
         _L.show '._oab_oa_deposit'
     else if this.f?.permissions?.permissions?.archiving_allowed
       # can be shared, depending on permissions info
@@ -637,6 +639,7 @@ _oab.prototype.permissions = (data) -> # only used by shareyourpaper
       _L.show '._oab_permission_required'
     else
       # can't be directly shared but can be passed to library for dark deposit
+      this.file = true
       _L.hide '#_oab_file'
       _L.show '._oab_dark_deposit'
 
@@ -1017,7 +1020,7 @@ _oab.shareyourpaper_template = '
     <p>All that\'s left to do is wait. Once the journal gives you permission to share, come back and we\'ll help you finish the job.</p>
   </div>
   
-  <div><p><a href="#" class="_oab_restart _oab_button" id="_oab_done_restart">Do another</a></p></div>
+  <p><a href="#" class="_oab_restart _oab_button" id="_oab_done_restart">Do another</a></p>
 </div>
 <div id="_oab_error"></div>
 <div id="_oab_pilot"></div>'
@@ -1026,7 +1029,6 @@ _oab.shareyourpaper_template = '
 # or key can be a user ID string and val must be empty, or key and val can both be empty and config will attempt 
 # to be retrieved from setup, or localstorage and/or from the API if a user ID is available from setup
 _oab.prototype.configure = (key, val, build, preview) ->
-  console.log preview
   if typeof key is 'string' and not val? and key.startsWith '{'
     try key = JSON.parse key
   if typeof key is 'string' and not val? and (not this.uid? or this.uid is 'anonymous')
@@ -1074,6 +1076,7 @@ _oab.prototype.configure = (key, val, build, preview) ->
       # if bootstrap css is already present on the page, and bootstrap value is not set,
       # and css has not been set either, then use bootstrap
       _L.append this.element, '<div class="btn" id="_oab_bootstrap_test" style="visibility:hidden;"></div>'
+      console.log _L.gebi('#_oab_bootstrap_test').offsetHeight
       this.bootstrap = _L.gebi('#_oab_bootstrap_test').offsetHeight isnt 0
       _L.remove '_#oab_bootstrap_test'
     if this.bootstrap is true
