@@ -528,12 +528,12 @@ _oab.prototype.deposit = (e) -> # only used by shareyourpaper
             # deposit was possible, show the user a congrats page with a link to the item in zenodo
             _L.set '#_oab_zenodo_url', res.zenodo.url
             if res.embargo
-              info = '<p>You\’ve done your part for now. Unfortunately, ' + jn + ' won’t let us make it public until '
+              info = '<p>You\'ve done your part for now. Unfortunately, ' + (this.f?.metadata?.journal_short ? this.f?.metadata?.journal ? 'the journal') + ' won\'t let us make it public until '
               info += if res.embargo_UI then res.embargo_UI else res.embargo
-              info += '. After release, you\’ll find your paper on ' + (this.config.repo_name ? 'ScholarWorks') + ', Google Scholar, Web of Science.</p>'
+              info += '. After release, you\'ll find your paper on ' + (this.config.repo_name ? 'ScholarWorks') + ', Google Scholar, Web of Science.</p>'
               info += '<h3>Your paper will be freely available at this link:</h3>'
             else
-              info = '<p>You\’ll soon find your paper freely available in ' + (this.config.repo_name ? 'ScholarWorks') + ', Google Scholar, Web of Science, and other popular tools.'
+              info = '<p>You\'ll soon find your paper freely available in ' + (this.config.repo_name ? 'ScholarWorks') + ', Google Scholar, Web of Science, and other popular tools.'
               info += '<h3>Your paper is now freely available at this link:</h3>'
             _L.html '#_oab_zenodo_embargo', info
             this.done 'zenodo'
@@ -948,7 +948,7 @@ _oab.shareyourpaper_template = '
     <div id="_oab_not_pdf">
       <h3><span>&#10003;</span> Find the manuscript the journal accepted. It\'s not a PDF from the journal site</h3>
       <p>This is the only version you\'re able to share legally. The accepted manuscript is the word file or Latex export you sent the publisher after peer-review and before formatting (publisher proofs).</p>
-      <h3><span>&#10003;</span> Check there aren\’t publisher logos or formatting</h3>
+      <h3><span>&#10003;</span> Check there aren\'t publisher logos or formatting</h3>
       <p>It\'s normal to share accepted manuscripts as the research is the same. It\'s fine to save your file as a pdf, make small edits to formatting, fix typos, remove comments, and arrange figures.</p>
     </div>
     <h3 class="_oab_section _oab_get_email"><span>&#10003;</span> Tell us your email</h3>
@@ -1076,7 +1076,6 @@ _oab.prototype.configure = (key, val, build, preview) ->
       # if bootstrap css is already present on the page, and bootstrap value is not set,
       # and css has not been set either, then use bootstrap
       _L.append this.element, '<div class="btn" id="_oab_bootstrap_test" style="visibility:hidden;"></div>'
-      console.log _L.gebi('#_oab_bootstrap_test').offsetHeight
       this.bootstrap = _L.gebi('#_oab_bootstrap_test').offsetHeight isnt 0
       _L.remove '_#oab_bootstrap_test'
     if this.bootstrap is true

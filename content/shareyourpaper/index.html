@@ -3,18 +3,6 @@
   <link rel="stylesheet" href="/static/oabutton_rebrand.css"> <!-- gets the new css (still also uses the old css, just overwrites where necessary) -->
 </head>
 
-<script src="/static/shareyourpaper.js"></script>
-<!-- 996 is joe@openaccessbutton.org live id. 4WD is the same email on dev. -->
-<script>
-jQuery(document).ready(function() {
-  shareyourpaper({
-    uid:(api.indexOf('dev.') !== -1 ? '4WDY6njiatg3FZMJm' : '996wFY3oTTkNonqnt'),
-    api:api,
-    config:{"repo_name":"Zenodo","allow_oa_deposit":true,"dark_deposit_off":true,"live":1585895131684,"not_a_library":true,"email":"joe@openaccessbutton.org"}
-  });
-});
-</script>
-
 
 <style>
   #topnav {
@@ -204,17 +192,23 @@ jQuery(document).ready(function() {
 </div>
 
 
-<script>
-jQuery(document).ready(function() {
-  $('#topnav').remove();
-  $('#footer').remove();
 
+<script src="/static/embed/oab_embed.js"></script>
+<!-- 996 is joe@openaccessbutton.org live id. 4WD is the same email on dev. -->
+<script>
+_oab = shareyourpaper({
+  uid:(api.indexOf('dev.') !== -1 ? '4WDY6njiatg3FZMJm' : '996wFY3oTTkNonqnt'),
+  api:api,
+  config:{"repo_name":"Zenodo","allow_oa_deposit":true,"dark_deposit_off":true,"live":1585895131684,"not_a_library":true,"email":"joe@openaccessbutton.org"}
+});
+
+jQuery(document).ready(function() {
   var evadd = true;
 
   var learnmore = function() {
     var rep = 'Try an example <a href="#" id="runexample"><u>10.1126/scitranslmed.3001922</u></a> or <a href="#" class="learnmore"><u>learn more</u></a>.';
-    $('#nodoi').replaceWith(rep);
-    $('#runexample').on('click',function(e) { e.preventDefault(); $('#oabutton_input').val('10.1126/scitranslmed.3001922'); $('#oabutton_find').trigger('click'); });
+    $('#_oab_nodoi').replaceWith(rep);
+    $('#runexample').on('click',function(e) { e.preventDefault(); $('#_oab_input').val('10.1126/scitranslmed.3001922'); _oab.find(); });
     $('.learnmore').on('click',function(e) {
       e.preventDefault();
       $('#shareyourpaper').toggle();
@@ -247,7 +241,7 @@ jQuery(document).ready(function() {
       }, 300);
     }
   };
-  waiting('#nodoi', learnmore);
+  waiting('#_oab_nodoi', learnmore);
 
 });
 </script>
