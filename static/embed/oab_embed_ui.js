@@ -260,7 +260,7 @@ jQuery(document).ready(function() {
     } else {
       _oab.configure(noddy.user.account._id);
     }
-    
+
     if (_oab.plugin === 'instantill') {
       try { // for ill
         $.ajax({
@@ -295,7 +295,7 @@ jQuery(document).ready(function() {
                 }
               }
               if (eurl) {
-                var ex = 'Here is an example:<br> <a href ="' + eurl + '?doi=10.10/something&email=something@university.edu" target="_blank"> '+ eurl +'?doi=10.10/something&email=something@university.edu</a>.<br><br>Any DOI will work, and you don’t need to include an email if you don’t have it.';
+                var ex = 'Here is an example:<br> <a href ="' + eurl + '?doi=10.1126/scitranslmed.3001922&email=something@university.edu" target="_blank"> '+ eurl +'?doi=10.1126/scitranslmed.3001922&email=something@university.edu</a>.<br><br>Any DOI will work, and you don’t need to include an email if you don’t have it.';
                 $('#embeddedexample').html(ex).show();
               } else {
                 $('#noembeddedexampleavailable').show();
