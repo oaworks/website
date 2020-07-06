@@ -297,7 +297,7 @@ _oab.prototype.state = (pop) ->
         this.restart()
 
 _oab.prototype.restart = (e, val) ->
-  if e.target.id isnt'_oab_permissionemail'
+  if e.target.parentElement.id isnt '_oab_permissionemail'
     try e.preventDefault()
   this.data = {}
   this.f = {}
@@ -821,7 +821,7 @@ _oab.css = '
 }
 ._oab_button {
   display: table-cell;
-  min-width:40px;
+  min-width:140px;
   height:34px;
   padding: 6px 3px;
   margin-bottom: 0;
@@ -854,7 +854,7 @@ _oab.instantill_template = '
     <br>Start by entering a full <span class="_oab_paper">article</span> title, DOI or URL:<br>
   </p> 
   <p><input class="_oab_form" type="text" id="_oab_input" placeholder="e.g. World Scientists Warning of a Climate Emergency" aria-label="Enter a search term" style="box-shadow:none;"></input></p>
-  <p><a class="_oab_find _oab_button _oab_loading" href="#" aria-label="Search" style="min-width:150px;">Find <span class="_oab_paper">article</span></a></p>
+  <p><a class="_oab_find _oab_button _oab_loading" href="#" aria-label="Search">Find <span class="_oab_paper">article</span></a></p>
   <div id="_oab_book_or_other"></div>
   <div id="_oab_advanced_account_info"></div>
 </div>
@@ -879,7 +879,7 @@ _oab.instantill_template = '
       <p id="_oab_terms_note"><input type="checkbox" id="_oab_read_terms"> I have read the <a id="_oab_terms_link" target="_blank" href="#">terms and conditions</a></p>
       <p><input placeholder="Your university email address" id="_oab_email" type="text" class="_oab_form"></p>
     </div>
-    <p><a class="_oab_submit _oab_button _oab_loading" href="#" style="min-width:150px;">Complete request</a></p>
+    <p><a class="_oab_submit _oab_button _oab_loading" href="#">Complete request</a></p>
   </div>
 </div>
 
@@ -891,7 +891,7 @@ _oab.instantill_template = '
   <p>Journal title (required)<br><input class="_oab_form" id="_oab_journal" type="text" placeholder="e.g. Nature"></p>
   <p>Year of publication (required)<br><input class="_oab_form" id="_oab_year" type="text" placeholder="e.g 1992"></p>
   <p><span class="_oab_paper">Article</span> DOI or URL<br><input class="_oab_form" id="_oab_doi" type="text" placeholder="e.g 10.1126/scitranslmed.3008973"></p>
-  <p><a href="#" class="_oab_find _oab_button _oab_loading _oab_continue" style="min-width:150px;">Continue</a></p>
+  <p><a href="#" class="_oab_find _oab_button _oab_loading _oab_continue">Continue</a></p>
   <p>
     <a href="#" class="_oab_restart"><b>Try again</b></a>
     <span id="_oab_advancedform" style="display:none;"></span>
@@ -916,7 +916,7 @@ _oab.shareyourpaper_template = '
   <h3>Start by entering the DOI of your paper</h3>
   <p>We\'ll gather information about your paper and find the easiest way to share it.</p>
   <p><input class="_oab_form" type="text" id="_oab_input" placeholder="e.g. 10.1126/scitranslmed.3001922" aria-label="Enter a search term" style="box-shadow:none;"></input></p>
-  <p><a class="_oab_find _oab_button _oab_loading" href="#" id="_oab_find" aria-label="Search" style="min-width:150px;">Next</a></p>
+  <p><a class="_oab_find _oab_button _oab_loading" href="#" id="_oab_find" aria-label="Search">Next</a></p>
   <p><a id="_oab_nodoi" href="mailto:help@openaccessbutton.org?subject=Help%20depositing%20my%20paper&body=Hi%2C%0D%0A%0D%0AI\'d%20like%20to%20deposit%3A%0D%0A%0D%0A%3C%3CPlease%20insert%20a%20full%20citation%3E%3E%0D%0A%0D%0ACan%20you%20please%20assist%20me%3F%0D%0A%0D%0AYours%20sincerely%2C"><b>My paper doesn\'t have a DOI</b></a></p>
 </div>
 
@@ -924,7 +924,7 @@ _oab.shareyourpaper_template = '
   <div class="_oab_section _oab_oa">
     <h2>Your paper is already freely available!</h2>
     <p>Great news, you\'re already getting the benefits of sharing your work! Your publisher or co-author have already shared it.</p>
-    <p><a target="_blank" href="#" class="_oab_oa_url _oab_button" style="min-width:150px;">See free version</a></p>
+    <p><a target="_blank" href="#" class="_oab_oa_url _oab_button">See free version</a></p>
     <p><a href="#" class="_oab_restart"><b>Do another</b></a></p>
   </div>
 
@@ -932,8 +932,8 @@ _oab.shareyourpaper_template = '
     <h2>You may share your paper if you ask the journal</h2>
     <p>Unlike most, <span class="_oab_journal">the journal</span> requires that you ask them before you share your paper freely. 
     Asking only takes a moment as we find out who to contact and have drafted an email for you.</p>
-    <p><a target="_blank" id="_oab_reviewemail" href="#" class="_oab_button" style="min-width:150px;">Review Email</a></p>
-    <p><a target="_blank" id="_oab_permissionemail" href="#"><b>I\'ve got permission now!</b></a></p>
+    <p><a target="_blank" id="_oab_reviewemail" href="#" class="_oab_button">Review Email</a></p>
+    <p><a target="_blank" id="_oab_permissionemail" class="_oab_restart" href="#"><b>I\'ve got permission now!</b></a></p>
   </div>  
 
   <div class="_oab_section _oab_oa_deposit">
@@ -975,7 +975,7 @@ _oab.shareyourpaper_template = '
   </div>
   
   <div class="_oab_section _oab_oa_deposit _oab_archivable _oab_dark_deposit">
-    <p><a href="#" class="_oab_deposit _oab_button _oab_loading" style="min-width:150px;">Deposit</a></p>
+    <p><a href="#" class="_oab_deposit _oab_button _oab_loading">Deposit</a></p>
   </div>
 </div>
 
@@ -984,7 +984,7 @@ _oab.shareyourpaper_template = '
     <h2>Hmmm, something looks wrong</h2>
     <p>You\'re nearly done. It looks like what you uploaded is a publisher\'s PDF which your journal prohibits legally sharing.<!-- It can only be shared on a limited basis.--><br><br>
     We just need the version accepted by the journal to make your work available to everyone.</p>
-    <p><a href="#" class="_oab_reload _oab_button" style="min-width:150px;">Try uploading again</a></p>
+    <p><a href="#" class="_oab_reload _oab_button">Try uploading again</a></p>
     <p><a href="#" class="_oab_confirm _oab_loading"><b>My upload was an accepted manuscript</b></a></p>
   </div>
 
@@ -1145,7 +1145,7 @@ _oab.prototype.configure = (key, val, build, preview) ->
     _L.listen 'enter', '#_oab_email', (e) => this.validate(e)
     _L.listen 'click', '._oab_find', (e) => this.find(e)
     _L.listen 'click', '._oab_submit', (e) => this.submit(e)
-    _L.listen 'click', '._oab_restart', (e) => this.restart(e)
+    _L.listen 'click', '._oab_restart', (e) => console.log(e); this.restart(e)
     _L.listen 'click', '._oab_ping', (e) => this.ping(_L.get e.target, 'message')
     _L.listen 'click', '._oab_wrong', (e) => 
       e.preventDefault()

@@ -167,7 +167,13 @@ var save = function(e, preview) {
   if (preview) {
     _oab.configure(data, true, undefined, preview);
   } else {
-    var configured = _oab.configure(data, true, undefined, $('.section:visible').first().attr('save'));
+    var configured;
+    if ($('.section:visible').first().attr('save') === 'restart') {
+      configured = _oab.configure(data, true);
+      _oab.restart();
+    } else {
+      configured = _oab.configure(data, true, undefined, $('.section:visible').first().attr('save'));
+    }
     if (noddy.apikey) {
       $.ajax({
         url: api + '/' + (_oab.plugin === 'instantill' ? 'ill' : 'deposit') + '/config',
