@@ -237,7 +237,7 @@ var loaded = function(xhr) {
   $('#shareyourpaper').show();
   var js = false;
   try { js = JSON.parse(xhr.response); } catch(err) {}
-  if (js !== false && js.zenodo !== undefined && js.zenodo.url.indexOf('/DEMO') !== -1) {
+  if (js !== false && js.zenodo !== undefined && js.demo) {
     if (window.location.hash && window.location.hash.indexOf('general') !== -1) {
       view('#success');
     }

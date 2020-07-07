@@ -284,7 +284,7 @@ _oab.prototype.state = (pop) ->
       u = window.location.pathname
       if not pop?
         if window.location.href.indexOf('shareyourpaper.org') isnt -1 and this.data.doi?
-          u = window.location.pathname.split('/10.')[0] + '/' + this.data.doi + window.location.search + window.location.hash
+          u = window.location.href.split('10.')[0] + this.data.doi + window.location.search + window.location.hash
         else if window.location.href.indexOf('/setup') is -1 and window.location.href.indexOf('/demo') is -1
           if this.data.doi? or this.data.title? or this.data.url?
             k = if this.data.doi then 'doi' else if this.data.title then 'title' else 'url'
@@ -911,8 +911,8 @@ _oab.instantill_template = '
 _oab.shareyourpaper_template = '
 <div class="_oab_panel" id="_oab_inputs">
   <h2>Make your research visible and see 30% more citations</h2>
-  <p id="_oab_lib_info">We can help you make your paper Open Access, for free, wherever you publish. It\'s legal and takes just minutes.</p>
-  <p>Join millions of researchers sharing their papers freely with colleagues and the public.</p>
+  <p><span id="_oab_lib_info">We can help you make your paper Open Access, for free, wherever you publish. It\'s legal and takes just minutes.</span> 
+  Join millions of researchers sharing their papers freely with colleagues and the public.</p>
   <h3>Start by entering the DOI of your paper</h3>
   <p>We\'ll gather information about your paper and find the easiest way to share it.</p>
   <p><input class="_oab_form" type="text" id="_oab_input" placeholder="e.g. 10.1126/scitranslmed.3001922" aria-label="Enter a search term" style="box-shadow:none;"></input></p>
