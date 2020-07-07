@@ -1108,7 +1108,7 @@ _oab.prototype.configure = (key, val, build, preview) ->
     if this.plugin is 'shareyourpaper'
       if this.cml()? and el = _L.gebi '_oab_nodoi'
         el.setAttribute 'href', el.getAttribute('href').replace('help@openaccessbutton.org', this.cml())
-      if not this.config.not_a_library
+      if this.config.not_a_library
         _L.html '._oab_library', 'We have'
       else
         _L.html '#_oab_lib_info', 'Share your paper with help from the library in ' + (this.config.repo_name ? 'ScholarWorks') + '. Legally, for free, in minutes. '
