@@ -297,8 +297,8 @@ _oab.prototype.state = (pop) ->
         this.restart()
 
 _oab.prototype.restart = (e, val) ->
-  if e.target.parentElement.id isnt '_oab_permissionemail'
-    try e.preventDefault()
+  try
+    e.preventDefault() if e.target.parentElement.id isnt '_oab_permissionemail'
   this.data = {}
   this.f = {}
   this.loading false
@@ -1060,7 +1060,7 @@ _oab.prototype.configure = (key, val, build, preview) ->
   for k of wc = JSON.parse JSON.stringify this.config
     delete wc[k] if not wc[k]? or wc[k] is false or ((typeof wc[k] is 'string' or Array.isArray(wc[k])) and wc[k].length is 0)
   try
-    localStorage.setItem('_oab_config_' + this.plugin, JSON.stringify wc) if JSON.stringify(wc) isnt '{}'
+    localStorage.setItem('_oab_config_' + this.plugin, JSON.stringify wc) if JSON.stringify(wc) isnt '{}' and this.local isnt false
   if this.css isnt false and this.config.css is true
     this.css = false
     build = true

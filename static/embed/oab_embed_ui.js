@@ -1,4 +1,6 @@
 
+var runas = false;
+
 var get_code = function(e) {
   try { e.preventDefault(); } catch(err) {}
   if ($('#instantill').length) $('#instantill').toggle();
@@ -83,14 +85,26 @@ var view = function(e) {
     $('#setup').show();
   }
   try { if (($('#instantill').length && !$('#instantill').is(':visible')) || ($('#shareyourpaper').length && !$('#shareyourpaper').is(':visible'))) get_code(); } catch(err) {}
-  //scrollTo(0,0);
 }
 $('body').on('click', '.view', view);
 $(window).on('popstate', view);
 view();
 
-var settings = function(uc) {
+var settings = function(uc,clear) {
   if (typeof uc === 'object') {
+    if (clear !== false) {
+      $('.setting').each(function() {
+        // clear everything first
+        if ($(this).is(':checkbox')) {
+          $('#'+k).prop('checked', false);
+        } else if (!$(this).is('input')) {
+          $('#' + $(this).attr('id') + ' option:selected').prop('selected', false);
+          $('#' + $(this).attr('id') + 'target option:first').prop('selected', 'selected');
+        } else {
+          $(this).val('');
+        }
+      });
+    }
     for (var k in uc) {
       if ((k === 'pilot' || k === 'live') && uc[k] !== '$DELETE') {
         $('#'+k).prop('checked', uc[k]);
@@ -175,6 +189,7 @@ var save = function(e, preview) {
       configured = _oab.configure(data, true, undefined, $('.section:visible').first().attr('save'));
     }
     if (noddy.apikey) {
+      if (runas) configured.uid = runas;
       $.ajax({
         url: api + '/' + (_oab.plugin === 'instantill' ? 'ill' : 'deposit') + '/config',
         type:'POST',
@@ -192,14 +207,12 @@ $('body').on('click','.save',save);
 
 var preview = function(e) {
   e.preventDefault();
-  //scrollTo(0,0);
-  save(undefined, $('.section:visible').first().attr('preview') ? $('.section:visible').first().attr('preview') : ($(this).attr('val') ? $(this).attr('val') : (_oab.plugin === 'instantill' ? '10.1145/2908080.2908114' : '10.1126/scitranslmed.3001922')));
+  save(undefined, $('.section:visible').first().attr('preview') ? $('.section:visible').first().attr('preview') : ($(this).attr('val') ? $(this).attr('val') : (_oab.plugin === 'instantill' ? '10.1126/scitranslmed.3001922' : '10.1126/scitranslmed.3001922')));
 }
 $('body').on('click', '.preview', preview);
 
 var restart = function(e) {
   e.preventDefault();
-  //scrollTo(0,0);
   _oab.restart();
 }
 $('body').on('click', '.restart', restart);
@@ -246,13 +259,27 @@ jQuery(document).ready(function() {
   }
   $('body').on('keyup', '#noddyEmail', loginorurl);
 
+  var se = undefined;
   noddy.afterLogin = function() {
     $('#loginorurl').hide();
     $('#maingetembed').show();
     if ($('.user_id').length) $('.user_id').html('uid: "' + noddy.user.account._id + '", ');
-    // alter to account for which plugin is in use
     var cfg = false;
-    if (noddy.user.account.service && noddy.user.account.service.openaccessbutton) {
+    if (window.location.search.indexOf('as=') !== -1 && noddy.hasRole('openaccessbutton.admin')) {
+      runas = window.location.search.split('as=')[1].split('&')[0].split('#')[0];
+      _oab.local = false;
+      _oab.uid = runas;
+      _oab.config = {};
+      _oab.configure();
+      se = setInterval(function() {
+        if (JSON.stringify(_oab.config) !== '{}') {
+          console.log('Rebuilding settings');
+          clearInterval(se);
+          settings(_oab.config);
+        }
+      }, 500);
+      if ($('.user_id').length) $('.user_id').html('uid: "' + runas + '", ');
+    } else if (noddy.user.account.service && noddy.user.account.service.openaccessbutton) {
       if (_oab.plugin === 'instantill' && noddy.user.account.service.openaccessbutton.ill && noddy.user.account.service.openaccessbutton.ill.config !== undefined) {
         cfg = noddy.user.account.service.openaccessbutton.ill.config;
       } else if (noddy.user.account.service.openaccessbutton.deposit && noddy.user.account.service.openaccessbutton.deposit.config !== undefined) {
@@ -270,7 +297,7 @@ jQuery(document).ready(function() {
     if (_oab.plugin === 'instantill') {
       try { // for ill
         $.ajax({
-          url: api + '/ill/url?uid=' + noddy.user.account._id,
+          url: api + '/ill/url?uid=' + (runas ? runas : noddy.user.account._id),
           type: 'GET',
           success: function(url) {
             if (url) {
