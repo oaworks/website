@@ -152,7 +152,7 @@
         </p>
 
         <p><b>What is your ILL article form link?</b></p>
-        <input id="ill_redirect_base_url" type="text" class="form-control setting green" placeholder="URL">
+        <input id="ill_form" type="text" class="form-control setting green" placeholder="URL">
         <p>
         Or <a href="#ill_email" class="view green">submit over email</a>
         </p>
@@ -190,18 +190,18 @@
         </p>
 
         <p><b>What is the name of your institution?</b></p>
-        <input id="ill_institution" type="text" class="form-control setting green" placeholder="Institution name">
+        <input id="institution" type="text" class="form-control setting green" placeholder="Institution name">
         <br>
 
         <p><b>What email address do you want users referred to if there is a problem?</b></p>
-        <input id="problem_email" type="text" class="form-control setting green" placeholder="User will be told to 'contact their library'">
+        <input id="problem" type="text" class="form-control setting green" placeholder="User will be told to 'contact their library'">
         <br>
 
         <p><b>
           We use 'article' to refer to academic journal publications by default. Would you like to change that?
         </b></p>
         <p>
-        <input id="saypaper" type="checkbox" class="setting green">
+        <input id="say_paper" type="checkbox" class="setting green">
           Yes, use 'paper' instead.
         </p>
         <br>
@@ -216,17 +216,17 @@
 
         <p><b>If you want patrons want to learn details about Interlibrary Loan services, where can they find that?</b></p>
         <small>This helps keep the page you embed InstantILL on clean and tidy while still making sure interested patrons can learn about ILL</small>
-        <input id="illinfo" type="text" class="form-control setting green" placeholder="e.g https://ulib.iupui.edu/services/ILL">
+        <input id="ill_info" type="text" class="form-control setting green" placeholder="e.g https://ulib.iupui.edu/services/ILL">
         <br>
 
         <p><b>If you want to allow users to view their account and outstanding loans, let us know where they can do that. </b></p>
         <small>This helps keep the page you embed InstantILL on clean and tidy while allowing users to manage their accounts.</small>
-        <input id="viewaccount" type="text" class="form-control setting green" placeholder="e.g https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=62">
+        <input id="account" type="text" class="form-control setting green" placeholder="e.g https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=62">
         <br>
 
         <p><b>If you want people to still be able to submit ILLs manually, let us know how they can do that.</b></p>
         <small>This helps make sure people who liked the old way of doing things still can</small>
-        <input id="advancedform" type="text" class="form-control setting green" placeholder="e.g https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=10">
+        <input id="advanced_ill_form" type="text" class="form-control setting green" placeholder="e.g https://ill.ulib.iupui.edu/ILLiad/IUP/illiad.dll?Action=10&Form=10">
         <br>
       </div>
 
@@ -251,7 +251,7 @@
           If we find an article Open Access, do you want to let patrons request an ILL?
         </b></p>
         <p>
-        <input id="noillifoa" type="checkbox" class="setting green">
+        <input id="ill_if_oa_off" type="checkbox" class="setting green">
           No
         </p>
         <br>
@@ -260,7 +260,7 @@
           If we find that you're subscribed to an article, do you still want patrons to be able to request an ILL?
         </b></p>
         <p>
-        <input id="noillifsub" type="checkbox" class="setting green">
+        <input id="ill_if_sub_off" type="checkbox" class="setting green">
           No
         </p>
         <br>
@@ -274,7 +274,7 @@
         </p>
 
         Add any additional params your base URL needs, such as a=b&c=d<br>
-        <input id="ill_redirect_params" type="text" class="form-control setting green" placeholder="Add any additional params your base URL needs"><br>
+        <input id="ill_added_params" type="text" class="form-control setting green" placeholder="Add any additional params your base URL needs"><br>
         <!--<input id="method" type="text" class="form-control setting" placeholder="default GET"><br>-->
         Add the param used to provide a service ID (which will be InstantILL)<br>
         <input id="sid" type="text" class="form-control setting green" placeholder="default sid">
@@ -395,7 +395,7 @@
           We include a small amount of CSS with InstantILL to make it look nice. You can override that:
         </p>
         <p>
-        <input id="css" type="checkbox" class="setting green">
+        <input id="css_off" type="checkbox" class="setting green">
           Override
         </p>
 
@@ -403,7 +403,7 @@
           We also use Bootstrap class names as a fallback option, these are btn btn-primary on buttons, and form-control on input elements. You can override that too:
         </p>
         <p>
-        <input id="bootstrap" type="checkbox" class="setting green">
+        <input id="bootstrap_off" type="checkbox" class="setting green">
           Override
         </p>
 
@@ -439,14 +439,14 @@
         </b></p>
         <small>The instructions are what appear above InstantILLs search box</small>
         <p>
-          <input id="intropara" type="checkbox" class="setting">
+          <input id="intro_off" type="checkbox" class="setting">
           Don't show
         </p>
         <p><b>
           You can completely turn off this feature too.
         </b></p>
         <p>
-          <input id="autorun" type="checkbox" class="setting">
+          <input id="autorun_off" type="checkbox" class="setting">
           Turn off
         </p>
       </div>
@@ -562,7 +562,7 @@
           If you'd prefer we didn't make work Open Access on your behalf, you can do that below.
         </b></p>
         <p>
-        <input id="norequests" type="checkbox" class="setting green">
+        <input id="requests_off" type="checkbox" class="setting green">
           Do not generate Open Access Button requests
         </p>
       </div>

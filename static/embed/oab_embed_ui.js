@@ -169,7 +169,7 @@ var save = function(e, preview) {
         }
       } else {
         data[$(this).attr('id')] = $(this).val();
-        if (['ill_redirect_base_url','terms','book','other'].indexOf($(this).attr('id')) !== -1 && data[$(this).attr('id')] !== '' && data[$(this).attr('id')].indexOf('http') !== 0) {
+        if (['ill_form','terms','book','other'].indexOf($(this).attr('id')) !== -1 && data[$(this).attr('id')] !== '' && data[$(this).attr('id')].indexOf('http') !== 0) {
           data[$(this).attr('id')] = 'http://' + data[$(this).attr('id')];
           $(this).val(data[$(this).attr('id')]);
         }
@@ -287,7 +287,7 @@ jQuery(document).ready(function() {
       }
     }
     if (cfg) {
-      if (!cfg.email) cfg.email = noddy.user.email ? noddy.user.email : noddy.user.emails[0].address;
+      if (!cfg.owner) cfg.owner = noddy.user.email ? noddy.user.email : (noddy.user.emails !== undefined ? noddy.user.emails[0].address : undefined);
       _oab.configure(cfg, noddy.user.account._id);
       settings(cfg);
     } else {

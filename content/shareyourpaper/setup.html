@@ -346,7 +346,7 @@
         <br>
 
         <p><b>Where can we find the terms and conditions of usage for your repository</b></p>
-        <input id="deposit_terms" type="text" class="form-control setting blue" placeholder="e.g https://scholarworks.montana.edu/docs">
+        <input id="terms" type="text" class="form-control setting blue" placeholder="e.g https://scholarworks.montana.edu/docs">
         <br>
       </div>
 
@@ -365,7 +365,7 @@
            Turn off the ability to deposit already open access content?
         </b></p>
         <p>
-        <input id="allow_oa_deposit" type="checkbox" class="setting blue">
+        <input id="oa_deposit_off" type="checkbox" class="setting blue">
           Yes
         </p>
       </div>
@@ -445,7 +445,7 @@
 
         <p><b>What is your institutions’ Research Organization Registry ID (ROR ID)?</b></p>
         <p>You can find the ID <a href="https://ror.org/search" target="_blank">here</a>. If there isn’t a ROR for the institution with the policy, e.g a University Library, choose the university instead.</p>
-        <input id="ROR_ID" type="text" class="form-control setting blue" placeholder="e.g 03vek6s52">
+        <input id="ror" type="text" class="form-control setting blue" placeholder="e.g 03vek6s52">
         <br>
       </div>
 
@@ -494,7 +494,7 @@
           We include a small amount of CSS with InstantILL to make it look nice. You can override that:
         </p>
         <p>
-        <input id="css" type="checkbox" class="setting blue">
+        <input id="css_off" type="checkbox" class="setting blue">
           Override
         </p>
 
@@ -502,7 +502,7 @@
           We also use Bootstrap class names as a fallback option, these are btn btn-primary on buttons, and form-control on input elements. You can override that too:
         </p>
         <p>
-        <input id="bootstrap" type="checkbox" class="setting blue">
+        <input id="bootstrap_off" type="checkbox" class="setting blue">
           Override
         </p>
 
@@ -582,7 +582,7 @@
           Are you not a library?
         </b></p>
         <p>
-        <input id="not_a_library" type="checkbox" class="setting blue">
+        <input id="not_library" type="checkbox" class="setting blue">
           We am not, but we're fans
         </p>
       </div>
