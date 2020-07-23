@@ -85,6 +85,7 @@ var view = function(e) {
     $('#setup').show();
   }
   try { if (($('#instantill').length && !$('#instantill').is(':visible')) || ($('#shareyourpaper').length && !$('#shareyourpaper').is(':visible'))) get_code(); } catch(err) {}
+  try { if ($('.section:visible').first().hasClass('nopreview')) $('#previewer').hide(); } catch(err) {}
 }
 $('body').on('click', '.view', view);
 $(window).on('popstate', view);
@@ -225,9 +226,11 @@ jQuery(document).ready(function() {
 
   if (api.indexOf('dev.') !== -1) {
     $('.dev_api').html("api: 'https://dev.api.cottagelabs.com/service/oab', ");
-  } else {
-    $('.site_url').html(_oab.plugin === 'instantill' ? 'https://instantill.org/embed.js' : 'https://shareyourpaper.org/embed.js');
+    $('.dev_url').each(function() {
+      $(this).html($(this).html().replace('https://','https://dev.'));
+    })
   }
+  $('.site_url').html('https://' + (api.indexOf('dev.') !== -1 ? 'dev.' : '') + _oab.plugin + '.org/embed.js');
 
   var loginorurl = function(e) {
     if (e.keyCode === 13) {
@@ -343,6 +346,7 @@ jQuery(document).ready(function() {
   };
   noddy.nologin = function() {
     $('#loginorurl').show(); // changed plans to always ask for login for now
+    scroll(0,0);
     if (JSON.stringify(_oab.config) === '{}') {
       $('#maingetembed').hide();
       //$('#loginorurl').show();

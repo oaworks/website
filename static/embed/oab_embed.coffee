@@ -209,6 +209,8 @@ _oab = (opts) ->
 
   _L.loaded = this.loaded if this.loaded? # if this is set to a function, it will be passed to _leviathan loaded, which gets run after every ajax call completes
 
+  if window.location.search.indexOf('clear=') isnt -1
+    localStorage.removeItem '_oab_config_' + this.plugin
   if window.location.search.indexOf('local=') isnt -1
     this.local = false
   if window.location.search.indexOf('config=') isnt -1
@@ -245,7 +247,7 @@ _oab = (opts) ->
 
 
 
-_oab.prototype.cml = () -> return this.config.problem ? this.config.owner ''
+_oab.prototype.cml = () -> return this.config.problem ? this.config.owner ? ''
 _oab.prototype.contact = () -> return 'Please try ' + (if this.cml() then '<a href="mailto:' + this.cml() + '">contacting your library</a>' else 'contacting your library') + ' directly'
 
 _oab.prototype.loading = (load) ->
@@ -306,6 +308,7 @@ _oab.prototype.restart = (e, val) ->
   this.f = {}
   this.loading false
   this.file = false
+  _L.gebi("_oab_file").value = ''
   _L.hide '._oab_panel'
   _L.show '#_oab_inputs'
   this.configure()
@@ -1160,6 +1163,7 @@ _oab.prototype.configure = (key, val, build, preview) ->
       this.metadata()
     _L.listen 'click', '._oab_reload', (e) => 
       e.preventDefault()
+      _L.gebi("_oab_file").value = ''
       this.file = false
       this.permissions()
     _L.listen 'click', '._oab_confirm', (e) => e.preventDefault(); this.data.confirmed = true; this.deposit()
@@ -1167,7 +1171,7 @@ _oab.prototype.configure = (key, val, build, preview) ->
     _L.listen 'click','._oab_deposit', (e) => this.deposit(e)
   
   if el = _L.gebi '_oab_config'
-    el.innerHTML = JSON.stringify wc, '', 2
+    el.innerHTML = JSON.stringify wc
   if window.location.search.indexOf('panel=') isnt -1
     this.panel window.location.search.split('panel=')[1].split('&')[0].split('#')[0], (if window.location.search.indexOf('section=') isnt -1 then window.location.search.split('section=')[1].split('&')[0].split('#')[0] else undefined)
   if preview
@@ -1175,6 +1179,7 @@ _oab.prototype.configure = (key, val, build, preview) ->
     this.data = {}
     this.f = {}
     this.loading false
+    _L.gebi("_oab_file").value = ''
     this.file = false
     _L.hide '._oab_panel'
     _L.show '#_oab_inputs'
