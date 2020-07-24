@@ -197,6 +197,7 @@ _oab = (opts) ->
   this.plugin ?= 'instantill' # has to be defined at startup, as either instantill or shareyourpaper
   this.element ?= '#' + this.plugin
   this.pushstate ?= true # if true, the embed will try to add page state changes to the browser state manager
+  this.local ?= true # local storage of config turned off by default for now
   this.config ?= {}
   this.data ?= {} # the data obj to send to backend
   this.f ?= {} # the result of the find/ill/permission request to the backend
@@ -212,7 +213,7 @@ _oab = (opts) ->
   if window.location.search.indexOf('clear=') isnt -1
     localStorage.removeItem '_oab_config_' + this.plugin
   if window.location.search.indexOf('local=') isnt -1
-    this.local = false
+    this.local = if window.location.search.indexOf('local=true') isnt -1 then true else false
   if window.location.search.indexOf('config=') isnt -1
     try this.config = JSON.parse window.location.search.split('config=')[1].split('&')[0].split('#')[0]
   if window.location.search.indexOf('config.') isnt -1
@@ -308,7 +309,7 @@ _oab.prototype.restart = (e, val) ->
   this.f = {}
   this.loading false
   this.file = false
-  _L.gebi("_oab_file").value = ''
+  gf.value = '' if gf = _L.gebi "_oab_file"
   _L.hide '._oab_panel'
   _L.show '#_oab_inputs'
   this.configure()
@@ -1163,7 +1164,7 @@ _oab.prototype.configure = (key, val, build, preview) ->
       this.metadata()
     _L.listen 'click', '._oab_reload', (e) => 
       e.preventDefault()
-      _L.gebi("_oab_file").value = ''
+      gf.value = '' if gf = _L.gebi "_oab_file"
       this.file = false
       this.permissions()
     _L.listen 'click', '._oab_confirm', (e) => e.preventDefault(); this.data.confirmed = true; this.deposit()
@@ -1179,7 +1180,7 @@ _oab.prototype.configure = (key, val, build, preview) ->
     this.data = {}
     this.f = {}
     this.loading false
-    _L.gebi("_oab_file").value = ''
+    gf.value = '' if gf = _L.gebi "_oab_file"
     this.file = false
     _L.hide '._oab_panel'
     _L.show '#_oab_inputs'

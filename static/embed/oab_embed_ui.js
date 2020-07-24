@@ -59,9 +59,9 @@ var view = function(e) {
         }
       }
     }
-    if (which === '#') {
+    if (which === '#' || which === '#undefined') {
       $('.section').first().show();
-      which = false;
+      which = '#menu';
     }
   }
   if (which && which !== '#menu') {
@@ -137,47 +137,52 @@ var settings = function(uc,clear) {
 };
 settings(_oab.config);
 
+var cleared = false;
 var save = function(e, preview) {
   try { e.preventDefault(); } catch (err) {}
   var data = {};
-  if (_oab.config && _oab.config.community) data.community = _oab.config.community; // deal with multiple community id annoyances that we should not have
-  $('.setting').each(function(i, obj) {
-    if ($(this).attr('id') && $(this).val() !== undefined) {
-      if ( $(this).attr('id') === 'community') {
-        var evl = $(this).val();
-        try {
-          if (evl.indexOf('/') !== -1) evl = evl.split('communities/')[1].split('/')[0];
-        } catch(err) {}
-        if ( _oab.config && ((_oab.config.community !== undefined && evl !== _oab.config.community) || (_oab.config.community === undefined && evl !== '') ) ) {
-          $('input').each(function(i, obj) { if ( $(this).attr('id') === 'community') { $(this).val(evl); } });
-          data.community = evl;
-        }
-      } else if ( $(this).is(':checkbox') ) {
-        data[$(this).attr('id')] = $(this).is(':checked');
-      } else if ( $(this).hasClass('subscription') ) {
-        if ($(this).val()) {
-          if (data.subscription === undefined) data.subscription = [];
-          data.subscription.push($(this).val());
-        } else if ($('.subscription').length > 1) {
-          $(this).remove();
-        }
-      } else if ( $(this).hasClass('subscription_type') ) {
-        if ($(this).val()) {
-          if (data['subscription_type'] === undefined) data['subscription_type'] = [];
-          data['subscription_type'].push($(this).val());
-        } else if ($('.subscription_type').length > 1) {
-          $(this).remove();
-        }
-      } else {
-        data[$(this).attr('id')] = $(this).val();
-        if (['ill_form','terms','book','other'].indexOf($(this).attr('id')) !== -1 && data[$(this).attr('id')] !== '' && data[$(this).attr('id')].indexOf('http') !== 0) {
-          data[$(this).attr('id')] = 'http://' + data[$(this).attr('id')];
-          $(this).val(data[$(this).attr('id')]);
+  if (window.location.search.indexOf('clear=') !== -1 && !cleared) {
+    cleared = true;
+  } else {
+    if (_oab.config && _oab.config.community) data.community = _oab.config.community; // deal with multiple community id annoyances that we should not have
+    $('.setting').each(function(i, obj) {
+      if ($(this).attr('id') && $(this).val() !== undefined) {
+        if ( $(this).attr('id') === 'community') {
+          var evl = $(this).val();
+          try {
+            if (evl.indexOf('/') !== -1) evl = evl.split('communities/')[1].split('/')[0];
+          } catch(err) {}
+          if ( _oab.config && ((_oab.config.community !== undefined && evl !== _oab.config.community) || (_oab.config.community === undefined && evl !== '') ) ) {
+            $('input').each(function(i, obj) { if ( $(this).attr('id') === 'community') { $(this).val(evl); } });
+            data.community = evl;
+          }
+        } else if ( $(this).is(':checkbox') ) {
+          data[$(this).attr('id')] = $(this).is(':checked');
+        } else if ( $(this).hasClass('subscription') ) {
+          if ($(this).val()) {
+            if (data.subscription === undefined) data.subscription = [];
+            data.subscription.push($(this).val());
+          } else if ($('.subscription').length > 1) {
+            $(this).remove();
+          }
+        } else if ( $(this).hasClass('subscription_type') ) {
+          if ($(this).val()) {
+            if (data['subscription_type'] === undefined) data['subscription_type'] = [];
+            data['subscription_type'].push($(this).val());
+          } else if ($('.subscription_type').length > 1) {
+            $(this).remove();
+          }
+        } else {
+          data[$(this).attr('id')] = $(this).val();
+          if (['ill_form','terms','book','other'].indexOf($(this).attr('id')) !== -1 && data[$(this).attr('id')] !== '' && data[$(this).attr('id')].indexOf('http') !== 0) {
+            data[$(this).attr('id')] = 'http://' + data[$(this).attr('id')];
+            $(this).val(data[$(this).attr('id')]);
+          }
         }
       }
-    }
-  });
-
+    });
+  }
+  
   settings(data);
   if (preview) {
     _oab.configure(data, true, undefined, preview);
@@ -289,7 +294,9 @@ jQuery(document).ready(function() {
         cfg = noddy.user.account.service.openaccessbutton.deposit.config;
       }
     }
-    if (cfg) {
+    if (window.location.search.indexOf('clear=') !== -1 && !cleared) {
+      save();
+    } else if (cfg) {
       if (!cfg.owner) cfg.owner = noddy.user.email ? noddy.user.email : (noddy.user.emails !== undefined ? noddy.user.emails[0].address : undefined);
       _oab.configure(cfg, noddy.user.account._id);
       settings(cfg);
@@ -305,9 +312,8 @@ jQuery(document).ready(function() {
           success: function(url) {
             if (url) {
               var ex = 'You can use this as the Base URL to integrate InstantILL into your other systems:<br>' + url + '.<br><br>Here is an example URL:<br>' + url + '?doi=10.1145/2908080.2908114 .<br><br>You likely have a more complex looking OpenURL. Not to worry! InstantILL can recognize a wide variety of standard OpenURL parameters so it should still just work.';
+              $('#noembeddedexampleavailable').hide();
               $('#embeddedexample').html(ex).show();
-            } else {
-              $('#noembeddedexampleavailable').show();
             }
           }
         });
