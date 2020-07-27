@@ -203,53 +203,38 @@
 
 <script src="/static/embed/oab_embed.js"></script>
 <!-- 996 is joe@openaccessbutton.org live id. 4WD is the same email on dev. -->
+
 <script>
+
+var learnmore = function() {
+  $('#_oab_nodoi').replaceWith('Try an example <a href="#" id="runexample"><u>10.1126/scitranslmed.3001922</u></a> or <a href="#" class="learnmore"><u>learn more</u></a>.');
+  if ($('#about').is(':visible')) {
+    $('#shareyourpaper').toggle();
+    $('#about').toggle();
+  }
+}
+
 _oab = shareyourpaper({
   uid:(api.indexOf('dev.') !== -1 ? '4WDY6njiatg3FZMJm' : '996wFY3oTTkNonqnt'),
   api:api,
+  loaded: learnmore,
   config:{"repo_name":"Zenodo","oa_deposit_off":true,"dark_deposit_off":true,"live":1585895131684,"not_library":true,"owner":"joe@openaccessbutton.org"}
 });
 
 jQuery(document).ready(function() {
-  var evadd = true;
-
-  var learnmore = function() {
-    var rep = 'Try an example <a href="#" id="runexample"><u>10.1126/scitranslmed.3001922</u></a> or <a href="#" class="learnmore"><u>learn more</u></a>.';
-    $('#_oab_nodoi').replaceWith(rep);
-    $('#runexample').on('click',function(e) { e.preventDefault(); $('#_oab_input').val('10.1126/scitranslmed.3001922'); _oab.find(); });
-    $('.learnmore').on('click',function(e) {
-      e.preventDefault();
-      $('#shareyourpaper').toggle();
-      $('#about').toggle();
-      if (evadd) {
-        evadd = false;
-        window.addEventListener("popstate", function(popevent) {
-          if (window.location.hash.indexOf('about') === -1 && $('#about').is(':visible')) {
-            $('#shareyourpaper').toggle();
-            $('#about').toggle();
-          }
-        });
+  $('body').on('click','#runexample',function(e) { e.preventDefault(); $('#_oab_input').val('10.1126/scitranslmed.3001922'); _oab.find(); });
+  $('body').on('click','.learnmore',function(e) {
+    e.preventDefault();
+    $('#shareyourpaper').toggle();
+    $('#about').toggle();
+    if ('pushState' in window.history) {
+      if ($('#about').is(':visible')) {
+        window.history.pushState("", "about", '#about');
+      } else {
+        window.history.pushState("", document.title, window.location.pathname);
       }
-      if ('pushState' in window.history) {
-        if ($('#about').is(':visible')) {
-          window.history.pushState("", "about", '#about');
-        } else {
-          window.history.pushState("", document.title, window.location.pathname);
-        }
-      }
-    });
-  }
-
-  var waiting = function(selector, callback) {
-    if ($(selector).length) {
-      callback();
-    } else {
-      setTimeout(function() {
-        waiting(selector, callback);
-      }, 300);
     }
-  };
-  waiting('#_oab_nodoi', learnmore);
-
+  });
 });
+
 </script>

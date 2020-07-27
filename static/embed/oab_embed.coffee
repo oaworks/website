@@ -208,7 +208,7 @@ _oab = (opts) ->
   this.submit_after_metadata = false # used by instantill to track if metadata has been provided by user
   this.file = false # used by syp to store the file for sending to backend
 
-  _L.loaded = this.loaded if this.loaded? # if this is set to a function, it will be passed to _leviathan loaded, which gets run after every ajax call completes
+  _L.loaded = this.loaded if this.loaded? # if this is set to a function, it will be passed to _leviathan loaded, which gets run after every ajax call completes. It is also called directly after every configure
 
   if window.location.search.indexOf('clear=') isnt -1
     localStorage.removeItem '_oab_config_' + this.plugin
@@ -780,7 +780,7 @@ _oab.prototype.find = (e) ->
   else if this.data.doi or this.data.title or this.data.url or this.data.id
     _L.set '#_oab_input', this.data.doi ? this.data.title ? this.data.url ? this.data.id
 
-  if this.plugin is 'instantill' and not this.data.doi and this.data.title and this.data.title.length < 30 and this.data.title.split(' ').length < 3
+  if this.plugin is 'instantill' and not this.data.doi and not this.f?.metadata?.journal and this.data.title and this.data.title.length < 30 and this.data.title.split(' ').length < 3
     this.metadata() # need more metadata for short titles
   else if not this.data.doi and (this.plugin is 'shareyourpaper' or (not this.data.url and not this.data.pmid and not this.data.pmcid and not this.data.title and not this.data.id))
     if this.plugin is 'shareyourpaper'
@@ -1052,7 +1052,7 @@ _oab.prototype.configure = (key, val, build, preview) ->
         if typeof lc is 'object' and lc isnt null
           console.log 'Config retrieved from local storage'
           this.config = lc 
-    if this.uid and this.uid isnt 'anonymous' and JSON.stringify(this.config) is '{}' # should a remote call always be made to check for superseded config if one is not provided at startup?
+    if this.remote isnt false and this.uid and this.uid isnt 'anonymous' and JSON.stringify(this.config) is '{}' # should a remote call always be made to check for superseded config if one is not provided at startup?
       _L.jx this.api + '/' + (if this.plugin is 'instantill' then 'ill' else 'deposit') + '/config?uid='+this.uid, undefined, (res) => 
         console.log 'Config retrieved from API'
         this.configure res
@@ -1186,6 +1186,7 @@ _oab.prototype.configure = (key, val, build, preview) ->
     _L.show '#_oab_inputs'
     _L.set '#_oab_input', preview
     setTimeout (() => this.find()), 1
+  this.loaded() if typeof this.loaded is 'function'
   return wc
 
 @shareyourpaper = (opts) -> opts ?= {}; opts.plugin = 'shareyourpaper'; return new _oab(opts);
