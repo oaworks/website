@@ -497,6 +497,14 @@ _oab.prototype.deposit = (e) -> # only used by shareyourpaper
   try e.preventDefault()
   if not this.data.email and _L.gebi '#_oab_email'
     this.validate()
+  else if this.demo is true or (this.data.doi? and this.data.doi.indexOf('10.1234/oab-syp-') is 0) or this.uid in ['qZooaHWRz9NLFNcgR','eZwJ83xp3oZDaec86'] or ((window.location.href.indexOf('setup') isnt -1 or window.location.href.indexOf('demo') isnt -1) and (window.location.href.indexOf('openaccessbutton.') isnt -1))
+    if this.data.doi? and this.data.doi.indexOf('10.1234/oab-syp-') is 0 # demo successful deposit
+      info = '<p>You\'ll soon find your paper freely available in ' + (this.config.repo_name ? 'ScholarWorks') + ', Google Scholar, Web of Science, and other popular tools.'
+      info += '<h3>Your paper is now freely available at this link:</h3>'
+      _L.html '#_oab_zenodo_embargo', info
+      this.done 'zenodo'
+    else # demo something wrong, please confirm
+      this.done 'confirm'
   else
     fl = _L.gebi '#_oab_file'
     if fl? and fl.files? and fl.files.length
@@ -681,22 +689,19 @@ _oab.prototype.findings = (data) -> # only used by instantill
     data.live = this.config.live if this.config.live
     if this.f.ill?.subscription?.url
       data.resolved = 'subscription'
-      data.url = this.f.ill.subscription.url
-      _L.post(this.api+'/ill', data, (() => window.location = this.f.ill.subscription.url), (() => window.location = this.f.ill.subscription.url))
     else if this.f.url
       data.resolved = 'open'
-      data.url = this.f.url
-      _L.post(this.api+'/ill', data, (() => window.location = this.f.url), (() => window.location = this.f.url))
     else if ou = this.openurl()
       data.resolved = 'library'
-      data.url = ou
-      _L.post(this.api+'/ill', data, (() => window.location = this.openurl()), (() => window.location = this.openurl()))
+    if data.resolved?
+      data.url = this.f.ill?.subscription?.url ? this.f.url ? ou
+      _L.post(this.api+'/ill', data, (() => window.location = this.f.ill?.subscription?.url ? this.f.url ? ou), (() => window.location = this.f.ill?.subscription?.url ? this.f.url ? ou))
 
   _L.show '#_oab_findings'
   if this.f.ill?.error
     _L.show '#_oab_error', '<p>Please note, we encountered errors querying the following subscription services: ' + this.f.ill.error.join(', ') + '</p>'
-  if this.f.metadata?.title? or this.f.ill?.subscription?.demo
-    citation = '<h2>' + (if this.f.ill?.subscription?.demo then 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL' else this.f.metadata.title) + '</h2>'
+  if this.f.metadata?.title?
+    citation = '<h2>' + this.f.metadata.title + '</h2>'
     if this.f.metadata.year or this.f.metadata.journal or this.f.metadata.volume or this.f.metadata.issue
       citation += '<p><i>'
       citation += (this.f.metadata.year ? '') + (if this.f.metadata.journal or this.f.metadata.volume or this.f.metadata.issue then ', ' else '') if this.f.metadata.year
@@ -804,12 +809,23 @@ _oab.prototype.find = (e) ->
     this.data.embedded ?= window.location.href
     this.data.pilot ?= this.config.pilot if this.config.pilot
     this.data.live ?= this.config.live if this.config.live
-    _L.post(
-      this.api+'/find'
-      this.data
-      (data) => if this.plugin is 'instantill' then this.findings(data) else this.permissions(data)
-      () => _L.show '#_oab_error', '<p>Oh dear, the service is down! We\'re aware, and working to fix the problem. ' + this.contact() + '</p>'
-    )
+    if this.demo is true and (this.data.title is 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL' or this.data.doi is '10.1234/567890' or (this.data.doi? and this.data.doi.indexOf('10.1234/oab-syp') is 0))
+      data = {title: 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL', year: '2019', crossref_type: 'journal-article', doi: this.data.doi ? '10.1234/oab-syp-aam'}
+      data.journal = 'Proceedings of the 16th IFLA ILDS conference: Beyond the paywall - Resource sharing in a disruptive ecosystem'
+      data.author = [{given: 'Mike', family: 'Paxton'}, {given: 'Gary', family: 'Maixner III'}, {given: 'Joseph', family: 'McArthur'}, {given: 'Tina', family: 'Baich'}]
+      data.ill = {subscription: {findings:{}, uid: options.from, lookups:[], error:[], url: 'https://scholarworks.iupui.edu/bitstream/handle/1805/20422/07-PAXTON.pdf?sequence=1&isAllowed=y'}}
+      data.permissions = { permissions: {
+        archiving_allowed: if this.data.doi is '10.1234/oab-syp-aam' then true else false,
+        version_allowed: if this.data.doi is '10.1234/oab-syp-aam' then "postprint" else undefined
+      }, file: {archivable: true, archivable_reason: "Demo acceptance", version: "postprint", licence: "cc-by", same_paper: true, name: "example.pdf", format: "pdf", checksum: "example-checksum"}}
+      if this.plugin is 'instantill' then this.findings(data) else this.permissions(data)
+    else
+      _L.post(
+        this.api+'/find'
+        this.data
+        (data) => if this.plugin is 'instantill' then this.findings(data) else this.permissions(data)
+        () => _L.show '#_oab_error', '<p>Oh dear, the service is down! We\'re aware, and working to fix the problem. ' + this.contact() + '</p>'
+      )
 
 _oab.css = '
 <style>
