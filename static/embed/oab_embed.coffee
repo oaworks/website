@@ -208,6 +208,8 @@ _oab = (opts) ->
   this.submit_after_metadata = false # used by instantill to track if metadata has been provided by user
   this.file = false # used by syp to store the file for sending to backend
 
+  this.demo ?= window.location.href.indexOf('/demo') isnt -1 and (window.location.href.indexOf('openaccessbutton.') isnt -1 or window.location.href.indexOf('shareyourpaper.') isnt -1 or window.location.href.indexOf('instantill.') isnt -1)
+
   _L.loaded = this.loaded if this.loaded? # if this is set to a function, it will be passed to _leviathan loaded, which gets run after every ajax call completes. It is also called directly after every configure
 
   if window.location.search.indexOf('clear=') isnt -1
@@ -497,7 +499,11 @@ _oab.prototype.deposit = (e) -> # only used by shareyourpaper
   try e.preventDefault()
   if not this.data.email and _L.gebi '#_oab_email'
     this.validate()
-  else if this.demo is true or (this.data.doi? and this.data.doi.indexOf('10.1234/oab-syp-') is 0) or this.uid in ['qZooaHWRz9NLFNcgR','eZwJ83xp3oZDaec86'] or ((window.location.href.indexOf('setup') isnt -1 or window.location.href.indexOf('demo') isnt -1) and (window.location.href.indexOf('openaccessbutton.') isnt -1))
+  # if the embed sets "demo", AND the embed submits a oab-syp doi, don't send it to the backend
+  # for any other DOI it SHOULD go to the backend as a deposit
+  # the backend, if seeing the deposit comes from a demo, should behave as normal BUT deposit to zenodo sandbox
+  # that should happen even on live if demo is true
+  else if this.demo is true and ((this.data.doi? and this.data.doi.indexOf('10.1234/oab-syp-') is 0) or this.uid in ['qZooaHWRz9NLFNcgR','eZwJ83xp3oZDaec86'] or ((window.location.href.indexOf('setup') isnt -1 or window.location.href.indexOf('demo') isnt -1) and (window.location.href.indexOf('openaccessbutton.') isnt -1)))
     if this.data.doi? and this.data.doi.indexOf('10.1234/oab-syp-') is 0 # demo successful deposit
       info = '<p>You\'ll soon find your paper freely available in ' + (this.config.repo_name ? 'ScholarWorks') + ', Google Scholar, Web of Science, and other popular tools.'
       info += '<h3>Your paper is now freely available at this link:</h3>'
@@ -518,6 +524,7 @@ _oab.prototype.deposit = (e) -> # only used by shareyourpaper
     # this could be just an email for a dark deposit, or a file for actual deposit
     # if the file is acceptable and can go in zenodo then we don't bother getting the email address
     data = {from: this.uid, plugin: this.plugin, embedded:window.location.href, metadata: this.f?.metadata }
+    data.demo = true if this.demo is true
     data.config = this.config
     data.email = this.data.email if this.data.email
     data.confirmed = this.data.confirmed if this.data.confirmed
@@ -810,10 +817,10 @@ _oab.prototype.find = (e) ->
     this.data.pilot ?= this.config.pilot if this.config.pilot
     this.data.live ?= this.config.live if this.config.live
     if this.demo is true and (this.data.title is 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL' or this.data.doi is '10.1234/567890' or (this.data.doi? and this.data.doi.indexOf('10.1234/oab-syp') is 0))
-      data = {title: 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL', year: '2019', crossref_type: 'journal-article', doi: this.data.doi ? '10.1234/oab-syp-aam'}
-      data.journal = 'Proceedings of the 16th IFLA ILDS conference: Beyond the paywall - Resource sharing in a disruptive ecosystem'
-      data.author = [{given: 'Mike', family: 'Paxton'}, {given: 'Gary', family: 'Maixner III'}, {given: 'Joseph', family: 'McArthur'}, {given: 'Tina', family: 'Baich'}]
-      data.ill = {subscription: {findings:{}, uid: options.from, lookups:[], error:[], url: 'https://scholarworks.iupui.edu/bitstream/handle/1805/20422/07-PAXTON.pdf?sequence=1&isAllowed=y'}}
+      data = {metadata: {title: 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL', year: '2019', crossref_type: 'journal-article', doi: this.data.doi ? '10.1234/oab-syp-aam'}}
+      data.metadata.journal = 'Proceedings of the 16th IFLA ILDS conference: Beyond the paywall - Resource sharing in a disruptive ecosystem'
+      data.metadata.author = [{given: 'Mike', family: 'Paxton'}, {given: 'Gary', family: 'Maixner III'}, {given: 'Joseph', family: 'McArthur'}, {given: 'Tina', family: 'Baich'}]
+      data.ill = {subscription: {findings:{}, uid: this.uid, lookups:[], error:[], url: 'https://scholarworks.iupui.edu/bitstream/handle/1805/20422/07-PAXTON.pdf?sequence=1&isAllowed=y'}}
       data.permissions = { permissions: {
         archiving_allowed: if this.data.doi is '10.1234/oab-syp-aam' then true else false,
         version_allowed: if this.data.doi is '10.1234/oab-syp-aam' then "postprint" else undefined

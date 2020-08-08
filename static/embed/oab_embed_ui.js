@@ -188,11 +188,15 @@ var save = function(e, preview) {
     _oab.configure(data, true, undefined, preview);
   } else {
     var configured;
-    if ($('.section:visible').first().attr('save') === 'restart') {
+    var dsv = undefined;
+    try {
+      dsv = $('.section:visible').first().prev().attr('save');
+    } catch(err) {}
+    if (dsv === 'restart') {
       configured = _oab.configure(data, true);
       _oab.restart();
     } else {
-      configured = _oab.configure(data, true, undefined, $('.section:visible').first().attr('save'));
+      configured = _oab.configure(data, true, undefined, dsv);
     }
     if (noddy.apikey) {
       if (runas) configured.uid = runas;
