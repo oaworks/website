@@ -178,7 +178,7 @@
           5/7 How do deposits get into my repository?
         </b></p>
 
-        <p><a class="btn btn-demo-blue view preview" href="#ingest" val="10.1234/oab-syp-dark">Show me!</a></p>
+        <p><a class="btn btn-demo-blue" href="#ingest" id="fakeingest">Show me!</a></p>
       </div>
 
       <div id="ingest" class="section blueery">
@@ -241,50 +241,8 @@
 <script src="/static/embed/oab_embed.js"></script>
 <script>
 var loaded = function(xhr) {
-  $('#faketable').hide();
-  $('#shareyourpaper').show();
-  var js = false;
-  try { js = JSON.parse(xhr.response); } catch(err) {}
-  if (js !== false && js.zenodo !== undefined && js.demo) {
-    if (window.location.hash && window.location.hash.indexOf('general') !== -1) {
-      view('#success');
-    }
-  } else if (js !== false && js.metadata && js.metadata.doi === '10.1234/oab-syp-dark') {
-    if (window.location.hash && window.location.hash.indexOf('ingest') !== -1) {
-      var table = '<table class="table table-bordered" id="faketable">';
-      table += '<tr><td><b>Data given</b></td><td><b>Value</b></td></tr>';
-      var citation = '';
-      var ma = js.metadata;
-      if (ma.author !== undefined) {
-        for (var a in ma.author) {
-          try {
-            if (a !== '0') citation += ', ';
-            citation += ma.author[a].given + ' ' + ma.author[a].family;
-          } catch(err) {}
-        }
-      }
-      if (citation !== '') citation += ' ';
-      if (ma.title !== undefined) citation += '<i>' + ma.title + '</i>';
-      if (ma.journal !== undefined) citation += ' in <b>' + ma.journal + '</b>';
-      if (ma.volume !== undefined) citation += ', vol. ' + ma.volume;
-      if (ma.issue !== undefined) citation += ', iss. ' + ma.issue;
-      if (citation !== '') citation += '.';
-      if (ma.year) citation += ' ' + ma.year + '. ';
-      if (ma.doi) citation += ' doi: ' + ma.doi;
-      if (citation !== '') table += '<tr><td>Citation</td><td><p>' + citation + '</p></td></tr>';
-      var mp = js.permissions;
-      table += '<tr><td>Version allowed</td><td>Postprint</td></tr>';
-      table += '<tr><td>Embargo date</td><td>07/13/21</td></tr>';
-      table += '<tr><td>Licence required</td><td>cc-by-nc-nd</td></tr>';
-      table += '<tr><td>Deposit statement</td><td>This is an Accepted Manuscript of an article published by Research Publisher in Journal of Science on 07/13/20, available online: <a href="http://www.tandfonline.com/10.1234/oab-syp-dark">http://www.tandfonline.com/10.1234/oab-syp-dark</a>.</td></tr>';
-      table += '<tr><td>Version uploaded</td><td>Postprint</td></tr>';
-      table += '<tr><td>Keywords</td><td>Science, structures, discovery</td></tr>';
-      table += '<tr><td>Upload matches paper</td><td>Yes</td></tr>';
-      table += '<tr><td>Abstract</td><td>In this paper we discover a breakthrough discovery that is a breakthrough in science.</td></tr>';
-      table += '</table>';
-      $('#shareyourpaper').hide();
-      $('#shareyourpaper').after(table);
-    }
+  if (window.location.hash && window.location.hash.indexOf('general') !== -1 && $('#_oab_zenodo_url').length && $('#_oab_zenodo_url').val()) {
+    view('#success');
   }
 };
 
@@ -292,9 +250,33 @@ _oab = shareyourpaper({uid:(api.indexOf('dev.') !== -1 ? 'qZooaHWRz9NLFNcgR' : '
 // the one starting qz is the dev id, and it will be used any time the domain has dev. in it. The second one beginning eZ is the live id
 
 $('body').on('click', '#fakedeposit', function(e) {
-  _oab.f = {metadata: {title: 'example', journal: 'example', doi: '10.1234/oab-syp-version'}};
+  _oab.data.doi = '10.1234/oab-syp-confirm';
   _oab.deposit();
   view('#wrong');
+});
+
+$('body').on('click', '#fakeingest', function(e) {
+  e.preventDefault();
+  var table = '<table class="table table-bordered" id="faketable">';
+  table += '<tr><td><b>Data given</b></td><td><b>Value</b></td></tr>';
+  var citation = 'Mike Paxton, Gary Maixner III, Joseph McArthur, Tina Baich \
+<i>Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL</i> \
+ in <b>Proceedings of the 16th IFLA ILDS conference: Beyond the paywall - Resource sharing in a disruptive ecosystem</b>. \
+ 2019. doi: 10.1234/oab-syp-dark';
+  table += '<tr><td>Citation</td><td><p>' + citation + '</p></td></tr>';
+  table += '<tr><td>Version allowed</td><td>Postprint</td></tr>';
+  table += '<tr><td>Embargo date</td><td>07/13/21</td></tr>';
+  table += '<tr><td>Licence required</td><td>cc-by-nc-nd</td></tr>';
+  table += '<tr><td>Deposit statement</td><td>This is an Accepted Manuscript of an article published by Research Publisher in Journal of Science on 07/13/20, available online: <a href="http://www.tandfonline.com/10.1234/oab-syp-dark">http://www.tandfonline.com/10.1234/oab-syp-dark</a>.</td></tr>';
+  table += '<tr><td>Version uploaded</td><td>Postprint</td></tr>';
+  table += '<tr><td>Keywords</td><td>Science, structures, discovery</td></tr>';
+  table += '<tr><td>Upload matches paper</td><td>Yes</td></tr>';
+  table += '<tr><td>Abstract</td><td>In this paper we discover a breakthrough discovery that is a breakthrough in science.</td></tr>';
+  table += '</table>';
+  $('#shareyourpaper').hide();
+  $('#shareyourpaper').after(table);
+  $('#dark').hide();
+  $('#ingest').show();
 });
 
 $('body').on('click', '#removefaketable', function(e) {

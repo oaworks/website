@@ -497,20 +497,19 @@ _oab.prototype.done = (res, msg) ->
 
 _oab.prototype.deposit = (e) -> # only used by shareyourpaper
   try e.preventDefault()
+  console.log this.data
   if not this.data.email and _L.gebi '#_oab_email'
     this.validate()
-  # if the embed sets "demo", AND the embed submits a oab-syp doi, don't send it to the backend
-  # for any other DOI it SHOULD go to the backend as a deposit
-  # the backend, if seeing the deposit comes from a demo, should behave as normal BUT deposit to zenodo sandbox
-  # that should happen even on live if demo is true
-  else if this.demo is true and ((this.data.doi? and this.data.doi.indexOf('10.1234/oab-syp-') is 0) or this.uid in ['qZooaHWRz9NLFNcgR','eZwJ83xp3oZDaec86'] or ((window.location.href.indexOf('setup') isnt -1 or window.location.href.indexOf('demo') isnt -1) and (window.location.href.indexOf('openaccessbutton.') isnt -1)))
-    if this.data.doi? and this.data.doi.indexOf('10.1234/oab-syp-') is 0 # demo successful deposit
+  else if this.demo is true and this.data.doi? and this.data.doi.indexOf('10.1234/oab-syp-') is 0
+    if this.data.doi? and this.data.doi.indexOf('10.1234/oab-syp-') is 0 and this.data.doi isnt '10.1234/oab-syp-confirm' # demo successful deposit
       info = '<p>You\'ll soon find your paper freely available in ' + (this.config.repo_name ? 'ScholarWorks') + ', Google Scholar, Web of Science, and other popular tools.'
       info += '<h3>Your paper is now freely available at this link:</h3>'
       _L.html '#_oab_zenodo_embargo', info
+      _L.set '#_oab_zenodo_url', 'https://zenodo.org/record/3703317'
       this.done 'zenodo'
     else # demo something wrong, please confirm
       this.done 'confirm'
+    this.loaded() if typeof this.loaded is 'function'
   else
     fl = _L.gebi '#_oab_file'
     if fl? and fl.files? and fl.files.length

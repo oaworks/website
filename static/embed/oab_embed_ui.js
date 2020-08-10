@@ -235,6 +235,7 @@ jQuery(document).ready(function() {
 
   if (api.indexOf('dev.') !== -1) {
     $('.dev_api').html("api: 'https://dev.api.cottagelabs.com/service/oab', ");
+    $('.dev_var').html('_oab=');
     $('.dev_url').each(function() {
       $(this).html($(this).html().replace('https://','https://dev.'));
     })
