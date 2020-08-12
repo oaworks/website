@@ -157,7 +157,11 @@ var save = function(e, preview) {
             data.community = evl;
           }
         } else if ( $(this).is(':checkbox') ) {
-          data[$(this).attr('id')] = $(this).is(':checked');
+          if ($(this).attr('id') === 'live' || $(this).attr('id') === 'pilot') {
+            if ($(this).is(':checked')) data[data[$(this).attr('id')]] = Date.now();
+          } else {
+            data[$(this).attr('id')] = $(this).is(':checked');
+          }
         } else if ( $(this).hasClass('subscription') ) {
           if ($(this).val()) {
             if (data.subscription === undefined) data.subscription = [];

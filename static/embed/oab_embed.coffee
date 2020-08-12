@@ -251,7 +251,7 @@ _oab = (opts) ->
 
 
 _oab.prototype.cml = () -> return this.config.problem ? this.config.owner ? ''
-_oab.prototype.contact = () -> return 'Please try ' + (if this.cml() then '<a href="mailto:' + this.cml() + '">contacting your library</a>' else 'contacting your library') + ' directly'
+_oab.prototype.contact = () -> return 'Please try ' + (if this.cml() then '<a id="_oab_contact_library" href="mailto:' + this.cml() + '">contacting your library</a>' else 'contacting your library') + ' directly'
 
 _oab.prototype.loading = (load) ->
   _L.hide '#_oab_error'
@@ -335,7 +335,6 @@ _oab.prototype.ping = (what) ->
 
 _oab.prototype.panel = (panel, section) ->
   if he = _L.gebi '_oab_' + (if panel.startsWith('_oab_') then panel.replace('_oab_','') else panel)
-    console.log he
     _L.hide '._oab_panel'
     _L.show he
     this.section(section) if section
@@ -497,7 +496,6 @@ _oab.prototype.done = (res, msg) ->
 
 _oab.prototype.deposit = (e) -> # only used by shareyourpaper
   try e.preventDefault()
-  console.log this.data
   if not this.data.email and _L.gebi '#_oab_email'
     this.validate()
   else if this.demo is true and this.data.doi? and this.data.doi.indexOf('10.1234/oab-syp-') is 0
@@ -573,7 +571,7 @@ _oab.prototype.deposit = (e) -> # only used by shareyourpaper
           this.done 'success'
       () =>
         this.loading false
-        _L.show '#_oab_error', '<p>Sorry, we were not able to deposit this paper for you. ' + this.contact() + '</p><p><a href="#" class="_oab_restart"><b>Try again</b></a></p>'
+        _L.show '#_oab_error', '<p>Sorry, we were not able to deposit this paper for you. ' + this.contact() + '</p><p><a href="#" class="_oab_restart" id="_oab_sorry_try_again"><b>Try again</b></a></p>'
         this.ping('shareyourpaper_couldnt_submit_deposit')
     )
 
@@ -600,8 +598,8 @@ _oab.prototype.permissions = (data) -> # only used by shareyourpaper
     _L.hide '._oab_section'
     _L.show '#_oab_permissions'
     this.loading false
-    tcs = 'terms <a href="https://openaccessbutton.org/terms" target="_blank">[1]</a>'
-    tcs += ' <a href="' + this.config.terms + '" target="_blank">[2]</a>' if this.config.terms
+    tcs = 'terms <a id="_oab_terms" href="https://openaccessbutton.org/terms" target="_blank">[1]</a>'
+    tcs += ' <a id="_oab_config_terms" href="' + this.config.terms + '" target="_blank">[2]</a>' if this.config.terms
     ph = 'your.name@institution.edu';
     if this.config.email_domains? and this.config.email_domains.length
       this.config.email_domains = this.config.email_domains.split(',') if typeof this.config.email_domains is 'string'
@@ -619,9 +617,9 @@ _oab.prototype.permissions = (data) -> # only used by shareyourpaper
       _L.html '._oab_terms', tcs
     refs = ''
     for p of this.f?.permissions?.permissions?.policy_full_text ? []
-      refs += ' <a target="_blank" href="' + this.f.permissions.permissions.policy_full_text[p] + '">[' + (parseInt(p)+1) + ']</a>'
+      refs += ' <a id="_oab_policy_text" target="_blank" href="' + this.f.permissions.permissions.policy_full_text[p] + '">[' + (parseInt(p)+1) + ']</a>'
     _L.html '._oab_refs', refs
-    paper = if this.f?.metadata?.doi then '<a target="_blank" href="https://doi.org/' + this.f.metadata.doi + '"><u>your paper</u></a>' else 'your paper'
+    paper = if this.f?.metadata?.doi then '<a id="_oab_your_paper" target="_blank" href="https://doi.org/' + this.f.metadata.doi + '"><u>your paper</u></a>' else 'your paper'
     _L.html '._oab_your_paper', (if this.f?.permissions?.permissions?.version_allowed is 'publisher pdf' then 'the publisher pdf of ' else '') + paper
     _L.html '._oab_journal', this.f?.metadata?.journal_short ? 'the journal'
     # set config by this.config.repo_name put name in ._oab_repo
@@ -674,7 +672,7 @@ _oab.prototype.findings = (data) -> # only used by instantill
   if ct = this.f.metadata?.crossref_type
     if ct not in ['journal-article','proceedings-article','posted-content']
       if ct in ['book-section','book-part','book-chapter']
-        err = '<p>Please make your request through our ' + (if this.config.book then '<a href="' + this.config.book + '">book form</a>' else 'book form')
+        err = '<p>Please make your request through our ' + (if this.config.book then '<a id="_oab_book_form" href="' + this.config.book + '">book form</a>' else 'book form')
       else
         err = '<p>We can only process academic journal articles, please use another form.'
       _L.show '#_oab_error', err + '</p>'
@@ -798,14 +796,14 @@ _oab.prototype.find = (e) ->
       delete this.data.title
       delete this.data.url
       delete this.data.id
-      _L.show '#_oab_error', '<p>Please provide a DOI. If you\'re not sure what a DOI is, go <a href="https://library.uic.edu/help/article/1966/what-is-a-doi-and-how-do-i-use-them-in-citations" target="_blank">here</a>.</p>'
+      _L.show '#_oab_error', '<p>Please provide a DOI. If you\'re not sure what a DOI is, go <a id="_oab_doi_howto" href="https://library.uic.edu/help/article/1966/what-is-a-doi-and-how-do-i-use-them-in-citations" target="_blank">here</a>.</p>'
     else
       _L.show '#_oab_error', '<p><span>&#10060;</span> Sorry please provide the full DOI, title, citation, PMID or PMC ID.</p>'
   else if this.data.doi and this.plugin is 'shareyourpaper' and (this.data.doi.indexOf('10') isnt 0 or this.data.doi.indexOf('/') is -1 or this.data.doi.indexOf('.') is -1 or this.data.doi.length < 8)
     delete this.data.doi
     _L.set '#_oab_input', ''
     _L.gebi('_oab_input').focus()
-    _L.show '#_oab_error', '<p>Please provide a DOI. If you\'re not sure what a DOI is, go <a href="https://library.uic.edu/help/article/1966/what-is-a-doi-and-how-do-i-use-them-in-citations" target="_blank">here</a>.</p>'
+    _L.show '#_oab_error', '<p>Please provide a DOI. If you\'re not sure what a DOI is, go <a id="_oab_doi_howto" href="https://library.uic.edu/help/article/1966/what-is-a-doi-and-how-do-i-use-them-in-citations" target="_blank">here</a>.</p>'
   else
     this.state()
     this.loading()
@@ -887,14 +885,14 @@ _oab.instantill_template = '
     <br>Start by entering a full <span class="_oab_paper">article</span> title, DOI or URL:<br>
   </p> 
   <p><input class="_oab_form" type="text" id="_oab_input" placeholder="e.g. World Scientists Warning of a Climate Emergency" aria-label="Enter a search term" style="box-shadow:none;"></input></p>
-  <p><a class="_oab_find _oab_button _oab_loading" href="#" aria-label="Search" style="min-width:140px;">Find <span class="_oab_paper">article</span></a></p>
+  <p><a class="_oab_find _oab_button _oab_loading" id="_oab_find" href="#" aria-label="Search" style="min-width:140px;">Find <span class="_oab_paper">article</span></a></p>
   <div id="_oab_book_or_other"></div>
   <div id="_oab_advanced_account_info"></div>
 </div>
 
 <div class="_oab_panel" id="_oab_findings" style="display:none;">
   <div id="_oab_citation"><h2>A title</h2><p><b>And citation string, OR demo title OR Unknown <span class="_oab_paper">article</span> and refer to library</b></p></div>
-  <p><a class="_oab_wrong" href="#"><b>This is not the <span class="_oab_paper">article</span> I searched</b></a></p>
+  <p id="_oab_wrong_paper"><a class="_oab_wrong" href="#"><b>This is not the <span class="_oab_paper">article</span> I searched</b></a></p>
   <div class="_oab_section" id="_oab_sub_available">
     <h3>We have an online copy instantly available</h3>
     <p>You should be able to access it on the publisher\'s website.</p>
@@ -912,7 +910,7 @@ _oab.instantill_template = '
       <p id="_oab_terms_note"><input type="checkbox" id="_oab_read_terms"> I have read the <a id="_oab_terms_link" target="_blank" href="#">terms and conditions</a></p>
       <p><input placeholder="Your university email address" id="_oab_email" type="text" class="_oab_form"></p>
     </div>
-    <p><a class="_oab_submit _oab_button _oab_loading" href="#" style="min-width:140px;">Complete request</a></p>
+    <p><a class="_oab_submit _oab_button _oab_loading" href="#" id="_oab_submit" style="min-width:140px;">Complete request</a></p>
   </div>
 </div>
 
@@ -924,9 +922,9 @@ _oab.instantill_template = '
   <p>Journal title (required)<br><input class="_oab_form" id="_oab_journal" type="text" placeholder="e.g. Nature"></p>
   <p>Year of publication (required)<br><input class="_oab_form" id="_oab_year" type="text" placeholder="e.g 1992"></p>
   <p><span class="_oab_paper">Article</span> DOI or URL<br><input class="_oab_form" id="_oab_doi" type="text" placeholder="e.g 10.1126/scitranslmed.3008973"></p>
-  <p><a href="#" class="_oab_find _oab_button _oab_loading _oab_continue" style="min-width:140px;">Continue</a></p>
+  <p><a href="#" class="_oab_find _oab_button _oab_loading _oab_continue" id="_oab_continue" style="min-width:140px;">Continue</a></p>
   <p>
-    <a href="#" class="_oab_restart"><b>Try again</b></a>
+    <a href="#" class="_oab_restart" id="_oab_try_again"><b>Try again</b></a>
     <span id="_oab_advanced_ill_form" style="display:none;"></span>
   </p>
 </div>
@@ -936,7 +934,7 @@ _oab.instantill_template = '
     <h2>Thanks! Your request has been received.</h2>
     <p>And confirmation code and tell we will email soon - OR sorry we could not create an ILL, and refer back to library if possible.</p>
   </div>
-  <p><a href="#" class="_oab_restart _oab_button" id="_oab_done_restart" style="min-width:140px;">Do another</a></p>
+  <p><a href="#" class="_oab_restart _oab_button" id="_oab_done_restart" id="_oab_restart" style="min-width:140px;">Do another</a></p>
 </div>
 <div id="_oab_error"></div>
 <div id="_oab_pilot"></div>'
@@ -954,14 +952,14 @@ _oab.shareyourpaper_template = '
 </div>
 
 <div class="_oab_panel" id="_oab_permissions" style="display:none;">
-  <div class="_oab_section _oab_oa">
+  <div class="_oab_section _oab_oa" id="_oab_oa">
     <h2>Your paper is already freely available!</h2>
     <p>Great news, you\'re already getting the benefits of sharing your work! Your publisher or co-author have already shared it.</p>
     <p><a target="_blank" href="#" class="_oab_oa_url _oab_button" style="min-width:140px;">See free version</a></p>
-    <p><a href="#" class="_oab_restart"><b>Do another</b></a></p>
+    <p><a href="#" class="_oab_restart" id="_oab_restart"><b>Do another</b></a></p>
   </div>
 
-  <div class="_oab_section _oab_permission_required">
+  <div class="_oab_section _oab_permission_required" id="_oab_permission_required">
     <h2>You may share your paper if you ask the journal</h2>
     <p>Unlike most, <span class="_oab_journal">the journal</span> requires that you ask them before you share your paper freely. 
     Asking only takes a moment as we find out who to contact and have drafted an email for you.</p>
@@ -969,13 +967,13 @@ _oab.shareyourpaper_template = '
     <p><a target="_blank" id="_oab_permissionemail" class="_oab_restart" href="#"><b>I\'ve got permission now!</b></a></p>
   </div>  
 
-  <div class="_oab_section _oab_oa_deposit">
+  <div class="_oab_section _oab_oa_deposit" id="_oab_oa_deposit">
     <h2>Your paper is already freely available!</h2>
-    <p>Great news, you\'re already getting the benefits of sharing your work! Your publisher or co-author have already shared a <a class="_oab_oa_url" target="_blank" href="#">freely available copy</a>.</p>
+    <p>Great news, you\'re already getting the benefits of sharing your work! Your publisher or co-author have already shared a <a class="_oab_oa_url" id="_oab_goto_oa_url" target="_blank" href="#">freely available copy</a>.</p>
     <h3 class="_oab_section _oab_get_email">Give us your email to confirm deposit</h3>
   </div>
 
-  <div class="_oab_section _oab_archivable">
+  <div class="_oab_section _oab_archivable" id="_oab_archivable">
     <h2>You can freely share your paper now!</h2>
     <p><span class="_oab_library">The library has</span> checked and <span class="_oab_journal">the journal</span> encourages you to freely share <span class="_oab_your_paper">your paper</span> so colleagues and the public can freely read and cite it. <span class="_oab_refs"></span></p>
     <div id="_oab_not_pdf">
@@ -987,28 +985,28 @@ _oab.shareyourpaper_template = '
     <h3 class="_oab_section _oab_get_email"><span>&#10003;</span> Tell us your email</h3>
   </div>
 
-  <div class="_oab_section _oab_dark_deposit">
+  <div class="_oab_section _oab_dark_deposit" id="_oab_dark_deposit">
     <h2>You can share your paper!</h2>
     <p>We checked and unfortunately <span class="_oab_journal">the journal</span> won\'t let you share <span class="_oab_your_paper">your paper</span> freely with everyone. <span class="_oab_refs"></span><br><br>
     The good news is the library can still legally make your paper much easier to find and access. We\'ll put the publisher PDF in <span class="_oab_repo">ScholarWorks</span> and then share it on your behalf whenever it is requested.</p>
     <h3 class="_oab_section _oab_get_email">All we need is your email</h3>
   </div>
 
-  <div class="_oab_section _oab_get_email">
+  <div class="_oab_section _oab_get_email" id="_oab_get_email">
     <p><input class="_oab_form" type="text" id="_oab_email" placeholder="" aria-label="Enter your email" style="box-shadow:none;"></input></p>
     <p class="_oab_section _oab_oa_deposit">We\'ll use this to send you a link. By depositing, you\'re agreeing to the <span class="_oab_terms">terms</span>.</p>
     <p class="_oab_section _oab_archivable">We\'ll only use this if something goes wrong.<br>
     <p class="_oab_section _oab_dark_deposit">We\'ll only use this to send you a link to your paper when it is in <span class="_oab_repo">ScholarWorks</span>. By depositing, you\'re agreeing to the <span class="_oab_terms">terms</span>.</p>
   </div>
 
-  <div class="_oab_section _oab_archivable">
+  <div class="_oab_section _oab_archivable" id="_oab_archivable_file">
     <h3>We\'ll check it\'s legal, then promote, and preserve your work</h3>
     <p><input type="file" name="file" id="_oab_file" class="_oab_form"></p>
     <p>By depositing you\'re agreeing to the <span class="_oab_terms">terms</span> and to license your work <span class="_oab_licence">CC-BY</span>.</p>
   </div>
   
-  <div class="_oab_section _oab_oa_deposit _oab_archivable _oab_dark_deposit">
-    <p><a href="#" class="_oab_deposit _oab_button _oab_loading" style="min-width:140px;">Deposit</a></p>
+  <div class="_oab_section _oab_oa_deposit _oab_archivable _oab_dark_deposit" id="_oab_deposits">
+    <p><a href="#" class="_oab_deposit _oab_button _oab_loading" style="min-width:140px;" id="_oab_deposit">Deposit</a></p>
   </div>
 </div>
 
@@ -1017,8 +1015,8 @@ _oab.shareyourpaper_template = '
     <h2>Hmmm, something looks wrong</h2>
     <p>You\'re nearly done. It looks like what you uploaded is a publisher\'s PDF which your journal prohibits legally sharing.<!-- It can only be shared on a limited basis.--><br><br>
     We just need the version accepted by the journal to make your work available to everyone.</p>
-    <p><a href="#" class="_oab_reload _oab_button" style="min-width:140px;">Try uploading again</a></p>
-    <p><a href="#" class="_oab_confirm _oab_loading"><b>My upload was an accepted manuscript</b></a></p>
+    <p><a href="#" class="_oab_reload _oab_button" id="_oab_upload_again" style="min-width:140px;">Try uploading again</a></p>
+    <p><a href="#" class="_oab_confirm _oab_loading" id="_oab_upload_accept"><b>My upload was an accepted manuscript</b></a></p>
   </div>
 
   <div class="_oab_done" id="_oab_check">
@@ -1178,7 +1176,7 @@ _oab.prototype.configure = (key, val, build, preview) ->
     _L.listen 'enter', '#_oab_email', (e) => this.validate(e)
     _L.listen 'click', '._oab_find', (e) => this.find(e)
     _L.listen 'click', '._oab_submit', (e) => this.submit(e)
-    _L.listen 'click', '._oab_restart', (e) => console.log(e); this.restart(e)
+    _L.listen 'click', '._oab_restart', (e) => this.restart(e)
     _L.listen 'click', '._oab_ping', (e) => this.ping(_L.get e.target, 'message')
     _L.listen 'click', '._oab_wrong', (e) => 
       e.preventDefault()
