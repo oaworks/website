@@ -64,86 +64,57 @@
 
 <div id="demo" class="container-fluid">
 
-  <div id="menu" class="section">
-    <div class="row">
-      <div class="col-md-6 col-md-offset-1 content">
-        <div id="shareyourpaper"></div>
-      </div>
+  <div id="setup" class="row full">
+    <div class="col-md-6 col-md-offset-1 content">
+      <div id="shareyourpaper"></div>
+    </div>
 
-      <div class="col-md-4 col-md-offset-1 blue">
-        <div class="blueery">
-          <h2>Test</h2>
+    <div class="settings col-md-4 col-md-offset-1 blue">
+      <div class="section blueery">
+        <h2>Test</h2>
 
-          <p>
-            This is a landing page for syp testing. It has some quick links to demo the different kinds of shareyourpaper responses and actions.
-          </p>
+        <p>
+          This is a landing page for syp testing. It has some quick links to demo the different kinds of shareyourpaper responses and actions.
+        </p>
 
-          <p> SYP can have quite a few different configs so the below dois can bring different responses. It's good to test at least two configs:
-            <ul>
-              <li><a href="https://josephmcarthur.github.io/playground/syp-dev-homepage">syp homepage</a></li>
-              <li><a href="https://josephmcarthur.github.io/playground/syp-dev">library default</a></li>
-            </ul>
-          </p>
+        <p> SYP can have quite a few different configs so the below dois can bring different responses. It's good to test at least two configs:
+          <ul>
+            <li><a href="https://josephmcarthur.github.io/playground/syp-dev-homepage">syp homepage</a></li>
+            <li><a href="https://josephmcarthur.github.io/playground/syp-dev">library default</a></li>
+          </ul>
+        </p>
 
-          <p>
-            <ul>
-              <li>1. Start a redeposit with <a href="#" class="preview" val="10.1186/1758-2946-3-47">10.1186/1758-2946-3-47</a> then choose "still want it in scholarworks" to see the redeposit flow.</li>
-              <li>2. A DOI that shows full info about not submitting publisher PDF etc: <a href="#" class="preview" val="10.1126/scitranslmed.3001922">10.1126/scitranslmed.3001922</a></li>
-              <li>3. A DOI where publisher PDF would be allowed: <a href="#" class="preview" val="10.1063/1.4937158">10.1063/1.4937158</a></li>
-              <li>4. A DOI where you can't share anything openly <a href="#" class="preview" val="10.15650/hebruniocollannu.89.2018.0221">10.15650/hebruniocollannu.89.2018.0221</a></li>
-              <li>5. Here is an example of a direct linkout: <a href="https://josephmcarthur.github.io/playground/syp-dev?doi=10.1073/pnas.1905762116">https://josephmcarthur.github.io/playground/syp-dev?doi=10.1073/pnas.1905762116</a></li>
-              <li>6. A DOI where there is an embargo & AAM override <a href="#" class="preview" val="10.1086/704224">10.1086/704224</a></li>
-              <li>Here are files that can be used to test: [<a href="https://docs.google.com/document/d/1PgdWOCE9nPf96_I_-7YfffU6eaOJq-85qw5YoV21pQI/export?format=docx">Correct AAM (2)</a>] [<a href="https://docs.google.com/document/d/1sNY8x0qCD4vuTikEghn2roSfI5kthJxdYuPJ1KSduEw/export?format=pdf">Wrong version (2)</a>] [<a href="https://drive.google.com/uc?export=download&id=1FzHn6U_uFYAXQwBLshDQkEEhopHPuUCv">Publisher (3)</a>] [<a href="https://github.com/OAButton/website/raw/develop/static/Meijers%20and%20van%20der%20Veer%202019%20-%20JOP%20(2).pdf" target="_blank">For 6</a>][<a href="https://docs.google.com/document/d/1AUYN2GscBVp69NKaQPjwQv2MPaAl2n42aAWGoZCDcdQ/edit?usp=sharing" target="_blank">To Edit</a>] </li>
-            </ul>
-          </p>
+        <p>
+          <ul>
+            <li>1. Start a redeposit with <a href="#" class="preview" val="10.1186/1758-2946-3-47">10.1186/1758-2946-3-47</a> then choose "still want it in scholarworks" to see the redeposit flow.</li>
+            <li>2. A DOI that shows full info about not submitting publisher PDF etc: <a href="#" class="preview" val="10.1126/scitranslmed.3001922">10.1126/scitranslmed.3001922</a></li>
+            <li>3. A DOI where publisher PDF would be allowed: <a href="#" class="preview" val="10.1063/1.4937158">10.1063/1.4937158</a></li>
+            <li>4. A DOI where you can't share anything openly <a href="#" class="preview" val="10.15650/hebruniocollannu.89.2018.0221">10.15650/hebruniocollannu.89.2018.0221</a></li>
+            <li>5. Here is an example of a direct linkout: <a href="https://josephmcarthur.github.io/playground/syp-dev?doi=10.1073/pnas.1905762116">https://josephmcarthur.github.io/playground/syp-dev?doi=10.1073/pnas.1905762116</a></li>
+            <li>6. A DOI where there is an embargo & AAM override <a href="#" class="preview" val="10.1086/704224">10.1086/704224</a></li>
+            <li>Here are files that can be used to test: [<a href="https://docs.google.com/document/d/1PgdWOCE9nPf96_I_-7YfffU6eaOJq-85qw5YoV21pQI/export?format=docx">Correct AAM (2)</a>] [<a href="https://docs.google.com/document/d/1sNY8x0qCD4vuTikEghn2roSfI5kthJxdYuPJ1KSduEw/export?format=pdf">Wrong version (2)</a>] [<a href="https://drive.google.com/uc?export=download&id=1FzHn6U_uFYAXQwBLshDQkEEhopHPuUCv">Publisher (3)</a>] [<a href="https://github.com/OAButton/website/raw/develop/static/Meijers%20and%20van%20der%20Veer%202019%20-%20JOP%20(2).pdf" target="_blank">For 6</a>][<a href="https://docs.google.com/document/d/1AUYN2GscBVp69NKaQPjwQv2MPaAl2n42aAWGoZCDcdQ/edit?usp=sharing" target="_blank">To Edit</a>] </li>
+          </ul>
+        </p>
 
-        </div>
       </div>
     </div>
   </div>
-
 </div>
 
 
 
 
-<script src="/static/shareyourpaper.js"></script>
+<script src="/static/embed/oab_embed.js"></script>
 
 <script>
+_oab = shareyourpaper({uid:(api.indexOf('dev.') !== -1 ? '4WDY6njiatg3FZMJm' : '996wFY3oTTkNonqnt'), api:api, local: false});
 jQuery(document).ready(function() {
-  $('#topnav').remove();
-  $('#footer').remove();
-});
-</script>
-
-<script src="/static/shareyourpaper_ui.js"></script>
-
-<script>
-jQuery(document).ready(function() {
-
   if ($('#demo').height() < $(window).height()) $('#demo').css({'min-height':$(window).height()+'px'});
-  $('div.blue').css({'min-height':$(window).height()+'px'});
+  $('.settings').css({'min-height':$(window).height()+'px'});
   var diff = Math.floor(($(window).height() - $('div.content:visible').height())/4);
   $('div.content:visible').css({'padding-top':diff+'px'});
 
-  /*$(document).ajaxComplete(function(e,xhr) {
-    if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.availability !== undefined) {
-      _ill_response = xhr.responseJSON.data;
-      $('div.content:visible').css({'padding-top':'100px'});
-      $('.oabutton_ill').off();
-    }
-  });*/
-
-  var fakedeposit = function(e) {
-    e.preventDefault();
-    view(undefined,'#wrong');
-    _restart();
-    setTimeout(function() { _fake_deposit(); },300);
-  }
-  $('#fakedeposit').bind('click',fakedeposit);
-
-  shareyourpaper({uid:(api.indexOf('dev.') !== -1 ? '4WDY6njiatg3FZMJm' : '996wFY3oTTkNonqnt'), api:api, css: false});
 });
 </script>
-
 <!--   996 is joe@openaccessbutton.org live id. 4WD is the same email on dev. -->
+<script src="/static/embed/oab_embed_ui.js"></script>

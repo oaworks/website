@@ -384,6 +384,18 @@ walk('./content', function(err, results) {
       content = template(vars);
 
       if (extrahead.indexOf('<title') !== -1 && content.indexOf('<title') !== -1) content = content.replace(/\<title.*?\<\/title\>/gi,'');
+      if (extrahead.indexOf('<meta') !== -1 && content.indexOf('<meta') !== -1) {
+        var metas = extrahead.split('<meta ');
+        for ( var m in metas ) {
+          if (metas[m].indexOf(' content=') !== -1) {
+            var mc = '<meta ' + metas[m].split(' content=')[0] + ' content=';
+            if (content.toLowerCase().indexOf(mc.toLowerCase()) !== -1) {
+              var rg = new RegExp(mc + '.*?>', 'i');
+              content = content.replace(rg,'');
+            }
+          }
+        }
+      }
       if (extrahead) content = content.replace('</head>', extrahead + '\n</head>');
 
       var open, close;
