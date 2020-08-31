@@ -1088,6 +1088,8 @@ _oab.prototype.configure = (key, val, build, preview) ->
     this.config[key] = if val is 'true' then true else if val is 'false' then false else val
   # make a "writable" config without unecessary params, such as those setting false etc
   # keep separate from this.config so that additional calls to configure take account of false if they do exist though
+  this.config.pilot = Date.now() if this.config.pilot is true
+  this.config.live = Date.now() if this.config.live is true
   for k of wc = JSON.parse JSON.stringify this.config
     delete wc[k] if not wc[k]? or wc[k] is false or ((typeof wc[k] is 'string' or Array.isArray(wc[k])) and wc[k].length is 0)
   try
