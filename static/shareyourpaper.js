@@ -693,7 +693,7 @@ var _run = function() {
         info += '<p><a target="_blank" href="#" class="oabutton_deposit ' + (_oab_opts.bootstrap !== false ? (typeof _oab_opts.bootstrap === 'string' ? _oab_opts.bootstrap : 'btn btn-primary') : '') + '" style="min-width:150px;">Submit</a></p>';
         info += '</div>';
       }
-      if (Array.isArray(avail.v2.permissions.permissions.policy_full_text)) {
+      if (avail.v2.permissions && avail.v2.permissions.permissions && Array.isArray(avail.v2.permissions.permissions.policy_full_text)) {
         var refs = '';
         for (var p in avail.v2.permissions.permissions.policy_full_text) {
           refs += ' <a target="_blank" href="' + avail.v2.permissions.permissions.policy_full_text[p] + '">[' + (parseInt(p)+1) + ']</a>';
