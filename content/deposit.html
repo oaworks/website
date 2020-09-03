@@ -40,8 +40,9 @@ p {
   <div id="maininfo" class="col-md-8 col-md-offset-2">
 
     <!-- The live one is set to be Natalia's gmail -->
-    <script src="/static/shareyourpaper.js"></script>
-    <script>shareyourpaper({uid:(api.indexOf('dev.') !== -1 ? 'tQ95zxSqqSPQqfqk9' : 'MNbNavF9ymZMY7jjN'),api:api});</script>
+    <script src="/static/embed/oab_embed.js"></script>
+
+    <script>_oab = shareyourpaper({uid:(api.indexOf('dev.') !== -1 ? 'tQ95zxSqqSPQqfqk9' : 'MNbNavF9ymZMY7jjN'), api:api, pushstate: false, local: false});</script>
     <div id="shareyourpaper"></div>
 
 <!-- tQ95zxSqqSPQqfqk9 is dev. These are linked to Natalia's gmail account. -->
