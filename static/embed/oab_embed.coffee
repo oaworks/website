@@ -4,7 +4,7 @@
 _L.d = document
 _L.gebi = (id) -> return document.getElementById id.replace('#','')
 _L.gebc = (cls) -> return document.getElementsByClassName cls.replace('.','')
-_L.gebn = (n) -> 
+_L.gebn = (n) ->
   r = document.getElementsByTagName n.replace('<','').replace('>','') # e.g. by the element name, like "div"
   return if r? then r else  document.getElementsByName n # otherwise by the "name" attribute matching n
 _L.each = (elems, key, val) ->
@@ -22,7 +22,7 @@ _L.each = (elems, key, val) ->
       if elem?
         if typeof key is 'function' then key(elem) else _L.set elem, key, val
 _L.listen = (action, els, fn) ->
-  _L.each els, (el) -> 
+  _L.each els, (el) ->
     if action is 'enter'
       action = 'keyup'
       wfn = (e) -> fn(e) if e.keyCode is 13
@@ -33,14 +33,14 @@ _L.listen = (action, els, fn) ->
       _L.class el, 'listen_'+action
       el.addEventListener action, (e) -> wfn(e)
 _L.show = (els, html, append) ->
-  _L.each els, (el) -> 
+  _L.each els, (el) ->
     if typeof html is 'string'
       el.innerHTML = (if append then el.innerHTML else '') + html
     was = _L.get el, '_l_display'
     was = (if el.tagName is 'DIV' then 'block' else 'inline') if typeof was isnt 'string' or was is 'none' # TODO should be inline in which cases...
     el.style.display = was
 _L.hide = (els) ->
-  _L.each els, (el) -> 
+  _L.each els, (el) ->
     if el.style.display isnt 'none'
       _L.set el, '_l_display', el.style.display
     el.style.display = 'none'
@@ -65,7 +65,7 @@ _L.checked = (els) ->
   return res
 _L.html = (els, html, append, show) ->
   rs = []
-  _L.each els, (el) -> 
+  _L.each els, (el) ->
     if typeof html is 'string'
       el.innerHTML = (if append then el.innerHTML else '') + html
     rs.push el.innerHTML
@@ -73,7 +73,7 @@ _L.html = (els, html, append, show) ->
   return if rs.length is 1 then (rs[0] ? '') else if rs.length then rs else ''
 _L.append = (els, html) -> _L.html els, html, true
 _L.remove = (els) -> _L.each els, (el) -> el.parentNode.removeChild el
-_L.class = (el, cls) -> 
+_L.class = (el, cls) ->
   rs = []
   classes = el.getAttribute 'class'
   classes ?= ''
@@ -116,7 +116,7 @@ _L.clone = (el, children) ->
     n.appendChild(el.firstChild) while el.hasChildNodes()
   el.parentNode.replaceChild n, el
   return n
-    
+
 _L.jx = (route, q, success, error, api, method, data, headers) ->
   # add auth options to this
   api ?= _L.api
@@ -157,7 +157,7 @@ _L.post = (route, data, success, error, api, headers) ->
       headers['Content-type'] ?= 'application/json'
   route += (if route.indexOf('?') is -1 then '?' else '&') + '_=' + Date.now() # set a random header to try to break any possible caching
   _L.jx route, undefined, success, error, api, 'POST', data, headers
-  
+
 _L.dot = (obj, key, value, del) ->
   if typeof key is 'string'
     return API.collection.dot obj, key.split('.'), value, del
@@ -202,7 +202,7 @@ _oab = (opts) ->
   this.data ?= {} # the data obj to send to backend
   this.f ?= {} # the result of the find/ill/permission request to the backend
   this.template ?= _oab[this.plugin + '_template'] # template or css can be passed in or are as defined below
-  
+
   this.css ?= _oab.css
   this._loading = false # tracks when loads are occurring
   this.submit_after_metadata = false # used by instantill to track if metadata has been provided by user
@@ -258,7 +258,7 @@ _oab.prototype.loading = (load) ->
   if load isnt true and (this._loading or load is false)
     try clearInterval this._loading
     this._loading = false
-    _L.each '._oab_loading', (el) => 
+    _L.each '._oab_loading', (el) =>
       if _L.has el, '_oab_continue'
         el.innerHTML = 'Continue'
       else if _L.has el, '_oab_submit'
@@ -300,7 +300,7 @@ _oab.prototype.state = (pop) ->
             u += k + '=' + this.data[k] + window.location.hash
       window.history.pushState "", (if pop? then "search" else "find"), u
       if pop?
-        # what to do with the pop event? for now just triggers a restart if user 
+        # what to do with the pop event? for now just triggers a restart if user
         # tries to go back, unless called with a boolean from the restart event
         this.restart() if typeof pop isnt 'boolean'
 
@@ -321,7 +321,7 @@ _oab.prototype.restart = (e, val) ->
     this.find()
   else
     _L.set '#_oab_input', ''
-    
+
 _oab.prototype.ping = (what) ->
   try
     if what.indexOf(this.plugin) is -1
@@ -414,7 +414,7 @@ _oab.prototype.validate = () ->
             _L.show '#_oab_error', '<p>Please try again with your university email address.</p>'
           else
             _L.show '#_oab_error', '<p>Sorry, your email does not look right. ' + (if res isnt false then 'Did you mean ' + res + '? ' else '') + 'Please check and try again.</p>'
-        () => 
+        () =>
           this.data.email = _L.get('#_oab_email').trim()
           if this.plugin is 'instantill' then this.submit() else this.deposit()
       )
@@ -436,7 +436,7 @@ _oab.prototype.openurl = () -> # only used by instantill
     return ''
   else
     config = JSON.parse JSON.stringify this.config
-    defaults = 
+    defaults =
       sid: 'sid'
       title: 'atitle' # this is what iupui needs (title is also acceptable, but would clash with using title for journal title, which we set below, as iupui do that
       doi: 'rft_id' # don't know yet what this should be
@@ -766,7 +766,7 @@ _oab.prototype.find = (e) ->
     if this.submit_after_metadata
       this.submit()
       return
-      
+
   this.data.title ?= this.data.atitle if this.data.atitle
   this.data.doi ?= this.data.rft_id if this.data.rft_id
   if this.data.doi and this.data.doi.indexOf('10.') isnt -1 and (this.data.doi.indexOf('/') is -1 or this.data.doi.indexOf('http') is 0)
@@ -882,8 +882,8 @@ _oab.instantill_template = '
 <div class="_oab_panel" id="_oab_inputs">
   <p id="_oab_intro">
     If you need <span class="_oab_paper">an article</span> you can request it from any library in the world through Interlibrary loan.
-    <br>Start by entering a full <span class="_oab_paper">article</span> title, DOI or URL:<br>
-  </p> 
+    <br>Start by entering a full <span class="_oab_paper">article</span> title, citation, DOI or URL:<br>
+  </p>
   <p><input class="_oab_form" type="text" id="_oab_input" placeholder="e.g. World Scientists Warning of a Climate Emergency" aria-label="Enter a search term" style="box-shadow:none;"></input></p>
   <p><a class="_oab_find _oab_button _oab_loading" id="_oab_find" href="#" aria-label="Search" style="min-width:140px;">Find <span class="_oab_paper">article</span></a></p>
   <div id="_oab_book_or_other"></div>
@@ -942,7 +942,7 @@ _oab.instantill_template = '
 _oab.shareyourpaper_template = '
 <div class="_oab_panel" id="_oab_inputs">
   <h2>Make your research visible and see 30% more citations</h2>
-  <p><span id="_oab_lib_info">We can help you make your paper Open Access, for free, wherever you publish. It\'s legal and takes just minutes.</span> 
+  <p><span id="_oab_lib_info">We can help you make your paper Open Access, for free, wherever you publish. It\'s legal and takes just minutes.</span>
   Join millions of researchers sharing their papers freely with colleagues and the public.</p>
   <h3>Start by entering the DOI of your paper</h3>
   <p>We\'ll gather information about your paper and find the easiest way to share it.</p>
@@ -961,11 +961,11 @@ _oab.shareyourpaper_template = '
 
   <div class="_oab_section _oab_permission_required" id="_oab_permission_required">
     <h2>You may share your paper if you ask the journal</h2>
-    <p>Unlike most, <span class="_oab_journal">the journal</span> requires that you ask them before you share your paper freely. 
+    <p>Unlike most, <span class="_oab_journal">the journal</span> requires that you ask them before you share your paper freely.
     Asking only takes a moment as we find out who to contact and have drafted an email for you.</p>
     <p><a target="_blank" id="_oab_reviewemail" href="#" class="_oab_button" style="min-width:140px;">Review Email</a></p>
     <p><a target="_blank" id="_oab_permissionemail" class="_oab_restart" href="#"><b>I\'ve got permission now!</b></a></p>
-  </div>  
+  </div>
 
   <div class="_oab_section _oab_oa_deposit" id="_oab_oa_deposit">
     <h2>Your paper is already freely available!</h2>
@@ -1004,7 +1004,7 @@ _oab.shareyourpaper_template = '
     <p><input type="file" name="file" id="_oab_file" class="_oab_form"></p>
     <p>By depositing you\'re agreeing to the <span class="_oab_terms">terms</span> and to license your work <span class="_oab_licence">CC-BY</span>.</p>
   </div>
-  
+
   <div class="_oab_section _oab_oa_deposit _oab_archivable _oab_dark_deposit" id="_oab_deposits">
     <p><a href="#" class="_oab_deposit _oab_button _oab_loading" style="min-width:140px;" id="_oab_deposit">Deposit</a></p>
   </div>
@@ -1023,12 +1023,12 @@ _oab.shareyourpaper_template = '
     <h2>We\'ll double check your paper</h2>
     <p>You\'ve done your part for now. Hopefully, we\'ll send you a link soon. First, we\'ll check in the next working day to make sure it\'s legal to share.</p>
   </div>
-  
+
   <div class="_oab_done" id="_oab_partial">
     <h2>Congrats, you\'re done!</h2>
     <p>Check back soon to see your paper live, or we\'ll email you with issues.</p>
   </div>
-  
+
   <div class="_oab_done" id="_oab_zenodo">
     <h2>Congrats! Your paper will be available to everyone, forever!</h2>
     <div id="_oab_zenodo_embargo"></div>
@@ -1050,14 +1050,14 @@ _oab.shareyourpaper_template = '
     <h2>You\'ve done your part</h2>
     <p>All that\'s left to do is wait. Once the journal gives you permission to share, come back and we\'ll help you finish the job.</p>
   </div>
-  
+
   <p><a href="#" class="_oab_restart _oab_button" id="_oab_done_restart" style="min-width:140px;">Do another</a></p>
 </div>
 <div id="_oab_error"></div>
 <div id="_oab_pilot"></div>'
 
-# can pass in a key/value pair, or key can be a config object, in which case val can optionally be a user ID string, 
-# or key can be a user ID string and val must be empty, or key and val can both be empty and config will attempt 
+# can pass in a key/value pair, or key can be a config object, in which case val can optionally be a user ID string,
+# or key can be a user ID string and val must be empty, or key and val can both be empty and config will attempt
 # to be retrieved from setup, or localstorage and/or from the API if a user ID is available from setup
 _oab.prototype.configure = (key, val, build, preview) ->
   if typeof key is 'string' and not val? and key.startsWith '{'
@@ -1071,9 +1071,9 @@ _oab.prototype.configure = (key, val, build, preview) ->
         lc = JSON.parse localStorage.getItem '_oab_config_' + this.plugin
         if typeof lc is 'object' and lc isnt null
           console.log 'Config retrieved from local storage'
-          this.config = lc 
+          this.config = lc
     if this.remote isnt false and this.uid and this.uid isnt 'anonymous' and JSON.stringify(this.config) is '{}' # should a remote call always be made to check for superseded config if one is not provided at startup?
-      _L.jx this.api + '/' + (if this.plugin is 'instantill' then 'ill' else 'deposit') + '/config?uid='+this.uid, undefined, (res) => 
+      _L.jx this.api + '/' + (if this.plugin is 'instantill' then 'ill' else 'deposit') + '/config?uid='+this.uid, undefined, (res) =>
         console.log 'Config retrieved from API'
         this.configure res
       if this.local is false
@@ -1180,11 +1180,11 @@ _oab.prototype.configure = (key, val, build, preview) ->
     _L.listen 'click', '._oab_submit', (e) => this.submit(e)
     _L.listen 'click', '._oab_restart', (e) => this.restart(e)
     _L.listen 'click', '._oab_ping', (e) => this.ping(_L.get e.target, 'message')
-    _L.listen 'click', '._oab_wrong', (e) => 
+    _L.listen 'click', '._oab_wrong', (e) =>
       e.preventDefault()
       this.ping '_wrong_article'
       this.metadata()
-    _L.listen 'click', '._oab_reload', (e) => 
+    _L.listen 'click', '._oab_reload', (e) =>
       e.preventDefault()
       gf.value = '' if gf = _L.gebi "_oab_file"
       this.file = false
@@ -1192,7 +1192,7 @@ _oab.prototype.configure = (key, val, build, preview) ->
     _L.listen 'click', '._oab_confirm', (e) => e.preventDefault(); this.data.confirmed = true; this.deposit()
     _L.listen 'click','#_oab_reviewemail', (e) => this.done 'review'
     _L.listen 'click','._oab_deposit', (e) => this.deposit(e)
-  
+
   if el = _L.gebi '_oab_config'
     el.innerHTML = JSON.stringify wc
   if window.location.search.indexOf('panel=') isnt -1
