@@ -1,5 +1,7 @@
+<head>
+<script src="/static/embed/oab_embed.js"></script>   
+</head>
 <style>
-
 
 .focal{
   background-color: white;
@@ -7,49 +9,44 @@
   border-radius: 5px;
   padding: 20px;
   }
-
 .innercolumns{
   width:100%;
   padding:10px;
   overflow: hidden;
   display: none;
 }
-
 .downloadbox {
   background-color: white;
   text-align: left;
   border-radius: 5px;
 }
-
 /* Make the div big, so we would jump, if the JS was still broken */
 .ill_system_content div {
   height: 100%;
 }
-
 p {
   line-height: 1.5 !important;
 }
-
 </style>
-
 <div class="container-fluid">
 
-
-<div class="row">
+  <div class="row">
 
   <div id="maininfo" class="col-md-8 col-md-offset-2">
-
-    <!-- The live one is set to be Natalia's gmail -->
-    <script src="/static/embed/oab_embed.js"></script>
-
-    <script>_oab = shareyourpaper({uid:(api.indexOf('dev.') !== -1 ? 'tQ95zxSqqSPQqfqk9' : 'MNbNavF9ymZMY7jjN'), api:api, pushstate: false, local: false});</script>
-    <div id="shareyourpaper"></div>
+  <div id="shareyourpaper"></div>
+      <script>
+          _oab = shareyourpaper({
+            uid:(api.indexOf('dev.') !== -1 ? 'tQ95zxSqqSPQqfqk9' : 'MNbNavF9ymZMY7jjN'),
+            api:api,
+            config: {"repo_name":"Zenodo","deposit_terms":"https://openaccessbutton.org/terms","allow_oa_deposit":true,"not_a_library":true,"terms":"https://openaccessbutton.org/terms","not_library":true,"oa_deposit_off":true,"owner":"natalianorori@gmail.com"}
+          });
+      </script>
 
 <!-- tQ95zxSqqSPQqfqk9 is dev. These are linked to Natalia's gmail account. -->
 
-  </div>
+    </div>
 
 <!-- end of download box -->
 
-</div>
+  </div>
 </div>
