@@ -1,0 +1,238 @@
+<head>
+  <script src="/static/embed/oab_embed.js"></script>
+  <title>Shareyourpaper.org</title>
+  <link rel="stylesheet" href="/static/oabutton_rebrand.css"> <!-- gets the new css (still also uses the old css, just overwrites where necessary) -->
+  <meta name="description" content="We can help you make your paper Open Access, for free, wherever you publish. It's legal and takes just minutes. Join millions of researchers sharing their papers freely with colleagues and the public." />
+  <meta property="og:description" content="We can help you make your paper Open Access, for free, wherever you publish. It's legal and takes just minutes. Join millions of researchers sharing their papers freely with colleagues and the public." />
+  <meta property="og:url" content="https://shareyourpaper.org" />
+  <meta name="twitter:description" content="We can help you make your paper Open Access, for free, wherever you publish. It's legal and takes just minutes. Join millions of researchers sharing their papers freely with colleagues and the public.">
+  <meta property="og:title" content="Shareyourpaper.org" />
+  <meta name="twitter:title" content="Shareyourpaper.org">
+  <meta property="og:image" content="https://shareyourpaper.org/static/shareyourpaper-transparent-blue.png">
+  <meta name="twitter:card" content="summary_large_image">
+</head>
+
+
+<style>
+  #topnav {
+    display: none;
+  }
+  #footer {
+    display: none;
+  }
+
+  .syp-close {
+    float: right;
+    font-size: 44px;
+    font-weight: bold;
+    line-height: 1;
+    color: #428BCA;
+    text-shadow: 0 1px 0 #fff;
+    filter: alpha(opacity=20);
+}
+
+  /*style things that sam added below*/
+
+  .btn-demo-white{
+    color:#428BCA !important;
+  }
+
+  h2{
+    color:#428BCA;
+    text-align: left;
+    margin-bottom: 25px;
+  }
+
+  h3{
+    color: #428BCA;
+    font-size:  18px;
+    font-weight: bold;
+    margin-top: 30px;
+    margin-bottom: 7px;
+  }
+
+  .footer p{
+    padding: 0;
+    margin:0;
+  }
+  .footer a{
+    color: white;
+  }
+
+  .strapline p{
+    padding: 7px 0 !important;
+    margin: 0;
+  }
+
+  .strapline .btn{
+    background-color: #428BCA !important;
+    border: none !important;
+  }
+
+  .strapline .btn:hover{
+    background-color: #345484 !important;
+  }
+
+  .form-control{
+      font-size: 1em;
+      box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      height: 46px;
+      padding-top:10px;
+      padding-bottom: 10px;
+  }
+/*
+    #file{
+        padding-top:  10px;
+        padding-bottom:   35px;
+    }
+
+    #oabutton_input{
+      padding: 22px 12px;
+    }*/
+
+  .form-control:focus{
+    border:2px solid #428bca;
+  }
+
+  @media screen and (max-width: 768px){
+    .quote{
+      padding: 40px 30px;
+    }
+  }
+   /*sams added style above*/
+
+   .alert-new {
+     width: 100%;
+     padding-top: 10px;
+     padding-left: 10px;
+     padding-right: 10px;
+     background-color: white;
+     text-align: center;
+   }
+
+   .alert-new p{
+     padding: 0;
+   }
+
+</style>
+
+<div class="flex-all">
+
+
+  <div class="alert-new">
+    <div class="center-col">
+      <div>
+        <p style="text-align:center">
+          We're in Beta. Please <a href="https://openaccessbutton.org/feedback#general" class="blue"><b>let us know</b></a> your feedback. <a href="https://blog.openaccessbutton.org/with-shareyourpaper-org-its-easy-to-make-your-paper-open-access-for-free-552918ff84af" class="blue"><b>Learn more in our announcement</b></a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+<!-- headder -->
+<div class="navy-bg flex-head">
+  <div class="center-col header">
+  <div>
+    <span><strong><a href="/">Shareyourpaper.org</a></strong> <a href="https://openaccessbutton.org" style="margin: 0" class="notonsmallphones">by Open Access Button</a></span>
+  </div>
+  <div>
+    <span><a class="btn btn-demo-white notonsmallphones" href="/libraries">For Libraries</a></span>
+  </div>
+  </div>
+</div>
+
+
+<!-- pitch -->
+<div class="flex-body" style="display: flex;">
+  <div class="center-col quote">
+    <div class="strapline">
+
+      <div id="shareyourpaper"></div>
+
+      <div id="about" style="display:none;">
+
+        <a class="syp-close learnmore" href="#">&times;</a>
+
+        <h2>About</h2>
+
+        <p>Shareyourpaper.org is the simplest way to legally make your paper freely available on
+        Google Scholar, Web of Science, your personal site and more to get a citation bump.</p>
+
+        <p>If the DOI gives you a paywalled paper: <a href="https://doi.org/10.1126/scitranslmed.3001922" target="_blank">doi.org/10.1126/scitranslmed.3001922</a>.</p>
+        <p>We help you free it: <a href="https://shareyourpaper.org/10.1126/scitranslmed.3001922" target="_blank">shareyourpaper.org/10.1126/scitranslmed.3001922</a>.</p>
+
+        <h2>How it works</h2>
+
+        <p>Shareyourpaper.org is open source and built by an academia-owned non-profit to make it easy, fast, and
+        safe to freely share your paper. We're <a href="https://openaccessbutton.org/leaders" target="_blank">funded by leading libraries and foundations</a>, so we won't sell your work, your data, or send you endless emails.</p>
+
+        <p>Behind the scenes, shareyourpaper.org works by gathering up information about your paper from the journal, checking copyright details, and seeing if it's already freely available. We then figure out the simplest way you can share it, guide you through it, and double check what you actually upload is okay. Then it gets put in Zenodo, a non-profit multi-subject based repository operated by CERN that preserves your work, and makes it discoverable. Neat, right? At end of it all, you get a freely available version like the one <a href="https://zenodo.org/record/3703317" target="_blank">here</a>. This means you can use shareyourpaper.org to build your personal archive, hosted alongside research from your discipline and others.</p>
+
+        <p>It's all powered by an <a href="https://openaccessbutton.org/api" target="_blank">open API</a> and our data sources which include Crossref, Microsoft Academic, Unpaywall, Europe PMC, and Open Access Button's Permissions Database.</p>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+<!-- footer -->
+<div class="navy-bg flex-foot">
+  <div class="center-col footer">
+    <div>
+      <p>Open Source • Community Controlled • Not for Profit</p>
+    </div>
+    <div style="padding: 5px 0; align-self: flex-end;">
+        <a href="/libraries" class="onlyonsmallphones"><u>For Libraries</u> •</a></u> <u>
+        <a href="https://shareyourpaper.org/permissions">Permissions</a></u> • <u>
+        <a href="https://openaccessbutton.org/api">API</a></u> • <u>
+        <a href="https://openaccessbutton.org/privacy">Privacy</a></u> • <u>
+        <a href="https://openaccessbutton.org/terms">Terms</a></u> • <u>
+        <a href="mailto:joe@openaccessbutton.org">Email</a></u> •
+        <u><a href="https://status.openaccessbutton.org">Status</a></u>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- 996 is joe@openaccessbutton.org live id. 4WD is the same email on dev. -->
+
+<script>
+
+var learnmore = function() {
+  $('#_oab_nodoi').replaceWith('Try an example <a href="#" id="runexample"><u>10.1126/scitranslmed.3001922</u></a> or <a href="#" class="learnmore"><u>learn more</u></a>.');
+  if ($('#about').is(':visible')) {
+    $('#shareyourpaper').toggle();
+    $('#about').toggle();
+  }
+}
+
+_oab = shareyourpaper({
+  uid:(api.indexOf('dev.') !== -1 ? '4WDY6njiatg3FZMJm' : '996wFY3oTTkNonqnt'),
+  api:api,
+  loaded: learnmore,
+  config:{"repo_name":"Zenodo","oa_deposit_off":true,"dark_deposit_off":true,"live":1585895131684,"not_library":true,"owner":"joe@openaccessbutton.org"}
+});
+
+jQuery(document).ready(function() {
+  $('body').on('click','#runexample',function(e) { e.preventDefault(); $('#_oab_input').val('10.1126/scitranslmed.3001922'); _oab.find(); });
+  $('body').on('click','.learnmore',function(e) {
+    e.preventDefault();
+    $('#shareyourpaper').toggle();
+    $('#about').toggle();
+    if ('pushState' in window.history) {
+      if ($('#about').is(':visible')) {
+        window.history.pushState("", "about", '#about');
+      } else {
+        window.history.pushState("", document.title, window.location.pathname);
+      }
+    }
+  });
+});
+
+</script>
