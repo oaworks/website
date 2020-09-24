@@ -1122,7 +1122,7 @@ _oab.prototype.configure = (key, val, build, preview) ->
         if not this.bootstrap?
           # hack test for bootstrap calls or classes in page doc
           dstr = document.documentElement.innerHTML
-          this.bootstrap = dstr.indexOf('bootstrap.css') isnt -1 or dstr.indexOf('bootstrap.min.css') isnt -1 or dstr.indexOf('btn-primary') isnt -1
+          this.bootstrap = dstr.indexOf('bootstrap/') isnt -1 or dstr.indexOf('/bootstrap') isnt -1 or dstr.indexOf('bootstrap.css') isnt -1 or dstr.indexOf('bootstrap.min.css') isnt -1 or dstr.indexOf('btn-primary') isnt -1
           console.log('Found bootstrap indicators in the doc') if this.bootstrap is true
         if this.bootstrap is true
           if this.template.indexOf('btn-primary') is -1
