@@ -909,7 +909,7 @@ _oab.instantill_template = '
       <p id="_oab_terms_note"><input type="checkbox" id="_oab_read_terms"> I have read the <a id="_oab_terms_link" target="_blank" href="#">terms and conditions</a></p>
       <p><input placeholder="Your university email address" id="_oab_email" type="text" class="_oab_form"></p>
     </div>
-    <p><a class="_oab_submit _oab_button _oab_loading" href="#" id="_oab_submit" style="min-width:140px;">Complete request</a></p>
+    <p><a class="_oab_submit btn-iu _oab_button _oab_loading" href="#" id="_oab_submit" style="min-width:140px;">Complete request</a></p>
   </div>
 </div>
 
@@ -933,7 +933,7 @@ _oab.instantill_template = '
     <h2>Thanks! Your request has been received.</h2>
     <p>And confirmation code and tell we will email soon - OR sorry we could not create an ILL, and refer back to library if possible.</p>
   </div>
-  <p><a href="#" class="_oab_restart _oab_button" id="_oab_done_restart" id="_oab_restart" style="min-width:140px;">Do another</a></p>
+  <p><a href="#" class="_oab_restart btn-iu _oab_button" id="_oab_done_restart" id="_oab_restart" style="min-width:140px;">Do another</a></p>
 </div>
 <div id="_oab_error"></div>
 <div id="_oab_pilot"></div>'
@@ -954,7 +954,7 @@ _oab.shareyourpaper_template = '
   <div class="_oab_section _oab_oa" id="_oab_oa">
     <h2>Your paper is already freely available!</h2>
     <p>Great news, you\'re already getting the benefits of sharing your work! Your publisher or co-author have already shared it.</p>
-    <p><a target="_blank" href="#" class="_oab_oa_url _oab_button" style="min-width:140px;">See free version</a></p>
+    <p><a target="_blank" href="#" class="_oab_oa_url btn-iu _oab_button" style="min-width:140px;">See free version</a></p>
     <p><a href="#" class="_oab_restart" id="_oab_restart"><b>Do another</b></a></p>
   </div>
 
@@ -962,7 +962,7 @@ _oab.shareyourpaper_template = '
     <h2>You may share your paper if you ask the journal</h2>
     <p>Unlike most, <span class="_oab_journal">the journal</span> requires that you ask them before you share your paper freely.
     Asking only takes a moment as we find out who to contact and have drafted an email for you.</p>
-    <p><a target="_blank" id="_oab_reviewemail" href="#" class="_oab_button" style="min-width:140px;">Review Email</a></p>
+    <p><a target="_blank" id="_oab_reviewemail" href="#" class="btn-iu _oab_button" style="min-width:140px;">Review Email</a></p>
     <p><a target="_blank" id="_oab_permissionemail" class="_oab_restart" href="#"><b>I\'ve got permission now!</b></a></p>
   </div>
 
@@ -1005,7 +1005,7 @@ _oab.shareyourpaper_template = '
   </div>
 
   <div class="_oab_section _oab_oa_deposit _oab_archivable _oab_dark_deposit" id="_oab_deposits">
-    <p><a href="#" class="_oab_deposit _oab_button _oab_loading" style="min-width:140px;" id="_oab_deposit">Deposit</a></p>
+    <p><a href="#" class="_oab_deposit btn-iu _oab_button _oab_loading" style="min-width:140px;" id="_oab_deposit">Deposit</a></p>
   </div>
 </div>
 
@@ -1014,7 +1014,7 @@ _oab.shareyourpaper_template = '
     <h2>Hmmm, something looks wrong</h2>
     <p>You\'re nearly done. It looks like what you uploaded is a publisher\'s PDF which your journal prohibits legally sharing.<!-- It can only be shared on a limited basis.--><br><br>
     We just need the version accepted by the journal to make your work available to everyone.</p>
-    <p><a href="#" class="_oab_reload _oab_button" id="_oab_upload_again" style="min-width:140px;">Try uploading again</a></p>
+    <p><a href="#" class="_oab_reload btn-iu _oab_button" id="_oab_upload_again" style="min-width:140px;">Try uploading again</a></p>
     <p><a href="#" class="_oab_confirm _oab_loading" id="_oab_upload_accept"><b>My upload was an accepted manuscript</b></a></p>
   </div>
 
@@ -1050,7 +1050,7 @@ _oab.shareyourpaper_template = '
     <p>All that\'s left to do is wait. Once the journal gives you permission to share, come back and we\'ll help you finish the job.</p>
   </div>
 
-  <p><a href="#" class="_oab_restart _oab_button" id="_oab_done_restart" style="min-width:140px;">Do another</a></p>
+  <p><a href="#" class="_oab_restart btn-iu _oab_button" id="_oab_done_restart" style="min-width:140px;">Do another</a></p>
 </div>
 <div id="_oab_error"></div>
 <div id="_oab_pilot"></div>'
@@ -1108,17 +1108,6 @@ _oab.prototype.configure = (key, val, build, preview) ->
         #_L.append('body', '<div id="' + this.element + '"></div>') if not _L.gebi this.element
         _L.html this.element, ''
 
-        #if not this.bootstrap?
-        #  # if bootstrap css is already present on the page, and bootstrap value is not set,
-        #  # and css has not been set either, then use bootstrap
-        #  _L.append this.element, '<div class="btn" id="_oab_bootstrap_test" style="visibility:hidden;"></div>'
-        #  this.bootstrap = _L.gebi('#_oab_bootstrap_test').offsetHeight isnt 0
-        #  _L.remove '_#oab_bootstrap_test'
-        #if this.bootstrap is true
-        #  this.template = this.template.replace(/_oab_button/g,'_oab_button btn btn-primary').replace(/_oab_form/g,'_oab_form form-control')
-        #else if this.template.indexOf('btn-primary') isnt -1
-        #  this.template = this.template.replace(/ btn btn-primary/g,'').replace(/ form-control/g,'')
-
         if not this.bootstrap?
           # hack test for bootstrap calls or classes in page doc
           dstr = document.documentElement.innerHTML
@@ -1129,12 +1118,6 @@ _oab.prototype.configure = (key, val, build, preview) ->
             this.template = this.template.replace(/_oab_button/g,'_oab_button btn btn-primary').replace(/_oab_form/g,'_oab_form form-control')
         else if this.template.indexOf('btn-primary') isnt -1
           this.template = this.template.replace(/ btn btn-primary/g,'').replace(/ form-control/g,'')
-        
-        #if this.bootstrap is false
-        #  if this.template.indexOf('btn-primary') isnt -1
-        #    this.template = this.template.replace(/ btn btn-primary/g,'').replace(/ form-control/g,'')
-        #else if this.template.indexOf('btn-primary') is -1
-        #  this.template = this.template.replace(/_oab_button/g,'_oab_button btn btn-primary').replace(/_oab_form/g,'_oab_form form-control')
 
         if typeof this.css is 'string' and this.css isnt 'false' and this.bootstrap isnt true #this.bootstrap is false
           this.css = '<div id="_oab_css"><style>' + this.css + '</style></div>' if not this.css.startsWith '<style>'
