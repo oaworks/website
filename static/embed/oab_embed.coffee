@@ -1,7 +1,7 @@
 
+# start with a simple set of helper functions
 @_L =
   api: 'https://api.lvatn.com'
-_L.d = document
 _L.gebi = (id) -> return document.getElementById id.replace('#','')
 _L.gebc = (cls) -> return document.getElementsByClassName cls.replace('.','')
 _L.gebn = (n) ->
@@ -28,7 +28,6 @@ _L.listen = (action, els, fn) ->
       wfn = (e) -> fn(e) if e.keyCode is 13
     else
       wfn = fn
-    #el = _L.clone el # gets rid of all listeners so we don't end up with dups - but note, gets rid of ALL. TODO use a wrapper to manage these independently
     if not _L.has el, 'listen_'+action
       _L.class el, 'listen_'+action
       el.addEventListener action, (e) -> wfn(e)
@@ -108,14 +107,6 @@ _L.css = (els, key, val) ->
       ss += ';' if ss isnt ''
       ss += k + ':' + style[k]
     _L.set el, 'style', ss
-_L.clone = (el, children) ->
-  if children
-    n = el.cloneNode true
-  else
-    n = el.cloneNode false
-    n.appendChild(el.firstChild) while el.hasChildNodes()
-  el.parentNode.replaceChild n, el
-  return n
 
 _L.jx = (route, q, success, error, api, method, data, headers) ->
   # add auth options to this
@@ -154,34 +145,10 @@ _L.post = (route, data, success, error, api, headers) ->
   if typeof data is 'object'
     if typeof data.append isnt 'function' # a FormData object will have an append function, a normal json object will not. FormData should be POSTable by xhr as-is
       data = JSON.stringify data
-      headers['Content-type'] ?= 'application/json'
-  route += (if route.indexOf('?') is -1 then '?' else '&') + '_=' + Date.now() # set a random header to try to break any possible caching
+      # disabled sending the correct header to avoid waiting for an OPTIONS check
+      #headers['Content-type'] ?= 'application/json'
+  #route += (if route.indexOf('?') is -1 then '?' else '&') + '_=' + Date.now() # set a random header to try to break any possible caching
   _L.jx route, undefined, success, error, api, 'POST', data, headers
-
-_L.dot = (obj, key, value, del) ->
-  if typeof key is 'string'
-    return API.collection.dot obj, key.split('.'), value, del
-  else if key.length is 1 and (value? or del?)
-    if del is true or value is '$DELETE'
-      if obj instanceof Array
-        obj.splice key[0], 1
-      else
-        delete obj[key[0]]
-      return true
-    else
-      obj[key[0]] = value
-      return true
-  else if key.length is 0
-    return obj
-  else
-    if not obj[key[0]]?
-      if value?
-        obj[key[0]] = if isNaN(parseInt(key[0])) then {} else []
-        return _L.dot obj[key[0]], key.slice(1), value, del
-      else
-        return undefined
-    else
-      return _L.dot obj[key[0]], key.slice(1), value, del
 
 
 
@@ -190,63 +157,66 @@ _L.dot = (obj, key, value, del) ->
 
 
 _oab = (opts) ->
-  opts ?= {} # can pass demo true here as well, to control demo output, stopping submit from POSTing
-  this[o] = opts[o] for o of opts
-  this.uid ?= 'anonymous'
-  this.api ?= if window.location.host.indexOf('dev.openaccessbutton.org') isnt -1 then 'https://dev.api.cottagelabs.com/service/oab' else 'https://api.openaccessbutton.org'
-  this.plugin ?= 'instantill' # has to be defined at startup, as either instantill or shareyourpaper
-  this.element ?= '#' + this.plugin
-  this.pushstate ?= true # if true, the embed will try to add page state changes to the browser state manager
-  this.local ?= true # local storage of config turned off by default for now
-  this.config ?= {}
-  this.data ?= {} # the data obj to send to backend
-  this.f ?= {} # the result of the find/ill/permission request to the backend
-  this.template ?= _oab[this.plugin + '_template'] # template or css can be passed in or are as defined below
-
-  this.css ?= _oab.css
-  this._loading = false # tracks when loads are occurring
-  this.submit_after_metadata = false # used by instantill to track if metadata has been provided by user
-  this.file = false # used by syp to store the file for sending to backend
-
-  this.demo ?= window.location.href.indexOf('/demo') isnt -1 and (window.location.href.indexOf('openaccessbutton.') isnt -1 or window.location.href.indexOf('shareyourpaper.') isnt -1 or window.location.href.indexOf('instantill.') isnt -1)
-
-  _L.loaded = this.loaded if this.loaded? # if this is set to a function, it will be passed to _leviathan loaded, which gets run after every ajax call completes. It is also called directly after every configure
-
-  if window.location.search.indexOf('clear=') isnt -1
-    localStorage.removeItem '_oab_config_' + this.plugin
-  if window.location.search.indexOf('local=') isnt -1
-    this.local = if window.location.search.indexOf('local=true') isnt -1 then true else false
-  if window.location.search.indexOf('config=') isnt -1
-    try this.config = JSON.parse window.location.search.split('config=')[1].split('&')[0].split('#')[0]
-  if window.location.search.indexOf('config.') isnt -1
-    configs = window.location.search.split 'config.'
-    configs.shift()
-    for c in configs
-      cs = c.split '='
-      if cs.length is 2
-        csk = cs[0].trim()
-        csv = cs[1].split('&')[0].split('#')[0].trim()
-        this.configure csk, csv, false
-
-  this.configure()
-
-  if not this.config.autorun_off
-    ap = if typeof this.config.autorunparams is 'string' then this.config.autorunparams.split(',') else if typeof this.config.autorunparams is 'object' then this.config.autorunparams else ['doi','title','url','atitle','rft_id','journal','issn','year','author']
-    ap = ap.replace(/"/g,'').replace(/'/g,'').split(',') if typeof ap is 'string'
-    for o in ap
-      o = o.split('=')[0].trim()
-      eq = o.split('=')[1].trim() if o.indexOf('=') isnt -1
-      this.data[eq ? o] = decodeURIComponent(window.location.search.replace('?','&').split('&'+o+'=')[1].split('&')[0].replace(/\+/g,' ')) if (window.location.search.replace('?','&').indexOf('&'+o+'=') isnt -1)
-    if not this.data.doi and window.location.href.split('?')[0].indexOf('/10.') isnt -1 and window.location.href.split('?')[0].split('/10.')[1].indexOf('/') > 1 and window.location.href.split('?')[0].split('/10.')[1].trim().split('/').length > 1
-      this.data.doi = '10.' + window.location.href.split('?')[0].split('/10.')[1].replace(/\/$/,'')
-  if window.location.search.indexOf('email=') isnt -1
-    this.data.email = window.location.search.split('email=')[1].split('&')[0].split('#')[0]
-    _L.remove '#_oab_collect_email'
-  if window.location.search.indexOf('confirmed=') isnt -1
-    this.data.confirmed = window.location.search.split('confirmed=')[1].split('&')[0].split('#')[0]
-  this.find() if this.data.doi or (this.plugin is 'instantill' and (this.data.title or this.data.url))
-  window.addEventListener "popstate", (pe) => this.state(pe)
-  return this
+  try
+    opts ?= {} # can pass demo true here as well, to control demo output, stopping submit from POSTing
+    this[o] = opts[o] for o of opts
+    this.uid ?= 'anonymous'
+    this.api ?= if window.location.host.indexOf('dev.openaccessbutton.org') isnt -1 then 'https://dev.api.cottagelabs.com/service/oab' else 'https://api.openaccessbutton.org'
+    this.plugin ?= 'instantill' # has to be defined at startup, as either instantill or shareyourpaper
+    this.element ?= '#' + this.plugin
+    this.pushstate ?= true # if true, the embed will try to add page state changes to the browser state manager
+    this.local ?= true # local storage of config turned off by default for now
+    this.config ?= {}
+    this.data ?= {} # the data obj to send to backend
+    this.f ?= {} # the result of the find/ill/permission request to the backend
+    this.template ?= _oab[this.plugin + '_template'] # template or css can be passed in or are as defined below
+  
+    this.css ?= _oab.css
+    this._loading = false # tracks when loads are occurring
+    this.submit_after_metadata = false # used by instantill to track if metadata has been provided by user
+    this.file = false # used by syp to store the file for sending to backend
+  
+    this.demo ?= window.location.href.indexOf('/demo') isnt -1 and (window.location.href.indexOf('openaccessbutton.') isnt -1 or window.location.href.indexOf('shareyourpaper.') isnt -1 or window.location.href.indexOf('instantill.') isnt -1)
+  
+    _L.loaded = this.loaded if this.loaded? # if this is set to a function, it will be passed to _leviathan loaded, which gets run after every ajax call completes. It is also called directly after every configure
+  
+    if window.location.search.indexOf('clear=') isnt -1
+      localStorage.removeItem '_oab_config_' + this.plugin
+    if window.location.search.indexOf('local=') isnt -1
+      this.local = if window.location.search.indexOf('local=true') isnt -1 then true else false
+    if window.location.search.indexOf('config=') isnt -1
+      try this.config = JSON.parse window.location.search.split('config=')[1].split('&')[0].split('#')[0]
+    if window.location.search.indexOf('config.') isnt -1
+      configs = window.location.search.split 'config.'
+      configs.shift()
+      for c in configs
+        cs = c.split '='
+        if cs.length is 2
+          csk = cs[0].trim()
+          csv = cs[1].split('&')[0].split('#')[0].trim()
+          this.configure csk, csv, false
+  
+    setTimeout (() => this.configure()), 1
+  
+    if not this.config.autorun_off
+      ap = if typeof this.config.autorunparams is 'string' then this.config.autorunparams.split(',') else if typeof this.config.autorunparams is 'object' then this.config.autorunparams else ['doi','title','url','atitle','rft_id','journal','issn','year','author']
+      ap = ap.replace(/"/g,'').replace(/'/g,'').split(',') if typeof ap is 'string'
+      for o in ap
+        o = o.split('=')[0].trim()
+        eq = o.split('=')[1].trim() if o.indexOf('=') isnt -1
+        this.data[eq ? o] = decodeURIComponent(window.location.search.replace('?','&').split('&'+o+'=')[1].split('&')[0].replace(/\+/g,' ')) if (window.location.search.replace('?','&').indexOf('&'+o+'=') isnt -1)
+      if not this.data.doi and window.location.href.split('?')[0].indexOf('/10.') isnt -1 and window.location.href.split('?')[0].split('/10.')[1].indexOf('/') > 1 and window.location.href.split('?')[0].split('/10.')[1].trim().split('/').length > 1
+        this.data.doi = '10.' + window.location.href.split('?')[0].split('/10.')[1].replace(/\/$/,'')
+    if window.location.search.indexOf('email=') isnt -1
+      this.data.email = window.location.search.split('email=')[1].split('&')[0].split('#')[0]
+      _L.remove '#_oab_collect_email'
+    if window.location.search.indexOf('confirmed=') isnt -1
+      this.data.confirmed = window.location.search.split('confirmed=')[1].split('&')[0].split('#')[0]
+    this.find() if this.data.doi or (this.plugin is 'instantill' and (this.data.title or this.data.url))
+    window.addEventListener "popstate", (pe) => this.state(pe)
+    return this
+  catch
+    this.ping 'instantill_or_shareyourpaper_try_initialise_catch'
 
 
 
@@ -328,7 +298,7 @@ _oab.prototype.ping = (what) ->
       what = '_' + what if not what.startsWith '_'
       what = this.plugin + what
     url = if this.api.indexOf('dev.') isnt -1 then 'https://dev.api.cottagelabs.com' else 'https://api.cottagelabs.com'
-    url += '/ping.png?service=openaccessbutton&action=' + what + '&from=' + this.uid
+    url += '/ping.png?service=openaccessbutton&action=' + what + '&from=' + this.uid + '&url=' + encodeURIComponent window.location.href
     url += '&pilot=' + this.config.pilot if this.config.pilot
     url += '&live=' + this.config.live if this.config.live
     _L.jx url
@@ -348,48 +318,51 @@ _oab.prototype.section = (section) ->
     _L.show fe
 
 _oab.prototype.submit = (e) -> # only used by instantill
-  try e.preventDefault()
-  if not this.openurl() and not this.data.email and _L.gebi '#_oab_email'
-    this.validate()
-  else if JSON.stringify(this.f) is '{}' or (not this.f.metadata?.title or not this.f.metadata?.journal or not this.f.metadata?.year)
-    if this.submit_after_metadata
-      this.done false
+  try
+    try e.preventDefault()
+    if not this.openurl() and not this.data.email and _L.gebi '#_oab_email'
+      this.validate()
+    else if JSON.stringify(this.f) is '{}' or (not this.f.metadata?.title or not this.f.metadata?.journal or not this.f.metadata?.year)
+      if this.submit_after_metadata
+        this.done false
+      else
+        this.submit_after_metadata = true
+        this.metadata()
     else
-      this.submit_after_metadata = true
-      this.metadata()
-  else
-    this.loading()
-    data = {match: this.f.input, email:this.data.email, from: this.uid, plugin: this.plugin, embedded: window.location.href}
-    data.config = this.config
-    data.metadata = this.f.metadata ? {}
-    for k in ['title','journal','year','doi']
-      data.metadata[k] = this.data[k] if not data.metadata[k] and this.data[k]
-      if data.metadata.doi and data.metadata.doi.indexOf('http') is 0
-        data.metadata.url = data.metadata.doi
-        delete data.metadata.doi
-    nfield = if this.config.notes then this.config.notes else 'notes'
-    data[nfield] = 'The user provided some metadata. ' if this.data.usermetadata
-    data.pilot = this.config.pilot if this.config.pilot
-    data.live = this.config.live if this.config.live
-    if this.f?.ill?.subscription or this.f?.url
-      if typeof data[nfield] isnt 'string' then data[nfield] = '' else data[nfield] += ' '
-      if this.f.ill?.subscription
-        data[nfield] += 'Subscription check done, found ' + (this.f.ill.subscription.url ? (if this.f.ill.subscription.journal then 'journal' else 'nothing')) + '. '
-      if this.f.metadata?
-        data[nfield] += 'OA availability check done, found ' + (this.f.url ? 'nothing') + '. '
-    ou = this.openurl()
-    if ou and not data.email
-      data.forwarded = true
-    if this.demo is true
-      console.log 'Not POSTing ILL and not forwarding to ' + ou + ' for demo purposes'
-      console.log data
-    else
-      _L.post(
-        this.api+'/ill'
-        data
-        (res) => this.done res
-        () => this.done false
-      )
+      this.loading()
+      data = {match: this.f.input, email:this.data.email, from: this.uid, plugin: this.plugin, embedded: window.location.href}
+      data.config = this.config
+      data.metadata = this.f.metadata ? {}
+      for k in ['title','journal','year','doi']
+        data.metadata[k] = this.data[k] if not data.metadata[k] and this.data[k]
+        if data.metadata.doi and data.metadata.doi.indexOf('http') is 0
+          data.metadata.url = data.metadata.doi
+          delete data.metadata.doi
+      nfield = if this.config.notes then this.config.notes else 'notes'
+      data[nfield] = 'The user provided some metadata. ' if this.data.usermetadata
+      data.pilot = this.config.pilot if this.config.pilot
+      data.live = this.config.live if this.config.live
+      if this.f?.ill?.subscription or this.f?.url
+        if typeof data[nfield] isnt 'string' then data[nfield] = '' else data[nfield] += ' '
+        if this.f.ill?.subscription
+          data[nfield] += 'Subscription check done, found ' + (this.f.ill.subscription.url ? (if this.f.ill.subscription.journal then 'journal' else 'nothing')) + '. '
+        if this.f.metadata?
+          data[nfield] += 'OA availability check done, found ' + (this.f.url ? 'nothing') + '. '
+      ou = this.openurl()
+      if ou and not data.email
+        data.forwarded = true
+      if this.demo is true
+        console.log 'Not POSTing ILL and not forwarding to ' + ou + ' for demo purposes'
+        console.log data
+      else
+        _L.post(
+          this.api+'/ill'
+          data
+          (res) => this.done res
+          () => this.done false
+        )
+  catch
+    this.ping 'instantill_try_submit_catch'
 
 _oab.prototype.validate = () ->
   if this.config.terms and not _L.checked '#_oab_read_terms' # instantill terms
@@ -431,6 +404,14 @@ _oab.prototype.metadata = (submitafter) -> # only used by instantill
 
 _oab.prototype.openurl = () -> # only used by instantill
   if this.f.ill?.openurl
+    try
+      nf = this.config.notes ? 'notes'
+      if this.f.ill.openurl.indexOf(nf+'=') is -1
+        notes = if this.data?.usermetadata then 'The user provided some metadata. ' else ''
+        notes += 'Subscription check done, found ' + (this.f.ill.subscription.url ? (if this.f.ill.subscription.journal then 'journal' else 'nothing')) + '. ' if this.f.ill?.subscription
+        notes += 'OA availability check done, found ' + (this.f.url ? 'nothing') + '. ' if this.f.metadata?
+        this.f.ill.openurl += '&' if not this.f.ill.openurl.endsWith '&'
+        this.f.ill.openurl += nf + '=' + notes
     return this.f.ill.openurl
   else if not this.config.ill_form
     return ''
@@ -468,7 +449,7 @@ _oab.prototype.openurl = () -> # only used by instantill
     notes = if this.data.usermetadata then 'The user provided some metadata. ' else ''
     notes += 'Subscription check done, found ' + (this.f.ill.subscription.url ? (if this.f.ill.subscription.journal then 'journal' else 'nothing')) + '. ' if this.f.ill?.subscription
     notes += 'OA availability check done, found ' + (this.f.url ? 'nothing') + '. ' if this.f.metadata?
-    url += '&' + (config.notes ? 'notes') + '=' + notes if notes
+    url += '&' + (this.config.notes ? 'notes') + '=' + notes if notes
     return url.replace '/&&/g', '&'
 
 _oab.prototype.done = (res, msg) ->
@@ -495,341 +476,359 @@ _oab.prototype.done = (res, msg) ->
   this.after() if typeof this.after is 'function'
 
 _oab.prototype.deposit = (e) -> # only used by shareyourpaper
-  try e.preventDefault()
-  if not this.data.email and _L.gebi '#_oab_email'
-    this.validate()
-  else if this.demo is true and this.data.doi? and this.data.doi.indexOf('10.1234/oab-syp-') is 0
-    if this.data.doi? and this.data.doi.indexOf('10.1234/oab-syp-') is 0 and this.data.doi isnt '10.1234/oab-syp-confirm' # demo successful deposit
-      info = '<p>You\'ll soon find your paper freely available in ' + (this.config.repo_name ? 'ScholarWorks') + ', Google Scholar, Web of Science, and other popular tools.'
-      info += '<h3>Your paper is now freely available at this link:</h3>'
-      _L.html '#_oab_zenodo_embargo', info
-      _L.set '#_oab_zenodo_url', 'https://zenodo.org/record/3703317'
-      this.done 'zenodo'
-    else # demo something wrong, please confirm
-      this.done 'confirm'
-    this.loaded() if typeof this.loaded is 'function'
-  else
-    fl = _L.gebi '#_oab_file'
-    if fl? and fl.files? and fl.files.length
-      this.file = new FormData()
-      this.file.append 'file', fl.files[0]
-    else if this.file isnt true # can be set to true when dark deposit is being followed - no file required. Or a demo may set it to true
-      _L.show '#_oab_error', '<p>Whoops, you need to give us a file! Check it\'s uploaded.</p>'
-      _L.css '#_oab_file', 'border-color','#f04717'
-      return
-    this.loading()
-    # this could be just an email for a dark deposit, or a file for actual deposit
-    # if the file is acceptable and can go in zenodo then we don't bother getting the email address
-    data = {from: this.uid, plugin: this.plugin, embedded:window.location.href, metadata: this.f?.metadata }
-    data.demo = true if this.demo is true
-    data.config = this.config
-    data.email = this.data.email if this.data.email
-    data.confirmed = this.data.confirmed if this.data.confirmed
-    data.redeposit = this.f.url if typeof this.f?.url is 'string'
-    data.pilot = this.config.pilot if this.config.pilot
-    data.live = this.config.live if this.config.live
-    if typeof this.file isnt 'boolean'
-      for d of data
-        if d is 'metadata'
-          for md of data[d]
-            this.file.append(md,data[d][md]) if (typeof data[d][md] is 'string' or typeof data[d][md] is 'number')
-        else
-          this.file.append d,data[d]
-      data = this.file
-
-    _L.post(
-      this.api+'/deposit', # + (this.f.catalogue ? '')
-      data
-      (res) =>
-        this.loading false
-        if typeof this.file isnt 'boolean'
-          if res.zenodo?.already or (this.data.confirmed and not res.zenodo?.url) #or not this.f?.permissions?.file?.archivable
-            this.done 'check'
-          else if res.error
-            # if we should be able to deposit but can't, we stick to the positive response and the file will be manually checked
-            this.done 'partial'
-          else if res.zenodo?.url
-            # deposit was possible, show the user a congrats page with a link to the item in zenodo
-            _L.set '#_oab_zenodo_url', res.zenodo.url
-            if res.embargo
-              info = '<p>You\'ve done your part for now. Unfortunately, ' + (this.f?.metadata?.journal_short ? this.f?.metadata?.journal ? 'the journal') + ' won\'t let us make it public until '
-              info += if res.embargo_UI then res.embargo_UI else res.embargo
-              info += '. After release, you\'ll find your paper on ' + (this.config.repo_name ? 'ScholarWorks') + ', Google Scholar, Web of Science.</p>'
-              info += '<h3>Your paper will be freely available at this link:</h3>'
-            else
-              info = '<p>You\'ll soon find your paper freely available in ' + (this.config.repo_name ? 'ScholarWorks') + ', Google Scholar, Web of Science, and other popular tools.'
-              info += '<h3>Your paper is now freely available at this link:</h3>'
-            _L.html '#_oab_zenodo_embargo', info
-            this.done 'zenodo'
+  try
+    try e.preventDefault()
+    if not this.data.email and _L.gebi '#_oab_email'
+      this.validate()
+    else if this.demo is true and this.data.doi? and this.data.doi.indexOf('10.1234/oab-syp-') is 0
+      if this.data.doi? and this.data.doi.indexOf('10.1234/oab-syp-') is 0 and this.data.doi isnt '10.1234/oab-syp-confirm' # demo successful deposit
+        info = '<p>You\'ll soon find your paper freely available in ' + (this.config.repo_name ? 'ScholarWorks') + ', Google Scholar, Web of Science, and other popular tools.'
+        info += '<h3>Your paper is now freely available at this link:</h3>'
+        _L.html '#_oab_zenodo_embargo', info
+        _L.set '#_oab_zenodo_url', 'https://zenodo.org/record/3703317'
+        this.done 'zenodo'
+      else # demo something wrong, please confirm
+        this.done 'confirm'
+      this.loaded() if typeof this.loaded is 'function'
+    else
+      fl = _L.gebi '#_oab_file'
+      if fl? and fl.files? and fl.files.length
+        this.file = new FormData()
+        this.file.append 'file', fl.files[0]
+      else if this.file isnt true # can be set to true when dark deposit is being followed - no file required. Or a demo may set it to true
+        _L.show '#_oab_error', '<p>Whoops, you need to give us a file! Check it\'s uploaded.</p>'
+        _L.css '#_oab_file', 'border-color','#f04717'
+        return
+      this.loading()
+      # this could be just an email for a dark deposit, or a file for actual deposit
+      # if the file is acceptable and can go in zenodo then we don't bother getting the email address
+      data = {from: this.uid, plugin: this.plugin, embedded:window.location.href, metadata: this.f?.metadata }
+      data.demo = true if this.demo is true
+      data.config = this.config
+      data.email = this.data.email if this.data.email
+      data.confirmed = this.data.confirmed if this.data.confirmed
+      data.redeposit = this.f.url if typeof this.f?.url is 'string'
+      data.pilot = this.config.pilot if this.config.pilot
+      data.live = this.config.live if this.config.live
+      if typeof this.file isnt 'boolean'
+        for d of data
+          if d is 'metadata'
+            for md of data[d]
+              this.file.append(md,data[d][md]) if (typeof data[d][md] is 'string' or typeof data[d][md] is 'number')
           else
-            # if the file given is not a version that is allowed, show a page saying something looks wrong
-            # also the backend should create a dark deposit in this case, but delay it by six hours, and cancel if received in the meantime
-            this.done 'confirm'
-        else if res.type is 'redeposit'
-          this.done 'redeposit'
-        else
-          this.done 'success'
-      () =>
-        this.loading false
-        _L.show '#_oab_error', '<p>Sorry, we were not able to deposit this paper for you. ' + this.contact() + '</p><p><a href="#" class="_oab_restart" id="_oab_sorry_try_again"><b>Try again</b></a></p>'
-        this.ping('shareyourpaper_couldnt_submit_deposit')
-    )
+            this.file.append d,data[d]
+        data = this.file
+  
+      _L.post(
+        this.api+'/deposit', # + (this.f.catalogue ? '')
+        data
+        (res) =>
+          this.loading false
+          if typeof this.file isnt 'boolean'
+            if res.zenodo?.already or (this.data.confirmed and not res.zenodo?.url) #or not this.f?.permissions?.file?.archivable
+              this.done 'check'
+            else if res.error
+              # if we should be able to deposit but can't, we stick to the positive response and the file will be manually checked
+              this.done 'partial'
+            else if res.zenodo?.url
+              # deposit was possible, show the user a congrats page with a link to the item in zenodo
+              _L.set '#_oab_zenodo_url', res.zenodo.url
+              if res.embargo
+                info = '<p>You\'ve done your part for now. Unfortunately, ' + (this.f?.metadata?.journal_short ? this.f?.metadata?.journal ? 'the journal') + ' won\'t let us make it public until '
+                info += if res.embargo_UI then res.embargo_UI else res.embargo
+                info += '. After release, you\'ll find your paper on ' + (this.config.repo_name ? 'ScholarWorks') + ', Google Scholar, Web of Science.</p>'
+                info += '<h3>Your paper will be freely available at this link:</h3>'
+              else
+                info = '<p>You\'ll soon find your paper freely available in ' + (this.config.repo_name ? 'ScholarWorks') + ', Google Scholar, Web of Science, and other popular tools.'
+                info += '<h3>Your paper is now freely available at this link:</h3>'
+              _L.html '#_oab_zenodo_embargo', info
+              this.done 'zenodo'
+            else
+              # if the file given is not a version that is allowed, show a page saying something looks wrong
+              # also the backend should create a dark deposit in this case, but delay it by six hours, and cancel if received in the meantime
+              this.done 'confirm'
+          else if res.type is 'redeposit'
+            this.done 'redeposit'
+          else
+            this.done 'success'
+        () =>
+          this.loading false
+          _L.show '#_oab_error', '<p>Sorry, we were not able to deposit this paper for you. ' + this.contact() + '</p><p><a href="#" class="_oab_restart" id="_oab_sorry_try_again"><b>Try again</b></a></p>'
+          this.ping('shareyourpaper_couldnt_submit_deposit')
+      )
+  catch
+    this.ping 'shareyourpaper_try_deposit_catch'
 
 _oab.prototype.permissions = (data) -> # only used by shareyourpaper
-  this.f = data if data?
-  this.loading false
-  if this.f?.doi_not_in_crossref
-    this.f = {}
-    _L.show '#_oab_error', '<p>Double check your DOI, that doesn\'t look right to us.</p>'
-    _L.gebi('_oab_input').focus()
-  else if this.f?.metadata?.crossref_type? and this.f.metadata.crossref_type not in ['journal-article', 'proceedings-article']
-    _L.gebi('_oab_input').focus()
-    nj = '<p>Sorry, right now this only works with academic journal articles.'
-    if this.cml()
-      nj += ' To get help with depositing, <a href="'
-      nj += if this.config.old_way then (if this.config.old_way.indexOf('@') isnt -1 then 'mailto:' else '') + this.config.old_way else 'mailto:' + this.cml()
-      nj += "?subject=Help%20depositing%20&body=Hi%2C%0D%0A%0D%0AI'd%20like%20to%20deposit%3A%0D%0A%0D%0A%3C%3CPlease%20insert%20a%20full%20citation%3E%3E%0D%0A%0D%0ACan%20you%20please%20assist%20me%3F%0D%0A%0D%0AYours%20sincerely%2C" + '">click here</a>'
-    _L.show '#_oab_error', nj + '.</p>'
-  else if not this.f?.metadata?.title?
-    _L.show '#_oab_error', '<h3>Unknown paper</h3><p>Sorry, we cannot find this paper or sufficient metadata. ' + this.contact() + '</p>'
-    this.ping 'shareyourpaper_unknown_article'
-  else
-    _L.hide '._oab_panel'
-    _L.hide '._oab_section'
-    _L.show '#_oab_permissions'
-    this.loading false
-    tcs = 'terms <a id="_oab_terms" href="https://openaccessbutton.org/terms" target="_blank">[1]</a>'
-    tcs += ' <a id="_oab_config_terms" href="' + this.config.terms + '" target="_blank">[2]</a>' if this.config.terms
-    ph = 'your.name@institution.edu';
-    if this.config.email_domains? and this.config.email_domains.length
-      this.config.email_domains = this.config.email_domains.split(',') if typeof this.config.email_domains is 'string'
-      ph = this.config.email_domains[0]
-      ph = ph.split('@')[1] if ph.indexOf('@') isnt -1
-      ph = ph.split('//')[1] if ph.indexOf('//') isnt -1
-      ph = ph.toLowerCase().replace('www.','')
-    ph = 'your.name@institution.edu' if not ph? or ph.length < 3
-    ph = 'your.name@' + ph if ph.indexOf('@') is -1
-    if this.data.email
-      _L.hide '._oab_get_email'
+  try
+    this.f = data if data?
+    if not _L.gebi this.element
+      setTimeout (() => this.permissions()), 100
     else
-      _L.show '._oab_get_email'
-      _L.set '#_oab_email', 'placeholder', ph
-      _L.html '._oab_terms', tcs
-    refs = ''
-    for p of this.f?.permissions?.permissions?.policy_full_text ? []
-      refs += ' <a id="_oab_policy_text" target="_blank" href="' + this.f.permissions.permissions.policy_full_text[p] + '">[' + (parseInt(p)+1) + ']</a>'
-    _L.html '._oab_refs', refs
-    paper = if this.f?.metadata?.doi then '<a id="_oab_your_paper" target="_blank" href="https://doi.org/' + this.f.metadata.doi + '"><u>your paper</u></a>' else 'your paper'
-    _L.html '._oab_your_paper', (if this.f?.permissions?.permissions?.version_allowed is 'publisher pdf' then 'the publisher pdf of ' else '') + paper
-    _L.html '._oab_journal', this.f?.metadata?.journal_short ? 'the journal'
-    # set config by this.config.repo_name put name in ._oab_repo
-
-    if this.f.url
-      # it is already OA, depending on settings can deposit another copy
-      _L.set '._oab_oa_url', 'href', this.f.url
-      if this.config.oa_deposit_off
-        _L.hide '._oab_get_email'
-        _L.show '._oab_oa'
+      this.loading false
+      if this.f?.doi_not_in_crossref
+        this.f = {}
+        _L.show '#_oab_error', '<p>Double check your DOI, that doesn\'t look right to us.</p>'
+        _L.gebi('_oab_input').focus()
+      else if this.f?.metadata?.crossref_type? and this.f.metadata.crossref_type not in ['journal-article', 'proceedings-article']
+        _L.gebi('_oab_input').focus()
+        nj = '<p>Sorry, right now this only works with academic journal articles.'
+        if this.cml()
+          nj += ' To get help with depositing, <a href="'
+          nj += if this.config.old_way then (if this.config.old_way.indexOf('@') isnt -1 then 'mailto:' else '') + this.config.old_way else 'mailto:' + this.cml()
+          nj += "?subject=Help%20depositing%20&body=Hi%2C%0D%0A%0D%0AI'd%20like%20to%20deposit%3A%0D%0A%0D%0A%3C%3CPlease%20insert%20a%20full%20citation%3E%3E%0D%0A%0D%0ACan%20you%20please%20assist%20me%3F%0D%0A%0D%0AYours%20sincerely%2C" + '">click here</a>'
+        _L.show '#_oab_error', nj + '.</p>'
+      else if not this.f?.metadata?.title?
+        _L.show '#_oab_error', '<h3>Unknown paper</h3><p>Sorry, we cannot find this paper or sufficient metadata. ' + this.contact() + '</p>'
+        this.ping 'shareyourpaper_unknown_article'
       else
-        this.file = true # no file required for oa deposit...
-        _L.show '._oab_oa_deposit'
-    else if this.f?.permissions?.permissions?.archiving_allowed
-      # can be shared, depending on permissions info
-      _L.hide('#_oab_not_pdf') if this.f?.permissions?.permissions?.version_allowed is 'publisher pdf'
-      if typeof this.f?.permissions?.permissions?.licence_required is 'string' and this.f.permissions.permissions.licence_required.indexOf('other-') is 0
-        _L.html '._oab_licence', 'under the publisher terms' + refs
-      else
-        _L.html '._oab_licence', this.f?.permissions?.permissions?.licence_required ? 'CC-BY'
-      _L.show '._oab_archivable'
-    else if this.config.dark_deposit_off
-      # permission must be requested first
-      rm = 'mailto:' + (this.f.permissions?.ricks?.application?.can_archive_conditions?.permission_required_contact ? this.config.deposit_help ? this.cml()) + '?'
-      rm += 'cc=' + (this.config.deposit_help ? this.cml()) + '&' if this.f.permissions?.ricks?.application?.can_archive_conditions?.permission_required_contact
-      rm += 'subject=Request%20to%20self%20archive%20' + (this.f.metadata?.doi ? '') + '&body=';
-      rm += encodeURIComponent 'To whom it may concern,\n\n'
-      rm += encodeURIComponent 'I am writing to request permission to deposit the full text of my paper "' + (this.f.metadata?.title ? this.f.metadata?.doi ? 'Untitled paper') + '" '
-      rm += encodeURIComponent 'published in "' + this.f.metadata.journal + '"' if this.f.metadata?.journal
-      rm += encodeURIComponent '\n\nI would like to archive the final pdf. If that is not possible, I would like to archive the accepted manuscript. Ideally, I would like to do so immediately but will respect a reasonable embargo if requested.\n\n'
-      if this.config.repo_name
-        rm += encodeURIComponent 'I plan to deposit it into "' + this.config.repo_name + '", a not-for-profit, digital, publicly accessible repository for scholarly work created for researchers ' + (if this.config.institution_name then 'at ' + this.config.institution_name else '') + '. It helps make research available to a wider audience, get citations for the original article, and assure its long-term preservation. The deposit will include a complete citation of the published version, and a link to it.\n\n'
-      rm += encodeURIComponent 'Thank you for your attention and I look forward to hearing from you.'
-      _L.set '#_oab_reviewemail', 'href', rm
-      # or to confirm permission has been received
-      pm = 'mailto:' + (this.config.deposit_help ? this.cml()) + '?subject=Permission%20Given%20to%20Deposit%20' + (this.f.metadata?.doi ? '') + '&body='
-      pm += encodeURIComponent 'To whom it may concern,\n\nAttached is written confirmation of permission I\'ve been given to deposit, and the permitted version of my paper: '
-      pm += encodeURIComponent '"' + (this.f.metadata?.title ? this.f.metadata?.doi ? 'Untitled paper') + '" \n\nCan you please deposit it into the repository on my behalf? \n\nSincerely, '
-      _L.set '#_oab_permissionemail', 'href', pm
-      _L.hide '._oab_get_email'
-      _L.show '._oab_permission_required'
-    else
-      # can't be directly shared but can be passed to library for dark deposit
-      this.file = true
-      _L.hide '#_oab_file'
-      _L.show '._oab_dark_deposit'
+        _L.hide '._oab_panel'
+        _L.hide '._oab_section'
+        _L.show '#_oab_permissions'
+        this.loading false
+        tcs = 'terms <a id="_oab_terms" href="https://openaccessbutton.org/terms" target="_blank">[1]</a>'
+        tcs += ' <a id="_oab_config_terms" href="' + this.config.terms + '" target="_blank">[2]</a>' if this.config.terms
+        ph = 'your.name@institution.edu';
+        if this.config.email_domains? and this.config.email_domains.length
+          this.config.email_domains = this.config.email_domains.split(',') if typeof this.config.email_domains is 'string'
+          ph = this.config.email_domains[0]
+          ph = ph.split('@')[1] if ph.indexOf('@') isnt -1
+          ph = ph.split('//')[1] if ph.indexOf('//') isnt -1
+          ph = ph.toLowerCase().replace('www.','')
+        ph = 'your.name@institution.edu' if not ph? or ph.length < 3
+        ph = 'your.name@' + ph if ph.indexOf('@') is -1
+        if this.data.email
+          _L.hide '._oab_get_email'
+        else
+          _L.show '._oab_get_email'
+          _L.set '#_oab_email', 'placeholder', ph
+          _L.html '._oab_terms', tcs
+        refs = ''
+        for p of this.f?.permissions?.permissions?.policy_full_text ? []
+          refs += ' <a id="_oab_policy_text" target="_blank" href="' + this.f.permissions.permissions.policy_full_text[p] + '">[' + (parseInt(p)+1) + ']</a>'
+        _L.html '._oab_refs', refs
+        paper = if this.f?.metadata?.doi then '<a id="_oab_your_paper" target="_blank" href="https://doi.org/' + this.f.metadata.doi + '"><u>your paper</u></a>' else 'your paper'
+        _L.html '._oab_your_paper', (if this.f?.permissions?.permissions?.version_allowed is 'publisher pdf' then 'the publisher pdf of ' else '') + paper
+        _L.html '._oab_journal', this.f?.metadata?.journal_short ? 'the journal'
+        # set config by this.config.repo_name put name in ._oab_repo
+    
+        if this.f.url
+          # it is already OA, depending on settings can deposit another copy
+          _L.set '._oab_oa_url', 'href', this.f.url
+          if this.config.oa_deposit_off
+            _L.hide '._oab_get_email'
+            _L.show '._oab_oa'
+          else
+            this.file = true # no file required for oa deposit...
+            _L.show '._oab_oa_deposit'
+        else if this.f?.permissions?.permissions?.archiving_allowed
+          # can be shared, depending on permissions info
+          _L.hide('#_oab_not_pdf') if this.f?.permissions?.permissions?.version_allowed is 'publisher pdf'
+          if typeof this.f?.permissions?.permissions?.licence_required is 'string' and this.f.permissions.permissions.licence_required.indexOf('other-') is 0
+            _L.html '._oab_licence', 'under the publisher terms' + refs
+          else
+            _L.html '._oab_licence', this.f?.permissions?.permissions?.licence_required ? 'CC-BY'
+          _L.show '._oab_archivable'
+        else if this.config.dark_deposit_off
+          # permission must be requested first
+          rm = 'mailto:' + (this.f.permissions?.ricks?.application?.can_archive_conditions?.permission_required_contact ? this.config.deposit_help ? this.cml()) + '?'
+          rm += 'cc=' + (this.config.deposit_help ? this.cml()) + '&' if this.f.permissions?.ricks?.application?.can_archive_conditions?.permission_required_contact
+          rm += 'subject=Request%20to%20self%20archive%20' + (this.f.metadata?.doi ? '') + '&body=';
+          rm += encodeURIComponent 'To whom it may concern,\n\n'
+          rm += encodeURIComponent 'I am writing to request permission to deposit the full text of my paper "' + (this.f.metadata?.title ? this.f.metadata?.doi ? 'Untitled paper') + '" '
+          rm += encodeURIComponent 'published in "' + this.f.metadata.journal + '"' if this.f.metadata?.journal
+          rm += encodeURIComponent '\n\nI would like to archive the final pdf. If that is not possible, I would like to archive the accepted manuscript. Ideally, I would like to do so immediately but will respect a reasonable embargo if requested.\n\n'
+          if this.config.repo_name
+            rm += encodeURIComponent 'I plan to deposit it into "' + this.config.repo_name + '", a not-for-profit, digital, publicly accessible repository for scholarly work created for researchers ' + (if this.config.institution_name then 'at ' + this.config.institution_name else '') + '. It helps make research available to a wider audience, get citations for the original article, and assure its long-term preservation. The deposit will include a complete citation of the published version, and a link to it.\n\n'
+          rm += encodeURIComponent 'Thank you for your attention and I look forward to hearing from you.'
+          _L.set '#_oab_reviewemail', 'href', rm
+          # or to confirm permission has been received
+          pm = 'mailto:' + (this.config.deposit_help ? this.cml()) + '?subject=Permission%20Given%20to%20Deposit%20' + (this.f.metadata?.doi ? '') + '&body='
+          pm += encodeURIComponent 'To whom it may concern,\n\nAttached is written confirmation of permission I\'ve been given to deposit, and the permitted version of my paper: '
+          pm += encodeURIComponent '"' + (this.f.metadata?.title ? this.f.metadata?.doi ? 'Untitled paper') + '" \n\nCan you please deposit it into the repository on my behalf? \n\nSincerely, '
+          _L.set '#_oab_permissionemail', 'href', pm
+          _L.hide '._oab_get_email'
+          _L.show '._oab_permission_required'
+        else
+          # can't be directly shared but can be passed to library for dark deposit
+          this.file = true
+          _L.hide '#_oab_file'
+          _L.show '._oab_dark_deposit'
+  catch
+    this.ping 'shareyourpaper_try_permissions_catch'
 
 _oab.prototype.findings = (data) -> # only used by instantill
-  this.f = data if data?
-  if ct = this.f.metadata?.crossref_type
-    if ct not in ['journal-article','proceedings-article','posted-content']
-      if ct in ['book-section','book-part','book-chapter']
-        err = '<p>Please make your request through our ' + (if this.config.book then '<a id="_oab_book_form" href="' + this.config.book + '">book form</a>' else 'book form')
-      else
-        err = '<p>We can only process academic journal articles, please use another form.'
-      _L.show '#_oab_error', err + '</p>'
-      return
-
-  _L.hide '._oab_panel'
-  _L.hide '._oab_section'
-  this.loading false
-
-  if this.config.resolver
-    # new setting to act as a link resolver, try to pass through immediately if sub url, OA url, or lib openurl are available
-    # TODO confirm if this should send an ILL to the backend first, as a record, or maybe just a pinger
-    # also check if could forward the user to the new page before the send to backend succeeds / errors
-    data = {match: this.f.input, from: this.uid, plugin: this.plugin, embedded: window.location.href}
-    data.config = this.config
-    data.metadata = this.f.metadata ? {}
-    data.pilot = this.config.pilot if this.config.pilot
-    data.live = this.config.live if this.config.live
-    if this.f.ill?.subscription?.url
-      data.resolved = 'subscription'
-    else if this.f.url
-      data.resolved = 'open'
-    else if ou = this.openurl()
-      data.resolved = 'library'
-    if data.resolved?
-      data.url = this.f.ill?.subscription?.url ? this.f.url ? ou
-      _L.post(this.api+'/ill', data, (() => window.location = this.f.ill?.subscription?.url ? this.f.url ? ou), (() => window.location = this.f.ill?.subscription?.url ? this.f.url ? ou))
-
-  _L.show '#_oab_findings'
-  if this.f.ill?.error
-    _L.show '#_oab_error', '<p>Please note, we encountered errors querying the following subscription services: ' + this.f.ill.error.join(', ') + '</p>'
-  if this.f.metadata?.title?
-    citation = '<h2>' + this.f.metadata.title + '</h2>'
-    if this.f.metadata.year or this.f.metadata.journal or this.f.metadata.volume or this.f.metadata.issue
-      citation += '<p><i>'
-      citation += (this.f.metadata.year ? '') + (if this.f.metadata.journal or this.f.metadata.volume or this.f.metadata.issue then ', ' else '') if this.f.metadata.year
-      if this.f.metadata.journal
-        citation += this.f.metadata.journal
-      else
-        citation += 'vol. ' + this.f.metadata.volume if this.f.metadata.volume
-        citation += (if this.f.metadata.volume then ', ' else '') + 'issue ' + this.f.metadata.issue if this.f.metadata.issue
-      citation += '</i></p>'
-    _L.html '#_oab_citation', citation
-
-    hassub = false
-    hasoa = false
-    if this.f.ill?.subscription?.journal or this.f.ill?.subscription?.url
-      hassub = true
-      # if sub url show the url link, else show the "should be able to access on pub site
-      _L.set('#_oab_sub_url', 'href', this.f.ill.subscription.url) if this.f.ill.subscription.url?
-      _L.show '#_oab_sub_available'
-    else if this.f.url
-      hasoa = true
-      _L.set '#_oab_url', 'href', this.f.url
-      _L.show '#_oab_oa_available'
-    if this.f.ill? and not ((this.config.ill_if_sub_off and hassub) or (this.config.ill_if_oa_off and hasoa))
-      _L.html '#_oab_cost_time', '<p>It ' + (if this.config.cost then 'costs ' + this.config.cost else 'is free to you,') + ' and we\'ll usually email the link within ' + (this.config.time ? '24 hours') + '.<br></p>'
-      if not this.data.email
-        if this.openurl()
-          _L.hide '#_oab_collect_email'
-        else
-          if this.config.terms
-            _L.show '#_oab_terms_note'
-            _L.set '#_oab_terms_link', 'href', this.config.terms
+  try
+    this.f = data if data?
+    if not _L.gebi this.element
+      setTimeout (() => this.findings()), 100
+    else
+      if ct = this.f.metadata?.crossref_type
+        if ct not in ['journal-article','proceedings-article','posted-content']
+          if ct in ['book-section','book-part','book-chapter']
+            err = '<p>Please make your request through our ' + (if this.config.book then '<a id="_oab_book_form" href="' + this.config.book + '">book form</a>' else 'book form')
           else
-            _L.hide '#_oab_terms_note'
-      _L.show '#_oab_ask_library'
-
-  else if this.data.usermetadata
-    _L.html '#_oab_citation', '<h3>Unknown ' + (if this.config.say_paper then 'paper' else 'article') + '</h3><p>Sorry, we can\'t find this ' + (if this.config.say_paper then 'paper' else 'article') + ' or sufficient metadata. ' + this.contact() + '</p>'
-    this.ping 'shareyourpaper_unknown_article'
-    setTimeout (() => this.restart()), 6000
-  else
-    this.metadata()
+            err = '<p>We can only process academic journal articles, please use another form.'
+          _L.show '#_oab_error', err + '</p>'
+          return
+    
+      _L.hide '._oab_panel'
+      _L.hide '._oab_section'
+      this.loading false
+    
+      if this.config.resolver
+        # new setting to act as a link resolver, try to pass through immediately if sub url, OA url, or lib openurl are available
+        # TODO confirm if this should send an ILL to the backend first, as a record, or maybe just a pinger
+        # also check if could forward the user to the new page before the send to backend succeeds / errors
+        data = {match: this.f.input, from: this.uid, plugin: this.plugin, embedded: window.location.href}
+        data.config = this.config
+        data.metadata = this.f.metadata ? {}
+        data.pilot = this.config.pilot if this.config.pilot
+        data.live = this.config.live if this.config.live
+        if this.f.ill?.subscription?.url
+          data.resolved = 'subscription'
+        else if this.f.url
+          data.resolved = 'open'
+        else if ou = this.openurl()
+          data.resolved = 'library'
+        if data.resolved?
+          data.url = this.f.ill?.subscription?.url ? this.f.url ? ou
+          _L.post(this.api+'/ill', data, (() => window.location = this.f.ill?.subscription?.url ? this.f.url ? ou), (() => window.location = this.f.ill?.subscription?.url ? this.f.url ? ou))
+    
+      _L.show '#_oab_findings'
+      if this.f.ill?.error
+        _L.show '#_oab_error', '<p>Please note, we encountered errors querying the following subscription services: ' + this.f.ill.error.join(', ') + '</p>'
+      if this.f.metadata?.title?
+        citation = '<h2>' + this.f.metadata.title + '</h2>'
+        if this.f.metadata.year or this.f.metadata.journal or this.f.metadata.volume or this.f.metadata.issue
+          citation += '<p><i>'
+          citation += (this.f.metadata.year ? '') + (if this.f.metadata.journal or this.f.metadata.volume or this.f.metadata.issue then ', ' else '') if this.f.metadata.year
+          if this.f.metadata.journal
+            citation += this.f.metadata.journal
+          else
+            citation += 'vol. ' + this.f.metadata.volume if this.f.metadata.volume
+            citation += (if this.f.metadata.volume then ', ' else '') + 'issue ' + this.f.metadata.issue if this.f.metadata.issue
+          citation += '</i></p>'
+        _L.html '#_oab_citation', citation
+    
+        hassub = false
+        hasoa = false
+        if this.f.ill?.subscription?.journal or this.f.ill?.subscription?.url
+          hassub = true
+          # if sub url show the url link, else show the "should be able to access on pub site
+          _L.set('#_oab_sub_url', 'href', this.f.ill.subscription.url) if this.f.ill.subscription.url?
+          _L.show '#_oab_sub_available'
+        else if this.f.url
+          hasoa = true
+          _L.set '#_oab_url', 'href', this.f.url
+          _L.show '#_oab_oa_available'
+        if this.f.ill? and not ((this.config.ill_if_sub_off and hassub) or (this.config.ill_if_oa_off and hasoa))
+          _L.html '#_oab_cost_time', '<p>It ' + (if this.config.cost then 'costs ' + this.config.cost else 'is free to you,') + ' and we\'ll usually email the link within ' + (this.config.time ? '24 hours') + '.<br></p>'
+          if not this.data.email
+            if this.openurl()
+              _L.hide '#_oab_collect_email'
+            else
+              if this.config.terms
+                _L.show '#_oab_terms_note'
+                _L.set '#_oab_terms_link', 'href', this.config.terms
+              else
+                _L.hide '#_oab_terms_note'
+          _L.show '#_oab_ask_library'
+    
+      else if this.data.usermetadata
+        _L.html '#_oab_citation', '<h3>Unknown ' + (if this.config.say_paper then 'paper' else 'article') + '</h3><p>Sorry, we can\'t find this ' + (if this.config.say_paper then 'paper' else 'article') + ' or sufficient metadata. ' + this.contact() + '</p>'
+        this.ping 'shareyourpaper_unknown_article'
+        setTimeout (() => this.restart()), 6000
+      else
+        this.metadata()
+  catch
+    this.ping 'instantill_try_findings_catch'
 
 _oab.prototype.find = (e) ->
-  try e.preventDefault()
-  if JSON.stringify(this.f) isnt '{}'
-    for k in ['title','journal','year','doi']
-      if v = _L.get '#_oab_' + k
-        if this.data[k] isnt v
-          this.data[k] = v
-          this.data.usermetadata = true
-    if this.data.year and this.data.year.length isnt 4
-      delete this.data.year
-      _L.show '#_oab_error', '<p>Please provide the full year e.g 2019</p>'
-      return
-    if not this.data.title or not this.data.journal or not this.data.year
-      _L.show '#_oab_error', '<p>Please complete all required fields</p>'
-      return
-    if this.submit_after_metadata
-      this.submit()
-      return
-
-  this.data.title ?= this.data.atitle if this.data.atitle
-  this.data.doi ?= this.data.rft_id if this.data.rft_id
-  if this.data.doi and this.data.doi.indexOf('10.') isnt -1 and (this.data.doi.indexOf('/') is -1 or this.data.doi.indexOf('http') is 0)
-    this.data.url = this.data.doi
-    delete this.data.doi
-  if val = _L.get('#_oab_input')
-    val = val.trim().replace(/\.$/,'')
-    if val.length
-      if val.indexOf('doi.org/') isnt -1
-        this.data.url = val
-        this.data.doi = '10.' + val.split('10.')[1].split(' ')[0]
-      else if val.indexOf('10.') isnt -1
-        this.data.doi = '10.' + val.split('10.')[1].split(' ')[0]
-      else if val.indexOf('http') is 0 or val.indexOf('www.') isnt -1
-        this.data.url = val
-      else if val.toLowerCase().replace('pmc','').replace('pmid','').replace(':','').replace(/[0-9]/g,'').length is 0
-        this.data.id = val
+  try
+    try e.preventDefault()
+    if JSON.stringify(this.f) isnt '{}'
+      for k in ['title','journal','year','doi']
+        if v = _L.get '#_oab_' + k
+          if this.data[k] isnt v
+            this.data[k] = v
+            this.data.usermetadata = true
+      if this.data.year and this.data.year.length isnt 4
+        delete this.data.year
+        _L.show '#_oab_error', '<p>Please provide the full year e.g 2019</p>'
+        return
+      if not this.data.title or not this.data.journal or not this.data.year
+        _L.show '#_oab_error', '<p>Please complete all required fields</p>'
+        return
+      if this.submit_after_metadata
+        this.submit()
+        return
+  
+    this.data.title ?= this.data.atitle if this.data.atitle
+    this.data.doi ?= this.data.rft_id if this.data.rft_id
+    if this.data.doi and this.data.doi.indexOf('10.') isnt -1 and (this.data.doi.indexOf('/') is -1 or this.data.doi.indexOf('http') is 0)
+      this.data.url = this.data.doi
+      delete this.data.doi
+    if val = _L.get('#_oab_input')
+      val = val.trim().replace(/\.$/,'')
+      if val.length
+        if val.indexOf('doi.org/') isnt -1
+          this.data.url = val
+          this.data.doi = '10.' + val.split('10.')[1].split(' ')[0]
+        else if val.indexOf('10.') isnt -1
+          this.data.doi = '10.' + val.split('10.')[1].split(' ')[0]
+        else if val.indexOf('http') is 0 or val.indexOf('www.') isnt -1
+          this.data.url = val
+        else if val.toLowerCase().replace('pmc','').replace('pmid','').replace(':','').replace(/[0-9]/g,'').length is 0
+          this.data.id = val
+        else
+          this.data.title = val
+    else if this.data.doi or this.data.title or this.data.url or this.data.id
+      _L.set '#_oab_input', this.data.doi ? this.data.title ? this.data.url ? this.data.id
+  
+    if this.plugin is 'instantill' and not this.data.doi and not this.f?.metadata?.journal and this.data.title and this.data.title.length < 30 and this.data.title.split(' ').length < 3
+      this.metadata() # need more metadata for short titles
+    else if not this.data.doi and (this.plugin is 'shareyourpaper' or (not this.data.url and not this.data.pmid and not this.data.pmcid and not this.data.title and not this.data.id))
+      if this.plugin is 'shareyourpaper'
+        delete this.data.title
+        delete this.data.url
+        delete this.data.id
+        _L.show '#_oab_error', '<p>Please provide a DOI. If you\'re not sure what a DOI is, go <a id="_oab_doi_howto" href="https://library.uic.edu/help/article/1966/what-is-a-doi-and-how-do-i-use-them-in-citations" target="_blank">here</a>.</p>'
       else
-        this.data.title = val
-  else if this.data.doi or this.data.title or this.data.url or this.data.id
-    _L.set '#_oab_input', this.data.doi ? this.data.title ? this.data.url ? this.data.id
-
-  if this.plugin is 'instantill' and not this.data.doi and not this.f?.metadata?.journal and this.data.title and this.data.title.length < 30 and this.data.title.split(' ').length < 3
-    this.metadata() # need more metadata for short titles
-  else if not this.data.doi and (this.plugin is 'shareyourpaper' or (not this.data.url and not this.data.pmid and not this.data.pmcid and not this.data.title and not this.data.id))
-    if this.plugin is 'shareyourpaper'
-      delete this.data.title
-      delete this.data.url
-      delete this.data.id
+        _L.show '#_oab_error', '<p><span>&#10060;</span> Sorry please provide the full DOI, title, citation, PMID or PMC ID.</p>'
+    else if this.data.doi and this.plugin is 'shareyourpaper' and (this.data.doi.indexOf('10') isnt 0 or this.data.doi.indexOf('/') is -1 or this.data.doi.indexOf('.') is -1 or this.data.doi.length < 8)
+      delete this.data.doi
+      _L.set '#_oab_input', ''
+      _L.gebi('_oab_input').focus()
       _L.show '#_oab_error', '<p>Please provide a DOI. If you\'re not sure what a DOI is, go <a id="_oab_doi_howto" href="https://library.uic.edu/help/article/1966/what-is-a-doi-and-how-do-i-use-them-in-citations" target="_blank">here</a>.</p>'
     else
-      _L.show '#_oab_error', '<p><span>&#10060;</span> Sorry please provide the full DOI, title, citation, PMID or PMC ID.</p>'
-  else if this.data.doi and this.plugin is 'shareyourpaper' and (this.data.doi.indexOf('10') isnt 0 or this.data.doi.indexOf('/') is -1 or this.data.doi.indexOf('.') is -1 or this.data.doi.length < 8)
-    delete this.data.doi
-    _L.set '#_oab_input', ''
-    _L.gebi('_oab_input').focus()
-    _L.show '#_oab_error', '<p>Please provide a DOI. If you\'re not sure what a DOI is, go <a id="_oab_doi_howto" href="https://library.uic.edu/help/article/1966/what-is-a-doi-and-how-do-i-use-them-in-citations" target="_blank">here</a>.</p>'
-  else
-    this.state()
-    this.loading()
-    this.data.config = this.config
-    this.data.from ?= this.uid
-    this.data.plugin ?= this.plugin
-    this.data.embedded ?= window.location.href
-    this.data.pilot ?= this.config.pilot if this.config.pilot
-    this.data.live ?= this.config.live if this.config.live
-    if this.demo is true and (this.data.title is 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL' or this.data.doi is '10.1234/567890' or (this.data.doi? and this.data.doi.indexOf('10.1234/oab-syp') is 0))
-      data = {metadata: {title: 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL', year: '2019', crossref_type: 'journal-article', doi: this.data.doi ? '10.1234/oab-syp-aam'}}
-      data.metadata.journal = 'Proceedings of the 16th IFLA ILDS conference: Beyond the paywall - Resource sharing in a disruptive ecosystem'
-      data.metadata.author = [{given: 'Mike', family: 'Paxton'}, {given: 'Gary', family: 'Maixner III'}, {given: 'Joseph', family: 'McArthur'}, {given: 'Tina', family: 'Baich'}]
-      data.ill = {subscription: {findings:{}, uid: this.uid, lookups:[], error:[], url: 'https://scholarworks.iupui.edu/bitstream/handle/1805/20422/07-PAXTON.pdf?sequence=1&isAllowed=y'}}
-      data.permissions = { permissions: {
-        archiving_allowed: if this.data.doi is '10.1234/oab-syp-aam' then true else false,
-        version_allowed: if this.data.doi is '10.1234/oab-syp-aam' then "postprint" else undefined
-      }, file: {archivable: true, archivable_reason: "Demo acceptance", version: "postprint", licence: "cc-by", same_paper: true, name: "example.pdf", format: "pdf", checksum: "example-checksum"}}
-      if this.plugin is 'instantill' then this.findings(data) else this.permissions(data)
-    else
-      _L.post(
-        this.api+'/find'
-        this.data
-        (data) => if this.plugin is 'instantill' then this.findings(data) else this.permissions(data)
-        () => _L.show '#_oab_error', '<p>Oh dear, the service is down! We\'re aware, and working to fix the problem. ' + this.contact() + '</p>'
-      )
+      this.state()
+      this.loading()
+      this.data.config = this.config
+      this.data.from ?= this.uid
+      this.data.plugin ?= this.plugin
+      this.data.embedded ?= window.location.href
+      this.data.pilot ?= this.config.pilot if this.config.pilot
+      this.data.live ?= this.config.live if this.config.live
+      if this.demo is true and (this.data.title is 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL' or this.data.doi is '10.1234/567890' or (this.data.doi? and this.data.doi.indexOf('10.1234/oab-syp') is 0))
+        data = {metadata: {title: 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL', year: '2019', crossref_type: 'journal-article', doi: this.data.doi ? '10.1234/oab-syp-aam'}}
+        data.metadata.journal = 'Proceedings of the 16th IFLA ILDS conference: Beyond the paywall - Resource sharing in a disruptive ecosystem'
+        data.metadata.author = [{given: 'Mike', family: 'Paxton'}, {given: 'Gary', family: 'Maixner III'}, {given: 'Joseph', family: 'McArthur'}, {given: 'Tina', family: 'Baich'}]
+        data.ill = {subscription: {findings:{}, uid: this.uid, lookups:[], error:[], url: 'https://scholarworks.iupui.edu/bitstream/handle/1805/20422/07-PAXTON.pdf?sequence=1&isAllowed=y'}}
+        data.permissions = { permissions: {
+          archiving_allowed: if this.data.doi is '10.1234/oab-syp-aam' then true else false,
+          version_allowed: if this.data.doi is '10.1234/oab-syp-aam' then "postprint" else undefined
+        }, file: {archivable: true, archivable_reason: "Demo acceptance", version: "postprint", licence: "cc-by", same_paper: true, name: "example.pdf", format: "pdf", checksum: "example-checksum"}}
+        if this.plugin is 'instantill' then this.findings(data) else this.permissions(data)
+      else
+        _L.post(
+          this.api+'/find'
+          this.data
+          (data) => if this.plugin is 'instantill' then this.findings(data) else this.permissions(data)
+          () => _L.show '#_oab_error', '<p>Oh dear, the service is down! We\'re aware, and working to fix the problem. ' + this.contact() + '</p>'
+        )
+  catch
+    this.ping this.plugin + '_try_find_catch'
 
 _oab.css = '
 <style>
@@ -885,7 +884,7 @@ _oab.instantill_template = '
     <br>Start by entering a full <span class="_oab_paper">article</span> title, citation, DOI or URL:<br>
   </p>
   <p><input class="_oab_form" type="text" id="_oab_input" placeholder="e.g. World Scientists Warning of a Climate Emergency" aria-label="Enter a search term" style="box-shadow:none;"></input></p>
-  <p><a class="_oab_find _oab_button _oab_loading" id="_oab_find" href="#" aria-label="Search" style="min-width:140px;">Find <span class="_oab_paper">article</span></a></p>
+  <p><a class="_oab_find btn-iu _oab_button _oab_loading" id="_oab_find" href="#" aria-label="Search" style="min-width:140px;">Find <span class="_oab_paper">article</span></a></p>
   <div id="_oab_book_or_other"></div>
   <div id="_oab_advanced_account_info"></div>
 </div>
@@ -922,7 +921,7 @@ _oab.instantill_template = '
   <p>Journal title (required)<br><input class="_oab_form" id="_oab_journal" type="text" placeholder="e.g. Nature"></p>
   <p>Year of publication (required)<br><input class="_oab_form" id="_oab_year" type="text" placeholder="e.g 1992"></p>
   <p><span class="_oab_paper">Article</span> DOI or URL<br><input class="_oab_form" id="_oab_doi" type="text" placeholder="e.g 10.1126/scitranslmed.3008973"></p>
-  <p><a href="#" class="_oab_find _oab_button _oab_loading _oab_continue" id="_oab_continue" style="min-width:140px;">Continue</a></p>
+  <p><a href="#" class="_oab_find btn-iu _oab_button _oab_loading _oab_continue" id="_oab_continue" style="min-width:140px;">Continue</a></p>
   <p>
     <a href="#" class="_oab_restart" id="_oab_try_again"><b>Try again</b></a>
     <span id="_oab_advanced_ill_form" style="display:none;"></span>
@@ -947,7 +946,7 @@ _oab.shareyourpaper_template = '
   <h3>Start by entering the DOI of your paper</h3>
   <p>We\'ll gather information about your paper and find the easiest way to share it.</p>
   <p><input class="_oab_form" type="text" id="_oab_input" placeholder="e.g. 10.1126/scitranslmed.3001922" aria-label="Enter a search term" style="box-shadow:none;"></input></p>
-  <p><a class="_oab_find _oab_button _oab_loading" href="#" id="_oab_find" aria-label="Search" style="min-width:140px;">Next</a></p>
+  <p><a class="_oab_find btn-iu _oab_button _oab_loading" href="#" id="_oab_find" aria-label="Search" style="min-width:140px;">Next</a></p>
   <p><a id="_oab_nodoi" href="mailto:help@openaccessbutton.org?subject=Help%20depositing%20my%20paper&body=Hi%2C%0D%0A%0D%0AI\'d%20like%20to%20deposit%3A%0D%0A%0D%0A%3C%3CPlease%20insert%20a%20full%20citation%3E%3E%0D%0A%0D%0ACan%20you%20please%20assist%20me%3F%0D%0A%0D%0AYours%20sincerely%2C"><b>My paper doesn\'t have a DOI</b></a></p>
 </div>
 
@@ -1100,115 +1099,169 @@ _oab.prototype.configure = (key, val, build, preview) ->
   if this.bootstrap isnt false and this.config.bootstrap_off
     this.bootstrap = false
     build = true
-  if build isnt false
-    console.log 'Building embed'
-    this.element ?= '#' + this.plugin
-    _L.append('body', '<div id="' + this.element + '"></div>') if not _L.gebi this.element
-    _L.html this.element, ''
-    if not this.bootstrap?
-      # if bootstrap css is already present on the page, and bootstrap value is not set,
-      # and css has not been set either, then use bootstrap
-      _L.append this.element, '<div class="btn" id="_oab_bootstrap_test" style="visibility:hidden;"></div>'
-      this.bootstrap = _L.gebi('#_oab_bootstrap_test').offsetHeight isnt 0
-      _L.remove '_#oab_bootstrap_test'
-    if this.bootstrap is true
-      this.template = this.template.replace(/_oab_button/g,'_oab_button btn btn-primary').replace(/_oab_form/g,'_oab_form form-control')
-    else if this.template.indexOf('btn-primary') isnt -1
-      this.template = this.template.replace(/ btn btn-primary/g,'').replace(/ form-control/g,'')
-    if typeof this.css is 'string' and this.css isnt 'false' and this.bootstrap isnt true
-      this.css = '<div id="_oab_css"><style>' + this.css + '</style></div>' if not this.css.startsWith '<style>'
-      _L.append this.element, this.css
-    _L.append this.element, this.template
-    _L.each '._oab_paper', (el) =>
-      cs = el.innerHTML
-      if this.config.say_paper
-        if cs.indexOf('aper') is -1
-          el.innerHTML = (if cs is 'an article' then 'a paper' else if cs is 'article' then 'paper' else 'Paper')
-      else if cs.indexOf('aper') isnt -1
-        el.innerHTML = (if cs is 'a paper' then 'an article' else if cs is 'paper' then 'article' else 'Article')
-    if this.config.pilot
-      pilot = '<p><br>Notice a change? We\'re testing a simpler and faster way to ' + (if this.plugin is 'instantill' then 'get' else 'deposit') + ' your ' + (if this.config.say_paper then 'paper' else 'article') + (if this.plugin is 'instantill' then '' else 's') + '. You can '
-      pilot += '<a href="mailto:' + this.cml() + '">give feedback</a> or '
-      if this.plugin is 'instantill'
-        pilot += '<a class="_oab_ping" message="instantill_use_the_old_form" target="_blank" href="' + (if this.config.advanced_ill_form then this.config.advanced_ill_form else if this.config.ill_form then this.config.ill_form else 'mailto:'+this.cml()) + '">use the old form</a>.</p>'
-      else
-        pilot += '<a class="_oab_ping" message="shareyourpaper_use_the_old_form" target="_blank" href="' + (if this.config.old_way then (if this.config.old_way.indexOf('@') isnt -1 then 'mailto:' else '') + this.config.old_way else 'mailto:' + this.cml()) + '">use the old way</a>.</p>'
-      _L.html '#_oab_pilot', pilot
+  this.element ?= '#' + this.plugin
+    
+  _whenready = () =>
+    if _L.gebi this.element
+      if build isnt false
+        console.log 'Building embed'
+        #_L.append('body', '<div id="' + this.element + '"></div>') if not _L.gebi this.element
+        _L.html this.element, ''
+
+        #if not this.bootstrap?
+        #  # if bootstrap css is already present on the page, and bootstrap value is not set,
+        #  # and css has not been set either, then use bootstrap
+        #  _L.append this.element, '<div class="btn" id="_oab_bootstrap_test" style="visibility:hidden;"></div>'
+        #  this.bootstrap = _L.gebi('#_oab_bootstrap_test').offsetHeight isnt 0
+        #  _L.remove '_#oab_bootstrap_test'
+        #if this.bootstrap is true
+        #  this.template = this.template.replace(/_oab_button/g,'_oab_button btn btn-primary').replace(/_oab_form/g,'_oab_form form-control')
+        #else if this.template.indexOf('btn-primary') isnt -1
+        #  this.template = this.template.replace(/ btn btn-primary/g,'').replace(/ form-control/g,'')
+
+        if not this.bootstrap?
+          # hack test for bootstrap calls or classes in page doc
+          dstr = document.documentElement.innerHTML
+          this.bootstrap = dstr.indexOf('bootstrap.css') isnt -1 or dstr.indexOf('bootstrap.min.css') isnt -1 or dstr.indexOf('btn-primary') isnt -1
+          console.log('Found bootstrap indicators in the doc') if this.bootstrap is true
+        if this.bootstrap is true
+          if this.template.indexOf('btn-primary') is -1
+            this.template = this.template.replace(/_oab_button/g,'_oab_button btn btn-primary').replace(/_oab_form/g,'_oab_form form-control')
+        else if this.template.indexOf('btn-primary') isnt -1
+          this.template = this.template.replace(/ btn btn-primary/g,'').replace(/ form-control/g,'')
+        
+        #if this.bootstrap is false
+        #  if this.template.indexOf('btn-primary') isnt -1
+        #    this.template = this.template.replace(/ btn btn-primary/g,'').replace(/ form-control/g,'')
+        #else if this.template.indexOf('btn-primary') is -1
+        #  this.template = this.template.replace(/_oab_button/g,'_oab_button btn btn-primary').replace(/_oab_form/g,'_oab_form form-control')
+
+        if typeof this.css is 'string' and this.css isnt 'false' and this.bootstrap isnt true #this.bootstrap is false
+          this.css = '<div id="_oab_css"><style>' + this.css + '</style></div>' if not this.css.startsWith '<style>'
+          _L.append this.element, this.css
+        _L.append this.element, this.template
+        _L.each '._oab_paper', (el) =>
+          cs = el.innerHTML
+          if this.config.say_paper
+            if cs.indexOf('aper') is -1
+              el.innerHTML = (if cs is 'an article' then 'a paper' else if cs is 'article' then 'paper' else 'Paper')
+          else if cs.indexOf('aper') isnt -1
+            el.innerHTML = (if cs is 'a paper' then 'an article' else if cs is 'paper' then 'article' else 'Article')
+        if this.config.pilot
+          pilot = '<p><br>Notice a change? We\'re testing a simpler and faster way to ' + (if this.plugin is 'instantill' then 'get' else 'deposit') + ' your ' + (if this.config.say_paper then 'paper' else 'article') + (if this.plugin is 'instantill' then '' else 's') + '. You can '
+          pilot += '<a href="mailto:' + this.cml() + '">give feedback</a> or '
+          if this.plugin is 'instantill'
+            pilot += '<a class="_oab_ping" message="instantill_use_the_old_form" target="_blank" href="' + (if this.config.advanced_ill_form then this.config.advanced_ill_form else if this.config.ill_form then this.config.ill_form else 'mailto:'+this.cml()) + '">use the old form</a>.</p>'
+          else
+            pilot += '<a class="_oab_ping" message="shareyourpaper_use_the_old_form" target="_blank" href="' + (if this.config.old_way then (if this.config.old_way.indexOf('@') isnt -1 then 'mailto:' else '') + this.config.old_way else 'mailto:' + this.cml()) + '">use the old way</a>.</p>'
+          _L.html '#_oab_pilot', pilot
+        else
+          _L.html '#_oab_pilot', ''
+    
+        # shareyourpaper exclusive configs
+        if this.plugin is 'shareyourpaper'
+          if this.cml()? and el = _L.gebi '_oab_nodoi'
+            el.setAttribute 'href', el.getAttribute('href').replace('help@openaccessbutton.org', this.cml())
+          if this.config.not_library
+            _L.html '._oab_library', 'We have'
+          else
+            _L.html '#_oab_lib_info', 'Share your paper with help from the library in ' + (this.config.repo_name ? 'ScholarWorks') + '. Legally, for free, in minutes. '
+        else if this.plugin is 'instantill'
+          if this.config.book or this.config.other
+            boro = '<p>Need '
+            boro += 'a <a href="' + this.config.book + '">book chapter</a>' if this.config.book
+            boro +=  (if this.config.book then ' or ' else ' ') + '<a href="' + this.config.other + '">something else</a>' if this.config.other
+            _L.html '#_oab_book_or_other', boro + '?</p>'
+          else
+            _L.html '#_oab_book_or_other', ''
+          if this.config.intro_off
+            _L.hide '#_oab_intro'
+          if this.config.advanced_ill_form or this.config.account or this.config.ill_info
+            aai = '<p>Or '
+            if this.config.advanced_ill_form
+              _L.show '#_oab_advanced_ill_form', ' or <a href="' + this.config.advanced_ill_form + '">use full request form</a>'
+              aai += '<a href="' + this.config.advanced_ill_form + '">use full request form</a>'
+              if this.config.account and this.config.ill_info
+                aai += ', '
+              else if this.config.account or this.config.ill_info
+                aai += ' and '
+            if this.config.account
+              aai += '<a href="' + this.config.account + '">view account</a>'
+              aai += ' and ' if this.config.ill_info
+            aai += '<a href="' + this.config.ill_info + '">learn about Interlibrary Loan</a>' if this.config.ill_info
+            _L.html '#_oab_advanced_account_info', aai + '</p>'
+          else
+            _L.html '#_oab_advanced_account_info', ''
+            _L.hide '#_oab_advanced_ill_form'
+    
+        # would be better to make _L handle the bind so that this.find works rather than having to wrap it in a function that passes context
+        _L.listen 'enter', '#_oab_input', (e) => this.find(e)
+        _L.listen 'enter', '#_oab_email', (e) => this.validate(e)
+        _L.listen 'click', '._oab_find', (e) => this.find(e)
+        _L.listen 'click', '._oab_submit', (e) => this.submit(e)
+        _L.listen 'click', '._oab_restart', (e) => this.restart(e)
+        _L.listen 'click', '._oab_ping', (e) => this.ping(_L.get e.target, 'message')
+        _L.listen 'click', '._oab_wrong', (e) =>
+          e.preventDefault()
+          this.ping '_wrong_article'
+          this.metadata()
+        _L.listen 'click', '._oab_reload', (e) =>
+          e.preventDefault()
+          gf.value = '' if gf = _L.gebi "_oab_file"
+          this.file = false
+          this.permissions()
+        _L.listen 'click', '._oab_confirm', (e) => e.preventDefault(); this.data.confirmed = true; this.deposit()
+        _L.listen 'click','#_oab_reviewemail', (e) => this.done 'review'
+        _L.listen 'click','._oab_deposit', (e) => this.deposit(e)
+    
+      if el = _L.gebi '_oab_config'
+        ncwc = JSON.parse JSON.stringify wc
+        nk = 
+          ill_institution: 'institution' # translate instantill old config keys
+          ill_redirect_base_url: 'ill_form'
+          ill_redirect_params: 'ill_added_params'
+          deposit_terms: 'terms'
+          problem_email: 'problem'
+          viewaccount: 'account'
+          autorun: 'autorun_off'
+          intropara: 'intro_off'
+          norequests: 'requests_off'
+          illinfo: 'ill_info'
+          noillifoa: 'ill_if_oa_off'
+          noillifsub: 'ill_if_sub_off'
+          saypaper: 'say_paper'
+          advancedform: 'advanced_ill_form'
+          deposit_date: 'depositdate' # and shareyourpaper keys
+          deposit_terms: 'terms'
+          allow_oa_deposit: 'oa_deposit_off'
+          ROR_ID: 'ror'
+          not_a_library: 'not_library'
+          adminemail: 'email'
+          css: 'css_off'
+          bootstrap: 'bootstrap_off'
+        for k of nk
+          if ncwc[k]?
+            ncwc[nk[k]] = ncwc[k]
+            delete ncwc[k]
+        el.innerHTML = JSON.stringify ncwc
+      if window.location.search.indexOf('panel=') isnt -1
+        this.panel window.location.search.split('panel=')[1].split('&')[0].split('#')[0], (if window.location.search.indexOf('section=') isnt -1 then window.location.search.split('section=')[1].split('&')[0].split('#')[0] else undefined)
+      if preview
+        preview = this.config.val if typeof preview isnt 'string' or (typeof this.config.val is 'string' and this.config.val.length)
+        this.data = {}
+        this.f = {}
+        this.loading false
+        gf.value = '' if gf = _L.gebi "_oab_file"
+        this.file = false
+        _L.hide '._oab_panel'
+        _L.show '#_oab_inputs'
+        _L.set '#_oab_input', preview
+        setTimeout (() => this.find()), 1
+      this.loaded() if typeof this.loaded is 'function'
     else
-      _L.html '#_oab_pilot', ''
-
-    # shareyourpaper exclusive configs
-    if this.plugin is 'shareyourpaper'
-      if this.cml()? and el = _L.gebi '_oab_nodoi'
-        el.setAttribute 'href', el.getAttribute('href').replace('help@openaccessbutton.org', this.cml())
-      if this.config.not_library
-        _L.html '._oab_library', 'We have'
-      else
-        _L.html '#_oab_lib_info', 'Share your paper with help from the library in ' + (this.config.repo_name ? 'ScholarWorks') + '. Legally, for free, in minutes. '
-    else if this.plugin is 'instantill'
-      if this.config.book or this.config.other
-        boro = '<p>Need '
-        boro += 'a <a href="' + this.config.book + '">book chapter</a>' if this.config.book
-        boro +=  (if this.config.book then ' or ' else ' ') + '<a href="' + this.config.other + '">something else</a>' if this.config.other
-        _L.html '#_oab_book_or_other', boro + '?</p>'
-      else
-        _L.html '#_oab_book_or_other', ''
-      if this.config.intro_off
-        _L.hide '#_oab_intro'
-      if this.config.advanced_ill_form or this.config.account or this.config.ill_info
-        aai = '<p>Or '
-        if this.config.advanced_ill_form
-          _L.show '#_oab_advanced_ill_form', ' or <a href="' + this.config.advanced_ill_form + '">use full request form</a>'
-          aai += '<a href="' + this.config.advanced_ill_form + '">use full request form</a>'
-          if this.config.account and this.config.ill_info
-            aai += ', '
-          else if this.config.account or this.config.ill_info
-            aai += ' and '
-        if this.config.account
-          aai += '<a href="' + this.config.account + '">view account</a>'
-          aai += ' and ' if this.config.ill_info
-        aai += '<a href="' + this.config.ill_info + '">learn about Interlibrary Loan</a>' if this.config.ill_info
-        _L.html '#_oab_advanced_account_info', aai + '</p>'
-      else
-        _L.html '#_oab_advanced_account_info', ''
-        _L.hide '#_oab_advanced_ill_form'
-
-    # would be better to make _L handle the bind so that this.find works rather than having to wrap it in a function that passes context
-    _L.listen 'enter', '#_oab_input', (e) => this.find(e)
-    _L.listen 'enter', '#_oab_email', (e) => this.validate(e)
-    _L.listen 'click', '._oab_find', (e) => this.find(e)
-    _L.listen 'click', '._oab_submit', (e) => this.submit(e)
-    _L.listen 'click', '._oab_restart', (e) => this.restart(e)
-    _L.listen 'click', '._oab_ping', (e) => this.ping(_L.get e.target, 'message')
-    _L.listen 'click', '._oab_wrong', (e) =>
-      e.preventDefault()
-      this.ping '_wrong_article'
-      this.metadata()
-    _L.listen 'click', '._oab_reload', (e) =>
-      e.preventDefault()
-      gf.value = '' if gf = _L.gebi "_oab_file"
-      this.file = false
-      this.permissions()
-    _L.listen 'click', '._oab_confirm', (e) => e.preventDefault(); this.data.confirmed = true; this.deposit()
-    _L.listen 'click','#_oab_reviewemail', (e) => this.done 'review'
-    _L.listen 'click','._oab_deposit', (e) => this.deposit(e)
-
-  if el = _L.gebi '_oab_config'
-    el.innerHTML = JSON.stringify wc
-  if window.location.search.indexOf('panel=') isnt -1
-    this.panel window.location.search.split('panel=')[1].split('&')[0].split('#')[0], (if window.location.search.indexOf('section=') isnt -1 then window.location.search.split('section=')[1].split('&')[0].split('#')[0] else undefined)
-  if preview
-    preview = this.config.val if typeof preview isnt 'string' or (typeof this.config.val is 'string' and this.config.val.length)
-    this.data = {}
-    this.f = {}
-    this.loading false
-    gf.value = '' if gf = _L.gebi "_oab_file"
-    this.file = false
-    _L.hide '._oab_panel'
-    _L.show '#_oab_inputs'
-    _L.set '#_oab_input', preview
-    setTimeout (() => this.find()), 1
-  this.loaded() if typeof this.loaded is 'function'
+      console.log 'waiting for ' + this.element
+      setTimeout (() => _whenready()), 100
+  _whenready()
   return wc
 
 @shareyourpaper = (opts) -> opts ?= {}; opts.plugin = 'shareyourpaper'; return new _oab(opts);
