@@ -158,7 +158,7 @@ var save = function(e, preview) {
           }
         } else if ( $(this).is(':checkbox') ) {
           if ($(this).attr('id') === 'live' || $(this).attr('id') === 'pilot') {
-            if ($(this).is(':checked')) data[data[$(this).attr('id')]] = Date.now();
+            if ($(this).is(':checked')) data[$(this).attr('id')] = Date.now();
           } else {
             data[$(this).attr('id')] = $(this).is(':checked');
           }
