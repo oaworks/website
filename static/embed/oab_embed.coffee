@@ -220,7 +220,7 @@ _oab = (opts) ->
 
 
 
-_oab.prototype.cml = () -> return this.config.problem ? this.config.owner ? ''
+_oab.prototype.cml = () -> return this.config.problem ? this.config.owner ? this.config.email ? ''
 _oab.prototype.contact = () -> return 'Please try ' + (if this.cml() then '<a id="_oab_contact_library" href="mailto:' + this.cml() + '">contacting your library</a>' else 'contacting your library') + ' directly'
 
 _oab.prototype.loading = (load) ->
@@ -1083,6 +1083,9 @@ _oab.prototype.configure = (key, val, build, preview) ->
       if not this.config[d]? or (this.config[d] isnt key[d] and val is true) # val true allows overwrite present values
         build = true if build isnt false
         this.config[d] = if key[d] is 'true' then true else if key[d] is 'false' then false else key[d]
+    if val is true
+      for cd of this.config
+        delete this.config[cd] if cd isnt 'owner' and not key[cd]?
   else if key? and val?
     this.config[key] = if val is 'true' then true else if val is 'false' then false else val
   # make a "writable" config without unecessary params, such as those setting false etc
