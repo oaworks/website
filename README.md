@@ -74,10 +74,10 @@ Your steps to update the website should be:
 If you're happy with the above changes & everything has been tested
 
 5. Go to: https://github.com/OAButton/oab_static/tree/master. You'll be invited to make a pull request from the develop branch. Do this. 
-6. On the new screen, check that the commits you made are lised & others have been tested. If there are commits that haven't been tested either test them or ask Mark to make a pull request for just your changes.  
+6. On the new screen, check that the commits you made are listed & others have been tested. If there are commits that haven't been tested either test them or ask Mark to make a pull request for just your changes.  
 8. Hit a the "Create a pull request" button.
 9. If all checks pass & you have no conflicts, keep clicking until it's successfully merged. DON'T delete "develop".
-10. Wait for your changes to appear on the live site (this may take a few minutes). If you're changes dont appear, you may need to bug Mark. 
+10. Wait for your changes to appear on the live site (this may take a few minutes). If you're changes don't appear, you may need to bug Mark. 
 
 Although before point 5 you probably could do other pushes to develop and view them too. Most of the time it should work
 
