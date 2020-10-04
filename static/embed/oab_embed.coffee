@@ -923,7 +923,7 @@ _oab.instantill_template = '
   <p><span class="_oab_paper">Article</span> DOI or URL<br><input class="_oab_form" id="_oab_doi" type="text" placeholder="e.g 10.1126/scitranslmed.3008973"></p>
   <p><a href="#" class="_oab_find btn-iu _oab_button _oab_loading _oab_continue" id="_oab_continue" style="min-width:140px;">Continue</a></p>
   <p>
-    <a href="#" class="_oab_restart" id="_oab_try_again"><b>Try again</b></a>
+    <a href="#" class="_oab_restart" id="_oab_try_again"><b>Try another</b></a>
     <span id="_oab_advanced_ill_form" style="display:none;"></span>
   </p>
 </div>
