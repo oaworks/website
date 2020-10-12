@@ -260,8 +260,8 @@ _oab.prototype.state = (pop) ->
     try
       u = window.location.pathname
       if not pop?
-        if window.location.href.indexOf('shareyourpaper.org') isnt -1 and this.data.doi?
-          u = window.location.href.split('10.')[0] + this.data.doi + window.location.search + window.location.hash
+        if window.location.href.indexOf('shareyourpaper.org') isnt -1
+          u = window.location.href.split('10.')[0] + (this.data.doi ? '') + window.location.search + window.location.hash
         else if window.location.href.indexOf('/setup') is -1 and window.location.href.indexOf('/demo') is -1
           if this.data.doi? or this.data.title? or this.data.url?
             k = if this.data.doi then 'doi' else if this.data.title then 'title' else 'url'
@@ -269,10 +269,8 @@ _oab.prototype.state = (pop) ->
             u += if u.indexOf('?') is -1 then '?' else '&'
             u += k + '=' + this.data[k] + window.location.hash
       window.history.pushState "", (if pop? then "search" else "find"), u
-      if pop?
-        # what to do with the pop event? for now just triggers a restart if user
-        # tries to go back, unless called with a boolean from the restart event
-        this.restart() if typeof pop isnt 'boolean'
+      # what to do with the pop event? for now just triggers a restart if user tries to go back
+      this.restart() if pop?
 
 _oab.prototype.restart = (e, val) ->
   try
@@ -285,7 +283,7 @@ _oab.prototype.restart = (e, val) ->
   _L.hide '._oab_panel'
   _L.show '#_oab_inputs'
   this.configure()
-  this.state true
+  this.state()
   if val
     _L.set '#_oab_input', val
     this.find()
@@ -663,6 +661,7 @@ _oab.prototype.findings = (data) -> # only used by instantill
     if not _L.gebi this.element
       setTimeout (() => this.findings()), 100
     else
+      this.loading false
       if ct = this.f.metadata?.crossref_type
         if ct not in ['journal-article','proceedings-article','posted-content']
           if ct in ['book-section','book-part','book-chapter']
@@ -670,11 +669,11 @@ _oab.prototype.findings = (data) -> # only used by instantill
           else
             err = '<p>We can only process academic journal articles, please use another form.'
           _L.show '#_oab_error', err + '</p>'
+          _L.set '#_oab_input', ''
           return
     
       _L.hide '._oab_panel'
       _L.hide '._oab_section'
-      this.loading false
     
       if this.config.resolver
         # new setting to act as a link resolver, try to pass through immediately if sub url, OA url, or lib openurl are available
@@ -910,6 +909,7 @@ _oab.instantill_template = '
       <p><input placeholder="Your university email address" id="_oab_email" type="text" class="_oab_form"></p>
     </div>
     <p><a class="_oab_submit btn-iu _oab_button _oab_loading" href="#" id="_oab_submit" style="min-width:140px;">Complete request</a></p>
+    <p><a href="#" class="_oab_restart" id="_oab_try_another"><b>Try another</b></a></p>
   </div>
 </div>
 
@@ -1126,6 +1126,8 @@ _oab.prototype.configure = (key, val, build, preview) ->
           this.css = '<div id="_oab_css"><style>' + this.css + '</style></div>' if not this.css.startsWith '<style>'
           _L.append this.element, this.css
         _L.append this.element, this.template
+        if this.data.doi or this.data.title or this.data.url or this.data.id
+          _L.set '#_oab_input', this.data.doi ? this.data.title ? this.data.url ? this.data.id
         _L.each '._oab_paper', (el) =>
           cs = el.innerHTML
           if this.config.say_paper
