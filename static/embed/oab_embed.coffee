@@ -1006,6 +1006,7 @@ _oab.shareyourpaper_template = '
 
   <div class="_oab_section _oab_oa_deposit _oab_archivable _oab_dark_deposit" id="_oab_deposits">
     <p><a href="#" class="_oab_deposit btn-iu _oab_button _oab_loading" style="min-width:140px;" id="_oab_deposit">Deposit</a></p>
+    <p><a href="#" class="_oab_restart" id="_oab_deposits_restart"><b>Do another</b></a></p>
   </div>
 </div>
 
