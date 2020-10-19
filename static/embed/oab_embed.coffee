@@ -170,16 +170,16 @@ _oab = (opts) ->
     this.data ?= {} # the data obj to send to backend
     this.f ?= {} # the result of the find/ill/permission request to the backend
     this.template ?= _oab[this.plugin + '_template'] # template or css can be passed in or are as defined below
-  
+
     this.css ?= _oab.css
     this._loading = false # tracks when loads are occurring
     this.submit_after_metadata = false # used by instantill to track if metadata has been provided by user
     this.file = false # used by syp to store the file for sending to backend
-  
+
     this.demo ?= window.location.href.indexOf('/demo') isnt -1 and (window.location.href.indexOf('openaccessbutton.') isnt -1 or window.location.href.indexOf('shareyourpaper.') isnt -1 or window.location.href.indexOf('instantill.') isnt -1)
-  
+
     _L.loaded = this.loaded if this.loaded? # if this is set to a function, it will be passed to _leviathan loaded, which gets run after every ajax call completes. It is also called directly after every configure
-  
+
     if window.location.search.indexOf('clear=') isnt -1
       localStorage.removeItem '_oab_config_' + this.plugin
     if window.location.search.indexOf('local=') isnt -1
@@ -195,9 +195,9 @@ _oab = (opts) ->
           csk = cs[0].trim()
           csv = cs[1].split('&')[0].split('#')[0].trim()
           this.configure csk, csv, false
-  
+
     setTimeout (() => this.configure()), 1
-  
+
     if not this.config.autorun_off
       ap = if typeof this.config.autorunparams is 'string' then this.config.autorunparams.split(',') else if typeof this.config.autorunparams is 'object' then this.config.autorunparams else ['doi','title','url','atitle','rft_id','journal','issn','year','author']
       ap = ap.replace(/"/g,'').replace(/'/g,'').split(',') if typeof ap is 'string'
@@ -260,8 +260,8 @@ _oab.prototype.state = (pop) ->
     try
       u = window.location.pathname
       if not pop?
-        if window.location.href.indexOf('shareyourpaper.org') isnt -1 and this.data.doi?
-          u = window.location.href.split('10.')[0] + this.data.doi + window.location.search + window.location.hash
+        if window.location.href.indexOf('shareyourpaper.org') isnt -1
+          u = window.location.href.split('10.')[0] + (this.data.doi ? '') + window.location.search + window.location.hash
         else if window.location.href.indexOf('/setup') is -1 and window.location.href.indexOf('/demo') is -1
           if this.data.doi? or this.data.title? or this.data.url?
             k = if this.data.doi then 'doi' else if this.data.title then 'title' else 'url'
@@ -269,10 +269,8 @@ _oab.prototype.state = (pop) ->
             u += if u.indexOf('?') is -1 then '?' else '&'
             u += k + '=' + this.data[k] + window.location.hash
       window.history.pushState "", (if pop? then "search" else "find"), u
-      if pop?
-        # what to do with the pop event? for now just triggers a restart if user
-        # tries to go back, unless called with a boolean from the restart event
-        this.restart() if typeof pop isnt 'boolean'
+      # what to do with the pop event? for now just triggers a restart if user tries to go back
+      this.restart() if pop?
 
 _oab.prototype.restart = (e, val) ->
   try
@@ -285,7 +283,7 @@ _oab.prototype.restart = (e, val) ->
   _L.hide '._oab_panel'
   _L.show '#_oab_inputs'
   this.configure()
-  this.state true
+  this.state()
   if val
     _L.set '#_oab_input', val
     this.find()
@@ -469,7 +467,7 @@ _oab.prototype.done = (res, msg) ->
       _L.html '#_oab_done_header', '<h3>Thanks! Your request has been received</h3><p>Your confirmation code is: ' + res + ', this will not be emailed to you. The ' + (if this.config.say_paper then 'paper' else 'article') + ' will be sent to ' + this.data.email + ' as soon as possible.</p>'
     else # only instantill falls through to here
       _L.html '#_oab_done_header', '<h3>Sorry, we were not able to create an Interlibrary Loan request for you.</h3><p>' + this.contact() + '</p>'
-      _L.html '#_oab_done_restart', 'Try again'
+      _L.html '#_oab_done_restart', 'Try another'
       this.ping msg ? 'instantill_couldnt_submit_ill'
       setTimeout (() => this.restart()), 6000
     _L.show '#_oab_done'
@@ -518,7 +516,7 @@ _oab.prototype.deposit = (e) -> # only used by shareyourpaper
           else
             this.file.append d,data[d]
         data = this.file
-  
+
       _L.post(
         this.api+'/deposit', # + (this.f.catalogue ? '')
         data
@@ -611,7 +609,7 @@ _oab.prototype.permissions = (data) -> # only used by shareyourpaper
         _L.html '._oab_your_paper', (if this.f?.permissions?.permissions?.version_allowed is 'publisher pdf' then 'the publisher pdf of ' else '') + paper
         _L.html '._oab_journal', this.f?.metadata?.journal_short ? 'the journal'
         # set config by this.config.repo_name put name in ._oab_repo
-    
+
         if this.f.url
           # it is already OA, depending on settings can deposit another copy
           _L.set '._oab_oa_url', 'href', this.f.url
@@ -663,6 +661,7 @@ _oab.prototype.findings = (data) -> # only used by instantill
     if not _L.gebi this.element
       setTimeout (() => this.findings()), 100
     else
+      this.loading false
       if ct = this.f.metadata?.crossref_type
         if ct not in ['journal-article','proceedings-article','posted-content']
           if ct in ['book-section','book-part','book-chapter']
@@ -670,12 +669,12 @@ _oab.prototype.findings = (data) -> # only used by instantill
           else
             err = '<p>We can only process academic journal articles, please use another form.'
           _L.show '#_oab_error', err + '</p>'
+          _L.set '#_oab_input', ''
           return
-    
+
       _L.hide '._oab_panel'
       _L.hide '._oab_section'
-      this.loading false
-    
+
       if this.config.resolver
         # new setting to act as a link resolver, try to pass through immediately if sub url, OA url, or lib openurl are available
         # TODO confirm if this should send an ILL to the backend first, as a record, or maybe just a pinger
@@ -694,7 +693,7 @@ _oab.prototype.findings = (data) -> # only used by instantill
         if data.resolved?
           data.url = this.f.ill?.subscription?.url ? this.f.url ? ou
           _L.post(this.api+'/ill', data, (() => window.location = this.f.ill?.subscription?.url ? this.f.url ? ou), (() => window.location = this.f.ill?.subscription?.url ? this.f.url ? ou))
-    
+
       _L.show '#_oab_findings'
       if this.f.ill?.error
         _L.show '#_oab_error', '<p>Please note, we encountered errors querying the following subscription services: ' + this.f.ill.error.join(', ') + '</p>'
@@ -710,7 +709,7 @@ _oab.prototype.findings = (data) -> # only used by instantill
             citation += (if this.f.metadata.volume then ', ' else '') + 'issue ' + this.f.metadata.issue if this.f.metadata.issue
           citation += '</i></p>'
         _L.html '#_oab_citation', citation
-    
+
         hassub = false
         hasoa = false
         if this.f.ill?.subscription?.journal or this.f.ill?.subscription?.url
@@ -734,7 +733,7 @@ _oab.prototype.findings = (data) -> # only used by instantill
               else
                 _L.hide '#_oab_terms_note'
           _L.show '#_oab_ask_library'
-    
+
       else if this.data.usermetadata
         _L.html '#_oab_citation', '<h3>Unknown ' + (if this.config.say_paper then 'paper' else 'article') + '</h3><p>Sorry, we can\'t find this ' + (if this.config.say_paper then 'paper' else 'article') + ' or sufficient metadata. ' + this.contact() + '</p>'
         this.ping 'shareyourpaper_unknown_article'
@@ -763,7 +762,7 @@ _oab.prototype.find = (e) ->
       if this.submit_after_metadata
         this.submit()
         return
-  
+
     this.data.title ?= this.data.atitle if this.data.atitle
     this.data.doi ?= this.data.rft_id if this.data.rft_id
     if this.data.doi and this.data.doi.indexOf('10.') isnt -1 and (this.data.doi.indexOf('/') is -1 or this.data.doi.indexOf('http') is 0)
@@ -785,7 +784,7 @@ _oab.prototype.find = (e) ->
           this.data.title = val
     else if this.data.doi or this.data.title or this.data.url or this.data.id
       _L.set '#_oab_input', this.data.doi ? this.data.title ? this.data.url ? this.data.id
-  
+
     if this.plugin is 'instantill' and not this.data.doi and not this.f?.metadata?.journal and this.data.title and this.data.title.length < 30 and this.data.title.split(' ').length < 3
       this.metadata() # need more metadata for short titles
     else if not this.data.doi and (this.plugin is 'shareyourpaper' or (not this.data.url and not this.data.pmid and not this.data.pmcid and not this.data.title and not this.data.id))
@@ -910,6 +909,7 @@ _oab.instantill_template = '
       <p><input placeholder="Your university email address" id="_oab_email" type="text" class="_oab_form"></p>
     </div>
     <p><a class="_oab_submit btn-iu _oab_button _oab_loading" href="#" id="_oab_submit" style="min-width:140px;">Complete request</a></p>
+    <p><a href="#" class="_oab_restart" id="_oab_try_another"><b>Try another</b></a></p>
   </div>
 </div>
 
@@ -923,7 +923,7 @@ _oab.instantill_template = '
   <p><span class="_oab_paper">Article</span> DOI or URL<br><input class="_oab_form" id="_oab_doi" type="text" placeholder="e.g 10.1126/scitranslmed.3008973"></p>
   <p><a href="#" class="_oab_find btn-iu _oab_button _oab_loading _oab_continue" id="_oab_continue" style="min-width:140px;">Continue</a></p>
   <p>
-    <a href="#" class="_oab_restart" id="_oab_try_again"><b>Try again</b></a>
+    <a href="#" class="_oab_restart" id="_oab_try_again"><b>Try another</b></a>
     <span id="_oab_advanced_ill_form" style="display:none;"></span>
   </p>
 </div>
@@ -1006,6 +1006,7 @@ _oab.shareyourpaper_template = '
 
   <div class="_oab_section _oab_oa_deposit _oab_archivable _oab_dark_deposit" id="_oab_deposits">
     <p><a href="#" class="_oab_deposit btn-iu _oab_button _oab_loading" style="min-width:140px;" id="_oab_deposit">Deposit</a></p>
+    <p><a href="#" class="_oab_restart" id="_oab_deposits_restart"><b>Do another</b></a></p>
   </div>
 </div>
 
@@ -1103,7 +1104,7 @@ _oab.prototype.configure = (key, val, build, preview) ->
     this.bootstrap = false
     build = true
   this.element ?= '#' + this.plugin
-    
+
   _whenready = () =>
     if _L.gebi this.element
       if build isnt false
@@ -1126,6 +1127,8 @@ _oab.prototype.configure = (key, val, build, preview) ->
           this.css = '<div id="_oab_css"><style>' + this.css + '</style></div>' if not this.css.startsWith '<style>'
           _L.append this.element, this.css
         _L.append this.element, this.template
+        if this.data.doi or this.data.title or this.data.url or this.data.id
+          _L.set '#_oab_input', this.data.doi ? this.data.title ? this.data.url ? this.data.id
         _L.each '._oab_paper', (el) =>
           cs = el.innerHTML
           if this.config.say_paper
@@ -1143,7 +1146,7 @@ _oab.prototype.configure = (key, val, build, preview) ->
           _L.html '#_oab_pilot', pilot
         else
           _L.html '#_oab_pilot', ''
-    
+
         # shareyourpaper exclusive configs
         if this.plugin is 'shareyourpaper'
           if this.cml()? and el = _L.gebi '_oab_nodoi'
@@ -1179,7 +1182,7 @@ _oab.prototype.configure = (key, val, build, preview) ->
           else
             _L.html '#_oab_advanced_account_info', ''
             _L.hide '#_oab_advanced_ill_form'
-    
+
         # would be better to make _L handle the bind so that this.find works rather than having to wrap it in a function that passes context
         _L.listen 'enter', '#_oab_input', (e) => this.find(e)
         _L.listen 'enter', '#_oab_email', (e) => this.validate(e)
@@ -1199,10 +1202,10 @@ _oab.prototype.configure = (key, val, build, preview) ->
         _L.listen 'click', '._oab_confirm', (e) => e.preventDefault(); this.data.confirmed = true; this.deposit()
         _L.listen 'click','#_oab_reviewemail', (e) => this.done 'review'
         _L.listen 'click','._oab_deposit', (e) => this.deposit(e)
-    
+
       if el = _L.gebi '_oab_config'
         ncwc = JSON.parse JSON.stringify wc
-        nk = 
+        nk =
           ill_institution: 'institution' # translate instantill old config keys
           ill_redirect_base_url: 'ill_form'
           ill_redirect_params: 'ill_added_params'
