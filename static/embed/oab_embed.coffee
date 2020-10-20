@@ -272,7 +272,7 @@ _oab.prototype.state = (pop) ->
       # what to do with the pop event? for now just triggers a restart if user tries to go back
       this.restart() if pop?
 
-_oab.prototype.restart = (e, val) ->
+_oab.prototype.restart = (e, val, err) ->
   try
     e.preventDefault() if e.target.parentElement.id isnt '_oab_permissionemail'
   this.data = {}
@@ -284,6 +284,8 @@ _oab.prototype.restart = (e, val) ->
   _L.show '#_oab_inputs'
   this.configure()
   this.state()
+  if err
+    _L.show '#_oab_error', err
   if val
     _L.set '#_oab_input', val
     this.find()
@@ -575,7 +577,7 @@ _oab.prototype.permissions = (data) -> # only used by shareyourpaper
           nj += ' To get help with depositing, <a href="'
           nj += if this.config.old_way then (if this.config.old_way.indexOf('@') isnt -1 then 'mailto:' else '') + this.config.old_way else 'mailto:' + this.cml()
           nj += "?subject=Help%20depositing%20&body=Hi%2C%0D%0A%0D%0AI'd%20like%20to%20deposit%3A%0D%0A%0D%0A%3C%3CPlease%20insert%20a%20full%20citation%3E%3E%0D%0A%0D%0ACan%20you%20please%20assist%20me%3F%0D%0A%0D%0AYours%20sincerely%2C" + '">click here</a>'
-        _L.show '#_oab_error', nj + '.</p>'
+        this.restart undefined, undefined, nj + '.</p>'
       else if not this.f?.metadata?.title?
         _L.show '#_oab_error', '<h3>Unknown paper</h3><p>Sorry, we cannot find this paper or sufficient metadata. ' + this.contact() + '</p>'
         this.ping 'shareyourpaper_unknown_article'
@@ -668,8 +670,7 @@ _oab.prototype.findings = (data) -> # only used by instantill
             err = '<p>Please make your request through our ' + (if this.config.book then '<a id="_oab_book_form" href="' + this.config.book + '">book form</a>' else 'book form')
           else
             err = '<p>We can only process academic journal articles, please use another form.'
-          _L.show '#_oab_error', err + '</p>'
-          _L.set '#_oab_input', ''
+          this.restart undefined, undefined, err + '</p>'
           return
 
       _L.hide '._oab_panel'
