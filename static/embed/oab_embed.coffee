@@ -165,7 +165,7 @@ _oab = (opts) ->
     this.plugin ?= 'instantill' # has to be defined at startup, as either instantill or shareyourpaper
     this.element ?= '#' + this.plugin
     this.pushstate ?= true # if true, the embed will try to add page state changes to the browser state manager
-    this.local ?= true # local storage of config turned off by default for now
+    this.local ?= false # local storage of config turned off by default for now
     this.config ?= {}
     this.data ?= {} # the data obj to send to backend
     this.f ?= {} # the result of the find/ill/permission request to the backend
@@ -180,10 +180,10 @@ _oab = (opts) ->
 
     _L.loaded = this.loaded if this.loaded? # if this is set to a function, it will be passed to _leviathan loaded, which gets run after every ajax call completes. It is also called directly after every configure
 
-    if window.location.search.indexOf('clear=') isnt -1
-      localStorage.removeItem '_oab_config_' + this.plugin
     if window.location.search.indexOf('local=') isnt -1
       this.local = if window.location.search.indexOf('local=true') isnt -1 then true else false
+    if window.location.search.indexOf('clear=') isnt -1 or this.local is false
+      try localStorage.removeItem '_oab_config_' + this.plugin
     if window.location.search.indexOf('config=') isnt -1
       try this.config = JSON.parse window.location.search.split('config=')[1].split('&')[0].split('#')[0]
     if window.location.search.indexOf('config.') isnt -1
@@ -774,9 +774,9 @@ _oab.prototype.find = (e) ->
       if val.length
         if val.indexOf('doi.org/') isnt -1
           this.data.url = val
-          this.data.doi = '10.' + val.split('10.')[1].split(' ')[0]
+          this.data.doi = '10.' + val.split('/10.')[1].split(' ')[0]
         else if val.indexOf('10.') isnt -1
-          this.data.doi = '10.' + val.split('10.')[1].split(' ')[0]
+          this.data.doi = val
         else if val.indexOf('http') is 0 or val.indexOf('www.') isnt -1
           this.data.url = val
         else if val.toLowerCase().replace('pmc','').replace('pmid','').replace(':','').replace(/[0-9]/g,'').length is 0
