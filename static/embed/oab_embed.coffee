@@ -983,7 +983,7 @@ _oab.shareyourpaper_template = '
     <p><span class="_oab_library">The library has</span> checked and <span class="_oab_journal">the journal</span> encourages you to freely share <span class="_oab_your_paper">your paper</span> so colleagues and the public can freely read and cite it. <span class="_oab_refs"></span></p>
     <div id="_oab_not_pdf">
       <h3><span>&#10003;</span> Find the manuscript the journal accepted. It\'s not a PDF from the journal site</h3>
-      <p>This is the only version you\'re able to share legally. The accepted manuscript is the word file or Latex export you sent the publisher after peer-review and before formatting (publisher proofs).</p>
+      <p>This is the only version you\'re able to share under copyright. The accepted manuscript is the word file or Latex export you sent the publisher after peer-review and before formatting (publisher proofs).</p>
       <h3><span>&#10003;</span> Check there aren\'t publisher logos or formatting</h3>
       <p>It\'s normal to share accepted manuscripts as the research is the same. It\'s fine to save your file as a pdf, make small edits to formatting, fix typos, remove comments, and arrange figures.</p>
     </div>
@@ -1018,9 +1018,9 @@ _oab.shareyourpaper_template = '
 
 <div class="_oab_panel" id="_oab_done" style="display:none;">
   <div class="_oab_done" id="_oab_confirm">
-    <h2>Hmmm, something looks wrong</h2>
-    <p>You\'re nearly done. It looks like what you uploaded is a publisher\'s PDF which your journal prohibits legally sharing.<!-- It can only be shared on a limited basis.--><br><br>
-    We just need the version accepted by the journal to make your work available to everyone.</p>
+    <h2>We need an earlier version</h2>
+    <p>It looks like what you uploaded is a publisher\'s PDF which your journal prohibits legally sharing.<br><br>
+    You\'re nearly done. We need the accepted version, not the PDF from the journal site.</p>
     <p><a href="#" class="_oab_reload btn-iu _oab_button" id="_oab_upload_again" style="min-width:140px;">Try uploading again</a></p>
     <p><a href="#" class="_oab_confirm _oab_loading" id="_oab_upload_accept"><b>My upload was an accepted manuscript</b></a></p>
   </div>
