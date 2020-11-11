@@ -990,6 +990,20 @@ _oab.shareyourpaper_template = '
     <h3 class="_oab_section _oab_get_email"><span>&#10003;</span> Tell us your email</h3>
   </div>
 
+  <!--
+  <div class="_oab_section _oab_bronze_archivable" id="_oab_bronze_archivable">
+    <h2>Keep your paper freely available!</h2>
+    <p>For now, <span class="_oab_journal">the journal</span> is sharing <span class="_oab_your_paper">your paper</span> for free, but that might change. You can do the following to ensure colleagues and the public can always freely read and cite it <span class="_oab_refs"></span>.</p>
+    <div id="_oab_not_pdf">
+      <h3><span>&#10003;</span> Find the manuscript the journal accepted. It\'s not a PDF from the journal site</h3>
+      <p>This is the only version you\'re able to share under copyright. The accepted manuscript is the word file or Latex export you sent the publisher after peer-review and before formatting (publisher proofs).</p>
+      <h3><span>&#10003;</span> Check there aren\'t publisher logos or formatting</h3>
+      <p>It\'s normal to share accepted manuscripts as the research is the same. It\'s fine to save your file as a pdf, make small edits to formatting, fix typos, remove comments, and arrange figures.</p>
+    </div>
+    <h3 class="_oab_section _oab_get_email"><span>&#10003;</span> Tell us your email</h3>
+  </div>
+  -->
+
   <div class="_oab_section _oab_dark_deposit" id="_oab_dark_deposit">
     <h2>You can share your paper!</h2>
     <p>We checked and unfortunately <span class="_oab_journal">the journal</span> won\'t let you share <span class="_oab_your_paper">your paper</span> freely with everyone. <span class="_oab_refs"></span><br><br>
