@@ -174,6 +174,7 @@ _oab = (opts) ->
     this.css ?= _oab.css
     this._loading = false # tracks when loads are occurring
     this.submit_after_metadata = false # used by instantill to track if metadata has been provided by user
+    this.needmore = false # used by instantill to track that more metadata is required (e.g. if title is too short)
     this.file = false # used by syp to store the file for sending to backend
 
     this.demo ?= window.location.href.indexOf('/demo') isnt -1 and (window.location.href.indexOf('openaccessbutton.') isnt -1 or window.location.href.indexOf('shareyourpaper.') isnt -1 or window.location.href.indexOf('instantill.') isnt -1)
@@ -747,7 +748,7 @@ _oab.prototype.findings = (data) -> # only used by instantill
 _oab.prototype.find = (e) ->
   try
     try e.preventDefault()
-    if JSON.stringify(this.f) isnt '{}'
+    if JSON.stringify(this.f) isnt '{}' or this.needmore
       for k in ['title','journal','year','doi']
         if v = _L.get '#_oab_' + k
           if this.data[k] isnt v
@@ -772,21 +773,25 @@ _oab.prototype.find = (e) ->
     if val = _L.get('#_oab_input')
       val = val.trim().replace(/\.$/,'')
       if val.length
-        if val.indexOf('doi.org/') isnt -1
-          this.data.url = val
-          this.data.doi = '10.' + val.split('/10.')[1].split(' ')[0]
-        else if val.indexOf('10.') isnt -1
-          this.data.doi = val
-        else if val.indexOf('http') is 0 or val.indexOf('www.') isnt -1
-          this.data.url = val
-        else if val.toLowerCase().replace('pmc','').replace('pmid','').replace(':','').replace(/[0-9]/g,'').length is 0
-          this.data.id = val
+        if val.indexOf(' ') is -1
+          if val.indexOf('doi.org/') isnt -1
+            this.data.url = val
+            this.data.doi = '10.' + val.split('/10.')[1].split(' ')[0]
+          else if val.indexOf('10.') isnt -1
+            this.data.doi = val
+          else if val.indexOf('http') is 0 or val.indexOf('www.') isnt -1
+            this.data.url = val
+          else if val.toLowerCase().replace('pmc','').replace('pmid','').replace(':','').replace(/[0-9]/g,'').length is 0
+            this.data.id = val
+          else
+            this.data.title = val # unlikely, just a one-word title, but just in case
         else
-          this.data.title = val
+          this.data.title = val # could also be a citation but backend will try to parse that out
     else if this.data.doi or this.data.title or this.data.url or this.data.id
       _L.set '#_oab_input', this.data.doi ? this.data.title ? this.data.url ? this.data.id
 
-    if this.plugin is 'instantill' and not this.data.doi and not this.f?.metadata?.journal and this.data.title and this.data.title.length < 30 and this.data.title.split(' ').length < 3
+    if this.plugin is 'instantill' and not this.data.doi and not this.needmore and not this.f?.metadata?.journal and this.data.title and this.data.title.length < 30 and this.data.title.split(' ').length < 3
+      this.needmore = true
       this.metadata() # need more metadata for short titles
     else if not this.data.doi and (this.plugin is 'shareyourpaper' or (not this.data.url and not this.data.pmid and not this.data.pmcid and not this.data.title and not this.data.id))
       if this.plugin is 'shareyourpaper'
@@ -1094,6 +1099,8 @@ _oab.prototype.configure = (key, val, build, preview) ->
   # keep separate from this.config so that additional calls to configure take account of false if they do exist though
   this.config.pilot = Date.now() if this.config.pilot is true
   this.config.live = Date.now() if this.config.live is true
+  for cw of this.config
+    delete this.config[cw] if this.config[cw] is ''
   for k of wc = JSON.parse JSON.stringify this.config
     delete wc[k] if not wc[k]? or wc[k] is false or ((typeof wc[k] is 'string' or Array.isArray(wc[k])) and wc[k].length is 0)
   try
