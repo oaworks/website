@@ -200,7 +200,7 @@ _oab = (opts) ->
     setTimeout (() => this.configure()), 1
 
     if not this.config.autorun_off
-      ap = if typeof this.config.autorunparams is 'string' then this.config.autorunparams.split(',') else if typeof this.config.autorunparams is 'object' then this.config.autorunparams else ['doi','title','url','atitle','rft_id','journal','issn','year','author']
+      ap = if typeof this.config.autorunparams is 'string' and this.config.autorunparams.length then this.config.autorunparams.split(',') else if typeof this.config.autorunparams is 'object' then this.config.autorunparams else ['doi','title','url','atitle','rft_id','journal','issn','year','author']
       ap = ap.replace(/"/g,'').replace(/'/g,'').split(',') if typeof ap is 'string'
       for o in ap
         o = o.split('=')[0].trim()
@@ -213,6 +213,8 @@ _oab = (opts) ->
       _L.remove '#_oab_collect_email'
     if window.location.search.indexOf('confirmed=') isnt -1
       this.data.confirmed = window.location.search.split('confirmed=')[1].split('&')[0].split('#')[0]
+    if window.location.search.indexOf('refresh=true') isnt -1
+      this.data.refresh = true
     this.find() if this.data.doi or (this.plugin is 'instantill' and (this.data.title or this.data.url))
     window.addEventListener "popstate", (pe) => this.state(pe)
     return this
@@ -278,6 +280,7 @@ _oab.prototype.restart = (e, val, err) ->
     e.preventDefault() if e.target.parentElement.id isnt '_oab_permissionemail'
   this.data = {}
   this.f = {}
+  this.needmore = false
   this.loading false
   this.file = false
   gf.value = '' if gf = _L.gebi "_oab_file"
@@ -396,7 +399,7 @@ _oab.prototype.validate = () ->
 _oab.prototype.metadata = (submitafter) -> # only used by instantill
   for m in ['title','year','journal','doi']
     if this.f?.metadata?[m]? or this.data[m]?
-      _L.set '#_oab_'+m, (this.f.metadata ? this.data)[m].split('(')[0].trim()
+      _L.set '#_oab_'+m, (this.f.metadata ? this.data)[m] #.split('(')[0].trim()
   #if this.f?.doi_not_in_crossref
   #  _L.html '#_oab_bad_doi', this.f.doi_not_in_crossref
   #  _L.show '#_oab_doi_not_in_crossref'
@@ -790,7 +793,7 @@ _oab.prototype.find = (e) ->
     else if this.data.doi or this.data.title or this.data.url or this.data.id
       _L.set '#_oab_input', this.data.doi ? this.data.title ? this.data.url ? this.data.id
 
-    if this.plugin is 'instantill' and not this.data.doi and not this.needmore and not this.f?.metadata?.journal and this.data.title and this.data.title.length < 30 and this.data.title.split(' ').length < 3
+    if this.plugin is 'instantill' and not this.data.doi and not this.needmore and not this.f?.metadata?.journal and (not this.data.title or (this.data.title.length < 30 and this.data.title.split(' ').length < 3))
       this.needmore = true
       this.metadata() # need more metadata for short titles
     else if not this.data.doi and (this.plugin is 'shareyourpaper' or (not this.data.url and not this.data.pmid and not this.data.pmcid and not this.data.title and not this.data.id))
@@ -1268,6 +1271,8 @@ _oab.prototype.configure = (key, val, build, preview) ->
         _L.show '#_oab_inputs'
         _L.set '#_oab_input', preview
         setTimeout (() => this.find()), 1
+      if this.needmore
+        this.metadata()
       this.loaded() if typeof this.loaded is 'function'
     else
       console.log 'waiting for ' + this.element
