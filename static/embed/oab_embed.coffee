@@ -625,7 +625,7 @@ _oab.prototype.permissions = (data) -> # only used by shareyourpaper
           else
             this.file = true # no file required for oa deposit...
             _L.show '._oab_oa_deposit'
-        else if this.f?.permissions?.best_permission?.can_archive
+        else if this.f?.permissions?.best_permission?.can_archive and not this.f.permissions.best_permission.permissions_contact
           # can be shared, depending on permissions info
           _L.hide('#_oab_not_pdf') if this.f?.permissions?.best_permission?.version is 'publishedVersion'
           if typeof this.f?.permissions?.best_permission?.licence is 'string' and this.f.permissions.best_permission.licence.indexOf('other-') is 0

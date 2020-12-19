@@ -13,7 +13,7 @@
 
 <p>We think the following versions are allowed:</p>
 
-{{permissions.permissions.version_allowed}}
+{{permissions.best_permission.versions}}
 
 <p>If it's okay, you can deposit it into Zenodo by <a href = "{{adminlink}}" id="adminlink">clicking here</a> and then uploading the file from this email.</p>
 
@@ -24,7 +24,7 @@
   <ul>
   <li>
     Send this email: <a href="mailto:{{email}}?subject=Link%20to%20your%20deposit%20for%20{{metadata.doi}}&body=As%20you%20requested%2C%20after%20reviewing%20your%20paper%2C%20we%20validated%20that%20it%20is%20the%20legal%20copy%20and%20have%20deposited%20your%20paper%20%E2%80%9C{{metadata.title}}%E2%80%9D.%20You%20can%20find%20a%20link%20to%20it%20here%3A%20INSERT%20LINK.%0D%0A%0D%0AThank%20you%20so%20much%20for%20sharing%20your%20work.%20If%20you%20have%20any%20questions%20or%20feedback%2C%20do%20let%20us%20know.">[Available Now]</a>
-    <a href="mailto:{{email}}?body=As%20you%20requested%2C%20after%20reviewing%20your%20paper%2C%20we%20validated%20that%20it%20is%20the%20legal%20copy%20and%20have%20deposited%20your%20paper%20%E2%80%9C{{metadata.title}}E2%80%9D.%0D%0A%0D%0A%0D%0AYou%20can%20share%20a%20free%20link%20to%20it%20here%3A%20INSERT%20LINK.%0D%0A%0D%0A%0D%0AUnfortunately%2C%20the%20journal%20won't%20let%20us%20make%20the%20link%20public%20until%20{{permissions.ricks.application.can_archive_conditions.postprint_embargo_end_calculated}}.%0D%0A%0D%0A%0D%0AAfter%20that%2C%20we20will%20promote%20and%20preserve%20your%20work.%20You%E2%80%99ll%20even%20find%20free%20versions%20of%20your%20paper%20on%20Google%20Scholar%20and%C2%A0Web%20of%20Science.%0D%0A%0D%0A%0D%0AThank%20you%20so%20much%20for%20sharing%20your%20work.%20If%20you%20have%20any%20questions%20or%20feedback%2C%20do%20let%20us%20know.">[Embargoed]</a> if it's from our system.
+    <a href="mailto:{{email}}?body=As%20you%20requested%2C%20after%20reviewing%20your%20paper%2C%20we%20validated%20that%20it%20is%20the%20legal%20copy%20and%20have%20deposited%20your%20paper%20%E2%80%9C{{metadata.title}}E2%80%9D.%0D%0A%0D%0A%0D%0AYou%20can%20share%20a%20free%20link%20to%20it%20here%3A%20INSERT%20LINK.%0D%0A%0D%0A%0D%0AUnfortunately%2C%20the%20journal%20won't%20let%20us%20make%20the%20link%20public%20until%20{{permissions.best_permission.embargo_end}}.%0D%0A%0D%0A%0D%0AAfter%20that%2C%20we20will%20promote%20and%20preserve%20your%20work.%20You%E2%80%99ll%20even%20find%20free%20versions%20of%20your%20paper%20on%20Google%20Scholar%20and%C2%A0Web%20of%20Science.%0D%0A%0D%0A%0D%0AThank%20you%20so%20much%20for%20sharing%20your%20work.%20If%20you%20have%20any%20questions%20or%20feedback%2C%20do%20let%20us%20know.">[Embargoed]</a> if it's from our system.
   </li>
   <li>
     <a href="mailto:?subject=Information%20for%20deposit%3A%20{{metadata.doi}}&body=Hi%2C%0D%0A%0D%0AYou%20should%20have%20just%20got%20notification%20of%20a%20successful%20deposit%20for%20{{metadata.doi}}.%20We%20had%20to%20manually%20review%20this%2C%20and%20so%20you%20need%20to%20let%20the%20author%20know%20the%20result%20and%20the%20link%20to%20their%20paper.%0D%0A%0D%0AWe%20have%20a%20suggested%20email%20for%20you%20to%20send%20here%3A%0D%0A%0D%0A%23%23%23%0D%0A%0D%0ASubject%3A%20Link%20to%20your%20deposit%20for%20{{metadata.doi}}%0D%0A%0D%0AAs%20you%20requested%2C%20after%20reviewing%20your%20paper%2C%20we%20validated%20that%20it%20is%20the%20legal%20copy%20and%20have%20deposited%20your%20paper%20%E2%80%9C{{metadata.title}}%E2%80%9D.%20You%20can%20find%20a%20link%20to%20it%20here%3A%20INSERT%20LINK.%0D%0A%0D%0AThe%20library%20will%20now%20promote%20and%20preserve%20your%20work.%0D%0A%0D%0A%0D%0AThank%20you%20so%20much%20for%20sharing%20your%20work.%20If%20you%20have%20any%20questions%20or%20feedback%2C%20do%20let%20us%20know.%0D%0A%0D%0A%23%23%23%0D%0A%0D%0AYours%2C%0D%0A%0D%0AShareyourpaper.org%20team.">Send this email</a>, if it's from someone elses system. To find the email to send it to either use your memory or go to their deposit page and look.
@@ -85,35 +85,32 @@
 
 <p><b>Permissions</b></p>
 
-<!--{{permissions.ricks.application.can_archive_conditions.can_archive}}-->
-<!--{{permissions.ricks.application.can_archive_conditions.versions_archivable}}-->
-
 <p>Archiving allowed:</p>
-{{permissions.permissions.archiving_allowed}}
+{{permissions.best_permission.can_archive}}
 
 <p>Versions allowed:</p>
-{{permissions.permissions.version_allowed}}
+{{permissions.best_permission.versions}}
 
 <p>Embargo end date:</p>
-{{permissions.ricks.application.can_archive_conditions.postprint_embargo_end_calculated}}
+{{permissions.best_permission.embargo_end}}
 
 <p>Archiving location permitted:</p>
-{{permissions.ricks.application.can_archive_conditions.archiving_locations_allowed}}
+{{permissions.best_permission.locations}}
 
 <p>Required licence:</p>
-{{permissions.ricks.application.can_archive_conditions.licenses_required}}
+{{permissions.best_permission.licence}}
 
 <p>Required Deposit Statement:</p>
-{{permissions.ricks.application.can_archive_conditions.deposit_statement_required_calculated}}
+{{permissions.best_permission.deposit_statement}}
 
 <p>Policy Full Text:</p>
-{{permissions.ricks.provenance.policy_full_text}}
+{{permissions.best_permission.provenance.archiving_policy}}
 
 <p>Monitoring type:</p>
-{{permissions.ricks.meta.monitoring_type}}
+{{permissions.best_permission.meta.monitoring}}
 
 <p>Last updated:</p>
-{{permissions.ricks.meta.record_last_updated}}
+{{permissions.best_permission.meta.updated}}
 
 <p><b>Upload information</b></p>
 
