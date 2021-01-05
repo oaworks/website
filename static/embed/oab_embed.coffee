@@ -608,11 +608,11 @@ _oab.prototype.permissions = (data) -> # only used by shareyourpaper
           _L.set '#_oab_email', 'placeholder', ph
           _L.html '._oab_terms', tcs
         refs = ''
-        for p of this.f?.permissions?.best_permission?.provenance?.archiving_policy ? []
-          refs += ' <a id="_oab_policy_text" target="_blank" href="' + this.f.permissions.best_permission.provenance.archiving_policy[p] + '">[' + (parseInt(p)+1) + ']</a>'
+        for p of this.f?.permissions?.permissions?.policy_full_text ? []
+          refs += ' <a id="_oab_policy_text" target="_blank" href="' + this.f.permissions.permissions.policy_full_text[p] + '">[' + (parseInt(p)+1) + ']</a>'
         _L.html '._oab_refs', refs
         paper = if this.f?.metadata?.doi then '<a id="_oab_your_paper" target="_blank" href="https://doi.org/' + this.f.metadata.doi + '"><u>your paper</u></a>' else 'your paper'
-        _L.html '._oab_your_paper', (if this.f?.permissions?.best_permission?.version is 'publishedVersion' then 'the publisher pdf of ' else '') + paper
+        _L.html '._oab_your_paper', (if this.f?.permissions?.permissions?.version_allowed is 'publisher pdf' then 'the publisher pdf of ' else '') + paper
         _L.html '._oab_journal', this.f?.metadata?.journal_short ? 'the journal'
         # set config by this.config.repo_name put name in ._oab_repo
 
@@ -625,18 +625,18 @@ _oab.prototype.permissions = (data) -> # only used by shareyourpaper
           else
             this.file = true # no file required for oa deposit...
             _L.show '._oab_oa_deposit'
-        else if this.f?.permissions?.best_permission?.can_archive and not this.f.permissions.best_permission.permissions_contact
+        else if this.f?.permissions?.permissions?.archiving_allowed
           # can be shared, depending on permissions info
-          _L.hide('#_oab_not_pdf') if this.f?.permissions?.best_permission?.version is 'publishedVersion'
-          if typeof this.f?.permissions?.best_permission?.licence is 'string' and this.f.permissions.best_permission.licence.indexOf('other-') is 0
+          _L.hide('#_oab_not_pdf') if this.f?.permissions?.permissions?.version_allowed is 'publisher pdf'
+          if typeof this.f?.permissions?.permissions?.licence_required is 'string' and this.f.permissions.permissions.licence_required.indexOf('other-') is 0
             _L.html '._oab_licence', 'under the publisher terms' + refs
           else
-            _L.html '._oab_licence', this.f?.permissions?.best_permission?.licence ? 'CC-BY'
+            _L.html '._oab_licence', this.f?.permissions?.permissions?.licence_required ? 'CC-BY'
           _L.show '._oab_archivable'
         else if this.config.dark_deposit_off
           # permission must be requested first
-          rm = 'mailto:' + (this.f.permissions?.best_permission?.permissions_contact ? this.config.deposit_help ? this.cml()) + '?'
-          rm += 'cc=' + (this.config.deposit_help ? this.cml()) + '&' if this.f.permissions?.best_permission?.permissions_contact
+          rm = 'mailto:' + (this.f.permissions?.ricks?.application?.can_archive_conditions?.permission_required_contact ? this.config.deposit_help ? this.cml()) + '?'
+          rm += 'cc=' + (this.config.deposit_help ? this.cml()) + '&' if this.f.permissions?.ricks?.application?.can_archive_conditions?.permission_required_contact
           rm += 'subject=Request%20to%20self%20archive%20' + (this.f.metadata?.doi ? '') + '&body=';
           rm += encodeURIComponent 'To whom it may concern,\n\n'
           rm += encodeURIComponent 'I am writing to request permission to deposit the full text of my paper "' + (this.f.metadata?.title ? this.f.metadata?.doi ? 'Untitled paper') + '" '
@@ -823,9 +823,9 @@ _oab.prototype.find = (e) ->
         data.metadata.journal = 'Proceedings of the 16th IFLA ILDS conference: Beyond the paywall - Resource sharing in a disruptive ecosystem'
         data.metadata.author = [{given: 'Mike', family: 'Paxton'}, {given: 'Gary', family: 'Maixner III'}, {given: 'Joseph', family: 'McArthur'}, {given: 'Tina', family: 'Baich'}]
         data.ill = {subscription: {findings:{}, uid: this.uid, lookups:[], error:[], url: 'https://scholarworks.iupui.edu/bitstream/handle/1805/20422/07-PAXTON.pdf?sequence=1&isAllowed=y'}}
-        data.permissions = { best_permission: {
-          can_archive: if this.data.doi is '10.1234/oab-syp-aam' then true else false,
-          version: if this.data.doi is '10.1234/oab-syp-aam' then "postprint" else undefined
+        data.permissions = { permissions: {
+          archiving_allowed: if this.data.doi is '10.1234/oab-syp-aam' then true else false,
+          version_allowed: if this.data.doi is '10.1234/oab-syp-aam' then "postprint" else undefined
         }, file: {archivable: true, archivable_reason: "Demo acceptance", version: "postprint", licence: "cc-by", same_paper: true, name: "example.pdf", format: "pdf", checksum: "example-checksum"}}
         if this.plugin is 'instantill' then this.findings(data) else this.permissions(data)
       else
