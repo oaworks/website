@@ -91,39 +91,30 @@
       padding-top:10px;
       padding-bottom: 10px;
   }
-/*
-    #file{
-        padding-top:  10px;
-        padding-bottom:   35px;
-    }
-
-    #oabutton_input{
-      padding: 22px 12px;
-    }*/
 
   .form-control:focus{
     border:2px solid #428bca;
   }
 
-  @media screen and (max-width: 768px){
-    .quote{
-      padding: 40px 30px;
+    @media screen and (max-width: 768px){
+      .quote{
+        padding: 40px 30px;
+      }
     }
-  }
-   /*sams added style above*/
+     /*sams added style above*/
 
-   .alert-new {
-     width: 100%;
-     padding-top: 10px;
-     padding-left: 10px;
-     padding-right: 10px;
-     background-color: white;
-     text-align: center;
-   }
+        .alert-new {
+          width: 100%;
+          padding-top: 10px;
+          padding-left: 10px;
+          padding-right: 10px;
+          background-color: white;
+          text-align: center;
+        }
 
-   .alert-new p{
-     padding: 0;
-   }
+        .alert-new p{
+          padding: 0;
+        }
 
 </style>
 
@@ -141,23 +132,25 @@
 
 <div class="container-fluid">
   <div class="row">
-    <div class="col-md-8 col-md-offset-2" style="text-align:justify;">
+    <div class="col-md-6 col-md-offset-3" style="text-align:justify;">
 
 <h1 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">FAQ</h1>
 
-    <p>1. How, generally, does InstantILL work?</p>
-    <p>2. What systems do you work with?</p>
-    <p>3. How do you find my subscriptions?</p>
+    <ol>
+    <li><a href="#">How, generally, does InstantILL work?</a></li>
+    <li><a href="#">What systems do you work with?</a></li>
+    <li><a href="#">How do you find my subscriptions?</a></li>
+    </ol>
 
     <h1>1. How, generally, does InstantILL work?</h1>
     <p>A brief overview can be found <a href="https://blog.openaccessbutton.org/instantill-is-being-rolled-out-at-iupui-heres-how-it-works-8103a096df0d">here</a>. A deeper dive can be found <a href="https://scholarworks.iupui.edu/bitstream/handle/1805/20422/07-PAXTON.pdf?sequence=1&amp;isAllowed=y">here</a>.</p>
 
     <h1>2. What systems do you work with?</h1>
     <p>See the <a href="https://dev.openaccessbutton.org/instantill/setup#compatibility">compatibility list</a>.</p>
+    
     <h1>3. How do you find my subscriptions?</h1>
     <p>Our goal is to find what you have subscribed to and be able to direct users on or off campus to a full-text link.</p>
     <p>We understand your holdings by integrating with your link resolver. If it says you have access, we tell the patron that you do, and we provide them with the link. This means that you handle authentication, you don't have another system to maintain, and only you know what your patron is accessing. To set this up, all we need is your link resolver URL.</p>
-
 
     </div>
   </div>
