@@ -13,6 +13,17 @@
   <script type="text/javascript" src="//static.cottagelabs.com/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
   <link rel="stylesheet" href="//static.cottagelabs.com/bootstrap-datepicker/bootstrap-datepicker3.min.css">
 
+  <script>
+      (function(h,o,t,j,a,r){
+          h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+          h._hjSettings={hjid:2180215,hjsv:6};
+          a=o.getElementsByTagName('head')[0];
+          r=o.createElement('script');r.async=1;
+          r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+          a.appendChild(r);
+      })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  </script>
+
 </head>
 
 <style>
@@ -267,6 +278,9 @@
         <p>
           We will always email you whenever you get a deposit. Currently, you can’t turn these off.
         </p>
+        <p>
+          If you'd like you can <a href="/static/example-deposit-email.pdf" download>download an example email</a>.
+        </p>
 
       </div>
 
@@ -287,12 +301,18 @@
             <li><a target="_blank" href="#" id="all_file_deposits" class="blue">All deposits with files</a></li>
           </ul>
         </p>
+
         <p>
 
         </p>
         <p><b>And you can get them from the following date</b></p>
         <input id="depositdate" type="text" class="form-control setting blue datepicker" placeholder="dd/mm/yyyy">
         <br>
+
+        <p>
+          If you don't have any deposits yet you can <a href="https://docs.google.com/spreadsheets/d/1yJ6aQ3p_3IMLi3Vj2zG0WXzfQR8LjA6_K_hucJSx6Go/export?format=csv">download an example</a>.
+        </p>
+
       </div>
 
       <div id="oai-pmh" class="section skip blueery">
@@ -511,10 +531,10 @@
         <h2>Website &amp; Brand</h2>
 
         <p>
-          Shareyourpaper.org can be integrated onto any webpage on your website, and blend in with your brand.
+          Shareyourpaper.org can be integrated onto any webpage on your website, and blend in with your brand. For instance, you can put it in your Libguide, on the repository website, and more!
         </p>
         <p>
-          To do that copy and paste the following into the source code (HTML) (or ask a developer to):
+          To get up and running copy and paste the following into the source code (HTML) (or ask a developer to):
         </p>
 
         <div id="embed_code">
@@ -523,7 +543,14 @@
 &lt;script&gt;<span class="dev_var">_oab=</span>shareyourpaper({<span class="dev_api"></span><span class="user_id"></span>config: <span id="_oab_config"></span>});&lt;/script&gt;</pre>
         </div>
 
-        <p>Then, you should be good to go! If not, review our <a href="#embed-advanced" class="view blue">advanced settings</a>.</p>
+        <p>
+          Then, you should be good to go! If not, review our <a href="#embed-advanced" class="view blue">advanced settings</a>.
+        </p>
+
+        <p>
+          If you can't get Shareyourpaper.org on your site, we can set you up a page on ours. Just <a href="mailto:joe@openaccessbutton.org">get in touch</a>.
+        </p>
+
 
       </div>
 
@@ -647,7 +674,7 @@
       <div id="prev_start_continue" class="blueery">
         <p id="previewer" style="display:none;"><a class="btn btn-demo-blue preview" href="#">Preview</a></p>
         <p><a id="startsave" class="btn btn-hollow-blue view" href="#">Get Started</a></p> <!-- becomes Save & Continue -->
-        <p><a class="blue" href="/feedback#general">Feedback</a> | <a class="blue view" href="#faq">FAQ</a> | <a class="blue" href="/feedback#bug"> Report Issue</a></p>
+        <p><a class="blue" href="/feedback#general">Feedback</a> | <a class="blue view" href="/faq">FAQ</a> | <a class="blue" href="/feedback#bug"> Report Issue</a></p>
       </div>
     </div>
   </div>
@@ -681,7 +708,7 @@
 
       <div class="blueery">
         <p><a class="btn btn-demo-blue view" href="#menu">Go to Menu</a></p>
-        <p><a class="blue" href="/feedback#general">Feedback</a> | <a class="blue view" href="#faq">FAQ</a> | <a class="blue" href="/feedback#bug"> Report Issue</a></p>
+        <p><a class="blue" href="/feedback#general">Feedback</a> | <a class="blue view" href="/faq">FAQ</a> | <a class="blue" href="/feedback#bug"> Report Issue</a></p>
       </div>
     </div>
   </div>
@@ -715,3 +742,7 @@ jQuery(document).ready(function() {
 });
 </script>
 <script src="/static/embed/oab_embed_ui.js"></script>
+
+<script async defer src="https://sa.shareyourpaper.org/latest.js"></script>
+<noscript><img src="https://sa.shareyourpaper.org/noscript.gif" alt=""/></noscript>
+<script async src="https://tryribbon.com/p/js/ribbon.js" ribbonID="5ff3410240aa8e0017c87a04"></script>
