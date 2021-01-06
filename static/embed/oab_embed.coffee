@@ -625,7 +625,7 @@ _oab.prototype.permissions = (data) -> # only used by shareyourpaper
           else
             this.file = true # no file required for oa deposit...
             _L.show '._oab_oa_deposit'
-        else if this.f?.permissions?.best_permission?.can_archive and not this.f.permissions.best_permission.permissions_contact
+        else if this.f?.permissions?.best_permission?.can_archive
           # can be shared, depending on permissions info
           _L.hide('#_oab_not_pdf') if this.f?.permissions?.best_permission?.version is 'publishedVersion'
           if typeof this.f?.permissions?.best_permission?.licence is 'string' and this.f.permissions.best_permission.licence.indexOf('other-') is 0
@@ -702,7 +702,7 @@ _oab.prototype.findings = (data) -> # only used by instantill
       _L.show '#_oab_findings'
       if this.f.ill?.error
         _L.show '#_oab_error', '<p>Please note, we encountered errors querying the following subscription services: ' + this.f.ill.error.join(', ') + '</p>'
-      if this.f.metadata?.title?
+      if this.f.metadata?.title? and (this.f.metadata.journal? or this.data.usermetadata)
         citation = '<h2>' + this.f.metadata.title + '</h2>'
         if this.f.metadata.year or this.f.metadata.journal or this.f.metadata.volume or this.f.metadata.issue
           citation += '<p><i>'
