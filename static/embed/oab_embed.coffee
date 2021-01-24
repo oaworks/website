@@ -889,7 +889,7 @@ _oab.instantill_template = '
 <div class="_oab_panel" id="_oab_inputs">
   <p id="_oab_intro">
     If you need <span class="_oab_paper">an article</span> you can request it from any library in the world through Interlibrary loan.
-    <br>Start by entering a full <span class="_oab_paper">article</span> title, citation, DOI or URL:<br>
+    <br>Start by entering a full <span class="_oab_paper">article</span> title, citation, or DOI:<br>
   </p>
   <p><input class="_oab_form" type="text" id="_oab_input" placeholder="e.g. World Scientists Warning of a Climate Emergency" aria-label="Enter a search term" style="box-shadow:none;"></input></p>
   <p><a class="_oab_find btn-iu _oab_button _oab_loading" id="_oab_find" href="#" aria-label="Search" style="min-width:140px;">Find <span class="_oab_paper">article</span></a></p>
@@ -982,7 +982,7 @@ _oab.shareyourpaper_template = '
   </div>
 
   <div class="_oab_section _oab_archivable" id="_oab_archivable">
-    <h2>You can freely share your paper now!</h2>
+    <h2>You can freely share your paper!</h2>
     <p><span class="_oab_library">The library has</span> checked and <span class="_oab_journal">the journal</span> encourages you to freely share <span class="_oab_your_paper">your paper</span> so colleagues and the public can freely read and cite it. <span class="_oab_refs"></span></p>
     <div id="_oab_not_pdf">
       <h3><span>&#10003;</span> Find the manuscript the journal accepted. It\'s not a PDF from the journal site</h3>
