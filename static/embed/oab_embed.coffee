@@ -1016,7 +1016,7 @@ _oab.shareyourpaper_template = '
 
   <div class="_oab_section _oab_get_email" id="_oab_get_email">
     <p><input class="_oab_form" type="text" id="_oab_email" placeholder="" aria-label="Enter your email" style="box-shadow:none;"></input></p>
-    <p class="_oab_section _oab_oa_deposit">We\'ll use this to send you a link. By depositing, you\'re agreeing to the <span class="_oab_terms">terms</span>.</p>
+    <p class="_oab_section _oab_oa_deposit">We\'ll use this to send you a link. By depositing, you\'re agreeing to our <span class="_oab_terms">terms</span>.</p>
     <p class="_oab_section _oab_archivable">We\'ll only use this if something goes wrong.<br>
     <p class="_oab_section _oab_dark_deposit">We\'ll only use this to send you a link to your paper when it is in <span class="_oab_repo">ScholarWorks</span>. By depositing, you\'re agreeing to the <span class="_oab_terms">terms</span>.</p>
   </div>
