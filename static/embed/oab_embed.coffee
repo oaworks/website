@@ -911,7 +911,7 @@ _oab.instantill_template = '
     <p><a id="_oab_url" target="_blank" href="#"><b>Open <span class="_oab_paper">article</span> in a new tab</b></a></p>
   </div>
   <div class="_oab_section" id="_oab_ask_library">
-    <h3><br>Ask the library to digitally send you the published full-text via Interlibrary Loan</h3>
+    <h3><br>Ask the library to send you a digital copy via Interlibrary Loan</h3>
     <div id="_oab_cost_time"><p>It is free to you, and we\'ll usually email the link within 24 hours.<br></p></div>
     <div id="_oab_collect_email">
       <p id="_oab_terms_note"><input type="checkbox" id="_oab_read_terms"> I have read the <a id="_oab_terms_link" target="_blank" href="#">terms and conditions</a></p>
