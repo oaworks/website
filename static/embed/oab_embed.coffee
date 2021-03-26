@@ -629,7 +629,7 @@ _oab.prototype.permissions = (data) -> # only used by shareyourpaper
           # can be shared, depending on permissions info
           _L.hide('#_oab_not_pdf') if this.f?.permissions?.best_permission?.version is 'publishedVersion'
           if typeof this.f?.permissions?.best_permission?.licence is 'string' and this.f.permissions.best_permission.licence.indexOf('other-') is 0
-            _L.html '._oab_licence', 'under the publisher terms' + refs
+            _L.html '._oab_licence', 'under the publisher\'s terms' + refs
           else
             _L.html '._oab_licence', this.f?.permissions?.best_permission?.licence ? 'CC-BY'
           _L.show '._oab_archivable'
@@ -889,7 +889,7 @@ _oab.instantill_template = '
 <div class="_oab_panel" id="_oab_inputs">
   <p id="_oab_intro">
     If you need <span class="_oab_paper">an article</span> you can request it from any library in the world through Interlibrary loan.
-    <br>Start by entering a full <span class="_oab_paper">article</span> title, citation, DOI or URL:<br>
+    <br>Start by entering a full <span class="_oab_paper">article</span> title, citation, or DOI:<br>
   </p>
   <p><input class="_oab_form" type="text" id="_oab_input" placeholder="e.g. World Scientists Warning of a Climate Emergency" aria-label="Enter a search term" style="box-shadow:none;"></input></p>
   <p><a class="_oab_find btn-iu _oab_button _oab_loading" id="_oab_find" href="#" aria-label="Search" style="min-width:140px;">Find <span class="_oab_paper">article</span></a></p>
@@ -911,7 +911,7 @@ _oab.instantill_template = '
     <p><a id="_oab_url" target="_blank" href="#"><b>Open <span class="_oab_paper">article</span> in a new tab</b></a></p>
   </div>
   <div class="_oab_section" id="_oab_ask_library">
-    <h3><br>Ask the library to digitally send you the published full-text via Interlibrary Loan</h3>
+    <h3><br>Ask the library to send you a digital copy via Interlibrary Loan</h3>
     <div id="_oab_cost_time"><p>It is free to you, and we\'ll usually email the link within 24 hours.<br></p></div>
     <div id="_oab_collect_email">
       <p id="_oab_terms_note"><input type="checkbox" id="_oab_read_terms"> I have read the <a id="_oab_terms_link" target="_blank" href="#">terms and conditions</a></p>
@@ -982,7 +982,7 @@ _oab.shareyourpaper_template = '
   </div>
 
   <div class="_oab_section _oab_archivable" id="_oab_archivable">
-    <h2>You can freely share your paper now!</h2>
+    <h2>You can freely share your paper!</h2>
     <p><span class="_oab_library">The library has</span> checked and <span class="_oab_journal">the journal</span> encourages you to freely share <span class="_oab_your_paper">your paper</span> so colleagues and the public can freely read and cite it. <span class="_oab_refs"></span></p>
     <div id="_oab_not_pdf">
       <h3><span>&#10003;</span> Find the manuscript the journal accepted. It\'s not a PDF from the journal site</h3>
@@ -1016,7 +1016,7 @@ _oab.shareyourpaper_template = '
 
   <div class="_oab_section _oab_get_email" id="_oab_get_email">
     <p><input class="_oab_form" type="text" id="_oab_email" placeholder="" aria-label="Enter your email" style="box-shadow:none;"></input></p>
-    <p class="_oab_section _oab_oa_deposit">We\'ll use this to send you a link. By depositing, you\'re agreeing to the <span class="_oab_terms">terms</span>.</p>
+    <p class="_oab_section _oab_oa_deposit">We\'ll use this to send you a link. By depositing, you\'re agreeing to our <span class="_oab_terms">terms</span>.</p>
     <p class="_oab_section _oab_archivable">We\'ll only use this if something goes wrong.<br>
     <p class="_oab_section _oab_dark_deposit">We\'ll only use this to send you a link to your paper when it is in <span class="_oab_repo">ScholarWorks</span>. By depositing, you\'re agreeing to the <span class="_oab_terms">terms</span>.</p>
   </div>

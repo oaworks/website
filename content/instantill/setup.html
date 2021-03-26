@@ -103,7 +103,7 @@
 
 <div id="demo" class="container-fluid">
 
-
+  <!--
   <div class="alert-new">
     <div class="center-col">
       <div>
@@ -113,6 +113,7 @@
       </div>
     </div>
   </div>
+  -->
 
   <div id="setup" class="row full">
     <div class="col-md-6 col-md-offset-1 content">
@@ -845,7 +846,7 @@ var guesssubscription = function(e) {
   } else if ($(this).val().indexOf('ebscohost.') !== -1) {
     $(this).next('.subscription_type').val('eds');
   } else if ($(this).val().indexOf('serialssolutions.') !== -1) {
-    $(this).next('.subscription_type').val('sfx');
+    $(this).next('.subscription_type').val('serialssolutions');
   }
 };
 $('body').on('change','.subscription',guesssubscription);

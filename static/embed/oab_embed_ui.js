@@ -146,7 +146,7 @@ var save = function(e, preview) {
   } else {
     if (_oab.config && _oab.config.community) data.community = _oab.config.community; // deal with multiple community id annoyances that we should not have
     $('.setting').each(function(i, obj) {
-      if ($(this).attr('id') && $(this).val() !== undefined) {
+      if ($(this).val() !== undefined) {
         if ( $(this).attr('id') === 'community') {
           var evl = $(this).val();
           try {
