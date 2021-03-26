@@ -629,7 +629,7 @@ _oab.prototype.permissions = (data) -> # only used by shareyourpaper
           # can be shared, depending on permissions info
           _L.hide('#_oab_not_pdf') if this.f?.permissions?.best_permission?.version is 'publishedVersion'
           if typeof this.f?.permissions?.best_permission?.licence is 'string' and this.f.permissions.best_permission.licence.indexOf('other-') is 0
-            _L.html '._oab_licence', 'under the publisher terms' + refs
+            _L.html '._oab_licence', 'under the publisher\'s terms' + refs
           else
             _L.html '._oab_licence', this.f?.permissions?.best_permission?.licence ? 'CC-BY'
           _L.show '._oab_archivable'
