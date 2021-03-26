@@ -407,17 +407,18 @@ _oab.prototype.metadata = (submitafter) -> # only used by instantill
   _L.show '#_oab_metadata'
 
 _oab.prototype.openurl = () -> # only used by instantill
-  if this.f.ill?.openurl
-    try
-      nf = this.config.notes ? 'notes'
-      if this.f.ill.openurl.indexOf(nf+'=') is -1
-        notes = if this.data?.usermetadata then 'The user provided some metadata. ' else ''
-        notes += 'Subscription check done, found ' + (this.f.ill.subscription.url ? (if this.f.ill.subscription.journal then 'journal' else 'nothing')) + '. ' if this.f.ill?.subscription
-        notes += 'OA availability check done, found ' + (this.f.url ? 'nothing') + '. ' if this.f.metadata?
-        this.f.ill.openurl += '&' if not this.f.ill.openurl.endsWith '&'
-        this.f.ill.openurl += nf + '=' + notes
-    return this.f.ill.openurl
-  else if not this.config.ill_form
+  #if this.f.ill?.openurl
+  # OLD WAY, TO BE DELETED. Now it is worked out locally, below
+  #  try
+  #    nf = this.config.notes ? 'notes'
+  #      notes = if this.data?.usermetadata then 'The user provided some metadata. ' else ''
+  #    if this.f.ill.openurl.indexOf(nf+'=') is -1
+  #      notes += 'Subscription check done, found ' + (this.f.ill.subscription.url ? (if this.f.ill.subscription.journal then 'journal' else 'nothing')) + '. ' if this.f.ill?.subscription
+  #      notes += 'OA availability check done, found ' + (this.f.url ? 'nothing') + '. ' if this.f.metadata?
+  #      this.f.ill.openurl += '&' if not this.f.ill.openurl.endsWith '&'
+  #      this.f.ill.openurl += nf + '=' + notes
+  #  return this.f.ill.openurl
+  if not this.config.ill_form
     return ''
   else
     config = JSON.parse JSON.stringify this.config
