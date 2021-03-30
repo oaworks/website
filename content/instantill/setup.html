@@ -384,6 +384,7 @@
             <option value="sfx">SFX</option>
             <!--<option value="eds">EDS / Ebsco</option>-->
             <option value="serialssolutions">Serials Solutions</option>
+            <option value="exlibris">Exlibris</option>
           </select>
           <a style="margin-top:10px;" class="btn btn-demo-green" id="addsubscription" href="#">Add another</a>
         </p>
@@ -847,9 +848,11 @@ var guesssubscription = function(e) {
     $(this).next('.subscription_type').val('eds');
   } else if ($(this).val().indexOf('serialssolutions.') !== -1) {
     $(this).next('.subscription_type').val('serialssolutions');
+  } else if ($(this).val().indexOf('.exlibris') !== -1) {
+    $(this).next('.subscription_type').val('exlibris');
   }
 };
-$('body').on('change','.subscription',guesssubscription);
+$('body').on('keyup','.subscription',guesssubscription);
 
 </script>
 <script src="/static/embed/oab_embed_ui.js"></script>
