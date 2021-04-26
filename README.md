@@ -38,12 +38,12 @@ This is the content of Open Access Button site.
 
 ## Contributing
 
-There are three repositories.  [This one](https://github.com/OAButton/website), an [issues/discussion area](https://github.com/OAButton/discussion), and  [plugin code](https://github.com/OAButton/plugin).
+There are three repositories.  [This one](https://github.com/oaworks/website), an [issues/discussion area](https://github.com/oaworks/discussion), and  [plugin code](https://github.com/oaworks/plugin).
 
 Quick guide:
 
-* If you have an issue (e.g bug, suggestion, question), make it [here](https://github.com/OAButton/discussion)
-* If you want to contribute code to the plugin [see this repository](https://github.com/OAButton/plugin). Pull requests are always welcome. Some useful information is below.
+* If you have an issue (e.g bug, suggestion, question), make it [here](https://github.com/oaworks/discussion)
+* If you want to contribute code to the plugin [see this repository](https://github.com/oaworks/plugin). Pull requests are always welcome. Some useful information is below.
 
 # Development Notes
 
@@ -73,7 +73,7 @@ Your steps to update the website should be:
 
 If you're happy with the above changes & everything has been tested
 
-5. Go to: https://github.com/OAButton/oab_static/tree/master. You'll be invited to make a pull request from the develop branch. Do this. 
+5. Go to: https://github.com/oaworks/oab_static/tree/master. You'll be invited to make a pull request from the develop branch. Do this. 
 6. On the new screen, check that the commits you made are lised & others have been tested. If there are commits that haven't been tested either test them or ask Mark to make a pull request for just your changes.  
 8. Hit a the "Create a pull request" button.
 9. If all checks pass & you have no conflicts, keep clicking until it's successfully merged. DON'T delete "develop".
@@ -147,9 +147,9 @@ All the content files are requested and served as JavaScript dynamic requests, t
 
 To edit the paraphernalia of the page, see the `index.html` file in the top level directory of this repository. Ignore the `header.html` and `footer.html` files but DO NOT delete them.
 
-The structure of content is just the top-level `index.html` file, for example in oab_static: [website/content/index.html](https://github.com/OAButton/website/blob/master/content/index.html)
+The structure of content is just the top-level `index.html` file, for example in oab_static: [website/content/index.html](https://github.com/oaworks/website/blob/master/content/index.html)
 
-Which does the usual HTML links to JS/CSS files etc, such as the main CSS file: [website/static/oabutton.css](https://github.com/OAButton/oab_static/blob/master/static/oabutton.css)
+Which does the usual HTML links to JS/CSS files etc, such as the main CSS file: [website/static/oabutton.css](https://github.com/oaworks/oab_static/blob/master/static/oabutton.css)
 
 So, for neatness, static content like JS and CSS files, and images, should go in the `/static` folder.
 
@@ -160,7 +160,7 @@ And then the content of individual pages just goes in the `/content` folder.
 
 ## The Bookmarklet
 
-* The bookmarklet is generated from code that runs the [Open Access Button Plugin](https://github.com/oabutton/unified-extension).
+* The bookmarklet is generated from code that runs the [Open Access Button Plugin](https://github.com/oaworks/unified-extension).
 * The bookmarklet can be instantly updated for users similar to how we update the website. 
 * You can view the bookmarklet in development at oabb.test.cottagelabs.com
 
