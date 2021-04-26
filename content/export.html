@@ -146,7 +146,7 @@
             var min = moment(data.min).format('DD/MM/YYYY');
             //change min to be a week behind now - this is also set below as the default from date if none is selected
             var cmin = moment(Date.now()-604800000).format('DD/MM/YYYY');
-            $('#from').val(cmin);
+            $('#from').val(w === 'account' ? min : cmin);
             $('#from').datepicker('setStartDate',min);
             $('#to').datepicker('setStartDate',min);
             var max = moment(data.max).format('DD/MM/YYYY');
@@ -154,7 +154,7 @@
             $('#from').datepicker('setEndDate',max);
             var max7 = moment(data.max+604800000).format('DD/MM/YYYY');
             $('#to').datepicker('setEndDate',max7);
-            changed.from = undefined; // no need to set a date range unless the user changes the date range, so unset on first load
+            changed.from = w === 'account' ? min : undefined; // no need to set a date range unless the user changes the date range, so unset on first load
             changed.to = undefined;
           }
         });
@@ -204,13 +204,12 @@
       } else {
         var size = 200000;
         var fields = {
-          account: ['_id','createdAt','email','profile.name','profile.firstname','profile.lastname','service.openaccessbutton.profile.affiliation','service.openaccessbutton.profile.profession','roles.openaccessbutton','username'],
           support: ['created_date','url','type','story','username','rid'],
           availability: ['created_date','username','url','discovered.article','discovered.data','plugin','from','embedded'],
           dnr: ['email']
         }
         var endpoint = '';
-        if ($('#what').val() === 'account') endpoint = 'users';
+        if ($('#what').val() === 'account') endpoint = 'users.csv';
         if ($('#what').val() === 'availability') endpoint = 'availabilities';
         if ($('#what').val() === 'support') endpoint = 'supports';
 
@@ -273,7 +272,11 @@
         var url = api + '/' + endpoint + '?';
         if ($('#what').val() === 'account') url += 'apikey=' + noddy.apikey + '&';
         url += 'source=' + JSON.stringify(query);
-        var curl = noddy.api + '/convert?from=json&to=csv&subset=hits.hits._source&fields=' + fields[$('#what').val()].join(',') + '&url='+encodeURIComponent(url);
+        if ($('#what').val() === 'account') {
+          var curl = url
+        } else {
+          var curl = noddy.api + '/convert?from=json&to=csv&subset=hits.hits._source&fields=' + fields[$('#what').val()].join(',') + '&url='+encodeURIComponent(url);
+        }
         $(this).attr('href',curl);
       }
     }

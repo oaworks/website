@@ -4,7 +4,7 @@ The backstory to this work is described: [here](INSERT-LINK) & [here](https://bl
 
 ## Relavent OAB links
 
-* Discussion repo: https://github.com/OAButton/discussion
+* Discussion repo: https://github.com/oaworks/discussion
 * API code: https://github.com/CottageLabs/api/tree/master/apps/clapi/server/endpoints/service
 
 ## More on how the Bookmarklet works
