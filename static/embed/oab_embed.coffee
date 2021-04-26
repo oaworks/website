@@ -520,6 +520,8 @@ _oab.prototype.deposit = (e) -> # only used by shareyourpaper
           if d is 'metadata'
             for md of data[d]
               this.file.append(md,data[d][md]) if (typeof data[d][md] is 'string' or typeof data[d][md] is 'number')
+          else if typeof data[d] is 'object'
+            this.file.append d, JSON.stringify data[d]
           else
             this.file.append d,data[d]
         data = this.file
