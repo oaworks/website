@@ -3,10 +3,7 @@
   <link rel="stylesheet" href="/static/oabutton_rebrand.css"> <!-- gets the new css (still also uses the old css, just overwrites where necessary) -->
 </head>
 
-<script src="https://shareyourpaper.org/embed.js"></script>
-<script>_oab=shareyourpaper({api: 'https://dev.api.cottagelabs.com/service/oab', uid: "xvByovXQwATihECTj", config: {"owner":"joe+gates@openaccessbutton.org","oa_deposit_off":true,"dark_deposit_off":true,"not_library":true,"repo_name":"Zenodo","old_way":"hello@openaccessbutton.org","community":"gates-foundation"}});</script>
-<!--<script>_oab=shareyourpaper({uid: "NZvBLyNY9uQJAvCuH", config: {"owner":"joe+gates@openaccessbutton.org","oa_deposit_off":true,"dark_deposit_off":true,"not_library":true,"repo_name":"Zenodo","old_way":"hello@openaccessbutton.org","community":"gates-foundation"}});</script>-→
-
+<script src="/static/embed/oab_embed.js"></script>
 <style>
   #topnav {
     display: none;
@@ -173,3 +170,15 @@
 
 <script async defer src="https://sa.shareyourpaper.org/latest.js"></script>
 <noscript><img src="https://sa.shareyourpaper.org/noscript.gif" alt=""/></noscript>
+
+<!-- NZvBLyNY9uQJAvCuH is live id. xvByovXQwATihECTj is dev. -->
+
+<script>
+
+  _oab = shareyourpaper({
+    uid:(api.indexOf('dev.') !== -1 ? 'xvByovXQwATihECTj' : 'NZvBLyNY9uQJAvCuH'),
+    api:api,
+    config: {"owner":"joe+gates@openaccessbutton.org","oa_deposit_off":true,"dark_deposit_off":true,"not_library":true,"repo_name":"Zenodo","old_way":"hello@openaccessbutton.org","community":"gates-foundation"}
+  });
+
+</script>
