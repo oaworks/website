@@ -224,7 +224,7 @@ _oab = (opts) ->
 
 
 _oab.prototype.cml = () -> return this.config.problem ? this.config.owner ? this.config.email ? ''
-_oab.prototype.contact = () -> return 'Please try ' + (if this.cml() then '<a id="_oab_contact_library" href="mailto:' + this.cml() + '">contacting your library</a>' else 'contacting your library') + ' directly'
+_oab.prototype.contact = () -> return 'Please try ' + (if this.cml() then '<a id="_oab_contact_library" href="mailto:' + this.cml() + '">contacting us</a>' else 'contacting us') + ' directly'
 
 _oab.prototype.loading = (load) ->
   _L.hide '#_oab_error'
@@ -981,7 +981,7 @@ _oab.shareyourpaper_template = '
   <div class="_oab_section _oab_oa_deposit" id="_oab_oa_deposit">
     <h2>Your paper is already freely available!</h2>
     <p>Great news, you\'re already getting the benefits of sharing your work! Your publisher or co-author have already shared a <a class="_oab_oa_url" id="_oab_goto_oa_url" target="_blank" href="#">freely available copy</a>.</p>
-    <h3 class="_oab_section _oab_get_email">Give us your email to confirm deposit</h3>
+    <h3 class="_oab_section _oab_get_email">Please enter your email to confirm deposit</h3>
   </div>
 
   <div class="_oab_section _oab_archivable" id="_oab_archivable">
@@ -1047,7 +1047,7 @@ _oab.shareyourpaper_template = '
 
   <div class="_oab_done" id="_oab_check">
     <h2>We\'ll double check your paper</h2>
-    <p>You\'ve done your part for now. Hopefully, we\'ll send you a link soon. First, we\'ll check in the next working day to make sure it\'s legal to share.</p>
+    <p>You\'ve done your part for now. Hopefully, we\'ll send you a link soon. First, we\'ll check to make sure it\'s legal to share.</p>
   </div>
 
   <div class="_oab_done" id="_oab_partial">
