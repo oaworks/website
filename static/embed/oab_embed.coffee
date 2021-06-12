@@ -617,7 +617,6 @@ _oab.prototype.permissions = (data) -> # only used by shareyourpaper
         paper = if this.f?.metadata?.doi then '<a id="_oab_your_paper" target="_blank" href="https://doi.org/' + this.f.metadata.doi + '"><u>your paper</u></a>' else 'your paper'
         _L.html '._oab_your_paper', (if this.f?.permissions?.best_permission?.version is 'publishedVersion' then 'the publisher pdf of ' else '') + paper
         _L.html '._oab_journal', this.f?.metadata?.journal_short ? 'the journal'
-        # set config by this.config.repo_name put name in ._oab_repo
 
         if this.f.url
           # it is already OA, depending on settings can deposit another copy
@@ -1183,6 +1182,8 @@ _oab.prototype.configure = (key, val, build, preview) ->
             _L.html '._oab_library', 'We have'
           else
             _L.html '#_oab_lib_info', 'Share your paper with help from the library in ' + (this.config.repo_name ? 'ScholarWorks') + '. Legally, for free, in minutes. '
+          if this.config.repo_name
+            _L.html '._oab_repo', this.config.repo_name
         else if this.plugin is 'instantill'
           if this.config.book or this.config.other
             boro = '<p>Need '
