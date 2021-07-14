@@ -269,7 +269,12 @@ _oab.prototype.state = (pop) ->
           else
             u += window.location.search.split('?doi=')[0].split('&doi=')[0]
             u += if u.indexOf('?') is -1 then '?' else '&'
-            u += 'doi=' + this.data.doi + window.location.hash
+            u += 'doi=' + this.data.doi
+            if window.location.search.split('?doi=')[1].indexOf('&') isnt -1
+              extras = window.location.search.split('?doi=')[1].split('&')
+              extras.shift()
+              u += '&' + extra for extra in extras
+            u += window.location.hash
         else if window.location.href.indexOf('/setup') is -1 and window.location.href.indexOf('/demo') is -1
           if this.data.doi? or this.data.title? or this.data.url?
             k = if this.data.doi then 'doi' else if this.data.title then 'title' else 'url'
