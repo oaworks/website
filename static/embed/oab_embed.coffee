@@ -264,7 +264,12 @@ _oab.prototype.state = (pop) ->
       u = window.location.pathname
       if not pop?
         if window.location.href.indexOf('shareyourpaper.org') isnt -1
-          u = window.location.href.split('10.')[0] + (this.data.doi ? '') + window.location.search + window.location.hash
+          if window.location.href.indexOf('/10.') isnt -1 or window.location.href.replace(/\//g,'').endsWith('.org')
+            u = window.location.href.split('10.')[0] + (this.data.doi ? '') + window.location.search + window.location.hash
+          else
+            u += window.location.search.split('?doi=')[0].split('&doi=')[0]
+            u += if u.indexOf('?') is -1 then '?' else '&'
+            u += 'doi=' + this.data.doi + window.location.hash
         else if window.location.href.indexOf('/setup') is -1 and window.location.href.indexOf('/demo') is -1
           if this.data.doi? or this.data.title? or this.data.url?
             k = if this.data.doi then 'doi' else if this.data.title then 'title' else 'url'
