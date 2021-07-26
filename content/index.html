@@ -447,7 +447,11 @@
                   dataType: 'json',
                   data: JSON.stringify(dr),
                   success: function(resp) {
-                    window.location = '/request/' + resp.data._id;
+                    if (resp && resp.data && resp.data._id) {
+                      window.location = '/request/' + resp.data._id;
+                    } else {
+                      window.location = '/request?url=' + encodeURIComponent(url);
+                    }
                   },
                   error: function() {
                     window.location = '/request?url=' + encodeURIComponent(url);

@@ -224,7 +224,7 @@ _oab = (opts) ->
 
 
 _oab.prototype.cml = () -> return this.config.problem ? this.config.owner ? this.config.email ? ''
-_oab.prototype.contact = () -> return 'Please try ' + (if this.cml() then '<a id="_oab_contact_library" href="mailto:' + this.cml() + '">contacting your library</a>' else 'contacting your library') + ' directly'
+_oab.prototype.contact = () -> return 'Please try ' + (if this.cml() then '<a id="_oab_contact_library" href="mailto:' + this.cml() + '">contacting us</a>' else 'contacting us') + ' directly'
 
 _oab.prototype.loading = (load) ->
   _L.hide '#_oab_error'
@@ -264,7 +264,17 @@ _oab.prototype.state = (pop) ->
       u = window.location.pathname
       if not pop?
         if window.location.href.indexOf('shareyourpaper.org') isnt -1
-          u = window.location.href.split('10.')[0] + (this.data.doi ? '') + window.location.search + window.location.hash
+          if window.location.href.indexOf('/10.') isnt -1 or window.location.href.replace(/\//g,'').endsWith('.org')
+            u = window.location.href.split('10.')[0] + (this.data.doi ? '') + window.location.search + window.location.hash
+          else
+            u += window.location.search.split('?doi=')[0].split('&doi=')[0]
+            u += if u.indexOf('?') is -1 then '?' else '&'
+            u += 'doi=' + this.data.doi
+            if window.location.search.split('?doi=')[1].indexOf('&') isnt -1
+              extras = window.location.search.split('?doi=')[1].split('&')
+              extras.shift()
+              u += '&' + extra for extra in extras
+            u += window.location.hash
         else if window.location.href.indexOf('/setup') is -1 and window.location.href.indexOf('/demo') is -1
           if this.data.doi? or this.data.title? or this.data.url?
             k = if this.data.doi then 'doi' else if this.data.title then 'title' else 'url'
@@ -617,7 +627,6 @@ _oab.prototype.permissions = (data) -> # only used by shareyourpaper
         paper = if this.f?.metadata?.doi then '<a id="_oab_your_paper" target="_blank" href="https://doi.org/' + this.f.metadata.doi + '"><u>your paper</u></a>' else 'your paper'
         _L.html '._oab_your_paper', (if this.f?.permissions?.best_permission?.version is 'publishedVersion' then 'the publisher pdf of ' else '') + paper
         _L.html '._oab_journal', this.f?.metadata?.journal_short ? 'the journal'
-        # set config by this.config.repo_name put name in ._oab_repo
 
         if this.f.url
           # it is already OA, depending on settings can deposit another copy
@@ -981,7 +990,7 @@ _oab.shareyourpaper_template = '
   <div class="_oab_section _oab_oa_deposit" id="_oab_oa_deposit">
     <h2>Your paper is already freely available!</h2>
     <p>Great news, you\'re already getting the benefits of sharing your work! Your publisher or co-author have already shared a <a class="_oab_oa_url" id="_oab_goto_oa_url" target="_blank" href="#">freely available copy</a>.</p>
-    <h3 class="_oab_section _oab_get_email">Give us your email to confirm deposit</h3>
+    <h3 class="_oab_section _oab_get_email">Please enter your email to confirm deposit</h3>
   </div>
 
   <div class="_oab_section _oab_archivable" id="_oab_archivable">
@@ -1047,7 +1056,7 @@ _oab.shareyourpaper_template = '
 
   <div class="_oab_done" id="_oab_check">
     <h2>We\'ll double check your paper</h2>
-    <p>You\'ve done your part for now. Hopefully, we\'ll send you a link soon. First, we\'ll check in the next working day to make sure it\'s legal to share.</p>
+    <p>You\'ve done your part for now. Hopefully, we\'ll send you a link soon. First, we\'ll check to make sure it\'s legal to share.</p>
   </div>
 
   <div class="_oab_done" id="_oab_partial">
@@ -1183,6 +1192,8 @@ _oab.prototype.configure = (key, val, build, preview) ->
             _L.html '._oab_library', 'We have'
           else
             _L.html '#_oab_lib_info', 'Share your paper with help from the library in ' + (this.config.repo_name ? 'ScholarWorks') + '. Legally, for free, in minutes. '
+          if this.config.repo_name
+            _L.html '._oab_repo', this.config.repo_name
         else if this.plugin is 'instantill'
           if this.config.book or this.config.other
             boro = '<p>Need '
