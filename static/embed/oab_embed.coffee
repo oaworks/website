@@ -410,9 +410,6 @@ _oab.prototype.metadata = (submitafter) -> # only used by instantill
   for m in ['title','year','journal','doi']
     if this.f?.metadata?[m]? or this.data[m]?
       _L.set '#_oab_'+m, (this.f.metadata ? this.data)[m] #.split('(')[0].trim()
-  #if this.f?.doi_not_in_crossref
-  #  _L.html '#_oab_bad_doi', this.f.doi_not_in_crossref
-  #  _L.show '#_oab_doi_not_in_crossref'
   _L.hide '._oab_panel'
   _L.show '#_oab_metadata'
 
@@ -458,7 +455,7 @@ _oab.prototype.openurl = () -> # only used by instantill
             try
               v += ', ' if v.length
               v += if typeof author is 'string' then author else if typeof author is 'object' and author.family then (author.family + if author.given then ', ' + author.given else '') else JSON.stringify author
-      else if k in ['doi','pmid','pmc','pmcid','url','journal','title','year','issn','volume','issue','page','crossref_type','publisher','published','notes']
+      else if k in ['doi','pmid','pmc','pmcid','url','journal','title','year','issn','volume','issue','page','crossref_type','type','publisher','published','notes']
         v = this.f.metadata[k]
       url += (config[k] ? k) + '=' + encodeURIComponent(v) + '&' if v
     notes = if this.data.usermetadata then 'The user provided some metadata. ' else ''
@@ -583,11 +580,11 @@ _oab.prototype.permissions = (data) -> # only used by shareyourpaper
       setTimeout (() => this.permissions()), 100
     else
       this.loading false
-      if this.f?.doi_not_in_crossref
+      if this.f?.doi_not_in_crossref and this.f?.doi_not_in_oadoi
         this.f = {}
         _L.show '#_oab_error', '<p>Double check your DOI, that doesn\'t look right to us.</p>'
         _L.gebi('_oab_input').focus()
-      else if this.f?.metadata?.crossref_type? and this.f.metadata.crossref_type not in ['journal-article', 'proceedings-article']
+      else if (this.f?.metadata?.crossref_type? and this.f.metadata.crossref_type not in ['journal-article', 'proceedings-article']) or (this.f?.metadata?.type? and this.f.metadata.type not in ['journal-article', 'proceedings-article'])
         _L.gebi('_oab_input').focus()
         nj = '<p>Sorry, right now this only works with academic journal articles.'
         if this.cml()
@@ -680,7 +677,7 @@ _oab.prototype.findings = (data) -> # only used by instantill
       setTimeout (() => this.findings()), 100
     else
       this.loading false
-      if ct = this.f.metadata?.crossref_type
+      if ct = this.f.metadata?.crossref_type ? this.f.metadata?.type
         if ct not in ['journal-article','proceedings-article','posted-content']
           if ct in ['book-section','book-part','book-chapter']
             err = '<p>Please make your request through our ' + (if this.config.book then '<a id="_oab_book_form" href="' + this.config.book + '">book form</a>' else 'book form')
