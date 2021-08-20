@@ -32,12 +32,12 @@ var _bigdeal_template = '\
   </div>\
   <table class="table table-bordered table-striped tabular pages">\
     <thead>\
-      <th style="width:20%;background-color:#eee;font-weight:bold;"><a alt="click to sort" title="click to sort" href="institution.exact" class="sorters">Institution <img style="height:10px;" src="XXXstaticXXX/up_grey_cropped.png"></a></th>\
-      <th style="background-color:#eee;font-weight:bold;"><a alt="click to sort" title="click to sort" href="publisher.exact" class="sorters">Publisher <img style="height:10px;" src="XXXstaticXXX/up_grey_cropped.png"></a></th>\
-      <th style="width:14%;background-color:#eee;font-weight:bold;"><a alt="click to sort" title="click to sort" href="collection.exact" class="sorters">Collection <img style="height:10px;" src="XXXstaticXXX/up_grey_cropped.png"></a></th>\
+      <th style="width:20%;background-color:#eee;font-weight:bold;"><a alt="click to sort" title="click to sort" href="institution.keyword" class="sorters">Institution <img style="height:10px;" src="XXXstaticXXX/up_grey_cropped.png"></a></th>\
+      <th style="background-color:#eee;font-weight:bold;"><a alt="click to sort" title="click to sort" href="publisher.keyword" class="sorters">Publisher <img style="height:10px;" src="XXXstaticXXX/up_grey_cropped.png"></a></th>\
+      <th style="width:14%;background-color:#eee;font-weight:bold;"><a alt="click to sort" title="click to sort" href="collection.keyword" class="sorters">Collection <img style="height:10px;" src="XXXstaticXXX/up_grey_cropped.png"></a></th>\
       <th style="background-color:#eee;font-weight:bold;"><a alt="click to sort" title="click to sort" href="fte" class="sorters">FTE <img style="height:10px;" src="XXXstaticXXX/up_grey_cropped.png"></a></th>\
-      <th style="width:14%;background-color:#eee;font-weight:bold;"><a alt="click to sort" title="click to sort" href="carnegiebasicclassification.exact" class="sorters">Carnegie <img style="height:10px;" src="XXXstaticXXX/up_grey_cropped.png"></a></th>\
-      <th style="background-color:#eee;font-weight:bold;"><a alt="click to sort" title="click to sort" href="years.exact" class="sorters">Year <img style="height:10px;" src="XXXstaticXXX/up_grey_cropped.png"></a></th>\
+      <th style="width:14%;background-color:#eee;font-weight:bold;"><a alt="click to sort" title="click to sort" href="carnegiebasicclassification.keyword" class="sorters">Carnegie <img style="height:10px;" src="XXXstaticXXX/up_grey_cropped.png"></a></th>\
+      <th style="background-color:#eee;font-weight:bold;"><a alt="click to sort" title="click to sort" href="years.keyword" class="sorters">Year <img style="height:10px;" src="XXXstaticXXX/up_grey_cropped.png"></a></th>\
       <th style="width:14%;background-color:#eee;font-weight:bold;"><a alt="click to sort" title="click to sort" href="value" class="sorters">USD Value <img style="height:10px;" src="XXXstaticXXX/down_red_cropped.png"></a></th>\
     </thead>\
     <tbody class="holder results"></tbody>\
@@ -58,7 +58,7 @@ var _bigdeal_template = '\
 var bigdeal_build = function() {
   jQuery(document).ready(function() {
     var opts = _bigdeal_opts;
-    var api = opts.api ? opts.api : 'https://dev.api.cottagelabs.com/service/bigdeal';
+    var api = opts.api ? opts.api : 'https://beta.oa.works/deal';
   
     $(opts.target).append(opts.template);
     $('body').on('click','.backtotop', function(e) {
@@ -154,7 +154,7 @@ var bigdeal_build = function() {
       }
     }
 
-    $.fn.holder.display.sort.fields = ['institution.exact','publisher.exact','collection.exact','fte','carnegiebasicclassification.exact','years.exact','value'];
+    $.fn.holder.display.sort.fields = ['institution.keyword','publisher.keyword','collection.keyword','fte','carnegiebasicclassification.keyword','years.keyword','value'];
     $.fn.holder.display.sort.default = {'value': 'desc'};
 
     $('#holder').holder({
@@ -165,15 +165,15 @@ var bigdeal_build = function() {
       pushstate: false,
       record: record,
       collapse: false,
-      //sort: 'institution.exact',
+      //sort: 'institution.keyword',
       //sticky:true,
       display: ['filters','range','sort'],
       size: 100,
       facets: {
-        institution: { terms: { field: "institution.exact", size: 1000, order: "term" } },
-        publisher: { terms: { field: "publisher.exact", size: 1000, order: "term", exclude: [''] } },
-        'Carnegie': { terms: { field: "carnegiebasicclassification.exact", size: 1000, order: "term" } },
-        collection: { terms: { field: "collection.exact", size: 1000, order: "term" } }
+        institution: { terms: { field: "institution.keyword", size: 1000, order: "term" } },
+        publisher: { terms: { field: "publisher.keyword", size: 1000, order: "term", exclude: [''] } },
+        'Carnegie': { terms: { field: "carnegiebasicclassification.keyword", size: 1000, order: "term" } },
+        collection: { terms: { field: "collection.keyword", size: 1000, order: "term" } }
       },
       ranges: {
         usdvalue: {
@@ -217,8 +217,7 @@ var bigdeal_get = function() {
 
 var bigdeal_setup = function(opts) {
   if (opts === undefined) opts = {}
-  if (opts.api === undefined) opts.api = 'https://api.cottagelabs.com/service/bigdeal';
-  //if (opts.site === undefined) opts.site = 'https://bigdeal.test.cottagelabs.com';
+  if (opts.api === undefined) opts.api = 'https://api.oa.works/deal';
   if (opts.static === undefined) opts.static = 'https://openaccessbutton.org/static/bigdeal';
   if (opts.target === undefined) opts.target = '#bigdeal';
   if (opts.template === undefined) opts.template = _bigdeal_template;
