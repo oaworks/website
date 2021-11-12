@@ -305,8 +305,16 @@
     $('#template').bind('change',template);
 
     var del = function(e) {
-      alert('TODO will remove a user account from oabutton');
       e.preventDefault();
+      var uid = $(this).attr('href');
+      $(this).html('<img src="//static.cottagelabs.com/spin_grey.svg" style="height:20px;">').addClass('disabled');
+      $.ajax({
+        type: 'GET',
+        url: api + '/users/' + uid + '?apikey=' + noddy.apikey + '&delete=true',
+        success: function(data) {
+          setTimeout(function() { location.reload(); }, 2000);
+        }
+      });
     }
     var ban = function(e) {
       alert('TODO will remove a user account from oabutton and ban an email address from signing up to oabutton');
@@ -345,15 +353,18 @@
         var record = function(res) {
           var out = '';
           out += '<div class="well" style="padding:2px 4px 2px 4px;background-color:#eee;border-color:#212f3f;overflow:hidden;">';
-          if (res.profile && res.profile.name) out += '<h4>' + res.profile.name + '</h4>';
+          if (res.profile && (res.profile.name || res.profile.firstname)) out += '<h4>' + (res.profile.name ? res.profile.name : (res.profile.firstname + (res.profile.lastname ? '' + res.profile.lastname : ''))) + '</h4>';
           if (res.username) out += '<h4>Username: ' + res.username + '</h4>';
           out += '<p>';
           out += res.emails[0].address;
           var dt = new Date(res.createdAt).toUTCString().split(', ')[1].split(':')[0];
           dt = dt.substring(0,dt.length-3);
           out += ' (created ' + dt + ')<br>';
+          if (res.service && res.service.openaccessbutton && res.service.openaccessbutton.profile && (res.service.openaccessbutton.profile.profession || res.service.openaccessbutton.profile.affiliation)) {
+            out += (res.service.openaccessbutton.profile.profession ? res.service.openaccessbutton.profile.profession + ' ' : '') + (res.service.openaccessbutton.profile.affiliation ? res.service.openaccessbutton.profile.affiliation : '') + '<br>';
+          }
           out += '<a class="label label-danger delete" href="' + res._id + '">remove</a> ';
-          out += '<a class="label label-danger ban" href="' + res._id + '">ban</a> ';
+          //out += '<a class="label label-danger ban" href="' + res._id + '">ban</a> ';
           out += '<a class="label label-info email" href="' + res.emails[0].address + '">email</a> ';
           out += '<a class="label label-warning adminify" href="' + res._id + '"';
           if (res.roles.openaccessbutton.indexOf('admin') !== -1) out += ' style="display:none;"';
