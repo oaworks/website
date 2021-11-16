@@ -312,7 +312,7 @@
         type: 'GET',
         url: api + '/users/' + uid + '?apikey=' + noddy.apikey + '&delete=true',
         success: function(data) {
-          setTimeout(function() { location.reload(); }, 2000);
+          setTimeout(function() { alert('User removed. Please reload this page.'); }, 2000);
         }
       });
     }
@@ -353,7 +353,7 @@
         var record = function(res) {
           var out = '';
           out += '<div class="well" style="padding:2px 4px 2px 4px;background-color:#eee;border-color:#212f3f;overflow:hidden;">';
-          if (res.profile && (res.profile.name || res.profile.firstname)) out += '<h4>' + (res.profile.name ? res.profile.name : (res.profile.firstname + (res.profile.lastname ? '' + res.profile.lastname : ''))) + '</h4>';
+          if (res.profile && (res.profile.name || res.profile.firstname)) out += '<h4>' + (res.profile.name ? res.profile.name : (res.profile.firstname + (res.profile.lastname ? ' ' + res.profile.lastname : ''))) + '</h4>';
           if (res.username) out += '<h4>Username: ' + res.username + '</h4>';
           out += '<p>';
           out += res.emails[0].address;
