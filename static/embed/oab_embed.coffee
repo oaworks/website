@@ -548,7 +548,7 @@ _oab.prototype.deposit = (e) -> # only used by shareyourpaper
               # deposit was possible, show the user a congrats page with a link to the item in zenodo
               _L.set '#_oab_zenodo_url', res.zenodo.url
               if res.embargo
-                info = '<p>You\'ve done your part for now. Unfortunately, ' + (this.f?.metadata?.journal_short ? this.f?.metadata?.journal ? 'the journal') + ' won\'t let us make it public until '
+                info = '<p>You\'ve done your part for now. Unfortunately, ' + (this.f?.metadata?.shortname ? this.f?.metadata?.journal ? 'the journal') + ' won\'t let us make it public until '
                 info += if res.embargo_UI then res.embargo_UI else res.embargo
                 info += '. After release, you\'ll find your paper on ' + (this.config.repo_name ? 'ScholarWorks') + ', Google Scholar, Web of Science.</p>'
                 info += '<h3>Your paper will be freely available at this link:</h3>'
@@ -587,7 +587,7 @@ _oab.prototype.permissions = (data) -> # only used by shareyourpaper
       else if (this.f?.metadata?.crossref_type? and this.f.metadata.crossref_type not in ['journal-article', 'proceedings-article']) or (this.f?.metadata?.type? and this.f.metadata.type not in ['journal-article', 'proceedings-article'])
         _L.gebi('_oab_input').focus()
         nj = '<p>Sorry, right now this only works with academic journal articles.'
-        if this.cml()
+        if this.cml() or (this.config.old_way and this.config.old_way.includes '@')
           nj += ' To get help with depositing, <a href="'
           nj += if this.config.old_way then (if this.config.old_way.indexOf('@') isnt -1 then 'mailto:' else '') + this.config.old_way else 'mailto:' + this.cml()
           nj += "?subject=Help%20depositing%20&body=Hi%2C%0D%0A%0D%0AI'd%20like%20to%20deposit%3A%0D%0A%0D%0A%3C%3CPlease%20insert%20a%20full%20citation%3E%3E%0D%0A%0D%0ACan%20you%20please%20assist%20me%3F%0D%0A%0D%0AYours%20sincerely%2C" + '">click here</a>'
@@ -623,7 +623,7 @@ _oab.prototype.permissions = (data) -> # only used by shareyourpaper
         _L.html '._oab_refs', refs
         paper = if this.f?.metadata?.doi then '<a id="_oab_your_paper" target="_blank" href="https://doi.org/' + this.f.metadata.doi + '"><u>your paper</u></a>' else 'your paper'
         _L.html '._oab_your_paper', (if this.f?.permissions?.best_permission?.version is 'publishedVersion' then 'the publisher pdf of ' else '') + paper
-        _L.html '._oab_journal', this.f?.metadata?.journal_short ? 'the journal'
+        _L.html '._oab_journal', this.f?.metadata?.shortname ? 'the journal'
 
         if this.f.url
           # it is already OA, depending on settings can deposit another copy
