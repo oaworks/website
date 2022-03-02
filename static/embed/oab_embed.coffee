@@ -1183,8 +1183,8 @@ _oab.prototype.configure = (key, val, build, preview) ->
 
         # shareyourpaper exclusive configs
         if this.plugin is 'shareyourpaper'
-          if this.cml()? and el = _L.gebi '_oab_nodoi'
-            el.setAttribute 'href', el.getAttribute('href').replace('help@openaccessbutton.org', this.cml())
+          if (this.cml()? or (this.config.old_way and this.config.old_way.includes '@')) and el = _L.gebi '_oab_nodoi'
+            el.setAttribute 'href', el.getAttribute('href').replace('help@openaccessbutton.org', (if this.config.old_way and this.config.old_way.includes('@') then this.config.old_way else this.cml()))
           if this.config.not_library
             _L.html '._oab_library', 'We have'
           else
