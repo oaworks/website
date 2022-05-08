@@ -205,7 +205,7 @@
 <script>
 
 var learnmore = function() {
-  $('#_oab_nodoi').replaceWith('Try an example <a href="#" id="runexample"><u>10.1126/scitranslmed.abc2344</u></a> or <a href="#" class="learnmore"><u>learn more</u></a>.');
+  $('#_oaw_nodoi').replaceWith('Try an example <a href="#" id="runexample"><u>10.1126/scitranslmed.abc2344</u></a> or <a href="#" class="learnmore"><u>learn more</u></a>.');
   if ($('#about').is(':visible')) {
     $('#shareyourpaper').toggle();
     $('#about').toggle();
@@ -220,7 +220,7 @@ _oab = shareyourpaper({
 });
 
 jQuery(document).ready(function() {
-  $('body').on('click','#runexample',function(e) { e.preventDefault(); $('#_oab_input').val('10.1126/scitranslmed.abc2344'); _oab.find(); });
+  $('body').on('click','#runexample',function(e) { e.preventDefault(); $('#_oaw_input').val('10.1126/scitranslmed.abc2344'); _oaw.find(); });
   $('body').on('click','.learnmore',function(e) {
     e.preventDefault();
     $('#shareyourpaper').toggle();
