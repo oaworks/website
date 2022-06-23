@@ -25,7 +25,7 @@ var _bigdeal_template = '\
         <!--<div class="col-md-4"><div style="border:1px solid #ccc;border-radius:4px;padding:5px;"><input type="checkbox" id="completes" class="holder" do="completes" val="url:*"> Complete agreements only</div></div>-->\
         <div class="col-md-8 holder sort" style="margin-left:5px;margin-right:-5px;display:none;"></div>\
         <div class="col-md-12">\
-          <a class="btn btn-default btn-block exporter" style="height:34px;padding-top:6px;" val="csv" href="#" target="_blank">Download</a>\
+          <a class="btn btn-default btn-block" style="height:34px;padding-top:6px;" href="https://docs.google.com/spreadsheets/d/1dPG7Xxvk4qnPajTu9jG_uNuz2R5jvjfeaKI-ylX4NXs/export?format=csv" target="_blank">Download</a>\
         </div>\
       </div>\
     </div>\
@@ -54,12 +54,12 @@ var _bigdeal_template = '\
     </div>\
   </div>\
 </div>';
-        
+
 var bigdeal_build = function() {
   jQuery(document).ready(function() {
     var opts = _bigdeal_opts;
     var api = opts.api ? opts.api : 'https://beta.oa.works/deal';
-  
+
     $(opts.target).append(opts.template);
     $('body').on('click','.backtotop', function(e) {
       if (e) e.preventDefault();
@@ -83,7 +83,7 @@ var bigdeal_build = function() {
         $('.holder.sortfield').val(w).trigger('change');
       }
     });
-    
+
     var record = function(rec,idx) {
       var options = $.fn.holder.options;
       var fromclass='.from' + options.query.from;
@@ -100,15 +100,15 @@ var bigdeal_build = function() {
         rr += '<td>' + rec.fte + '</td><td>' + rec.carnegiebasicclassification + '</td><td>' + rec.years + '</td><td style="text-align:right">$' + rec.usdvalue + '</td></tr>';
       }
       return rr;
-    }    
-  
+    }
+
     var exporter = function(e) {
       var q = JSON.parse(JSON.stringify($('#holder').holder.options.query))
       q.size = $('#holder').holder.options.response.hits.total;
       $(this).attr('href', api + '.csv?source=' + encodeURIComponent(JSON.stringify(q)));
     }
     $('.exporter').bind('click',exporter);
-  
+
     var _citv = undefined;
     var completes = function(event,th) {
       if (th.is(':checked')) {
