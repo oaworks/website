@@ -282,17 +282,17 @@
 <script src="/static/embed/oab_embed.js"></script>
 <script>
 var loaded = function(xhr) {
-  if (window.location.hash && window.location.hash.indexOf('general') !== -1 && $('#_oab_zenodo_url').length && $('#_oab_zenodo_url').val()) {
+  if (window.location.hash && window.location.hash.indexOf('general') !== -1 && $('#_oaw_zenodo_url').length && $('#_oaw_zenodo_url').val()) {
     view('#success');
   }
 };
 
-_oab = shareyourpaper({uid:(api.indexOf('dev.') !== -1 ? 'qZooaHWRz9NLFNcgR' : 'eZwJ83xp3oZDaec86'), api:api, loaded: loaded, pushstate: false, local: false});
+_oaw = shareyourpaper({uid:(api.indexOf('dev.') !== -1 ? 'qZooaHWRz9NLFNcgR' : 'eZwJ83xp3oZDaec86'), api:api, loaded: loaded, pushstate: false, local: false});
 // the one starting qz is the dev id, and it will be used any time the domain has dev. in it. The second one beginning eZ is the live id
 
 $('body').on('click', '#fakedeposit', function(e) {
-  _oab.data.doi = '10.1234/oab-syp-confirm';
-  _oab.deposit();
+  _oaw.data.doi = '10.1234/oab-syp-confirm';
+  _oaw.deposit();
   view('#wrong');
 });
 
