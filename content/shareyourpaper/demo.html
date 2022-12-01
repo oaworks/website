@@ -287,12 +287,12 @@ var loaded = function(xhr) {
   }
 };
 
-_oaw = shareyourpaper({uid:(api.indexOf('dev.') !== -1 ? 'qZooaHWRz9NLFNcgR' : 'eZwJ83xp3oZDaec86'), api:api, loaded: loaded, pushstate: false, local: false});
+_oab = shareyourpaper({uid:(api.indexOf('dev.') !== -1 ? 'qZooaHWRz9NLFNcgR' : 'eZwJ83xp3oZDaec86'), api:api, loaded: loaded, pushstate: false, local: false});
 // the one starting qz is the dev id, and it will be used any time the domain has dev. in it. The second one beginning eZ is the live id
 
 $('body').on('click', '#fakedeposit', function(e) {
-  _oaw.data.doi = '10.1234/oab-syp-confirm';
-  _oaw.deposit();
+  _oab.data.doi = '10.1234/oab-syp-confirm';
+  _oab.deposit();
   view('#wrong');
 });
 
