@@ -963,7 +963,7 @@ _oab.shareyourpaper_template = '
   Join millions of researchers sharing their papers freely with colleagues and the public.</p>
   <h3>Start by entering the DOI of your paper</h3>
   <p>We\'ll gather information about your paper and find the easiest way to share it.</p>
-  <p><input class="_oab_form" type="text" id="_oab_input" placeholder="e.g. 10.1126/scitranslmed.abc2344" aria-label="Enter a search term" style="box-shadow:none;"></input></p>
+  <p><input class="_oab_form" type="text" id="_oab_input" placeholder="e.g. 10.1016/j.spmi.2019.106308" aria-label="Enter a search term" style="box-shadow:none;"></input></p>
   <p><a class="_oab_find btn-iu _oab_button _oab_loading" href="#" id="_oab_find" aria-label="Search" style="min-width:140px;">Next</a></p>
   <p><a id="_oab_nodoi" href="mailto:help@openaccessbutton.org?subject=Help%20depositing%20my%20paper&body=Hi%2C%0D%0A%0D%0AI\'d%20like%20to%20deposit%3A%0D%0A%0D%0A%3C%3CPlease%20insert%20a%20full%20citation%3E%3E%0D%0A%0D%0ACan%20you%20please%20assist%20me%3F%0D%0A%0D%0AYours%20sincerely%2C"><b>My paper doesn\'t have a DOI</b></a></p>
 </div>

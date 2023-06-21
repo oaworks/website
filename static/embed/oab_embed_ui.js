@@ -221,7 +221,7 @@ $('body').on('click','.save',save);
 
 var preview = function(e) {
   e.preventDefault();
-  save(undefined, $('.section:visible').first().attr('preview') ? $('.section:visible').first().attr('preview') : ($(this).attr('val') ? $(this).attr('val') : (_oab.plugin === 'instantill' ? '10.1126/scitranslmed.abc2344' : '10.1126/scitranslmed.abc2344')));
+  save(undefined, $('.section:visible').first().attr('preview') ? $('.section:visible').first().attr('preview') : ($(this).attr('val') ? $(this).attr('val') : (_oab.plugin === 'instantill' ? '10.1016/j.spmi.2019.106308' : '10.1016/j.spmi.2019.106308')));
 }
 $('body').on('click', '.preview', preview);
 
@@ -346,7 +346,7 @@ jQuery(document).ready(function() {
                 }
               }
               if (eurl) {
-                var ex = 'Here is an example:<br> <a href ="' + eurl + '?doi=10.1126/scitranslmed.abc2344&email=something@university.edu" target="_blank"> '+ eurl +'?doi=10.1126/scitranslmed.abc2344&email=something@university.edu</a>.<br><br>Any DOI will work, and you don’t need to include an email if you don’t have it.';
+                var ex = 'Here is an example:<br> <a href ="' + eurl + '?doi=10.1016/j.spmi.2019.106308&email=something@university.edu" target="_blank"> '+ eurl +'?doi=10.1016/j.spmi.2019.106308&email=something@university.edu</a>.<br><br>Any DOI will work, and you don’t need to include an email if you don’t have it.';
                 $('#embeddedexample').html(ex).show();
               } else {
                 $('#noembeddedexampleavailable').show();
