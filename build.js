@@ -298,7 +298,7 @@ if (args.bundle && typeof bundle === 'object') {
   if (js.length) {
     var uglify = require("uglify-js");
     uglyjs = uglify.minify(js);
-    uglyjs.error ? (console.log(uglyjs.error), process.exit(1)) : (
+    uglyjs.error ? console.log(uglyjs.error) : (
         jshash = 'bundled_' + crypto.createHash('md5').update(uglyjs.code).digest("hex"),
         fs.writeFileSync('./serve/static/' + jshash + '.min.js', uglyjs.code)
     );
