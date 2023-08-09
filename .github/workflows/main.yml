@@ -16,4 +16,4 @@ jobs:
         user: ${{secrets.USER_TEST_V1}}
         private_key: ${{secrets.GA_ED25519}}
         host_fingerprint: ${{secrets.FINGERPRINT_TEST_V1}}
-        command: cd ~/dev/openresearchbutton/website && git pull && node build.js && sudo nginx -s reload
+        command: cd ~/dev/oaworks/embed && git pull && cd ~/dev/openresearchbutton/website && git pull && node build.js && sudo nginx -s reload
