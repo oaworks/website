@@ -10,12 +10,6 @@ This repo will automatically deploy changes committed to the site. There is a de
 Changes should be committed to the develop branch first and viewed on the test site. Once confirmed as being acceptable, 
 they should be committed to the master branch and they will appear on the live site. Deployment is handled by Codeship.
 
-develop branch deployment status: 
-[ ![Codeship Status for OAButton/website](https://app.codeship.com/projects/4f79d560-ab44-0134-07f6-7e28a7337ed8/status?branch=develop)](https://app.codeship.com/projects/192217)
-
-master branch deployment status:
-[ ![Codeship Status for OAButton/website](https://app.codeship.com/projects/4f79d560-ab44-0134-07f6-7e28a7337ed8/status?branch=master)](https://app.codeship.com/projects/192217)
-
 Actual editing of the files themselves can be done in any text editor or code editing tool, as you prefer.
 
 ### How to Edit via GitHub Web UI (needs work)
