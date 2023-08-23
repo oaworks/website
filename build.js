@@ -298,8 +298,10 @@ if (args.bundle && typeof bundle === 'object') {
   if (js.length) {
     var uglify = require("uglify-js");
     uglyjs = uglify.minify(js);
-    jshash = 'bundled_' + crypto.createHash('md5').update(uglyjs.code).digest("hex");
-    fs.writeFileSync('./serve/static/' + jshash + '.min.js', uglyjs.code);
+    uglyjs.error ? console.log(uglyjs.error) : (
+        jshash = 'bundled_' + crypto.createHash('md5').update(uglyjs.code).digest("hex"),
+        fs.writeFileSync('./serve/static/' + jshash + '.min.js', uglyjs.code)
+    );
   }
   if (css.length) {
     // for every css file, if retrieved, get anything it interally refers
