@@ -407,7 +407,8 @@
         if (url.lastIndexOf('.') === url.length-1) url = url.substring(0,url.length-1);
         $('.intro').hide();
         $('#loading').show();
-        var lurl = api+'/availability?plugin=website&'
+        //var lurl = api+'/availability?plugin=website&';
+        var lurl = (api.includes('dev.') ? 'https://bg.beta.oa.works' : 'https://api.oa.works') + '/availability?plugin=website&';
         if (window.location.search.indexOf('refresh=') !== -1) lurl += 'refresh=' + window.location.search.split('refresh=')[1].split('&')[0] + '&';
         if (window.location.search.indexOf('from=') !== -1) lurl += 'from=' + window.location.search.split('from=')[1].split('&')[0] + '&';
         if (window.location.search.indexOf('uid=') !== -1) lurl += 'uid=' + window.location.search.split('uid=')[1].split('&')[0] + '&';
@@ -554,7 +555,8 @@
         if (noddy.apikey) {
           opts.beforeSend = function (request) { request.setRequestHeader("x-apikey", noddy.apikey); };
           opts.type = 'POST';
-          opts.url = api+'/availability';
+          //opts.url = api+'/availability';
+          opts.url = (api.includes('dev.') ? 'https://bg.beta.oa.works' : 'https://api.oa.works') + '/availability';
           opts.cache = false;
           opts.processData = false;
           opts.contentType = 'application/json';
