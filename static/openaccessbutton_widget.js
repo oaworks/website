@@ -100,7 +100,8 @@ var openaccessbutton_widget = function(opts) {
       $('#oabutton_loading').show();
       var avopts = {
         type:'POST',
-        url:api+'/availability',
+        //url:api+'/availability',
+        url: (api.includes('dev.') ? 'https://bg.beta.oa.works' : 'https://api.oa.works') + '/availability',
         cache: false,
         processData: false,
         contentType: 'application/json',
