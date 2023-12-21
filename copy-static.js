@@ -5,7 +5,7 @@ const path = require('path');
 function copyDir(src, dest) {
   if (!fs.existsSync(src)) {
       console.warn(`Source path does not exist: ${src}`);
-      return; // Skip if the source path doesn't exist
+      return;
   }
 
   fs.mkdirSync(dest, { recursive: true });
@@ -21,7 +21,7 @@ function copyDir(src, dest) {
           if (fs.existsSync(srcPath)) {
               fs.copyFileSync(srcPath, destPath);
           } else {
-              console.warn(`File does not exist: ${srcPath}`);
+              console.warn(`File does not exist: ${srcPath}, skipping.`);
           }
       }
   }
