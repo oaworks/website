@@ -14,6 +14,6 @@ jobs:
       with:
         host: dev.openaccessbutton.org
         user: ${{secrets.USER_TEST_V1}}
-        private_key: ${{secrets.GA_ED25519}}
+        private_key: ${{secrets.ID_ED25519}}
         host_fingerprint: ${{secrets.FINGERPRINT_TEST_V1}}
         command: cd ~/dev/oaworks/embed && git pull && cd ~/dev/openresearchbutton/website && git pull && node build.js && sudo nginx -s reload
