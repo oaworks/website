@@ -309,7 +309,7 @@ if (args.bundle && typeof bundle === 'object') {
   if (js.length) {
     const uglify = require("uglify-js");
     const path = require('path');
-    uglyjs = uglify.minify(js.map(_path => JSON.stringify(path.normalize(_path))));
+    uglyjs = uglify.minify(js.map(_path => path.normalize(_path)));
     uglyjs.error ? console.log(uglyjs.error) : (
         jshash = 'bundled_' + crypto.createHash('md5').update(uglyjs.code).digest("hex"),
         fs.writeFileSync('./serve/static/' + jshash + '.min.js', uglyjs.code)
