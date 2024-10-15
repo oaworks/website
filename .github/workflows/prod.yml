@@ -1,0 +1,19 @@
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  deploy_prod:
+    name: Pull latest master and redeploy prod instance
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: SSH live pull and build (same machine so correct host is dev.)
+      uses: D3rHase/ssh-command-action@v0.2.2
+      with:
+        host: dev.openaccessbutton.org
+        user: ${{secrets.USER_TEST_V1}}
+        private_key: ${{secrets.GA_ED25519}}
+        host_fingerprint: ${{secrets.FINGERPRINT_TEST_V1}}
+        command: cd ~/live/oaworks/embed && git pull && cd ~/live/openresearchbutton/website && git pull && npm install && node build.js && sudo nginx -s reload
