@@ -697,7 +697,8 @@ jQuery(document).ready(function() {
   });
 
   var deposits = function(e) {
-    var addr = api + '/deposited.csv?'
+    //var addr = api + '/deposited.csv?'
+    var addr = 'https://' + (api.indexOf('dev.') !== -1 ? 'bg.beta.oa.works' : 'bg.api.oa.works') + '/deposited.csv?'
     if (noddy.user !== undefined && noddy.user.account !== undefined && noddy.user.account._id !== undefined) addr += 'uid=' + noddy.user.account._id + '&';
     if ($(this).attr('id') === 'all_file_deposits') addr += 'submitted=true&';
     if ($('#depositdate').val()) addr += 'fromdate=' + new Date($('#depositdate').datepicker('getDate')).valueOf() + '&';
