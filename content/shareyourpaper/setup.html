@@ -702,6 +702,7 @@ jQuery(document).ready(function() {
     if (noddy.user !== undefined && noddy.user.account !== undefined && noddy.user.account._id !== undefined) addr += 'uid=' + noddy.user.account._id + '&';
     if ($(this).attr('id') === 'all_file_deposits') addr += 'submitted=true&';
     if ($('#depositdate').val()) addr += 'fromdate=' + new Date($('#depositdate').datepicker('getDate')).valueOf() + '&';
+    console.log(addr);
     $(this).attr('href',addr);
   }
   $('body').on('click','#all_deposits',deposits);
