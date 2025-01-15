@@ -1,2 +1,2 @@
 I trigger deployments...
-Updating for embed bronze archivable
+Updating for embed bronze archivable.
