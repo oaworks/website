@@ -159,7 +159,7 @@ if (!fs.existsSync('./serve')) fs.mkdirSync('./serve');
 
 // Only delete directories or files that are not 'static' or 'retrieved'
 fs.readdirSync('./serve/').forEach(function(n, index) {
-  if ((n !== 'static' && n !== 'retrieved') || (n === 'retrieved' && args.retrieve)) {
+  if ((n !== 'static' && n !== 'retrieved' && n !== '_redirects') || (n === 'retrieved' && args.retrieve)) {
     if (fs.lstatSync('./serve/' + n).isDirectory()) {
       deleteFolderRecursive('./serve/' + n);
     } else {
