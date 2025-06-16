@@ -1,7 +1,6 @@
 {
   "scripts": {
-    "copy-static": "node copy-static.js",
-    "build": "node build.js"
+    "build": "node build.js && node copy-static.js"
   },
   "dependencies": {
     "handlebars": "^4.7.8",
