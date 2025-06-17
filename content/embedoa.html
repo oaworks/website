@@ -20,51 +20,50 @@ jQuery(document).ready(function() {
 </script>
 
 <style>
+  .focal{
+    background-color: white;
+    text-align: left;
+    border-radius: 5px;
+    padding: 20px;
+    }
 
-
-.focal{
-  background-color: white;
-  text-align: left;
-  border-radius: 5px;
-  padding: 20px;
+  .innercolumns{
+    width:100%;
+    padding:10px;
+    overflow: hidden;
+    display: none;
   }
 
-.innercolumns{
-  width:100%;
-  padding:10px;
-  overflow: hidden;
-  display: none;
-}
+  .downloadbox {
+    background-color: white;
+    text-align: left;
+    border-radius: 5px;
+  }
 
-.downloadbox {
-  background-color: white;
-  text-align: left;
-  border-radius: 5px;
-}
+  /* Make the div big, so we would jump, if the JS was still broken */
+  .ill_system_content div {
+    height: 100%;
+  }
 
-/* Make the div big, so we would jump, if the JS was still broken */
-.ill_system_content div {
-  height: 100%;
-}
-
-p {
-  line-height: 1.5 !important;
-}
-
+  p {
+    line-height: 1.5 !important;
+  }
+  #issue {
+    display: none !important;
+  }
 </style>
 
 <div class="container-fluid">
   <div class="row">
-    <div id="maininfo" class="col-md-6 col-md-offset-3">
-      <h1 style="text-align:left; font-size:4em;">EmbedOA</h1>
+    <div class="col-md-8 col-md-offset-2" style="text-align:justify;">
+      <h1 style="text-align:center;margin-top:25px;font-size:4em;margin-bottom:0px;">EmbedOA</h1>
     </div>
-
-    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 60vh; text-align: center; padding: 2rem;">
-      <h2 style="font-size: 2.5em; margin-bottom: 1rem;">The Open Access Button is retired</h2>
-      <p style="font-size: 1.2em; max-width: 600px;">
-        The Open Access Button and its related tools have been retired. <br>Learn why and what’s next on <a href="https://blog.oa.works/sunsetting-the-open-access-button-instantill/">our OA.Works blog</a>.
-      </p>
-    </div>
+  </div>
+  <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 60vh; text-align: center; padding: 2rem;">
+    <h2 style="font-size: 2.5em; margin-bottom: 1rem;">The Open Access Button is retiring</h2>
+    <p style="font-size: 1.2em; max-width: 600px;">
+      The Open Access Button and its related tools are being retired. <br>Learn why and what’s next on <a href="https://blog.oa.works/sunsetting-the-open-access-button-instantill/">our OA.Works blog</a>.
+    </p>
   </div>
 </div>
 
