@@ -1,281 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <title>InstantILL Demo</title>
-  <link rel="stylesheet" href="/static/oabutton_rebrand.css"> <!-- gets the new css (still also uses the old css, just overwrites where necessary) -->
-  <meta name="description" content="InstantILL instantly delivers papers your patrons need from your holdings, Open Access and simplifies your ILL process to save you and your patrons money and time. It’s free, open source, community owned and easily set up in minutes." />
-  <meta property="og:description" content="InstantILL instantly delivers papers your patrons need from your holdings, Open Access and simplifies your ILL process to save you and your patrons money and time. It’s free, open source, community owned and easily set up in minutes." />
-  <meta property="og:url" content="https://instantill.org" />
-  <meta name="twitter:description" content="InstantILL instantly delivers papers your patrons need from your holdings, Open Access and simplifies your ILL process to save you and your patrons money and time. It’s free, open source, community owned and easily set up in minutes.">
-  <meta property="og:title" content="InstantILL" />
-  <meta name="twitter:title" content="InstantILL">
-  <meta property="og:image" content="https://instantill.org/static/Instant-ILL-transparent-green.png">
-  <meta name="twitter:card" content="summary_large_image">
-</head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="InstantILL has been retired." />
+  <meta name="robots" content="noindex">
 
+  {# Fonts #}
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
 
-<style>
-  #topnav {
-    display: none;
-  }
-  #footer {
-    display: none;
-  }
-
-  .form-control {
-    color:#46b633;
-    border:2px solid #46b633;
-  }
-
-  a {
-    color:#46b633;
-    font-weight:normal;
-  }
-  a:hover {
-    color:#46b633;
-  }
-
-  .btn-hollow-blue:hover {
-    color: #ECF3FA;
-  }
-
-  p{
-    padding:0;
-    margin: 10px 0;
-  }
-
-  h2{
-    text-align: left;
-  }
-
-  .alert-new {
-    width: 100%;
-    padding: 10px;
-    background-color: #46b633;
-    color: white;
-    text-align: center !important;
-  }
-  .btn-primary {
-    background-color:#46b633;
-    border-color:#46b633;
-    border-radius:0px;
-    color:#ffffff;
-    width:49%;
-    font-weight:bold;
-    padding-top:10px;
-    padding-bottom:10px;
-  }
-  .btn-primary:hover {
-    background-color:#46b633;
-    border-color:#46b633;
-    color:#ffffff;
-  }
-
-</style>
-
-<div id="demo-mobile" class="container-fluid">
-
-  <div class="green-bg">
-    <div class="center-col header">
-      <div><span><strong><a href="/">InstantILL</a></strong> by <a href="https://oa.works" style="color:white">OA.Works</a></span></div>
-    </div>
-  </div>
-
-
-  <div class="center-col">
-    <div class="pitch">
-      <div class="pitchhalf">
-        <h2>This page is intentionally left blank</h2>
-        <p style="padding: 30px 0">
-            While InstantILL itself is fully responsive and works at all screen sizes, this demo doesn't. The demo lets you interactive with our tools alongside detailed explainations of what you're seeing and why. That just doesn't work so well on a phone.
-        </p>
-        <p>
-          Please come back on your computer, or <a href="https://blog.openaccessbutton.org">check our blog</a> where we walk through the tool and how it works.
-          </p>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- footer -->
-  <div class="green-bg">
-    <div class="center-col footer">
-      <div>
-        <p>Open Source • Community Controlled • Not for Profit</p>
-      </div>
-      <div>
-        <span><a href="https://openaccessbutton.org/api">API</a></span>
-        <span><a href="https://openaccessbutton.org/privacy">Privacy</a></span>
-        <span><a href="https://openaccessbutton.org/terms">Terms</a></span>
-        <span><a href="mailto:joe.mcarthur@oa.works">Contact</a></span>
-        <span><a href="https://status.openaccessbutton.org">Status</a></span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="demo" class="container-fluid">
-  <div id="setup" class="row full">
-    <div class="col-md-6 col-md-offset-1 content">
-      <table class="table table-bordered" id="fakeilltable" style="display:none;">
-      </table>
-
-      <div id="instantill"></div>
-    </div>
-
-    <div class="settings col-md-4 col-md-offset-1 green">
-      <div id="part1" class="section greenery">
-        <h2><span class=""></span> Try it now</h2>
-        <p>
-          This is a demo of InstantILL, it works just like it would on your website, placed wherever you normally have your ILL form and blending in with your brand.
-        </p>
-        <p><b>
-          Let us show you InstantILL's main features!
-        </b></p>
-        <p><a class="btn btn-demo-green view preview pinger" id="instantill_demo_start" href="#part2" val="10.1234/567890">Try InstantILL</a></p>
-      </div>
-
-      <div id="part2" class="section greenery">
-        <h2>Hurrah, thanks for trying InstantILL!</h2>
-        <p>
-          You just put a DOI into InstantILL, and as you can see, if you’re subscribed to the article InstantILL goes straight to full to the PDF.
-        </p>
-        <p>
-          InstantILL knows the electronic resources you subscribe to using your link resolver, and we provide a direct to PDF link for the user to access through your proxy. Off campus, they’ll be nudged to login as normal.
-        </p>
-        <p><b>
-          2/6. Let’s try an article title!
-        </b></p>
-
-        <p><a class="btn btn-hollow-green btn-block view preview pinger" id="instantill_demo_oa" href="#part3" val="Factors associated with mental distress among undergraduate students in northern Tanzania">Show me!</a></p>
-      </div>
-
-      <div id="part3" class="section greenery">
-        <h2>We found it freely!</h2>
-        <p>
-          You just put an article title into InstantILL, and we found a version that's Open Access, so you can instantly go straight to the full text.
-        </p>
-        <p>
-          We built Open Access into the heart of InstantILL because patrons want to access content instantly, and often 20% of ILLs can be found free, saving you money and time. We’ve been pioneers in Open Access delivery, and the content comes from legal sources.
-        </p>
-        <p><b>
-          3/6. Now, hit 'Complete Request’ to see how easy it is to make a request
-        </b></p>
-      </div>
-
-      <div id="fakeill" class="section greenery">
-        <h2>Request made!</h2>
-        <p>
-          No more completing long forms! We’ll autocomplete them using the meta-data you see, which we’re showing instead of your completed ILL form since this is a demo.
-        </p>
-        <p>
-          InstantILL point’s to your existing ILL form (or, sends you an email), where you handle authentication and submission into your existing systems. We just focus on making sure you don’t need to do anything before sending for fulfilment.
-        </p>
-        <p>
-
-        </p>
-        <p><b>
-          4/6. InstantILL also integrates into your workflows. Let’s try to check the link resolver
-        </b></p>
-        <p><a class="btn btn-hollow-green btn-block view preview pinger removefaketable" id="instantill_demo_LR"   href="#part5" val="10.1126/science.196.4287.293">Find it</a></p>
-      </div>
-
-      <div id="part5" class="section greenery">
-        <h2>Link, Resolved!</h2>
-        <p>
-          InstantILL can integrate with your existing tools, from library search, to link resolvers, and your ILL page.
-        </p>
-        <p>
-          You can link to, or embed, InstantILL on pages and using OpenURL we’ll make sure patrons don’t need to enter what they need so you can InstantILL in 'request a copy' and ‘get it now’ buttons, or in link resolvers.
-        </p>
-        <p><b>
-          5. Finally, see what it takes to set InstantILL up!:
-        </b></p>
-        <p><a class="btn btn-hollow-green btn-block view pinger" id=instantill_demo_setup href="#part6" val="">Show me!</a></p>
-      </div>
-
-      <div id="part6" class="section greenery">
-        <h2>Only three simple steps</h2>
-        <p>
-          Set up yourself, in 30 minutes today, by:
-        </p>
-        <ul>
-          <li>Telling us your ILL form link (or, email address)</li>
-          <li>Telling us your link resolver URL</li>
-          <li>Add a line of code to your website</li>
-        </ul>
-        <p>
-          No coding, special systems knowledge, or contract signing required. Of course, you can tweak dozens of settings, including how to handle other items, so everything works just right.
-        </p>
-        <p>Now you understand InstantILL, you can keep testing InstantILL here, or...</p>
-        <p><b>
-          6/6: Try InstantILL yourself, with your systems
-        </b></p>
-        <p><a class="btn btn-demo-green btn-block pinger" id=instantill_demo_install href="/setup">Install Now!</a></p>
-        <p>or <a id="contact_us" href="mailto:joe.mcarthur@oa.works">contact us</a>. </p>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-<script src="/static/embed/oab_embed.js"></script>
-<script>
-var loaded = function() {
-  $('#faketable').hide();
-  $('#instantill').show();
-}
-_oab = instantill({
-  uid:(api.indexOf('dev.') !== -1 ? 'qZooaHWRz9NLFNcgR' : 'eZwJ83xp3oZDaec86'),
-  api:api,
-  loaded: loaded,
-  local: false,
-  pushstate: false,
-  config: {ill_form:"https://aurl.org", demo: true}
-});
-
-jQuery(document).ready(function() {
-  var fakeill = function(e) {
-    e.preventDefault();
-    console.log('Faking ILL');
-    var defm = {
-      title: 'Engineering a Powerfully Simple Interlibrary Loan Experience with InstantILL',
-      journal: 'Proceedings of the 16th IFLA ILDS conference: Beyond the paywall - Resource sharing in a disruptive ecosystem',
-      author: [
-        {given: 'Mike', family: 'Paxton'},
-        {given: 'Gary', family: 'Maixner III'},
-        {given: 'Joseph', family: 'McArthur'},
-        {given: 'Tina', family: 'Baich'}
-      ],
-      year: '2019'
-    };
-    var meta = _oab.f  !== undefined && _oab.f.metadata !== undefined ? _oab.f.metadata : defm;
-    var table = '<table class="table table-bordered" id="faketable">';
-    for ( var i in meta) {
-      if (i === 'author') {
-        table += '<tr><td>Author(s)</td><td><p>';
-        for (var a in meta.author) {
-          if (a !== '0') table += ', ';
-          table += meta.author[a].given + ' ' + meta.author[a].family;
+  {# Tailwind (Play CDN) #}
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] }
         }
-        table += '</p></td></tr>';
-      } else {
-        table += '<tr><td>' + i.substring(0,1).toUpperCase() + (['doi','issn'].indexOf(i.toLowerCase()) !== -1 ? i.substring(1).toUpperCase() : i.substring(1)) + '</td><td><p>' + meta[i] + '</p></td></tr>';
       }
-    }
-    table += '</table>';
-    view('#fakeill');
-    $('#instantill').hide();
-    $('#instantill').after(table);
-  }
-  $('body').on('click','._oaw_submit',fakeill);
+    };
+  </script>
 
-  $('body').on('click', '.removefaketable', function(e) {
-    $('#faketable').hide();
-    $('#instantill').show();
-  });
+  {# Simple Analytics #}
+  <script async defer src="https://sa.instantill.org/latest.js"></script>
+  <noscript><img src="https://sa.instantill.org/noscript.gif" alt=""></noscript>
 
-});
-</script>
-<script src="/static/embed/oab_embed_ui.js"></script>
+  <link rel="icon" href="/favicon.ico" />
+  <title>{{ title }}</title>
+</head>
+<body class="font-sans text-black flex flex-col min-h-screen antialiased">
 
-<script async defer src="https://sa.instantill.org/latest.js"></script>
-<noscript><img src="https://sa.instantill.org/noscript.gif" alt=""/></noscript>
+  <header class="bg-[#46B633] text-white text-center text-sm tracking-widest py-8 px-4">
+    <strong><a href="/" class="hover:underline">InstantILL</a></strong>
+    <span> by <a href="https://oa.works" target="_blank" class="underline">OA.Works</a></span>
+  </header>
+
+  <main class="flex-1 flex items-center justify-center px-6 py-12">
+    <div class="w-full text-center">
+      <div class="flex items-center justify-center px-4">
+        <div class="max-w-prose w-full text-center">
+          <h1 class="text-3xl font-semibold mb-6">InstantILL is shutting down <br>on November 18th</h1>
+
+          <div class="max-w-[55ch] text-lg">
+            <p class="leading-relaxed mb-4">
+              We’ve paused new signups, but existing installations of InstantILL will continue to function until that date.
+            </p>
+
+            <p class="leading-relaxed mb-4">
+              To learn more about why we’re shutting down InstantILL and what OA.Works is doing next, read
+              <a href="https://blog.oa.works/sunsetting-the-open-access-button-instantill/" class="text-[#46B633] underline">our announcement on the OA.Works blog</a>.
+            </p>
+
+            <p class="leading-relaxed mb-4">
+              We’re so grateful for your interest in our work, and we’re sorry for any inconvenience this may cause.
+              Please don’t hesitate to
+              <a href="mailto:help@instantill.org" class="text-[#46B633] underline">get in touch</a>
+              if you need support.
+            </p>
+
+            <h2 class="font-semibold mt-8 mb-4">Stay in touch</h2>
+
+            <a
+              href="https://oa.works/newsletter/"
+              class="inline-block bg-[#46B633] text-white font-medium text-lg px-5 py-3 rounded hover:bg-[#3ca72b] transition"
+            >
+              Join the OA.Works newsletter
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t border-black/20 py-8 text-sm flex flex-col items-center gap-4 px-6">
+    <p class="text-lg">
+      <a href="https://github.com/oaworks/" target="_blank" rel="noopener" class="hover:text-[#46B633] transition-colors">Open-source</a>
+      &nbsp;•&nbsp;
+      <a href="https://oa.works/about/values/" target="_blank" class="hover:text-[#46B633] transition-colors">Values-driven</a>
+      &nbsp;•&nbsp;
+      <a href="https://oa.works/about/governance/" target="_blank" class="hover:text-[#46B633] transition-colors">Non-profit</a>
+    </p>
+
+    <a href="https://oa.works" target="_blank" aria-label="OA.Works home" class="group">
+      <svg fill="none" xmlns="http://www.w3.org/2000/svg" class="h-14 group-hover:opacity-90 transition-opacity" viewBox="0 0 7034 2845"><title>OA.Works logotype</title><path d="M755.5 150c78.9 0 154.3 14 226.2 41.8 73.1 26.6 138 66 194.9 118.3a553.1 553.1 0 01134 191.4c33.6 75.4 50.4 161.2 50.4 257.5 0 96.3-16.8 182.1-50.4 257.5a553.1 553.1 0 01-134 191.4 602.4 602.4 0 01-194.9 120 645 645 0 01-226.2 40.1 659.5 659.5 0 01-228-40 607 607 0 01-193-120 573.2 573.2 0 01-135.8-191.5C166.2 941.1 150 855.3 150 759c0-96.3 16.2-182.1 48.7-257.5a573.2 573.2 0 01328.9-309.7 635 635 0 01228-41.8zm0 304.5c-52.2 0-98.6 13.3-139.2 40A288.7 288.7 0 00519 604.1C495.7 649.4 484 701 484 759s11.6 110.2 34.8 156.6a292.1 292.1 0 0097.4 107.9c40.6 26.7 87 40 139.2 40 52.2 0 98.6-13.3 139.2-40a273.6 273.6 0 0097.5-107.9A345.4 345.4 0 001027 759c0-58-11.6-109.6-34.8-154.9a270.9 270.9 0 00-97.5-109.6c-40.6-26.7-87-40-139.2-40zM2039.5 158.7l539.4 1183.2h-379.4l-57.4-156.6h-368.9l-57.4 156.6h-379.3l539.4-1183.2h163.5zm-81.8 525.5l-88.8 240.1h177.5l-88.7-240.1zM2301.9 1502.1l-379.3 1165.8h-245.4l-203.6-617.7-203.5 617.7h-245.4L642 1502.1h379.3l158.4 605.5 181-605.5h222.7l184.4 605.5 154.9-605.5h379.3zM4168.3 1502.1a612 612 0 01172.2 24.4 471 471 0 01153.1 74.8 369 369 0 01108 127c27.8 51 41.7 110.8 41.7 179.2 0 87-25 159-74.9 215.8-48.7 56.8-111.3 95.7-187.9 116.6l322 428h-396.8l-311.4-462.8v462.8h-325.4V1502.1h499.3zm-174 304.5v217.5c19.7 7 40.5 12.8 62.6 17.4a372 372 0 0073 7c51.1 0 93.5-9.9 127-29.6 34.9-20.9 52.3-52.2 52.3-94 0-47.5-17.4-78.9-52.2-94-33.6-16.2-76-24.3-127-24.3h-135.8zM5157 1502.1v428l356.8-428h391.5l-421.1 478.5 473.3 687.3h-414.1l-280.2-438.5-106.1 120V2668h-325.4V1502.1H5157zM6448.6 1476c68.5 0 135.8 8.7 201.9 26.1 67.3 16.2 121.2 38.3 161.8 66.1v315a1363 1363 0 00-147.9-74.9c-48.7-22-106.1-33-172.3-33a257 257 0 00-99.2 17.4c-27.8 11.6-41.7 30.7-41.7 57.4 0 29 16.8 51 50.4 66.1 33.7 14 74.9 30.2 123.6 48.7l125.3 47c84.7 32.5 144.4 76.6 179.2 132.3 36 55.6 54 111.3 54 167 0 74.2-21.5 140.4-64.4 198.4-43 56.8-101 102-174 135.7-73.1 32.5-155 48.7-245.4 48.7a613.6 613.6 0 01-207-36.5 740.7 740.7 0 01-179.3-90.5v-315a833.7 833.7 0 00179.3 102.7c65 26.7 129.9 40 194.8 40 40.6 0 73.1-4.6 97.5-13.9 25.5-10.4 38.3-27.8 38.3-52.2 0-17.4-9.3-32.5-27.9-45.2a266.6 266.6 0 00-74.8-33.1l-165.3-52.2c-65-20.9-115.4-49.3-151.4-85.3s-60.9-76-74.8-120a465 465 0 01-20.9-137.5c0-82.3 20.9-151.4 62.7-207a390.5 390.5 0 01163.5-128.8 535 535 0 01214-43.5zM2941.1 1476c78.9 0 154.3 14 226.2 41.8 73 26.6 138 66 194.9 118.3a553.1 553.1 0 01134 191.4c33.6 75.4 50.4 161.2 50.4 257.5 0 96.3-16.8 182.1-50.4 257.5a553.1 553.1 0 01-134 191.4 602.4 602.4 0 01-194.9 120 645 645 0 01-226.2 40.1 659.5 659.5 0 01-228-40 607 607 0 01-193-120 573.3 573.3 0 01-135.8-191.5c-32.5-75.4-48.7-161.2-48.7-257.5 0-96.3 16.2-182.1 48.7-257.5a573.3 573.3 0 01328.9-309.7A635 635 0 012941 1476zm0 304.5c-52.2 0-98.6 13.3-139.2 40a288.7 288.7 0 00-97.4 109.6c-23.2 45.3-34.8 96.9-34.8 154.9s11.6 110.2 34.8 156.6a292.1 292.1 0 0097.4 107.9c40.6 26.7 87 40 139.2 40 52.2 0 98.6-13.3 139.2-40a273.6 273.6 0 0097.4-107.9 345.3 345.3 0 0034.8-156.6c0-58-11.6-109.6-34.8-154.9a270.9 270.9 0 00-97.4-109.6c-40.6-26.7-87-40-139.2-40z" fill="#000"></path><path d="M3246.3 1063.3a304.5 304.5 0 11-609 0 304.5 304.5 0 01609 0z" fill="#46B633"></path></svg>
+    </a>
+  </footer>
+
+</body>
+</html>
