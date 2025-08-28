@@ -1,102 +1,4 @@
-<!-- OA.Works retirement notice w/ MicroModal -->
-<div class="oab-modal micromodal-slide" id="oab-retire" aria-hidden="false">
-  <div class="oab-overlay" tabindex="-1" data-micromodal-close>
-    <div class="oab-container" role="dialog" aria-modal="true" aria-labelledby="oab-title" aria-describedby="oab-desc">
-      <header class="oab-header">
-        <h2 id="oab-title" class="oab-title">The Open Access Button</h2>
-        <button class="oab-x" aria-label="Close notice" data-micromodal-close data-dismiss="oab">✕</button>
-      </header>
-      <article class="oab-body" id="oab-desc">
-        <p>
-          <strong>The Open Access Button will retire on November 18th.</strong>
-        </p>
-        <p>
-          See the timeline and alternatives on the
-          <a href="https://blog.oa.works/sunsetting-the-open-access-button-instantill/" target="_blank">OA.Works blog</a>.
-        </p>
-      </article>
-      <footer class="oab-footer">
-        <button class="oab-close" data-micromodal-close data-dismiss="oab">Close</button>
-      </footer>
-    </div>
-  </div>
-</div>
-
-<style>
-  .oab-modal { position: fixed; inset: 0; z-index: 2147483647; }
-  .oab-modal { display: block; }
-  .oab-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: grid; place-items: center; }
-  .oab-container {
-    width: min(92vw, 560px);
-    background: #fff; color: #000;
-    border: 2px solid #428BCA; border-radius: 0;
-    box-shadow: 0 8px 24px rgba(0,0,0,.2);
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-  }
-  .oab-header {
-    display: flex; align-items: center; justify-content: space-between;
-    background: #428BCA; color: #fff; padding: 12px 14px;
-  }
-  .oab-logo { display: block; }
-  .oab-title { margin: 0; font-size: 1rem; font-weight: 600; line-height: 1.2; }
-  .oab-x {
-    background: transparent; border: 0; color: #fff;
-    font-size: 18px; line-height: 1; cursor: pointer; padding: 4px 6px;
-  }
-  .oab-x:focus { outline: 2px solid #fff; outline-offset: 2px; }
-  .oab-body { padding: 24px 14px; text-align: center;}
-  .oab-body p { margin: 0; font-size: 16px; line-height: 1.5; }
-  .oab-body a { color: #428BCA; text-decoration: underline; }
-  .oab-footer {
-    padding: 0 14px 12px 14px;
-    display: flex; justify-content: flex-end; gap: 8px; background: #fff;
-  }
-  .oab-close {
-    background: #428BCA; color: #fff;
-    border: 2px solid #428BCA; padding: 8px 14px; font-size: 14px; cursor: pointer; border-radius: 0;
-  }
-  .oab-close:focus { outline: 2px solid #000; outline-offset: 2px; }
-  .micromodal-slide.is-open { display: block; }
-</style>
-
-<script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
-
-<script>
-  // See https://gist.github.com/ghosh/4f94cf497d7090359a5c9f81caf60699#file-micromodal-html
-  window.addEventListener('load', function () {
-    try {
-      MicroModal.init({
-        openClass: 'is-open',
-        disableScroll: true,
-        awaitOpenAnimation: false,
-        awaitCloseAnimation: false
-      });
-      MicroModal.show('oab-retire');
-    } catch (e) {
-    }
-  });
-
-  (function () {
-    function closeFallback() {
-      var el = document.getElementById('oab-retire');
-      if (el) el.parentNode && el.parentNode.removeChild(el);
-      // Re-enable page scrolling if it was affected by custom CSS.
-      document.documentElement.style.overflow = '';
-      document.body.style.overflow = '';
-    }
-    document.addEventListener('click', function (e) {
-      var t = e.target;
-      if (t && t.getAttribute && t.getAttribute('data-dismiss') === 'oab') {
-        e.preventDefault();
-        closeFallback();
-      }
-    }, false);
-    document.documentElement.style.overflow = 'hidden';
-    document.body.style.overflow = 'hidden';
-  })();
-</script>
-
-<div id="topnav" class="navbar navbar-fixed-top">
+  <div id="topnav" class="navbar navbar-fixed-top">
     <div class="navbar-header visible-xs" style="padding-top:10px;">
       <a href="/" class="pull-left" style="color:#212f3f;margin-left:10px;" id="mobnavheader">Open Access Button</a>
       <button type="button" class="mobnavtoggle pull-right" style="z-index:1000000;padding-top:0px;border:none;background-color:transparent;margin-right:10px;">
@@ -116,10 +18,10 @@
       </ul>
     </div>
 
-    <!-- <div class="alert alert-info" id="issue">
+    <div class="alert alert-info" id="issue">
       <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
       <p style="padding:0px;"><strong>The Open Access Button will retire on November 18th.</strong>  See the timeline and alternatives on the <a href="https://blog.oa.works/sunsetting-the-open-access-button-instantill/" target="_blank">OA.Works blog</a>.</p>
-    </div> -->
+    </div>
 
     <div class="alert alert-info" style="display:none;" id="fromopendatabutton">
       <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
