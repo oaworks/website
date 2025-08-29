@@ -25,6 +25,9 @@
             </p>
           </div>
         </div>
+        <footer class="oab-footer">
+          <button class="oab-close" data-micromodal-close data-dismiss="oab">Close</button>
+        </footer>
       </article>
     </div>
   </div>
@@ -42,7 +45,7 @@
 }
 .oab-header {
   display: flex; align-items: center; justify-content: space-between;
-  background: #428BCA; color: #fff; padding: 12px 14px;
+  background: #428BCA; color: #fff; padding: 20px;
 }
 .oab-title { margin: 0; font-size: 1rem; font-weight: 600; line-height: 1.2; }
 .oab-x {
@@ -50,14 +53,15 @@
   font-size: 18px; line-height: 1; cursor: pointer; padding: 4px 6px;
 }
 .oab-x:focus { outline: 2px solid #fff; outline-offset: 2px; }
-.oab-body { padding: 24px 14px; }
+.oab-body { padding: 20px; }
 .oab-body p { margin: 0; padding: 0; font-size: 16px; line-height: 1.5; }
-.oab-row { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; }
+.oab-row { display: grid; grid-template-columns: auto 1fr; gap: 20px; align-items: start; }
 .oab-logo { display: block; max-width: 25px; height: auto; }
 .oab-copy p { margin: 0 0 10px 0; }
 .oab-copy p:last-child { margin-bottom: 0; }
 .oab-body a { color: #428BCA; text-decoration: underline; }
 .oab-close:focus { outline: 2px solid #000; outline-offset: 2px; }
+.oab-footer { padding: 0 14px 12px 14px; display: flex; justify-content: flex-end; gap: 8px; background: #fff;}
 .micromodal-slide.is-open { display: block; }
 </style>
 
