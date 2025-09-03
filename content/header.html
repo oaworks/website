@@ -109,11 +109,18 @@
         awaitCloseAnimation: false
       });
       MicroModal.show('oab-retire', {
-        onClose: function () {
+        // Do not persist on generic close (X, overlay, ESC)
+        onClose: function () {}
+      });
+
+      // Persist only when the explicit "Close" button is clicked
+      var closeBtn = document.querySelector('#oab-retire .oab-close');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function () {
           try { localStorage.setItem(KEY, '1'); } catch (e) {}
           document.documentElement.classList.add('oab-notice-dismissed');
-        }
-      });
+        }, { once: true });
+      }
     } catch (e) {
       // If MicroModal isn't available, we fall back below.
     }
@@ -125,20 +132,24 @@
 
     var KEY = window.__OAB_NOTICE_KEY__ || 'oab_retire_notice_v2025-09-03';
 
-    function closeFallback() {
+    function closeFallback(shouldCache) {
       var el = document.getElementById('oab-retire');
       if (el && el.parentNode) el.parentNode.removeChild(el);
       document.documentElement.style.overflow = '';
       document.body.style.overflow = '';
-      try { localStorage.setItem(KEY, '1'); } catch (e) {}
-      document.documentElement.classList.add('oab-notice-dismissed');
+      if (shouldCache) {
+        try { localStorage.setItem(KEY, '1'); } catch (e) {}
+        document.documentElement.classList.add('oab-notice-dismissed');
+      }
     }
 
     document.addEventListener('click', function (e) {
       var t = e.target;
       if (t && t.getAttribute && t.getAttribute('data-dismiss') === 'oab') {
         e.preventDefault();
-        closeFallback();
+        // Only persist when the explicit "Close" button is clicked
+        var shouldCache = t.classList && t.classList.contains('oab-close');
+        closeFallback(shouldCache);
       }
     }, false);
 
