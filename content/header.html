@@ -1,3 +1,23 @@
+<script>
+  (function () {
+    // Versioned key in case we want to show it again
+    var OAB_KEY = 'oab_retire_notice_v2025-09-03';
+
+    // Dev/testing reset by adding ?reset_oab_notice=1
+    try {
+      if (/\breset_oab_notice=1\b/.test(location.search)) {
+        localStorage.removeItem(OAB_KEY);
+      }
+      if (localStorage.getItem(OAB_KEY)) {
+        document.documentElement.classList.add('oab-notice-dismissed');
+      }
+      // expose key for later scripts
+      window.__OAB_NOTICE_KEY__ = OAB_KEY;
+    } catch (e) {
+    }
+  })();
+</script>
+
 <!-- Retirement notice w/ MicroModal -->
 <div class="oab-modal micromodal-slide" id="oab-retire" aria-hidden="false">
   <div class="oab-overlay" tabindex="-1" data-micromodal-close>
@@ -66,6 +86,9 @@
 
 /* ===== MicroModal open state ===== */
 .micromodal-slide.is-open { display: block; }
+
+/* ===== Dismissal of modal ===== */
+.oab-notice-dismissed #oab-retire { display: none !important; }
 </style>
 
 <script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
@@ -74,6 +97,10 @@
   // Init MicroModal on window load
   // See https://gist.github.com/ghosh/4f94cf497d7090359a5c9f81caf60699#file-micromodal-html
   window.addEventListener('load', function () {
+    var KEY = window.__OAB_NOTICE_KEY__ || 'oab_retire_notice_v2025-11-18';
+    // If previously dismissed, do nothing
+    if (document.documentElement.classList.contains('oab-notice-dismissed')) return;
+
     try {
       MicroModal.init({
         openClass: 'is-open',
@@ -81,7 +108,12 @@
         awaitOpenAnimation: false,
         awaitCloseAnimation: false
       });
-      MicroModal.show('oab-retire');
+      MicroModal.show('oab-retire', {
+        onClose: function () {
+          try { localStorage.setItem(KEY, '1'); } catch (e) {}
+          document.documentElement.classList.add('oab-notice-dismissed');
+        }
+      });
     } catch (e) {
       // If MicroModal isn't available, we fall back below.
     }
@@ -91,11 +123,15 @@
   (function () {
     if (window.MicroModal) return;
 
+    var KEY = window.__OAB_NOTICE_KEY__ || 'oab_retire_notice_v2025-09-03';
+
     function closeFallback() {
       var el = document.getElementById('oab-retire');
       if (el && el.parentNode) el.parentNode.removeChild(el);
       document.documentElement.style.overflow = '';
       document.body.style.overflow = '';
+      try { localStorage.setItem(KEY, '1'); } catch (e) {}
+      document.documentElement.classList.add('oab-notice-dismissed');
     }
 
     document.addEventListener('click', function (e) {
