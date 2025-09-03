@@ -30,37 +30,40 @@
 </div>
 
 <style>
+/* ===== Modal shell & visibility ===== */
 .oab-modal { position: fixed; inset: 0; z-index: 2147483647; }
 .oab-modal[aria-hidden="true"] { display: none; }
 .oab-modal[aria-hidden="false"] { display: block; }
-.oab-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: grid; place-items: center; }
-.oab-container {
-  width: min(92vw, 560px);
-  background: #fff; color: #000;
-  border: 2px solid #428BCA; border-radius: 0;
-  box-shadow: 0 8px 24px rgba(0,0,0,.2);
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-}
-.oab-header {
-  display: flex; align-items: center; justify-content: space-between;
-  background: #428BCA; color: #fff; padding: 20px;
-}
+
+/* ===== Overlay ===== */
+.oab-overlay { position: fixed; inset: 0; display: grid; place-items: center; background: rgba(0,0,0,.5); }
+
+/* ===== Container ===== */
+.oab-container { width: min(92vw, 560px); background: #fff; color: #000; border: 2px solid #428BCA; border-radius: 0; box-shadow: 0 8px 24px rgba(0,0,0,.2); font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+
+/* ===== Header ===== */
+.oab-header { display: flex; align-items: center; justify-content: space-between; padding: 20px; background: #428BCA; color: #fff; }
 .oab-title { margin: 0; font-size: 1rem; font-weight: 600; line-height: 1.2; }
-.oab-x {
-  background: transparent; border: 0; color: #fff;
-  font-size: 18px; line-height: 1; cursor: pointer; padding: 4px 6px;
-}
+.oab-x { padding: 4px 6px; background: transparent; border: 0; color: #fff; cursor: pointer; font-size: 18px; line-height: 1; }
 .oab-x:focus { outline: 2px solid #fff; outline-offset: 2px; }
+
+/* ===== Body ===== */
 .oab-body { padding: 20px; }
 .oab-body p { margin: 0; padding: 0; font-size: 16px; line-height: 1.5; }
+.oab-body a { color: #428BCA; text-decoration: underline; }
+
+/* Body layout: logo left, text right */
 .oab-row { display: grid; grid-template-columns: auto 1fr; gap: 24px; align-items: start; }
 .oab-logo { display: block; max-width: 25px; height: auto; }
 .oab-copy p { margin: 0 0 10px 0; }
 .oab-copy p:last-child { margin-bottom: 0; }
-.oab-body a { color: #428BCA; text-decoration: underline; }
-.oab-footer { padding: 0; display: flex; justify-content: flex-end; gap: 8px; background: #fff;}
-.oab-close { background: #428BCA; padding: 8px 12px; color: #fff; border: 2px solid #428BCA; font-size: 14px; cursor: pointer; border-radius: 0; }
+
+/* ===== Footer & close button ===== */
+.oab-footer { display: flex; justify-content: flex-end; gap: 8px; padding: 0; background: #fff; }
+.oab-close { padding: 8px 12px; background: #428BCA; color: #fff; border: 2px solid #428BCA; border-radius: 0; cursor: pointer; font-size: 14px; }
 .oab-close:focus { outline: 2px solid #000; outline-offset: 2px; }
+
+/* ===== MicroModal open state ===== */
 .micromodal-slide.is-open { display: block; }
 </style>
 
