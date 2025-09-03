@@ -1,4 +1,4 @@
-<!-- OA.Works retirement notice w/ MicroModal -->
+<!-- Retirement notice w/ MicroModal -->
 <div class="oab-modal micromodal-slide" id="oab-retire" aria-hidden="false">
   <div class="oab-overlay" tabindex="-1" data-micromodal-close>
     <div class="oab-container" role="dialog" aria-modal="true" aria-labelledby="oab-title" aria-describedby="oab-desc">
@@ -34,7 +34,9 @@
 </div>
 
 <style>
-.oab-modal { position: fixed; inset: 0; z-index: 2147483647; display: block; }
+.oab-modal { position: fixed; inset: 0; z-index: 2147483647; }
+.oab-modal[aria-hidden="true"] { display: none; }
+.oab-modal[aria-hidden="false"] { display: block; }
 .oab-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: grid; place-items: center; }
 .oab-container {
   width: min(92vw, 560px);
@@ -69,6 +71,7 @@
 <script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
 
 <script>
+  // Init MicroModal on window load
   // See https://gist.github.com/ghosh/4f94cf497d7090359a5c9f81caf60699#file-micromodal-html
   window.addEventListener('load', function () {
     try {
@@ -80,17 +83,21 @@
       });
       MicroModal.show('oab-retire');
     } catch (e) {
+      // If MicroModal isn't available, we fall back below.
     }
   });
 
+  // Fallback only if MicroModal failed to load
   (function () {
+    if (window.MicroModal) return;
+
     function closeFallback() {
       var el = document.getElementById('oab-retire');
-      if (el) el.parentNode && el.parentNode.removeChild(el);
-      // Re-enable page scrolling if it was affected by custom CSS.
+      if (el && el.parentNode) el.parentNode.removeChild(el);
       document.documentElement.style.overflow = '';
       document.body.style.overflow = '';
     }
+
     document.addEventListener('click', function (e) {
       var t = e.target;
       if (t && t.getAttribute && t.getAttribute('data-dismiss') === 'oab') {
@@ -98,6 +105,8 @@
         closeFallback();
       }
     }, false);
+
+    // Manual scroll lock only when we're in fallback mode
     document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
   })();
