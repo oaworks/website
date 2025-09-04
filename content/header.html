@@ -19,8 +19,8 @@
 </script>
 
 <!-- Retirement notice w/ MicroModal -->
-<div class="oab-modal micromodal-slide" id="oab-retire" aria-hidden="false">
-  <div class="oab-overlay" tabindex="-1" data-micromodal-close>
+<div class="oab-modal micromodal-slide" id="oab-retire" aria-hidden="true">
+  <div class="oab-overlay" data-micromodal-close>
     <div class="oab-container" role="dialog" aria-modal="true" aria-labelledby="oab-title" aria-describedby="oab-desc">
       <header class="oab-header">
         <h2 id="oab-title" class="oab-title">Sunsetting announcement</h2>
@@ -105,13 +105,25 @@
       MicroModal.init({
         openClass: 'is-open',
         disableScroll: true,
-        disableFocus: true,
         awaitOpenAnimation: false,
         awaitCloseAnimation: false
+        // (no disableFocus here — we’ll set it on show)
       });
+
       MicroModal.show('oab-retire', {
         // Do not persist on generic close (X, overlay, ESC)
-        onClose: function () {}
+        disableFocus: true,
+        onShow(modalEl) {
+          // Move focus somewhere neutral so nothing “looks” preselected
+          const target =
+            modalEl.querySelector('.oab-container') ||
+            modalEl.querySelector('#oab-title');
+          if (target) {
+            target.setAttribute('tabindex', '-1');
+            target.focus({ preventScroll: true });
+          }
+        },
+        onClose() {}
       });
 
       // Persist only when the explicit "Close" button is clicked
