@@ -1,4 +1,191 @@
-  <div id="topnav" class="navbar navbar-fixed-top">
+<script>
+  (function () {
+    // Versioned key in case we want to show it again
+    var OAB_KEY = 'oab_retire_notice_v2025-09-03';
+
+    // Dev/testing reset by adding ?reset_oab_notice=1
+    try {
+      if (/\breset_oab_notice=1\b/.test(location.search)) {
+        localStorage.removeItem(OAB_KEY);
+      }
+      if (localStorage.getItem(OAB_KEY)) {
+        document.documentElement.classList.add('oab-notice-dismissed');
+      }
+
+      // Suppress ONLY on /feedback
+      var PATH = location.pathname.replace(/\/+$/,'').toLowerCase();
+      if (PATH === '/feedback') {
+        document.documentElement.classList.add('oab-notice-dismissed');
+      }
+
+      // expose key for later scripts
+      window.__OAB_NOTICE_KEY__ = OAB_KEY;
+    } catch (e) {}
+  })();
+</script>
+
+
+<!-- Retirement notice w/ MicroModal -->
+<div class="oab-modal micromodal-slide" id="oab-retire" aria-hidden="true">
+  <div class="oab-overlay" data-micromodal-close>
+    <div class="oab-container" role="dialog" aria-modal="true" aria-labelledby="oab-title" aria-describedby="oab-desc">
+      <header class="oab-header">
+        <h2 id="oab-title" class="oab-title">Sunsetting announcement</h2>
+        <button class="oab-x" aria-label="Close notice" data-micromodal-close data-dismiss="oab">✕</button>
+      </header>
+      <article class="oab-body" id="oab-desc">
+        <div class="oab-row">
+          <img
+            src="https://openaccessbutton.org/static/icon_OAB.png"
+            alt=""
+            class="oab-logo"
+            decoding="async"
+            referrerpolicy="no-referrer"
+          >
+          <div class="oab-copy">
+            <p><strong>The Open Access Button will shut down on November 18th, but our work continues.</strong></p>
+            <p>To keep finding free-to-read articles when you hit a paywall, we recommend trying <a href="https://unpaywall.org/products/extension" target="_blank" rel="noopener">Unpaywall</a>. For a full list of alternatives, the shutdown timeline, and the tool’s legacy <a href="https://blog.oa.works/sunsetting-the-open-access-button-instantill/" target="_blank">visit our blog</a>.</p>
+            <p>Stay in touch by subscribing to our <a href="https://oa.works/newsletter/" target="_blank">newsletter</a> as the OA.Works team makes research open to all with products like <a href="https://oa.report/" target="_blank">OA.Report</a>,  <a href="https://shareyourpaper.org/" target="_blank">ShareYourPaper</a>, and with new ideas we’ll build with the community.</p>
+            <p>Thank you for your support 💙</p>
+            <p style="text-align:right;">— The OA.Works team</p>
+          </div>
+        </div>
+        <footer class="oab-footer">
+          <button class="oab-close" data-micromodal-close data-dismiss="oab">Close</button>
+        </footer>
+      </article>
+    </div>
+  </div>
+</div>
+
+<style>
+/* ===== Modal shell & visibility ===== */
+.oab-modal { position: fixed; inset: 0; z-index: 2147483647; }
+.oab-modal[aria-hidden="true"] { display: none; }
+.oab-modal[aria-hidden="false"] { display: block; }
+
+/* ===== Overlay ===== */
+.oab-overlay { position: fixed; inset: 0; display: grid; place-items: center; background: rgba(0,0,0,.5); }
+
+/* ===== Container ===== */
+.oab-container { width: min(92vw, 560px); background: #fff; color: #000; border: 2px solid #428BCA; border-radius: 0; box-shadow: 0 8px 24px rgba(0,0,0,.2); font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+
+/* ===== Header ===== */
+.oab-header { display: flex; align-items: center; justify-content: space-between; padding: 20px; background: #428BCA; color: #fff; }
+.oab-title { margin: 0; font-size: 1rem; font-weight: 600; line-height: 1.2; }
+.oab-x { padding: 4px 6px; background: transparent; border: 0; color: #fff; cursor: pointer; font-size: 18px; line-height: 1; }
+.oab-x:focus { outline: 2px solid #fff; outline-offset: 2px; }
+
+/* ===== Body ===== */
+.oab-body { padding: 20px; }
+.oab-body p { margin: 0; padding: 0; font-size: 16px; line-height: 1.5; }
+.oab-body a { color: #428BCA; text-decoration: underline; }
+
+/* Body layout: logo left, text right */
+.oab-row { display: grid; grid-template-columns: auto 1fr; gap: 24px; align-items: start; }
+.oab-logo { display: block; max-width: 25px; height: auto; }
+.oab-copy p { margin: 0 0 10px 0; }
+
+/* ===== Footer & close button ===== */
+.oab-footer { display: flex; justify-content: flex-end; gap: 8px; padding: 0; background: #fff; }
+.oab-close { padding: 8px 12px; background: #428BCA; color: #fff; border: 2px solid #428BCA; border-radius: 0; cursor: pointer; font-size: 14px; }
+.oab-close:focus { outline: 2px solid #000; outline-offset: 2px; }
+
+/* ===== MicroModal open state ===== */
+.micromodal-slide.is-open { display: block; }
+
+/* ===== Dismissal of modal ===== */
+.oab-notice-dismissed #oab-retire { display: none !important; }
+</style>
+
+<script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
+
+<script>
+  // Init MicroModal on window load
+  // See https://gist.github.com/ghosh/4f94cf497d7090359a5c9f81caf60699#file-micromodal-html
+  window.addEventListener('load', function () {
+    var PATH = location.pathname.replace(/\/+$/,'').toLowerCase();
+    if (PATH === '/feedback') return; // never open on /feedback
+
+    var KEY = window.__OAB_NOTICE_KEY__ || 'oab_retire_notice_v2025-11-18';
+    // If previously dismissed, do nothing
+    if (document.documentElement.classList.contains('oab-notice-dismissed')) return;
+
+    try {
+      MicroModal.init({
+        openClass: 'is-open',
+        disableScroll: true,
+        awaitOpenAnimation: false,
+        awaitCloseAnimation: false
+        // (no disableFocus here — we’ll set it on show)
+      });
+
+      MicroModal.show('oab-retire', {
+        // Do not persist on generic close (X, overlay, ESC)
+        disableFocus: true,
+        onShow(modalEl) {
+          // Move focus somewhere neutral so nothing “looks” preselected
+          const target =
+            modalEl.querySelector('.oab-container') ||
+            modalEl.querySelector('#oab-title');
+          if (target) {
+            target.setAttribute('tabindex', '-1');
+            target.focus({ preventScroll: true });
+          }
+        },
+        onClose() {}
+      });
+
+      // Persist only when the explicit "Close" button is clicked
+      var closeBtn = document.querySelector('#oab-retire .oab-close');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function () {
+          try { localStorage.setItem(KEY, '1'); } catch (e) {}
+          document.documentElement.classList.add('oab-notice-dismissed');
+        }, { once: true });
+      }
+    } catch (e) {
+      // If MicroModal isn't available, we fall back below.
+    }
+  });
+
+  // Fallback only if MicroModal failed to load
+  (function () {
+    if (window.MicroModal) return;
+
+    var PATH = location.pathname.replace(/\/+$/,'').toLowerCase();
+    if (PATH === '/feedback') return; // never open on /feedback
+
+    var KEY = window.__OAB_NOTICE_KEY__ || 'oab_retire_notice_v2025-09-03';
+
+    function closeFallback(shouldCache) {
+      var el = document.getElementById('oab-retire');
+      if (el && el.parentNode) el.parentNode.removeChild(el);
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+      if (shouldCache) {
+        try { localStorage.setItem(KEY, '1'); } catch (e) {}
+        document.documentElement.classList.add('oab-notice-dismissed');
+      }
+    }
+
+    document.addEventListener('click', function (e) {
+      var t = e.target;
+      if (t && t.getAttribute && t.getAttribute('data-dismiss') === 'oab') {
+        e.preventDefault();
+        // Only persist when the explicit "Close" button is clicked
+        var shouldCache = t.classList && t.classList.contains('oab-close');
+        closeFallback(shouldCache);
+      }
+    }, false);
+
+    // Manual scroll lock only when we're in fallback mode
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+  })();
+</script>
+
+<div id="topnav" class="navbar navbar-fixed-top">
     <div class="navbar-header visible-xs" style="padding-top:10px;">
       <a href="/" class="pull-left" style="color:#212f3f;margin-left:10px;" id="mobnavheader">Open Access Button</a>
       <button type="button" class="mobnavtoggle pull-right" style="z-index:1000000;padding-top:0px;border:none;background-color:transparent;margin-right:10px;">
@@ -18,10 +205,10 @@
       </ul>
     </div>
 
-    <div class="alert alert-info" id="issue">
+    <!-- <div class="alert alert-info" id="issue">
       <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
       <p style="padding:0px;"><strong>The Open Access Button will retire on November 18th.</strong>  See the timeline and alternatives on the <a href="https://blog.oa.works/sunsetting-the-open-access-button-instantill/" target="_blank">OA.Works blog</a>.</p>
-    </div>
+    </div> -->
 
     <div class="alert alert-info" style="display:none;" id="fromopendatabutton">
       <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>

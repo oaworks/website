@@ -1,262 +1,83 @@
 <style>
-  textarea {
-    min-height:200px;
-  }
+  textarea { min-height:200px; }
 </style>
 
-<div class="container-fluid goto gotochoose">
-  <div class="row">
-    <div class="col-md-8 col-md-offset-2">
-      <h1 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">
-        Feedback
-      </h1>
-      <p>
-        What do you want to tell us about?
-      </p>
-      <select class="form-control" id="goto">
-        <option value="">Please choose an option:</option>
-        <option value="general">General feedback and ideas</option>
-        <option value="wrong">We found the wrong content</option>
-        <option value="bug">I found a bug</option>
-        <!-- add any needed types of form here so they can be selected -->
-      </select>
-    </div>
-  </div>
-</div>
-
-
+<!-- Only keep custom message for bugs-->
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-8 col-md-offset-2">
-      <form id="form" method="POST" action="https://api.openaccessbutton.org/bug" style="display:none;">
-        <input type="text" name="contact">
 
-        <!-- particular forms can be directly reached for example by appending #dnr to the page URL -->
-        <!-- extra parameters for the bug message can be added as URL params too -->
+      <div class="goto gotobug" style="display:none;">
+        <h1 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">
+          Having trouble with the Open Access Button?
+        </h1>
+        <p><strong>The Open Access Button will shut down on November 18th. Though we’re no longer providing new fixes, our work continues.</strong></p>
+        
+        <p>To keep finding free-to-read articles when you hit a paywall, we recommend trying <a href="https://unpaywall.org/products/extension" target="_blank" rel="noopener">Unpaywall</a>. For a full list of alternatives, the shutdown timeline, and the tool’s legacy <a href="https://blog.oa.works/sunsetting-the-open-access-button-instantill/" target="_blank">visit our blog</a>.</p>
 
-        <div class="goto gotobug">
-					<h4 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">Report a bug</h4>
-          <p>We'll get it fixed as soon as we can, and let you know.</p>
-					<h3 class="hideifknown">Your email address</h3>
-					<p><input type="text" name="email" class="form-control" placeholder="Your email"></p>
-					<h3>Where are you having the issue?</h3>
-          <p><input type="checkbox" name="where" value="Chrome plugin"> Chrome plugin</p>
-          <p><input type="checkbox" name="where" value="Bookmarklet"> Bookmarklet</p>
-      	  <p><input type="checkbox" name="where" value="Website"> Website</p>
-          <p><input type="checkbox" name="where" value="Firefox plugin"> Firefox plugin</p>
-          <p><input type="checkbox" name="where" value="EmbedOA"> EmbedOA (a search widget for external sites)</p>
-          <p><input type="checkbox" name="where" value="oaSheet"> OAsheet</p>
-          <p><input type="checkbox" name="where" value="DeliverOA"> DeliverOA</p>
-          <p><input type="checkbox" name="where" value="InstantILL"> InstantILL</p>
-          <p><input type="checkbox" name="where" value="Shareyourpaper"> Shareourpaper.org</p>
-          <p><input type="checkbox" name="where" value="FB messenger"> Facebook Messenger Bot</p>
-					<h3>What's the issue?</h3>
-					<p><textarea name="issue" class="form-control" style="min-height:200px;" placeholder="It's helpful if you can tell us what happened, what you expect to happen, and how we can reproduce the issue."></textarea></p>
-					<h3 class="codeknown">Do you have an error code? If so, please tell us it</h3>
-					<p class="codeknown"><input type="text" name="code" class="form-control" placeholder="Error code"></p>
-					<h3>Anything else we should know?</h3>
-					<p><textarea name="info" class="form-control" style="min-height:200px;" placeholder="Tell us anything you think might help us solve the issue."></textarea></p>
-        </div>
+        <p>Stay in touch by subscribing to our <a href="https://oa.works/newsletter/" target="_blank">newsletter</a> as the OA.Works team makes research open to all with products like <a href="https://oa.report/" target="_blank">OA.Report</a>,  <a href="https://shareyourpaper.org/" target="_blank">ShareYourPaper</a>, and with new ideas we’ll build with the community.</p>
 
-        <div class="goto gotodnr">
-          <h4 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">Sorry you don’t want to hear from us</h4>
-          <h3>We’d love to know why you’d prefer to not hear from us:</h3>
-          <p><input type="checkbox" name="why" value="Don't understand what I'm being asked"> I don't understand what I'm being asked</p>
-          <p><input type="checkbox" name="why" value="Don't know or trust oab"> I don’t know or trust the Open Access Button</p>
-          <p><input type="checkbox" name="why" value="Don't want to share data / articles"> I don’t want to share my data or article</p>
-          <p><input class="form-control" type="text" name="other" placeholder="Other (please state)"></p>
-          <h3>Our team is still learning. Can we follow up with you about your experience?</h3>
-          <p><input type="radio" name="followup" value="yes"> Yes</p>
-          <p><input type="radio" name="followup" value="no"> No</p>
-        </div>
+        <h3 style="margin-top: 25px;">Still need some help?</h3>
 
-        <div class="goto gotowrong">
-          <!-- the link to this bug form could include a URL param "request", with the ID of the request the user is saying is wrong -->
-          <h4 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">Wrong content?</h4>
-          <h2>Let's get that fixed</h2>
-          <p>We apologize that we didn’t give you the content you were looking for. Linking to the correct version can be difficult sometimes. Please let us know your issue and we’ll work to resolve it:</p>
-          <h3>What did you search for?</h3>
-					<p><input type="text" name="searched" class="form-control" placeholder="Put what you searched for here"></p>
-          <h3>What did we find?</h3>
-					<p><input type="text" name="given" class="form-control" placeholder="Put the URL we sent you to here"></p>
-          <h3>What was wrong?</h3>
-          <p><input type="checkbox" name="wrong" value="Wrong paper searched for"> The Button searched for the wrong paper</p>
-          <p><input type="checkbox" name="wrong" value="Known open copy not given"> A copy I know is available wasn't shown</p>
-          <p><input type="checkbox" name="wrong" value="Paper not actually available"> The article wasn't actually available</p>
-          <p><input type="checkbox" name="wrong" value="Not full text"> I didn't get sent directly to the full-text</p>
-          <h3>Can you tell us the correct URL to the content?</h3>
-          <p><input class="form-control" type="text" name="correction" placeholder="(optional) Correct URL, if known"></p>
-        </div>
+        <p>We’re no longer accepting new bug reports. If you have questions regarding your current use of the Open Access Button, please contact us at <a href="mailto:help@openaccessbutton.org?subject=Open Access Button support">help@openaccessbutton.org</a>.</p>
 
-        <div class="goto gotouninstall">
-          <!-- for this form, set the URL in google chrome extension uninstall link: -->
-          <!-- https://developer.chrome.com/extensions/runtime#method-setUninstallURL -->
-          <!-- link should be https://openaccessbutton.org/bug#uninstall -->
-          <h4 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">We're sad to see you go</h4>
-          <p>We're constantly trying to improve the Button, can you help by giving us some quick feedback?</p>
-          <h3>Why are you uninstalling the Open Access Button?</h3>
-          <p>Check all that apply:</p>
-          <p><input type="checkbox" name="why" value="It never found what I needed"> It didn't find what I needed</p>
-          <p><input type="checkbox" name="why" value="It's hard to use"> It's hard to use</p>
-          <p><input type="checkbox" name="why" value="I don't want to make requests"> I don't want to make requests</p>
-          <p><input type="checkbox" name="why" value="It didn't work"> It didn't work</p>
-          <p><input type="checkbox" name="why" value="Using something else"> I found a better tool</p>
-          <h3>Please let us know what didn't work, or any other feedback you have (optional):</h3>
-          <p><textarea class="form-control" name="feedback" placeholder="How can we improve?"></textarea></p>
-          <h3 class="hideifknown">What's your email address? (optional)</h3>
-          <p><input type="text" name="email" class="form-control" placeholder="Your email"></p>
-        </div>
+        <p>Thank you for your support 💙</p>
 
-        <div class="goto gotonoshare">
-          <!-- the link to the page for this form could include the request ID -->
-          <h4>Why can't you share this article?</h4>
-          <p><input type="checkbox" name="why" value="time"> I don't have the time</p>
-          <p><input type="checkbox" name="why" value="uninterested"> I don't want to</p>
-          <p><input type="checkbox" name="why" value="version"> I can't find the right version</p>
-          <p><input type="checkbox" name="why" value="version"> I have already shared it</p>
-          <p><input class="form-control" type="text" name="other" placeholder="Other (please explain)"></p>
-        </div>
-
-        <div class="goto gotogeneral">
-          <!-- the link to the page for this form could include a param of the previous page -->
-          <h4 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">Let us know what you think!</h4>
-          <p>We spend day (and night) making the Open Access Button the best it can be. If you have any feedback or ideas we'd love to hear them.</p>
-          <p><textarea class="form-control" name="feedback" placeholder="Tell us what you think."></textarea></p>
-          <h3 class="hideifknown">What's your email address?</h3>
-          <p><input class="form-control" type="text" name="email" placeholder="email address"></p>
-        </div>
-
-        <!-- put any additional form types here -->
-
-        <noscript>
-          <input type="hidden" name="nojs" value="nojs">
-        </noscript>
-        <input id="submit" name="submit" value="Submit" type="submit" class="btn btn-action btn-block">
-      </form>
-    </div>
-  </div>
-</div>
-
-
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-8 col-md-offset-2">
-      <div class="goto gotodefaultthanks">
-        <h3 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">Thanks</h3>
-        <p>Thanks for your response.</p>
+        <p style="text-align:right;">— The OA.Works team</p>
       </div>
 
-      <!-- custom thanks areas can be added here -->
+      <!-- COMMON CONTENT (shown for /feedback and any hash except #bug) -->
+      <div class="goto gotocommon" style="display:none;">
+        <h1 style="text-align:left;margin-top:25px;margin-bottom:25px;font-size:4em;">
+          Thanks for using the Open Access Button! 
+        </h1>
+        <p><strong>The Open Access Button will shut down on November 18th, but our work continues.</strong></p>
+        <p>To keep finding free-to-read articles when you hit a paywall, we recommend trying <a href="https://unpaywall.org/products/extension" target="_blank" rel="noopener">Unpaywall</a>. For a full list of alternatives, the shutdown timeline, and the tool’s legacy <a href="https://blog.oa.works/sunsetting-the-open-access-button-instantill/" target="_blank">visit our blog</a>.</p>
+        <p>Stay in touch by subscribing to our <a href="https://oa.works/newsletter/" target="_blank">newsletter</a> as the OA.Works team makes research open to all with products like <a href="https://oa.report/" target="_blank">OA.Report</a>,  <a href="https://shareyourpaper.org/" target="_blank">ShareYourPaper</a>, and with new ideas we’ll build with the community.</p>
+        <p>Thank you for your support 💙</p>
+        <p style="text-align:right;">— The OA.Works team</p>
+      </div>
+
     </div>
   </div>
 </div>
 
 
 <script>
-  jQuery(document).ready(function() {
-    $('[name="contact"]').css('display','none');
+  (function() {
+    function showSection() {
+      var href = window.location.href;
+      var url;
+      try { url = new URL(href); } catch (e) { url = null; }
 
-		if (window.location.href.indexOf('?') !== -1) {
-			var pt = window.location.href.split('?')[1];
-			var pts = pt.split('&');
-			for ( var pt in pts ) {
-				var prts = pts[pt].split('=');
-				if (prts.length === 2 && prts[0].length && prts[1].length && $('[name="' + prts[0] + '"]').length) $('[name="' + prts[0] + '"]').val(decodeURIComponent(prts[1]));
-			}
-		}
-    if (noddy.loggedin()) {
-      $('.hideifknown').hide();
-      $('[name="email"]').val(noddy.getCookie().email).hide();
-    }
-    $('#form').attr('action',api+'/bug');
-    $('.goto').hide();
-    var goto = window.location.hash.split('?')[0].replace('#','');
-    var code = window.location.search.indexOf('code=') !== -1 ? window.location.search.split('code=')[1] : undefined;
-    if (code) {
-      goto = 'bug';
-      $('[name="code"]').val(code);
-      $('.codeknown').hide();
-      $('#form').show();
-    } else if (!goto) {
-      goto = 'choose';
-    } else {
-      $('#form').show();
-    }
-    if (goto.indexOf('thanks') !== -1) {
-      $('#form').hide();
-      if (!$('.goto'+goto).length) goto = 'defaultthanks';
-    }
-    $('.goto'+goto).show();
-    var choose = function(e) {
-      if (e) e.preventDefault();
-      $('.goto').hide();
-      goto = $(this).val();
-			if ('pushState' in window.history) window.history.pushState("", "feedback", '#' + goto);
-			$('#form').show();
-      $('.goto'+goto).show();
-    }
-    $('#goto').bind('change',choose);
-    var submit = function(e) {
-      if (e) e.preventDefault();
-      var data = {form:goto};
-      $('input,select,textarea').each(function() {
-        if ( $(this).parents('.goto'+goto) ) {
-          var key = $(this).attr('name') ? $(this).attr('name') : $(this).attr('id');
-          var val = $(this).val() ? $(this).val() : $(this).attr('value');
-          if ( ( $(this).attr('type') === 'checkbox' || $(this).attr('type') === 'radio' ) && !$(this).is(':checked') ) val = undefined;
-          if ( key === "submit" ) key = undefined;
-          if ( key && val ) {
-            if (data[key] === undefined) {
-              data[key] = val;
-            } else if (key !== 'email') {
-              if (typeof data[key] !== 'object') data[key] = [data[key]];
-              data[key].push(val);
-            }
-          }
-        }
-      });
-      if (window.location.href.indexOf('?') !== -1) {
-        var p = window.location.href.split('?')[1];
-        var pairs = p.split('&');
-        for ( var pr in pairs ) {
-          var parts = pairs[pr].split('=');
-          if (parts.length === 2 && parts[0].length && parts[1].length) data[parts[0]] = decodeURIComponent(parts[1]);
-        }
+      var hash = (window.location.hash || "").split("?")[0].replace("#","").toLowerCase();
+      var hasCodeParam = false;
+
+      if (url) {
+        // Treat the presence of ?code= (including ?code=0) as opening the bug view
+        var params = url.searchParams;
+        hasCodeParam = params.has("code");
+      } else {
+        // Fallback if URL constructor isn't available
+        hasCodeParam = href.indexOf("?code=") !== -1;
       }
-      data.page = window.location.href;
-      data.language = navigator.language || navigator.userLanguage
-			data.viewport = {
-				width: window.innerWidth,
-				height: window.innerHeight
-			}
-      try {
-        data.user = noddy.user;
-        data.cookie = noddy.getCookie();
-      } catch(err) {}
-      try {
-        data.navigator = {
-          userAgent: navigator.userAgent,
-          platform: navigator.platform,
-          vendor: navigator.vendor,
-          plugins: navigator.plugins
-        }
-      } catch(err) {}
-      // submit the form with ajax, or just stick stringified data into a form field and submit the form normal?
-      $.ajax({
-        type:'POST',
-        url: api + '/bug',
-        cache:false,
-        processData:false,
-        contentType: 'application/json',
-        dataType: 'json',
-        data:JSON.stringify(data)
-      });
-      goto += 'thanks';
-      $('.goto').hide();
-      $('#form').hide();
-      if (!$('.goto'+goto).length ) goto = 'defaultthanks';
-      $('.goto'+goto).show();
+
+      var isBug = (hash === "bug") || hasCodeParam;
+
+      var bug = document.querySelector(".gotobug");
+      var common = document.querySelector(".gotocommon");
+
+      if (bug) bug.style.display = isBug ? "" : "none";
+      if (common) common.style.display = isBug ? "none" : "";
     }
-    $('#submit').bind('click',submit);
-  });
+
+    // initial render
+    showSection();
+
+    // respond to hash changes (e.g., navigating #bug -> #general)
+    window.addEventListener("hashchange", showSection);
+
+    // respond to query-string changes via history push/replace (if used elsewhere)
+    window.addEventListener("popstate", showSection);
+  })();
 </script>
