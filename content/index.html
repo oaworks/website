@@ -22,6 +22,92 @@
 <meta property="twitter:description" content="Free, legal research articles delivered instantly or automatically requested from authors.">
 <meta property="twitter:image" content="/static/twitter-paste.png">
 
+  <!-- chrome install -->
+    <div class="strapline" id ="install_chrome" style="padding: 25px 0; display: none;">
+        <div style="display: flex; justify-content: center;">
+          <!-- icon -->
+          <div>
+            <a target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">
+              <i class="glyphicon glyphicon-download" role="”none”"></i>
+            </a>
+          </div>
+
+          <!-- text -->
+          <div class="glyphicon-text">
+            <p style="padding: 0; margin: 0">Always have the button by your side, no account needed.</p>
+            <a target="_blank" href="https://chrome.google.com/webstore/detail/open-access-button/gknkbkaapnhpmkcgkmdekdffgcddoiel">
+              Get the Chrome browser extension, no sign up required.
+            </a>
+          </div>
+        </div>
+      </div>
+
+  <!-- firefox install -->
+    <div class="strapline" id ="install_firefox" style="padding: 25px 0; display: none;">
+      <div style="display: flex; justify-content: center;">
+        <!-- icon -->
+        <div>
+          <a target="_blank" href="https://addons.mozilla.org/en-US/firefox/addon/openaccessbutton/">
+            <i class="glyphicon glyphicon-download" role="”none”"></i>
+          </a>
+        </div>
+
+        <!-- text -->
+        <div class="glyphicon-text">
+          <p style="padding: 0; margin: 0">Always have the button by your side, no account needed.</p>
+          <a target="_blank" href="https://addons.mozilla.org/en-US/firefox/addon/openaccessbutton/">
+            Get the Firefox browser extension, no sign up required.
+          </a>
+        </div>
+      </div>
+    </div>
+
+  <!-- bookmark install -->
+   <div class="strapline" id ="install_bookmarklet" style="padding: 25px 0; display: none;">
+      <div style="display: flex; justify-content: center;">
+        <!-- icon -->
+        <div>
+          <a target="_blank" href="#">
+            <i class="glyphicon glyphicon-download" role="”none”"></i>
+          </a>
+        </div>
+
+        <!-- text -->
+        <div class="glyphicon-text">
+          <p style="padding: 0; margin: 0">Always have the button by your side, no account needed.</p>
+          <a target="_blank" href="#">Get the browser bookmarklet</a>
+        </div>
+      </div>
+    </div>
+
+  <!-- safari install -->
+    <div class="modal fade" id="install_bookmarklet_safari" tabindex="-1" role="dialog" aria-labelledby="alphaLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="alphaLabel">Getting Started on Safari</h4>
+          </div>
+          <div class="modal-body">
+            <p>
+              <a class="btn btn-action btn-block" style="width:50%; text-align:center" href="javascript:document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).setAttribute('src','{{site_url}}/static/bookmarklet/includer.js?r='+Math.random());" style="background-color:#ccc;padding:5px;border-radius:3px;">Open Access Button</a>
+            </p>
+            <ol>
+            <li> Make sure your bookmarks bar is showing. If not, you can click View, and select "Show Bookmarks Bar."</li>
+            <li> Drag the Button above to your bookmarks bar.</li>
+            <img src = "/static/safari_install.gif" style = "width: 100%;border:1px solid #212f3f;margin:10px;" >
+            <li> If there is a pop-up, click yes.</li>
+            <li> You're done! The Button is ready to click when you next need it.</li>
+            <li> <a href="/instructions">Give the button a try, or read the instructions</a></li>
+            </ol>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
 </head>
 
 <link rel="stylesheet" href="/static/oabutton_rebrand.css">
