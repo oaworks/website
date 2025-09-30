@@ -12,9 +12,9 @@
         document.documentElement.classList.add('oab-notice-dismissed');
       }
 
-      // Suppress ONLY on /feedback
+      // Suppress it on certain pages
       var PATH = location.pathname.replace(/\/+$/,'').toLowerCase();
-      if (PATH === '/feedback' || PATH === '/support' || /(^|\.)shareyourpaper\.org$/i.test(location.hostname)) {
+      if (PATH === '/feedback' || PATH === '/support' || PATH === '/account' || /(^|\.)shareyourpaper\.org$/i.test(location.hostname)) {
         document.documentElement.classList.add('oab-notice-dismissed');
       }
 
@@ -105,7 +105,7 @@
   // See https://gist.github.com/ghosh/4f94cf497d7090359a5c9f81caf60699#file-micromodal-html
   window.addEventListener('load', function () {
     var PATH = location.pathname.replace(/\/+$/,'').toLowerCase();
-    if (PATH === '/feedback' || PATH === '/support' || /(^|\.)shareyourpaper\.org$/i.test(location.hostname)) return; // never open on /feedback or /support
+    if (PATH === '/feedback' || PATH === '/support' || PATH === '/account' || /(^|\.)shareyourpaper\.org$/i.test(location.hostname)) return; // never open on these pages
 
     var KEY = window.__OAB_NOTICE_KEY__ || 'oab_retire_notice_v2025-11-18';
     // If previously dismissed, do nothing
@@ -154,7 +154,7 @@
     if (window.MicroModal) return;
 
     var PATH = location.pathname.replace(/\/+$/,'').toLowerCase();
-    if (PATH === '/feedback' || PATH === '/support'  || /(^|\.)shareyourpaper\.org$/i.test(location.hostname)) return; // never open on /feedback or /support
+    if (PATH === '/feedback' || PATH === '/support' || PATH === '/account' || /(^|\.)shareyourpaper\.org$/i.test(location.hostname)) return; // never open on these pages
 
     var KEY = window.__OAB_NOTICE_KEY__ || 'oab_retire_notice_v2025-09-03';
 
