@@ -1,6 +1,6 @@
 [![DOI](https://zenodo.org/badge/58967079.svg)](https://zenodo.org/badge/latestdoi/58967079)
 
-# Open Access Button Website Content
+# Open Access Button Website Content.
 
 Static content of OAButton site like the homepage, blogs and the about page, and the email templates.
 
