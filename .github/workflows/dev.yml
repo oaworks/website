@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - develop
+    - develop
 
 jobs:
   deploy_dev:
@@ -9,30 +9,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: SSH dev pull and build
-        uses: D3rHase/ssh-command-action@v0.2.2
-        with:
-          host: dev.openaccessbutton.org
-          user: ${{ secrets.USER_TEST_V1 }}
-          private_key: ${{ secrets.GA_ED25519 }}
-          host_fingerprint: ${{ secrets.FINGERPRINT_TEST_V1 }}
-          command: |
-            set -euo pipefail
-
-            # Reset both checkouts to origin/develop and clean strays
-            cd ~/dev/oaworks/embed
-            git fetch origin develop
-            git checkout -B develop origin/develop
-            git reset --hard origin/develop
-            git clean -fd
-
-            cd ~/dev/openresearchbutton/website
-            git fetch origin develop
-            git checkout -B develop origin/develop
-            git reset --hard origin/develop
-            git clean -fd
-
-            # Install, build, reload
-            npm ci --no-audit --no-fund || npm install
-            node build.js
-            sudo nginx -s reload
+    - name: SSH dev pull and build
+      uses: D3rHase/ssh-command-action@v0.2.2
+      with:
+        host: dev.openaccessbutton.org
+        user: ${{ secrets.USER_TEST_V1 }}
+        private_key: ${{ secrets.GA_ED25519 }}
+        host_fingerprint: ${{ secrets.FINGERPRINT_TEST_V1 }}
+        command: cd ~/dev/oaworks/embed && git pull && cd ~/dev/openresearchbutton/website && git pull && npm install && node build.js && sudo nginx -s reload
