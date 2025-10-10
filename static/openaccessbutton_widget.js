@@ -89,8 +89,10 @@ var openaccessbutton_widget = function(opts) {
   $(opts.element).html(w);
 
   // --- Pre-shutdown banner (see oaworks/discussion#3548) ---
+  // On 18th November 2025, make sure to remove the widget itself and only leave this message
+  // Don't forget to update the message itself and the UTM campaign code to shutdown_notice
   var warnUrl = "https://blog.oa.works/sunsetting-the-open-access-button-instantill/"
-              + "?utm_source=embedoa&utm_medium=widget&utm_campaign=shutdown_notice"
+              + "?utm_source=embedoa&utm_medium=widget&utm_campaign=shutdown_pre_notice"
               + "&utm_content=" + encodeURIComponent(location.hostname || '');
 
   var banner = '' +
