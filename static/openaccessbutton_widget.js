@@ -101,7 +101,7 @@ var openaccessbutton_widget = function(opts) {
     '            border:1px solid #e4b4b8; background:#fff6f6; color:#5b1a1a; ' +
     '            border-radius:4px; font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">' +
     '  <span aria-hidden="true" style="margin-right:.5em">⚠️</span>' +
-    '  <strong>This search tool (the “Open Access Button”) will stop working on November 18th, 2025.</strong> ' +
+    '  <strong>This search tool will stop working on November 18th, 2025.</strong> ' +
     '  Please contact your library or this site’s administrator. ' +
     '  <a href="' + warnUrl + '" target="_blank" rel="noopener">Learn more</a>.' +
     '</div>';
