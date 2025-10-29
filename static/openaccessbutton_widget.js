@@ -88,6 +88,26 @@ var openaccessbutton_widget = function(opts) {
   if (opts.css !== false) w = '<style>' + (typeof opts.css === 'string' ? opts.css : ws) + '</style>' + w;
   $(opts.element).html(w);
 
+  // --- Pre-shutdown banner (see oaworks/discussion#3548) ---
+  // On 18th November 2025, make sure to remove the widget itself and only leave this message
+  // Don't forget to update the message itself and the UTM campaign code to shutdown_notice
+  var warnUrl = "https://blog.oa.works/sunsetting-the-open-access-button-instantill/"
+              + "?utm_source=embedoa&utm_medium=widget&utm_campaign=shutdown_pre_notice"
+              + "&utm_content=" + encodeURIComponent(location.hostname || '');
+
+  var banner = '' +
+    '<div role="alert" aria-live="polite" ' +
+    '     style="margin:8px 0 12px; padding:10px 12px; ' +
+    '            border:1px solid #e4b4b8; background:#fff6f6; color:#5b1a1a; ' +
+    '            border-radius:4px; font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">' +
+    '  <span aria-hidden="true" style="margin-right:.5em">⚠️</span>' +
+    '  <strong>This search tool will stop working on November 18th, 2025.</strong> ' +
+    '  Please contact your library or this site’s administrator. ' +
+    '  <a href="' + warnUrl + '" target="_blank" rel="noopener">Learn more</a>.' +
+    '</div>';
+
+  $(opts.element).prepend(banner);
+
   var availability = function(e) {
     if ($(this).attr('id') === 'oabutton_find' || e === undefined || e.keyCode === 13) {
       if (e && $(this).attr('id') === 'oabutton_find') e.preventDefault();

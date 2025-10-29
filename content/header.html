@@ -11,12 +11,19 @@
       if (localStorage.getItem(OAB_KEY)) {
         document.documentElement.classList.add('oab-notice-dismissed');
       }
+
+      // Suppress it on certain pages
+      var PATH = location.pathname.replace(/\/+$/,'').toLowerCase();
+      if (PATH === '/feedback' || PATH === '/support' || PATH === '/account' || /(^|\.)shareyourpaper\.org$/i.test(location.hostname)) {
+        document.documentElement.classList.add('oab-notice-dismissed');
+      }
+
       // expose key for later scripts
       window.__OAB_NOTICE_KEY__ = OAB_KEY;
-    } catch (e) {
-    }
+    } catch (e) {}
   })();
 </script>
+
 
 <!-- Retirement notice w/ MicroModal -->
 <div class="oab-modal micromodal-slide" id="oab-retire" aria-hidden="true">
@@ -97,6 +104,9 @@
   // Init MicroModal on window load
   // See https://gist.github.com/ghosh/4f94cf497d7090359a5c9f81caf60699#file-micromodal-html
   window.addEventListener('load', function () {
+    var PATH = location.pathname.replace(/\/+$/,'').toLowerCase();
+    if (PATH === '/feedback' || PATH === '/support' || PATH === '/account' || /(^|\.)shareyourpaper\.org$/i.test(location.hostname)) return; // never open on these pages
+
     var KEY = window.__OAB_NOTICE_KEY__ || 'oab_retire_notice_v2025-11-18';
     // If previously dismissed, do nothing
     if (document.documentElement.classList.contains('oab-notice-dismissed')) return;
@@ -142,6 +152,9 @@
   // Fallback only if MicroModal failed to load
   (function () {
     if (window.MicroModal) return;
+
+    var PATH = location.pathname.replace(/\/+$/,'').toLowerCase();
+    if (PATH === '/feedback' || PATH === '/support' || PATH === '/account' || /(^|\.)shareyourpaper\.org$/i.test(location.hostname)) return; // never open on these pages
 
     var KEY = window.__OAB_NOTICE_KEY__ || 'oab_retire_notice_v2025-09-03';
 
@@ -220,8 +233,6 @@
           <h2><a href="/">Home</a></h2>
           <h2><a href="/request">Requests</a></h2>
           <h2><a href="/libraries">For Libraries</a></h2>
-          <h2 class="noddin" style="display:none;"><a href="/account">Your Account</a></h2>
-          <h2 class="nottin"><a href="/account" style="padding-top:16px;">Login</a></h2>
           <h2><a href="/about#landing">About</a></h2>
           <h2><a href="/feedback#bug">Bugs</a></h2>
           <h2><a href="/api">API</a></h2>
