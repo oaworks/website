@@ -1,25 +1,11 @@
 <script>
   (function () {
-    // Versioned key in case we want to show it again
-    var OAB_KEY = 'oab_retire_notice_v2025-09-03';
-
-    // Dev/testing reset by adding ?reset_oab_notice=1
     try {
-      if (/\breset_oab_notice=1\b/.test(location.search)) {
-        localStorage.removeItem(OAB_KEY);
-      }
-      if (localStorage.getItem(OAB_KEY)) {
-        document.documentElement.classList.add('oab-notice-dismissed');
-      }
-
-      // Suppress it on certain pages
+      // Suppress modal on certain pages
       var PATH = location.pathname.replace(/\/+$/,'').toLowerCase();
       if (PATH === '/feedback' || PATH === '/support' || PATH === '/account' || /(^|\.)shareyourpaper\.org$/i.test(location.hostname)) {
         document.documentElement.classList.add('oab-notice-dismissed');
       }
-
-      // expose key for later scripts
-      window.__OAB_NOTICE_KEY__ = OAB_KEY;
     } catch (e) {}
   })();
 </script>
@@ -107,10 +93,6 @@
     var PATH = location.pathname.replace(/\/+$/,'').toLowerCase();
     if (PATH === '/feedback' || PATH === '/support' || PATH === '/account' || /(^|\.)shareyourpaper\.org$/i.test(location.hostname)) return; // never open on these pages
 
-    var KEY = window.__OAB_NOTICE_KEY__ || 'oab_retire_notice_v2025-11-18';
-    // If previously dismissed, do nothing
-    if (document.documentElement.classList.contains('oab-notice-dismissed')) return;
-
     try {
       MicroModal.init({
         openClass: 'is-open',
@@ -136,14 +118,6 @@
         onClose() {}
       });
 
-      // Persist only when the explicit "Close" button is clicked
-      var closeBtn = document.querySelector('#oab-retire .oab-close');
-      if (closeBtn) {
-        closeBtn.addEventListener('click', function () {
-          try { localStorage.setItem(KEY, '1'); } catch (e) {}
-          document.documentElement.classList.add('oab-notice-dismissed');
-        }, { once: true });
-      }
     } catch (e) {
       // If MicroModal isn't available, we fall back below.
     }
@@ -156,26 +130,18 @@
     var PATH = location.pathname.replace(/\/+$/,'').toLowerCase();
     if (PATH === '/feedback' || PATH === '/support' || PATH === '/account' || /(^|\.)shareyourpaper\.org$/i.test(location.hostname)) return; // never open on these pages
 
-    var KEY = window.__OAB_NOTICE_KEY__ || 'oab_retire_notice_v2025-09-03';
-
-    function closeFallback(shouldCache) {
+    function closeFallback() {
       var el = document.getElementById('oab-retire');
       if (el && el.parentNode) el.parentNode.removeChild(el);
       document.documentElement.style.overflow = '';
       document.body.style.overflow = '';
-      if (shouldCache) {
-        try { localStorage.setItem(KEY, '1'); } catch (e) {}
-        document.documentElement.classList.add('oab-notice-dismissed');
-      }
     }
 
     document.addEventListener('click', function (e) {
       var t = e.target;
       if (t && t.getAttribute && t.getAttribute('data-dismiss') === 'oab') {
         e.preventDefault();
-        // Only persist when the explicit "Close" button is clicked
-        var shouldCache = t.classList && t.classList.contains('oab-close');
-        closeFallback(shouldCache);
+        closeFallback();
       }
     }, false);
 
